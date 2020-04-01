@@ -28,6 +28,23 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+  <groupId>ar.edu.itba.paw</groupId>
+  <artifactId>interfaces</artifactId>
+  <version>${parent.version}</version>
+</dependency>
+<dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+</dependency>
+<dependency>
+<groupId>org.springframework</groupId>
+<artifactId>spring-jdbc</artifactId>
+</dependency>
+<dependency>
+<groupId>org.postgresql</groupId>
+<artifactId>postgresql</artifactId>
+</dependency>
   </dependencies>
 
   <build>

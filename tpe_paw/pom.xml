@@ -1,75 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-            
-  
-  
-  
-  
   <modelVersion>4.0.0</modelVersion>
-            
-  
-  
-  
-  
   <groupId>ar.edu.itba.paw</groupId>
-            
-  
-  
-  
-  
   <artifactId>tpe_paw</artifactId>
-            
-  
-  
-  
-  
   <version>1.0-SNAPSHOT</version>
-            
-  
-  
-  
-  
   <packaging>pom</packaging>
-            
-  
-  
-  
-  
   <name>tpe_paw</name>
-          
-  
-  
-  
-  
-  <modules>
-                      
-    
-    
-    
-    
-    <module>webapp</module>
-                      
-    
-    
-    
-    
-    <module>services</module>
-                  
-    
-    
-    
-    <module>persistence</module>
-              
-    
-    
-    <module>models</module>
-          
-    
-    <module>interfaces</module>
-      
+
+  <properties>
+<org.springframework.version>4.2.5.RELEASE</org.springframework.version>
+<servlet-api.version>2.5</servlet-api.version>
+    <jstl.version>1.2</jstl.version>
+    <org.postgresql.version>42.2.5</org.postgresql.version>
+  </properties>
+
+  <dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${org.springframework.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${org.springframework.version}</version>
+</dependency>
+<dependency>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-jdbc</artifactId>
+  <version>${org.springframework.version}</version>
+</dependency>
+<dependency>
+  <groupId>org.postgresql</groupId>
+  <artifactId>postgresql</artifactId>
+  <version>${org.postgresql.version}</version>
+</dependency>
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>${servlet-api.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>jstl</artifactId>
+        <version>${jstl.version}</version>
+      </dependency>
+  </dependencies>
+</dependencyManagement>
+
+  <modules>                    
+    <module>webapp</module>   
+    <module>services</module>   
+    <module>persistence</module>   
+    <module>models</module>   
+    <module>interfaces</module>     
   </modules>
-        
-
-
-
 </project>

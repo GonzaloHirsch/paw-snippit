@@ -6,16 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-
+@Repository
 public class UserDaoImpl implements UserDao {
     private JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -54,12 +52,10 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findUserByUsername(String username) {
-        final List<User> list = jdbcTemplate.query("SELECT * FROM users WHERE username = ?", ROW_MAPPER, username);
-        if(list.isEmpty()) {
-            return null;
-        }
-        return list.get(0);
+    public Optional<User> findUserByUsername(String username) {
+        return jdbcTemplate.query("SELECT * FROM users WHERE username = ?", ROW_MAPPER, username)
+                .stream().findFirst();
+
     }
 
     @Override

@@ -43,5 +43,6 @@ public class SnippetDaoImpl implements SnippetDao {
         }
         return list.get(0);
         */
+        return null;
     }
 }

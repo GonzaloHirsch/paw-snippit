@@ -2,14 +2,17 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.models.Snippet;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
+@Repository
 public class SnippetDaoImpl implements SnippetDao {
 
     private JdbcTemplate jdbcTemplate;
@@ -43,5 +46,6 @@ public class SnippetDaoImpl implements SnippetDao {
         }
         return list.get(0);
         */
+        return null;
     }
 }

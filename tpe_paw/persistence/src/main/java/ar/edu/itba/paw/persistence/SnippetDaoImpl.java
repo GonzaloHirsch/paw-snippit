@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Optional;
 
 @Repository
 public class SnippetDaoImpl implements SnippetDao {
@@ -38,7 +39,7 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> getSnippetByTag(String tag) {
+    public Optional<Collection<Snippet>> getSnippetByTag(String tag) {
         /*
         final Collection<Snippet> snippets = jdbcTemplate.query("SELECT * FROM snippets WHERE id = ?", ROW_MAPPER, id);
         final List<User> list =
@@ -47,11 +48,11 @@ public class SnippetDaoImpl implements SnippetDao {
         }
         return list.get(0);
         */
-        return null;
+        return Optional.of(null);
     }
 
     @Override
-    public Snippet getSnippetById(String id){
-        return (Snippet) jdbcTemplate.queryForObject("SELECT * FROM snippets WHERE id = ?", ROW_MAPPER, Integer.valueOf(id));
+    public Optional<Snippet> getSnippetById(String id){
+        return Optional.of((Snippet) jdbcTemplate.queryForObject("SELECT * FROM snippets WHERE id = ?", ROW_MAPPER, Integer.valueOf(id)));
     }
 }

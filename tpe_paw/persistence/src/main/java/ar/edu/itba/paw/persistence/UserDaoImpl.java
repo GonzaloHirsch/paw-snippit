@@ -67,4 +67,9 @@ public class UserDaoImpl implements UserDao {
     public void changePassword(String email, String password){
         jdbcTemplate.update("UPDATE users SET password = ? WHERE email = ?", password, email);
     }
+
+    @Override
+    public Optional<User> getCurrentUser() {
+        return Optional.of(new User("dan", "pass", "email", "desc", new Date("11/1/1")));
+    }
 }

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.dao.TagDao;
 import ar.edu.itba.paw.models.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -27,6 +28,7 @@ public class TagDaoImpl implements TagDao {
         }
     };
 
+    @Autowired
     public TagDaoImpl(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate((dataSource));
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("tags").usingGeneratedKeyColumns("id");

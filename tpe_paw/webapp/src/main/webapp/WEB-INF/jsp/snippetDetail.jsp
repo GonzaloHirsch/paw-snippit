@@ -25,5 +25,10 @@
             </tbody>
         </table>
     </div>
+    <div>
+        <button disabled="${canVote}">
+            VOTE
+        </button>
+    </div>
 </body>
 </html>

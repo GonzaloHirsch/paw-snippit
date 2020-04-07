@@ -1,0 +1,30 @@
+/*
+ * CSS for the snippet's card --> snippetFeed.jsp
+ */
+
+.card-snippet-container {
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    grid-row-end: span 2;
+    transition: 0.3s;
+}
+
+.card-snippet-container:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.card-snippet-content {
+    padding: 20px;
+}
+
+.card-snippet-text {
+    font-family: "sans-serif";
+    overflow-wrap: break-word;
+}
+
+.card-snippet-code {
+    color: dimgray;
+    font-family: "Fira Code Light";
+}

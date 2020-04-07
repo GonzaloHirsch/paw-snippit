@@ -4,8 +4,6 @@ import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.interfaces.service.VoteService;
 import ar.edu.itba.paw.models.Snippet;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.Vote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +14,7 @@ import java.util.Optional;
 
 @Controller
 public class SnippetController {
+
     @Autowired
     private SnippetService snippetService;
     private UserService userService;

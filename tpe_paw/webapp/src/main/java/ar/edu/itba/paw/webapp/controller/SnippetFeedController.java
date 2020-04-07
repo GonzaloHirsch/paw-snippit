@@ -15,7 +15,7 @@ public class SnippetFeedController {
     public ModelAndView getHomeSnippetFeed() {
         final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
         List<Snippet> snippetsHomeFeed = Arrays.asList(
-                new Snippet(1, 1, "CODIGO", "TEST CARD", "Just wanna test the card"),
+                new Snippet(1, 1, "CODIGO", "TEST CARD", "normal: the default. The browser will break lines according to normal line breaking rules. Words or unbroken strings will not break, even if they overflow the container.normal: the default. The browser will break lines according to normal line breaking rules. Words or unbroken strings will not break, even if they overflow the container."),
                 new Snippet(2, 1, "JAVA ROKS", "TEST CARDS", "")
         );
         mav.addObject("snippetList", snippetsHomeFeed);

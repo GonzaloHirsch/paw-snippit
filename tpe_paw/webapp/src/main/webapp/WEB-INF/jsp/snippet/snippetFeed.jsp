@@ -10,9 +10,9 @@
         <h2>This is the snippet feed!</h2>
         <c:forEach var="snippet" items="${snippetList}">
             <div class="card-snippet-container">
-                <h2 class="card-snippet-title">Card: ${snippet.title}</h2>
+                <h2 class="card-snippet-text">Card: ${snippet.title}</h2>
                 <c:if test="${!StringUtils.isEmpty(snippet.description)}">
-                    <p class="card-snippet-description">${snippet.description}</p>
+                    <p class="card-snippet-text">${snippet.description}</p>
                 </c:if>
                 <div class="card-snippet-code">${snippet.code}</div>
             </div>

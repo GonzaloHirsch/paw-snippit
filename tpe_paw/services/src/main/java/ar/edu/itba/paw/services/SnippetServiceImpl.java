@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.SnippetDao;
+import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.SnippetService;
 import ar.edu.itba.paw.models.Snippet;
 import org.springframework.beans.factory.annotation.Autowired;

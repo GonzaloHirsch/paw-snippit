@@ -32,16 +32,16 @@ public class SnippetController {
             mav.addObject("noSnippet", true);
         }
 
-        Optional<User> user = userService.getCurrentUser();
-        Optional<Vote> vote = voteService.getVote(user.get().getUserId(), retrievedSnippet.get().getId());
-
-        int voteType = -1;
-        if (vote.isPresent()) {
-            voteType = vote.get().getVoteType();
-        }
-
-        mav.addObject("canVoteUp", voteType != 0);
-        mav.addObject("canVoteDown", voteType );
+//        Optional<User> user = userService.getCurrentUser();
+//        Optional<Vote> vote = voteService.getVote(user.get().getUserId(), retrievedSnippet.get().getId());
+//
+//        int voteType = -1;
+//        if (vote.isPresent()) {
+//            voteType = vote.get().getVoteType();
+//        }
+//
+//        mav.addObject("canVoteUp", voteType != 0);
+//        mav.addObject("canVoteDown", voteType );
         return mav;
     }
 

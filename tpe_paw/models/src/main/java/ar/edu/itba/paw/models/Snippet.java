@@ -2,12 +2,12 @@ package ar.edu.itba.paw.models;
 
 public class Snippet {
     private long id;
-    private User owner;
+    private long owner;
     private String code;
     private String title;
     private String description;
 
-    public Snippet(long id, User owner, String code, String title, String description) {
+    public Snippet(long id, long owner, String code, String title, String description) {
         this.id = id;
         this.owner = owner;
         this.code = code;
@@ -19,7 +19,7 @@ public class Snippet {
         return id;
     }
 
-    public User getOwner() {
+    public long getOwner() {
         return owner;
     }
 

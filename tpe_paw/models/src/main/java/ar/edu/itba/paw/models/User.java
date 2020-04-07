@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models;
 import java.util.Date;
 
 public class User {
+    private long id;
     private String username;
     private String password;
     private String email;
@@ -16,6 +17,8 @@ public class User {
         this.description = description;
         this.dateJoined = dateJoined;
     }
+
+    public long getUserId() { return id; }
 
     public String getUsername() {
         return username;

@@ -2,8 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.UserService;
+import ar.edu.itba.paw.interfaces.service.VoteService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.Vote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,18 +19,29 @@ public class SnippetController {
     @Autowired
     private SnippetService snippetService;
     private UserService userService;
+    private VoteService voteService;
 
     @RequestMapping("/snippet/{id}")
     public ModelAndView snippetDetail(@PathVariable("id") long id) {
         final ModelAndView mav = new ModelAndView("snippetDetail");
-//        mav.addObject("snippet", new Snippet(id, 1234, "code", "title", "description"));
         Optional<Snippet> retrievedSnippet = snippetService.getSnippetById(String.valueOf(id));
-        if(retrievedSnippet.isPresent())
+        if (retrievedSnippet.isPresent()) {
             mav.addObject("snippet", retrievedSnippet.get());
-        else
-            mav.addObject("noSnippet",true);
-        //        User user = userService.getCurrentUser();
-//        mav.addObject("canVote", userService.checkUserCanVote(user));
+        }
+        else {
+            mav.addObject("noSnippet", true);
+        }
+
+        Optional<User> user = userService.getCurrentUser();
+        Optional<Vote> vote = voteService.getVote(user.get().getUserId(), retrievedSnippet.get().getId());
+
+        int voteType = -1;
+        if (vote.isPresent()) {
+            voteType = vote.get().getVoteType();
+        }
+
+        mav.addObject("canVoteUp", voteType != 0);
+        mav.addObject("canVoteDown", voteType );
         return mav;
     }
 

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.models.Snippet;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,10 +32,17 @@ public class SnippetDaoImpl implements SnippetDao {
         }
     };
 
+    @Autowired
     public SnippetDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
 
     }
+
+    @Override
+    public Collection<Snippet> getSnippetByName(String title){
+        return jdbcTemplate.query("SELECT * FROM snippets where title = ?",ROW_MAPPER,title);
+    }
+
 
     @Override
     public Collection<Snippet> getSnippetByTag(String tag) {

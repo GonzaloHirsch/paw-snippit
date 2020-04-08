@@ -5,5 +5,6 @@ import ar.edu.itba.paw.models.Snippet;
 import java.util.Collection;
 
 public interface SnippetDao {
+    Collection<Snippet> getSnippetByName(String name);
     Collection<Snippet> getSnippetByTag(String tag);
 }

@@ -1,9 +1,12 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
+import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.Snippet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import ar.edu.itba.paw.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -20,11 +23,15 @@ public class SnippetDaoImpl implements SnippetDao {
 
     private final static RowMapper<Snippet> ROW_MAPPER = new RowMapper<Snippet>() {
 
+        @Autowired
+        private UserDao userDao;
+
         @Override
         public Snippet mapRow(ResultSet rs, int rowNum) throws SQLException {
+            User userOwner = (userDao.findUserById(rs.getLong("owner"))).orElse(null);
             return new Snippet(
                     rs.getLong("id"),
-                    rs.getLong("owner"),
+                    userOwner,
                     rs.getString("code"),
                     rs.getString("title"),
                     rs.getString("description")

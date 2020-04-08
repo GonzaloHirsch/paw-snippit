@@ -7,14 +7,14 @@ public class User {
     private String username;
     private String password;
     private String email;
-    private String description;
+    private int reputation;
     private Date dateJoined;
 
-    public User(String username, String password, String email, String description, Date dateJoined) {
+    public User(String username, String password, String email, int reputation, Date dateJoined) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.description = description;
+        this.reputation = reputation;
         this.dateJoined = dateJoined;
     }
 
@@ -32,8 +32,8 @@ public class User {
         return email;
     }
 
-    public String getDescription() {
-        return description;
+    public int getReputation() {
+        return reputation;
     }
 
     public Date getDateJoined() {

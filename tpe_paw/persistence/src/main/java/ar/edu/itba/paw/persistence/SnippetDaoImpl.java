@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -20,11 +21,11 @@ public class SnippetDaoImpl implements SnippetDao {
 
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private UserDao userDao;
 
-    private final static RowMapper<Snippet> ROW_MAPPER = new RowMapper<Snippet>() {
+    private final RowMapper<Snippet> ROW_MAPPER = new RowMapper<Snippet>() {
 
-        @Autowired
-        private UserDao userDao;
 
         @Override
         public Snippet mapRow(ResultSet rs, int rowNum) throws SQLException {

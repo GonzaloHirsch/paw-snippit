@@ -22,7 +22,7 @@ public class SnippetServiceImpl implements SnippetService {
     public Collection<Snippet> getSnippetByContent(String code){ return this.snippetDao.getSnippetByContent(code);}
 
     @Override
-    public Optional<Collection<Snippet>> getSnippetByTag(String tag) {
+    public Collection<Snippet> getSnippetByTag(String tag) {
         return this.snippetDao.getSnippetByTag(tag);
     }
     @Override

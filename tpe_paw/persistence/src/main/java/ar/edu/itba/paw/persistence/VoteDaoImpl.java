@@ -51,8 +51,8 @@ public class VoteDaoImpl implements VoteDao {
     }
 
     @Override
-    public Optional<Collection<Vote>> getUserVotes(long userId) {
-        return Optional.of(jdbcTemplate.query("SELECT * FROM votes_for WHERE user_id = ?", ROW_MAPPER, userId));
+    public Collection<Vote> getUserVotes(long userId) {
+        return jdbcTemplate.query("SELECT * FROM votes_for WHERE user_id = ?", ROW_MAPPER, userId);
     }
 
     @Override

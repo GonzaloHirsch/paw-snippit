@@ -10,7 +10,7 @@ import java.util.Optional;
 @Service
 public class VoteServiceImpl implements VoteService {
     @Override
-    public Optional<Collection<Vote>> getUserVotes(long userId) {
+    public Collection<Vote> getUserVotes(long userId) {
         return Optional.empty();
     }
 

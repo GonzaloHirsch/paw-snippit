@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface SnippetService {
     Optional<Snippet> getSnippetById(long id);
-    Optional<Collection<Snippet>> getSnippetByTag(String tag);
+    Collection<Snippet> getSnippetByTag(String tag);
     Collection<Snippet> getSnippetByName(String name);
     Collection<Snippet> getSnippetByContent(String code);
 }

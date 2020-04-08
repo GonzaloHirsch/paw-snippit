@@ -60,7 +60,7 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Optional<Collection<Snippet>> getSnippetByTag(String tag) {
+    public Collection<Snippet> getSnippetByTag(String tag) {
         /*
         final Collection<Snippet> snippets = jdbcTemplate.query("SELECT * FROM snippets WHERE id = ?", ROW_MAPPER, id);
         final List<User> list =
@@ -69,7 +69,7 @@ public class SnippetDaoImpl implements SnippetDao {
         }
         return list.get(0);
         */
-        return Optional.of(null);
+        return null;
     }
 
     @Override

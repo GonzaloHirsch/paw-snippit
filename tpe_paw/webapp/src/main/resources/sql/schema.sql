@@ -25,3 +25,10 @@ create table if not exists tags(
 
 /*Testeo*/
 insert into tags(name) values('tag1');
+
+create table if not exists votes_for(
+    userId int not null,
+    snippetId int not null,
+    voteType int not null,
+    primary key (userId, snippetId)
+);

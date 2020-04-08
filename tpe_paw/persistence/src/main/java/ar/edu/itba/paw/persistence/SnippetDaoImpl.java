@@ -35,12 +35,11 @@ public class SnippetDaoImpl implements SnippetDao {
     @Autowired
     public SnippetDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
-
     }
 
     @Override
     public Collection<Snippet> getSnippetByName(String title){
-        return jdbcTemplate.query("SELECT * FROM snippets where title = ?",ROW_MAPPER,title);
+        return jdbcTemplate.query("SELECT * FROM snippets WHERE title like ?",ROW_MAPPER,"%"+title+"%");
     }
 
 

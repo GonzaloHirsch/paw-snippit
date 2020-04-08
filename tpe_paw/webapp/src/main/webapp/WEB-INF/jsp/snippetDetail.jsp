@@ -7,23 +7,15 @@
 </head>
 <body>
     <div>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th><th>Owner</th><th>Code</th><th>Title</th><th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>${snippet.id}</td><td>${snippet.owner}</td><td>${snippet.code}</td><td>${snippet.title}</td><td>${snippet.description}</td>
-                </tr>
-            </tbody>
-        </table>
+        <h1>
+            ${snippet.title}
+        </h1>
+        <h2>
+            ${snippet.description}
+        </h2>
     </div>
     <div>
-        <button disabled="${canVote}">
-            VOTE
-        </button>
+        ${snippet.code}
     </div>
 </body>
 </html>

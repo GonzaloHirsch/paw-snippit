@@ -7,7 +7,7 @@ public class Snippet {
     private String title;
     private String description;
 
-    public Snippet(long id, long owner, String code, String title, String description) {
+    public Snippet(long id, long owner, String code, String title, String description, long language_id) {
         this.id = id;
         this.owner = owner;
         this.code = code;

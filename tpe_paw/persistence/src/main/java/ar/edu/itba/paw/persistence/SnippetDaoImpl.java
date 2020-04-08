@@ -25,10 +25,11 @@ public class SnippetDaoImpl implements SnippetDao {
         public Snippet mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Snippet(
                     rs.getLong("id"),
-                    rs.getLong("owner"),
+                    rs.getLong("user_id"),
+                    rs.getString("description"),
                     rs.getString("code"),
-                    rs.getString("title"),
-                    rs.getString("description")
+                    rs.getString("date_created"),
+                    rs.getLong("language_id")
             );
         }
     };

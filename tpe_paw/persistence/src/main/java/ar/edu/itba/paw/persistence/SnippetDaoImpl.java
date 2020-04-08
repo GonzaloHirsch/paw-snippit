@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
+import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,20 +18,22 @@ import java.util.Optional;
 @Repository
 public class SnippetDaoImpl implements SnippetDao {
 
-
     private JdbcTemplate jdbcTemplate;
 
     private final static RowMapper<Snippet> ROW_MAPPER = new RowMapper<Snippet>() {
 
+        @Autowired
+        private UserDao userDao;
+
         @Override
         public Snippet mapRow(ResultSet rs, int rowNum) throws SQLException {
+            User userOwner = (userDao.findUserById(rs.getLong("owner"))).orElse(null);
             return new Snippet(
                     rs.getLong("id"),
-                    rs.getLong("user_id"),
-                    rs.getString("description"),
+                    userOwner,
                     rs.getString("code"),
-                    rs.getString("date_created"),
-                    rs.getLong("language_id")
+                    rs.getString("title"),
+                    rs.getString("description")
             );
         }
     };
@@ -37,6 +41,21 @@ public class SnippetDaoImpl implements SnippetDao {
     @Autowired
     public SnippetDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
+    }
+
+    @Override
+    public Collection<Snippet> getSnippetByName(String title){
+        return jdbcTemplate.query("SELECT * FROM snippets WHERE title like ?",ROW_MAPPER,"%"+title+"%");
+    }
+
+    @Override
+    public Collection<Snippet> getSnippetByContent(String code) {
+        return jdbcTemplate.query("SELECT * FROM snippets WHERE code like ?",ROW_MAPPER, '%'+code+'%');
+    }
+
+    @Override
+    public Collection<Snippet> getAllSnippets(){
+        return jdbcTemplate.query("SELECT * FROM snippets",ROW_MAPPER);
     }
 
     @Override

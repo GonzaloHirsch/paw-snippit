@@ -61,7 +61,6 @@ public class UserDaoImpl implements UserDao {
     public Optional<User> findUserByUsername(String username) {
         return jdbcTemplate.query("SELECT * FROM users WHERE username = ?", ROW_MAPPER, username)
                 .stream().findFirst();
-
     }
 
     @Override

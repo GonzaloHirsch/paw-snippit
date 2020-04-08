@@ -42,6 +42,16 @@ public class SnippetDaoImpl implements SnippetDao {
         return jdbcTemplate.query("SELECT * FROM snippets WHERE title like ?",ROW_MAPPER,"%"+title+"%");
     }
 
+    @Override
+    public Collection<Snippet> getSnippetByContent(String code) {
+        return jdbcTemplate.query("SELECT * FROM snippets WHERE code like ?",ROW_MAPPER, '%'+code+'%');
+    }
+
+    @Override
+    public Collection<Snippet> getAllSnippets(){
+        return jdbcTemplate.query("SELECT * FROM snippets",ROW_MAPPER);
+    }
+
 
     @Override
     public Collection<Snippet> getSnippetByTag(String tag) {

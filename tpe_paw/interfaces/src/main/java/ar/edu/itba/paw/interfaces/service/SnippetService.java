@@ -6,5 +6,6 @@ import java.util.Collection;
 
 public interface SnippetService {
     Collection<Snippet> getSnippetByName(String name);
+    Collection<Snippet> getSnippetByContent(String code);
     Collection<Snippet> getSnippetByTag(String tag);
 }

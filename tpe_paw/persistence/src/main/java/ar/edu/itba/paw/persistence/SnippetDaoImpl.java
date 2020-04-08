@@ -3,6 +3,8 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.Snippet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -37,10 +39,26 @@ public class SnippetDaoImpl implements SnippetDao {
         }
     };
 
+    @Autowired
     public SnippetDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
-
     }
+
+    @Override
+    public Collection<Snippet> getSnippetByName(String title){
+        return jdbcTemplate.query("SELECT * FROM snippets WHERE title like ?",ROW_MAPPER,"%"+title+"%");
+    }
+
+    @Override
+    public Collection<Snippet> getSnippetByContent(String code) {
+        return jdbcTemplate.query("SELECT * FROM snippets WHERE code like ?",ROW_MAPPER, '%'+code+'%');
+    }
+
+    @Override
+    public Collection<Snippet> getAllSnippets(){
+        return jdbcTemplate.query("SELECT * FROM snippets",ROW_MAPPER);
+    }
+
 
     @Override
     public Collection<Snippet> getSnippetByTag(String tag) {

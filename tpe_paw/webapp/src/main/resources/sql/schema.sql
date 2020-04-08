@@ -1,11 +1,11 @@
-drop table if exists votes_for;
-drop table if exists favorites;
-drop table if exists follows;
-drop table if exists snippet_tags;
-drop table if exists tags;
-drop table if exists snippets;
-drop table if exists languages;
-drop table if exists users;
+-- drop table if exists votes_for;
+-- drop table if exists favorites;
+-- drop table if exists follows;
+-- drop table if exists snippet_tags;
+-- drop table if exists tags;
+-- drop table if exists snippets;
+-- drop table if exists languages;
+-- drop table if exists users;
 
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
@@ -61,9 +61,3 @@ CREATE TABLE IF NOT EXISTS snippet_tags (
     tag_id INT REFERENCES tags(id) ON UPDATE CASCADE ON DELETE CASCADE,
     PRIMARY KEY(snippet_id, tag_id)
 );
-
-insert into users values(default, 'igrib', 'pass', 'igrib@gmail.com', 35, '11/2/2020', null);
-insert into users values(default, 'igrib2', 'pass', 'igrib2@gmail.com', 35, '11/2/2020', null);
-insert into snippets values(default, 1, 'Some HTML Code', 'This code is about testing something', '<html>HOLA</html>', '1/1/2020');
-insert into snippets values(default, 2, 'Some HTML Code', 'This code is about testing something', '<html>CHAU</html>', '1/1/2020');
-insert into votes_for values(1, 2, 1);

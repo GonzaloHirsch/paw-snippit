@@ -25,6 +25,7 @@ public class WebConfig {
     @Value("classpath:sql/schema.sql")
     private Resource schemaSql;
 
+
     @Bean
     public ViewResolver viewResolver() {
         final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();

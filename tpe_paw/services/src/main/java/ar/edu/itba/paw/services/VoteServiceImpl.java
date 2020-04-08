@@ -11,7 +11,7 @@ import java.util.Optional;
 public class VoteServiceImpl implements VoteService {
     @Override
     public Collection<Vote> getUserVotes(long userId) {
-        return Optional.empty();
+        return null;
     }
 
     @Override

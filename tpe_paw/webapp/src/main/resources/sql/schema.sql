@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS snippets (
     description VARCHAR(300),
     code VARCHAR(500),
     date_created DATE,
-    language_id INTEGER REFERENCES language(id) ON UPDATE CASCADE ON DELETE SET NULL
+    language_id INTEGER REFERENCES languages(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS votes_for (

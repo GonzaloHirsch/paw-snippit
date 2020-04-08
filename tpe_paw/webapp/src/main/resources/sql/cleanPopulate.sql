@@ -1,5 +1,5 @@
 /*
-    TO manually populate database in terminal: psql -U username -d myDataBase -a -f myInsertFile
+    TO manually populate database in terminal: psql -U postgres -d paw -a -f populate.sql
  */
 delete from users where true;
 delete from languages where true;

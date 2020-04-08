@@ -20,6 +20,7 @@ public class SnippetDaoImpl implements SnippetDao {
 
     private JdbcTemplate jdbcTemplate;
 
+
     private final static RowMapper<Snippet> ROW_MAPPER = new RowMapper<Snippet>() {
 
         @Autowired
@@ -27,7 +28,7 @@ public class SnippetDaoImpl implements SnippetDao {
 
         @Override
         public Snippet mapRow(ResultSet rs, int rowNum) throws SQLException {
-            User userOwner = (userDao.findUserById(rs.getLong("owner"))).orElse(null);
+            User userOwner = (userDao.findUserById(rs.getLong("user_id"))).orElse(null);
             return new Snippet(
                     rs.getLong("id"),
                     userOwner,
@@ -72,7 +73,7 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Optional<Snippet> getSnippetById(String id){
-        return Optional.of((Snippet) jdbcTemplate.queryForObject("SELECT * FROM snippets WHERE id = ?", ROW_MAPPER, Integer.valueOf(id)));
+    public Optional<Snippet> getSnippetById(long id){
+        return Optional.of((Snippet) jdbcTemplate.queryForObject("SELECT * FROM snippets WHERE id = ?", ROW_MAPPER, id));
     }
 }

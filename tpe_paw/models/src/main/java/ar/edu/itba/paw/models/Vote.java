@@ -2,25 +2,27 @@ package ar.edu.itba.paw.models;
 
 public class Vote {
 
-    private long userId;
-    private long snippetId;
-    private int voteType;
 
-    public Vote(long userId, long snippetId, int voteType) {
-        this.userId = userId;
-        this.snippetId = snippetId;
-        this.voteType = voteType;
+    private User user;
+    private Snippet snippet;
+    private int type;
+
+    public Vote(User user, Snippet snippet, int type) {
+        this.user = user;
+        this.snippet = snippet;
+        this.type = type;
     }
 
-    public long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public long getSnippetId() {
-        return snippetId;
+    public Snippet getSnippet() {
+        return snippet;
     }
 
-    public int getVoteType() {
-        return voteType;
+    public int getType() {
+        return type;
     }
+
 }

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Optional;
 
 public interface UserDao {
+
     User createUser(String username, String password, String email, String description, Date dateJoined);
 
     Optional<User> findUserByUsername(String username);

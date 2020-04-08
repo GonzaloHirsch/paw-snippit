@@ -40,13 +40,11 @@ public class SnippetDaoImpl implements SnippetDao {
     @Autowired
     public SnippetDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS snippets("
-                + "id SERIAL PRIMARY KEY,"
-                + "ownerId INTEGER,"
-                + "code VARCHAR(1000) NOT NULL,"
-                + "title VARCHAR(100) NOT NULL,"
-                + "description VARCHAR(250)"
-                + ")");
+    }
+
+    @Override
+    public Collection<Snippet> getAllSnippets(){
+        return jdbcTemplate.query("SELECT * FROM snippets",ROW_MAPPER);
     }
 
     @Override

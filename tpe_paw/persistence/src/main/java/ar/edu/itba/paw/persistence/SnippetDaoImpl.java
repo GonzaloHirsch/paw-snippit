@@ -50,8 +50,26 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> getSnippetByTag(String tag) {
-        final String tagToUse = "%" + tag + "%";
-        return jdbcTemplate.query("SELECT id, ownerId, code, title, description FROM snippets AS s INNER JOIN taggedSnippets AS ts ON s.id = ts.snippetId INNER JOIN tags AS t WHERE t.id = ts.tagId AND t.name LIKE ?", ROW_MAPPER, tagToUse);
+    public Collection<Snippet> findSnippetsByTag(String tag, String source, String userId) {
+        SnippetQuery snippetQuery = new SnippetQuery.Builder()
+                .setSource(source, userId)
+                .setType("tag", tag).build();
+        return jdbcTemplate.query(snippetQuery.getQuery(), snippetQuery.getParams(), ROW_MAPPER);
+    }
+
+    @Override
+    public Collection<Snippet> findSnippetsByTitle(String title, String source, String userId) {
+        SnippetQuery snippetQuery = new SnippetQuery.Builder()
+                .setSource(source, userId)
+                .setType("title", title).build();
+        return jdbcTemplate.query(snippetQuery.getQuery(), snippetQuery.getParams(), ROW_MAPPER);
+    }
+
+    @Override
+    public Collection<Snippet> findSnippetsByContent(String content, String source, String userId) {
+        SnippetQuery snippetQuery = new SnippetQuery.Builder()
+                .setSource(source, userId)
+                .setType("content", content).build();
+        return jdbcTemplate.query(snippetQuery.getQuery(), snippetQuery.getParams(), ROW_MAPPER);
     }
 }

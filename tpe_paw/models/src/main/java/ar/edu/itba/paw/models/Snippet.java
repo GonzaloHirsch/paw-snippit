@@ -9,7 +9,7 @@ public class Snippet {
 
     public Snippet(long id, User owner, String code, String title, String description) {
         this.id = id;
-        this.ownerId = ownerId;
+        this.owner = owner;
         this.code = code;
         this.title = title;
         this.description = description;

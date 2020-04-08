@@ -52,7 +52,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserById(long id) {
+    public Optional<User> findUserById(final long id) {
         return jdbcTemplate.query("SELECT * FROM users WHERE id = ?", ROW_MAPPER, id)
                 .stream().findFirst();
     }

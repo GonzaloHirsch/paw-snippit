@@ -13,4 +13,6 @@ public interface UserDao {
     void updateDescription(String username, String newDescription);
 
     void changePassword(String email, String password);
+
+    Optional<User> findUserById(final long id);
 }

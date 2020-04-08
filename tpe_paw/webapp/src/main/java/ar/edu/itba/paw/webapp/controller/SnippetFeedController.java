@@ -15,8 +15,8 @@ public class SnippetFeedController {
     public ModelAndView getHomeSnippetFeed() {
         final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
         List<Snippet> snippetsHomeFeed = Arrays.asList(
-                new Snippet(1, 1, "CODIGO", "TEST CARD", "Just wanna test the card"),
-                new Snippet(2, 1, "JAVA ROKS", "TEST CARDS", "")
+                new Snippet(1,  null, "CODIGO", "TEST CARD", "Just wanna test the card"),
+                new Snippet(2, null, "JAVA ROKS", "TEST CARDS", "")
         );
         mav.addObject("snippetList", snippetsHomeFeed);
         return mav;

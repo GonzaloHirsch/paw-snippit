@@ -16,11 +16,60 @@ public class SearchController {
     @Autowired
     private SnippetService snippetService;
 
-    @RequestMapping("/search/tag")
-    public ModelAndView searchByTag(@RequestParam(value = "searchTerm", required = true) String searchTerm) {
+    @RequestMapping("/home/search")
+    public ModelAndView searchInHome(@RequestParam(value = "q", required = true) String query, @RequestParam(value = "t", required = true) String type) {
         final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
-        Collection<Snippet> snippets = this.snippetService.getSnippetByTag(searchTerm);
-        mav.addObject("greeting", "PAW");
+        Collection<Snippet> snippets = null;
+        switch (type) {
+            case "tag":
+                snippets = this.snippetService.findSnippetsByTag(query, "home", null);
+                break;
+            case "title":
+                snippets = this.snippetService.findSnippetsByTitle(query, "home", null);
+                break;
+            case "content":
+                snippets = this.snippetService.findSnippetsByContent(query, "home", null);
+                break;
+        }
+        mav.addObject("snippetList", snippets);
+        return mav;
+    }
+
+    @RequestMapping("/favorites/search")
+    public ModelAndView searchInFavorites(@RequestParam(value = "q", required = true) String query, @RequestParam(value = "t", required = true) String type, @RequestParam(value = "u", required = true) String userId) {
+        final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
+        Collection<Snippet> snippets = null;
+        switch (type) {
+            case "tag":
+                snippets = this.snippetService.findSnippetsByTag(query, "favorites", userId);
+                break;
+            case "title":
+                snippets = this.snippetService.findSnippetsByTitle(query, "favorites", userId);
+                break;
+            case "content":
+                snippets = this.snippetService.findSnippetsByContent(query, "favorites", userId);
+                break;
+        }
+        mav.addObject("snippetList", snippets);
+        return mav;
+    }
+
+    @RequestMapping("/following/search")
+    public ModelAndView searchInFollowing(@RequestParam(value = "q", required = true) String query, @RequestParam(value = "t", required = true) String type, @RequestParam(value = "u", required = true) String userId) {
+        final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
+        Collection<Snippet> snippets = null;
+        switch (type) {
+            case "tag":
+                snippets = this.snippetService.findSnippetsByTag(query, "following", userId);
+                break;
+            case "title":
+                snippets = this.snippetService.findSnippetsByTitle(query, "following", userId);
+                break;
+            case "content":
+                snippets = this.snippetService.findSnippetsByContent(query, "following", userId);
+                break;
+        }
+        mav.addObject("snippetList", snippets);
         return mav;
     }
 }

@@ -13,6 +13,7 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
       <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
     </init-param>
   </servlet>
+
   <servlet-mapping>
     <servlet-name>dispatcher</servlet-name>
     <url-pattern>/</url-pattern>

@@ -1,27 +1,56 @@
-create table if not exists users(
+
+CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    description VARCHAR(255),
-    dateJoined VARCHAR(255)
+    username VARCHAR(30) UNIQUE,
+    password VARCHAR(30) NOT NULL,
+    email VARCHAR(60) UNIQUE,
+    reputation INT,
+    date_joined DATE,
+    icon bytea
 );
 
-create table if not exists snippets(
+CREATE TABLE IF NOT EXISTS language (
     id SERIAL PRIMARY KEY,
-    owner INTEGER  NOT NULL,
-    code VARCHAR(255) NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    description VARCHAR(255),
-    FOREIGN KEY(owner) REFERENCES users(id)
+    name VARCHAR(30) UNIQUE
 );
 
-create table if not exists tags(
+CREATE TABLE IF NOT EXISTS tags (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(30) UNIQUE
 );
 
-/*Agregar la tabla de snippet_has_tag (para R NxN)*/
+CREATE TABLE IF NOT EXISTS snippets (
+    id SERIAL PRIMARY KEY ,
+    user_id BIGINT UNSIGNED REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL,
+    title VARCHAR(50),
+    description VARCHAR(300),
+    code VARCHAR(500),
+    date_created DATE,
+    language_id BIGINT UNSIGNED REFERENCES language(id) ON UPDATE CASCADE ON DELETE SET NULL,
+);
 
-/*Testeo*/
-insert into tags(name) values('tag1');
+CREATE TABLE IF NOT EXISTS votes_for (
+    user_id BIGINT UNSIGNED REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL,
+    snippet_id BIGINT UNSIGNED REFERENCES snippets(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    type INT,
+    PRIMARY KEY(user_id, snippet_id)
+);
+
+CREATE TABLE IF NOT EXISTS favorites (
+    snippet_id BIGINT UNSIGNED REFERENCES snippets(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    user_id BIGINT UNSIGNED REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    PRIMARY KEY(snippet_id, user_id)
+);
+
+CREATE TABLE IF NOT EXISTS follows (
+    user_id BIGINT UNSIGNED REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    tag_id BIGINT UNSIGNED REFERENCES tags(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    PRIMARY KEY(user_id, tag_id)
+);
+
+CREATE TABLE IF NOT EXISTS snippet_tags (
+    snippet_id BIGINT UNSIGNED REFERENCES snippets(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    tag_id BIGINT UNSIGNED REFERENCES tags(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    PRIMARY KEY(snippet_id, tag_id)
+);
+

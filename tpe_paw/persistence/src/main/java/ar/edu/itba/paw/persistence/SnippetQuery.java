@@ -17,16 +17,16 @@ public class SnippetQuery {
     }
 
     public static class Builder {
-        private static String QUERY_SELECT = "SELECT id, ownerId, code, title, description FROM ";
+        private static String QUERY_SELECT = "SELECT s.id, s.user_id, s.code, s.title, s.description FROM ";
 
-        private static String TAG_QUERY = " AS s INNER JOIN snippet_tags AS ts ON s.id = ts.snippetId INNER JOIN tags AS t WHERE t.id = ts.tagId AND t.name LIKE ?";
+        private static String TAG_QUERY = " AS s INNER JOIN snippet_tags AS ts ON s.id = ts.snippet_id INNER JOIN tags AS t ON t.id = ts.tag_id WHERE t.name LIKE ?";
         private static String TITLE_QUERY = " AS s WHERE s.title LIKE ?";
         private static String CONTENT_QUERY = " AS s WHERE s.code LIKE ?";
         private static String HOME_SOURCE = "(SELECT * FROM snippets)";
-        private static String FAVORITES_SOURCE = "(SELECT sn.id, sn.ownerId, sn.code, sn.title, sn.description FROM snippets AS sn JOIN favorites AS fav ON fav.snippet_id = sn.id WHERE fav.user_id = ?)";
-        private static String FOLLOWING_SOURCE = "(SELECT sn.id, sn.ownerId, sn.code, sn.title, sn.description FROM snippets AS sn JOIN snippet_tags AS st.snippet_id = sn.id JOIN following AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?";
+        private static String FAVORITES_SOURCE = "(SELECT sn.id, sn.user_id, sn.code, sn.title, sn.description FROM snippets AS sn JOIN favorites AS fav ON fav.snippet_id = sn.id WHERE fav.user_id = ?)";
+        private static String FOLLOWING_SOURCE = "(SELECT sn.id, sn.user_id, sn.code, sn.title, sn.description FROM snippets AS sn JOIN snippet_tags AS st.snippet_id = sn.id JOIN following AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?";
 
-        private StringBuilder query;
+        private StringBuilder query = new StringBuilder();
         private List<Object> params = new ArrayList<>();
 
         public Builder(){

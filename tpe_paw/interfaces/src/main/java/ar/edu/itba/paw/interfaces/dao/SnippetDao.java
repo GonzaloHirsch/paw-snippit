@@ -11,5 +11,4 @@ public interface SnippetDao {
     Collection<Snippet> findSnippetsByContent(String content, String source, String userId);
     Collection<Snippet> getAllSnippets();
     Optional<Snippet> getSnippetById(long id);
-    Collection<Snippet> getSnippetByTag(String tag);
 }

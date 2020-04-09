@@ -22,6 +22,7 @@ public class HelloWorldController {
         return mav;
     }
 
+    /*
     @RequestMapping("/testmav/")
     public ModelAndView testMav() {
         final ModelAndView mav = new ModelAndView("index");
@@ -29,4 +30,6 @@ public class HelloWorldController {
         mav.addObject("greeting", snippetList.get(0).getTitle());
         return mav;
     }
+
+     */
 }

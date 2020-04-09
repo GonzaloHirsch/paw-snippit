@@ -46,31 +46,32 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> getSnippetByName(String title){
-        return jdbcTemplate.query("SELECT * FROM snippets WHERE title like ?",ROW_MAPPER,"%"+title+"%");
-    }
-
-    @Override
-    public Collection<Snippet> getSnippetByContent(String code) {
-        return jdbcTemplate.query("SELECT * FROM snippets WHERE code like ?",ROW_MAPPER, '%'+code+'%');
-    }
-
-    @Override
     public Collection<Snippet> getAllSnippets(){
         return jdbcTemplate.query("SELECT * FROM snippets",ROW_MAPPER);
     }
 
     @Override
-    public Collection<Snippet> getSnippetByTag(String tag) {
-        /*
-        final Collection<Snippet> snippets = jdbcTemplate.query("SELECT * FROM snippets WHERE id = ?", ROW_MAPPER, id);
-        final List<User> list =
-        if (list.isEmpty()) {
-            return null;
-        }
-        return list.get(0);
-        */
-        return null;
+    public Collection<Snippet> findSnippetsByTag(String tag, String source, String userId) {
+        SnippetQuery snippetQuery = new SnippetQuery.Builder()
+                .setSource(source, userId)
+                .setType("tag", tag).build();
+        return jdbcTemplate.query(snippetQuery.getQuery(), snippetQuery.getParams(), ROW_MAPPER);
+    }
+
+    @Override
+    public Collection<Snippet> findSnippetsByTitle(String title, String source, String userId) {
+        SnippetQuery snippetQuery = new SnippetQuery.Builder()
+                .setSource(source, userId)
+                .setType("title", title).build();
+        return jdbcTemplate.query(snippetQuery.getQuery(), snippetQuery.getParams(), ROW_MAPPER);
+    }
+
+    @Override
+    public Collection<Snippet> findSnippetsByContent(String content, String source, String userId) {
+        SnippetQuery snippetQuery = new SnippetQuery.Builder()
+                .setSource(source, userId)
+                .setType("content", content).build();
+        return jdbcTemplate.query(snippetQuery.getQuery(), snippetQuery.getParams(), ROW_MAPPER);
     }
 
     @Override

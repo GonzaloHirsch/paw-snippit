@@ -1,19 +1,20 @@
---drop table if exists votes_for;
---drop table if exists favorites;
---drop table if exists follows;
---drop table if exists snippet_tags;
---drop table if exists tags;
---drop table if exists snippets;
---drop table if exists languages;
---drop table if exists users;
+drop table if exists votes_for;
+drop table if exists favorites;
+drop table if exists follows;
+drop table if exists snippet_tags;
+drop table if exists tags;
+drop table if exists snippets;
+drop table if exists languages;
+drop table if exists users;
 
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(30) UNIQUE,
     password VARCHAR(30) NOT NULL,
     email VARCHAR(60) UNIQUE,
+    description VARCHAR(300),
     reputation INT,
-    date_joined DATE,
+    date_joined TIMESTAMP ,
     icon bytea
 );
 
@@ -31,9 +32,9 @@ CREATE TABLE IF NOT EXISTS snippets (
     id SERIAL PRIMARY KEY ,
     user_id INT REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL,
     title VARCHAR(50),
-    description VARCHAR(300),
-    code VARCHAR(500),
-    date_created DATE,
+    description VARCHAR(500),
+    code VARCHAR(6000),
+    date_created TIMESTAMP ,
     language_id INT REFERENCES languages(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 

@@ -26,7 +26,7 @@ public class SnippetQuery {
         private static String FAVORITES_SOURCE = "(SELECT sn.id, sn.ownerId, sn.code, sn.title, sn.description FROM snippets AS sn JOIN favorites AS fav ON fav.snippet_id = sn.id WHERE fav.user_id = ?)";
         private static String FOLLOWING_SOURCE = "(SELECT sn.id, sn.ownerId, sn.code, sn.title, sn.description FROM snippets AS sn JOIN snippet_tags AS st.snippet_id = sn.id JOIN following AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?";
 
-        private StringBuilder query;
+        private StringBuilder query = new StringBuilder();
         private List<Object> params = new ArrayList<>();
 
         public Builder(){

@@ -17,5 +17,5 @@ public interface UserDao {
 
     void changePassword(String email, String password);
 
-    Optional<User> findUserById(final long id);
+    Optional<User> getCurrentUser();
 }

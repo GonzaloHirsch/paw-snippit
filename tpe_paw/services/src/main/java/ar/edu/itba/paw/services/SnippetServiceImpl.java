@@ -29,4 +29,9 @@ public class SnippetServiceImpl implements SnippetService {
     public Collection<Snippet> findSnippetsByContent(String content, String source, String userId) {
         return this.snippetDao.findSnippetsByContent(content, source, userId);
     }
+
+    @Override
+    public Optional<Snippet> getSnippetById(long id) {
+        return this.snippetDao.getSnippetById(id);
+    }
 }

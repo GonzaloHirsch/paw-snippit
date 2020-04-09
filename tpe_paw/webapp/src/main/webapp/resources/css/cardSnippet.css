@@ -1,5 +1,5 @@
 /*
- * CSS for the snippet's card --> snippetFeed.jsp
+ * CSS for the snippet's card --> snippetCard.jsp
  */
 
 .card-snippet-container {
@@ -16,24 +16,26 @@
 }
 
 .card-snippet-content {
+    display: flex;
+    flex-direction: column;
     padding: 20px;
 }
 
-.card-snippet-code-block {
+.card-snippet-descr-block {
+    margin-bottom: 10px;
+}
+
+.card-snippet-block {
     max-height: 200px;
     overflow: hidden;
     position: relative;
     text-align: justify;
 }
 
-.card-snippet-code-block .card-snippet-fade-out {
+.card-snippet-fade-out {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    text-align: center;
-    margin: 0; padding: 30px 0;
-
-    /* "transparent" only works here because == rgba(0,0,0,0) */
-    /*background-image: linear-gradient(to bottom, transparent, #DCDCDC); */
+    margin: 0; padding: 40px 0;
 }

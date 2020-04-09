@@ -13,14 +13,15 @@
             <div class="card-snippet-content">
                 <h2 class="snippet-text">Card: ${fn:escapeXml(snippet.title)}</h2>
                 <c:if test="${!StringUtils.isEmpty(snippet.description)}">
-                    <p class="snippet-text">${fn:escapeXml(snippet.description)}</p>
+                    <div class="card-snippet-block card-snippet-descr-block">
+                        <p class="snippet-text">${fn:escapeXml(snippet.description)}</p>
+                        <p class="card-snippet-fade-out card-snippet-fade-out-descr"></p>
+                    </div>
                 </c:if>
                 <div class="snippet-code-container">
-                    <div class="card-snippet-code-block">
+                    <div class="card-snippet-block">
                         <pre><code>${fn:escapeXml(snippet.code)}</code></pre>
-                        <c:if test="true">
-                            <p class="card-snippet-fade-out"></p>
-                        </c:if>
+                        <p class="card-snippet-fade-out card-snippet-fade-out-code"></p>
                     </div>
                 </div>
             </div>

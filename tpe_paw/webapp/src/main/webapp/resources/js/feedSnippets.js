@@ -2,24 +2,19 @@
 /* Resizes the height of a single card */
 function resizeCard(card){
     /*
-     * CODE CONTAINER --> If the code is too long, will want it to fade out in the card
+     * CODE/DESCRIPTION CONTAINER --> If the code is too long, will want it to fade out in the card
      */
-    codeBlock = card.querySelector('.card-snippet-content').querySelector('.snippet-code-container').querySelector('.card-snippet-code-block');
+    codeBlock = card.querySelector('.card-snippet-content').querySelector('.snippet-code-container').querySelector('.card-snippet-block');
+    descrBlock = card.querySelector('.card-snippet-content').querySelector('.card-snippet-block');
 
-    codeBlockHeight = codeBlock.getBoundingClientRect().height;
-    codeBlockMaxHeight = 200;
-
-    if (codeBlockHeight >= (codeBlockMaxHeight)) {
-        /* Add the fade out */
-        codeBlock.querySelector('.card-snippet-fade-out').style.backgroundImage = 'linear-gradient(to bottom, transparent, #DCDCDC)';
-    }
+    addFadeOutTo(codeBlock, '.card-snippet-fade-out-code', '#DCDCDC');
+    addFadeOutTo(descrBlock, '.card-snippet-fade-out-descr', '#FFFFFF');
 
     /*
      * CARD CONTAINER --> Making the card height match the content
      */
     feedGrid = document.getElementsByClassName("feed-snippets-grid")[0];
 
-    /* Get the height and gap of the cards */
     rowHeight = parseInt(window.getComputedStyle(feedGrid).getPropertyValue('grid-auto-rows'));
     rowGap = parseInt(window.getComputedStyle(feedGrid).getPropertyValue('grid-row-gap'));
 
@@ -28,6 +23,13 @@ function resizeCard(card){
 
     /* Add the new row span to the card style */
     card.style.gridRowEnd = 'span ' + rowSpan;
+}
+
+function addFadeOutTo(block, cssClass, color) {
+    maxBlockHeight = 200;
+    if (block.getBoundingClientRect().height >= (maxBlockHeight - 2)) {
+        block.querySelector(cssClass).style.backgroundImage = 'linear-gradient(to bottom, transparent, ' + color +')';
+    }
 }
 
 /* Get all the different cards and for each one, resize it to the correct height */

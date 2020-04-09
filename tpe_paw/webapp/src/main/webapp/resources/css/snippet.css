@@ -1,0 +1,29 @@
+/*
+ * CSS stylesheet for the snippet
+ */
+
+.snippet-code-container {
+    background: #DCDCDC;
+    display: flex;
+    flex-direction: column;
+    margin: 0px 5px 0px 5px;
+    outline: dimgray;
+    padding: 10px;
+}
+
+.snippet-text {
+    font-family: "sans-serif";
+    overflow-wrap: break-word;
+    text-align: justify;
+}
+
+pre {
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;}
+
+code {
+    font-family: Courier, 'New Courier', monospace;
+    font-size: 13px;
+}

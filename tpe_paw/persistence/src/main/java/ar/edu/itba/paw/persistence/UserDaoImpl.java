@@ -20,13 +20,14 @@ public class UserDaoImpl implements UserDao {
 
     private final static RowMapper<User> ROW_MAPPER = new RowMapper<User>() {
 
-        @Override public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+        @Override
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new User(
                     rs.getString("username"),
                     rs.getString("password"),
                     rs.getString("email"),
-                    rs.getString("description"),
-                    rs.getDate("dateJoined")); //ni idea como hacer esto
+                    rs.getInt("reputation"),
+                    rs.getDate("date_joined")); //ni idea como hacer esto
         }
     };
 
@@ -39,16 +40,16 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User createUser(String username,String password, String email, String description, Date dateJoined) {
+    public User createUser(String username,String password, String email, int reputation, Date dateJoined) {
         final Map<String, Object> args = new HashMap<>();
         args.put("username",username);
         args.put("password",password);
         args.put("email",email);
-        args.put("description",description);
-        args.put("dateJoined",dateJoined);
+        args.put("reputation",reputation);
+        args.put("date_joined",dateJoined);
 
         int result = jdbcInsert.execute(args);
-        return new User(username, password, email, description, dateJoined);
+        return new User(username, password, email, reputation, dateJoined);
     }
 
     @Override
@@ -72,5 +73,10 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void changePassword(String email, String password){
         jdbcTemplate.update("UPDATE users SET password = ? WHERE email = ?", password, email);
+    }
+
+    @Override
+    public Optional<User> getCurrentUser() {
+        return Optional.of(new User("dan", "pass", "email", 35, new Date("11/1/1")));
     }
 }

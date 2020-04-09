@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class SnippetServiceImpl implements SnippetService {
@@ -28,4 +29,6 @@ public class SnippetServiceImpl implements SnippetService {
     public Collection<Snippet> findSnippetsByContent(String content, String source, String userId) {
         return this.snippetDao.findSnippetsByContent(content, source, userId);
     }
+    @Override
+    public Optional<Snippet> getSnippetById(long id) { return snippetDao.getSnippetById(id);}
 }

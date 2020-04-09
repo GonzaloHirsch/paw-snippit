@@ -25,11 +25,13 @@ public class VoteDaoImpl implements VoteDao {
     private JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final static RowMapper<Vote> ROW_MAPPER = new RowMapper<Vote>() {
+    @Autowired
+    private UserDao userDao;
+    @Autowired
+    private SnippetDao snippetDao;
 
-        @Autowired
-        private UserDao userDao;
-        private SnippetDao snippetDao;
+    private final RowMapper<Vote> ROW_MAPPER = new RowMapper<Vote>() {
+
 
         @Override public Vote mapRow(ResultSet rs, int rowNum) throws SQLException {
             Optional<User> user = userDao.findUserById(rs.getLong("user_id"));
@@ -56,12 +58,13 @@ public class VoteDaoImpl implements VoteDao {
     }
 
     @Override
-    public Optional<Vote> getVote(long userId, long voteId) {
-        return Optional.of(jdbcTemplate.queryForObject("SELECT * FROM votes_for WHERE user_id = ? AND vote_id = voteId", ROW_MAPPER, userId, voteId));
+    public Optional<Vote> getVote(long userId, long snippetId) {
+        return Optional.of(jdbcTemplate.queryForObject("SELECT * FROM votes_for WHERE user_id = ? AND snippet_id = ?", ROW_MAPPER, userId, snippetId));
     }
 
     @Override
     public void performVote(long userId, long voteId, int voteType) {
+
         final Map<String, Object> args = new HashMap<>();
         args.put("user_id", userId);
         args.put("voteId", voteId);

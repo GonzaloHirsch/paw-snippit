@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface VoteDao {
     Collection<Vote> getUserVotes(long userId);
-    Optional<Vote> getVote(long userId, long voteId);
+    Optional<Vote> getVote(long userId, long snippetId);
     void performVote(long userId, long voteId, int voteType);
 }

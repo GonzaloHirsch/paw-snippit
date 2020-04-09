@@ -16,7 +16,7 @@ public class SearchController {
     @Autowired
     private SnippetService snippetService;
 
-    @RequestMapping("/home/search")
+    @RequestMapping("/search")
     public ModelAndView searchInHome(@RequestParam(value = "q", required = true) String query, @RequestParam(value = "t", required = true) String type) {
         final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
         Collection<Snippet> snippets = null;

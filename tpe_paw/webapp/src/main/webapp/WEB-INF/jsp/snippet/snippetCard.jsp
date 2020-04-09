@@ -1,19 +1,29 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html>
     <head>
         <link href="<c:url value='/resources/css/cardSnippet.css'/>" rel="stylesheet" />
+        <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet" />
     </head>
     <body>
         <c:set var="snippet" value="${requestScope.snippet}"/>
         <div class="card-snippet-container">
             <div class="card-snippet-content">
-                <h2 class="card-snippet-text">Card: ${snippet.title}</h2>
+                <h2 class="snippet-text">Card: ${fn:escapeXml(snippet.title)}</h2>
                 <c:if test="${!StringUtils.isEmpty(snippet.description)}">
-                    <p class="card-snippet-text">${snippet.description}</p>
+                    <div class="card-snippet-block card-snippet-descr-block">
+                        <p class="snippet-text">${fn:escapeXml(snippet.description)}</p>
+                        <p class="card-snippet-fade-out card-snippet-fade-out-descr"></p>
+                    </div>
                 </c:if>
-                <div class="card-snippet-code">${snippet.code}</div>
+                <div class="snippet-code-container">
+                    <div class="card-snippet-block">
+                        <pre><code>${fn:escapeXml(snippet.code)}</code></pre>
+                        <p class="card-snippet-fade-out card-snippet-fade-out-code"></p>
+                    </div>
+                </div>
             </div>
         </div>
     </body>

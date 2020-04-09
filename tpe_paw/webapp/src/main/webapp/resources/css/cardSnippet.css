@@ -1,5 +1,5 @@
 /*
- * CSS for the snippet's card --> snippetFeed.jsp
+ * CSS for the snippet's card --> snippetCard.jsp
  */
 
 .card-snippet-container {
@@ -16,15 +16,26 @@
 }
 
 .card-snippet-content {
+    display: flex;
+    flex-direction: column;
     padding: 20px;
 }
 
-.card-snippet-text {
-    font-family: "sans-serif";
-    overflow-wrap: break-word;
+.card-snippet-descr-block {
+    margin-bottom: 10px;
 }
 
-.card-snippet-code {
-    color: dimgray;
-    font-family: "Fira Code Light";
+.card-snippet-block {
+    max-height: 200px;
+    overflow: hidden;
+    position: relative;
+    text-align: justify;
+}
+
+.card-snippet-fade-out {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin: 0; padding: 40px 0;
 }

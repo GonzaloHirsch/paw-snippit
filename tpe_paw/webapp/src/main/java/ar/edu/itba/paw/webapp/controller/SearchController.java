@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
+import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,29 +16,39 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class SearchController {
 
+    private Map<String, SnippetDao.Types> typesMap = new HashMap<String, SnippetDao.Types>(){{
+        put("tag", SnippetDao.Types.TAG);
+        put("title", SnippetDao.Types.TITLE);
+        put("content", SnippetDao.Types.CONTENT);
+    }};
+
+    private Map<String, SnippetDao.Orders> ordersMap = new HashMap<String, SnippetDao.Orders>(){{
+        put("asc", SnippetDao.Orders.ASC);
+        put("desc", SnippetDao.Orders.DESC);
+        put("no", SnippetDao.Orders.NO);
+    }};
+
     @Autowired
     private SnippetService snippetService;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("/search")
     public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm) {
         final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
-        Collection<Snippet> snippets = null;
-        switch (searchForm.getType()) {
-            case "tag":
-                snippets = this.snippetService.findSnippetsByTag(searchForm.getQuery(), "home", null);
-                break;
-            case "title":
-                System.out.println("En title");
-                snippets = this.snippetService.findSnippetsByTitle(searchForm.getQuery(), "home", null);
-                break;
-            case "content":
-                snippets = this.snippetService.findSnippetsByContent(searchForm.getQuery(), "home", null);
-                break;
-        }
+        Collection<Snippet> snippets = this.snippetService.findSnippetByCriteria(
+                this.typesMap.get(type),
+                query,
+                SnippetDao.Locations.HOME,
+                this.ordersMap.get(sort),
+                null);
         mav.addObject("snippetList", snippets);
         return mav;
     }
@@ -43,18 +56,17 @@ public class SearchController {
     @RequestMapping("/favorites/search")
     public ModelAndView searchInFavorites(@Valid @ModelAttribute("searchForm") final SearchForm searchForm){
         final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
-        Collection<Snippet> snippets = null;
-        switch (searchForm.getType()) {
-            case "tag":
-                snippets = this.snippetService.findSnippetsByTag(searchForm.getQuery(), "favorites", searchForm.getUserId());
-                break;
-            case "title":
-                snippets = this.snippetService.findSnippetsByTitle(searchForm.getQuery(), "favorites", searchForm.getUserId());
-                break;
-            case "content":
-                snippets = this.snippetService.findSnippetsByContent(searchForm.getQuery(), "favorites", searchForm.getUserId());
-                break;
+        Optional<User> user = this.userService.getCurrentUser();
+        Long userId = null;
+        if (user.isPresent()){
+            userId = user.get().getUserId();
         }
+        Collection<Snippet> snippets = this.snippetService.findSnippetByCriteria(
+                this.typesMap.get(type),
+                query,
+                SnippetDao.Locations.FAVORITES,
+                this.ordersMap.get(sort),
+                userId);
         mav.addObject("snippetList", snippets);
         return mav;
     }
@@ -62,18 +74,17 @@ public class SearchController {
     @RequestMapping("/following/search")
     public ModelAndView searchInFollowing(@Valid @ModelAttribute("searchForm") final SearchForm searchForm){
         final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
-        Collection<Snippet> snippets = null;
-        switch (searchForm.getType()) {
-            case "tag":
-                snippets = this.snippetService.findSnippetsByTag(searchForm.getQuery(), "following", searchForm.getUserId());
-                break;
-            case "title":
-                snippets = this.snippetService.findSnippetsByTitle(searchForm.getQuery(), "following", searchForm.getUserId());
-                break;
-            case "content":
-                snippets = this.snippetService.findSnippetsByContent(searchForm.getQuery(), "following", searchForm.getUserId());
-                break;
+        Optional<User> user = this.userService.getCurrentUser();
+        Long userId = null;
+        if (user.isPresent()){
+            userId = user.get().getUserId();
         }
+        Collection<Snippet> snippets = this.snippetService.findSnippetByCriteria(
+                this.typesMap.get(type),
+                query,
+                SnippetDao.Locations.FAVORITES,
+                this.ordersMap.get(sort),
+                userId);
         mav.addObject("snippetList", snippets);
         return mav;
     }

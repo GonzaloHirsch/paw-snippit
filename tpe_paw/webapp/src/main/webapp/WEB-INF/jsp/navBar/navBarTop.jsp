@@ -15,13 +15,18 @@
     <a class="active">Home</a>
     <div class="search-container">
         <form:form modelAttribute="searchForm" method="post" action="${searchUrl}" >
-            <form:select path="type" name="Type">
-                <option value="title">Title</option>
-                <option value="tag">Tag</option>
-                <option value="content">Content</option>
-            </form:select>
-            <form:input path="query" type="text" placeholder="Search..." />
-            <button type="submit"><i class="fa fa-search"></i></button>
+            <div class="dropdown-type">
+                <form:select path="type" name="Type" class="select-type">
+                    <form:option value="title">Select a Type</form:option>
+                    <form:option value="title">Title</form:option>
+                    <form:option value="tag">Tag</form:option>
+                    <form:option value="content">Content</form:option>
+                </form:select>
+            </div>
+            <div class="search-bar">
+                <form:input path="query" type="text"  class="search-input" placeholder="Search..." />
+                <button type="submit"><i class="fa fa-search"></i></button>
+            </div>
         </form:form>
     </div>
 

@@ -32,13 +32,15 @@ body {
 
 .navtop .search-container {
     float: right;
+    overflow:hidden;
 }
 
-.navtop input[type=text] {
+.navtop .search-input{
     padding: 6px;
     margin-top: 8px;
     font-size: 17px;
     border: none;
+    height:29px;
 }
 
 .navtop .search-container button {
@@ -55,3 +57,13 @@ body {
 .navtop .search-container button:hover {
     background: #ccc;
 }
+
+.navtop .search-container .dropdown-type{
+    float:left;
+    margin-top:15px;
+    margin-right:5px;
+}
+.navtop .search-container .search-bar{
+    float: left;
+}
+

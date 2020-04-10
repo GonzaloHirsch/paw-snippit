@@ -42,12 +42,15 @@ public class SearchController {
 
     @RequestMapping("/search")
     public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm) {
+
+        System.out.println(searchForm.getQuery() +" " + searchForm.getType() + " "+ searchForm.getSort());
+
         final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
         Collection<Snippet> snippets = this.snippetService.findSnippetByCriteria(
-                this.typesMap.get(type),
-                query,
+                this.typesMap.get(searchForm.getType()),
+                searchForm.getQuery(),
                 SnippetDao.Locations.HOME,
-                this.ordersMap.get(sort),
+                this.ordersMap.get(searchForm.getSort()),
                 null);
         mav.addObject("snippetList", snippets);
         return mav;
@@ -62,10 +65,10 @@ public class SearchController {
             userId = user.get().getUserId();
         }
         Collection<Snippet> snippets = this.snippetService.findSnippetByCriteria(
-                this.typesMap.get(type),
-                query,
+                this.typesMap.get(searchForm.getType()),
+                searchForm.getQuery(),
                 SnippetDao.Locations.FAVORITES,
-                this.ordersMap.get(sort),
+                this.ordersMap.get(searchForm.getSort()),
                 userId);
         mav.addObject("snippetList", snippets);
         return mav;
@@ -80,10 +83,10 @@ public class SearchController {
             userId = user.get().getUserId();
         }
         Collection<Snippet> snippets = this.snippetService.findSnippetByCriteria(
-                this.typesMap.get(type),
-                query,
+                this.typesMap.get(searchForm.getType()),
+                searchForm.getQuery(),
                 SnippetDao.Locations.FAVORITES,
-                this.ordersMap.get(sort),
+                this.ordersMap.get(searchForm.getSort()),
                 userId);
         mav.addObject("snippetList", snippets);
         return mav;

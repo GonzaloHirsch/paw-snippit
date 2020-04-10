@@ -4,8 +4,15 @@ public class SearchForm {
     private String query;
     private String type;
     private String userId;
+    private String sort;
 
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
 
+    public String getSort() {
+        return sort;
+    }
 
     public void setUserId(String userId) {
         this.userId = userId;

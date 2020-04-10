@@ -23,6 +23,14 @@
                     <form:option value="content">Content</form:option>
                 </form:select>
             </div>
+            <div class="dropdown-type">
+                <form:select path="sort" name="Sort" class="select-sort">
+                    <form:option value="ASC">Select sort</form:option>
+                    <form:option value="ASC">Ascending</form:option>
+                    <form:option value="DESC">Descending</form:option>
+                </form:select>
+            </div>
+
             <div class="search-bar">
                 <form:input path="query" type="text"  class="search-input" placeholder="Search..." />
                 <button type="submit"><i class="fa fa-search"></i></button>

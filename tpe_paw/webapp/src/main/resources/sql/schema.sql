@@ -62,9 +62,3 @@ CREATE TABLE IF NOT EXISTS snippet_tags (
     tag_id INT REFERENCES tags(id) ON UPDATE CASCADE ON DELETE CASCADE,
     PRIMARY KEY(snippet_id, tag_id)
 );
-
-insert into users values(default, 'igrib', 'pass', 'igrib@gmail.com', 'desc1', 35, timestamp '2019-09-28 12:40:00', null);
-insert into users values(default, 'igrib2', 'pass', 'igrib2@gmail.com', 'desc2', 35, timestamp '2019-09-28 12:40:00', null);
-insert into snippets values(default, (select id from users where email = 'igrib@gmail.com'), 'Some HTML Code', 'This code is about testing something', '<html>HOLA</html>',  timestamp '2019-09-28 12:40:00');
-insert into snippets values(default, (select id from users where email = 'igrib2@gmail.com'), 'Some HTML Code', 'This code is about testing something', '<html>CHAU</html>',  timestamp '2019-09-28 12:40:00');
--- insert into votes_for values((select id from users where email = 'igrib@gmail.com'), 2, 1);

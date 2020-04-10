@@ -143,9 +143,10 @@ sw.Start();
 // ...
 
 sw.Stop();
-', timestamp '2020-04-10 12:40:00', (select id from languages where name='c#'));
+
 Console.WriteLine("Elapsed={0}",sw.Elapsed);
-insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='testUser'),'Dijkstra Shortest Path','Implementation of Dijkstra\'s algorithm for the shortest path in graphs, this is a greedy algorithm',
+', timestamp '2020-04-10 12:40:00', (select id from languages where name='c#'));
+insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='testUser'),'Dijkstra Shortest Path','Implementation of Dijkstras algorithm for the shortest path in graphs, this is a greedy algorithm',
 'import java.util.*; 
 import java.lang.*; 
 import java.io.*; 
@@ -176,7 +177,7 @@ class ShortestPath {
             System.out.println(i + " \t\t " + dist[i]); 
     } 
   
-    // Function that implements Dijkstra\'s single source shortest path 
+    // Function that implements Dijkstras single source shortest path 
     // algorithm for a graph represented using adjacency matrix 
     // representation 
     void dijkstra(int graph[][], int src) 
@@ -328,7 +329,7 @@ try {
 	}
 }
 ', timestamp '2019-09-28 12:40:00', (select id from languages where name='java'));
-insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='testUser'),'PDF Generation with iText','Code to generate a PDF in Java using the iText library, here\'s the link: https://itextpdf.com/en/resources/api-documentation',
+insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='testUser'),'PDF Generation with iText','Code to generate a PDF in Java using the iText library, heres the link: https://itextpdf.com/en/resources/api-documentation',
 'import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -365,8 +366,8 @@ insert into snippets(user_id, title, description, code, date_created, language_i
 
 def sigmoid(x):
   return 1 / (1 + math.exp(-x))
-', timestamp "2020-01-20 09:40:00", (select id from languages where name='python'));
-insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='testUser'),'Heuns\'s method','Implementation of Heun\'s method in Python, includes a plotting of the function',
+', timestamp '2020-01-20 09:40:00', (select id from languages where name='python'));
+insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='testUser'),'Heuns method','Implementation of Heuns method in Python, includes a plotting of the function',
 'import matplotlib.pyplot as plt
 import math
 
@@ -470,7 +471,7 @@ insert into snippets(user_id, title, description, code, date_created, language_i
   /* "transparent" only works here because == rgba(0,0,0,0) */
   background-image: linear-gradient(to bottom, transparent, black);
 }
-', timestamp "2020-02-15 21:47:12", (select id from languages where name='css'));
+', timestamp '2020-02-15 21:47:12', (select id from languages where name='css'));
 insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='testUser'),'Netflix-like Card Expansion','On hover, cards expand and push other cards to the side. It is similar to the effect Netflix uses',
 '<div class="container">
   <a href="#animals" class="item"><img src="https://placeimg.com/640/480/animals" alt="Animals"></a>
@@ -516,7 +517,7 @@ body {
   display: block;
   max-width: 100%;
 }
-', timestamp "2020-03-01 03:30:12", (select id from languages where name='css'));
+', timestamp '2020-03-01 03:30:12', (select id from languages where name='css'));
 
 insert into votes_for(user_id, snippet_id) values((select id from users where username='testUser'),(select id from snippets where title='Implementation of merge sort'));
 insert into votes_for(user_id, snippet_id) values((select id from users where username='testUser'),(select id from snippets where title='Dijkstra Shortest Path'));
@@ -536,7 +537,7 @@ insert into snippet_tags(snippet_id,tag_id) values((select id from snippets wher
 insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Implementation of merge sort'),(select id from tags where name='sort'));
 insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Heapsort'),(select id from tags where name='sort'));
 insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Dijkstra Shortest Path'),(select id from tags where name='greedy'));
-insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Heuns\'s method'),(select id from tags where name='math'));
+insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Heuns method'),(select id from tags where name='math'));
 insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Sigmoid Function'),(select id from tags where name='math'));
 insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Sigmoid Function'),(select id from tags where name='machine-learning'));
 insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Text Blur'),(select id from tags where name='style'));

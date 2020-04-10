@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Optional;
@@ -40,28 +41,16 @@ public class SnippetController {
         }
         VoteForm voteForm = new VoteForm();
         voteForm.setType(voteType);
+        voteForm.setUserId(user.get().getUserId());
+        voteForm.setSnippetId(id);
         mav.addObject("vote", voteForm);
         return mav;
     }
 
-    @RequestMapping("/snippet/vote")
+    @RequestMapping(value="/snippet/vote", method=RequestMethod.POST)
     public ModelAndView voteFor(@ModelAttribute("vote") final VoteForm voteForm) {
-        final ModelAndView mav = new ModelAndView("redirect:/snippet/2");
-        Optional<Snippet> retrievedSnippet = snippetService.getSnippetById(2);
-        retrievedSnippet.ifPresent(snippet -> mav.addObject("snippet", snippet));
-        Optional<User> user = userService.getCurrentUser();
-        voteService.performVote(1, 2, voteForm.getType());
+        final ModelAndView mav = new ModelAndView("redirect:/snippet/" + voteForm.getSnippetId());
+        voteService.performVote(voteForm.getUserId(), voteForm.getSnippetId(), voteForm.getType());
         return mav;
     }
-
-
-    //TODO check bindings or remove
-
-    @ModelAttribute("userId")
-    public Long currentUserId(){
-        return 1L;
-    }
-
-//    @RequestMapping("/snippet/vote")
-//    public
 }

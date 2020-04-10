@@ -4,10 +4,15 @@ import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.interfaces.service.VoteService;
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.Vote;
+import ar.edu.itba.paw.webapp.form.VoteForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Optional;
@@ -16,33 +21,36 @@ import java.util.Optional;
 public class SnippetController {
 
     @Autowired
-    private SnippetService snippetService;
     private UserService userService;
+    @Autowired
+    private SnippetService snippetService;
+    @Autowired
     private VoteService voteService;
 
     @RequestMapping("/snippet/{id}")
-    public ModelAndView snippetDetail(@PathVariable("id") long id) {
-        final ModelAndView mav = new ModelAndView("snippet/snippetDetail");
-        Optional<Snippet> retrievedSnippet = snippetService.findSnippetById(id);
-        if (retrievedSnippet.isPresent()) {
-            mav.addObject("snippet", retrievedSnippet.get());
+    public ModelAndView snippetDetail(@ModelAttribute("snippetId") @PathVariable("id") long id) {
+        final ModelAndView mav = new ModelAndView("snippetDetail");
+        Optional<Snippet> retrievedSnippet = snippetService.getSnippetById(id);
+        retrievedSnippet.ifPresent(snippet -> mav.addObject("snippet", snippet));
+        Optional<User> user = userService.getCurrentUser();
+        Optional<Vote> vote = voteService.getVote(1, retrievedSnippet.get().getId());
+        mav.addObject("user", user.get());
+        int voteType = -1;
+        if (vote.isPresent()) {
+            voteType = vote.get().getType();
         }
-        else {
-            mav.addObject("noSnippet", true);
-        }
-
-//        Optional<User> user = userService.getCurrentUser();
-//        Optional<Vote> vote = voteService.getVote(user.get().getUserId(), retrievedSnippet.get().getId());
-//
-//        int voteType = -1;
-//        if (vote.isPresent()) {
-//            voteType = vote.get().getVoteType();
-//        }
-//
-//        mav.addObject("canVoteUp", voteType != 0);
-//        mav.addObject("canVoteDown", voteType );
+        VoteForm voteForm = new VoteForm();
+        voteForm.setType(voteType);
+        voteForm.setUserId(user.get().getUserId());
+        voteForm.setSnippetId(id);
+        mav.addObject("vote", voteForm);
         return mav;
     }
 
-
+    @RequestMapping(value="/snippet/vote", method=RequestMethod.POST)
+    public ModelAndView voteFor(@ModelAttribute("vote") final VoteForm voteForm) {
+        final ModelAndView mav = new ModelAndView("redirect:/snippet/" + voteForm.getSnippetId());
+        voteService.performVote(voteForm.getUserId(), voteForm.getSnippetId(), voteForm.getType());
+        return mav;
+    }
 }

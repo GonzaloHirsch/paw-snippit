@@ -21,12 +21,12 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public Optional<Vote> getVote(long userId, long voteId) {
-        return voteDao.getVote(userId, voteId);
+    public Optional<Vote> getVote(long userId, long snippetId) {
+        return voteDao.getVote(userId, snippetId);
     }
 
     @Override
-    public void performVote(long userId, long voteId, int voteType) {
-        voteDao.performVote(userId, voteId, voteType);
+    public void performVote(long userId, long snippetId, int voteType) {
+        voteDao.performVote(userId, snippetId, voteType);
     }
 }

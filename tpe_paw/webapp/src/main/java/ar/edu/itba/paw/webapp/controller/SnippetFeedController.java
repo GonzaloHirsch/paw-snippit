@@ -1,23 +1,28 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class SnippetFeedController {
 
+    @Autowired
+    private SnippetService snippetService;
+
     @RequestMapping("/feed")
     public ModelAndView getHomeSnippetFeed() {
         final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
+        Collection<Snippet> snippetsHomeFeed = this.snippetService.getAllSnippets();
 
-        Date d = new Date();
+
+        /*Calendar d = Calendar.getInstance();
         User u = new User(0, "lollipop","pass", "myemail", "",1, d);
         List<Snippet> snippetsHomeFeed = Arrays.asList(
                 new Snippet(1, u, "CODIGO", "TEST CARD", "java", "$normal: the default. The browser will break lines according to normal line breaking rules. Words or unbroken strings will not break, even if they overflow the container.normal: the default. The browser will break lines according to normal line breaking rules. Words or unbroken strings will not break, even if they overflow the container.", d),
@@ -34,7 +39,7 @@ public class SnippetFeedController {
                 new Snippet(2, u, "JAVA ROKS", "java", "TEST CARDS", "", d),
                 new Snippet(2, u, "This means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item f the grid item containing to display all the conJAVA This means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\n", "JAVA","TEST CARDS", "This means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\n", d),
                 new Snippet(2, u, "JAVA This means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\n", "HACK","TEST CARDS", "", d)
-        );
+        );*/
 
         mav.addObject("snippetList", snippetsHomeFeed);
         return mav;

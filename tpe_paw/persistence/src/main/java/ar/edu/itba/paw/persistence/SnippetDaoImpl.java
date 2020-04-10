@@ -76,7 +76,7 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Optional<Snippet> getSnippetById(long id){
+    public Optional<Snippet> findSnippetById(long id){
         return Optional.of((Snippet) jdbcTemplate.queryForObject("SELECT * FROM snippets WHERE id = ?", ROW_MAPPER, id));
     }
 }

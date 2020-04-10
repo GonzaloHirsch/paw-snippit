@@ -33,7 +33,7 @@ public class VoteDaoImpl implements VoteDao {
 
         @Override public Vote mapRow(ResultSet rs, int rowNum) throws SQLException {
             Optional<User> user = userDao.findUserById(rs.getLong("user_id"));
-            Optional<Snippet> snippet = snippetDao.getSnippetById(rs.getLong("snippet_id"));
+            Optional<Snippet> snippet = snippetDao.findSnippetById(rs.getLong("snippet_id"));
             if (!user.isPresent() || !snippet.isPresent())
                 throw new SQLException("No User or Snippet Found");
             return new Vote(

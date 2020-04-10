@@ -7,7 +7,6 @@ import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -51,27 +50,12 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> findSnippetsByTag(String tag, String source, String userId) {
-        SnippetQuery snippetQuery = new SnippetQuery.Builder()
-                .setSource(source, userId)
-                .setType("tag", tag).build();
-        return jdbcTemplate.query(snippetQuery.getQuery(), snippetQuery.getParams(), ROW_MAPPER);
-    }
-
-    @Override
-    public Collection<Snippet> findSnippetsByTitle(String title, String source, String userId) {
-        SnippetQuery snippetQuery = new SnippetQuery.Builder()
-                .setSource(source, userId)
-                .setType("title", title).build();
-        return jdbcTemplate.query(snippetQuery.getQuery(), snippetQuery.getParams(), ROW_MAPPER);
-    }
-
-    @Override
-    public Collection<Snippet> findSnippetsByContent(String content, String source, String userId) {
-        SnippetQuery snippetQuery = new SnippetQuery.Builder()
-                .setSource(source, userId)
-                .setType("content", content).build();
-        return jdbcTemplate.query(snippetQuery.getQuery(), snippetQuery.getParams(), ROW_MAPPER);
+    public Collection<Snippet> findSnippetByCriteria(Types type, String term, Locations location, Orders order, Long userId) {
+        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(location, userId)
+                .setType(type, term)
+                .setOrder(order, type)
+                .build();
+        return jdbcTemplate.query(searchQuery.getQuery(), searchQuery.getParams(), ROW_MAPPER);
     }
 
     @Override

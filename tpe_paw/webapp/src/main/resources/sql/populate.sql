@@ -134,3 +134,7 @@ insert into follows(user_id,tag_id) values((select id from users where username=
 
 insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Snippet4'),(select id from tags where name='greedy'));
 
+insert into users values(default, 'igrib', 'pass', 'igrib@gmail.com', 'desc1', 35, timestamp '2019-09-28 12:40:00', null);
+insert into users values(default, 'igrib2', 'pass', 'igrib2@gmail.com', 'desc2', 35, timestamp '2019-09-28 12:40:00', null);
+insert into snippets values(default, (select id from users where email = 'igrib@gmail.com'), 'Some HTML Code', 'This code is about testing something', '<html>HOLA</html>',  timestamp '2019-09-28 12:40:00');
+insert into snippets values(default, (select id from users where email = 'igrib2@gmail.com'), 'Some HTML Code', 'This code is about testing something', '<html>CHAU</html>',  timestamp '2019-09-28 12:40:00');

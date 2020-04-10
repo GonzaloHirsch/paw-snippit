@@ -7,7 +7,6 @@ import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -78,6 +77,6 @@ public class SnippetDaoImpl implements SnippetDao {
 
     @Override
     public Optional<Snippet> findSnippetById(long id){
-        return Optional.of((Snippet) jdbcTemplate.queryForObject("SELECT * FROM snippets WHERE id = ?", ROW_MAPPER, id));
+        return jdbcTemplate.query("SELECT * FROM snippets WHERE id = ?", ROW_MAPPER, id).stream().findFirst();
     }
 }

@@ -12,11 +12,14 @@
         <div class="card-snippet-container">
             <div class="card-snippet-content">
                 <div class="card-snippet-upload-details">
-                    <img src="<c:url value='/resources/images/paw_icon.jpg'/>" alt="User Icon"/>
-                    <div class="card-snippet-upload-info">
-                        <div class="snippet-text">${snippet.owner.username}</div>
-                        <div class="snippet-text card-snippet-date">${snippet.dateCreated}</div>
+                    <div class="card-snippet-upload-details">
+                        <img src="<c:url value='/resources/images/paw_icon.jpg'/>" alt="User Icon"/>
+                        <div class="card-snippet-upload-info">
+                            <div class="snippet-text">${snippet.owner.username}</div>
+                            <div class="snippet-text card-snippet-date">${snippet.dateCreated}</div>
+                        </div>
                     </div>
+                    <div class="snippet-language-tag">${snippet.language.toUpperCase()}</div>
                 </div>
                 <div class="snippet-text card-snippet-title">${fn:escapeXml(snippet.title)}</div>
                 <c:if test="${!StringUtils.isEmpty(snippet.description)}">

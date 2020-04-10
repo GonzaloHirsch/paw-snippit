@@ -17,6 +17,14 @@
     text-align: justify;
 }
 
+.snippet-language-tag {
+    border: 2px cadetblue;
+    border-style: solid;
+    border-radius: 5%;
+    color: cadetblue;
+    padding: 10px;
+}
+
 pre {
     white-space: pre-wrap;
     white-space: -moz-pre-wrap;

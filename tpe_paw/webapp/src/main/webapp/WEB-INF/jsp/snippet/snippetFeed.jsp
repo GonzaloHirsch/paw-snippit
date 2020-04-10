@@ -7,10 +7,11 @@
         <link href="<c:url value='/resources/css/feedSnippets.css'/>" rel="stylesheet" />
     </head>
     <body>
+        <c:set var="snippetList" value="${requestScope.snippetList}"/>
         <div class="feed-snippets-grid">
             <c:forEach var="snippet" items="${snippetList}">
                 <c:set var="snippet" value="${snippet}" scope="request"/>
-                <c:import url="snippetCard.jsp"/>
+                <c:import url="snippet/snippetCard.jsp"/>
             </c:forEach>
         </div>
 

@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface VoteService {
     Collection<Vote> getUserVotes(long userId);
     Optional<Vote> getVote(long userId, long snippetId);
-    void performVote(long userId, long voteId, int voteType);
+    void performVote(long userId, long snippetId, int voteType);
 }

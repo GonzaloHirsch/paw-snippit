@@ -26,7 +26,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public void performVote(long userId, long voteId, int voteType) {
-        voteDao.performVote(userId, voteId, voteType);
+    public void performVote(long userId, long snippetId, int voteType) {
+        voteDao.performVote(userId, snippetId, voteType);
     }
 }

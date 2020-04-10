@@ -9,9 +9,9 @@ public class Snippet {
     private String title;
     private String description;
     private Calendar date_created;
-    private Language language;
+    private String language;
 
-    public Snippet(long id, User owner, String code, String title, String description, Calendar date_created, Language language) {
+    public Snippet(long id, User owner, String code, String title, String description, Calendar date_created, String language) {
         this.id = id;
         this.owner = owner;
         this.code = code;
@@ -45,7 +45,7 @@ public class Snippet {
         return date_created;
     }
 
-    public Language getLanguage() {
+    public String getLanguage() {
         return language;
     }
 }

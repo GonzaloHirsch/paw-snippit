@@ -42,7 +42,7 @@ public class SnippetDaoImpl implements SnippetDao {
                     rs.getString("title"),
                     rs.getString("description"),
                     calendar,
-                    language
+                    language.getName()
             );
         }
     };

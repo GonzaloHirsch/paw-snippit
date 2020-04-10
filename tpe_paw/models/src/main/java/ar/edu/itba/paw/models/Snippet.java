@@ -6,14 +6,16 @@ public class Snippet {
     private long id;
     private User owner;
     private String code;
+    private String language;
     private String title;
     private String description;
     private Date dateCreated;
 
-    public Snippet(long id, User owner, String code, String title, String description, Date dateCreated) {
+    public Snippet(long id, User owner, String code, String language, String title, String description, Date dateCreated) {
         this.id = id;
         this.owner = owner;
         this.code = code;
+        this.language = language;
         this.title = title;
         this.description = description;
         this.dateCreated = dateCreated;
@@ -29,6 +31,10 @@ public class Snippet {
 
     public String getCode() {
         return code;
+    }
+
+    public String getLanguage() {
+        return language;
     }
 
     public String getTitle() {

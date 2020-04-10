@@ -6,15 +6,30 @@
     <head>
         <link href="<c:url value='/resources/css/cardSnippet.css'/>" rel="stylesheet" />
         <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet" />
+        <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet" />
     </head>
     <body>
         <c:set var="snippet" value="${requestScope.snippet}"/>
         <div class="card-snippet-container">
             <div class="card-snippet-content">
-                <h2 class="snippet-text">Card: ${fn:escapeXml(snippet.title)}</h2>
+
+                <!-- Top card section containing icon, username, date and language -->
+                <div class="card-snippet-upload-details">
+                    <div class="card-snippet-upload-details">
+                        <img src="<c:url value='/resources/images/paw_icon.jpg'/>" alt="User Icon"/>
+                        <div class="card-snippet-upload-info">
+                            <div class="snippet-text">${snippet.owner.username}</div>
+                            <div class="snippet-text card-snippet-date">${snippet.dateCreated}</div>
+                        </div>
+                    </div>
+                    <div class="snippet-language-tag">${snippet.language.toUpperCase()}</div>
+                </div>
+
+                <!-- Bottom part of the card with the title, description and code -->
+                <div class="snippet-text card-snippet-title">${fn:escapeXml(snippet.title)}</div>
                 <c:if test="${!StringUtils.isEmpty(snippet.description)}">
                     <div class="card-snippet-block card-snippet-descr-block">
-                        <p class="snippet-text">${fn:escapeXml(snippet.description)}</p>
+                        <div class="snippet-text justify-text">${fn:escapeXml(snippet.description)}</div>
                         <p class="card-snippet-fade-out card-snippet-fade-out-descr"></p>
                     </div>
                 </c:if>

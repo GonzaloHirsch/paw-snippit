@@ -29,7 +29,7 @@ public class SnippetController {
 
     @RequestMapping("/snippet/{id}")
     public ModelAndView snippetDetail(@ModelAttribute("snippetId") @PathVariable("id") long id) {
-        final ModelAndView mav = new ModelAndView("snippetDetail");
+        final ModelAndView mav = new ModelAndView("snippet/snippetDetail");
         Optional<Snippet> retrievedSnippet = snippetService.findSnippetById(id);
         retrievedSnippet.ifPresent(snippet -> mav.addObject("snippet", snippet));
         Optional<User> user = userService.getCurrentUser();

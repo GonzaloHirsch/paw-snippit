@@ -34,7 +34,7 @@ public class SnippetDaoImpl implements SnippetDao {
             User userOwner = userDao.findUserById(rs.getLong("user_id")).orElse(null);
             Language language = languageDao.findById(rs.getLong("language_id")).orElse(null);
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(rs.getLong("date_created"));
+            calendar.setTimeInMillis(rs.getTimestamp("date_created").getTime());
             return new Snippet(
                     rs.getLong("id"),
                     userOwner,

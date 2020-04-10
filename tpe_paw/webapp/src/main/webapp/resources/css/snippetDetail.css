@@ -43,3 +43,8 @@
 .vote-buttons label#down {
     border-top: 30px solid red;
 }
+.hidden-input {
+    visibility: hidden;
+    height: 0px;
+    width: 0px;
+}

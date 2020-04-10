@@ -11,7 +11,8 @@ public class User {
     private int reputation;
     private Date dateJoined;
 
-    public User(String username, String password, String email, String description, int reputation, Date dateJoined) {
+    public User(long id, String username, String password, String email, String description, int reputation, Date dateJoined) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;

@@ -28,6 +28,8 @@ public class WebConfig {
 
     @Value("classpath:sql/schema.sql")
     private Resource schemaSql;
+    @Value("classpath:sql/populate.sql")
+    private Resource populatorSql;
 
     @Bean
     public ViewResolver viewResolver() {

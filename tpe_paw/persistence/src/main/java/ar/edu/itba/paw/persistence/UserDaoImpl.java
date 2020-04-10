@@ -23,6 +23,7 @@ public class UserDaoImpl implements UserDao {
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new User(
+                    rs.getLong("id"),
                     rs.getString("username"),
                     rs.getString("password"),
                     rs.getString("email"),
@@ -50,8 +51,8 @@ public class UserDaoImpl implements UserDao {
         args.put("reputation",reputation);
         args.put("date_joined",dateJoined);
 
-        int result = jdbcInsert.execute(args);
-        return new User(username, password, email, description, reputation, dateJoined);
+        long result = jdbcInsert.executeAndReturnKey(args).longValue();
+        return new User(result, username, password, email, description, reputation, dateJoined);
     }
 
     @Override
@@ -79,6 +80,6 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> getCurrentUser() {
-        return Optional.of(new User("Dan", "pass", "email", "I am Dan!", 35, new Date("11/1/1")));
+        return Optional.of(new User(1, "Dan", "pass", "email", "I am Dan!", 35, new Date("11/1/1")));
     }
 }

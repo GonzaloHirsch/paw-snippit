@@ -34,6 +34,7 @@ public class SnippetDaoImpl implements SnippetDao {
                     rs.getLong("id"),
                     userOwner,
                     rs.getString("code"),
+                    rs.getString("language_id"),
                     rs.getString("title"),
                     rs.getString("description"),
                     rs.getDate("date_created")

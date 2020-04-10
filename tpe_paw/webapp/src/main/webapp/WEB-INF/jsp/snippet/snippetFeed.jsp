@@ -7,7 +7,6 @@
         <link href="<c:url value='/resources/css/feedSnippets.css'/>" rel="stylesheet" />
     </head>
     <body>
-        <h2>This is the snippet feed!</h2>
         <div class="feed-snippets-grid">
             <c:forEach var="snippet" items="${snippetList}">
                 <c:set var="snippet" value="${snippet}" scope="request"/>

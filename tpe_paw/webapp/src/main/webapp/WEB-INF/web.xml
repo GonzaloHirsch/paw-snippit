@@ -29,6 +29,11 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
     <url-pattern>*.js</url-pattern>
   </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.jpg</url-pattern>
+    </servlet-mapping>
+
   <context-param>
     <param-name>contextClass</param-name>
     <param-value>

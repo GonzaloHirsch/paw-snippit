@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -37,5 +38,10 @@ public class LanguageDaoImpl implements LanguageDao {
     public Optional<Language> findById(final long id) {
         return jdbcTemplate.query("SELECT * FROM languages WHERE id = ?", ROW_MAPPER, id)
                 .stream().findFirst();
+    }
+
+    @Override
+    public Collection<Language> getAll() {
+        return jdbcTemplate.query("SELECT * FROM languages", ROW_MAPPER);
     }
 }

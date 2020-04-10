@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.dao.LanguageDao;
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
+import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -22,19 +25,24 @@ public class SnippetDaoImpl implements SnippetDao {
 
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private LanguageDao languageDao;
 
     private final RowMapper<Snippet> ROW_MAPPER = new RowMapper<Snippet>() {
-
-
         @Override
         public Snippet mapRow(ResultSet rs, int rowNum) throws SQLException {
-            User userOwner = (userDao.findUserById(rs.getLong("user_id"))).orElse(null);
+            User userOwner = userDao.findUserById(rs.getLong("user_id")).orElse(null);
+            Language language = languageDao.findById(rs.getLong("language_id")).orElse(null);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(rs.getLong("date_created"));
             return new Snippet(
                     rs.getLong("id"),
                     userOwner,
                     rs.getString("code"),
                     rs.getString("title"),
-                    rs.getString("description")
+                    rs.getString("description"),
+                    calendar,
+                    language
             );
         }
     };
@@ -51,8 +59,7 @@ public class SnippetDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> findSnippetByCriteria(Types type, String term, Locations location, Orders order, Long userId) {
-        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(location, userId)
-                .setType(type, term)
+        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(location, userId, type, term)
                 .setOrder(order, type)
                 .build();
         return jdbcTemplate.query(searchQuery.getQuery(), searchQuery.getParams(), ROW_MAPPER);

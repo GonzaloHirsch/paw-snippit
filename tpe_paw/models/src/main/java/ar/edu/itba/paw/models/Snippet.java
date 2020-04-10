@@ -1,18 +1,24 @@
 package ar.edu.itba.paw.models;
 
+import java.util.Calendar;
+
 public class Snippet {
     private long id;
     private User owner;
     private String code;
     private String title;
     private String description;
+    private Calendar date_created;
+    private Language language;
 
-    public Snippet(long id, User owner, String code, String title, String description) {
+    public Snippet(long id, User owner, String code, String title, String description, Calendar date_created, Language language) {
         this.id = id;
         this.owner = owner;
         this.code = code;
         this.title = title;
         this.description = description;
+        this.date_created = date_created;
+        this.language = language;
     }
 
     public long getId() {
@@ -35,7 +41,11 @@ public class Snippet {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public Calendar getDate_created() {
+        return date_created;
+    }
+
+    public Language getLanguage() {
+        return language;
     }
 }

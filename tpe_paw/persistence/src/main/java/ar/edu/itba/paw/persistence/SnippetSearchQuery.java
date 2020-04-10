@@ -48,8 +48,8 @@ public class SnippetSearchQuery {
          */
         private Map<SnippetDao.Locations, String> locationsMap = new HashMap<SnippetDao.Locations, String>(){{
             put(SnippetDao.Locations.HOME, "(SELECT * FROM snippets)");
-            put(SnippetDao.Locations.FAVORITES, "(SELECT sn.id, sn.user_id, sn.code, sn.title, sn.description FROM snippets AS sn JOIN favorites AS fav ON fav.snippet_id = sn.id WHERE fav.user_id = ?)");
-            put(SnippetDao.Locations.FOLLOWING, "(SELECT sn.id, sn.user_id, sn.code, sn.title, sn.description FROM snippets AS sn JOIN snippet_tags AS st.snippet_id = sn.id JOIN following AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?");
+            put(SnippetDao.Locations.FAVORITES, "(SELECT sn.id, sn.user_id, sn.code, sn.title, sn.description, sn.language_id, sn.date_created FROM snippets AS sn JOIN favorites AS fav ON fav.snippet_id = sn.id WHERE fav.user_id = ?)");
+            put(SnippetDao.Locations.FOLLOWING, "(SELECT sn.id, sn.user_id, sn.code, sn.title, sn.description, sn.language_id, sn.date_created FROM snippets AS sn JOIN snippet_tags AS st.snippet_id = sn.id JOIN following AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?");
         }};
         /**
          * Map used to translate the given enum for order types into their query equivalent
@@ -84,7 +84,7 @@ public class SnippetSearchQuery {
          */
         public Builder(SnippetDao.Locations location, Long userId, SnippetDao.Types type, String term){
             this.query
-                    .append("SELECT s.id, s.user_id, s.code, s.title, s.description FROM ")
+                    .append("SELECT s.id, s.user_id, s.code, s.title, s.description, s.language_id, s.date_created FROM ")
                     .append(this.locationsMap.get(location));
             if (userId != null){ params.add(userId); }
             this.query.append(this.typeMap.get(type));

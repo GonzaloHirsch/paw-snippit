@@ -43,6 +43,7 @@
   <version>${parent.version}</version>
   <scope>runtime</scope>
 </dependency>
+
   </dependencies>
 
   <build>

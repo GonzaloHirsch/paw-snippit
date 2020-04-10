@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Optional;
@@ -41,8 +42,8 @@ public class SnippetDaoImpl implements SnippetDao {
                     rs.getString("code"),
                     rs.getString("title"),
                     rs.getString("description"),
-                    calendar,
-                    language.getName()
+                    new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(calendar.getTime()),
+                    language != null ? language.getName() : ""
             );
         }
     };

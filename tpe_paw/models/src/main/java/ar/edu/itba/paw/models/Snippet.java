@@ -8,16 +8,16 @@ public class Snippet {
     private String code;
     private String title;
     private String description;
-    private Calendar date_created;
+    private String dateCreated;
     private String language;
 
-    public Snippet(long id, User owner, String code, String title, String description, Calendar date_created, String language) {
+    public Snippet(long id, User owner, String code, String title, String description, String dateCreated, String language) {
         this.id = id;
         this.owner = owner;
         this.code = code;
         this.title = title;
         this.description = description;
-        this.date_created = date_created;
+        this.dateCreated = dateCreated;
         this.language = language;
     }
 
@@ -41,8 +41,8 @@ public class Snippet {
         return description;
     }
 
-    public Calendar getDate_created() {
-        return date_created;
+    public String getDateCreated() {
+        return dateCreated;
     }
 
     public String getLanguage() {

@@ -12,8 +12,9 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(30) UNIQUE,
     password VARCHAR(30) NOT NULL,
     email VARCHAR(60) UNIQUE,
+    description VARCHAR(300),
     reputation INT,
-    date_joined DATE,
+    date_joined TIMESTAMP ,
     icon bytea
 );
 
@@ -31,9 +32,9 @@ CREATE TABLE IF NOT EXISTS snippets (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL,
     title VARCHAR(50),
-    description VARCHAR(300),
-    code VARCHAR(500),
-    date_created DATE,
+    description VARCHAR(500),
+    code VARCHAR(6000),
+    date_created TIMESTAMP ,
     language_id INT REFERENCES languages(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
@@ -61,9 +62,3 @@ CREATE TABLE IF NOT EXISTS snippet_tags (
     tag_id INT REFERENCES tags(id) ON UPDATE CASCADE ON DELETE CASCADE,
     PRIMARY KEY(snippet_id, tag_id)
 );
-
-insert into users values(default, 'igrib', 'pass', 'igrib@gmail.com', 35, '11/2/2020', null);
-insert into users values(default, 'igrib2', 'pass', 'igrib2@gmail.com', 35, '11/2/2020', null);
-insert into snippets values(default, 1, 'Some HTML Code', 'This code is about testing something', '<html>HOLA</html>', '1/1/2020');
-insert into snippets values(default, 2, 'Some HTML Code', 'This code is about testing something', '<html>CHAU</html>', '1/1/2020');
-insert into votes_for values(1, 2, 1);

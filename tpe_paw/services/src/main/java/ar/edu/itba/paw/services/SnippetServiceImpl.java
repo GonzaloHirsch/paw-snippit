@@ -16,14 +16,18 @@ public class SnippetServiceImpl implements SnippetService {
     private SnippetDao snippetDao;
 
     @Override
-    public Collection<Snippet> getSnippetByName(String name) { return this.snippetDao.getSnippetByName(name); }
+    public Collection<Snippet> findSnippetsByTag(String tag, String source, String userId) {
+        return this.snippetDao.findSnippetsByTag(tag, source, userId);
+    }
 
     @Override
-    public Collection<Snippet> getSnippetByContent(String code){ return this.snippetDao.getSnippetByContent(code);}
+    public Collection<Snippet> findSnippetsByTitle(String title, String source, String userId) {
+        return this.snippetDao.findSnippetsByTitle(title, source, userId);
+    }
 
     @Override
-    public Collection<Snippet> getSnippetByTag(String tag) {
-        return this.snippetDao.getSnippetByTag(tag);
+    public Collection<Snippet> findSnippetsByContent(String content, String source, String userId) {
+        return this.snippetDao.findSnippetsByContent(content, source, userId);
     }
     @Override
     public Optional<Snippet> getSnippetById(long id) { return snippetDao.getSnippetById(id);}

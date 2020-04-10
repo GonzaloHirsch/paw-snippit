@@ -22,11 +22,14 @@ public class HelloWorldController {
         return mav;
     }
 
+    /*
     @RequestMapping("/testmav/")
     public ModelAndView testMav() {
         final ModelAndView mav = new ModelAndView("index");
-        List<Snippet> snippetList = (List<Snippet>) ss.getSnippetByName("title1");
-        mav.addObject("greeting", snippetList.get(0).getTitle());
+        List<Snippet> snippetList = (List<Snippet>) ss.findSnippetsByTitle("snippet1","home",null);
+        mav.addObject("greeting", snippetList.isEmpty() ? "No hay user" : snippetList.get(0).getTitle());
         return mav;
     }
+
+     */
 }

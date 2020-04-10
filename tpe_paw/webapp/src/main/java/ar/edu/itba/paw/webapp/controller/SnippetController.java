@@ -6,10 +6,13 @@ import ar.edu.itba.paw.interfaces.service.VoteService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Vote;
+import ar.edu.itba.paw.webapp.form.VoteForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Optional;
@@ -25,7 +28,7 @@ public class SnippetController {
     private VoteService voteService;
 
     @RequestMapping("/snippet/{id}")
-    public ModelAndView snippetDetail(@PathVariable("id") long id) {
+    public ModelAndView snippetDetail(@ModelAttribute("snippetId") @PathVariable("id") long id) {
         final ModelAndView mav = new ModelAndView("snippetDetail");
         Optional<Snippet> retrievedSnippet = snippetService.getSnippetById(id);
         retrievedSnippet.ifPresent(snippet -> mav.addObject("snippet", snippet));
@@ -36,9 +39,30 @@ public class SnippetController {
         if (vote.isPresent()) {
             voteType = vote.get().getType();
         }
-        mav.addObject("vote", voteType);
+        VoteForm voteForm = new VoteForm();
+        voteForm.setType(voteType);
+        mav.addObject("vote", voteForm);
+        return mav;
+    }
+
+    @RequestMapping("/snippet/vote")
+    public ModelAndView voteFor(@ModelAttribute("vote") final VoteForm voteForm) {
+        final ModelAndView mav = new ModelAndView("redirect:/snippet/2");
+        Optional<Snippet> retrievedSnippet = snippetService.getSnippetById(2);
+        retrievedSnippet.ifPresent(snippet -> mav.addObject("snippet", snippet));
+        Optional<User> user = userService.getCurrentUser();
+
         return mav;
     }
 
 
+    //TODO check bindings or remove
+
+    @ModelAttribute("userId")
+    public Long currentUserId(){
+        return 1L;
+    }
+
+//    @RequestMapping("/snippet/vote")
+//    public
 }

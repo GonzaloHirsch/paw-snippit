@@ -8,3 +8,22 @@
     margin: 0px;
 }
 
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.border-radius {
+    border-radius: 8px;
+}
+
+.hidden {
+    visibility: hidden;
+    height: 0px;
+    width: 0px;
+}

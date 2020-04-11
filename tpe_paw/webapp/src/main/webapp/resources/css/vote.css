@@ -1,0 +1,28 @@
+
+.vote-arrow {
+    font-size: 60px !important;
+    color: lightgray;
+}
+
+.vote-container {
+    margin-block-end: 0em;
+}
+
+.vote-down:hover {
+    color: tomato;
+}
+
+.vote-down-selected {
+    color: tomato;
+}
+
+.vote-up:hover {
+    color: lawngreen;
+}
+
+.vote-up-selected {
+    color: lawngreen;
+}
+
+
+

@@ -7,8 +7,6 @@
     border-radius: 5px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     color: inherit;
-    display: flex;
-    flex-direction: column;
     text-decoration: none;
     transition: 0.3s;
 }
@@ -17,25 +15,11 @@
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.card-snippet-upload-details {
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-right: 10px;
-}
-
-.card-snippet-upload-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    margin: 0px 0px 0px 10px;
+.card-snippet-icon {
     height: 40px;
 }
 
 .card-snippet-content {
-    display: flex;
-    flex-direction: column;
     padding: 20px;
 }
 
@@ -63,7 +47,3 @@
     font-size: 13px;
 }
 
-.card-snippet-title {
-    font-size: 40px;
-    margin: 8px 8px 0px
-}

@@ -2,7 +2,7 @@
 
 <html>
     <head>
-        <link href="<c:url value='/resources/css/feedSnippets.css'/>" rel="stylesheet" />
+        <link href="<c:url value='/resources/css/snippetFeed.css'/>" rel="stylesheet" />
     </head>
     <body>
         <div class="feed-background-color">

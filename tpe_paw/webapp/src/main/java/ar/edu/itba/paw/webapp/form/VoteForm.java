@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.form;
 
 public class VoteForm {
     private int type;
+    private int oldType;
     private long userId;
     private long snippetId;
 
@@ -29,5 +30,13 @@ public class VoteForm {
 
     public void setSnippetId(long snippetId) {
         this.snippetId = snippetId;
+    }
+
+    public int getOldType() {
+        return oldType;
+    }
+
+    public void setOldType(int oldType) {
+        this.oldType = oldType;
     }
 }

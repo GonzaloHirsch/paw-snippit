@@ -59,6 +59,16 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
+    public Collection<Snippet> getAllFavoriteSnippets(Long userId) {
+        return jdbcTemplate.query("SELECT s.id, s.user_id, s.code, s.title, s.description, s.language_id, s.date_created FROM snippets AS s JOIN favorites AS fav ON fav.snippet_id = s.id WHERE fav.user_id = ?",ROW_MAPPER, userId);
+    }
+
+    @Override
+    public Collection<Snippet> getAllFollowingSnippets(Long userId) {
+        return jdbcTemplate.query("SELECT s.id, s.user_id, s.code, s.title, s.description, s.language_id, s.date_created FROM snippets AS s JOIN snippet_tags AS st.snippet_id = s.id JOIN following AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?",ROW_MAPPER, userId);
+    }
+
+    @Override
     public Collection<Snippet> findSnippetByCriteria(Types type, String term, Locations location, Orders order, Long userId) {
         SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(location, userId, type, term)
                 .setOrder(order, type)

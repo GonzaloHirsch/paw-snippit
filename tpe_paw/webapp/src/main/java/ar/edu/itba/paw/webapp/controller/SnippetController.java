@@ -33,7 +33,10 @@ public class SnippetController {
         Optional<Snippet> retrievedSnippet = snippetService.findSnippetById(id);
         retrievedSnippet.ifPresent(snippet -> mav.addObject("snippet", snippet));
         Optional<User> user = userService.getCurrentUser();
-        Optional<Vote> vote = voteService.getVote(1, retrievedSnippet.get().getId());
+        if (!user.isPresent()) {
+            // TODO handle error
+        }
+        Optional<Vote> vote = voteService.getVote(user.get().getUserId(), retrievedSnippet.get().getId());
         mav.addObject("user", user.get());
         int voteType = -1;
         if (vote.isPresent()) {
@@ -41,6 +44,7 @@ public class SnippetController {
         }
         VoteForm voteForm = new VoteForm();
         voteForm.setType(voteType);
+        voteForm.setOldType(voteType);
         voteForm.setUserId(user.get().getUserId());
         voteForm.setSnippetId(id);
         mav.addObject("vote", voteForm);
@@ -50,7 +54,10 @@ public class SnippetController {
     @RequestMapping(value="/snippet/vote", method=RequestMethod.POST)
     public ModelAndView voteFor(@ModelAttribute("vote") final VoteForm voteForm) {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + voteForm.getSnippetId());
-        voteService.performVote(voteForm.getUserId(), voteForm.getSnippetId(), voteForm.getType());
+        if (voteForm.getOldType() == voteForm.getType())
+            voteService.withdrawVote(voteForm.getUserId(), voteForm.getSnippetId());
+        else
+            voteService.performVote(voteForm.getUserId(), voteForm.getSnippetId(), voteForm.getType());
         return mav;
     }
 }

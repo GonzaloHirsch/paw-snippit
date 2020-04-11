@@ -80,6 +80,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> getCurrentUser() {
-        return Optional.of(new User(1, "Dan", "pass", "email", "I am Dan!", 35, new Date("11/1/1")));
+        return jdbcTemplate.query("SELECT * FROM users WHERE username = ?", ROW_MAPPER, "JaneRoe")
+                .stream().findFirst();
     }
 }

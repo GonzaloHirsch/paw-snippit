@@ -24,4 +24,14 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Override
     public Collection<Snippet> getAllSnippets() { return snippetDao.getAllSnippets(); }
+
+    @Override
+    public Collection<Snippet> getAllFavoriteSnippets(Long userId) {
+        return snippetDao.getAllFavoriteSnippets(userId);
+    }
+
+    @Override
+    public Collection<Snippet> getAllFollowingSnippets(Long userId) {
+        return snippetDao.getAllFollowingSnippets(userId);
+    }
 }

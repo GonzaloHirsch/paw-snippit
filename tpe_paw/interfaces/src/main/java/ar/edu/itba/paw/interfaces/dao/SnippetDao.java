@@ -24,5 +24,7 @@ public interface SnippetDao {
 
     Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId);
     Collection<Snippet> getAllSnippets();
+    Collection<Snippet> getAllFavoriteSnippets(Long userId);
+    Collection<Snippet> getAllFollowingSnippets(Long userId);
     Optional<Snippet> findSnippetById(long id);
 }

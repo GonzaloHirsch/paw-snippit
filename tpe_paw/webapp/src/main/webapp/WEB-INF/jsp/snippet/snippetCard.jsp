@@ -10,7 +10,7 @@
     </head>
     <body>
         <c:set var="snippet" value="${requestScope.snippet}"/>
-        <div class="card-snippet-container">
+        <a href="<c:url value='snippet/${snippet.id}'/>" class="card-snippet-container">
             <div class="card-snippet-content">
 
                 <!-- Top card section containing icon, username, date and language -->
@@ -40,6 +40,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </body>
 </html>

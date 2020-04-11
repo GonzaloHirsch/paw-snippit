@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class SearchController {
@@ -42,13 +43,9 @@ public class SearchController {
     @RequestMapping("/search")
     public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm) {
 
-        final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
-        Collection<Snippet> snippets = this.snippetService.findSnippetByCriteria(
-                this.typesMap.get(searchForm.getType()),
-                searchForm.getQuery(),
-                SnippetDao.Locations.HOME,
-                this.ordersMap.get(searchForm.getSort()),
-                null);
+
+        final ModelAndView mav = new ModelAndView("index");
+        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, searchForm.getSort(), null);
         mav.addObject("snippetList", snippets);
         mav.addObject("searchContext","");
         return mav;
@@ -56,18 +53,10 @@ public class SearchController {
 
     @RequestMapping("/favorites/search")
     public ModelAndView searchInFavorites(@Valid @ModelAttribute("searchForm") final SearchForm searchForm){
-        final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
-        Optional<User> user = this.userService.getCurrentUser();
-        Long userId = null;
-        if (user.isPresent()){
-            userId = user.get().getUserId();
-        }
-        Collection<Snippet> snippets = this.snippetService.findSnippetByCriteria(
-                this.typesMap.get(searchForm.getType()),
-                searchForm.getQuery(),
-                SnippetDao.Locations.FAVORITES,
-                this.ordersMap.get(searchForm.getSort()),
-                userId);
+
+        final ModelAndView mav = new ModelAndView("index");
+        Long currentUserId = this.getCurrentUserId();
+        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, searchForm.getSort(), currentUserId);
         mav.addObject("snippetList", snippets);
         mav.addObject("searchContext","favorites/");
         return mav;
@@ -75,21 +64,33 @@ public class SearchController {
 
     @RequestMapping("/following/search")
     public ModelAndView searchInFollowing(@Valid @ModelAttribute("searchForm") final SearchForm searchForm){
-        final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
-        Optional<User> user = this.userService.getCurrentUser();
-        Long userId = null;
-        if (user.isPresent()){
-            userId = user.get().getUserId();
-        }
-        Collection<Snippet> snippets = this.snippetService.findSnippetByCriteria(
-                this.typesMap.get(searchForm.getType()),
-                searchForm.getQuery(),
-                SnippetDao.Locations.FAVORITES,
-                this.ordersMap.get(searchForm.getSort()),
-                userId);
+        final ModelAndView mav = new ModelAndView("index");
+        Long currentUserId = this.getCurrentUserId();
+        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, searchForm.getSort(), currentUserId);
         mav.addObject("snippetList", snippets);
         mav.addObject("searchContext","following/");
         return mav;
     }
 
+    private Long getCurrentUserId(){
+        Optional<User> user = this.userService.getCurrentUser();
+        Long userId = null;
+        if (user.isPresent()){
+            userId = user.get().getUserId();
+        }
+        return userId;
+    }
+
+    private Collection<Snippet> findByCriteria(String type, String query, SnippetDao.Locations location, String sort, Long userId){
+        if (!this.typesMap.containsKey(type) || !this.ordersMap.containsKey(sort)){
+            return new ArrayList<>();
+        } else {
+            return this.snippetService.findSnippetByCriteria(
+                    this.typesMap.get(type),
+                    query,
+                    location,
+                    this.ordersMap.get(sort),
+                    userId);
+        }
+    }
 }

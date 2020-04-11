@@ -17,13 +17,27 @@ public class SnippetFeedController {
     @Autowired
     private SnippetService snippetService;
 
-    @RequestMapping("/feed")
+    @RequestMapping("/")
     public ModelAndView getHomeSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm) {
-        final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
-        Collection<Snippet> snippetsHomeFeed = this.snippetService.getAllSnippets();
+        final ModelAndView mav = new ModelAndView("index");
+        mav.addObject("snippetList", this.snippetService.getAllSnippets());
+        mav.addObject("searchContext","");
+        return mav;
+    }
 
-        mav.addObject("snippetList", snippetsHomeFeed);
-        mav.addObject("searchContext",""); // = /search/
+    @RequestMapping("/favorites")
+    public ModelAndView getFavoritesSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm) {
+        final ModelAndView mav = new ModelAndView("index");
+        mav.addObject("snippetList", this.snippetService.getAllSnippets());
+        mav.addObject("searchContext","favorites/");
+        return mav;
+    }
+
+    @RequestMapping("/following")
+    public ModelAndView getFollowingSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm) {
+        final ModelAndView mav = new ModelAndView("index");
+        mav.addObject("snippetList", this.snippetService.getAllSnippets());
+        mav.addObject("searchContext","following/");
         return mav;
     }
 }

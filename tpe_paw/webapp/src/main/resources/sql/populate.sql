@@ -1,14 +1,15 @@
 /*
     TO manually populate database in terminal: psql -U postgres -d paw -a -f populate.sql
  */
-delete from users where true;
-delete from languages where true;
-delete from tags where true;
 delete from snippets where true;
 delete from votes_for where true;
 delete from favorites where true;
 delete from follows where true;
 delete from snippet_tags where true;
+delete from languages where true;
+delete from tags where true;
+delete from users where true;
+
 
 insert into users(username, password, email, description, reputation, date_joined) values('testUser','testPassword','testUser@gmail.com', 'I am the first user created on this web site', 3, timestamp '2019-09-28 12:30:00');
 

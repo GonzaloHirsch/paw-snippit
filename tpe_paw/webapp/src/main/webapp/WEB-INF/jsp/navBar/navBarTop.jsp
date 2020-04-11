@@ -25,9 +25,9 @@
             </div>
             <div class="dropdown-type">
                 <form:select path="sort" name="Sort" class="select-sort">
-                    <form:option value="ASC">Select sort</form:option>
-                    <form:option value="ASC">Ascending</form:option>
-                    <form:option value="DESC">Descending</form:option>
+                    <form:option value="asc">Select sort</form:option>
+                    <form:option value="asc">Ascending</form:option>
+                    <form:option value="desc">Descending</form:option>
                 </form:select>
             </div>
 

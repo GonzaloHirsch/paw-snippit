@@ -15,12 +15,24 @@ public class SnippetFeedController {
     @Autowired
     private SnippetService snippetService;
 
-    @RequestMapping("/feed")
+    @RequestMapping("/")
     public ModelAndView getHomeSnippetFeed() {
-        final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
-        Collection<Snippet> snippetsHomeFeed = this.snippetService.getAllSnippets();
+        final ModelAndView mav = new ModelAndView("index");
+        mav.addObject("snippetList", this.snippetService.getAllSnippets());
+        return mav;
+    }
 
-        mav.addObject("snippetList", snippetsHomeFeed);
+    @RequestMapping("/favorites")
+    public ModelAndView getFavoritesSnippetFeed() {
+        final ModelAndView mav = new ModelAndView("index");
+        mav.addObject("snippetList", this.snippetService.getAllSnippets());
+        return mav;
+    }
+
+    @RequestMapping("/following")
+    public ModelAndView getFollowingSnippetFeed() {
+        final ModelAndView mav = new ModelAndView("index");
+        mav.addObject("snippetList", this.snippetService.getAllSnippets());
         return mav;
     }
 }

@@ -14,18 +14,15 @@
         <div class="snippet-detail-left-col">
             <div class="vote-buttons">
                 <form:form action="vote" method="post" modelAttribute="vote">
-                    <form:radiobutton id="up-button" class="hidden" path="type" value="1" onchange="changed(this)"/>
+                    <form:radiobutton id="up-button" path="type" value="1" onclick="changed(this)"/>
                     <label for="up-button">
-                        <i class="material-icons vote-arrow"
-                            disabled="<c:choose>
-                                <c:when test="${vote.type == 1}">true</c:when>
-                                <c:otherwise></c:otherwise>
-                            </c:choose>">arrow_drop_up</i>
+                        <i class="material-icons vote-arrow">arrow_drop_up</i>
                     </label>
-                    <form:radiobutton id="down-button" class="hidden" path="type" value="0" onchange="changed(this)"/>
+                    <form:radiobutton id="down-button" path="type" value="0" onclick="changed(this)"/>
                     <label for="down-button">
                         <i class="material-icons vote-arrow">arrow_drop_down</i>
                     </label>
+                    <form:input class="hidden" path="oldType"/>
                     <form:input class="hidden" path="userId"/>
                     <form:input class="hidden" path="snippetId"/>
                 </form:form>

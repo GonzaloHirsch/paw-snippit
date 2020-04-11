@@ -73,4 +73,9 @@ public class VoteDaoImpl implements VoteDao {
                 "SET type = " + voteType;
         jdbcTemplate.execute(upsert);
     }
+
+    @Override
+    public void withdrawVote(long userId, long snippetId) {
+        jdbcTemplate.execute("DELETE FROM votes_for WHERE user_id = " + userId + " AND snippet_id = " + snippetId);
+    }
 }

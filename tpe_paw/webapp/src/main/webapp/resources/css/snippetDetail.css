@@ -1,6 +1,10 @@
 .snippet-detail-main-row {
     display:flex;
 }
+.snippet-title-main-row {
+    display:flex;
+    padding: 10px;
+}
 .snippet-detail-left-col {
     flex-basis: 5%;
     display: grid;
@@ -8,8 +12,9 @@
     background: lightgreen;
 }
 .snippet-detail-center-col {
-    flex-basis: 60%;
+    flex-basis: 100%;
     background: lightblue;
+    padding: 5px;
 }
 .vote-buttons {
     display: grid;
@@ -21,9 +26,20 @@
     transition: 0.3s;
     cursor: pointer;
 }
+.snippet-tag-right {
+    margin: 10px;
+}
+.snippet-title-left {
+    flex-basis: 90%;
+    margin: 10px;
+}
 
 .vote-arrow:hover {
     box-shadow: 10px 10px 5px 0 rgba(168,155,168,1);
+}
+
+.snippet-detail-divider {
+    border: 1px solid #444;
 }
 
 .hidden {

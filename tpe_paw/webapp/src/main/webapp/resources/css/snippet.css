@@ -22,6 +22,7 @@
     border-radius: 5%;
     color: cadetblue;
     padding: 10px;
+    justify-content: center;
 }
 
 pre {

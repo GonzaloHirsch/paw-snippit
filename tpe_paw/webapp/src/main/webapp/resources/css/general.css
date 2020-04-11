@@ -3,3 +3,8 @@
 .justify-text {
     text-align: justify;
 }
+
+.no-margin {
+    margin: 0px;
+}
+

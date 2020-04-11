@@ -11,7 +11,7 @@
         <div class="feed-snippets-grid">
             <c:forEach var="snippet" items="${snippetList}">
                 <c:set var="snippet" value="${snippet}" scope="request"/>
-                <c:import url="snippet/snippetCard.jsp"/>
+                <c:import url="/WEB-INF/jsp/snippet/snippetCard.jsp"/>
             </c:forEach>
         </div>
 

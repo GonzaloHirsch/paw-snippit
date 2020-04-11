@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -95,6 +94,6 @@ public class SearchController {
 
     @RequestMapping(value = "/searchTest/", method={RequestMethod.GET})
     public ModelAndView searchForm(@ModelAttribute("searchForm") final SearchForm searchForm){
-        return new ModelAndView("navBar/navBarTop");
+        return new ModelAndView("navigationBar");
     }
 }

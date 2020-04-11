@@ -8,7 +8,7 @@
 
 <html>
 <head>
-    <link href="<c:url value='/resources/css/navBarTop.css'/>" rel="stylesheet" />
+    <link href="<c:url value='/resources/css/navigationBar.css'/>" rel="stylesheet" />
     <c:url var="searchUrl" value="/${searchContext}search" />
 </head>
 <body>

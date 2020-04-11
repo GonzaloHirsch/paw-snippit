@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 
 <html>
-    <c:import url="/WEB-INF/jsp/navBar/navBarTop.jsp"/>
+    <c:import url="/WEB-INF/jsp/navBar/navigationBar.jsp"/>
     <head>
         <title>Snippet Feed</title>
         <link href="<c:url value='/resources/css/feedSnippets.css'/>" rel="stylesheet" />

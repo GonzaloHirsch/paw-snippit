@@ -35,7 +35,7 @@ public class SearchController {
 
     @RequestMapping("/search")
     public ModelAndView searchInHome(@RequestParam(value = "q", required = true) String query, @RequestParam(value = "t", required = true) String type, @RequestParam(value = "s", required = true) String sort) {
-        final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
+        final ModelAndView mav = new ModelAndView("index");
         Collection<Snippet> snippets = this.findByCriteria(type, query, SnippetDao.Locations.HOME, sort, null);
         mav.addObject("snippetList", snippets);
         return mav;
@@ -43,7 +43,7 @@ public class SearchController {
 
     @RequestMapping("/favorites/search")
     public ModelAndView searchInFavorites(@RequestParam(value = "q", required = true) String query, @RequestParam(value = "t", required = true) String type, @RequestParam(value = "s", required = true) String sort) {
-        final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
+        final ModelAndView mav = new ModelAndView("index");
         Long currentUserId = this.getCurrentUserId();
         Collection<Snippet> snippets = this.findByCriteria(type, query, SnippetDao.Locations.FAVORITES, sort, currentUserId);
         mav.addObject("snippetList", snippets);
@@ -52,7 +52,7 @@ public class SearchController {
 
     @RequestMapping("/following/search")
     public ModelAndView searchInFollowing(@RequestParam(value = "q", required = true) String query, @RequestParam(value = "t", required = true) String type, @RequestParam(value = "s", required = true) String sort) {
-        final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
+        final ModelAndView mav = new ModelAndView("index");
         Long currentUserId = this.getCurrentUserId();
         Collection<Snippet> snippets = this.findByCriteria(type, query, SnippetDao.Locations.FOLLOWING, sort, currentUserId);
         mav.addObject("snippetList", snippets);

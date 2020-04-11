@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class SearchController {
@@ -39,12 +36,7 @@ public class SearchController {
     @RequestMapping("/search")
     public ModelAndView searchInHome(@RequestParam(value = "q", required = true) String query, @RequestParam(value = "t", required = true) String type, @RequestParam(value = "s", required = true) String sort) {
         final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
-        Collection<Snippet> snippets = this.snippetService.findSnippetByCriteria(
-                this.typesMap.get(type),
-                query,
-                SnippetDao.Locations.HOME,
-                this.ordersMap.get(sort),
-                null);
+        Collection<Snippet> snippets = this.findByCriteria(type, query, SnippetDao.Locations.HOME, sort, null);
         mav.addObject("snippetList", snippets);
         return mav;
     }
@@ -52,17 +44,8 @@ public class SearchController {
     @RequestMapping("/favorites/search")
     public ModelAndView searchInFavorites(@RequestParam(value = "q", required = true) String query, @RequestParam(value = "t", required = true) String type, @RequestParam(value = "s", required = true) String sort) {
         final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
-        Optional<User> user = this.userService.getCurrentUser();
-        Long userId = null;
-        if (user.isPresent()){
-            userId = user.get().getUserId();
-        }
-        Collection<Snippet> snippets = this.snippetService.findSnippetByCriteria(
-                this.typesMap.get(type),
-                query,
-                SnippetDao.Locations.FAVORITES,
-                this.ordersMap.get(sort),
-                userId);
+        Long currentUserId = this.getCurrentUserId();
+        Collection<Snippet> snippets = this.findByCriteria(type, query, SnippetDao.Locations.FAVORITES, sort, currentUserId);
         mav.addObject("snippetList", snippets);
         return mav;
     }
@@ -70,18 +53,31 @@ public class SearchController {
     @RequestMapping("/following/search")
     public ModelAndView searchInFollowing(@RequestParam(value = "q", required = true) String query, @RequestParam(value = "t", required = true) String type, @RequestParam(value = "s", required = true) String sort) {
         final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
+        Long currentUserId = this.getCurrentUserId();
+        Collection<Snippet> snippets = this.findByCriteria(type, query, SnippetDao.Locations.FOLLOWING, sort, currentUserId);
+        mav.addObject("snippetList", snippets);
+        return mav;
+    }
+
+    private Long getCurrentUserId(){
         Optional<User> user = this.userService.getCurrentUser();
         Long userId = null;
         if (user.isPresent()){
             userId = user.get().getUserId();
         }
-        Collection<Snippet> snippets = this.snippetService.findSnippetByCriteria(
-                this.typesMap.get(type),
-                query,
-                SnippetDao.Locations.FAVORITES,
-                this.ordersMap.get(sort),
-                userId);
-        mav.addObject("snippetList", snippets);
-        return mav;
+        return userId;
+    }
+
+    private Collection<Snippet> findByCriteria(String type, String query, SnippetDao.Locations location, String sort, Long userId){
+        if (!this.typesMap.containsKey(type) || !this.ordersMap.containsKey(sort)){
+            return new ArrayList<>();
+        } else {
+            return this.snippetService.findSnippetByCriteria(
+                    this.typesMap.get(type),
+                    query,
+                    location,
+                    this.ordersMap.get(sort),
+                    userId);
+        }
     }
 }

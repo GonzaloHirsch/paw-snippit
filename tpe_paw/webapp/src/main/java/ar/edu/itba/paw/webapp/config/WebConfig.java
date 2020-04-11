@@ -61,6 +61,7 @@ public class WebConfig {
     public DatabasePopulator databasePopulator(){
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(schemaSql);
+        populator.addScript(populatorSql);
         return populator;
     }
 

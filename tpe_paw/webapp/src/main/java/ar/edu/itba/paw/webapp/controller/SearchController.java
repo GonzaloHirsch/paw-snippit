@@ -43,8 +43,6 @@ public class SearchController {
     @RequestMapping("/search")
     public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm) {
 
-        System.out.println(searchForm.getQuery() +" " + searchForm.getType() + " "+ searchForm.getSort());
-
         final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
         Collection<Snippet> snippets = this.snippetService.findSnippetByCriteria(
                 this.typesMap.get(searchForm.getType()),

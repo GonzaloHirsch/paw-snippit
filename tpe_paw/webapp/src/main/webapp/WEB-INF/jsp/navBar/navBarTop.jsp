@@ -16,7 +16,7 @@
     <div class="search-container">
         <form:form modelAttribute="searchForm" method="post" action="${searchUrl}" >
             <div class="dropdown-type">
-                <form:select path="type" name="Type" class="select-type">
+                <form:select path="type" name="Type">
                     <form:option value="title">Select a Type</form:option>
                     <form:option value="title">Title</form:option>
                     <form:option value="tag">Tag</form:option>
@@ -24,7 +24,7 @@
                 </form:select>
             </div>
             <div class="dropdown-type">
-                <form:select path="sort" name="Sort" class="select-sort">
+                <form:select path="sort" name="Sort">
                     <form:option value="asc">Select sort</form:option>
                     <form:option value="asc">Ascending</form:option>
                     <form:option value="desc">Descending</form:option>

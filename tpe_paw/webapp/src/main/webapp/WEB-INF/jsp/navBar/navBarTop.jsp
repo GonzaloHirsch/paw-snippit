@@ -9,36 +9,47 @@
 <html>
 <head>
     <link href="<c:url value='/resources/css/navBarTop.css'/>" rel="stylesheet" />
+    <c:url var="searchUrl" value="/${searchContext}search" />
 </head>
-<c:url var="searchUrl" value="/search" />
-<div class="navtop">
-    <a class="active">Home</a>
-    <div class="search-container">
-        <form:form modelAttribute="searchForm" method="post" action="${searchUrl}" >
-            <div class="dropdown-type">
-                <form:select path="type" name="Type">
-                    <form:option value="title">Select a Type</form:option>
-                    <form:option value="title">Title</form:option>
-                    <form:option value="tag">Tag</form:option>
-                    <form:option value="content">Content</form:option>
-                </form:select>
-            </div>
-            <div class="dropdown-type">
-                <form:select path="sort" name="Sort">
-                    <form:option value="asc">Select sort</form:option>
-                    <form:option value="asc">Ascending</form:option>
-                    <form:option value="desc">Descending</form:option>
-                </form:select>
-            </div>
+<body>
+    <div class="navtop">
+        <a class="active">Home</a>
+        <div class="search-container">
+            <form:form modelAttribute="searchForm" method="post" action="${searchUrl}" >
+                <div class="dropdown-type">
+                    <form:select path="type" name="Type">
+                        <form:option value="title">Select a Type</form:option>
+                        <form:option value="title">Title</form:option>
+                        <form:option value="tag">Tag</form:option>
+                        <form:option value="content">Content</form:option>
+                    </form:select>
+                </div>
+                <div class="dropdown-type">
+                    <form:select path="sort" name="Sort">
+                        <form:option value="asc">Select sort</form:option>
+                        <form:option value="asc">Ascending</form:option>
+                        <form:option value="desc">Descending</form:option>
+                    </form:select>
+                </div>
 
-            <div class="search-bar">
-                <form:input path="query" type="text"  class="search-input" placeholder="Search..." />
-                <button type="submit"><i class="fa fa-search"></i></button>
-            </div>
-        </form:form>
+                <div class="search-bar">
+                    <form:input path="query" type="text"  class="search-input" placeholder="Search..." />
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </div>
+            </form:form>
+        </div>
     </div>
 
+    <div class="navside">
+        <a href="<c:url value="/"/>">All</a>
+        <a href="<c:url value="/following/"/>">Following</a>
+        <a href="<c:url value="/tags/"/>" >Tags</a>
+        <hr/>
+        <a href="<c:url value="/uploads/"/>">Uploads</a>
+        <a href="<c:url value="/favorites/"/>">Favorites</a>
+        <hr/>
+        <a href="<c:url value="/following/"/>">Following</a>
 
-</div>
-
+    </div>
+</body>
 </html>

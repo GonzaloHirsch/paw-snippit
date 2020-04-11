@@ -1,3 +1,36 @@
+
+.navside{
+    height: 100%;
+    width: 160px;
+    position:fixed;
+    z-index: 1;
+    top: 0; /
+    left: 0;
+    background-color:#e9e9e9 ;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.navside a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+}
+
+.navside a:hover {
+    color: #f1f1f1;
+}
+
+.main {
+    margin-left: 160px;
+    padding: 0px 10px;
+}
+
+
+<!----------------------- TOP NAVIGATION BAR -------------->
+
 * {box-sizing: border-box;}
 
 body {
@@ -66,4 +99,5 @@ body {
 .navtop .search-container .search-bar{
     float: left;
 }
+
 

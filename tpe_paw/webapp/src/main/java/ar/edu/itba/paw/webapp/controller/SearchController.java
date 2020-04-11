@@ -51,6 +51,7 @@ public class SearchController {
                 this.ordersMap.get(searchForm.getSort()),
                 null);
         mav.addObject("snippetList", snippets);
+        mav.addObject("searchContext","");
         return mav;
     }
 
@@ -69,6 +70,7 @@ public class SearchController {
                 this.ordersMap.get(searchForm.getSort()),
                 userId);
         mav.addObject("snippetList", snippets);
+        mav.addObject("searchContext","favorites/");
         return mav;
     }
 
@@ -87,6 +89,7 @@ public class SearchController {
                 this.ordersMap.get(searchForm.getSort()),
                 userId);
         mav.addObject("snippetList", snippets);
+        mav.addObject("searchContext","following/");
         return mav;
     }
 

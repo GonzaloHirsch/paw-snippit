@@ -1,40 +1,24 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.models.Snippet;
-import ar.edu.itba.paw.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.Collection;
 
 @Controller
 public class SnippetFeedController {
 
+    @Autowired
+    private SnippetService snippetService;
+
     @RequestMapping("/feed")
     public ModelAndView getHomeSnippetFeed() {
         final ModelAndView mav = new ModelAndView("snippet/snippetFeed");
-
-        Date d = new Date();
-        User u = new User(0, "lollipop","pass", "myemail", "",1, d);
-        List<Snippet> snippetsHomeFeed = Arrays.asList(
-                new Snippet(1, u, "CODIGO", "TEST CARD", "java", "$normal: the default. The browser will break lines according to normal line breaking rules. Words or unbroken strings will not break, even if they overflow the container.normal: the default. The browser will break lines according to normal line breaking rules. Words or unbroken strings will not break, even if they overflow the container.", d),
-                new Snippet(2, u, "This means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the conThis means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the conThis means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the conThis means we will be able to compare the height of this “content” div with the height of the grid item containing it. The This means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\nThis means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\nThis means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\nThis means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\nThis means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\nThis means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being tThis means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\noo large to create excess white space.\nThis means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\n ROKS", "JAVA","HEy yo", "hey there", d),
-                new Snippet(2, u, "JAVA ROKS", "sql","TEST CARDS", "This means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\n",d),
-                new Snippet(2, u, "JAVA ROKS", "javascript","<script type=\"text/javascript\">\n$(document).ready(function() {\n$('.slideshow').cycle({\n", "This means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\nThis means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\nThis means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\nThis means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\n", d),
-                new Snippet(2, u, "JAVA ROKS", "scala", "TEST CARDS", "this is a looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooolooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong description",d ),
-                new Snippet(2, u, "<script type=\"text/javascript\">\n$(document).ready(function() {\n$('.slideshow').cycle({\n" +
-                        "fx: 'fade' // choose your transition type, ex: fade, scrollUp, shuffle, etc...\n" +
-                        "});\n" +
-                        "});\n" +
-                        "</script>Making this one a little longer \n doing this okaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaay", "JaVa", "TEST CARDS", "", d),
-                new Snippet(2, u, "At the moment the rows are automatically sizing to allow the largest items in each row to be fully displayed. We will instead restrict the row sizes to a predetermined height:\n", "HELLO","TEST CARDS", "", d),
-                new Snippet(2, u, "JAVA ROKS", "java", "TEST CARDS", "", d),
-                new Snippet(2, u, "This means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item f the grid item containing to display all the conJAVA This means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\n", "JAVA","TEST CARDS", "This means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\n", d),
-                new Snippet(2, u, "JAVA This means we will be able to compare the height of this “content” div with the height of the grid item containing it. The aim will be to make the grid item just large enough to display all the content without being too large to create excess white space.\n", "HACK","TEST CARDS", "", d)
-        );
+        Collection<Snippet> snippetsHomeFeed = this.snippetService.getAllSnippets();
 
         mav.addObject("snippetList", snippetsHomeFeed);
         return mav;

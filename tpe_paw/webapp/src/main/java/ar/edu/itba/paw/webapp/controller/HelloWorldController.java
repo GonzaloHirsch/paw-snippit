@@ -13,12 +13,12 @@ import java.util.List;
 public class HelloWorldController {
 
     @Autowired
-    private SnippetService ss;
+    private SnippetService snippetService;
 
     @RequestMapping("/")
     public ModelAndView helloWorld() {
         final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("greeting", "PAW");
+        mav.addObject("snippetList", snippetService.getAllSnippets());
         return mav;
     }
 

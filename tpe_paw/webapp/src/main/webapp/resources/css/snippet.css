@@ -8,13 +8,20 @@
     flex-direction: column;
     margin: 0px 5px 0px 5px;
     outline: dimgray;
-    padding: 10px;
+    padding: 5px 20px 5px 20px;
 }
 
 .snippet-text {
     font-family: "sans-serif";
     overflow-wrap: break-word;
-    text-align: justify;
+}
+
+.snippet-language-tag {
+    border: 2px cadetblue;
+    border-style: solid;
+    border-radius: 5%;
+    color: cadetblue;
+    padding: 10px;
 }
 
 pre {
@@ -26,4 +33,9 @@ pre {
 code {
     font-family: Courier, 'New Courier', monospace;
     font-size: 13px;
+}
+
+img {
+    border-radius: 50%;
+    height: 45px;
 }

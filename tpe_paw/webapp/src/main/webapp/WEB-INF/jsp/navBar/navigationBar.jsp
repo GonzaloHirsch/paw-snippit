@@ -13,9 +13,7 @@
 </head>
 <body>
     <div class="sidebar">
-        <h2>Sidebar</h2>
         <ul>
-            <hr/>
             <li><a href="<c:url value="/"/>">All</a></li>
             <li><a href="<c:url value="/following/"/>">Following</a></li>
             <li><a href="<c:url value="/tags/"/>" >Tags</a></li>

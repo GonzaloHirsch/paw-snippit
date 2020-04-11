@@ -20,14 +20,6 @@
     z-index:999;
 }
 
-.wrapper .sidebar h2 {
-    color: black;
-    text-transform: uppercase;
-    text-align: center;
-    margin-bottom: 30px;
-    margin-top:50px;
-}
-
 .wrapper .sidebar ul{
     padding:0px;
 }

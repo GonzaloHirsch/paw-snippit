@@ -92,8 +92,4 @@ public class SearchController {
         return mav;
     }
 
-    @RequestMapping(value = "/searchTest/", method={RequestMethod.GET})
-    public ModelAndView searchForm(@ModelAttribute("searchForm") final SearchForm searchForm){
-        return new ModelAndView("navigationBar");
-    }
 }

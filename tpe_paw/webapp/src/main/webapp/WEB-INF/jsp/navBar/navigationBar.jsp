@@ -12,8 +12,24 @@
     <c:url var="searchUrl" value="/${searchContext}search" />
 </head>
 <body>
+    <div class="sidebar">
+        <h2>Sidebar</h2>
+        <ul>
+            <hr/>
+            <li><a href="<c:url value="/"/>">All</a></li>
+            <li><a href="<c:url value="/following/"/>">Following</a></li>
+            <li><a href="<c:url value="/tags/"/>" >Tags</a></li>
+            <hr/>
+            <li><a href="<c:url value="/uploads/"/>">Uploads</a></li>
+            <li><a href="<c:url value="/favorites/"/>">Favorites</a></li>
+            <hr/>
+            <li><a href="<c:url value="/following/"/>">Following</a></ul></li>
+        </ul>
+    </div>
+
+
     <div class="navtop">
-        <a class="active">Home</a>
+        <a class="app-name">App Name</a>
         <div class="search-container">
             <form:form modelAttribute="searchForm" method="post" action="${searchUrl}" >
                 <div class="dropdown-type">
@@ -40,16 +56,5 @@
         </div>
     </div>
 
-    <div class="navside">
-        <a href="<c:url value="/"/>">All</a>
-        <a href="<c:url value="/following/"/>">Following</a>
-        <a href="<c:url value="/tags/"/>" >Tags</a>
-        <hr/>
-        <a href="<c:url value="/uploads/"/>">Uploads</a>
-        <a href="<c:url value="/favorites/"/>">Favorites</a>
-        <hr/>
-        <a href="<c:url value="/following/"/>">Following</a>
-
-    </div>
 </body>
 </html>

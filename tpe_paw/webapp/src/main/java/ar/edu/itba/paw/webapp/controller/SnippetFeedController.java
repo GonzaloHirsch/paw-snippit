@@ -23,7 +23,7 @@ public class SnippetFeedController {
         Collection<Snippet> snippetsHomeFeed = this.snippetService.getAllSnippets();
 
         mav.addObject("snippetList", snippetsHomeFeed);
-        mav.addObject("searchContext","following/"); // = /search/
+        mav.addObject("searchContext",""); // = /search/
         return mav;
     }
 }

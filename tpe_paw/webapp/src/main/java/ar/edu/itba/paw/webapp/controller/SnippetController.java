@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.service.VoteService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Vote;
+import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.form.VoteForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ public class SnippetController {
     private VoteService voteService;
 
     @RequestMapping("/snippet/{id}")
-    public ModelAndView snippetDetail(@ModelAttribute("snippetId") @PathVariable("id") long id) {
+    public ModelAndView snippetDetail(@ModelAttribute("snippetId") @PathVariable("id") long id, @ModelAttribute("searchForm") final SearchForm searchForm) {
         final ModelAndView mav = new ModelAndView("snippet/snippetDetail");
         Optional<Snippet> retrievedSnippet = snippetService.findSnippetById(id);
         retrievedSnippet.ifPresent(snippet -> mav.addObject("snippet", snippet));
@@ -48,6 +49,7 @@ public class SnippetController {
         voteForm.setUserId(user.get().getUserId());
         voteForm.setSnippetId(id);
         mav.addObject("vote", voteForm);
+        mav.addObject("searchContext","");
         return mav;
     }
 

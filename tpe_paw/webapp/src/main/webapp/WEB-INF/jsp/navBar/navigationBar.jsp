@@ -37,7 +37,7 @@
                 </div>
                 <div class="dropdown-type">
                     <form:select path="type" name="Type">
-                        <form:option value="title">Select a Type</form:option>
+                        <form:option value="title">Search by</form:option>
                         <form:option value="title">Title</form:option>
                         <form:option value="tag">Tag</form:option>
                         <form:option value="content">Content</form:option>
@@ -45,7 +45,7 @@
                 </div>
                 <div class="dropdown-type">
                     <form:select path="sort" name="Sort">
-                        <form:option value="asc">Select sort</form:option>
+                        <form:option value="asc">Sort by</form:option>
                         <form:option value="asc">Ascending</form:option>
                         <form:option value="desc">Descending</form:option>
                     </form:select>

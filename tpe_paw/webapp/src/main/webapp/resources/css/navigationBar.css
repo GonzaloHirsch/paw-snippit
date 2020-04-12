@@ -1,0 +1,113 @@
+/*----------------------------Side nav bar --------------------------- */
+
+.wrapper{
+    display:flex;
+    position:absolute;
+}
+
+.wrapper .main-content{
+    width:100%;
+    margin-left:180px;
+    margin-top:45px;
+}
+
+.wrapper .sidebar{
+    position: fixed;
+    width: 180px;
+    height: 100%;
+    background: #e9e9e9;
+    padding: 30px 0;
+    z-index:999;
+}
+
+.wrapper .sidebar ul{
+    padding:0px;
+}
+
+.wrapper .sidebar ul li{
+    padding: 15px;
+    text-align: left;
+}
+
+.wrapper .sidebar ul li a{
+    color: black;
+    font-weight: bold;
+    display:block;
+    text-decoration:none;
+}
+
+.wrapper .sidebar ul li:hover{
+    background: lightgrey;
+}
+
+
+/*-----------------------------Top nav bar---------------------------------*/
+
+* {box-sizing: border-box;}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.wrapper .navtop {
+    overflow: hidden;
+    position:fixed;
+    width:100%;
+    background-color: #e9e9e9;
+    z-index:999;
+}
+
+.navtop a {
+    float: left;
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+.navtop .app-name{
+    background-color: #2196F3;
+    color:white;
+    width:180px;
+}
+
+.navtop .search-container {
+    float: right;
+    overflow:hidden;
+}
+
+.navtop .search-input{
+    padding: 6px;
+    margin-top: 8px;
+    font-size: 17px;
+    border: none;
+    height:29px;
+}
+
+.navtop .search-container button {
+    float: right;
+    padding: 6px 10px;
+    margin-top: 8px;
+    margin-right: 16px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+}
+
+.navtop .search-container button:hover {
+    background: #ccc;
+}
+
+.navtop .search-container .dropdown-type{
+    float:left;
+    margin-top:15px;
+    margin-right:5px;
+}
+.navtop .search-container .search-bar{
+    float: left;
+}
+
+

@@ -29,7 +29,7 @@
     <div class="navtop">
         <a class="app-name">App Name</a>
         <div class="search-container">
-            <form:form modelAttribute="searchForm" method="post" action="${searchUrl}" >
+            <form:form modelAttribute="searchForm" method="get" action="${searchUrl}" >
                 <div class="dropdown-type">
                     <form:select path="type" name="Type">
                         <form:option value="title">Select a Type</form:option>

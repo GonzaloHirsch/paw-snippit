@@ -65,7 +65,7 @@ public class SnippetDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> getAllFollowingSnippets(Long userId) {
-        return jdbcTemplate.query("SELECT s.id, s.user_id, s.code, s.title, s.description, s.language_id, s.date_created FROM snippets AS s JOIN snippet_tags AS st.snippet_id = s.id JOIN following AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?",ROW_MAPPER, userId);
+        return jdbcTemplate.query("SELECT sn.id, sn.user_id, sn.code, sn.title, sn.description, sn.language_id, sn.date_created FROM snippets AS sn JOIN snippet_tags AS st ON st.snippet_id = sn.id JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?",ROW_MAPPER, userId);
     }
 
     @Override

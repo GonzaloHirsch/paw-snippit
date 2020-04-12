@@ -4,7 +4,7 @@
 <html>
     <head>
         <title>Snippet Feed</title>
-        <link href="<c:url value='/resources/css/feedSnippets.css'/>" rel="stylesheet" />
+        <link href="<c:url value='/resources/css/snippetFeed.css'/>" rel="stylesheet" />
     </head>
     <body>
         <div class="wrapper">

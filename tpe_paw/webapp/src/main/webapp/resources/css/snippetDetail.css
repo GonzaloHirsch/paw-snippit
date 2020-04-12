@@ -1,30 +1,14 @@
-.snippet-detail-main-row {
-    display:flex;
-}
-.snippet-title-main-row {
-    display:flex;
-    padding: 10px;
-}
-.snippet-detail-left-col {
+
+.detail-snippet-left-col {
     flex-basis: 5%;
     display: grid;
     align-items: center;
     background: lightgreen;
 }
-.snippet-detail-center-col {
+.detail-snippet-center-col {
     flex-basis: 100%;
     background: lightblue;
     padding: 5px;
-}
-.vote-buttons {
-    display: grid;
-    justify-content: center;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-.vote-arrow {
-    font-size: 60px !important;
-    transition: 0.3s;
-    cursor: pointer;
 }
 .snippet-tag-right {
     margin: 10px;
@@ -34,16 +18,48 @@
     margin: 10px;
 }
 
-.vote-arrow:hover {
-    box-shadow: 10px 10px 5px 0 rgba(168,155,168,1);
+/* --------------------------------------------------- */
+
+.detail-snippet-container {
+    border-style: solid;
+    border-color: coral;
+    padding: 15px;
 }
 
-.snippet-detail-divider {
+.detail-snippet-divider {
     border: 1px solid #444;
 }
 
-.hidden {
-    visibility: hidden;
-    height: 0px;
-    width: 0px;
+.detail-snippet-center {
+    padding: 20px 35px 40px 20px;
+}
+
+.detail-snippet-date {
+    color: teal;
+    font-size: 12px;
+}
+
+.detail-snippet-block {
+    align-items: center;
+    background: lightcyan;
+    justify-content: center;
+    margin: 15px 8px;
+    padding: 10px;
+}
+
+.detail-snippet-user {
+    max-width: 200px;
+}
+
+.detail-snippet-user-info {
+    margin: 11px 0px 4px 0px;
+}
+
+.detail-snippet-block-descr {
+    margin: 18px 5px 5px 5px;
+}
+
+.detail-snippet-block-code {
+    max-height: 580px;
+    overflow: auto;
 }

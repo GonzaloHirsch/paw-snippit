@@ -9,12 +9,13 @@
 <html>
 <head>
     <link href="<c:url value='/resources/css/navigationBar.css'/>" rel="stylesheet" />
+    <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet" />
     <c:url var="searchUrl" value="/${searchContext}search" />
 </head>
 <body>
     <div class="sidebar">
         <ul>
-            <li><a href="<c:url value="/"/>">All</a></li>
+            <li class="fw-100"><a href="<c:url value="/"/>">All</a></li>
             <li><a href="<c:url value="/following/"/>">Following</a></li>
             <li><a href="<c:url value="/tags/"/>" >Tags</a></li>
             <hr/>
@@ -27,7 +28,7 @@
 
 
     <div class="navtop">
-        <a class="app-name">App Name</a>
+        <a class="app-name fw-100" href="<c:url value="/"/>">Snippit</a>
         <div class="search-container">
             <form:form modelAttribute="searchForm" method="get" action="${searchUrl}" >
                 <div class="search-bar">

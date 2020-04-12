@@ -1,21 +1,23 @@
 /*----------------------------Side nav bar --------------------------- */
 
 .wrapper{
-    display:flex;
     position:absolute;
+    right: 175px;
+    left: 0px;
 }
 
 .wrapper .main-content{
     width:100%;
     margin-left:180px;
     margin-top:45px;
+    background: #f0ffff;
 }
 
 .wrapper .sidebar{
     position: fixed;
     width: 180px;
     height: 100%;
-    background: #e9e9e9;
+    background: #000000;
     padding: 30px 0;
     z-index:999;
 }
@@ -30,14 +32,14 @@
 }
 
 .wrapper .sidebar ul li a{
-    color: black;
+    color: white;
     font-weight: bold;
     display:block;
     text-decoration:none;
 }
 
 .wrapper .sidebar ul li:hover{
-    background: lightgrey;
+    background: #00a7b3;
 }
 
 
@@ -54,7 +56,7 @@ body {
     overflow: hidden;
     position:fixed;
     width:100%;
-    background-color: #e9e9e9;
+    background-color: #00a7b3;
     z-index:999;
     display: flex;
 }
@@ -72,6 +74,11 @@ body {
     background-color: #2196F3;
     color:white;
     width:180px;
+    letter-spacing: 2px;
+}
+
+.navtop .app-name:hover{
+    background: #ccc;
 }
 
 .navtop .search-container {

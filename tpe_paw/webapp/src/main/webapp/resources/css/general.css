@@ -1,5 +1,16 @@
 /* General CSS stylesheet for all the project */
 
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+.fw-100 { font-weight: 100; }
+.fw-300 { font-weight: 300; }
+.fw-400 { font-weight: 400; }
+.fw-500 { font-weight: 500; }
+.fw-700 { font-weight: 700; }
+.fw-900 { font-weight: 900; }
+
 .justify-text {
     text-align: justify;
 }

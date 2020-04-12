@@ -14,7 +14,9 @@
 
 <body>
 
-    <div class="flex-row detail-snippet-container">
+<div class="wrapper">
+    <c:import url="/WEB-INF/jsp/navBar/navigationBar.jsp"/>
+    <div class="flex-row detail-snippet-container main-content">
 
         <div class="detail-snippet-left-col">
 
@@ -60,6 +62,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </body>
 </html>

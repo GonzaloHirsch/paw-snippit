@@ -38,7 +38,7 @@ public class SnippetController {
         }
         Optional<Vote> vote = voteService.getVote(user.get().getUserId(), retrievedSnippet.get().getId());
         mav.addObject("user", user.get());
-        int voteType = -1;
+        int voteType = 0;
         if (vote.isPresent()) {
             voteType = vote.get().getType();
         }

@@ -26,7 +26,7 @@
                 </c:choose>
             </label>
 
-            <form:radiobutton class="hidden" id="vote-down-button" path="type" value="0" onclick="updateVote(this)"/>
+            <form:radiobutton class="hidden" id="vote-down-button" path="type" value="-1" onclick="updateVote(this)"/>
             <label for="vote-down-button">
                 <c:choose>
                     <c:when test="${vote.oldType == -1}">

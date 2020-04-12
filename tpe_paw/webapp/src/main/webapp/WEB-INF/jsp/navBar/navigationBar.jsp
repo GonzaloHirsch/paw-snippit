@@ -30,6 +30,10 @@
         <a class="app-name">App Name</a>
         <div class="search-container">
             <form:form modelAttribute="searchForm" method="get" action="${searchUrl}" >
+                <div class="search-bar">
+                    <form:input path="query" type="text"  class="search-input" placeholder="Search..." />
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </div>
                 <div class="dropdown-type">
                     <form:select path="type" name="Type">
                         <form:option value="title">Select a Type</form:option>
@@ -44,11 +48,6 @@
                         <form:option value="asc">Ascending</form:option>
                         <form:option value="desc">Descending</form:option>
                     </form:select>
-                </div>
-
-                <div class="search-bar">
-                    <form:input path="query" type="text"  class="search-input" placeholder="Search..." />
-                    <button type="submit"><i class="fa fa-search"></i></button>
                 </div>
             </form:form>
         </div>

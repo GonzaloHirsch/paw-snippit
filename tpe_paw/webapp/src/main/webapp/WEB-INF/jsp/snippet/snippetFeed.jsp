@@ -17,10 +17,8 @@
                         <c:import url="/WEB-INF/jsp/snippet/snippetCard.jsp"/>
                     </c:forEach>
                 </div>
-                <script src="<c:url value='/resources/js/feedSnippets.js'/>"></script>
             </div>
         </div>
-
         <script src="<c:url value='/resources/js/snippetsFeed.js'/>"></script>
     </body>
 </html>

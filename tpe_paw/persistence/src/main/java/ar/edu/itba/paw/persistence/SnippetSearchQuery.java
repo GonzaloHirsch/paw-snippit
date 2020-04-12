@@ -49,7 +49,7 @@ public class SnippetSearchQuery {
         private Map<SnippetDao.Locations, String> locationsMap = new HashMap<SnippetDao.Locations, String>(){{
             put(SnippetDao.Locations.HOME, "(SELECT * FROM snippets)");
             put(SnippetDao.Locations.FAVORITES, "(SELECT sn.id, sn.user_id, sn.code, sn.title, sn.description, sn.language_id, sn.date_created FROM snippets AS sn JOIN favorites AS fav ON fav.snippet_id = sn.id WHERE fav.user_id = ?)");
-            put(SnippetDao.Locations.FOLLOWING, "(SELECT sn.id, sn.user_id, sn.code, sn.title, sn.description, sn.language_id, sn.date_created FROM snippets AS sn JOIN snippet_tags AS st.snippet_id = sn.id JOIN following AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?");
+            put(SnippetDao.Locations.FOLLOWING, "(SELECT sn.id, sn.user_id, sn.code, sn.title, sn.description, sn.language_id, sn.date_created FROM snippets AS sn JOIN snippet_tags AS st ON st.snippet_id = sn.id JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?)");
         }};
         /**
          * Map used to translate the given enum for order types into their query equivalent

@@ -24,13 +24,11 @@
 
 .detail-snippet-block {
     background: lightcyan;
+    border: #00a7b3 1px solid;
     margin: 15px 8px;
+    min-height: 94px;
     min-width: 94px;
     padding: 10px;
-}
-
-.detail-snippet-user {
-    max-width: 225px;
 }
 
 .detail-snippet-user-info {

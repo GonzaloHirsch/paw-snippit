@@ -55,7 +55,7 @@
                     </div>
 
                     <!-- USER DETAILS -->
-                    <div class="flex-column flex-center detail-snippet-block detail-snippet-user border-radius">
+                    <div class="flex-column flex-center detail-snippet-block border-radius">
                         <div class="snippet-text detail-snippet-date">Uploaded ${snippet.dateCreated}</div>
 
                         <div class="flex-row snippet-user-info detail-snippet-user-info">

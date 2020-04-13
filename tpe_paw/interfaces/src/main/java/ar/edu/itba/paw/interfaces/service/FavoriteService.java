@@ -15,5 +15,6 @@ public interface FavoriteService {
 
     void removeFromFavorites(long userId, long snippetId);
 
+    void updateFavorites(long userId, long snippetId, boolean isFav);
 }
 

@@ -4,8 +4,7 @@ import ar.edu.itba.paw.interfaces.dao.FavoriteDao;
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.Favorite;
-import ar.edu.itba.paw.models.Snippet;
-import ar.edu.itba.paw.models.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -37,8 +36,7 @@ public class FavoriteDaoImpl implements FavoriteDao {
         @Override public Favorite mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Favorite(
                     rs.getLong("user_id"),
-                    rs.getLong("snippet_id"),
-                    true
+                    rs.getLong("snippet_id")
             );
         }
     };
@@ -47,7 +45,7 @@ public class FavoriteDaoImpl implements FavoriteDao {
     public FavoriteDaoImpl (DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
 
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("votes_for");
+        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("favorites");
         jdbcCall = new SimpleJdbcCall(ds);
     }
 

@@ -35,5 +35,15 @@ public class FavoriteServiceImpl implements FavoriteService {
         favDao.removeFromFavorites(userId, snippetId);
     }
 
+    @Override
+    public void updateFavorites(long userId, long snippetId, boolean isFav) {
+        if (isFav) {
+            addToFavorites(userId, snippetId);
+        } else {
+            removeFromFavorites(userId, snippetId);
+        }
+        return;
+    }
+
 }
 

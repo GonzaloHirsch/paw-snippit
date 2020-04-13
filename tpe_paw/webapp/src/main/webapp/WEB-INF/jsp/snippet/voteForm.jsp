@@ -8,16 +8,16 @@
     <link href="<c:url value='/resources/css/vote.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="<c:url value='/resources/js/voteForm.js'/>"></script>
+    <script src="<c:url value='/resources/js/form.js'/>"></script>
 </head>
 
 <body>
     <div class="flex-column">
-        <form:form class="flex-row vote-container" action="vote" method="post" modelAttribute="vote">
-            <form:radiobutton class="hidden" id="vote-up-button" path="type" value="1" onclick="updateVote(this)"/>
+        <form:form class="flex-row vote-container" action="vote" method="post" modelAttribute="voteForm">
+            <form:radiobutton class="hidden" id="vote-up-button" path="type" value="1" onclick="updateForm(this)"/>
             <label for="vote-up-button">
                 <c:choose>
-                    <c:when test="${vote.oldType == 1}">
+                    <c:when test="${voteForm.oldType == 1}">
                         <i class="vote-up-selected material-icons vote-arrow">thumb_up</i>
                     </c:when>
                     <c:otherwise>
@@ -26,10 +26,10 @@
                 </c:choose>
             </label>
 
-            <form:radiobutton class="hidden" id="vote-down-button" path="type" value="-1" onclick="updateVote(this)"/>
+            <form:radiobutton class="hidden" id="vote-down-button" path="type" value="-1" onclick="updateForm(this)"/>
             <label for="vote-down-button">
                 <c:choose>
-                    <c:when test="${vote.oldType == -1}">
+                    <c:when test="${voteForm.oldType == -1}">
                         <i class="vote-down-selected material-icons vote-arrow">thumb_down</i>
                     </c:when>
                     <c:otherwise>

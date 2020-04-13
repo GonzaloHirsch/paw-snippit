@@ -18,6 +18,8 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -38,6 +40,7 @@ public class VoteDaoImpl implements VoteDao {
             Optional<User> user = userDao.findUserById(rs.getLong("user_id"));
             Optional<Snippet> snippet = snippetDao.findSnippetById(rs.getLong("snippet_id"));
             if (!user.isPresent() || !snippet.isPresent())
+                //TODO extract string resource
                 throw new SQLException("No User or Snippet Found");
             return new Vote(
                     user.get(),
@@ -67,15 +70,20 @@ public class VoteDaoImpl implements VoteDao {
     @Override
     @Transactional
     public void performVote(long userId, long snippetId, int voteType) {
-        // upsert
-        String upsert = "INSERT INTO votes_for VALUES(" + userId + ", " + snippetId+ ", " + voteType + ") " +
-                "ON CONFLICT ON CONSTRAINT one_snippet_one_vote DO UPDATE " +
-                "SET type = " + voteType;
-        jdbcTemplate.execute(upsert);
+        if (getVote(userId, snippetId).isPresent())
+            jdbcTemplate.update("UPDATE votes_for SET TYPE = ? WHERE user_id = ? AND snippet_id = ?", voteType, userId, snippetId);
+        else {
+            Map<String, Object> args = new HashMap<>();
+            args.put("user_id", userId);
+            args.put("snippet_id", snippetId);
+            args.put("type", voteType);
+            jdbcInsert.execute(args);
+        }
     }
 
     @Override
     public void withdrawVote(long userId, long snippetId) {
-        jdbcTemplate.execute("DELETE FROM votes_for WHERE user_id = " + userId + " AND snippet_id = " + snippetId);
+        Object[] args = new Object[]{userId, snippetId};
+        jdbcTemplate.update("DELETE FROM votes_for WHERE user_id = ? AND snippet_id = ?", args);
     }
 }

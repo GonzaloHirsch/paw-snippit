@@ -11,8 +11,8 @@ delete from tags where true;
 delete from users where true;
 
 
-insert into users(username, password, email, description, reputation, date_joined) values('JohnDoe','password','johndoe@gmail.com', 'I am the first user created on this website, I own many snippets', 3, timestamp '2019-09-28 12:30:00');
-insert into users(username, password, email, description, reputation, date_joined) values('JaneRoe','password','janeroe@gmail.com', 'I am just visiting', 3, timestamp '2019-09-28 12:30:00');
+insert into users(username, password, email, description, reputation, date_joined) values('JohnDoe','password','johndoe@gmail.com', 'I am the first user created on this website, I own many snippets', 0, timestamp '2019-09-28 12:30:00');
+insert into users(username, password, email, description, reputation, date_joined) values('JaneRoe','password','janeroe@gmail.com', 'I am just visiting', 0, timestamp '2019-09-28 12:30:00');
 
 insert into languages(name) values('java');
 insert into languages(name) values('c#');
@@ -521,9 +521,9 @@ body {
 }
 ', timestamp '2020-03-01 03:30:12', (select id from languages where name='css'));
 
-insert into votes_for(user_id, snippet_id) values((select id from users where username='JaneRoe'),(select id from snippets where title='Implementation of merge sort'));
-insert into votes_for(user_id, snippet_id) values((select id from users where username='JaneRoe'),(select id from snippets where title='Dijkstra Shortest Path'));
-insert into votes_for(user_id, snippet_id) values((select id from users where username='JaneRoe'),(select id from snippets where title='Netflix-like Card Expansion'));
+insert into votes_for(user_id, snippet_id, type) values((select id from users where username='JaneRoe'),(select id from snippets where title='Implementation of merge sort'), 1);
+insert into votes_for(user_id, snippet_id, type) values((select id from users where username='JaneRoe'),(select id from snippets where title='Dijkstra Shortest Path'), 1);
+insert into votes_for(user_id, snippet_id, type) values((select id from users where username='JaneRoe'),(select id from snippets where title='Netflix-like Card Expansion'), 1);
 
 insert into favorites(snippet_id,user_id) values((select id from snippets where title='Heapsort'),(select id from users where username='JaneRoe'));
 insert into favorites(snippet_id,user_id) values((select id from snippets where title='Implementation of merge sort'),(select id from users where username='JaneRoe'));

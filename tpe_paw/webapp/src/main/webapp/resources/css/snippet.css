@@ -12,7 +12,7 @@
 
 .snippet-title {
     font-size: 33px;
-    margin: 8px 8px 0px
+    margin: 8px 5px 0px
 }
 
 .snippet-text {
@@ -24,8 +24,9 @@
     border: 2px cadetblue;
     border-style: solid;
     color: cadetblue;
-    padding: 10px;
+    height: 45px;
     justify-content: center;
+    padding: 10px;
 }
 
 .snippet-upload-spacing {
@@ -42,6 +43,10 @@
     margin: 0px 0px 0px 10px;
 }
 
+.snippet-icon {
+    font-size: 60px !important;
+    color: lightgray;
+}
 
 pre {
     white-space: pre-wrap;

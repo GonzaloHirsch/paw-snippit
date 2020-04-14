@@ -2,7 +2,7 @@
 
 /* Text Properties */
 * {
-    font-family: 'Roboto', sans-serif;
+    font-family: Roboto, "sans-serif";
 }
 
 .fw-100 { font-weight: 100; }

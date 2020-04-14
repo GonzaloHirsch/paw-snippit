@@ -21,11 +21,10 @@
 
 .snippet-title {
     font-size: 33px;
-    margin: 8px 5px 0px
+    margin: 8px 5px 0px;
 }
 
 .snippet-text {
-    font-family: "sans-serif";
     overflow-wrap: break-word;
 }
 
@@ -55,7 +54,7 @@ pre {
     word-wrap: break-word;}
 
 code {
-    font-family: Courier, 'New Courier', monospace;
+    font-family: "Roboto Mono", 'New Courier', monospace;
     font-size: 13px;
 }
 

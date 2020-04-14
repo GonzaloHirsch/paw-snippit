@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS snippets (
 CREATE TABLE IF NOT EXISTS votes_for (
     user_id INT REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL,
     snippet_id INT REFERENCES snippets(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    type INT,
+    type INT CHECK(type IN (-1, 1)),
     CONSTRAINT one_snippet_one_vote PRIMARY KEY(user_id, snippet_id)
 );
 

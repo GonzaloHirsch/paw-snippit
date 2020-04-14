@@ -43,6 +43,7 @@
                     </div>
                 </div>
                 <div class="flex-row flex-center">
+                    <c:set var="snippetId" value="${snippet.id}" scope="request"/>
                     <!-- FAVORITES -->
                     <div class="flex-center detail-snippet-block border-radius">
                         <c:import url="/WEB-INF/jsp/snippet/favForm.jsp"/>

@@ -12,12 +12,12 @@
 
 <body>
 <div class="flex-column">
-    <form:form class="form-container" action="snippet/${snippetId}/fav" method="post" modelAttribute="favForm">
-
-        <form:checkbox class="hidden" id="fav-button" path="favorite" value="false" onchange="updateFavValue(this)" onclick="updateForm(this)"/>
+    <c:set var="snippetId" value="${requestScope.snippetId}"/>
+    <form:form class="form-container" action="${snippetId}/fav" method="post" modelAttribute="favForm">
+        <form:checkbox class="hidden" id="fav-button" path="favorite" value="true" onclick="updateForm(this)"/>
         <label for="fav-button">
             <c:choose>
-                <c:when test="${true}">
+                <c:when test="${favForm.favorite}">
                     <i class="fav-icon-selected material-icons snippet-icon">favorite</i>
                 </c:when>
                 <c:otherwise>
@@ -25,9 +25,7 @@
                 </c:otherwise>
             </c:choose>
         </label>
-
         <form:input class="hidden" path="userId"/>
-        <form:input class="hidden" path="snippetId"/>
     </form:form>
 </div>
 

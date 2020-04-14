@@ -44,7 +44,6 @@ public class FavoriteServiceImpl implements FavoriteService {
             System.out.println("REMOVE TO FAV");
             removeFromFavorites(userId, snippetId);
         }
-        return;
     }
 
 }

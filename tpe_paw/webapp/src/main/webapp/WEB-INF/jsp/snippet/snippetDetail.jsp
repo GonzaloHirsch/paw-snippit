@@ -19,7 +19,7 @@
     <div class="main-content">
         <div class="flex-row detail-snippet-container flex-center">
 
-
+            <!-- The center contains all the info besides the tags -->
             <div class="flex-column detail-snippet-center">
 
                 <div class="flex-row flex-center flex-space-between">
@@ -37,9 +37,17 @@
 
                 <hr class="detail-snippet-divider">
 
-                <div class="">
+                <div class="flex-column">
+                    <!-- CODE -->
                     <div class="full-width snippet-code-container detail-snippet-block-code">
                         <pre><code>${fn:escapeXml(snippet.code)}</code></pre>
+                    </div>
+                    <!-- TAGS -->
+                    <div class="flex-row flex-center flex-wrap detail-snippet-tags">
+                        <c:forEach var="tag" items="${snippet.tags}">
+                            <c:set var="tag" value="${tag}" scope="request"/>
+                            <c:import url="/WEB-INF/jsp/snippet/snippetTag.jsp"/>
+                        </c:forEach>
                     </div>
                 </div>
                 <div class="flex-row flex-center">
@@ -72,7 +80,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+
     </div>
 </div>
 </body>

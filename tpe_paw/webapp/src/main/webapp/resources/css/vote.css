@@ -1,13 +1,3 @@
-
-.vote-arrow {
-    font-size: 60px !important;
-    color: lightgray;
-}
-
-.vote-container {
-    margin-block-end: 0em;
-}
-
 .vote-down:hover {
     color: tomato;
 }
@@ -22,6 +12,11 @@
 
 .vote-up-selected {
     color: lawngreen;
+}
+
+.vote-count {
+    font-size: xx-large;
+    padding: 10px;
 }
 
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -46,5 +47,11 @@ public class TagDaoImpl implements TagDao {
         args.put("name", name);
         final Number tagId = jdbcInsert.executeAndReturnKey(args);
         return new Tag(tagId.longValue(), name);
+    }
+
+    @Override
+    public Collection<Tag> findTagsForSnippet(long snippetId) {
+        return jdbcTemplate.query("SELECT * FROM tags WHERE id IN " +
+                "(SELECT tag_id FROM snippet_tags WHERE snippet_id = ?)", ROW_MAPPER, snippetId);
     }
 }

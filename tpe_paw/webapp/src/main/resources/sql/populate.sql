@@ -521,9 +521,9 @@ body {
 }
 ', timestamp '2020-03-01 03:30:12', (select id from languages where name='css'));
 
-insert into votes_for(user_id, snippet_id) values((select id from users where username='JaneRoe'),(select id from snippets where title='Implementation of merge sort'));
-insert into votes_for(user_id, snippet_id) values((select id from users where username='JaneRoe'),(select id from snippets where title='Dijkstra Shortest Path'));
-insert into votes_for(user_id, snippet_id) values((select id from users where username='JaneRoe'),(select id from snippets where title='Netflix-like Card Expansion'));
+insert into votes_for(user_id, snippet_id, type) values((select id from users where username='JaneRoe'),(select id from snippets where title='Implementation of merge sort'), 1);
+insert into votes_for(user_id, snippet_id, type) values((select id from users where username='JaneRoe'),(select id from snippets where title='Dijkstra Shortest Path'), 1);
+insert into votes_for(user_id, snippet_id, type) values((select id from users where username='JaneRoe'),(select id from snippets where title='Netflix-like Card Expansion'), 1);
 
 insert into favorites(snippet_id,user_id) values((select id from snippets where title='Heapsort'),(select id from users where username='JaneRoe'));
 insert into favorites(snippet_id,user_id) values((select id from snippets where title='Implementation of merge sort'),(select id from users where username='JaneRoe'));

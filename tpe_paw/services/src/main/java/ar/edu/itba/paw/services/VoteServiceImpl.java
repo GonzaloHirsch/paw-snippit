@@ -13,25 +13,39 @@ import java.util.Optional;
 public class VoteServiceImpl implements VoteService {
 
     @Autowired
-    VoteDao voteDao;
+    private VoteDao voteDao;
 
     @Override
-    public Collection<Vote> getUserVotes(long userId) {
+    public Collection<Vote> getUserVotes(final long userId) {
         return voteDao.getUserVotes(userId);
     }
 
     @Override
-    public Optional<Vote> getVote(long userId, long snippetId) {
-        return voteDao.getVote(userId, snippetId);
+    public Optional<Vote> getVote(final long userId, final long snippetId) {
+        return this.voteDao.getVote(userId, snippetId);
     }
 
     @Override
-    public void performVote(long userId, long snippetId, int voteType) {
-        voteDao.performVote(userId, snippetId, voteType);
+    public void performVote(final long userId, final long snippetId, final int voteType, final int oldVoteType) {
+        if (oldVoteType == voteType){
+            this.withdrawVote(userId, snippetId);
+        } else {
+            this.addVote(userId, snippetId, voteType);
+        }
     }
 
     @Override
-    public void withdrawVote(long userId, long snippetId) {
-        voteDao.withdrawVote(userId, snippetId);
+    public void withdrawVote(final long userId, final long snippetId) {
+        this.voteDao.withdrawVote(userId, snippetId);
+    }
+
+    @Override
+    public void addVote(final long userId, final long snippetId, final int voteType) {
+        this.voteDao.addVote(userId, snippetId, voteType);
+    }
+
+    @Override
+    public Optional<Integer> getVoteBalance(final long snippetId) {
+        return voteDao.getVoteBalance(snippetId);
     }
 }

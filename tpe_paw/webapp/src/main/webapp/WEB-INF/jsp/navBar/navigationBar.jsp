@@ -17,12 +17,12 @@
         <ul>
             <li class="fw-100"><a href="<c:url value="/"/>">All</a></li>
             <li><a href="<c:url value="/following/"/>">Following</a></li>
-            <li><a href="<c:url value="/tags/"/>" >Tags</a></li>
+            <!--<li><a href="<c:url value="/tags/"/>" >Tags</a></li>-->
             <hr/>
-            <li><a href="<c:url value="/uploads/"/>">Uploads</a></li>
+            <!--<li><a href="<c:url value="/uploads/"/>">Uploads</a></li>-->
             <li><a href="<c:url value="/favorites/"/>">Favorites</a></li>
-            <hr/>
-            <li><a href="<c:url value="/following/"/>">Following</a></ul></li>
+            <!--<hr/>
+            <li><a href="<c:url value="/following/"/>">Following</a></ul></li>-->
         </ul>
     </div>
 
@@ -45,7 +45,7 @@
                 </div>
                 <div class="dropdown-type">
                     <form:select path="sort" name="Sort">
-                        <form:option value="asc">Sort by</form:option>
+                        <form:option value="no">Sort by</form:option>
                         <form:option value="asc">Ascending</form:option>
                         <form:option value="desc">Descending</form:option>
                     </form:select>

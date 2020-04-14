@@ -43,4 +43,9 @@ public class VoteServiceImpl implements VoteService {
     public void addVote(final long userId, final long snippetId, final int voteType) {
         this.voteDao.addVote(userId, snippetId, voteType);
     }
+
+    @Override
+    public Optional<Integer> getVoteCount(long snippetId) {
+        return voteDao.getVoteCount(snippetId);
+    }
 }

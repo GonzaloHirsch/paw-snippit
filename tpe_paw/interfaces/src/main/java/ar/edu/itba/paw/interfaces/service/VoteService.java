@@ -11,4 +11,5 @@ public interface VoteService {
     void performVote(final long userId, final long snippetId, final int voteType, final int oldVoteType);
     void withdrawVote(final long userId, final long snippetId);
     void addVote(final long userId, final long snippetId, final int voteType);
+    Optional<Integer> getVoteCount(final long snippetId);
 }

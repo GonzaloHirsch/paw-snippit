@@ -86,4 +86,9 @@ public class VoteDaoImpl implements VoteDao {
         Object[] args = new Object[]{userId, snippetId};
         jdbcTemplate.update("DELETE FROM votes_for WHERE user_id = ? AND snippet_id = ?", args);
     }
+
+    @Override
+    public Optional<Integer> getVoteCount(long snippetId) {
+        return Optional.of(jdbcTemplate.queryForObject("SELECT COUNT(user_id) FROM votes_for WHERE snippet_id = ?", new Object[]{snippetId}, Integer.class));
+    }
 }

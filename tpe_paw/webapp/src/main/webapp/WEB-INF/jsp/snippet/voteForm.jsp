@@ -13,6 +13,7 @@
 
 <body>
 <c:set var="snippetId" value="${requestScope.snippetId}"/>
+<c:set var="votes" value="${requestScope.votes}"/>
     <div class="flex-column">
         <form:form class="flex-row form-container" action="${snippetId}/vote" method="post" modelAttribute="voteForm">
             <form:radiobutton class="hidden" id="vote-up-button" path="type" value="1" onclick="updateForm(this)"/>
@@ -26,7 +27,9 @@
                     </c:otherwise>
                 </c:choose>
             </label>
-
+            <label class="flex-center vote-count">
+                ${votes}
+            </label>
             <form:radiobutton class="hidden" id="vote-down-button" path="type" value="-1" onclick="updateForm(this)"/>
             <label for="vote-down-button">
                 <c:choose>

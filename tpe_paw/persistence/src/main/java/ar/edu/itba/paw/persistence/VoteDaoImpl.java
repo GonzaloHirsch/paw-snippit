@@ -88,7 +88,7 @@ public class VoteDaoImpl implements VoteDao {
     }
 
     @Override
-    public Optional<Integer> getVoteCount(long snippetId) {
-        return Optional.of(jdbcTemplate.queryForObject("SELECT COUNT(user_id) FROM votes_for WHERE snippet_id = ?", new Object[]{snippetId}, Integer.class));
+    public Optional<Integer> getVoteBalance(final long snippetId) {
+        return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT SUM(v.type) FROM votes_for AS v WHERE v.snippet_id = ?", new Object[]{snippetId}, Integer.class));
     }
 }

@@ -54,7 +54,7 @@ public class SnippetController {
             // TODO No user is logged in -> Fav/vote buttons take to login screen
         }
         mav.addObject("user", user.get());
-        //Vote
+        // Vote
         Optional<Vote> vote = this.voteService.getVote(user.get().getUserId(), retrievedSnippet.get().getId());
         int voteType = 0;
         if (vote.isPresent()) {
@@ -63,10 +63,17 @@ public class SnippetController {
         voteForm.setType(voteType);
         voteForm.setOldType(voteType);
         voteForm.setUserId(user.get().getUserId());
-        //Fav
+        // Fav
         Optional<Favorite> fav = this.favService.getFavorite(user.get().getUserId(), retrievedSnippet.get().getId());
         favForm.setFavorite(fav.isPresent());
         favForm.setUserId(user.get().getUserId());
+        // Vote Count
+        Optional<Integer> voteCount = this.voteService.getVoteBalance(retrievedSnippet.get().getId());
+        if (voteCount.isPresent()){
+            mav.addObject("voteCount",voteCount.get());
+        } else {
+            mav.addObject("voteCount",0);
+        }
         mav.addObject("searchContext","");
         return mav;
     }

@@ -49,6 +49,7 @@
                         <c:import url="/WEB-INF/jsp/snippet/favForm.jsp"/>
                     </div>
 
+                    <c:set var="votes" value="${voteCount}" scope="request"/>
                     <!-- VOTE -->
                     <div class="flex-column flex-center detail-snippet-block border-radius">
                         <c:import url="/WEB-INF/jsp/snippet/voteForm.jsp"/>

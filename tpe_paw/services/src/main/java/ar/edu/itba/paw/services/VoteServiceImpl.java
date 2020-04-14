@@ -45,7 +45,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public Optional<Integer> getVoteCount(long snippetId) {
-        return voteDao.getVoteCount(snippetId);
+    public Optional<Integer> getVoteBalance(final long snippetId) {
+        return voteDao.getVoteBalance(snippetId);
     }
 }

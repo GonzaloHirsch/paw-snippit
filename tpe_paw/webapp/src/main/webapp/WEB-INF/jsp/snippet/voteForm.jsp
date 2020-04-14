@@ -12,8 +12,9 @@
 </head>
 
 <body>
+<c:set var="snippetId" value="${requestScope.snippetId}"/>
     <div class="flex-column">
-        <form:form class="flex-row form-container" action="vote" method="post" modelAttribute="voteForm">
+        <form:form class="flex-row form-container" action="${snippetId}/vote" method="post" modelAttribute="voteForm">
             <form:radiobutton class="hidden" id="vote-up-button" path="type" value="1" onclick="updateForm(this)"/>
             <label for="vote-up-button">
                 <c:choose>
@@ -39,7 +40,6 @@
             </label>
             <form:input class="hidden" path="oldType"/>
             <form:input class="hidden" path="userId"/>
-            <form:input class="hidden" path="snippetId"/>
         </form:form>
     </div>
 </body>

@@ -6,8 +6,9 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface VoteService {
-    Collection<Vote> getUserVotes(long userId);
-    Optional<Vote> getVote(long userId, long snippetId);
-    void performVote(long userId, long snippetId, int voteType);
-    void withdrawVote(long userId, long snippetId);
+    Collection<Vote> getUserVotes(final long userId);
+    Optional<Vote> getVote(final long userId, final long snippetId);
+    void performVote(final long userId, final long snippetId, final int voteType, final int oldVoteType);
+    void withdrawVote(final long userId, final long snippetId);
+    void addVote(final long userId, final long snippetId, final int voteType);
 }

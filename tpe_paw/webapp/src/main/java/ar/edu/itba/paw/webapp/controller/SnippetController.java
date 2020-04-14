@@ -62,8 +62,7 @@ public class SnippetController {
         }
         voteForm.setType(voteType);
         voteForm.setOldType(voteType);
-        voteForm.setUserId(user.get().getUserId()); // TODO: REMOVE
-        voteForm.setSnippetId(id);
+        voteForm.setUserId(user.get().getUserId());
         //Fav
         Optional<Favorite> fav = this.favService.getFavorite(user.get().getUserId(), retrievedSnippet.get().getId());
         favForm.setFavorite(fav.isPresent());
@@ -78,12 +77,7 @@ public class SnippetController {
             @ModelAttribute("voteForm") final VoteForm voteForm
     ) {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
-        // TODO --> hacer estas validaciones en otro lado
-        if (voteForm.getOldType() == voteForm.getType()) {
-            this.voteService.withdrawVote(voteForm.getUserId(), voteForm.getSnippetId());
-        } else {
-            this.voteService.performVote(voteForm.getUserId(), voteForm.getSnippetId(), voteForm.getType());
-        }
+        this.voteService.performVote(voteForm.getUserId(), id, voteForm.getType(), voteForm.getOldType());
         return mav;
     }
 

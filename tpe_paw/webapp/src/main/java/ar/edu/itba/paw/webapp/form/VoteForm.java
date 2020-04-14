@@ -4,7 +4,6 @@ public class VoteForm {
     private int type;
     private int oldType;
     private long userId;
-    private long snippetId;
 
     public VoteForm() {
     }
@@ -22,14 +21,6 @@ public class VoteForm {
 
     public void setUserId(long userId) {
         this.userId = userId;
-    }
-
-    public long getSnippetId() {
-        return snippetId;
-    }
-
-    public void setSnippetId(long snippetId) {
-        this.snippetId = snippetId;
     }
 
     public int getOldType() {

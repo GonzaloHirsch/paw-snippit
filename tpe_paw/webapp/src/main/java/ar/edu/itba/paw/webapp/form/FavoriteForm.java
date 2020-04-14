@@ -1,19 +1,28 @@
 package ar.edu.itba.paw.webapp.form;
 
 public class FavoriteForm {
-    private boolean isFav;
+    private boolean favorite;
+    private boolean wasFavorite;
     private long userId;
     private long snippetId;
 
     public FavoriteForm() {
     }
 
-    public boolean isFavorite(){
-        return isFav;
+    public boolean getFavorite(){
+        return favorite;
     }
 
-    public void setIsFav(boolean isFav){
-        this.isFav = isFav;
+    public void setFavorite(boolean fav){
+        this.favorite = fav;
+    }
+
+    public boolean getWasFavorite(){
+        return wasFavorite;
+    }
+
+    public void setWasFavorite(boolean fav){
+        this.wasFavorite = fav;
     }
 
     public long getUserId() {

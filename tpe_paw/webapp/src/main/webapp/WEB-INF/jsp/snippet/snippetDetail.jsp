@@ -9,7 +9,6 @@
     <link href="<c:url value='/resources/css/snippetDetail.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet"/>
-    <link href="<c:url value='/resources/css/favorites.css'/>" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
@@ -46,7 +45,7 @@
                 <div class="flex-row flex-center">
                     <!-- FAVORITES -->
                     <div class="flex-center detail-snippet-block border-radius">
-                        <i class="material-icons fav-heart">favorite_border</i>
+                        <c:import url="/WEB-INF/jsp/snippet/favForm.jsp"/>
                     </div>
 
                     <!-- VOTE -->

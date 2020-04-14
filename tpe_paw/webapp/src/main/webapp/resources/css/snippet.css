@@ -43,6 +43,10 @@
     margin: 0px 0px 0px 10px;
 }
 
+.snippet-icon {
+    font-size: 60px !important;
+    color: lightgray;
+}
 
 pre {
     white-space: pre-wrap;

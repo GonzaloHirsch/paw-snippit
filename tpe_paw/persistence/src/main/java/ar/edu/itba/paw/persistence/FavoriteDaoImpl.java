@@ -62,7 +62,7 @@ public class FavoriteDaoImpl implements FavoriteDao {
     @Override
     @Transactional
     public void addToFavorites(long userId, long snippetId) {
-        jdbcTemplate.execute("INSERT INTO favorites VALUES(" + userId + ", " + snippetId+ ") ");
+        jdbcTemplate.execute("INSERT INTO favorites (user_id, snippet_id) VALUES(" + userId + ", " + snippetId+ ") ");
     }
 
     @Override

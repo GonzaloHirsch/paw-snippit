@@ -1,3 +1,6 @@
+/*
+ * CSS for the voting icons --> voteForm.jsp
+ */
 .vote-down:hover {
     color: tomato;
 }

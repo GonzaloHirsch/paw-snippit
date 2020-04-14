@@ -1,5 +1,6 @@
 /* General CSS stylesheet for all the project */
 
+/* Text Properties */
 * {
     font-family: 'Roboto', sans-serif;
 }
@@ -15,13 +16,7 @@
     text-align: justify;
 }
 
-.full-width {
-    width: 100%;
-}
-
-.no-margin {
-    margin: 0px;
-}
+/* Flex Properties CSS */
 
 .flex-column {
     display: flex;
@@ -43,6 +38,17 @@
     justify-content: space-between;
 }
 
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+
+/* Border Properties CSS */
+
+.no-margin {
+    margin: 0px;
+}
+
 .form-container {
     margin-block-end: 0em;
 }
@@ -51,8 +57,14 @@
     border-radius: 8px;
 }
 
+/* Extra */
+
 .hidden {
     visibility: hidden;
     height: 0px;
     width: 0px;
+}
+
+.full-width {
+    width: 100%;
 }

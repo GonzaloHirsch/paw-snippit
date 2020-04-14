@@ -39,9 +39,9 @@ public class SnippetSearchQuery {
          * Map used to map types of search to the corresponding queries they translate to
          */
         private Map<SnippetDao.Types, String> typeMap = new HashMap<SnippetDao.Types, String>(){{
-            put(SnippetDao.Types.TAG, " AS s INNER JOIN snippet_tags AS ts ON s.id = ts.snippet_id INNER JOIN tags AS t ON t.id = ts.tag_id WHERE t.name ILIKE ?");
-            put(SnippetDao.Types.TITLE, " AS s WHERE s.title ILIKE ?");
-            put(SnippetDao.Types.CONTENT, " AS s WHERE s.code ILIKE ?");
+            put(SnippetDao.Types.TAG, " AS s INNER JOIN snippet_tags AS ts ON s.id = ts.snippet_id INNER JOIN tags AS t ON t.id = ts.tag_id WHERE lower(t.name) LIKE lower(?)");
+            put(SnippetDao.Types.TITLE, " AS s WHERE lower(s.title) LIKE lower(?)");
+            put(SnippetDao.Types.CONTENT, " AS s WHERE lower(s.code) LIKE lower(?)");
         }};
         /**
          * Map used to map the locations or sources of snippets to be searched among to the corresponding queries they translate to

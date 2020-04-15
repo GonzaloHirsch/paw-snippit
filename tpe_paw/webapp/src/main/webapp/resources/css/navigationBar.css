@@ -41,7 +41,14 @@
 }
 
 .wrapper .sidebar ul li:hover{
-    background: #00a7b3;
+    background: #86b0b3;
+}
+
+.menu-selected {
+    background: #86b0b3;
+    border-right: #00a7b3;
+    border-right-style: solid;
+    border-right-width: 5px;
 }
 
 
@@ -68,21 +75,25 @@ body {
     display: block;
     color: black;
     text-align: center;
-    padding: 14px 16px;
+    padding: 10px;
     text-decoration: none;
     font-size: 17px;
 }
 .navtop .app-name{
-    background-color: #2196F3;
+    background-color: darkslategrey;
     color:white;
     width:180px;
     letter-spacing: 2px;
-    font-weight: 300;
+    font-weight: 100;
+    font-size: 26px;
+    border-bottom: white;
+    border-bottom-width: thin;
+    border-bottom-style: solid;
 }
 
-.navtop .app-name:hover{
-    background: #ccc;
-}
+/*.navtop .app-name:hover{*/
+/*    background: #ccc;*/
+/*}*/
 
 .navtop .search-container {
     float: right;

@@ -1,0 +1,70 @@
+/* General CSS stylesheet for all the project */
+
+/* Text Properties */
+* {
+    font-family: Roboto, "sans-serif";
+}
+
+.fw-100 { font-weight: 100; }
+.fw-300 { font-weight: 300; }
+.fw-400 { font-weight: 400; }
+.fw-500 { font-weight: 500; }
+.fw-700 { font-weight: 700; }
+.fw-900 { font-weight: 900; }
+
+.justify-text {
+    text-align: justify;
+}
+
+/* Flex Properties CSS */
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-space-between {
+    justify-content: space-between;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+
+/* Border Properties CSS */
+
+.no-margin {
+    margin: 0px;
+}
+
+.form-container {
+    margin-block-end: 0em;
+}
+
+.border-radius {
+    border-radius: 8px;
+}
+
+/* Extra */
+
+.hidden {
+    visibility: hidden;
+    height: 0px;
+    width: 0px;
+}
+
+.full-width {
+    width: 100%;
+}

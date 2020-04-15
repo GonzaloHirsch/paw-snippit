@@ -1,0 +1,54 @@
+/*
+ * CSS for the snippet detail --> snippetDetail.jsp
+ */
+
+.detail-snippet-container {
+    padding: 15px;
+    max-width: 850px;
+}
+
+.detail-snippet-divider {
+    border: 1px solid #444;
+}
+
+.detail-snippet-center {
+    padding: 20px;
+    width: 750px;
+}
+
+.detail-snippet-tags {
+    margin: 5px 0px 0px 0px;
+    padding: 0px 20px 0px 20px;
+}
+
+.detail-snippet-block {
+    background: lightcyan;
+    border: #00a7b3 1px solid;
+    margin: 15px 8px;
+    min-height: 94px;
+    min-width: 94px;
+    padding: 10px;
+}
+
+.detail-snippet-block-descr {
+    margin: 18px 5px 5px 5px;
+    padding: 5px;
+}
+
+.detail-snippet-block-code {
+    max-height: 580px;
+    overflow: auto;
+}
+
+.detail-snippet-user-info {
+    margin: 11px 0px 4px 0px;
+}
+
+.detail-snippet-date {
+    color: teal;
+    font-size: 12px;
+}
+
+.detail-snippet-language-margin {
+    margin: 0px 5px 0px 30px;
+}

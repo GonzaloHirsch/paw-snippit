@@ -1,0 +1,13 @@
+/*
+ * CSS for the snippet tags --> snippetTag.jsp
+ */
+
+.tag-container {
+    background-color: #DCDCDC;
+    margin: 10px;
+    padding: 10px;
+}
+
+.tag-text {
+    font-size: 13px;
+}

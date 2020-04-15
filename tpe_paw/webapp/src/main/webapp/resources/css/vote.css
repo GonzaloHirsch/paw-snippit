@@ -1,0 +1,26 @@
+/*
+ * CSS for the voting icons --> voteForm.jsp
+ */
+.vote-down:hover {
+    color: tomato;
+}
+
+.vote-down-selected {
+    color: tomato;
+}
+
+.vote-up:hover {
+    color: lawngreen;
+}
+
+.vote-up-selected {
+    color: lawngreen;
+}
+
+.vote-count {
+    font-size: xx-large;
+    padding: 10px;
+}
+
+
+

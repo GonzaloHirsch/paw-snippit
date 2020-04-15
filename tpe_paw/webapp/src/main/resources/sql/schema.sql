@@ -79,7 +79,8 @@ CREATE OR REPLACE FUNCTION update_reputation() RETURNS TRIGGER AS
         newReputation = (SELECT reputation FROM users AS u WHERE u.id = uid);
         IF NEW IS NOT null THEN
             newReputation = newReputation + NEW.type;
-        ELSIF OLD IS NOT null THEN
+        END IF;
+        IF OLD IS NOT null THEN
             newReputation = newReputation - OLD.type;
         END IF;
         UPDATE users AS u SET reputation = newReputation WHERE u.id = uid;

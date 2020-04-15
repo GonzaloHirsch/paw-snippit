@@ -63,6 +63,8 @@ CREATE TABLE IF NOT EXISTS snippet_tags (
     PRIMARY KEY(snippet_id, tag_id)
 );
 
+-- Notation of trigger uses single quotes instead of $$ due to parser errors while parsing
+-- The use of TG_OP is needed to avoid the error of not assigned variables NEW or OLD
 CREATE OR REPLACE FUNCTION update_reputation() RETURNS TRIGGER AS
     '
     DECLARE
@@ -77,20 +79,34 @@ CREATE OR REPLACE FUNCTION update_reputation() RETURNS TRIGGER AS
         END IF;
         uid = (SELECT user_id FROM snippets AS sn WHERE sn.id = snippetId);
         newReputation = (SELECT reputation FROM users AS u WHERE u.id = uid);
-        IF NEW IS NOT null THEN
-            newReputation = newReputation + NEW.type;
-        END IF;
-        IF OLD IS NOT null THEN
-            newReputation = newReputation - OLD.type;
+        IF TG_OP = ''INSERT'' THEN
+            IF NEW IS NOT null THEN
+                newReputation = newReputation + NEW.type;
+            END IF;
+        ELSIF TG_OP = ''UPDATE'' THEN
+            IF NEW IS NOT null THEN
+                newReputation = newReputation + NEW.type;
+            END IF;
+            IF OLD IS NOT null THEN
+                newReputation = newReputation - OLD.type;
+            END IF;
+        ELSIF TG_OP = ''DELETE'' THEN
+            IF OLD IS NOT null THEN
+                newReputation = newReputation - OLD.type;
+            END IF;
         END IF;
         UPDATE users AS u SET reputation = newReputation WHERE u.id = uid;
-        return new;
+        IF TG_OP = ''INSERT'' OR TG_OP = ''UPDATE'' THEN
+            RETURN NEW;
+        ELSIF TG_OP = ''DELETE'' THEN
+            RETURN OLD;
+        END IF;
     END;
     ' language plpgsql;
 
 DROP TRIGGER IF EXISTS update_reputation_trigger ON votes_for;
 
+-- Notation uses PROCEDURE instead of FUNCTION to make it backwards compatible
 CREATE TRIGGER update_reputation_trigger AFTER INSERT OR UPDATE OR DELETE ON votes_for
-    FOR EACH ROW
-    EXECUTE FUNCTION update_reputation();
+    FOR EACH ROW EXECUTE PROCEDURE update_reputation();
 

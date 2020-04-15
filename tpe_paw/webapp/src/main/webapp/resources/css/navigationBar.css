@@ -46,9 +46,9 @@
 
 .menu-selected {
     background: #86b0b3;
-    border-right: #00a7b3;
-    border-right-style: solid;
-    border-right-width: 5px;
+    border-left: #00a7b3;
+    border-left-style: solid;
+    border-left-width: 5px;
 }
 
 
@@ -84,7 +84,6 @@ body {
     color:white;
     width:180px;
     letter-spacing: 2px;
-    font-weight: 100;
     font-size: 26px;
     border-bottom: white;
     border-bottom-width: thin;

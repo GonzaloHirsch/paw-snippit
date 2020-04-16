@@ -12,6 +12,8 @@
 <servlet-api.version>2.5</servlet-api.version>
     <jstl.version>1.2</jstl.version>
     <org.postgresql.version>42.2.5</org.postgresql.version>
+      <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
+      <org.hibernate.validator>4.3.1.Final</org.hibernate.validator>
   </properties>
 
   <dependencyManagement>
@@ -38,6 +40,17 @@
           <scope>test</scope>
       </dependency>
 
+      <dependency>
+          <groupId>javax.validation</groupId>
+          <artifactId>validation-api</artifactId>
+          <version>${javax.validation-api.version}</version>
+      </dependency>
+
+      <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-validator</artifactId>
+          <version>${org.hibernate.validator}</version>
+      </dependency>
 
       <dependency>
         <groupId>org.postgresql</groupId>

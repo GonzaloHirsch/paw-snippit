@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/signUp",method = { RequestMethod.POST })
-    public ModelAndView signUp(@ModelAttribute("signUpForm") @Valid final RegisterForm registerForm, final BindingResult errors) {
+    public ModelAndView signUp(@Valid @ModelAttribute("signUpForm") final RegisterForm registerForm, final BindingResult errors) {
         if (errors.hasErrors()) {
             System.out.println("INSIDE ERROR");
             return signUpForm(registerForm);

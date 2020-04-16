@@ -1,27 +1,28 @@
 package ar.edu.itba.paw.webapp.form;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class RegisterForm {
 
-    @NotBlank
     @Size(min=6, max=50)
     @Pattern(regexp = "^[a-zA-Z0-9-_.]+$")
+    @NotBlank
     private String username;
 
-    @NotBlank
     @Email
+    @NotBlank
     private String email;
 
-    @NotBlank
     @Size(min=6)
+    @NotBlank
     private String password;
 
-    @NotBlank
     @Size(min=6)
+    @NotBlank
     private String repeatPassword;
 
     public String getUsername() {

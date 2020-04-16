@@ -52,3 +52,59 @@
 .detail-snippet-language-margin {
     margin: 0px 5px 0px 30px;
 }
+
+.hidden-code {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0);
+}
+
+.copy-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: solid black 1px;
+    border-radius: 2px;
+    font-size: 30px !important;
+    cursor: pointer;
+}
+
+.copy-icon:hover {
+    background: #c1c1c1;
+}
+
+.copy-tooltip {
+    visibility: hidden;
+    width: 140px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -75px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.copy-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.copy-icon:hover .copy-tooltip {
+    visibility: visible;
+    opacity: 1;
+}

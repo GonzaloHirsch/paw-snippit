@@ -10,6 +10,7 @@
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="<c:url value='/resources/js/snippetDetail.js'/>"></script>
 </head>
 
 <body>
@@ -40,7 +41,12 @@
                 <div class="flex-column">
                     <!-- CODE -->
                     <div class="full-width snippet-code-container detail-snippet-block-code">
-                        <pre><code>${fn:escapeXml(snippet.code)}</code></pre>
+                        <span class="material-icons copy-icon" onclick="copyContent(this)" onmouseout="resetTooltip()">
+                            <span class="copy-tooltip" id="copy-tooltip">Copy to clipboard</span>
+                            file_copy
+                        </span>
+                        <pre><code id="code-block">${fn:escapeXml(snippet.code)}</code></pre>
+                        <input id="hidden-code-input" class="hidden-code" />
                     </div>
                     <!-- TAGS -->
                     <div class="flex-row flex-center flex-wrap detail-snippet-tags">

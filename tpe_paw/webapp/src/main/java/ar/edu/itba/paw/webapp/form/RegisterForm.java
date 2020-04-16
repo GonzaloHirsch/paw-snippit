@@ -8,21 +8,21 @@ import javax.validation.constraints.Size;
 
 public class RegisterForm {
 
-    @NotBlank
     @Size(min=6, max=50)
     @Pattern(regexp = "^[a-zA-Z0-9-_.]+$")
+    @NotBlank
     private String username;
 
-    @NotBlank
     @Email
+    @NotBlank
     private String email;
 
-    @NotBlank
     @Size(min=6)
+    @NotBlank
     private String password;
 
-    @NotBlank
     @Size(min=6)
+    @NotBlank
     private String repeatPassword;
 
     public String getUsername() {

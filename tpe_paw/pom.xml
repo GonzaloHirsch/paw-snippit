@@ -41,6 +41,12 @@
           <scope>test</scope>
       </dependency>
       <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-validator</artifactId>
+          <version>${org.hibernate.validator}</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>${org.postgresql.version}</version>

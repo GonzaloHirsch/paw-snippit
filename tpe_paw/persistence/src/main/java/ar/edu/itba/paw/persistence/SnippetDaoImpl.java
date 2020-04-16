@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -24,6 +25,7 @@ import java.util.Optional;
 public class SnippetDaoImpl implements SnippetDao {
 
     private JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     @Autowired
     private UserDao userDao;
@@ -60,6 +62,7 @@ public class SnippetDaoImpl implements SnippetDao {
     @Autowired
     public SnippetDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
+        this.jdbcInsert = new SimpleJdbcInsert(this.jdbcTemplate).withTableName("snippets").usingGeneratedKeyColumns("id");
     }
 
     @Override

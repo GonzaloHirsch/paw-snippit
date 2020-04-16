@@ -17,11 +17,11 @@ public class RegisterForm {
     @NotBlank
     private String email;
 
-    @Size(min=6)
+    @Size(min=8)
     @NotBlank
     private String password;
 
-    @Size(min=6)
+    @Size(min=8)
     @NotBlank
     private String repeatPassword;
 

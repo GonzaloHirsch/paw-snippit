@@ -38,7 +38,7 @@ public class UserDaoImpl implements UserDao {
 
         jdbcTemplate = new JdbcTemplate(ds);
 
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("users");
+        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("users").usingGeneratedKeyColumns("id");
     }
 
     @Override

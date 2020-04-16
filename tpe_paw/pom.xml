@@ -8,10 +8,13 @@
   <name>tpe_paw</name>
 
   <properties>
-<org.springframework.version>4.2.5.RELEASE</org.springframework.version>
-<servlet-api.version>2.5</servlet-api.version>
+    <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
+    <servlet-api.version>2.5</servlet-api.version>
     <jstl.version>1.2</jstl.version>
     <org.postgresql.version>42.2.5</org.postgresql.version>
+    <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
+    <org.hibernate.validator>4.3.1.Final</org.hibernate.validator>
+      <javax.xml.bind.version>2.3.0</javax.xml.bind.version>
   </properties>
 
   <dependencyManagement>
@@ -37,8 +40,6 @@
           <version>${org.springframework.version}</version>
           <scope>test</scope>
       </dependency>
-
-
       <dependency>
         <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
@@ -55,14 +56,27 @@
         <artifactId>jstl</artifactId>
         <version>${jstl.version}</version>
       </dependency>
-
       <dependency>
           <groupId>org.hsqldb</groupId>
           <artifactId>hsqldb</artifactId>
           <version>2.4.0</version>
           <scope>test</scope>
       </dependency>
-
+      <dependency>
+          <groupId>javax.validation</groupId>
+          <artifactId>validation-api</artifactId>
+          <version>${javax.validation-api.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-validator</artifactId>
+          <version>${org.hibernate.validator}</version>
+      </dependency>
+      <dependency>
+          <groupId>javax.xml.bind</groupId>
+          <artifactId>jaxb-api</artifactId>
+          <version>${javax.xml.bind.version}</version>
+      </dependency>
   </dependencies>
 </dependencyManagement>
 

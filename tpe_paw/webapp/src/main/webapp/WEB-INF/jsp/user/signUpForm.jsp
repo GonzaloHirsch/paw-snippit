@@ -9,6 +9,9 @@
     <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
 </head>
 <body>
+<spring:message code="registerForm.username.hint" var="username_hint"/>
+<spring:message code="registerForm.email" var="email"/>
+<spring:message code="registerForm.password" var="password"/>
 <c:url var="signUpUrl" value="/signUp"/>
 <form:form modelAttribute="signUpForm" method="post" action="${signUpUrl}">
     
@@ -16,7 +19,7 @@
         <form:errors path="username" cssClass="form-error" element="p "/>
         <label>
             <spring:message code="registerForm.username"/>
-            <input path="username" placeholder="<spring:message code='registerForm.username.hint'/>"/>
+            <form:input path="username" placeholder='${username_hint}'/>
         </label>
     </div>
 
@@ -24,23 +27,23 @@
         <form:errors path="email" cssClass="form-error" element="p "/>
         <label>
             <spring:message code="registerForm.email"/>
-            <input path="email" placeholder="<spring:message code='registerForm.email'/>"/>
+            <form:input path="email" placeholder='${email}'/>
         </label>
     </div>
 
     <div>
-        <errors path="password" cssClass="form-error" element="p "/>
+        <form:errors path="password" cssClass="form-error" element="p "/>
         <label>
             <spring:message code="registerForm.password"/>
-            <input path="password" placeholder="<spring:message code='registerForm.password'/>" type="password"/>
+            <form:input path="password" placeholder='${password}' type="password"/>
         </label>
     </div>
 
     <div>
-        <errors path="repeatPassword" cssClass="form-error" element="p "/>
+        <form:errors path="repeatPassword" cssClass="form-error" element="p "/>
         <label>
             <spring:message code="registerForm.repeatPassword"/>
-            <input path="repeatPassword" placeholder="<spring:message code='registerForm.password'/>" type="password"/>
+            <form:input path="repeatPassword" placeholder='${password}' type="password"/>
         </label>
     </div>
 

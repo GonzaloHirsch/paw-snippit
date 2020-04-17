@@ -8,6 +8,7 @@
     max-width: 700px;
     outline: dimgray;
     padding: 5px 20px 5px 20px;
+    position: relative;
 }
 
 .snippet-language-tag {

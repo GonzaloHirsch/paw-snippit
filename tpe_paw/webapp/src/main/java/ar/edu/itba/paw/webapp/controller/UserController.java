@@ -60,6 +60,12 @@ public class UserController {
         return new ModelAndView("user/userProfile");
     }
 
+    @RequestMapping(value = "/login")
+    public ModelAndView login() {
+        return new ModelAndView("user/login");
+    }
+
+
 //    @ModelAttribute("loggedUser")
 //    public User loggedUser(HttpSession session) {
 //         Long userId = (Long) session.getAttribute("userId");

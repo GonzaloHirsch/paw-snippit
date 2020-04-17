@@ -48,7 +48,7 @@
     </div>
 
     <div>
-        <input type="submit" value="<spring:message code="registerForm.signUp"/>"/>
+        <input type="submit" value="<spring:message code="registerForm.submit"/>"/>
     </div>
 </form:form>
 </body>

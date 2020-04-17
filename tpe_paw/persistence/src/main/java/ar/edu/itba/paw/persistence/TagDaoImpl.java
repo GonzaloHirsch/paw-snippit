@@ -54,4 +54,9 @@ public class TagDaoImpl implements TagDao {
         return jdbcTemplate.query("SELECT * FROM tags WHERE id IN " +
                 "(SELECT tag_id FROM snippet_tags WHERE snippet_id = ?)", ROW_MAPPER, snippetId);
     }
+
+    @Override
+    public Collection<Tag> getAllTags() {
+        return jdbcTemplate.query("SELECT * FROM tags", ROW_MAPPER);
+    }
 }

@@ -52,3 +52,27 @@
 .detail-snippet-language-margin {
     margin: 0px 5px 0px 30px;
 }
+
+.hidden-code {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0);
+}
+
+.copy-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: solid #00a7b3 2px;
+    border-radius: 5px;
+    font-size: 30px !important;
+    cursor: pointer;
+    transition: background-color 0.5s;
+}
+
+.copy-icon:hover {
+    background: rgb(139, 250, 255);
+}

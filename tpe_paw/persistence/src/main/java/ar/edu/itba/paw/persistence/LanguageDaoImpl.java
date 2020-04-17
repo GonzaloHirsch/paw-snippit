@@ -21,6 +21,8 @@ import java.util.Optional;
 public class LanguageDaoImpl implements LanguageDao {
 
     private JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
+
     private final static RowMapper<Language> ROW_MAPPER = new RowMapper<Language>(){
 
         @Override
@@ -32,6 +34,7 @@ public class LanguageDaoImpl implements LanguageDao {
     @Autowired
     public LanguageDaoImpl(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate((dataSource));
+        this.jdbcInsert = new SimpleJdbcInsert(this.jdbcTemplate).withTableName("languages").usingGeneratedKeyColumns("id");
     }
 
     @Override

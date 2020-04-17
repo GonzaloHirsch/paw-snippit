@@ -63,6 +63,7 @@ public class SnippetSearchQuery {
          * Map used to translate the types over which the order is done into their SQL equivalents
          */
         private final Map<SnippetDao.Types, String> orderTypesMap = new HashMap<SnippetDao.Types, String>(){{
+            put(SnippetDao.Types.ALL, " s.title ");
             put(SnippetDao.Types.TAG, " t.name ");
             put(SnippetDao.Types.TITLE, " s.title ");
             put(SnippetDao.Types.CONTENT, " s.code ");

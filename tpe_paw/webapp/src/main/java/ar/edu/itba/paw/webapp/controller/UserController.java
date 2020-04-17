@@ -46,7 +46,7 @@ public class UserController {
         return new ModelAndView("redirect:/");
     }
 
-    /* Llevarlo a un error controller
+    /* TODO Llevarlo a un error controller
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView noSuchUser() {

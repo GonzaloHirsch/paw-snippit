@@ -24,6 +24,7 @@ import java.util.*;
 public class SearchController {
 
     private Map<String, SnippetDao.Types> typesMap = new HashMap<String, SnippetDao.Types>(){{
+        put("all", SnippetDao.Types.ALL);
         put("tag", SnippetDao.Types.TAG);
         put("title", SnippetDao.Types.TITLE);
         put("content", SnippetDao.Types.CONTENT);

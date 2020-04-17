@@ -12,6 +12,7 @@ public interface SnippetDao {
         FOLLOWING
     }
     enum Types {
+        ALL,
         TAG,
         CONTENT,
         TITLE

@@ -59,7 +59,8 @@
                 </div>
                 <div class="dropdown-type">
                     <form:select path="type" name="Type">
-                        <form:option value="title">Search by</form:option>
+                        <form:option value="all">Search by</form:option>
+                        <form:option value="all">All</form:option>
                         <form:option value="title">Title</form:option>
                         <form:option value="tag">Tag</form:option>
                         <form:option value="content">Content</form:option>

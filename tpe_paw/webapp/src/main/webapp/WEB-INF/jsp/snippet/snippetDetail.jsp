@@ -41,8 +41,7 @@
                 <div class="flex-column">
                     <!-- CODE -->
                     <div class="full-width snippet-code-container detail-snippet-block-code">
-                        <span class="material-icons copy-icon" onclick="copyContent(this)" onmouseout="resetTooltip()">
-                            <span class="copy-tooltip" id="copy-tooltip">Copy to clipboard</span>
+                        <span class="material-icons copy-icon" onclick="copyContent(this)">
                             file_copy
                         </span>
                         <pre><code id="code-block">${fn:escapeXml(snippet.code)}</code></pre>

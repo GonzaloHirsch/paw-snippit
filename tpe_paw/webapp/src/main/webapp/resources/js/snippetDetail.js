@@ -4,12 +4,4 @@ function copyContent() {
     textBox.setAttribute('value', textToCopy.innerHTML);
     textBox.select();
     document.execCommand('copy');
-
-    let tooltip = document.getElementById("copy-tooltip");
-    tooltip.innerHTML = "Copied!";
-}
-
-function resetTooltip() {
-    let tooltip = document.getElementById("copy-tooltip");
-    tooltip.innerHTML = "Copy to clipboard";
 }

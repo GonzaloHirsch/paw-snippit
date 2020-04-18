@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,9 @@ import java.util.Date;
 public class UserController {
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     UserService userService;
 
     @RequestMapping(value = "/signup", method = { RequestMethod.GET })
@@ -28,31 +32,20 @@ public class UserController {
     @RequestMapping(value = "/signup",method = { RequestMethod.POST })
     public ModelAndView signUp(@Valid @ModelAttribute("signUpForm") final RegisterForm registerForm, final BindingResult errors) {
         if (errors.hasErrors()) {
-            System.out.println("INSIDE ERROR");
             return signUpForm(registerForm);
         }
 
-        User user = userService.createUser(
+        User user = userService.register(
                 registerForm.getUsername(),
-                registerForm.getPassword(),
+                passwordEncoder.encode(registerForm.getPassword()),
                 registerForm.getEmail(),
-                "",
-                0,
-                new Date()     //TODO how to getTimeZone, switch to calendar
+                new Date()                  //TODO how to getTimeZone, switch to calendar
         );
 
-        // TODO set as current user
+        // TODO set as current user --> will redirect to login for now
 
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/login");
     }
-
-    /* TODO Llevarlo a un error controller
-    @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    public ModelAndView noSuchUser() {
-        return new ModelAndView("errors/404");
-    }
-    */
 
     @RequestMapping(value = "/user/{id}")
     public ModelAndView userProfile(@PathVariable("id") long id) {

@@ -19,6 +19,12 @@ public class SnippetServiceImpl implements SnippetService {
     public Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId) {
         return this.snippetDao.findSnippetByCriteria(type, term, location, order, userId);
     }
+
+    @Override
+    public Collection<Snippet> findSnippetsForTag(long tagId) {
+        return snippetDao.findSnippetsForTag(tagId);
+    }
+
     @Override
     public Optional<Snippet> findSnippetById(long id) { return snippetDao.findSnippetById(id);}
 

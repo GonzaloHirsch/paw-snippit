@@ -92,4 +92,10 @@ public class SnippetDaoImpl implements SnippetDao {
     public Optional<Snippet> findSnippetById(long id){
         return Optional.of((Snippet) jdbcTemplate.queryForObject("SELECT * FROM snippets WHERE id = ?", ROW_MAPPER, id));
     }
+
+    @Override
+    public Collection<Snippet> findSnippetsForTag(long tagId) {
+        return jdbcTemplate.query("SELECT DISTINCT * FROM snippets AS s1 WHERE EXISTS" +
+                "(SELECT * FROM snippet_tags AS st WHERE s1.id = st.snippet_id AND st.tag_id = ?)", ROW_MAPPER, tagId);
+    }
 }

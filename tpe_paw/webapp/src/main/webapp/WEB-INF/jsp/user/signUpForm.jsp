@@ -12,7 +12,7 @@
 <spring:message code="registerForm.username.hint" var="username_hint"/>
 <spring:message code="registerForm.email" var="email"/>
 <spring:message code="registerForm.password" var="password"/>
-<c:url var="signUpUrl" value="/signUp"/>
+<c:url var="signUpUrl" value="/signup"/>
 <form:form modelAttribute="signUpForm" method="post" action="${signUpUrl}">
     
     <div>

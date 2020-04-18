@@ -7,7 +7,8 @@
     <title>Title</title>
 </head>
 <body>
-    <form method="post">
+    <c:url value="/login" var="loginUrl" />
+    <form action="${loginUrl}" method="post" enctype="application/x-www-form-urlencoded">
         <div>
             <label>
                 <spring:message code="registerForm.username"/>

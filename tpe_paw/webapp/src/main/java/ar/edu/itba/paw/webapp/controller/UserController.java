@@ -20,12 +20,12 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @RequestMapping(value = "/signUp", method = { RequestMethod.GET })
+    @RequestMapping(value = "/signup", method = { RequestMethod.GET })
     public ModelAndView signUpForm(@ModelAttribute("signUpForm") final RegisterForm form) {
         return new ModelAndView("user/signUpForm");
     }
 
-    @RequestMapping(value = "/signUp",method = { RequestMethod.POST })
+    @RequestMapping(value = "/signup",method = { RequestMethod.POST })
     public ModelAndView signUp(@Valid @ModelAttribute("signUpForm") final RegisterForm registerForm, final BindingResult errors) {
         if (errors.hasErrors()) {
             System.out.println("INSIDE ERROR");

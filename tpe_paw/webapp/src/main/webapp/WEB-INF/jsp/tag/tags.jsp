@@ -3,7 +3,7 @@
 
 <html>
     <head>
-
+        <link href="/resources/css/general.css" type="text/css" rel="stylesheet"/>
     </head>
     <body>
         <c:import url="/WEB-INF/jsp/navBar/navigationBar.jsp"></c:import>

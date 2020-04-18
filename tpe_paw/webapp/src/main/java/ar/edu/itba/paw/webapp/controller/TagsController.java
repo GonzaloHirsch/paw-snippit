@@ -23,14 +23,14 @@ public class TagsController {
 
     @RequestMapping("/tags")
     public ModelAndView showAllTags(@ModelAttribute final SearchForm searchForm) {
-        ModelAndView mav = new ModelAndView("tags/tags");
+        ModelAndView mav = new ModelAndView("tag/tags");
         Collection<Tag> allTags = tagService.getAllTags();
         mav.addObject("tags", allTags); 
         return mav;
     }
     @RequestMapping("/tags/{tagId}")
     public ModelAndView showSnippetsForTag(@PathVariable("tagId") long tagId){
-        ModelAndView mav = new ModelAndView("tags/tagSnippets");
+        ModelAndView mav = new ModelAndView("tag/tagSnippets");
         mav.addObject("snippets", snippetService.findSnippetsForTag(tagId));
         return mav;
     }

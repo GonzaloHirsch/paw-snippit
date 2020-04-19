@@ -21,6 +21,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User register(String username, String password, String email, Date dateJoined) {
+        return createUser(username, password, email, "", 0, dateJoined);
+    }
+
+    @Override
     public Optional<User> findUserByUsername(String username) {
         return userDao.findUserByUsername(username);
     }
@@ -30,6 +35,7 @@ public class UserServiceImpl implements UserService {
         userDao.updateDescription(username, newDescription);
     }
 
+    // TODO, should this ask for the current password?
     @Override
     public void changePassword(String email, String password) {
         userDao.changePassword(email, password);

@@ -8,6 +8,8 @@ import java.util.Optional;
 public interface UserService {
     User createUser(String username, String password, String email, String description, int reputation, Date dateJoined);
 
+    User register(String username, String password, String email, Date dateJoined);
+
     Optional<User> findUserByUsername(String username);
 
     void updateDescription(String username, String newDescription);

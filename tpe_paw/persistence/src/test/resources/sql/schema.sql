@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS users (
      id INTEGER IDENTITY PRIMARY KEY,
      username VARCHAR(30) UNIQUE,
-     password VARCHAR(30) NOT NULL,
+     password VARCHAR(60) NOT NULL,
      email VARCHAR(60) UNIQUE,
      description VARCHAR(300),
      reputation INT,

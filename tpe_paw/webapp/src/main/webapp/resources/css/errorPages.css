@@ -33,3 +33,7 @@ h2 {
 .link-button-holder{
     text-align: center;
 }
+
+.form-error {
+    color:red;
+}

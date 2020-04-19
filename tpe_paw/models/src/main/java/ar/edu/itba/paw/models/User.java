@@ -11,6 +11,16 @@ public class User {
     private int reputation;
     private Date dateJoined;
 
+    public User(long id, String username, String password, String email, Date dateJoined) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.description = "";
+        this.reputation = 0;
+        this.dateJoined = dateJoined;
+    }
+
     public User(long id, String username, String password, String email, String description, int reputation, Date dateJoined) {
         this.id = id;
         this.username = username;

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.form.SnippetCreateForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,8 +30,12 @@ public class SnippetCreateController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ModelAndView snippetCreate(@ModelAttribute("searchForm") final SearchForm searchForm, @Valid @ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm) {
+    public ModelAndView snippetCreate( @Valid @ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm, final BindingResult errors,@ModelAttribute("searchForm") final SearchForm searchForm) {
+        if (errors.hasErrors()) {return snippetCreateDetail(searchForm,snippetCreateForm); }
         final ModelAndView mav = new ModelAndView("snippet/snippetCreate");
+
+
+
         mav.addObject("searchContext", "");
         return mav;
     }

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.dao.TagDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,9 +18,7 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class SnippetDaoImpl implements SnippetDao {
@@ -91,5 +90,23 @@ public class SnippetDaoImpl implements SnippetDao {
     @Override
     public Optional<Snippet> findSnippetById(long id){
         return Optional.of((Snippet) jdbcTemplate.queryForObject("SELECT * FROM snippets WHERE id = ?", ROW_MAPPER, id));
+    }
+
+    @Override
+    public Optional<Snippet> createSnippet(User owner, String title, String description,String code, String dateCreated, String language, Collection<Tag> tags){
+        final Map<String, Object> snippetDataMap = new HashMap<String,Object>(){{
+            put("user_id", owner.getUserId());
+            put("title",title);
+            put("description",description);
+            put("code",code);
+            put("date_created",dateCreated);
+            put("language",language);
+        }};
+        final Number snippetId = jdbcInsert.executeAndReturnKey(snippetDataMap);
+
+        //TODO: Agregar a la tabla de tags
+
+
+        return Optional.of(new Snippet((Long)snippetId,owner,code,title,description,dateCreated,language,tags));
     }
 }

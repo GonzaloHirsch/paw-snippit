@@ -3,26 +3,22 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 
+import javax.validation.constraints.Size;
 import java.util.Collection;
 
 public class SnippetCreateForm {
-
-    private long id;
-    private User owner;
-    private String code;
+    @Size(min=5, max=50)
     private String title;
+
+    @Size(max=500)
     private String description;
-    private String dateCreated;
+
+    @Size(min=5,max=30000)
+    private String code;
+
     private String language;
     private Collection<Tag> tags;
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
 
     public void setCode(String code) {
         this.code = code;
@@ -36,10 +32,6 @@ public class SnippetCreateForm {
         this.description = description;
     }
 
-    public void setDateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
     public void setLanguage(String language) {
         this.language = language;
     }
@@ -48,13 +40,7 @@ public class SnippetCreateForm {
         this.tags = tags;
     }
 
-    public long getId() {
-        return id;
-    }
 
-    public User getOwner() {
-        return owner;
-    }
 
     public String getCode() {
         return code;
@@ -66,10 +52,6 @@ public class SnippetCreateForm {
 
     public String getDescription() {
         return description;
-    }
-
-    public String getDateCreated() {
-        return dateCreated;
     }
 
     public String getLanguage() {

@@ -51,7 +51,7 @@
                     <div class="flex-row flex-center flex-wrap detail-snippet-tags">
                         <c:forEach var="tag" items="${snippet.tags}">
                             <c:set var="tag" value="${tag}" scope="request"/>
-                            <c:import url="/WEB-INF/jsp/snippet/snippetTag.jsp"/>
+                            <c:import url="/WEB-INF/jsp/tag/tag.jsp"/>
                         </c:forEach>
                     </div>
                 </div>

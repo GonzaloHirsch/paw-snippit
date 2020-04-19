@@ -15,8 +15,8 @@
 </head>
 <body>
     <c:set var="tag" value="${requestScope.tag}"/>
-    <div class="tag-container border-radius">
+    <a href="<c:url value='/tags/${tag.id}'/>" class="tag-container border-radius">
         <div class="snippet-text tag-text">${tag.name.toUpperCase()}</div>
-    </div>
+    </a>
 </body>
 </html>

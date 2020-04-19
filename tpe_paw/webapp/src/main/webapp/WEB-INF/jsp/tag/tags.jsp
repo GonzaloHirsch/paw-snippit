@@ -5,7 +5,7 @@
     <head>
         <link href="<c:url value='/resources/css/general.css'/>" type="text/css" rel="stylesheet"/>
         <link href="<c:url value='/resources/css/navigationBar.css'/>" type="text/css" rel="stylesheet"/>
-        <link href="<c:url value='/resources/css/allTags.css'/>" type="text/css" rel="stylesheet"/>
+        <link href="<c:url value='/resources/css/tags.css'/>" type="text/css" rel="stylesheet"/>
         <link href="<c:url value='/resources/css/tag.css'/>" type="text/css" rel="stylesheet"/>
     </head>
     <body>

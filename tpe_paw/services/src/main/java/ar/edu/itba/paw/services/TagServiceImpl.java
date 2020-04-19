@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class TagServiceImpl implements TagService {
@@ -28,6 +29,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public Optional<Tag> findTagById(long tagId) {
+        return tagDao.findTagById(tagId);
+    }
+
+    @Override
     public void followTag(long userId, long tagId) {
         followingDao.followTag(userId, tagId);
     }
@@ -36,5 +42,6 @@ public class TagServiceImpl implements TagService {
     public void unfollowTag(long userId, long tagId) {
         followingDao.unfollowTag(userId, tagId);
     }
+
 
 }

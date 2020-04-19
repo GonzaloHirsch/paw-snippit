@@ -10,4 +10,6 @@ public interface TagDao {
     Tag addTag(String name);
     Collection<Tag> findTagsForSnippet(long snippetId);
     Collection<Tag> getAllTags();
+
+    Optional<Tag> findTagById(long tagId);
 }

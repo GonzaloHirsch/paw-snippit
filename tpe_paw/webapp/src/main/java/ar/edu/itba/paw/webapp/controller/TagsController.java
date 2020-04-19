@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Controller
 public class TagsController {
@@ -29,9 +30,15 @@ public class TagsController {
         return mav;
     }
     @RequestMapping("/tags/{tagId}")
-    public ModelAndView showSnippetsForTag(@PathVariable("tagId") long tagId){
+    public ModelAndView showSnippetsForTag(@PathVariable("tagId") long tagId, @ModelAttribute final SearchForm searchForm){
         ModelAndView mav = new ModelAndView("tag/tagSnippets");
-        mav.addObject("snippets", snippetService.findSnippetsForTag(tagId));
+        Optional<Tag> tag = tagService.findTagById(tagId);
+        if (!tag.isPresent()) {
+            // TODO customize error msg
+        } else {
+            mav.addObject("tag", tag.get());
+            mav.addObject("snippets", snippetService.findSnippetsForTag(tagId));
+        }
         return mav;
     }
 

@@ -21,16 +21,17 @@ public class SnippetCreateController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    @RequestMapping(value = "/create")
     public ModelAndView snippetCreateDetail(@ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm) {
-        final ModelAndView mav = new ModelAndView("snippetCreate");
-        mav.addObject("searchContext","");
+        final ModelAndView mav = new ModelAndView("snippet/snippetCreate");
+        mav.addObject("searchContext", "");
         return mav;
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ModelAndView snippetCreate(@ModelAttribute("searchForm") final SearchForm searchForm, @Valid @ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm){
-        final ModelAndView mav = new ModelAndView("snippetCreate");
-        mav.addObject("searchContext","");
+    public ModelAndView snippetCreate(@ModelAttribute("searchForm") final SearchForm searchForm, @Valid @ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm) {
+        final ModelAndView mav = new ModelAndView("snippet/snippetCreate");
+        mav.addObject("searchContext", "");
         return mav;
     }
+}

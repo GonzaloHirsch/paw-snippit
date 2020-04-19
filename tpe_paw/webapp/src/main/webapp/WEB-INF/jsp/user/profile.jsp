@@ -48,8 +48,15 @@
         </div>
         <hr class="divider"/>
         <div class="feed-background-color">
-            <c:set var="snippetList" value="${snippets}" scope="request"/>
-            <c:import url="/WEB-INF/jsp/snippet/snippetFeed.jsp"/>
+            <c:if test="${snippets.size() == 0}">
+                <div class="profile-no-snippet flex-center fw-100">
+                    <spring:message code="profile.no-snippets"/>
+                </div>
+            </c:if>
+            <c:if test="${snippets.size() > 0}">
+                <c:set var="snippetList" value="${snippets}" scope="request"/>
+                <c:import url="/WEB-INF/jsp/snippet/snippetFeed.jsp"/>
+            </c:if>
         </div>
     </div>
 </div>

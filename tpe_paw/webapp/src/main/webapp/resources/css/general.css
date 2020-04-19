@@ -1,8 +1,17 @@
 /* General CSS stylesheet for all the project */
 
+/* SNIPPIT ICON */
+.app-icon {
+    font-size: 55px !important;
+}
+
 /* Text Properties */
 * {
     font-family: Roboto, "sans-serif";
+}
+
+*:focus {
+    outline: none;
 }
 
 .fw-100 { font-weight: 100; }

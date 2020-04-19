@@ -31,6 +31,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findUserById(long id) {
+        return this.userDao.findUserById(id);
+    }
+
+    @Override
     public void updateDescription(String username, String newDescription) {
         userDao.updateDescription(username, newDescription);
     }

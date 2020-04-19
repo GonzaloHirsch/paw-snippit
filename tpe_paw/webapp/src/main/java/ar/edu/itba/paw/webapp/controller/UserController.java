@@ -1,19 +1,25 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.UserService;
+import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
+import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -22,7 +28,10 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
+
+    @Autowired
+    private SnippetService snippetService;
 
     @RequestMapping(value = "/signup", method = { RequestMethod.GET })
     public ModelAndView signUpForm(@ModelAttribute("signUpForm") final RegisterForm form) {
@@ -48,9 +57,16 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/{id}")
-    public ModelAndView userProfile(@PathVariable("id") long id) {
-        // TODO
-        return new ModelAndView("user/userProfile");
+    public ModelAndView userProfile(@ModelAttribute("searchForm") final SearchForm searchForm, final @PathVariable("id") long id) {
+        final ModelAndView mav = new ModelAndView("user/profile");
+        Optional<User> user = this.userService.findUserById(id);
+        if (!user.isPresent()){
+            // TODO: handle error
+        }
+        Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getUserId());
+        mav.addObject("user", user.get());
+        mav.addObject("snippets", snippets);
+        return mav;
     }
 
     @RequestMapping(value = "/login")

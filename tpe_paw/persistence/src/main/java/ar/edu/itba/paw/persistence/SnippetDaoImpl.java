@@ -81,6 +81,11 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
+    public Collection<Snippet> findAllSnippetsByOwner(long userId) {
+        return jdbcTemplate.query("SELECT * FROM snippets AS s WHERE s.user_id = ?",ROW_MAPPER, userId);
+    }
+
+    @Override
     public Collection<Snippet> findSnippetByCriteria(Types type, String term, Locations location, Orders order, Long userId) {
         SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(location, userId, type, term)
                 .setOrder(order, type)

@@ -21,8 +21,7 @@ public class RegisterForm {
     @NotBlank
     private String password;
 
-    @Size(min=8)
-    @NotBlank
+    // TODO check if same password
     private String repeatPassword;
 
     public String getUsername() {

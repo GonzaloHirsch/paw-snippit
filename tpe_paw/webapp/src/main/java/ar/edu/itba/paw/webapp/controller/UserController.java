@@ -25,12 +25,12 @@ public class UserController {
     UserService userService;
 
     @RequestMapping(value = "/signup", method = { RequestMethod.GET })
-    public ModelAndView signUpForm(@ModelAttribute("signUpForm") final RegisterForm form) {
+    public ModelAndView signUpForm(@ModelAttribute("registerForm") final RegisterForm form) {
         return new ModelAndView("user/signUpForm");
     }
 
     @RequestMapping(value = "/signup",method = { RequestMethod.POST })
-    public ModelAndView signUp(@Valid @ModelAttribute("signUpForm") final RegisterForm registerForm, final BindingResult errors) {
+    public ModelAndView signUp(@Valid @ModelAttribute("registerForm") final RegisterForm registerForm, final BindingResult errors) {
         if (errors.hasErrors()) {
             return signUpForm(registerForm);
         }

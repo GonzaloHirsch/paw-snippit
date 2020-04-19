@@ -7,49 +7,50 @@
 <head>
     <title>Sign Up!</title>
     <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/registration.css'/>" rel="stylesheet"/>
 </head>
 <body>
 <spring:message code="registerForm.username.hint" var="username_hint"/>
-<spring:message code="registerForm.email" var="email"/>
-<spring:message code="registerForm.password" var="password"/>
+<spring:message code="registerForm.email.hint" var="email_hint"/>
+<spring:message code="registerForm.password.hint" var="password_hint"/>
 <c:url var="signUpUrl" value="/signup"/>
-<form:form modelAttribute="signUpForm" method="post" action="${signUpUrl}">
-    
-    <div>
-        <form:errors path="username" cssClass="form-error" element="p "/>
-        <label>
-            <spring:message code="registerForm.username"/>
-            <form:input path="username" placeholder='${username_hint}'/>
-        </label>
-    </div>
+<div>
+    <form:form class="flex-center register-form register-border register-shadow" modelAttribute="registerForm" method="post" action="${signUpUrl}">
+        <div class="flex-column register-form-data">
+            <div class="register-field-container">
+                <form:errors path="username" cssClass="form-error" element="p" />
+                <label>
+                    <form:input class="register-border register-field-size" path="username" placeholder='${username_hint}'/>
+                </label>
+            </div>
 
-    <div>
-        <form:errors path="email" cssClass="form-error" element="p "/>
-        <label>
-            <spring:message code="registerForm.email"/>
-            <form:input path="email" placeholder='${email}'/>
-        </label>
-    </div>
+            <div class="register-field-container border-radius">
+                <form:errors path="email" cssClass="form-error" element="p "/>
+                <label>
+                    <form:input class="register-border register-field-size" path="email" placeholder='${email_hint}'/>
+                </label>
+            </div>
 
-    <div>
-        <form:errors path="password" cssClass="form-error" element="p "/>
-        <label>
-            <spring:message code="registerForm.password"/>
-            <form:input path="password" placeholder='${password}' type="password"/>
-        </label>
-    </div>
+            <div class="register-field-container">
+                <form:errors path="password" cssClass="form-error" element="p "/>
+                <label>
+                    <form:input class="register-border register-field-size" path="password" placeholder='${password_hint}' type="password"/>
+                </label>
+            </div>
 
-    <div>
-        <form:errors path="repeatPassword" cssClass="form-error" element="p "/>
-        <label>
-            <spring:message code="registerForm.repeatPassword"/>
-            <form:input path="repeatPassword" placeholder='${password}' type="password"/>
-        </label>
-    </div>
+            <div class="register-field-container">
+                <form:errors path="repeatPassword" cssClass="form-error" element="p "/>
+                <label>
+                    <form:input class="register-border register-field-size" path="repeatPassword" placeholder='${password_hint}' type="password"/>
+                </label>
+            </div>
 
-    <div>
-        <input type="submit" value="<spring:message code="registerForm.submit"/>"/>
-    </div>
-</form:form>
+            <div class="register-field-container">
+                <input class="register-border register-field-size register-button" type="submit" value="<spring:message code="registerForm.submit"/>"/>
+            </div>
+        </div>
+    </form:form>
+</div>
 </body>
 </html>

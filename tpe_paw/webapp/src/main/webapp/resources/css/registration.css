@@ -1,0 +1,39 @@
+
+.register-form {
+    margin: 20px;
+    max-width: 500px;
+    padding: 40px
+}
+
+.register-form-data {
+    padding: 10px;
+}
+
+.register-field-container {
+    margin: 5px;
+}
+
+.register-field-size {
+    font-size: 17px;
+    height: 50px;
+    padding: 15px;
+    width: 450px;
+}
+
+.register-button {
+    background-color: slateblue; /* Green */
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 17px;
+    text-align: center;
+    margin: 8px 0px 0px 0px;
+}
+
+.register-border {
+    border-radius: 12px;
+}
+
+.register-shadow {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}

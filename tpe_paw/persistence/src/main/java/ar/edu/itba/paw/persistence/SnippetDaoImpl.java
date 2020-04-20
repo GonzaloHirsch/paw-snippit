@@ -55,7 +55,7 @@ public class SnippetDaoImpl implements SnippetDao {
                     rs.getString("code"),
                     rs.getString("title"),
                     rs.getString("description"),
-                    new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(calendar.getTime()),
+                    new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(calendar.getTime()),
                     language != null ? language : "",
                     null
             );

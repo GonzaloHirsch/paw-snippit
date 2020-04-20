@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.dao.TagDao;
+import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,6 +22,7 @@ public class TagDaoImpl implements TagDao {
 
     private JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final SimpleJdbcInsert jdbcInsertSnippetTag;
     private final static RowMapper<Tag> ROW_MAPPER = new RowMapper<Tag>(){
 
         @Override
@@ -33,6 +35,7 @@ public class TagDaoImpl implements TagDao {
     public TagDaoImpl(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate((dataSource));
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("tags").usingGeneratedKeyColumns("id");
+        this.jdbcInsertSnippetTag = new SimpleJdbcInsert(jdbcTemplate).withTableName("snippet_tags");
     }
 
     @Override
@@ -53,5 +56,14 @@ public class TagDaoImpl implements TagDao {
     public Collection<Tag> findTagsForSnippet(long snippetId) {
         return jdbcTemplate.query("SELECT * FROM tags WHERE id IN " +
                 "(SELECT tag_id FROM snippet_tags WHERE snippet_id = ?)", ROW_MAPPER, snippetId);
+    }
+
+    @Override
+    public void addSnippetTag(Snippet snippet, Tag tag){
+        final Map<String, Object> snippetTagDataMap = new HashMap<String,Object>(){{
+            put("snippet_id", snippet.getId());
+            put("tag_id", tag.getId());
+        }};
+        jdbcInsert.execute(snippetTagDataMap);
     }
 }

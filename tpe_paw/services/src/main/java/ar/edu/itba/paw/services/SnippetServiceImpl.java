@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
+import ar.edu.itba.paw.interfaces.dao.TagDao;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
@@ -16,6 +17,9 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Autowired
     private SnippetDao snippetDao;
+
+    @Autowired
+    private TagDao tagDao;
 
     @Override
     public Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId) {
@@ -39,6 +43,16 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Override
     public Optional<Snippet> createSnippet(User owner, String title, String description, String code, String dateCreated, String language, Collection<Tag> tags) {
-        return snippetDao.createSnippet(owner,title,description,code,dateCreated,language,tags);
+        Optional<Snippet> snippet =  snippetDao.createSnippet(owner,title,description,code,dateCreated,language,tags);
+
+        //Add the tags to the snippet_tag table
+        //TODO: See if its better to call TagService instead of TagDao directly.
+        if(snippet.isPresent()){
+            for(Tag tag : tags) {
+                tagDao.addSnippetTag(snippet.get(), tag);
+            }
+        }
+
+        return snippet;
     }
 }

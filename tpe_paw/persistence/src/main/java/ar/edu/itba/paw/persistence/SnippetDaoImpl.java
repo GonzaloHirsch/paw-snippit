@@ -104,9 +104,6 @@ public class SnippetDaoImpl implements SnippetDao {
         }};
         final Number snippetId = jdbcInsert.executeAndReturnKey(snippetDataMap);
 
-        //TODO: Agregar a la tabla de tags
-
-
         return Optional.of(new Snippet((Long)snippetId,owner,code,title,description,dateCreated,language,tags));
     }
 }

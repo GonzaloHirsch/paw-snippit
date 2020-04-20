@@ -1,0 +1,8 @@
+
+.all-tags-grid {
+    display: grid;
+    padding: 40px;
+    grid-gap: 20px;
+    grid-template-rows: max-content;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}

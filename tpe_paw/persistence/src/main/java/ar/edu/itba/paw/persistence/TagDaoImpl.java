@@ -66,4 +66,14 @@ public class TagDaoImpl implements TagDao {
         }};
         jdbcInsert.execute(snippetTagDataMap);
     }
+
+    @Override
+    public Collection<Tag> getAllTags() {
+        return jdbcTemplate.query("SELECT * FROM tags", ROW_MAPPER);
+    }
+
+    @Override
+    public Optional<Tag> findTagById(long tagId) {
+        return jdbcTemplate.query("SELECT * FROM tags WHERE id = ?", ROW_MAPPER, tagId).stream().findFirst();
+    }
 }

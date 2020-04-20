@@ -12,7 +12,27 @@
         <c:import url="/WEB-INF/jsp/navBar/navigationBar.jsp"/>
         <div class="main-content">
             <div>
-                <spring:message code="tagSnippets.title" arguments="${tag.name}"/>
+                <div>
+                    <spring:message code="tagSnippets.title" arguments="${tag.name}"/>
+                </div>
+                <div>
+                    <c:choose>
+                        <c:when test="${!follows}">
+                            <a href="<c:url value='/tags/follow/${tag.id}'/>">
+                                <button>
+                                    <spring:message code="tags.follow"/>
+                                </button>
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="<c:url value='/tags/unfollow/${tag.id}'/>">
+                                <button>
+                                    <spring:message code="tags.unfollow"/>
+                                </button>
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
             </div>
             <div class="tag-snippets-grid">
                 <c:forEach var="snippet" items="${snippets}">

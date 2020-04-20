@@ -32,7 +32,7 @@ public class FollowingDaoImpl implements FollowingDao {
     @Autowired
     FollowingDaoImpl(DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds).withTableName("following");
+        this.jdbcInsert = new SimpleJdbcInsert(ds).withTableName("follows");
     }
 
     @Override
@@ -51,6 +51,6 @@ public class FollowingDaoImpl implements FollowingDao {
 
     @Override
     public void unfollowTag(long userId, long tagId) {
-        jdbcTemplate.update("DELETE FROM following WHERE user_id = ? AND tag_id = ?", new Object[]{userId, tagId});
+        jdbcTemplate.update("DELETE FROM follows WHERE user_id = ? AND tag_id = ?", new Object[]{userId, tagId});
     }
 }

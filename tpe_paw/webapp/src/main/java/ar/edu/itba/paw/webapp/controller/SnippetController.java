@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.service.FavoriteService;
-import ar.edu.itba.paw.interfaces.service.SnippetService;
-import ar.edu.itba.paw.interfaces.service.UserService;
-import ar.edu.itba.paw.interfaces.service.VoteService;
+import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Favorite;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
@@ -47,13 +44,12 @@ public class SnippetController {
         retrievedSnippet.ifPresent(snippet -> {
                 mav.addObject("snippet", snippet);
         });
+
         //User
         Optional<User> user = this.userService.getCurrentUser();
         // TODO Do we need to pass user logged in to the detail? Why?
-        if (!user.isPresent()) {
-            // TODO No user is logged in -> Fav/vote buttons take to login screen
-        }
         mav.addObject("user", user.get());
+
         // Vote
         Optional<Vote> vote = this.voteService.getVote(user.get().getUserId(), retrievedSnippet.get().getId());
         int voteType = 0;
@@ -63,10 +59,12 @@ public class SnippetController {
         voteForm.setType(voteType);
         voteForm.setOldType(voteType);
         voteForm.setUserId(user.get().getUserId());
+
         // Fav
         Optional<Favorite> fav = this.favService.getFavorite(user.get().getUserId(), retrievedSnippet.get().getId());
         favForm.setFavorite(fav.isPresent());
         favForm.setUserId(user.get().getUserId());
+
         // Vote Count
         Optional<Integer> voteCount = this.voteService.getVoteBalance(retrievedSnippet.get().getId());
         if (voteCount.isPresent()){

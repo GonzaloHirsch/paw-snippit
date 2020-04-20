@@ -10,7 +10,6 @@
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/registration.css'/>" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -39,7 +38,7 @@
                 </label>
             </div>
 
-            <div class="register-field-container border-radius">
+            <div class="register-field-container">
                 <form:errors path="email" cssClass="form-error" element="p "/>
                 <label>
                     <i class="material-icons register-icons">email</i>

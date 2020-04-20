@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
+import ar.edu.itba.paw.interfaces.dao.TagDao;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
@@ -16,12 +17,17 @@ public class SnippetServiceImpl implements SnippetService {
     @Autowired
     private SnippetDao snippetDao;
 
+    @Autowired
+    private TagDao tagDao;
+
     @Override
     public Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId) {
         return this.snippetDao.findSnippetByCriteria(type, term, location, order, userId);
     }
     @Override
-    public Optional<Snippet> findSnippetById(long id) { return snippetDao.findSnippetById(id);}
+    public Optional<Snippet> findSnippetById(long id) {
+        return snippetDao.findSnippetById(id);
+    }
 
     @Override
     public Collection<Snippet> getAllSnippets() { return snippetDao.getAllSnippets(); }

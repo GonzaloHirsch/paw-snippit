@@ -54,4 +54,8 @@ public class Snippet {
     public Collection<Tag> getTags() {
         return tags;
     }
+
+    public void setTags(Collection<Tag> tags) {
+        this.tags = tags;
+    }
 }

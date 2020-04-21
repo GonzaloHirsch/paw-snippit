@@ -10,6 +10,7 @@
 <head>
     <link href="<c:url value='/resources/css/navigationBar.css'/>" rel="stylesheet" />
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet" />
+    <script src="<c:url value='/resources/js/searchForm.js'/>"></script>
     <c:url var="searchUrl" value="/${searchContext}search" />
 </head>
 <body>
@@ -54,19 +55,20 @@
         <div class="search-container">
             <form:form modelAttribute="searchForm" method="get" action="${searchUrl}" >
                 <div class="search-bar">
-                    <form:input path="query" type="text"  class="search-input" placeholder="Search..." />
+                    <form:input path="query" type="text" id="search-bar"  class="search-input" placeholder="Search..." />
                     <button type="submit"><i class="fa fa-search"></i></button>
                 </div>
                 <div class="dropdown-type">
                     <form:select path="type" name="Type">
-                        <form:option value="title">Search by</form:option>
+                        <form:option value="all">Search by</form:option>
+                        <form:option value="all">All</form:option>
                         <form:option value="title">Title</form:option>
                         <form:option value="tag">Tag</form:option>
                         <form:option value="content">Content</form:option>
                     </form:select>
                 </div>
                 <div class="dropdown-type">
-                    <form:select path="sort" name="Sort">
+                    <form:select path="sort" name="Sort" onchange="submitForm(this)">
                         <form:option value="no">Sort by</form:option>
                         <form:option value="asc">Ascending</form:option>
                         <form:option value="desc">Descending</form:option>

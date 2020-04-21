@@ -3,6 +3,12 @@
 /* Text Properties */
 * {
     font-family: Roboto, "sans-serif";
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #eeedf2;
+    margin: 0;
 }
 
 .fw-100 { font-weight: 100; }

@@ -10,10 +10,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
           rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <c:url var="searchUrl" value="/${searchContext}search"/>
     <script src="<c:url value='/resources/js/navigationBar.js'/>"></script>
+    <script src="<c:url value='/resources/js/searchForm.js'/>"></script>
 </head>
 <body>
+<c:url var="searchUrl" value="/${searchContext}search"/>
 <%--    <div class="sidebar">--%>
 <%--        <ul>--%>
 <%--            <c:choose>--%>
@@ -92,7 +93,8 @@
     <div class="search-container flex-center">
         <form:form modelAttribute="searchForm" method="get" action="${searchUrl}">
             <div class="search-bar fw-100">
-                <form:input path="query" type="text" class="search-input fw-100" placeholder="Search..."/>
+                <form:input path="query" type="text" id="search-bar" class="search-input fw-100"
+                            placeholder="Search..."/>
                 <button type="submit"><span class="material-icons search-icon">search</span></button>
             </div>
             <div class="dropdown-type">
@@ -104,7 +106,7 @@
                 </form:select>
             </div>
             <div class="dropdown-type">
-                <form:select path="sort" name="Sort">
+                <form:select path="sort" name="Sort" onchange="submitForm(this)">
                     <form:option value="no">Sort by</form:option>
                     <form:option value="asc">Ascending</form:option>
                     <form:option value="desc">Descending</form:option>

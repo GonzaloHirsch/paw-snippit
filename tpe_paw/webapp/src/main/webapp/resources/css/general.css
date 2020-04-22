@@ -81,3 +81,14 @@
 .full-width {
     width: 100%;
 }
+
+.panel {
+    background: lightcyan;
+    border: #00a7b3 1px solid;
+    border-radius: 8px;
+}
+
+.divider {
+    margin-left: 100px;
+    margin-right: 100px;
+}

@@ -30,6 +30,11 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
+    public Collection<Snippet> findAllSnippetsByOwner(final long userId) {
+        return this.snippetDao.findAllSnippetsByOwner(userId);
+    }
+
+    @Override
     public Collection<Snippet> getAllSnippets() { return snippetDao.getAllSnippets(); }
 
     @Override

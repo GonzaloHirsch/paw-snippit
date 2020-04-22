@@ -12,6 +12,8 @@ public interface UserService {
 
     Optional<User> findUserByUsername(String username);
 
+    Optional<User> findUserById(final long id);
+
     void updateDescription(String username, String newDescription);
 
     void changePassword(String email, String password);

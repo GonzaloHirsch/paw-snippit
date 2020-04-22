@@ -7,9 +7,7 @@
         <link href="<c:url value='/resources/css/snippetFeed.css'/>" rel="stylesheet" />
     </head>
     <body>
-        <div class="wrapper">
-            <c:import url="/WEB-INF/jsp/navBar/navigationBar.jsp"/>
-            <div class="main-content">
+
                 <c:set var="snippetList" value="${requestScope.snippetList}"/>
                 <div class="feed-snippets-grid">
                     <c:forEach var="snippet" items="${snippetList}">
@@ -18,7 +16,6 @@
                     </c:forEach>
                 </div>
             </div>
-        </div>
         <script src="<c:url value='/resources/js/snippetsFeed.js'/>"></script>
     </body>
 </html>

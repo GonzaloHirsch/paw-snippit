@@ -1,0 +1,52 @@
+.detail-user {
+    margin: 55px 15px 10px;
+    padding-top: 15px;
+    min-height: 94px;
+    min-width: 94px;
+}
+
+.profile-info {
+    margin: 10px 30px 10px 10px;
+    justify-content: center;
+}
+
+.profile-info .profile-info-item {
+    padding-top: 15px;
+}
+
+.profile-username {
+    font-size: 30px;
+}
+
+.profile-description {
+    display: inline-block;
+    font-size: 20px;
+    word-break: break-word;
+}
+
+.profile-date {
+    font-size: 10px;
+}
+
+.profile-stats .flex-column {
+    margin: 10px;
+}
+
+.profile-photo {
+    height: 200px;
+    margin: 20px 25px 20px 25px;
+}
+
+.stat {
+    font-size: 20px;
+    margin-right: 4px;
+}
+
+.stat-bundle {
+    margin-right: 20px;
+}
+
+.profile-no-snippet {
+    font-size: 30px;
+    padding: 50px;
+}

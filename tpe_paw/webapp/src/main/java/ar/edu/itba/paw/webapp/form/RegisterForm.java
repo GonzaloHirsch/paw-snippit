@@ -3,11 +3,14 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.webapp.helpers.FieldMatch;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@FieldMatch(first = "password", second = "repeatPassword", message = "The password fields must match")
+@FieldMatch(first = "password", second = "repeatPassword" /*message = messageSource.getMessage("FieldMatch.registerForm",null, LocaleContextHolder.getLocale())*/)
 public class RegisterForm {
 
     @Size(min=6, max=50)
@@ -23,7 +26,6 @@ public class RegisterForm {
     @NotBlank
     private String password;
 
-    // TODO check if same password
     private String repeatPassword;
 
     public String getUsername() {

@@ -6,3 +6,18 @@
     grid-template-rows: max-content;
     padding: 40px;
 }
+
+.tag-snippets-title-line {
+    display: flex;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 10px;
+}
+
+.tag-snippets-title {
+    flex-grow: 1;
+}
+
+.tag-snippets-button {
+
+}

@@ -74,6 +74,11 @@ public class UserController {
         return new ModelAndView("user/login");
     }
 
+    @RequestMapping(value = "/goodbye")
+    public ModelAndView logout() {
+        return new ModelAndView("user/logout");
+    }
+
 
 //    @ModelAttribute("loggedUser")
 //    public User loggedUser(HttpSession session) {

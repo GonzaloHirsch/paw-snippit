@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.helpers.FieldMatch;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+@FieldMatch(first = "password", second = "repeatPassword", message = "The password fields must match")
 public class RegisterForm {
 
     @Size(min=6, max=50)

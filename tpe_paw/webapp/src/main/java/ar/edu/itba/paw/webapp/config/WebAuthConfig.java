@@ -41,10 +41,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement()
                 .invalidSessionUrl("/")                                         /* Where to redirect when there is no available session */
             .and().authorizeRequests()                                          /* How we will authorize HTTP request --> which roles and do which requests */
+                .antMatchers("/goodbye").anonymous()
                 .antMatchers("/login", "/signup").anonymous()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/favorites/", "/following/", "/snippet/**/vote", "/snippet/**/fav").hasRole("USER")
-            .and().formLogin()
+                .antMatchers("/**").permitAll()
+                .and().formLogin()
                 .loginPage("/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
@@ -55,7 +57,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .key("${key}")
             .and().logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
+                .logoutSuccessUrl("/goodbye")
             .and().exceptionHandling()
                 .accessDeniedPage("/403")
             .and().csrf().disable();

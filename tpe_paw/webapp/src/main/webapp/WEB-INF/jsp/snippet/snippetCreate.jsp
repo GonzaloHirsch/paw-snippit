@@ -40,6 +40,7 @@
                         <form:option value="${lan.id}">${lan.name}</form:option>
                     </c:forEach>
                 </form:select>
+                <form:errors path="language" cssClass="formError" element="p"/>
             </div>
 
             <div>
@@ -48,6 +49,7 @@
                     <form:select path="tags" multiple="true" name="tagselect" >
                         <form:options items="${tagList}" itemValue="id" itemLabel="name"/>
                     </form:select>
+                    <form:errors path="tags" cssClass="formError" element="p"/>
                 </td>
             </div>
             <div>

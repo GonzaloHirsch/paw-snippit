@@ -11,11 +11,11 @@
     <div class="wrapper">
         <c:import url="/WEB-INF/jsp/navBar/navigationBar.jsp"/>
         <div class="main-content">
-            <div>
-                <div>
+            <div class="tag-snippets-title-line">
+                <div class="tag-snippets-title">
                     <spring:message code="tagSnippets.title" arguments="${tag.name}"/>
                 </div>
-                <div>
+                <div class="tag-snippets-button">
                     <c:choose>
                         <c:when test="${!follows}">
                             <a href="<c:url value='/tags/follow/${tag.id}'/>">

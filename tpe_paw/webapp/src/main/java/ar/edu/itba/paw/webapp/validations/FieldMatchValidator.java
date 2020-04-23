@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.helpers;
+package ar.edu.itba.paw.webapp.validations;
 
 import org.apache.commons.beanutils.BeanUtils;
 

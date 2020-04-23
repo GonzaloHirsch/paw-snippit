@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.helpers;
+package ar.edu.itba.paw.webapp.validations;
 
 import ar.edu.itba.paw.interfaces.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

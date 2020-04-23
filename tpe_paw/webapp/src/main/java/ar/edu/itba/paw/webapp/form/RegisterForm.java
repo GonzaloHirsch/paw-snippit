@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.helpers.FieldMatch;
-import ar.edu.itba.paw.webapp.helpers.UniqueEmail;
-import ar.edu.itba.paw.webapp.helpers.UniqueUsername;
+import ar.edu.itba.paw.webapp.validations.FieldMatch;
+import ar.edu.itba.paw.webapp.validations.UniqueEmail;
+import ar.edu.itba.paw.webapp.validations.UniqueUsername;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 

@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -44,7 +46,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/goodbye").anonymous()
                 .antMatchers("/login", "/signup").anonymous()
                 .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/favorites/", "/following/", "/snippet/**/vote", "/snippet/**/fav").hasRole("USER")
+                .antMatchers("/favorites/", "/following/", "/snippet/**/vote", "/snippet/**/fav", "/user/**").hasRole("USER")
                 .antMatchers("/**").permitAll()
                 .and().formLogin()
                 .loginPage("/login")
@@ -58,6 +60,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
             .and().logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/goodbye")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
             .and().exceptionHandling()
                 .accessDeniedPage("/403")
             .and().csrf().disable();
@@ -67,6 +71,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public void configure(final WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico", "/403");
+    }
+
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
 }

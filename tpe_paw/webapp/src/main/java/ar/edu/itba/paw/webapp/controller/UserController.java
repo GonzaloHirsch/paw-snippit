@@ -4,9 +4,12 @@ import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -16,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
@@ -33,13 +39,16 @@ public class UserController {
     @Autowired
     private SnippetService snippetService;
 
+    @Autowired
+    private LoginAuthentication loginAuthentication;
+
     @RequestMapping(value = "/signup", method = { RequestMethod.GET })
     public ModelAndView signUpForm(@ModelAttribute("registerForm") final RegisterForm form) {
         return new ModelAndView("user/signUpForm");
     }
 
     @RequestMapping(value = "/signup",method = { RequestMethod.POST })
-    public ModelAndView signUp(@Valid @ModelAttribute("registerForm") final RegisterForm registerForm, final BindingResult errors) {
+    public ModelAndView signUp(@Valid @ModelAttribute("registerForm") final RegisterForm registerForm, final BindingResult errors, HttpServletRequest request, HttpServletResponse response) {
         if (errors.hasErrors()) {
             return signUpForm(registerForm);
         }
@@ -51,9 +60,13 @@ public class UserController {
                 new Date()                  //TODO how to getTimeZone, switch to calendar
         );
 
-        // TODO set as current user --> will redirect to login for now
+        final Collection<? extends GrantedAuthority> authorities = Arrays.asList(
+                new SimpleGrantedAuthority("ROLE_USER")
+        );
 
-        return new ModelAndView("redirect:/login");
+        loginAuthentication.authWithAuthManager(request, registerForm.getUsername(), registerForm.getPassword());
+
+        return new ModelAndView("redirect:/");
     }
 
     @RequestMapping(value = "/user/{id}")
@@ -78,15 +91,5 @@ public class UserController {
     public ModelAndView logout() {
         return new ModelAndView("user/logout");
     }
-
-
-//    @ModelAttribute("loggedUser")
-//    public User loggedUser(HttpSession session) {
-//         Long userId = (Long) session.getAttribute("userId");
-//         if (userId == null) {
-//             return null;
-//         }
-//         return userService.findById(userId.longValue()).orElseGet(() -> null);
-//    }
 
 }

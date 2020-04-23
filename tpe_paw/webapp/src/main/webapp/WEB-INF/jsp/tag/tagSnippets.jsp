@@ -3,9 +3,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <link href="<c:url value='/resources/css/general.css'/>" type="text/css" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/navigationBar.css'/>" type="text/css" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/tagSnippets.css'/>" type="text/css" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/general.css'/>" type="text/css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="wrapper">
@@ -18,17 +19,17 @@
                 <div class="tag-snippets-button">
                     <c:choose>
                         <c:when test="${!follows}">
-                            <a href="<c:url value='/tags/follow/${tag.id}'/>">
-                                <button>
+                            <a href="<c:url value='/tags/follow/${tag.id}'/>" class="follow-button-container">
+                                <div>
                                     <spring:message code="tags.follow"/>
-                                </button>
+                                </div>
                             </a>
                         </c:when>
                         <c:otherwise>
-                            <a href="<c:url value='/tags/unfollow/${tag.id}'/>">
-                                <button>
+                            <a href="<c:url value='/tags/unfollow/${tag.id}'/>" class="follow-button-container">
+                                <div>
                                     <spring:message code="tags.unfollow"/>
-                                </button>
+                                </div>
                             </a>
                         </c:otherwise>
                     </c:choose>

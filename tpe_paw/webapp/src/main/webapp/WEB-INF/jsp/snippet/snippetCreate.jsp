@@ -8,7 +8,6 @@
 <head>
     <title>Snippet Detail</title>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
-
 </head>
 
 <body>
@@ -34,6 +33,23 @@
                 <form:errors path="code" cssClass="formError" element="p"/>
             </div>
 
+            <div>
+                <form:select path="language">
+                    <form:option value="-1">Select code Language</form:option>
+                    <c:forEach items="${languageList}" var="lan" varStatus="status">
+                        <form:option value="${lan.id}">${lan.name}</form:option>
+                    </c:forEach>
+                </form:select>
+            </div>
+
+            <div>
+                <td>Tags:</td>
+                <td>
+                    <form:select path="tags" multiple="true" name="tagselect" >
+                        <form:options items="${tagList}" itemValue="id" itemLabel="name"/>
+                    </form:select>
+                </td>
+            </div>
             <div>
                 <input type="submit" value='<spring:message code="snippetCreateForm.save"/>'/>
             </div>

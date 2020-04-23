@@ -59,12 +59,12 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public void addSnippetTag(Snippet snippet, Tag tag){
+    public void addSnippetTag(long snippetId, long tagId){
         final Map<String, Object> snippetTagDataMap = new HashMap<String,Object>(){{
-            put("snippet_id", snippet.getId());
-            put("tag_id", tag.getId());
+            put("snippet_id", snippetId);
+            put("tag_id", tagId);
         }};
-        jdbcInsert.execute(snippetTagDataMap);
+        jdbcInsertSnippetTag.execute(snippetTagDataMap);
     }
 
     @Override

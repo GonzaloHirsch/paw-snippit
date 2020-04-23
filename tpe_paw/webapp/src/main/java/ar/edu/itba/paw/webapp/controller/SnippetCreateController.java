@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.service.LanguageService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
+import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
@@ -21,11 +23,10 @@ import java.util.Optional;
 
 @Controller
 public class SnippetCreateController {
-    @Autowired
-    private SnippetService snippetService;
-
-    @Autowired
-    private UserService userService;
+    @Autowired private SnippetService snippetService;
+    @Autowired private TagService tagService;
+    @Autowired private UserService userService;
+    @Autowired private LanguageService languageService;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -35,13 +36,27 @@ public class SnippetCreateController {
 
     @RequestMapping(value = "/create")
     public ModelAndView snippetCreateDetail(@ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm) {
+
+        System.out.println("Inside create");
+
         final ModelAndView mav = new ModelAndView("snippet/snippetCreate");
+        mav.addObject("tagList",tagService.getAllTags());
+        mav.addObject("languageList", languageService.getAll());
         mav.addObject("searchContext", "");
+
         return mav;
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ModelAndView snippetCreate( @Valid @ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm, final BindingResult errors,@ModelAttribute("searchForm") final SearchForm searchForm) {
+
+        System.out.println("Data"+ "\n" + userService.getCurrentUser().get() + "\n"
+                + snippetCreateForm.getTitle() + "\n"+
+                snippetCreateForm.getDescription()+"\n"+
+                snippetCreateForm.getCode()+ "\n" +
+                snippetCreateForm.getLanguage() + "\n"+ snippetCreateForm.getTags() +"\n--------------------\n");
+
+
         if (errors.hasErrors())
             return snippetCreateDetail(searchForm,snippetCreateForm);
 

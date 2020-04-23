@@ -2,7 +2,10 @@ package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 
@@ -13,11 +16,13 @@ public class SnippetCreateForm {
     @Size(max=500)
     private String description;
 
-    @Size(min=5,max=30000)
+    @Size(min=5, max=30000)
     private String code;
 
-    private String language;
-    private Collection<Tag> tags;
+    @Min(value=1)
+    private Long language;
+
+    private Collection<Long> tags;
 
 
     public void setCode(String code) {
@@ -32,11 +37,11 @@ public class SnippetCreateForm {
         this.description = description;
     }
 
-    public void setLanguage(String language) {
+    public void setLanguage(Long language) {
         this.language = language;
     }
 
-    public void setTags(Collection<Tag> tags) {
+    public void setTags(Collection<Long> tags) {
         this.tags = tags;
     }
 
@@ -54,11 +59,11 @@ public class SnippetCreateForm {
         return description;
     }
 
-    public String getLanguage() {
+    public Long getLanguage() {
         return language;
     }
 
-    public Collection<Tag> getTags() {
+    public Collection<Long> getTags() {
         return tags;
     }
 }

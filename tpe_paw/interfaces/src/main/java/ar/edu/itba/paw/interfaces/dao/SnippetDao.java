@@ -29,6 +29,6 @@ public interface SnippetDao {
     Collection<Snippet> getAllFavoriteSnippets(Long userId);
     Collection<Snippet> getAllFollowingSnippets(Long userId);
     Optional<Snippet> findSnippetById(long id);
-    Optional<Snippet> createSnippet(User owner, String title, String description, String code, String dateCreated, String language, Collection<Tag> tags);
+    Optional<Snippet> createSnippet(User owner, String title, String description, String code, String dateCreated, Long language);
     Collection<Snippet> findSnippetsForTag(long tagId);
 }

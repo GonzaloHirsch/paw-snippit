@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -41,6 +42,21 @@ public class TagServiceImpl implements TagService {
     @Override
     public void unfollowTag(long userId, long tagId) {
         followingDao.unfollowTag(userId, tagId);
+    }
+
+    @Override
+    public Collection<Tag> addTagsToSnippet(Long snippetId, Collection<Long> tagIdList){
+        ArrayList<Tag> tagList = new ArrayList<>();
+        for(Long tagId : tagIdList) {
+            Optional<Tag> tag = tagDao.findTagById(tagId);
+            if(tag.isPresent()) {
+                tagDao.addSnippetTag(snippetId, tagId);
+                tagList.add(tagDao.findTagById(tagId).get());
+
+                System.out.println(tag.get().getName());
+            }
+        }
+        return tagList;
     }
 
 

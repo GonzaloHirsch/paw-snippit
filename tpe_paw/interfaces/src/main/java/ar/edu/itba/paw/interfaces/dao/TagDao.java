@@ -13,5 +13,5 @@ public interface TagDao {
     Collection<Tag> getAllTags();
 
     Optional<Tag> findTagById(long tagId);
-    void addSnippetTag(Snippet snippet, Tag tag);
+    void addSnippetTag(long snippetOd, long tagId);
 }

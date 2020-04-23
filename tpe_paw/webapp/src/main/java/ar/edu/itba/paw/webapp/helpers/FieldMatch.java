@@ -18,7 +18,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface FieldMatch {
 
-    String message() default "The fields must match";
+    String message() default "{FieldMatch.default}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
     String first();

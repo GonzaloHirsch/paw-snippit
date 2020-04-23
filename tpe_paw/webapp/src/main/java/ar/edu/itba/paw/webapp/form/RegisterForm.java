@@ -5,12 +5,11 @@ import ar.edu.itba.paw.webapp.helpers.UniqueEmail;
 import ar.edu.itba.paw.webapp.helpers.UniqueUsername;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@FieldMatch(first = "password", second = "repeatPassword" /*message = messageSource.getMessage("FieldMatch.registerForm",null, LocaleContextHolder.getLocale())*/)
+@FieldMatch(first = "password", second = "repeatPassword", message = "{FieldMatch.registerForm.passwords}")
 public class RegisterForm {
 
     @Size(min=6, max=50)

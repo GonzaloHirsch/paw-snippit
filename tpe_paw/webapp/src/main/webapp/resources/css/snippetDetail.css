@@ -28,6 +28,12 @@
     min-height: 94px;
     min-width: 94px;
     padding: 10px;
+    display: block;
+}
+
+.user-url {
+    text-decoration: none;
+    text-decoration-color: black;
 }
 
 .detail-snippet-block-descr {

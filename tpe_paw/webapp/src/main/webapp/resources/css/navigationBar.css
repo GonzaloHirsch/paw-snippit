@@ -10,7 +10,7 @@
     padding-top:30px;
     width:100%;
     margin-left:180px;
-    margin-top:45px;
+    margin-top: 55px;
     background: #f0ffff;
 }
 
@@ -47,9 +47,9 @@
 
 .menu-selected {
     background: #86b0b3;
-    border-left: #00a7b3;
-    border-left-style: solid;
-    border-left-width: 5px;
+    border-right: #00a7b3;
+    border-right-style: solid;
+    border-right-width: 5px;
 }
 
 
@@ -68,6 +68,7 @@ body {
     background-color: #00a7b3;
     z-index:999;
     display: flex;
+    height: 55px;
 }
 
 .navtop a {

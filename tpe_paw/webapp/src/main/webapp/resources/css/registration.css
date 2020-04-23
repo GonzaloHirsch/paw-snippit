@@ -1,0 +1,80 @@
+
+.TODO-delete {
+    background-color: slateblue;
+}
+
+.register-form {
+    background-color: white;
+    margin: 20px;
+    max-width: 500px;
+    padding: 40px
+}
+
+.register-form-data {
+    padding: 10px;
+}
+
+.register-field-container {
+    margin: 5px;
+}
+
+.register-field-size {
+    font-size: 17px;
+    height: 50px;
+    padding: 15px;
+    width: 450px;
+}
+
+.register-field-padding {
+    padding: 15px 15px 15px 48px !important;
+}
+
+.register-text-container{
+    margin: 10px;
+}
+
+.register-text {
+    color: white;
+}
+
+.register-text-space {
+    margin: 0px 0px 0px 5px;
+}
+
+.register-welcome-text {
+    font-size: 30px;
+}
+
+.register-title-margin {
+    margin: 0px 6px 0px 8px;
+}
+
+.register-app-icon-margin {
+    margin: 0px 12px 0px 0px;
+}
+
+.register-icons {
+    font-size: 28px !important;
+    color: slateblue;
+    position: absolute;
+    margin: 11px 0px 11px 12px;
+}
+
+.register-button {
+    background-color: slateblue;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 17px;
+    text-align: center;
+    margin: 8px 0px 0px 0px;
+}
+
+.register-border {
+    border-radius: 12px;
+}
+
+.register-shadow {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+

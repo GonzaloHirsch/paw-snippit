@@ -15,6 +15,7 @@ import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -70,6 +71,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return dsi;
     }
 
+    @Bean
     public DatabasePopulator databasePopulator(){
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(schemaSql);
@@ -91,6 +93,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         ms.setDefaultEncoding(StandardCharsets.UTF_8.name());
 
         return ms;
+    }
+
+    @Bean
+    @Override
+    public LocalValidatorFactoryBean getValidator() {
+        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+        bean.setValidationMessageSource(messageSource());
+        return bean;
     }
 
     @Bean

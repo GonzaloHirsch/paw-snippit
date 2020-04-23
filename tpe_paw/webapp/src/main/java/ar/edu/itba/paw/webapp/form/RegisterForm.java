@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.helpers.FieldMatch;
+import ar.edu.itba.paw.webapp.helpers.UniqueEmail;
+import ar.edu.itba.paw.webapp.helpers.UniqueUsername;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -16,10 +16,12 @@ public class RegisterForm {
     @Size(min=6, max=50)
     @Pattern(regexp = "^[a-zA-Z0-9-_.]+$")
     @NotBlank
+    @UniqueUsername
     private String username;
 
     @Email
     @NotBlank
+    @UniqueEmail
     private String email;
 
     @Size(min=8)

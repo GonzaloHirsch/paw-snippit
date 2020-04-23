@@ -50,4 +50,14 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getCurrentUser() {
         return userDao.getCurrentUser();
     }
+
+    @Override
+    public boolean isEmailUnique(String email) {
+        return !userDao.findUserByEmail(email).isPresent();
+    }
+
+    @Override
+    public boolean isUsernameUnique(String username) {
+        return !userDao.findUserByUsername(username).isPresent();
+    }
 }

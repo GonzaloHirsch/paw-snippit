@@ -1,0 +1,64 @@
+.snippetC-form {
+    background-color: white;
+    margin: 20px;
+    flex-basis: 600px;
+    padding: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-radius:10px;
+}
+
+.snippetC-container {
+    padding: 15px;
+    max-width: 850px;
+}
+
+.snippetC-title-container {
+    margin: 5px;
+    flex:4;
+}
+.snippetC-language-container {
+    margin: 5px;
+    flex:1;
+}
+
+.snippetC-elem-container {
+    margin: 5px;
+}
+.snippetC-title-input{
+    width: 95%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 17px;
+    height: 50px;
+}
+
+.snippetC-code-input{
+    background: #DCDCDC;
+    margin: 5px 10px 0px 0px;
+    max-width: 700px;
+    padding: 5px 5px 5px 5px;
+    border-width:thin;
+}
+
+.snippetC-description-input{
+    margin-top: 5px;
+    padding: 5px 0 0 5px;
+}
+
+.snippetC-divider{
+    width: 100%;
+    border: none;
+    height: 1px;
+    background-color: lightgrey;
+    margin: 10px 0 10px 0;
+}
+
+
+.snippetC-border{
+    border-radius: 2px;
+    border-width:thin;
+}

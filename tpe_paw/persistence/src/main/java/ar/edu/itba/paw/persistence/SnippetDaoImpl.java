@@ -25,6 +25,8 @@ public class SnippetDaoImpl implements SnippetDao {
 
     @Autowired
     private TagDao tagDao;
+    @Autowired
+    private LanguageDao languageDao;
 
     private JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;

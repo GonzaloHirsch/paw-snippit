@@ -16,11 +16,14 @@
     <link href="<c:url value='/resources/css/snippetCreate.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippetDetail.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
 </head>
 
 <body>
 
 <spring:message code="snippetCreateForm.title" var="title_hint"/>
+<spring:message code="snippetCreateForm.descriptionHint" var="desc_hint"/>
+<spring:message code="snippetCreateFrom.codeHint" var="code_hint"/>
 
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navBar/navigationBar.jsp"/>
@@ -35,7 +38,6 @@
                     <div class="flex-row flex-center">
                         <div class="snippetC-title-container">
                             <form:input class="snippetC-title-input snippetC-border fw-100" type="text" path="title" placeholder='${title_hint}'/>
-                            <form:errors path="title" cssClass="formError" element="p"/>
                         </div>
                         <div class="snippetC-language-container">
                             <form:select class="selectpicker snippetC-language" path="language">
@@ -44,24 +46,27 @@
                                     <form:option value="${lan.id}">${lan.name.toUpperCase()}</form:option>
                                 </c:forEach>
                             </form:select>
-                            <form:errors path="language" cssClass="formError" element="p"/>
                         </div>
+                    </div>
+                    <div>
+                        <form:errors class="form-error" path="title"  element="p"/>
+                        <form:errors class="form-error" path="language" element="p"/>
                     </div>
 
                     <hr class="snippetC-divider"/>
 
                     <div class="snippetC-elem-container">
                         <form:label path="description"><spring:message code="snippetCreateForm.description"/> </form:label>
-                        <form:textarea class="full-width snippetC-description-input snippetC-border" rows="1" type="text" path="description"/>
-                        <form:errors path="description" cssClass="formError" element="p"/>
+                        <form:textarea class="full-width snippetC-description-input snippetC-border" rows="2" type="text" path="description" placeholder='${desc_hint}'/>
+                        <form:errors path="description" element="p"/>
                     </div>
 
                     <hr class="snippetC-divider"/>
 
                     <div class="snippetC-elem-container">
                         <form:label path="code"><spring:message code="snippetCreateForm.code"/> </form:label>
-                        <form:textarea class="full-width snippetC-code-input snippetC-border"  rows="5" type="text" path="code" placeholder="Enter some code..."/>
-                        <form:errors path="code" cssClass="formError" element="p"/>
+                        <form:textarea class="full-width snippetC-code-input snippetC-border"  rows="5" type="text" path="code" placeholder='${code_hint}'/>
+                        <form:errors class="form-error" path="code" element="p"/>
                     </div>
 
                     <hr class="snippetC-divider"/>
@@ -73,7 +78,7 @@
                             <form:select class="selectpicker snippetC-tags" multiple="true" data-live-search="true" path="tags" name="tagselect" >
                                 <form:options items="${tagList}" itemValue="id" itemLabel="name"/>
                             </form:select>
-                            <form:errors path="tags" cssClass="formError" element="p"/>
+                            <form:errors class="form-error" path="tags" element="p"/>
                         </div>
                         <div class="snippetC-submit-container">
                             <input class="snippetC-button snippetC-border" type="submit" value='<spring:message code="snippetCreateForm.save"/>'/>

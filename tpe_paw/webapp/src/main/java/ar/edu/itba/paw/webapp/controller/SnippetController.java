@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Favorite;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Vote;
+import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.FavoriteForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.form.VoteForm;
@@ -23,13 +24,16 @@ import java.util.Optional;
 public class SnippetController {
 
     @Autowired
-    private UserService userService;
-    @Autowired
     private SnippetService snippetService;
     @Autowired
     private VoteService voteService;
     @Autowired
     private FavoriteService favService;
+    @Autowired
+    private LoginAuthentication loginAuthentication;
+    @Autowired
+    private TagService tagService;
+
 
     @RequestMapping("/snippet/{id}")
     public ModelAndView snippetDetail(
@@ -45,25 +49,28 @@ public class SnippetController {
                 mav.addObject("snippet", snippet);
         });
 
-        //User
-        Optional<User> user = this.userService.getCurrentUser();
-        // TODO Do we need to pass user logged in to the detail? Why?
-        mav.addObject("user", user.get());
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
+        if (currentUser != null){
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+        } else {
+            // ERROR
+        }
 
         // Vote
-        Optional<Vote> vote = this.voteService.getVote(user.get().getUserId(), retrievedSnippet.get().getId());
+        Optional<Vote> vote = this.voteService.getVote(currentUser.getUserId(), retrievedSnippet.get().getId());
         int voteType = 0;
         if (vote.isPresent()) {
             voteType = vote.get().getType();
         }
         voteForm.setType(voteType);
         voteForm.setOldType(voteType);
-        voteForm.setUserId(user.get().getUserId());
+        voteForm.setUserId(currentUser.getUserId());
 
         // Fav
-        Optional<Favorite> fav = this.favService.getFavorite(user.get().getUserId(), retrievedSnippet.get().getId());
+        Optional<Favorite> fav = this.favService.getFavorite(currentUser.getUserId(), retrievedSnippet.get().getId());
         favForm.setFavorite(fav.isPresent());
-        favForm.setUserId(user.get().getUserId());
+        favForm.setUserId(currentUser.getUserId());
 
         // Vote Count
         Optional<Integer> voteCount = this.voteService.getVoteBalance(retrievedSnippet.get().getId());

@@ -41,11 +41,14 @@ public class SnippetFeedController {
     @RequestMapping("/favorites")
     public ModelAndView getFavoritesSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm) {
         final ModelAndView mav = new ModelAndView("index");
-        Optional<User> user = this.userService.getCurrentUser();
-        if (!user.isPresent()){
-            // REddirect to error
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
+        if (currentUser != null){
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+        } else {
+            // ERROR
         }
-        mav.addObject("snippetList", this.snippetService.getAllFavoriteSnippets(user.get().getUserId()));
+        mav.addObject("snippetList", this.snippetService.getAllFavoriteSnippets(currentUser.getUserId()));
         mav.addObject("searchContext","favorites/");
         return mav;
     }
@@ -53,11 +56,14 @@ public class SnippetFeedController {
     @RequestMapping("/following")
     public ModelAndView getFollowingSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm) {
         final ModelAndView mav = new ModelAndView("index");
-        Optional<User> user = this.userService.getCurrentUser();
-        if (!user.isPresent()){
-            // REddirect to error
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
+        if (currentUser != null){
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+        } else {
+            // ERROR
         }
-        mav.addObject("snippetList", this.snippetService.getAllFollowingSnippets(user.get().getUserId()));
+        mav.addObject("snippetList", this.snippetService.getAllFollowingSnippets(currentUser.getUserId()));
         mav.addObject("searchContext","following/");
         return mav;
     }

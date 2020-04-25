@@ -19,45 +19,62 @@
     <ul>
         <c:choose>
             <c:when test="${searchContext == ''}">
-                <li class="fw-100 menu-selected"><a href="<c:url value="/"/>">All</a></li>
+                <li class="fw-100 menu-option menu-selected"><a href="<c:url value="/"/>"><span
+                        class="material-icons menu-option-icon">home</span>
+                    Home</a></li>
             </c:when>
             <c:otherwise>
-                <li class="fw-100"><a href="<c:url value="/"/>">All</a></li>
+                <li class="fw-100 menu-option"><a href="<c:url value="/"/>"><span
+                        class="material-icons menu-option-icon">home</span>
+                    Home</a></li>
             </c:otherwise>
         </c:choose>
         <c:choose>
             <c:when test="${searchContext == 'tags/'}">
-                <li class="fw-100 menu-selected"><a href="<c:url value="/tags/"/>">Tags</a></li>
+                <li class="fw-100 menu-option menu-selected"><a href="<c:url value="/tags/"/>"><span
+                        class="material-icons menu-option-icon">local_offer</span>
+                    Tags</a></li>
             </c:when>
             <c:otherwise>
-                <li class="fw-100"><a href="<c:url value="/tags/"/>">Tags</a></li>
+                <li class="fw-100 menu-option"><a href="<c:url value="/tags/"/>"><span
+                        class="material-icons menu-option-icon">local_offer</span>
+                    Tags</a></li>
             </c:otherwise>
         </c:choose>
         <c:if test="${currentUser != null}">
             <hr/>
             <c:choose>
                 <c:when test="${searchContext == 'user/'}">
-                    <li class="fw-100 menu-selected"><a href="<c:url value="${'/user/'}${currentUser.username}"/>">Profile</a></li>
+                    <li class="fw-100 menu-option menu-selected"><a href="<c:url value="${'/user/'}${currentUser.username}"/>">Profile</a>
+                    </li>
                 </c:when>
                 <c:otherwise>
-                    <li class="fw-100"><a href="<c:url value="${'/user/'}${currentUser.username}"/>">Profile</a></li>
+                    <li class="fw-100 menu-option"><a href="<c:url value="${'/user/'}${currentUser.username}"/>">Profile</a></li>
                 </c:otherwise>
             </c:choose>
             <c:choose>
                 <c:when test="${searchContext == 'following/'}">
-                    <li class="fw-100 menu-selected"><a href="<c:url value="/following/"/>">Following</a></li>
+                    <li class="fw-100 menu-option menu-selected"><a href="<c:url value="/following/"/>">
+                        <span class="material-icons menu-option-icon">loyalty</span>
+                        Following</a></li>
                 </c:when>
                 <c:otherwise>
-                    <li class="fw-100"><a href="<c:url value="/following/"/>">Following</a></li>
+                    <li class="fw-100 menu-option"><a href="<c:url value="/following/"/>"><span
+                            class="material-icons menu-option-icon">loyalty</span>
+                        Following</a></li>
                 </c:otherwise>
             </c:choose>
             <!--<li><a href="<c:url value="/uploads/"/>">Uploads</a></li>-->
             <c:choose>
                 <c:when test="${searchContext == 'favorites/'}">
-                    <li class="fw-100 menu-selected"><a href="<c:url value="/favorites/"/>">Favorites</a></li>
+                    <li class="fw-100 menu-option menu-selected"><a href="<c:url value="/favorites/"/>"><span
+                            class="material-icons menu-option-icon">favorite</span>
+                        Favorites</a></li>
                 </c:when>
                 <c:otherwise>
-                    <li class="fw-100"><a href="<c:url value="/favorites/"/>">Favorites</a></li>
+                    <li class="fw-100 menu-option"><a href="<c:url value="/favorites/"/>"><span
+                            class="material-icons menu-option-icon">favorite</span>
+                        Favorites</a></li>
                 </c:otherwise>
             </c:choose>
             <hr/>

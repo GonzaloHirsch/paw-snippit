@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,10 +27,19 @@ public class TagsController {
     private SnippetService snippetService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private LoginAuthentication loginAuthentication;
 
     @RequestMapping("/tags")
     public ModelAndView showAllTags(@ModelAttribute final SearchForm searchForm) {
         ModelAndView mav = new ModelAndView("tag/tags");
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
+        if (currentUser != null){
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+        } else {
+            // ERROR
+        }
         Collection<Tag> allTags = tagService.getAllTags();
         mav.addObject("tags", allTags); 
         return mav;
@@ -37,11 +47,14 @@ public class TagsController {
     @RequestMapping("/tags/{tagId}")
     public ModelAndView showSnippetsForTag(@PathVariable("tagId") long tagId, @ModelAttribute final SearchForm searchForm){
         ModelAndView mav = new ModelAndView("tag/tagSnippets");
-        Optional<User> currentUserOpt = userService.getCurrentUser();
-        if (!currentUserOpt.isPresent()){
-            // TODO customize error msg
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
+        if (currentUser != null){
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+        } else {
+            // ERROR
         }
-        Collection<Tag> followedTags = tagService.getFollowedTagsForUser(currentUserOpt.get().getUserId());
+        Collection<Tag> followedTags = tagService.getFollowedTagsForUser(currentUser.getUserId());
         boolean follows = followedTags.stream().map(Tag::getId).collect(Collectors.toList()).contains(tagId);
         Optional<Tag> tag = tagService.findTagById(tagId);
         if (!tag.isPresent()) {

@@ -52,7 +52,7 @@ public class TagsController {
         mav.addObject("snippets", snippetService.findSnippetsForTag(tagId));
         return mav;
     }
-    @RequestMapping("/tags/follow/{tagId}")
+    @RequestMapping("/tags/{tagId}/follow")
     public ModelAndView followSnippet(@PathVariable("tagId") long tagId) {
         Optional<User> currentUserOpt = userService.getCurrentUser();
         if (!currentUserOpt.isPresent()){
@@ -62,7 +62,7 @@ public class TagsController {
         }
         return new ModelAndView("redirect:/tags/" + tagId);
     }
-    @RequestMapping("/tags/unfollow/{tagId}")
+    @RequestMapping("/tags/{tagId}/unfollow")
     public ModelAndView unfollowSnippet(@PathVariable("tagId") long tagId) {
         Optional<User> currentUserOpt = userService.getCurrentUser();
         if (!currentUserOpt.isPresent()){

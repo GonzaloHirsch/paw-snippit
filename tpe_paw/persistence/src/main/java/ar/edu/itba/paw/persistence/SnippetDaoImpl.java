@@ -26,6 +26,10 @@ public class SnippetDaoImpl implements SnippetDao {
 
     @Autowired
     private TagDao tagDao;
+    @Autowired
+    private UserDao userDao;
+    @Autowired
+    private LanguageDao languageDao;
 
     private JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -33,25 +37,34 @@ public class SnippetDaoImpl implements SnippetDao {
     private final RowMapper<Snippet> ROW_MAPPER = new RowMapper<Snippet>() {
         @Override
         public Snippet mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Optional<User> userOpt = userDao.findUserById(rs.getLong("user_id"));
+            if (!userOpt.isPresent()) {
+                // TODO Customize error msg
+            }
+            // TODO unnecessary hardcoded user (?)
+//            User userOwner = new User(
+//                    rs.getLong("user_id"),
+//                    null,
+//                    null,
+//                    null,
+//                    null,
+//                    -1,
+//                    null
+//            );
 
-            User userOwner = new User(
-                    rs.getLong("user_id"),
-                    rs.getString("username"),
-                    null,
-                    null,
-                    null,
-                    rs.getInt("reputation"),
-                    null
-            );
+            Optional<Language> lang = languageDao.findById(rs.getLong("language_id"));
+            if (! lang.isPresent()) {
+                // TODO customize error msg
+            }
 
-            String language = rs.getString("language");
+            String language = lang.get().getName();
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(rs.getTimestamp("date_created").getTime());
 
             return new Snippet(
                     rs.getLong("id"),
-                    userOwner,
+                    userOpt.get(),
                     rs.getString("code"),
                     rs.getString("title"),
                     rs.getString("description"),

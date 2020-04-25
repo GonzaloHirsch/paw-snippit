@@ -19,14 +19,14 @@
                 <div class="tag-snippets-button">
                     <c:choose>
                         <c:when test="${!follows}">
-                            <a href="<c:url value='/tags/follow/${tag.id}'/>" class="follow-button-container">
+                            <a href="<c:url value='/tags/${tag.id}/follow'/>" class="follow-button-container">
                                 <div>
                                     <spring:message code="tags.follow"/>
                                 </div>
                             </a>
                         </c:when>
                         <c:otherwise>
-                            <a href="<c:url value='/tags/unfollow/${tag.id}'/>" class="follow-button-container">
+                            <a href="<c:url value='/tags/${tag.id}/unfollow'/>" class="follow-button-container">
                                 <div>
                                     <spring:message code="tags.unfollow"/>
                                 </div>

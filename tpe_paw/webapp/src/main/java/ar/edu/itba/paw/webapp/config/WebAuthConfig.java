@@ -44,12 +44,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .invalidSessionUrl("/")                                         /* Where to redirect when there is no available session */
             .and().authorizeRequests()                                          /* How we will authorize HTTP request --> which roles and do which requests */
                 .antMatchers("/goodbye").anonymous()
-                .antMatchers("/login", "/signup").anonymous()
+                .antMatchers("/login", "/login_error", "/signup").anonymous()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/favorites/", "/following/", "/snippet/**/vote", "/snippet/**/fav", "/tags/**/follow", "/tags/**/unfollow").hasRole("USER")
                 .antMatchers("/**").permitAll()
                 .and().formLogin()
                 .loginPage("/login")
+                .failureUrl("/login_error")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/", false)

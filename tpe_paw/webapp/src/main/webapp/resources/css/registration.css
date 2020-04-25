@@ -32,6 +32,10 @@
     margin: 10px;
 }
 
+.register-text-error{
+    margin: -15px 0px 10px 0px;
+}
+
 .register-text {
     color: white;
 }

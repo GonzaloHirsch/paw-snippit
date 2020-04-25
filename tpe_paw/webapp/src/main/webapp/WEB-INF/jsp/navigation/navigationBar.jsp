@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
@@ -101,7 +101,8 @@
             </div>
             <div class="dropdown-type">
                 <form:select path="type" name="Type">
-                    <form:option value="title">Search by</form:option>
+                    <form:option value="all">Search by</form:option>
+                    <form:option value="all">All</form:option>
                     <form:option value="title">Title</form:option>
                     <form:option value="tag">Tag</form:option>
                     <form:option value="content">Content</form:option>
@@ -109,7 +110,7 @@
             </div>
             <div class="dropdown-type">
                 <form:select path="sort" name="Sort" onchange="submitForm(this)">
-                    <form:option value="no">Sort by</form:option>
+                    <form:option value="asc">Sort by</form:option>
                     <form:option value="asc">Ascending</form:option>
                     <form:option value="desc">Descending</form:option>
                 </form:select>

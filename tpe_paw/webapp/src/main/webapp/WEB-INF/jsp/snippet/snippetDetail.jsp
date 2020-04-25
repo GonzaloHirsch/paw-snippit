@@ -20,7 +20,7 @@
 <body>
 
 <div class="wrapper">
-    <c:import url="/WEB-INF/jsp/navBar/navigationBar.jsp"/>
+    <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
         <div class="flex-row detail-snippet-container flex-center">
 

@@ -10,7 +10,7 @@
     </head>
     <body>
         <div class="wrapper">
-        <c:import url="/WEB-INF/jsp/navBar/navigationBar.jsp"/>
+        <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
             <div class="main-content">
                 <div class="fw-100 flex-stretch tags-title">
                     Tags

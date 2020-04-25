@@ -13,6 +13,7 @@
 <body>
 <c:set var="snippetList" value="${requestScope.snippetList}"/>
 <div class="feed-snippets-grid">
+<%--    <c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>--%>
     <c:forEach var="snippet" items="${snippetList}">
         <c:set var="snippet" value="${snippet}" scope="request"/>
         <c:import url="/WEB-INF/jsp/snippet/snippetCard.jsp"/>

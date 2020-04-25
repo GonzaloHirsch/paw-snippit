@@ -13,7 +13,7 @@
 </head>
 <body>
 <div class="wrapper">
-    <c:import url="/WEB-INF/jsp/navBar/navigationBar.jsp"/>
+    <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
         <div class="flex-column detail-user">
             <div class="flex-row">

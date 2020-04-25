@@ -72,7 +72,8 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> getAllSnippets() {
+    public Collection<Snippet> getAllSnippets(int page, int pageSize) {
+//        return jdbcTemplate.query("SELECT * FROM complete_snippets LIMIT ? OFFSET ?", ROW_MAPPER, pageSize, pageSize * page);
         return jdbcTemplate.query("SELECT * FROM complete_snippets", ROW_MAPPER);
     }
 
@@ -93,9 +94,10 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> findSnippetByCriteria(Types type, String term, Locations location, Orders order, Long userId) {
-        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(location, userId, type, term)
+    public Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, Types type, String term, Locations location, Orders order, Long userId, int page, int pageSize) {
+        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(queryType, location, userId, type, term)
                 .setOrder(order, type)
+//                .setPaging(page, pageSize)
                 .build();
         return jdbcTemplate.query(searchQuery.getQuery(), searchQuery.getParams(), ROW_MAPPER);
     }
@@ -112,5 +114,17 @@ public class SnippetDaoImpl implements SnippetDao {
     @Override
     public Collection<Snippet> findSnippetsForTag(long tagId) {
         return jdbcTemplate.query("SELECT DISTINCT * FROM complete_snippets AS cs JOIN snippet_tags AS st ON cs.id = st.snippet_id WHERE st.tag_id = ?", ROW_MAPPER, tagId);
+    }
+
+    @Override
+    public int getAllSnippetsCount() {
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM complete_snippets", Integer.class);
+    }
+
+    @Override
+    public int getSnippetByCriteriaCount(QueryTypes queryType, Types type, String term, Locations location, Long userId) {
+        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(queryType, location, userId, type, term)
+                .build();
+        return jdbcTemplate.queryForObject(searchQuery.getQuery(), searchQuery.getParams(), Integer.class);
     }
 }

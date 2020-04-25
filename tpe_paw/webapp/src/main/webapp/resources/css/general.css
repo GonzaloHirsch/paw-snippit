@@ -31,6 +31,14 @@ body {
     text-align: justify;
 }
 
+.white-text {
+    color: white !important;
+}
+
+.purple-text {
+    color: #5E35B1 !important;
+}
+
 /* Flex Properties CSS */
 
 .flex-column {
@@ -59,6 +67,14 @@ body {
 
 .flex-stretch {
     align-items: stretch;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.flex-end {
+    justify-content: flex-end;
 }
 
 

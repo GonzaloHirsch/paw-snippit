@@ -4,7 +4,6 @@
 
 .detail-snippet-container {
     padding: 15px;
-    max-width: 850px;
 }
 
 .detail-snippet-divider {
@@ -16,14 +15,9 @@
     width: 750px;
 }
 
-.detail-snippet-tags {
-    margin: 5px 0px 0px 0px;
-    padding: 0px 20px 0px 20px;
-}
-
 .detail-snippet-block {
-    background: lightcyan;
-    border: #00a7b3 1px solid;
+    /*background: #a49eb0;*/
+    border: #5e35b1 2px solid;
     margin: 15px 8px;
     min-height: 94px;
     min-width: 94px;
@@ -47,11 +41,11 @@
 }
 
 .detail-snippet-user-info {
-    margin: 11px 0px 4px 0px;
+    margin: 5px 0px 4px 0px;
 }
 
 .detail-snippet-date {
-    color: teal;
+    color: #5e35b1;
     font-size: 12px;
 }
 
@@ -72,7 +66,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    border: solid #00a7b3 2px;
+    border: solid #5e35b1 2px;
     border-radius: 5px;
     font-size: 30px !important;
     cursor: pointer;
@@ -80,5 +74,5 @@
 }
 
 .copy-icon:hover {
-    background: rgb(139, 250, 255);
+    background: #a49eb0;
 }

@@ -24,8 +24,6 @@ import java.util.Optional;
 public class SnippetController {
 
     @Autowired
-    private UserService userService;
-    @Autowired
     private SnippetService snippetService;
     @Autowired
     private VoteService voteService;
@@ -33,6 +31,9 @@ public class SnippetController {
     private FavoriteService favService;
     @Autowired
     private LoginAuthentication loginAuthentication;
+    @Autowired
+    private TagService tagService;
+
 
     @RequestMapping("/snippet/{id}")
     public ModelAndView snippetDetail(
@@ -52,11 +53,11 @@ public class SnippetController {
             // TODO --> Logger + REDIRECT TO 500 ERROR CODE!!
             // TODO --> throw new ...
         }
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
+        if (currentUser != null){
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
 
-        /* Obtain the logged in user if any */
-        User currentUser = loginAuthentication.getLoggedInUser();
-
-        if (currentUser != null) {
             // Vote
             Optional<Vote> vote = this.voteService.getVote(currentUser.getUserId(), retrievedSnippet.get().getId());
             int voteType = 0;
@@ -71,6 +72,8 @@ public class SnippetController {
             Optional<Favorite> fav = this.favService.getFavorite(currentUser.getUserId(), retrievedSnippet.get().getId());
             favForm.setFavorite(fav.isPresent());
             favForm.setUserId(currentUser.getUserId());
+        } else {
+            // ERROR
         }
 
         // Vote Count
@@ -80,6 +83,7 @@ public class SnippetController {
         } else {
             mav.addObject("voteCount",0);
         }
+
         mav.addObject("searchContext","");
         return mav;
     }

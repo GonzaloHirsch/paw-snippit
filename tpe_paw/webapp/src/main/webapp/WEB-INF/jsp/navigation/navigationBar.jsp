@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html>
@@ -19,77 +20,116 @@
     <ul>
         <c:choose>
             <c:when test="${searchContext == ''}">
-                <li class="fw-100 menu-selected"><a href="<c:url value="/"/>">All</a></li>
+                <li class="fw-100 menu-option menu-selected"><a href="<c:url value="/"/>"><span
+                        class="material-icons menu-option-icon">home</span>
+                    Home</a></li>
             </c:when>
             <c:otherwise>
-                <li class="fw-100"><a href="<c:url value="/"/>">All</a></li>
+                <li class="fw-100 menu-option"><a href="<c:url value="/"/>"><span
+                        class="material-icons menu-option-icon">home</span>
+                    Home</a></li>
             </c:otherwise>
         </c:choose>
         <c:choose>
-            <c:when test="${searchContext == 'following/'}">
-                <li class="fw-100 menu-selected"><a href="<c:url value="/following/"/>">Following</a></li>
+            <c:when test="${searchContext == 'tags/'}">
+                <li class="fw-100 menu-option menu-selected"><a href="<c:url value="/tags/"/>"><span
+                        class="material-icons menu-option-icon">local_offer</span>
+                    Tags</a></li>
             </c:when>
             <c:otherwise>
-                <li class="fw-100"><a href="<c:url value="/following/"/>">Following</a></li>
+                <li class="fw-100 menu-option"><a href="<c:url value="/tags/"/>"><span
+                        class="material-icons menu-option-icon">local_offer</span>
+                    Tags</a></li>
             </c:otherwise>
         </c:choose>
-
-        <!--<li><a href="<c:url value="/tags/"/>" >Tags</a></li>-->
-        <hr/>
-        <c:choose>
-            <c:when test="${searchContext == '/tags/'}">
-                <li class="fw-100 menu-selected"><a href="<c:url value="/tags/"/>">Tags</a></li>
-            </c:when>
-            <c:otherwise>
-                <li class="fw-100"><a href="<c:url value="/tags/"/>">Tags</a></li>
-            </c:otherwise>
-        </c:choose>
-        <!--<li><a href="<c:url value="/uploads/"/>">Uploads</a></li>-->
-        <c:choose>
-            <c:when test="${searchContext == 'favorites/'}">
-                <li class="fw-100 menu-selected"><a href="<c:url value="/favorites/"/>">Favorites</a></li>
-            </c:when>
-            <c:otherwise>
-                <li class="fw-100"><a href="<c:url value="/favorites/"/>">Favorites</a></li>
-            </c:otherwise>
-        </c:choose>
-        <!--<hr/>
-                    <li><a href="<c:url value="/following/"/>">Following</a></ul></li>-->
+        <c:if test="${currentUser != null}">
+            <hr/>
+            <c:choose>
+                <c:when test="${searchContext == 'user/'}">
+                    <li class="fw-100 menu-option menu-selected"><a href="<c:url value="${'/user/'}${currentUser.username}"/>">Profile</a>
+                    </li>
+                </c:when>
+                <c:otherwise>
+                    <li class="fw-100 menu-option"><a href="<c:url value="${'/user/'}${currentUser.username}"/>">Profile</a></li>
+                </c:otherwise>
+            </c:choose>
+            <c:choose>
+                <c:when test="${searchContext == 'following/'}">
+                    <li class="fw-100 menu-option menu-selected"><a href="<c:url value="/following/"/>">
+                        <span class="material-icons menu-option-icon">loyalty</span>
+                        Following</a></li>
+                </c:when>
+                <c:otherwise>
+                    <li class="fw-100 menu-option"><a href="<c:url value="/following/"/>"><span
+                            class="material-icons menu-option-icon">loyalty</span>
+                        Following</a></li>
+                </c:otherwise>
+            </c:choose>
+            <!--<li><a href="<c:url value="/uploads/"/>">Uploads</a></li>-->
+            <c:choose>
+                <c:when test="${searchContext == 'favorites/'}">
+                    <li class="fw-100 menu-option menu-selected"><a href="<c:url value="/favorites/"/>"><span
+                            class="material-icons menu-option-icon">favorite</span>
+                        Favorites</a></li>
+                </c:when>
+                <c:otherwise>
+                    <li class="fw-100 menu-option"><a href="<c:url value="/favorites/"/>"><span
+                            class="material-icons menu-option-icon">favorite</span>
+                        Favorites</a></li>
+                </c:otherwise>
+            </c:choose>
+            <hr/>
+            <span class="fw-100 section-title">Following</span>
+            <c:forEach var="tag" items="${tagList}">
+                <li class="fw-100"><a href="<c:url value="${'/tags/'}${tag.id}"/>">${tag.name}</a></li>
+            </c:forEach>
+        </c:if>
     </ul>
 </div>
-
-<div class="navtop">
-    <span id="menu-icon" class="material-icons menu-icon flex-center" onclick="openNav()">menu</span>
-    <a class="app-name fw-100" href="<c:url value="/"/>">
-        <span class="material-icons app-icon">code</span>
-        Snippit
+    <div class="navtop flex-row flex-space-between">
+    <div class="flex-center">
+    <span id="menu-icon" class="material-icons menu-icon" onclick="openNav()">menu</span>
+    <a class="flex-row white-text app-name fw-100" href="<c:url value="/"/>">
+    <span class="material-icons app-icon">code</span>
+    Snippit
     </a>
-    <div class="search-container flex-center">
-        <form:form modelAttribute="searchForm" method="get" action="${searchUrl}">
-            <div class="search-bar fw-100">
-                <form:input path="query" type="text" id="search-bar" class="search-input fw-100"
-                            placeholder="Search..."/>
-                <button type="submit"><span class="material-icons search-icon">search</span></button>
-            </div>
-            <div class="dropdown-type">
-                <form:select path="type" name="Type">
-                    <form:option value="all">Search by</form:option>
-                    <form:option value="all">All</form:option>
-                    <form:option value="title">Title</form:option>
-                    <form:option value="tag">Tag</form:option>
-                    <form:option value="content">Content</form:option>
-                </form:select>
-            </div>
-            <div class="dropdown-type">
-                <form:select path="sort" name="Sort" onchange="submitForm(this)">
-                    <form:option value="asc">Sort by</form:option>
-                    <form:option value="asc">Ascending</form:option>
-                    <form:option value="desc">Descending</form:option>
-                </form:select>
-            </div>
-        </form:form>
     </div>
-</div>
+    <div class="flex-row flex-wrap flex-center flex-grow">
+    <form:form modelAttribute="searchForm" method="get" action="${searchUrl}" class="flex-row flex-center flex-wrap search-container">
+        <div class="flex-row flex-grow fw-100">
+        <form:input path="query" type="text" id="search-bar" class="search-input flex-grow fw-100"
+                    placeholder="Search..."/>
+        <button type="submit"><span class="material-icons search-icon">search</span></button>
+        </div>
+        <div class="flex-center">
+        <div class="dropdown-type">
+        <form:select path="type" name="Type">
+            <form:option value="all">Search by</form:option>
+            <form:option value="all">All</form:option>
+            <form:option value="title">Title</form:option>
+            <form:option value="tag">Tag</form:option>
+            <form:option value="content">Content</form:option>
+        </form:select>
+        </div>
+        <div class="dropdown-type">
+        <form:select path="sort" name="Sort" onchange="submitForm(this)">
+            <form:option value="no">Sort by</form:option>
+            <form:option value="asc">Ascending</form:option>
+            <form:option value="desc">Descending</form:option>
+        </form:select>
+        </div>
+        </div>
+    </form:form>
+    </div>
+    <div class="flex-row navtop-register-buttons">
+    <a class="flex-center purple-text navtop-button border-radius" href="<c:url value="/login"/>">
+    <spring:message code="login.title"/>
+    </a>
+    <a class="flex-center purple-text navtop-button border-radius" href="<c:url value="/signup"/>">
+    <spring:message code="register.title"/>
+    </a>
+    </div>
+    </div>
 
 </body>
 </html>

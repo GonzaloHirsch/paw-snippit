@@ -19,8 +19,11 @@
 </head>
 <body>
     <c:set var="tag" value="${requestScope.tag}"/>
-    <a href="<c:url value='/tags/${tag.id}'/>" class="tag-container border-radius">
-        <div class="snippet-text tag-text">${tag.name.toUpperCase()}</div>
+    <c:set var="style" value="${requestScope.cssClass}"/>
+    <a href="<c:url value='/tags/${tag.id}'/>" class="${style} ${'flex-center'}">
+        <div class="fw-300 tag-title">
+            ${tag.name.toUpperCase()}
+        </div>
     </a>
 </body>
 </html>

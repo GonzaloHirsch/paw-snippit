@@ -15,40 +15,6 @@
 </head>
 <body>
 <c:url var="searchUrl" value="/${searchContext}search"/>
-<%--    <div class="sidebar">--%>
-<%--        <ul>--%>
-<%--            <c:choose>--%>
-<%--                <c:when test="${searchContext == ''}">--%>
-<%--                    <li class="fw-100 menu-selected"><a href="<c:url value="/"/>">All</a></li>--%>
-<%--                </c:when>--%>
-<%--                <c:otherwise>--%>
-<%--                    <li class="fw-100"><a href="<c:url value="/"/>">All</a></li>--%>
-<%--                </c:otherwise>--%>
-<%--            </c:choose>--%>
-<%--            <c:choose>--%>
-<%--                <c:when test="${searchContext == 'following/'}">--%>
-<%--                    <li class="fw-100 menu-selected"><a href="<c:url value="/following/"/>">Following</a></li>--%>
-<%--                </c:when>--%>
-<%--                <c:otherwise>--%>
-<%--                    <li class="fw-100"><a href="<c:url value="/following/"/>">Following</a></li>--%>
-<%--                </c:otherwise>--%>
-<%--            </c:choose>--%>
-
-<%--            <!--<li><a href="<c:url value="/tags/"/>" >Tags</a></li>-->--%>
-<%--            <hr/>--%>
-<%--            <!--<li><a href="<c:url value="/uploads/"/>">Uploads</a></li>-->--%>
-<%--            <c:choose>--%>
-<%--                <c:when test="${searchContext == 'favorites/'}">--%>
-<%--                    <li class="fw-100 menu-selected"><a href="<c:url value="/favorites/"/>">Favorites</a></li>--%>
-<%--                </c:when>--%>
-<%--                <c:otherwise>--%>
-<%--                    <li class="fw-100"><a href="<c:url value="/favorites/"/>">Favorites</a></li>--%>
-<%--                </c:otherwise>--%>
-<%--            </c:choose>--%>
-<%--            <!--<hr/>--%>
-<%--            <li><a href="<c:url value="/following/"/>">Following</a></ul></li>-->--%>
-<%--        </ul>--%>
-<%--    </div>--%>
 <div id="sidenav" class="sidenav">
     <ul>
         <c:choose>
@@ -60,35 +26,46 @@
             </c:otherwise>
         </c:choose>
         <c:choose>
-            <c:when test="${searchContext == 'following/'}">
-                <li class="fw-100 menu-selected"><a href="<c:url value="/following/"/>">Following</a></li>
-            </c:when>
-            <c:otherwise>
-                <li class="fw-100"><a href="<c:url value="/following/"/>">Following</a></li>
-            </c:otherwise>
-        </c:choose>
-
-        <!--<li><a href="<c:url value="/tags/"/>" >Tags</a></li>-->
-        <hr/>
-        <c:choose>
-            <c:when test="${searchContext == '/tags/'}">
+            <c:when test="${searchContext == 'tags/'}">
                 <li class="fw-100 menu-selected"><a href="<c:url value="/tags/"/>">Tags</a></li>
             </c:when>
             <c:otherwise>
                 <li class="fw-100"><a href="<c:url value="/tags/"/>">Tags</a></li>
             </c:otherwise>
         </c:choose>
-        <!--<li><a href="<c:url value="/uploads/"/>">Uploads</a></li>-->
-        <c:choose>
-            <c:when test="${searchContext == 'favorites/'}">
-                <li class="fw-100 menu-selected"><a href="<c:url value="/favorites/"/>">Favorites</a></li>
-            </c:when>
-            <c:otherwise>
-                <li class="fw-100"><a href="<c:url value="/favorites/"/>">Favorites</a></li>
-            </c:otherwise>
-        </c:choose>
-        <!--<hr/>
-                    <li><a href="<c:url value="/following/"/>">Following</a></ul></li>-->
+        <c:if test="${loggedUser != null}">
+            <hr/>
+            <c:choose>
+                <c:when test="${searchContext == 'user/'}">
+                    <li class="fw-100 menu-selected"><a href="<c:url value="/user/"/>">Profile</a></li>
+                </c:when>
+                <c:otherwise>
+                    <li class="fw-100"><a href="<c:url value="/user/"/>">Profile</a></li>
+                </c:otherwise>
+            </c:choose>
+            <c:choose>
+                <c:when test="${searchContext == 'following/'}">
+                    <li class="fw-100 menu-selected"><a href="<c:url value="/following/"/>">Following</a></li>
+                </c:when>
+                <c:otherwise>
+                    <li class="fw-100"><a href="<c:url value="/following/"/>">Following</a></li>
+                </c:otherwise>
+            </c:choose>
+            <!--<li><a href="<c:url value="/uploads/"/>">Uploads</a></li>-->
+            <c:choose>
+                <c:when test="${searchContext == 'favorites/'}">
+                    <li class="fw-100 menu-selected"><a href="<c:url value="/favorites/"/>">Favorites</a></li>
+                </c:when>
+                <c:otherwise>
+                    <li class="fw-100"><a href="<c:url value="/favorites/"/>">Favorites</a></li>
+                </c:otherwise>
+            </c:choose>
+            <hr/>
+            <span class="fw-100 section-title">Following</span>
+            <c:forEach var="tag" items="${tagList}">
+                <li class="fw-100"><a href="<c:url value="${'/tag/'}${tag.id}"/>">Favorites</a></li>
+            </c:forEach>
+        </c:if>
     </ul>
 </div>
 

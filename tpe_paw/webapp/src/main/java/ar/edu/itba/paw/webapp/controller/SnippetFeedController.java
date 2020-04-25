@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.SnippetService;
+import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,13 +18,18 @@ public class SnippetFeedController {
 
     @Autowired
     private SnippetService snippetService;
-
     @Autowired
     private UserService userService;
+    @Autowired
+    private LoginAuthentication loginAuthentication;
+    @Autowired
+    private TagService tagService;
 
     @RequestMapping("/")
     public ModelAndView getHomeSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm) {
         final ModelAndView mav = new ModelAndView("index");
+        
+        mav.addObject("snippetList", this.tagService.getFollowedTagsForUser(3));
         mav.addObject("snippetList", this.snippetService.getAllSnippets());
         mav.addObject("searchContext","");
         return mav;

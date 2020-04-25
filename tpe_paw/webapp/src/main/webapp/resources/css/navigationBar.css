@@ -58,7 +58,7 @@
 }
 
 .sidenav li:hover {
-    background-color: #908dc9;
+    background-color: rgba(150, 148, 201, 0.84);
     border-bottom-left-radius: 10px;
     border-top-left-radius: 10px;
 }
@@ -69,12 +69,16 @@
 }
 
 .menu-selected {
-    background: #908dc9;
-    border-right: slateblue;
+    background: rgba(150, 148, 201, 0.84);
+    border-right: #5e35b1;
     border-right-style: solid;
     border-right-width: 5px;
     border-bottom-left-radius: 10px;
     border-top-left-radius: 10px;
+}
+
+.sidenav .section-title {
+    color: white;
 }
 
 /*-----------------------------Top nav bar---------------------------------*/
@@ -83,7 +87,7 @@
     overflow: hidden;
     position: fixed;
     width:100%;
-    background-color: slateblue;
+    background-color: #5e35b1;
     z-index:999;
     display: flex;
     border-bottom-left-radius: 30px;

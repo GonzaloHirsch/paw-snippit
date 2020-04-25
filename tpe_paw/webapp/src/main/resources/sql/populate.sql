@@ -13,6 +13,7 @@ delete from users where true;
 
 insert into users(username, password, email, description, reputation, date_joined) values('JohnDoe','password','johndoe@gmail.com', 'I am the first user created on this website, I own many snippets', 0, timestamp '2019-09-28 12:30:00');
 insert into users(username, password, email, description, reputation, date_joined) values('JaneRoe','password','janeroe@gmail.com', 'I am just visiting', 0, timestamp '2019-09-28 12:30:00');
+insert into users(username, password, email, description, reputation, date_joined) values('admin','password','admin@snippit.com', 'I am the admin and have many important roles. I do not have a user profile and I do not post or vote', 0, timestamp '2019-09-28 12:30:00');
 
 insert into languages(name) values('java');
 insert into languages(name) values('c#');

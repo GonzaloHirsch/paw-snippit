@@ -11,7 +11,9 @@ public interface UserDao {
 
     Optional<User> findUserByUsername(String username);
 
-    Optional<User> findUserById(long id);
+    Optional<User> findUserById(final long id);
+
+    Optional<User> findUserByEmail(String email);
 
     void updateDescription(String username, String newDescription);
 

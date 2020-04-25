@@ -37,6 +37,7 @@
 .snippet-upload-info {
     justify-content: space-around;
     margin: 0px 0px 0px 10px;
+    text-decoration: none;
 }
 
 .snippet-user-info {

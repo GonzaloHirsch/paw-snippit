@@ -26,7 +26,7 @@
 <spring:message code="snippetCreateFrom.codeHint" var="code_hint"/>
 
 <div class="wrapper">
-    <c:import url="/WEB-INF/jsp/navBar/navigationBar.jsp"/>
+    <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <c:url value="/create" var="postPath"/>
     <div class="main-content">
 

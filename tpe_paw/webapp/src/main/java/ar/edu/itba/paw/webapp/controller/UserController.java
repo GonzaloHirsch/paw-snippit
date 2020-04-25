@@ -84,8 +84,16 @@ public class UserController {
 
     @RequestMapping(value = "/login")
     public ModelAndView login() {
-        return new ModelAndView("user/login");
+        final ModelAndView mav = new ModelAndView("user/login");
+        mav.addObject("error", false);
+        return mav;
     }
+
+    @RequestMapping(value = "/login_error")
+    public ModelAndView loginError() {
+        final ModelAndView mav = new ModelAndView("user/login");
+        mav.addObject("error", true);
+        return mav;    }
 
     @RequestMapping(value = "/goodbye")
     public ModelAndView logout() {

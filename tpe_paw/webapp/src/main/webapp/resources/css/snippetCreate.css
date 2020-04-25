@@ -12,6 +12,10 @@
     max-width: 850px;
 }
 
+.snippetC-elem-container {
+    margin: 5px;
+}
+
 .snippetC-title-container {
     margin: 5px;
     flex:4;
@@ -21,32 +25,42 @@
     flex:1;
 }
 
-.snippetC-elem-container {
-    margin: 5px;
+.snippetC-tags-container {
+    flex: 4;
+}
+
+.snnipetC-submit-container {
+    flex:1;
 }
 .snippetC-title-input{
     width: 95%;
     padding: 12px 20px;
     margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
     font-size: 17px;
     height: 50px;
 }
 
+.snippetC-language{
+    width:120px !important;
+}
+
+.snippetC-tags{
+    width: 300px !important;
+}
+
 .snippetC-code-input{
     background: #DCDCDC;
-    margin: 5px 10px 0px 0px;
+    margin: 10px 10px 0px 0px;
     max-width: 700px;
-    padding: 5px 5px 5px 5px;
+    padding: 10px 5px 5px 8px;
     border-width:thin;
+    line-height: 19px;
 }
 
 .snippetC-description-input{
     margin-top: 5px;
-    padding: 5px 0 0 5px;
+    padding: 10px 0 0 10px;
+    line-height: 19px;
 }
 
 .snippetC-divider{
@@ -59,6 +73,19 @@
 
 
 .snippetC-border{
-    border-radius: 2px;
+    border-radius: 4px;
     border-width:thin;
+    border-color: #ccc;
+}
+
+.snippetC-button {
+    background-color: cadetblue;
+    padding: 10px 10px 10px 10px;
+    width:100%;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 17px;
+    text-align: center;
+    margin: 8px 0px 0px 0px;
 }

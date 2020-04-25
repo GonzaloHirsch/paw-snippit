@@ -6,7 +6,12 @@
 
 <html>
 <head>
-    <title>Snippet Detail</title>
+    <title>Snippet Create</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippetCreate.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippetDetail.css'/>" rel="stylesheet"/>
@@ -29,14 +34,14 @@
 
                     <div class="flex-row flex-center">
                         <div class="snippetC-title-container">
-                            <form:input class="snippetC-title-input" type="text" path="title" placeholder='${title_hint}'/>
+                            <form:input class="snippetC-title-input snippetC-border fw-100" type="text" path="title" placeholder='${title_hint}'/>
                             <form:errors path="title" cssClass="formError" element="p"/>
                         </div>
                         <div class="snippetC-language-container">
-                            <form:select path="language">
-                                <form:option value="-1">Select code Language</form:option>
+                            <form:select class="selectpicker snippetC-language" path="language">
+                                <form:option value="-1">Language</form:option>
                                 <c:forEach items="${languageList}" var="lan" varStatus="status">
-                                    <form:option value="${lan.id}">${lan.name}</form:option>
+                                    <form:option value="${lan.id}">${lan.name.toUpperCase()}</form:option>
                                 </c:forEach>
                             </form:select>
                             <form:errors path="language" cssClass="formError" element="p"/>
@@ -61,15 +66,17 @@
 
                     <hr class="snippetC-divider"/>
 
-                    <div class="flex-row flex-space-between">
-                        <div>
-                            <form:select col="3" path="tags" multiple="true" name="tagselect" >
+                    <div class="flex-row flex-space-between snippetC-elem-container flex-center">
+
+                        <div class="flex-column snippetC-tags-container">
+                            <form:label path="tags"><spring:message code="snippetCreateForm.tags"/></form:label>
+                            <form:select class="selectpicker snippetC-tags" multiple="true" data-live-search="true" path="tags" name="tagselect" >
                                 <form:options items="${tagList}" itemValue="id" itemLabel="name"/>
                             </form:select>
                             <form:errors path="tags" cssClass="formError" element="p"/>
                         </div>
-                        <div>
-                            <input type="submit" value='<spring:message code="snippetCreateForm.save"/>'/>
+                        <div class="snippetC-submit-container">
+                            <input class="snippetC-button snippetC-border" type="submit" value='<spring:message code="snippetCreateForm.save"/>'/>
                         </div>
                     </div>
 
@@ -80,5 +87,13 @@
         </div>
     </div>
 </div>
+
+<!-- Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+
 </body>
 </html>

@@ -15,11 +15,6 @@
     width: 750px;
 }
 
-.detail-snippet-tags {
-    margin: 5px 0px 0px 0px;
-    padding: 0px 20px 0px 20px;
-}
-
 .detail-snippet-block {
     /*background: #a49eb0;*/
     border: #5e35b1 2px solid;
@@ -46,7 +41,7 @@
 }
 
 .detail-snippet-user-info {
-    margin: 11px 0px 4px 0px;
+    margin: 5px 0px 4px 0px;
 }
 
 .detail-snippet-date {

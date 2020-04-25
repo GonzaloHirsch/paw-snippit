@@ -41,6 +41,7 @@ public class TagsController {
             // ERROR
         }
         Collection<Tag> allTags = tagService.getAllTags();
+        mav.addObject("searchContext","tags/");
         mav.addObject("tags", allTags); 
         return mav;
     }
@@ -49,13 +50,14 @@ public class TagsController {
         ModelAndView mav = new ModelAndView("tag/tagSnippets");
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
+        boolean follows = false;
         if (currentUser != null){
             mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+            Collection<Tag> followedTags = tagService.getFollowedTagsForUser(currentUser.getUserId());
+            follows = followedTags.stream().map(Tag::getId).collect(Collectors.toList()).contains(tagId);
         } else {
             // ERROR
         }
-        Collection<Tag> followedTags = tagService.getFollowedTagsForUser(currentUser.getUserId());
-        boolean follows = followedTags.stream().map(Tag::getId).collect(Collectors.toList()).contains(tagId);
         Optional<Tag> tag = tagService.findTagById(tagId);
         if (!tag.isPresent()) {
             // TODO customize error msg

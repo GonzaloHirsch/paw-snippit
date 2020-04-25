@@ -53,24 +53,24 @@ public class SnippetController {
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
             mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+
+            // Vote
+            Optional<Vote> vote = this.voteService.getVote(currentUser.getUserId(), retrievedSnippet.get().getId());
+            int voteType = 0;
+            if (vote.isPresent()) {
+                voteType = vote.get().getType();
+            }
+            voteForm.setType(voteType);
+            voteForm.setOldType(voteType);
+            voteForm.setUserId(currentUser.getUserId());
+
+            // Fav
+            Optional<Favorite> fav = this.favService.getFavorite(currentUser.getUserId(), retrievedSnippet.get().getId());
+            favForm.setFavorite(fav.isPresent());
+            favForm.setUserId(currentUser.getUserId());
         } else {
             // ERROR
         }
-
-        // Vote
-        Optional<Vote> vote = this.voteService.getVote(currentUser.getUserId(), retrievedSnippet.get().getId());
-        int voteType = 0;
-        if (vote.isPresent()) {
-            voteType = vote.get().getType();
-        }
-        voteForm.setType(voteType);
-        voteForm.setOldType(voteType);
-        voteForm.setUserId(currentUser.getUserId());
-
-        // Fav
-        Optional<Favorite> fav = this.favService.getFavorite(currentUser.getUserId(), retrievedSnippet.get().getId());
-        favForm.setFavorite(fav.isPresent());
-        favForm.setUserId(currentUser.getUserId());
 
         // Vote Count
         Optional<Integer> voteCount = this.voteService.getVoteBalance(retrievedSnippet.get().getId());
@@ -79,6 +79,7 @@ public class SnippetController {
         } else {
             mav.addObject("voteCount",0);
         }
+
         mav.addObject("searchContext","");
         return mav;
     }

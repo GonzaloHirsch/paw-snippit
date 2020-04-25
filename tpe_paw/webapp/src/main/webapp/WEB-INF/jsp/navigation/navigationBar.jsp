@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
@@ -15,40 +15,6 @@
 </head>
 <body>
 <c:url var="searchUrl" value="/${searchContext}search"/>
-<%--    <div class="sidebar">--%>
-<%--        <ul>--%>
-<%--            <c:choose>--%>
-<%--                <c:when test="${searchContext == ''}">--%>
-<%--                    <li class="fw-100 menu-selected"><a href="<c:url value="/"/>">All</a></li>--%>
-<%--                </c:when>--%>
-<%--                <c:otherwise>--%>
-<%--                    <li class="fw-100"><a href="<c:url value="/"/>">All</a></li>--%>
-<%--                </c:otherwise>--%>
-<%--            </c:choose>--%>
-<%--            <c:choose>--%>
-<%--                <c:when test="${searchContext == 'following/'}">--%>
-<%--                    <li class="fw-100 menu-selected"><a href="<c:url value="/following/"/>">Following</a></li>--%>
-<%--                </c:when>--%>
-<%--                <c:otherwise>--%>
-<%--                    <li class="fw-100"><a href="<c:url value="/following/"/>">Following</a></li>--%>
-<%--                </c:otherwise>--%>
-<%--            </c:choose>--%>
-
-<%--            <!--<li><a href="<c:url value="/tags/"/>" >Tags</a></li>-->--%>
-<%--            <hr/>--%>
-<%--            <!--<li><a href="<c:url value="/uploads/"/>">Uploads</a></li>-->--%>
-<%--            <c:choose>--%>
-<%--                <c:when test="${searchContext == 'favorites/'}">--%>
-<%--                    <li class="fw-100 menu-selected"><a href="<c:url value="/favorites/"/>">Favorites</a></li>--%>
-<%--                </c:when>--%>
-<%--                <c:otherwise>--%>
-<%--                    <li class="fw-100"><a href="<c:url value="/favorites/"/>">Favorites</a></li>--%>
-<%--                </c:otherwise>--%>
-<%--            </c:choose>--%>
-<%--            <!--<hr/>--%>
-<%--            <li><a href="<c:url value="/following/"/>">Following</a></ul></li>-->--%>
-<%--        </ul>--%>
-<%--    </div>--%>
 <div id="sidenav" class="sidenav">
     <ul>
         <c:choose>
@@ -107,7 +73,8 @@
             </div>
             <div class="dropdown-type">
                 <form:select path="type" name="Type">
-                    <form:option value="title">Search by</form:option>
+                    <form:option value="all">Search by</form:option>
+                    <form:option value="all">All</form:option>
                     <form:option value="title">Title</form:option>
                     <form:option value="tag">Tag</form:option>
                     <form:option value="content">Content</form:option>
@@ -115,7 +82,7 @@
             </div>
             <div class="dropdown-type">
                 <form:select path="sort" name="Sort" onchange="submitForm(this)">
-                    <form:option value="no">Sort by</form:option>
+                    <form:option value="asc">Sort by</form:option>
                     <form:option value="asc">Ascending</form:option>
                     <form:option value="desc">Descending</form:option>
                 </form:select>

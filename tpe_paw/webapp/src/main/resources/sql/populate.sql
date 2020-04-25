@@ -149,7 +149,7 @@ sw.Stop();
 
 Console.WriteLine("Elapsed={0}",sw.Elapsed);
 ', timestamp '2020-04-10 12:40:00', (select id from languages where name='c#'));
-insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Dijkstra Shortest Path','Implementation of Dijkstras algorithm for the shortest path in graphs, this is a greedy algorithm',
+insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Dijkstra Shortest Path Implementation','Implementation of Dijkstras algorithm for the shortest path in graphs, this is a greedy algorithm',
 'import java.util.*; 
 import java.lang.*; 
 import java.io.*; 
@@ -244,7 +244,7 @@ class ShortestPath {
     } 
 } 
 ', timestamp '2019-09-28 12:40:00', (select id from languages where name='java'));
-insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Heapsort','Implementation of heapsort in java without a Heap class',
+insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Heapsort Implementation','Implementation of heapsort in java without a Heap class',
 'public class HeapSort 
 { 
     public void sort(int arr[]) 
@@ -370,7 +370,7 @@ insert into snippets(user_id, title, description, code, date_created, language_i
 def sigmoid(x):
   return 1 / (1 + math.exp(-x))
 ', timestamp '2020-01-20 09:40:00', (select id from languages where name='python'));
-insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Heuns method','Implementation of Heuns method in Python, includes a plotting of the function',
+insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Heuns method Implementation','Implementation of Heuns method in Python, includes a plotting of the function',
 'import matplotlib.pyplot as plt
 import math
 
@@ -523,10 +523,10 @@ body {
 ', timestamp '2020-03-01 03:30:12', (select id from languages where name='css'));
 
 insert into votes_for(user_id, snippet_id, type) values((select id from users where username='JaneRoe'),(select id from snippets where title='Implementation of merge sort'), 1);
-insert into votes_for(user_id, snippet_id, type) values((select id from users where username='JaneRoe'),(select id from snippets where title='Dijkstra Shortest Path'), 1);
+insert into votes_for(user_id, snippet_id, type) values((select id from users where username='JaneRoe'),(select id from snippets where title='Dijkstra Shortest Path Implementation'), 1);
 insert into votes_for(user_id, snippet_id, type) values((select id from users where username='JaneRoe'),(select id from snippets where title='Netflix-like Card Expansion'), 1);
 
-insert into favorites(snippet_id,user_id) values((select id from snippets where title='Heapsort'),(select id from users where username='JaneRoe'));
+insert into favorites(snippet_id,user_id) values((select id from snippets where title='Heapsort Implementation'),(select id from users where username='JaneRoe'));
 insert into favorites(snippet_id,user_id) values((select id from snippets where title='Implementation of merge sort'),(select id from users where username='JaneRoe'));
 insert into favorites(snippet_id,user_id) values((select id from snippets where title='Sigmoid Function'),(select id from users where username='JaneRoe'));
 
@@ -536,11 +536,11 @@ insert into follows(user_id,tag_id) values((select id from users where username=
 
 insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Meassure time'),(select id from tags where name='performance'));
 insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Implementation of merge sort'),(select id from tags where name='sorting'));
-insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Heapsort'),(select id from tags where name='sorting'));
+insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Heapsort Implementation'),(select id from tags where name='sorting'));
 insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Implementation of merge sort'),(select id from tags where name='sort'));
-insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Heapsort'),(select id from tags where name='sort'));
-insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Dijkstra Shortest Path'),(select id from tags where name='greedy'));
-insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Heuns method'),(select id from tags where name='math'));
+insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Heapsort Implementation'),(select id from tags where name='sort'));
+insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Dijkstra Shortest Path Implementation'),(select id from tags where name='greedy'));
+insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Heuns method Implementation'),(select id from tags where name='math'));
 insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Sigmoid Function'),(select id from tags where name='math'));
 insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Sigmoid Function'),(select id from tags where name='machine-learning'));
 insert into snippet_tags(snippet_id,tag_id) values((select id from snippets where title='Text Blur'),(select id from tags where name='style'));

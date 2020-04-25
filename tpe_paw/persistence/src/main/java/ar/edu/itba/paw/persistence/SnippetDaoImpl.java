@@ -96,7 +96,7 @@ public class SnippetDaoImpl implements SnippetDao {
     public Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, Types type, String term, Locations location, Orders order, Long userId, int page, int pageSize) {
         SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(queryType, location, userId, type, term)
                 .setOrder(order, type)
-                .setPaging(page, pageSize)
+//                .setPaging(page, pageSize)
                 .build();
         return jdbcTemplate.query(searchQuery.getQuery(), searchQuery.getParams(), ROW_MAPPER);
     }

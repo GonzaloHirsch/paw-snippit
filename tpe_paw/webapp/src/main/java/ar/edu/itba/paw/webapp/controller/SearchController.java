@@ -44,35 +44,38 @@ public class SearchController {
     private UserService userService;
 
     @RequestMapping("/search")
-    public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("pageForm") final PageForm pageForm) {
+    public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm/*, @ModelAttribute("pageForm") final PageForm pageForm*/) {
         final ModelAndView mav = new ModelAndView("index");
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, searchForm.getSort(), null, pageForm.getPage(), 5);
+//        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, searchForm.getSort(), null, pageForm.getPage(), 5);
+        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, searchForm.getSort(), null, 1, 30);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, null);
-        pageForm.setTotalPages(totalSnippetCount/ 5 + (totalSnippetCount % 5 == 0 ? 0 : 1));
+//        pageForm.setTotalPages(totalSnippetCount/ 5 + (totalSnippetCount % 5 == 0 ? 0 : 1));
         mav.addObject("snippetList", snippets);
         mav.addObject("searchContext","");
         return mav;
     }
 
     @RequestMapping("/favorites/search")
-    public ModelAndView searchInFavorites(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("pageForm") final PageForm pageForm){
+    public ModelAndView searchInFavorites(@Valid @ModelAttribute("searchForm") final SearchForm searchForm/*, @ModelAttribute("pageForm") final PageForm pageForm*/){
         final ModelAndView mav = new ModelAndView("index");
         Long currentUserId = this.getCurrentUserId();
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, searchForm.getSort(), currentUserId, pageForm.getPage(), 5);
+//        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, searchForm.getSort(), currentUserId, pageForm.getPage(), 5);
+        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, searchForm.getSort(), currentUserId, 1, 30);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, currentUserId);
-        pageForm.setTotalPages(totalSnippetCount/ 5 + (totalSnippetCount % 5 == 0 ? 0 : 1));
+//        pageForm.setTotalPages(totalSnippetCount/ 5 + (totalSnippetCount % 5 == 0 ? 0 : 1));
         mav.addObject("snippetList", snippets);
         mav.addObject("searchContext","favorites/");
         return mav;
     }
 
     @RequestMapping("/following/search")
-    public ModelAndView searchInFollowing(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("pageForm") final PageForm pageForm){
+    public ModelAndView searchInFollowing(@Valid @ModelAttribute("searchForm") final SearchForm searchForm/*, @ModelAttribute("pageForm") final PageForm pageForm*/){
         final ModelAndView mav = new ModelAndView("index");
         Long currentUserId = this.getCurrentUserId();
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, searchForm.getSort(), currentUserId, pageForm.getPage(), 5);
+//        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, searchForm.getSort(), currentUserId, pageForm.getPage(), 5);
+        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, searchForm.getSort(), currentUserId, 1, 30);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, currentUserId);
-        pageForm.setTotalPages(totalSnippetCount/ 5 + (totalSnippetCount % 5 == 0 ? 0 : 1));
+//        pageForm.setTotalPages(totalSnippetCount/ 5 + (totalSnippetCount % 5 == 0 ? 0 : 1));
         mav.addObject("snippetList", snippets);
         mav.addObject("searchContext","following/");
         return mav;

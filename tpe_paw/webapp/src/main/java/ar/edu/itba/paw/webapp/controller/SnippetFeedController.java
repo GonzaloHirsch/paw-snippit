@@ -25,11 +25,12 @@ public class SnippetFeedController {
     private UserService userService;
 
     @RequestMapping("/")
-    public ModelAndView getHomeSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("pageForm") final PageForm pageForm) {
+    public ModelAndView getHomeSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm/*, @ModelAttribute("pageForm") final PageForm pageForm*/) {
         final ModelAndView mav = new ModelAndView("index");
-        Collection<Snippet> snippets = this.snippetService.getAllSnippets(pageForm.getPage(), 5);
+//        Collection<Snippet> snippets = this.snippetService.getAllSnippets(pageForm.getPage(), 5);
+        Collection<Snippet> snippets = this.snippetService.getAllSnippets(1, 30);
         int totalSnippetCount = this.snippetService.getAllSnippetsCount();
-        pageForm.setTotalPages(totalSnippetCount/ 5 + (totalSnippetCount % 5 == 0 ? 0 : 1));
+//        pageForm.setTotalPages(totalSnippetCount/ 5 + (totalSnippetCount % 5 == 0 ? 0 : 1));
         mav.addObject("snippetList", snippets);
         mav.addObject("searchContext","");
         return mav;
@@ -48,7 +49,7 @@ public class SnippetFeedController {
     }
 
     @RequestMapping("/following")
-    public ModelAndView getFollowingSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("pageForm") final PageForm pageForm) {
+    public ModelAndView getFollowingSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm/*, @ModelAttribute("pageForm") final PageForm pageForm*/) {
         final ModelAndView mav = new ModelAndView("index");
         Optional<User> user = this.userService.getCurrentUser();
         if (!user.isPresent()){

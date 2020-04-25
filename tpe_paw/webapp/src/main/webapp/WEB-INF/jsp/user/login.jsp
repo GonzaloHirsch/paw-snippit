@@ -40,7 +40,7 @@
                 <div class="register-field-container">
                     <label>
                         <i class="material-icons register-icons">lock</i>
-                        <input class="register-border register-field-size register-field-padding" name="password" placeholder="<spring:message code='registerForm.password'/>">
+                        <input class="register-border register-field-size register-field-padding" name="password" type="password" placeholder="<spring:message code='registerForm.password'/>">
                     </label>
                 </div>
 

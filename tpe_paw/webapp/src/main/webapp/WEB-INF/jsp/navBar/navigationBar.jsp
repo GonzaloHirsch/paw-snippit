@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html>
@@ -92,35 +93,47 @@
     </ul>
 </div>
 
-<div class="navtop">
-    <span id="menu-icon" class="material-icons menu-icon flex-center" onclick="openNav()">menu</span>
-    <a class="app-name fw-100" href="<c:url value="/"/>">
-        <span class="material-icons app-icon">code</span>
-        Snippit
-    </a>
-    <div class="search-container flex-center">
-        <form:form modelAttribute="searchForm" method="get" action="${searchUrl}">
-            <div class="search-bar fw-100">
-                <form:input path="query" type="text" id="search-bar" class="search-input fw-100"
+<div class="navtop flex-row flex-space-between">
+    <div class="flex-center">
+        <span id="menu-icon" class="material-icons menu-icon" onclick="openNav()">menu</span>
+        <a class="flex-row white-text app-name fw-100" href="<c:url value="/"/>">
+            <span class="material-icons app-icon">code</span>
+            Snippit
+        </a>
+    </div>
+    <div class="flex-row flex-wrap flex-center flex-grow">
+        <form:form modelAttribute="searchForm" method="get" action="${searchUrl}" class="flex-row flex-center flex-wrap search-container">
+            <div class="flex-row flex-grow fw-100">
+                <form:input path="query" type="text" id="search-bar" class="search-input flex-grow fw-100"
                             placeholder="Search..."/>
                 <button type="submit"><span class="material-icons search-icon">search</span></button>
             </div>
-            <div class="dropdown-type">
-                <form:select path="type" name="Type">
-                    <form:option value="title">Search by</form:option>
-                    <form:option value="title">Title</form:option>
-                    <form:option value="tag">Tag</form:option>
-                    <form:option value="content">Content</form:option>
-                </form:select>
-            </div>
-            <div class="dropdown-type">
-                <form:select path="sort" name="Sort" onchange="submitForm(this)">
-                    <form:option value="no">Sort by</form:option>
-                    <form:option value="asc">Ascending</form:option>
-                    <form:option value="desc">Descending</form:option>
-                </form:select>
+            <div class="flex-center">
+                <div class="dropdown-type">
+                    <form:select path="type" name="Type">
+                        <form:option value="title">Search by</form:option>
+                        <form:option value="title">Title</form:option>
+                        <form:option value="tag">Tag</form:option>
+                        <form:option value="content">Content</form:option>
+                    </form:select>
+                </div>
+                <div class="dropdown-type">
+                    <form:select path="sort" name="Sort" onchange="submitForm(this)">
+                        <form:option value="no">Sort by</form:option>
+                        <form:option value="asc">Ascending</form:option>
+                        <form:option value="desc">Descending</form:option>
+                    </form:select>
+                </div>
             </div>
         </form:form>
+    </div>
+    <div class="flex-row navtop-register-buttons">
+        <a class="flex-center purple-text navtop-button border-radius" href="<c:url value="/login"/>">
+            <spring:message code="login.title"/>
+        </a>
+        <a class="flex-center purple-text navtop-button border-radius" href="<c:url value="/signup"/>">
+            <spring:message code="register.title"/>
+        </a>
     </div>
 </div>
 

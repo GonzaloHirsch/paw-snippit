@@ -91,20 +91,15 @@
 }
 
 .navtop a {
-    float: left;
-    display: block;
-    color: black;
     text-align: center;
     padding: 10px;
     text-decoration: none;
     /*font-size: 17px;*/
 }
 .navtop .app-name{
-    color:white;
     width:150px;
     letter-spacing: 2px;
     font-size: 26px !important;
-    display: flex !important;
 }
 
 .navtop .app-icon{
@@ -112,7 +107,18 @@
     font-size: 26px !important;
     display: flex !important;
     align-items: center !important;
-    margin-right: 5px;
+    margin: 0px 6px;
+}
+
+.navtop .navtop-button {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 17px;
+    margin: 5px 3px;
+    min-width: 78px;
+    text-align: center;
+    text-decoration: none;
 }
 
 /*
@@ -135,11 +141,10 @@
 }
 
 .navtop .search-container {
-    float: right;
-    overflow:hidden;
+    display: flex;
+    flex-grow: 1;
+    max-width: 800px;
     padding: 5px;
-    flex-basis: 75%;
-    min-width: 50%;
 }
 
 .navtop .search-container button:hover {
@@ -153,7 +158,7 @@
     margin-right: 5px;
 }
 .navtop .search-container .dropdown-type select{
-    width: 100px;
+    width: 75px;
     height: 25px;
     padding: 4px;
     border-radius:4px;
@@ -166,23 +171,13 @@
 }
 
 
-.navtop .search-container .search-bar{
-    float: left;
-    margin-left: 20px;
-    width:550px;
-    /*min-width: 65%;*/
-}
-
 .navtop .search-input{
-    padding: 6px;
-    font-size: 17px;
-    border: none;
-    height:40px;
-    flex-basis: 60%;
-    width: 480px;
-    float: left;
-    border-radius: 5px 0px 0px 5px;
     background-color: #eeedf2;
+    border: none;
+    border-radius: 5px 0px 0px 5px;
+    font-size: 17px;
+    height:40px;
+    padding: 6px;
 }
 
 .navtop .search-icon {
@@ -190,10 +185,8 @@
 }
 
 .navtop .search-container button {
-    float: left;
-    left: 0;
     padding: 6px 10px;
-    margin-right: 16px;
+    margin: 0px 16px 0px 0px;
     background: #ddd;
     font-size: 17px;
     border: none;
@@ -201,5 +194,7 @@
     border-radius: 0px 5px 5px 0px;
 }
 
-
+.navtop-register-buttons {
+    margin: 0px 27px 0px 0px;
+}
 

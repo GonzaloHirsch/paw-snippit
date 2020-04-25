@@ -73,7 +73,8 @@ public class SnippetDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> getAllSnippets(int page, int pageSize) {
-        return jdbcTemplate.query("SELECT * FROM complete_snippets LIMIT ? OFFSET ?", ROW_MAPPER, pageSize, pageSize * page);
+//        return jdbcTemplate.query("SELECT * FROM complete_snippets LIMIT ? OFFSET ?", ROW_MAPPER, pageSize, pageSize * page);
+        return jdbcTemplate.query("SELECT * FROM complete_snippets", ROW_MAPPER);
     }
 
 

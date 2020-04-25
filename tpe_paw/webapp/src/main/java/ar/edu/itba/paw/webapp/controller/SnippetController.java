@@ -49,6 +49,10 @@ public class SnippetController {
                 mav.addObject("snippet", snippet);
         });
 
+        if (!retrievedSnippet.isPresent()) {
+            // TODO --> Logger + REDIRECT TO 500 ERROR CODE!!
+            // TODO --> throw new ...
+        }
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){

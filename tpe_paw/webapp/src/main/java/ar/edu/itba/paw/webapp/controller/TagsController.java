@@ -69,21 +69,21 @@ public class TagsController {
     }
     @RequestMapping("/tags/{tagId}/follow")
     public ModelAndView followSnippet(@PathVariable("tagId") long tagId) {
-        Optional<User> currentUserOpt = userService.getCurrentUser();
-        if (!currentUserOpt.isPresent()){
-            // TODO customize error msg
+        User currentUserOpt = loginAuthentication.getLoggedInUser();
+        if ( currentUserOpt != null){
+            // TODO LOGGER + customize error msg
         } else {
-            tagService.followTag(currentUserOpt.get().getUserId(), tagId);
+            tagService.followTag(currentUserOpt.getUserId(), tagId);
         }
         return new ModelAndView("redirect:/tags/" + tagId);
     }
     @RequestMapping("/tags/{tagId}/unfollow")
     public ModelAndView unfollowSnippet(@PathVariable("tagId") long tagId) {
-        Optional<User> currentUserOpt = userService.getCurrentUser();
-        if (!currentUserOpt.isPresent()){
-            // TODO customize error msg
-        } else {
-            tagService.unfollowTag(currentUserOpt.get().getUserId(), tagId);
+        User currentUserOpt = loginAuthentication.getLoggedInUser();
+        if ( currentUserOpt != null){
+            // TODO LOGGER + customize error msg
+        }else {
+            tagService.unfollowTag(currentUserOpt.getUserId(), tagId);
         }
         return new ModelAndView("redirect:/tags/" + tagId);
     }

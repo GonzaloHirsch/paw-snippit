@@ -15,7 +15,7 @@
     <c:set var="error" value="${requestScope.error}"/>
     <div class="flex-column flex-center TODO-delete">
 
-        <div class="flex-row flex-center register-text-container register-text register-welcome-text fw-300">
+        <div class="flex-row flex-center register-text-container white-text register-welcome-text fw-300">
             <i class="material-icons app-icon register-app-icon-margin">code</i>
             <spring:message code="login.welcome"/>
             <span class="fw-500 register-title-margin"> <spring:message code="app.name"/></span>
@@ -58,9 +58,9 @@
             </div>
         </form>
 
-        <div class="flex-center register-text-container register-text">
+        <div class="flex-center register-text-container white-text">
             <spring:message code="login.noAccount"/>
-            <a class="register-text register-text-space" href="<c:url value='/signup'/>">
+            <a class="white-text register-text-space" href="<c:url value='/signup'/>">
                 <spring:message code="login.signupRedirect"/>
             </a>
         </div>

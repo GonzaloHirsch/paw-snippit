@@ -12,6 +12,7 @@ public interface SnippetDao {
         FOLLOWING
     }
     enum Types {
+        ALL,
         TAG,
         CONTENT,
         TITLE
@@ -28,4 +29,5 @@ public interface SnippetDao {
     Collection<Snippet> getAllFollowingSnippets(Long userId);
     Collection<Snippet> findAllSnippetsByOwner(final long userId);
     Optional<Snippet> findSnippetById(long id);
+    Collection<Snippet> findSnippetsForTag(long tagId);
 }

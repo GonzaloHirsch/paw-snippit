@@ -1,13 +1,21 @@
 /*
- * CSS for the snippet tags --> snippetTag.jsp
+ * CSS for the snippet tags --> tag.jsp
  */
 
 .tag-container {
     background-color: #DCDCDC;
+    text-decoration: none;
     margin: 10px;
     padding: 10px;
+    transition: 0.3s;
+}
+
+.tag-container:hover {
+    background-color: rgb(20, 200, 255);
+
 }
 
 .tag-text {
     font-size: 13px;
+    color: black;
 }

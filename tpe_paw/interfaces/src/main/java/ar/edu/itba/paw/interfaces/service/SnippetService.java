@@ -13,4 +13,5 @@ public interface SnippetService {
     Optional<Snippet> findSnippetById(long id);
     Collection<Snippet> findAllSnippetsByOwner(final long userId);
     Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId);
+    Collection<Snippet> findSnippetsForTag(long tagId);
 }

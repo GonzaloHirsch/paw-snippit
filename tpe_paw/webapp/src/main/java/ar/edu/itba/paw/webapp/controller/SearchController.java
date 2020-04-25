@@ -24,6 +24,7 @@ import java.util.*;
 public class SearchController {
 
     private Map<String, SnippetDao.Types> typesMap = new HashMap<String, SnippetDao.Types>(){{
+        put("all", SnippetDao.Types.ALL);
         put("tag", SnippetDao.Types.TAG);
         put("title", SnippetDao.Types.TITLE);
         put("content", SnippetDao.Types.CONTENT);
@@ -42,8 +43,6 @@ public class SearchController {
 
     @RequestMapping("/search")
     public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm) {
-
-
         final ModelAndView mav = new ModelAndView("index");
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, searchForm.getSort(), null);
         mav.addObject("snippetList", snippets);
@@ -53,7 +52,6 @@ public class SearchController {
 
     @RequestMapping("/favorites/search")
     public ModelAndView searchInFavorites(@Valid @ModelAttribute("searchForm") final SearchForm searchForm){
-
         final ModelAndView mav = new ModelAndView("index");
         Long currentUserId = this.getCurrentUserId();
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, searchForm.getSort(), currentUserId);

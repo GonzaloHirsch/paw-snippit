@@ -86,7 +86,7 @@ public class SnippetSearchQuery {
          */
         public Builder(SnippetDao.Locations location, Long userId, SnippetDao.Types type, String term){
             this.query
-                    .append("SELECT DISTINCT s.id, s.user_id, s.code, s.title, s.description, s.language_id, s.date_created FROM ")
+                    .append("SELECT DISTINCT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language_id, s.language, s.date_created FROM ")
                     .append(this.locationsMap.get(location));
             if (userId != null){ params.add(userId); }
             this.query.append(this.typeMap.get(type));

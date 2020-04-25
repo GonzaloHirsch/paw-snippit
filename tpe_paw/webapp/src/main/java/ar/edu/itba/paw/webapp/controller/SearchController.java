@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,8 @@ public class SearchController {
     private SnippetService snippetService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private LoginAuthentication loginAuthentication;
 
     @RequestMapping("/search")
     public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm) {
@@ -53,7 +56,8 @@ public class SearchController {
     @RequestMapping("/favorites/search")
     public ModelAndView searchInFavorites(@Valid @ModelAttribute("searchForm") final SearchForm searchForm){
         final ModelAndView mav = new ModelAndView("index");
-        Long currentUserId = this.getCurrentUserId();
+        User currentUser = loginAuthentication.getLoggedInUser();
+        Long currentUserId = currentUser == null ? null : currentUser.getUserId();
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, searchForm.getSort(), currentUserId);
         mav.addObject("snippetList", snippets);
         mav.addObject("searchContext","favorites/");
@@ -63,21 +67,14 @@ public class SearchController {
     @RequestMapping("/following/search")
     public ModelAndView searchInFollowing(@Valid @ModelAttribute("searchForm") final SearchForm searchForm){
         final ModelAndView mav = new ModelAndView("index");
-        Long currentUserId = this.getCurrentUserId();
+        User currentUser = loginAuthentication.getLoggedInUser();
+        Long currentUserId = currentUser == null ? null : currentUser.getUserId();
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, searchForm.getSort(), currentUserId);
         mav.addObject("snippetList", snippets);
         mav.addObject("searchContext","following/");
         return mav;
     }
 
-    private Long getCurrentUserId(){
-        Optional<User> user = this.userService.getCurrentUser();
-        Long userId = null;
-        if (user.isPresent()){
-            userId = user.get().getUserId();
-        }
-        return userId;
-    }
 
     private Collection<Snippet> findByCriteria(String type, String query, SnippetDao.Locations location, String sort, Long userId){
         if (!this.typesMap.containsKey(type) || !this.ordersMap.containsKey(sort)){

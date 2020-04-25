@@ -19,5 +19,4 @@ public interface UserDao {
 
     void changePassword(String email, String password);
 
-    Optional<User> getCurrentUser();
 }

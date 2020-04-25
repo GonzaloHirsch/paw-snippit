@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,9 @@ public class SnippetFeedController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private LoginAuthentication loginAuthentication;
+
     @RequestMapping("/")
     public ModelAndView getHomeSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm) {
         final ModelAndView mav = new ModelAndView("index");
@@ -31,11 +35,11 @@ public class SnippetFeedController {
     @RequestMapping("/favorites")
     public ModelAndView getFavoritesSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm) {
         final ModelAndView mav = new ModelAndView("index");
-        Optional<User> user = this.userService.getCurrentUser();
-        if (!user.isPresent()){
-            // REddirect to error
+        User user = loginAuthentication.getLoggedInUser();
+        if (user != null){
+            // TODO REddirect to error
         }
-        mav.addObject("snippetList", this.snippetService.getAllFavoriteSnippets(user.get().getUserId()));
+        mav.addObject("snippetList", this.snippetService.getAllFavoriteSnippets(user.getUserId()));
         mav.addObject("searchContext","favorites/");
         return mav;
     }
@@ -43,11 +47,11 @@ public class SnippetFeedController {
     @RequestMapping("/following")
     public ModelAndView getFollowingSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm) {
         final ModelAndView mav = new ModelAndView("index");
-        Optional<User> user = this.userService.getCurrentUser();
-        if (!user.isPresent()){
-            // REddirect to error
+        User user = loginAuthentication.getLoggedInUser();
+        if (user != null){
+            // TODO REddirect to error
         }
-        mav.addObject("snippetList", this.snippetService.getAllFollowingSnippets(user.get().getUserId()));
+        mav.addObject("snippetList", this.snippetService.getAllFollowingSnippets(user.getUserId()));
         mav.addObject("searchContext","following/");
         return mav;
     }

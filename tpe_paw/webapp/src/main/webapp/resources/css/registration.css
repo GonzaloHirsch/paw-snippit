@@ -21,7 +21,6 @@
 .register-field-size {
     font-size: 17px;
     height: 50px;
-    padding: 15px;
     width: 450px;
 }
 
@@ -31,6 +30,10 @@
 
 .register-text-container{
     margin: 10px;
+}
+
+.register-text-error{
+    margin: -15px 0px 10px 0px;
 }
 
 .register-text {
@@ -67,7 +70,12 @@
     cursor: pointer;
     font-size: 17px;
     text-align: center;
+    text-decoration: none;
     margin: 8px 0px 0px 0px;
+}
+
+.register-buttons-margin {
+    margin: 7px 0px;
 }
 
 .register-border {

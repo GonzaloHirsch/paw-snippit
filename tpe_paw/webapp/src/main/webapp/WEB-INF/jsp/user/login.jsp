@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <body>
     <c:url value="/login" var="loginUrl" />
+    <c:set var="error" value="${requestScope.error}"/>
     <div class="flex-column flex-center TODO-delete">
 
         <div class="flex-row flex-center register-text-container register-text register-welcome-text fw-300">
@@ -21,7 +22,14 @@
         </div>
 
         <form class="flex-center register-form register-border register-shadow" action="${loginUrl}" method="post" enctype="application/x-www-form-urlencoded">
+
             <div class="flex-column register-form-data">
+                <c:if test="${error}">
+                    <div class="flex-center register-text-error form-error">
+                        <spring:message code="loginForm.invalid"/>
+                    </div>
+                </c:if>
+
                 <div class="register-field-container">
                     <label>
                         <i class="material-icons register-icons">person</i>
@@ -32,7 +40,7 @@
                 <div class="register-field-container">
                     <label>
                         <i class="material-icons register-icons">lock</i>
-                        <input class="register-border register-field-size register-field-padding" name="password" placeholder="<spring:message code='registerForm.password'/>">
+                        <input class="register-border register-field-size register-field-padding" name="password" type="password" placeholder="<spring:message code='registerForm.password'/>">
                     </label>
                 </div>
 

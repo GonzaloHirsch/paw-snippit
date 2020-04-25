@@ -18,5 +18,7 @@ public interface UserService {
 
     void changePassword(String email, String password);
 
-    Optional<User> getCurrentUser();
+    boolean isEmailUnique(String email);
+
+    boolean isUsernameUnique(String username);
 }

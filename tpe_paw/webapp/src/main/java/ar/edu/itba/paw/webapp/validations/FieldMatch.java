@@ -1,7 +1,4 @@
-package ar.edu.itba.paw.webapp.helpers;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
+package ar.edu.itba.paw.webapp.validations;
 
 import javax.validation.Payload;
 import javax.validation.Constraint;
@@ -18,7 +15,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface FieldMatch {
 
-    String message() default "The fields must match";
+    String message() default "{FieldMatch.default}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
     String first();

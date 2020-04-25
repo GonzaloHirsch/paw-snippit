@@ -1,12 +1,7 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: fpetrikovich
-  Date: 4/20/20
-  Time: 2:37 PM
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %><html>
+
 <head>
     <head>
         <title><spring:message code="logout.title"/></title>
@@ -15,7 +10,6 @@
         <link href="<c:url value='/resources/css/registration.css'/>" rel="stylesheet"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <body>
-<c:url value="/login" var="loginUrl" />
 <div class="flex-column flex-center TODO-delete">
 
     <div class="flex-row flex-center register-text-container register-text register-welcome-text fw-300">
@@ -25,11 +19,17 @@
 
     <div class="flex-center register-form register-border register-shadow">
         <div class="flex-column register-form-data">
-            <div class="register-field-container">
-                <a class="register-border register-field-size register-button fw-500 register-text" href="<c:url value='/login'/>">
-                    <spring:message code="login.signupRedirect"/>
-                </a>
-            </div>
+            <a class="flex-center register-border register-field-size register-button register-buttons-margin fw-500 register-text" href="<c:url value='/'/>">
+                <spring:message code="logout.homeRedirect"/>
+            </a>
+
+            <a class="flex-center register-border register-field-size register-button register-buttons-margin fw-500 register-text" href="<c:url value='/login'/>">
+                <spring:message code="logout.loginRedirect"/>
+            </a>
+
+            <a class="flex-center register-border register-field-size register-button register-buttons-margin fw-500 register-text" href="<c:url value='/signup'/>">
+                <spring:message code="logout.signupRedirect"/>
+            </a>
         </div>
     </div>
 

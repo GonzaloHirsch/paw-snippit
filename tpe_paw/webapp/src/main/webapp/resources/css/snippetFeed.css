@@ -10,10 +10,6 @@
     padding: 30px;
 }
 
-.feed-background-color {
-    background: #f0ffff;
-}
-
 /*
  * repeat --> create multiple similar columns
  * auto-fill --> create as many columns will fit in the available grid width

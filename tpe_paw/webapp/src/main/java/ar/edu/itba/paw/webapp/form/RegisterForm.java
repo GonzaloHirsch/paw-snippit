@@ -1,25 +1,26 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.helpers.FieldMatch;
+import ar.edu.itba.paw.webapp.validations.FieldMatch;
+import ar.edu.itba.paw.webapp.validations.UniqueEmail;
+import ar.edu.itba.paw.webapp.validations.UniqueUsername;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@FieldMatch(first = "password", second = "repeatPassword" /*message = messageSource.getMessage("FieldMatch.registerForm",null, LocaleContextHolder.getLocale())*/)
+@FieldMatch(first = "password", second = "repeatPassword", message = "{FieldMatch.registerForm.passwords}")
 public class RegisterForm {
 
     @Size(min=6, max=50)
     @Pattern(regexp = "^[a-zA-Z0-9-_.]+$")
     @NotBlank
+    @UniqueUsername
     private String username;
 
     @Email
     @NotBlank
+    @UniqueEmail
     private String email;
 
     @Size(min=8)

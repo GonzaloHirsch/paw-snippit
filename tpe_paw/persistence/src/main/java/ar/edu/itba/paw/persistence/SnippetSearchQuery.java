@@ -39,7 +39,7 @@ public class SnippetSearchQuery {
          * Map used to map types of search to the corresponding queries they translate to
          */
         private final Map<SnippetDao.Types, String> typeMap = new HashMap<SnippetDao.Types, String>(){{
-            put(SnippetDao.Types.ALL, " AS s INNER JOIN snippet_tags AS ts ON s.id = ts.snippet_id INNER JOIN tags AS t ON t.id = ts.tag_id WHERE lower(t.name) LIKE lower(?) OR lower(s.title) LIKE lower(?) OR lower(s.code) LIKE lower(?)");
+            put(SnippetDao.Types.ALL, " AS s LEFT OUTER JOIN snippet_tags AS ts ON s.id = ts.snippet_id LEFT OUTER JOIN tags AS t ON t.id = ts.tag_id WHERE lower(t.name) LIKE lower(?) OR lower(s.title) LIKE lower(?) OR lower(s.code) LIKE lower(?)");
             put(SnippetDao.Types.TAG, " AS s INNER JOIN snippet_tags AS ts ON s.id = ts.snippet_id INNER JOIN tags AS t ON t.id = ts.tag_id WHERE lower(t.name) LIKE lower(?)");
             put(SnippetDao.Types.TITLE, " AS s WHERE lower(s.title) LIKE lower(?)");
             put(SnippetDao.Types.CONTENT, " AS s WHERE lower(s.code) LIKE lower(?)");
@@ -68,6 +68,10 @@ public class SnippetSearchQuery {
             put(SnippetDao.Types.TITLE, " s.title ");
             put(SnippetDao.Types.CONTENT, " s.code ");
         }};
+        private final Map<SnippetDao.QueryTypes, String> queryTypesMap = new HashMap<SnippetDao.QueryTypes, String>(){{
+            put(SnippetDao.QueryTypes.COUNT, "SELECT COUNT(DISTINCT s.id) FROM ");
+            put(SnippetDao.QueryTypes.SEARCH, "SELECT DISTINCT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language, s.date_created FROM ");
+        }};
         /**
          * StringBuilder in order to make the building of the query more performant
          */
@@ -84,9 +88,9 @@ public class SnippetSearchQuery {
          * @param type Type of search, over which parameter the search is going to be performed
          * @param term Term to be used for the search
          */
-        public Builder(SnippetDao.Locations location, Long userId, SnippetDao.Types type, String term){
+        public Builder(SnippetDao.QueryTypes queryType, SnippetDao.Locations location, Long userId, SnippetDao.Types type, String term){
             this.query
-                    .append("SELECT DISTINCT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language_id, s.language, s.date_created FROM ")
+                    .append(this.queryTypesMap.get(queryType))
                     .append(this.locationsMap.get(location));
             if (userId != null){ params.add(userId); }
             this.query.append(this.typeMap.get(type));
@@ -109,6 +113,13 @@ public class SnippetSearchQuery {
                         .append(this.orderTypesMap.get(type))
                         .append(this.ordersMap.get(order));
             }
+            return this;
+        }
+
+        public Builder setPaging(int page, int pageSize){
+            this.query.append(" LIMIT ? OFFSET ?");
+            params.add(pageSize);
+            params.add(pageSize * (page - 1));
             return this;
         }
 

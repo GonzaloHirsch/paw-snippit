@@ -38,7 +38,8 @@ public class SnippetSearchQuery {
         /**
          * Map used to map types of search to the corresponding queries they translate to
          */
-        private Map<SnippetDao.Types, String> typeMap = new HashMap<SnippetDao.Types, String>(){{
+        private final Map<SnippetDao.Types, String> typeMap = new HashMap<SnippetDao.Types, String>(){{
+            put(SnippetDao.Types.ALL, " AS s INNER JOIN snippet_tags AS ts ON s.id = ts.snippet_id INNER JOIN tags AS t ON t.id = ts.tag_id WHERE lower(t.name) LIKE lower(?) OR lower(s.title) LIKE lower(?) OR lower(s.code) LIKE lower(?)");
             put(SnippetDao.Types.TAG, " AS s INNER JOIN snippet_tags AS ts ON s.id = ts.snippet_id INNER JOIN tags AS t ON t.id = ts.tag_id WHERE lower(t.name) LIKE lower(?)");
             put(SnippetDao.Types.TITLE, " AS s WHERE lower(s.title) LIKE lower(?)");
             put(SnippetDao.Types.CONTENT, " AS s WHERE lower(s.code) LIKE lower(?)");
@@ -54,14 +55,15 @@ public class SnippetSearchQuery {
         /**
          * Map used to translate the given enum for order types into their query equivalent
          */
-        private Map<SnippetDao.Orders, String> ordersMap = new HashMap<SnippetDao.Orders, String>(){{
+        private final Map<SnippetDao.Orders, String> ordersMap = new HashMap<SnippetDao.Orders, String>(){{
             put(SnippetDao.Orders.ASC, "ASC");
             put(SnippetDao.Orders.DESC, "DESC");
         }};
         /**
          * Map used to translate the types over which the order is done into their SQL equivalents
          */
-        private Map<SnippetDao.Types, String> orderTypesMap = new HashMap<SnippetDao.Types, String>(){{
+        private final Map<SnippetDao.Types, String> orderTypesMap = new HashMap<SnippetDao.Types, String>(){{
+            put(SnippetDao.Types.ALL, " s.title ");
             put(SnippetDao.Types.TAG, " t.name ");
             put(SnippetDao.Types.TITLE, " s.title ");
             put(SnippetDao.Types.CONTENT, " s.code ");
@@ -69,11 +71,11 @@ public class SnippetSearchQuery {
         /**
          * StringBuilder in order to make the building of the query more performant
          */
-        private StringBuilder query = new StringBuilder();
+        private final StringBuilder query = new StringBuilder();
         /**
          * List of parameters to be used in the query
          */
-        private List<Object> params = new ArrayList<>();
+        private final List<Object> params = new ArrayList<>();
 
         /**
          * Constructor for the Builder inner class
@@ -84,18 +86,22 @@ public class SnippetSearchQuery {
          */
         public Builder(SnippetDao.Locations location, Long userId, SnippetDao.Types type, String term){
             this.query
-                    .append("SELECT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language, s.date_created FROM ")
+                    .append("SELECT DISTINCT s.id, s.user_id, s.code, s.title, s.description, s.language_id, s.date_created FROM ")
                     .append(this.locationsMap.get(location));
             if (userId != null){ params.add(userId); }
             this.query.append(this.typeMap.get(type));
             params.add("%" + term + "%");
+            if (type.equals(SnippetDao.Types.ALL)){
+                params.add("%" + term + "%");
+                params.add("%" + term + "%");
+            }
         }
 
         /**
          * Method to add order to the results
          * @param order Order of the results
          * @param type Field over which the order is going to be performed
-         * @return
+         * @return this same instance of the Builder
          */
         public Builder setOrder(SnippetDao.Orders order, SnippetDao.Types type){
             if (!order.equals(SnippetDao.Orders.NO)){

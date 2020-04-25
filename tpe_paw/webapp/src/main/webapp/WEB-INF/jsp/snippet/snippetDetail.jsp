@@ -20,7 +20,6 @@
     <div class="main-content">
         <div class="flex-row detail-snippet-container flex-center">
 
-            <!-- The center contains all the info besides the tags -->
             <div class="flex-column detail-snippet-center">
 
                 <div class="flex-row flex-center flex-space-between">

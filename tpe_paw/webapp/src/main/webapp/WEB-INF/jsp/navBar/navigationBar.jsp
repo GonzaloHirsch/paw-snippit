@@ -33,14 +33,14 @@
                 <li class="fw-100"><a href="<c:url value="/tags/"/>">Tags</a></li>
             </c:otherwise>
         </c:choose>
-        <c:if test="${loggedUser != null}">
+        <c:if test="${currentUser != null}">
             <hr/>
             <c:choose>
                 <c:when test="${searchContext == 'user/'}">
-                    <li class="fw-100 menu-selected"><a href="<c:url value="/user/"/>">Profile</a></li>
+                    <li class="fw-100 menu-selected"><a href="<c:url value="${'/user/'}${currentUser.username}"/>">Profile</a></li>
                 </c:when>
                 <c:otherwise>
-                    <li class="fw-100"><a href="<c:url value="/user/"/>">Profile</a></li>
+                    <li class="fw-100"><a href="<c:url value="${'/user/'}${currentUser.username}"/>">Profile</a></li>
                 </c:otherwise>
             </c:choose>
             <c:choose>
@@ -63,7 +63,7 @@
             <hr/>
             <span class="fw-100 section-title">Following</span>
             <c:forEach var="tag" items="${tagList}">
-                <li class="fw-100"><a href="<c:url value="${'/tag/'}${tag.id}"/>">Favorites</a></li>
+                <li class="fw-100"><a href="<c:url value="${'/tags/'}${tag.id}"/>">${tag.name}</a></li>
             </c:forEach>
         </c:if>
     </ul>

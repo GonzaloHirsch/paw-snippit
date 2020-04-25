@@ -28,8 +28,11 @@ public class SnippetFeedController {
     @RequestMapping("/")
     public ModelAndView getHomeSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm) {
         final ModelAndView mav = new ModelAndView("index");
-        
-        mav.addObject("snippetList", this.tagService.getFollowedTagsForUser(3));
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
+        if (currentUser != null){
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+        }
         mav.addObject("snippetList", this.snippetService.getAllSnippets());
         mav.addObject("searchContext","");
         return mav;

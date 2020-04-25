@@ -70,6 +70,14 @@
 
         <!--<li><a href="<c:url value="/tags/"/>" >Tags</a></li>-->
         <hr/>
+        <c:choose>
+            <c:when test="${searchContext == '/tags/'}">
+                <li class="fw-100 menu-selected"><a href="<c:url value="/tags/"/>">Tags</a></li>
+            </c:when>
+            <c:otherwise>
+                <li class="fw-100"><a href="<c:url value="/tags/"/>">Tags</a></li>
+            </c:otherwise>
+        </c:choose>
         <!--<li><a href="<c:url value="/uploads/"/>">Uploads</a></li>-->
         <c:choose>
             <c:when test="${searchContext == 'favorites/'}">

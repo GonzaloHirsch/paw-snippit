@@ -13,6 +13,7 @@
           rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="<c:url value='/resources/js/snippetDetail.js'/>"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -22,7 +23,6 @@
     <div class="main-content">
         <div class="flex-row detail-snippet-container flex-center">
 
-            <!-- The center contains all the info besides the tags -->
             <div class="flex-column detail-snippet-center">
 
                 <div class="flex-row flex-center flex-space-between">
@@ -47,13 +47,13 @@
                             file_copy
                         </span>
                         <pre><code id="code-block">${fn:escapeXml(snippet.code)}</code></pre>
-                        <input id="hidden-code-input" class="hidden-code" />
+                        <input id="hidden-code-input" class="hidden-code"/>
                     </div>
                     <!-- TAGS -->
                     <div class="flex-row flex-center flex-wrap detail-snippet-tags">
                         <c:forEach var="tag" items="${snippet.tags}">
                             <c:set var="tag" value="${tag}" scope="request"/>
-                            <c:import url="/WEB-INF/jsp/snippet/snippetTag.jsp"/>
+                            <c:import url="/WEB-INF/jsp/tag/tag.jsp"/>
                         </c:forEach>
                     </div>
                 </div>
@@ -71,24 +71,28 @@
                     </div>
 
                     <!-- USER DETAILS -->
-                    <div class="flex-column flex-center detail-snippet-block border-radius">
-                        <div class="snippet-text detail-snippet-date">Uploaded ${snippet.dateCreated}</div>
+                    <a class="user-url" href="<c:url value='/user/${snippet.owner.userId}'/>">
+                        <div class="flex-column flex-center detail-snippet-block border-radius">
+                            <div class="snippet-text detail-snippet-date">Uploaded ${snippet.dateCreated}</div>
 
-                        <div class="flex-row snippet-user-info detail-snippet-user-info">
-                            <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
-                            <div class="flex-column snippet-upload-info">
-                                <div class="snippet-text">${snippet.owner.username}</div>
-                                <div class="flex-row">
-                                    <!-- TODO agregar for de estrellita -->
-                                    <div class="snippet-text">${snippet.owner.reputation}</div>
+                            <div class="flex-row snippet-user-info detail-snippet-user-info">
+                                <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
+                                <div class="flex-column snippet-upload-info">
+                                    <div class="snippet-text">
+                                        ${snippet.owner.username}
+                                    </div>
+                                    <div class="flex-row">
+                                        <!-- TODO agregar for de estrellita -->
+                                        <div class="snippet-text">${snippet.owner.reputation}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
 
+        </div>
     </div>
-</div>
 </body>
 </html>

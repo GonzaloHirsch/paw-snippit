@@ -24,37 +24,43 @@ import java.util.Optional;
 @Repository
 public class SnippetDaoImpl implements SnippetDao {
 
-    private JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-
+    @Autowired
+    private TagDao tagDao;
     @Autowired
     private UserDao userDao;
     @Autowired
     private LanguageDao languageDao;
-    @Autowired
-    private TagDao tagDao;
+
+    private JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     private final RowMapper<Snippet> ROW_MAPPER = new RowMapper<Snippet>() {
         @Override
         public Snippet mapRow(ResultSet rs, int rowNum) throws SQLException {
-            long snippetId = rs.getLong("id");
+            User userOwner = new User(
+                    rs.getLong("user_id"),
+                    rs.getString("username"),
+                    null,
+                    null,
+                    null,
+                    rs.getInt("reputation"),
+                    null
+            );
 
-            User userOwner = userDao.findUserById(rs.getLong("user_id")).orElse(null);
-
-            Language language = languageDao.findById(rs.getLong("language_id")).orElse(null);
+            String language = rs.getString("language");
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(rs.getTimestamp("date_created").getTime());
 
             return new Snippet(
-                    snippetId,
+                    rs.getLong("id"),
                     userOwner,
                     rs.getString("code"),
                     rs.getString("title"),
                     rs.getString("description"),
-                    new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(calendar.getTime()),
-                    language != null ? language.getName() : "",
-                    tagDao.findTagsForSnippet(snippetId)
+                    new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(calendar.getTime()),
+                    language != null ? language : "",
+                    null
             );
         }
     };
@@ -66,18 +72,24 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> getAllSnippets(){
-        return jdbcTemplate.query("SELECT * FROM snippets",ROW_MAPPER);
+    public Collection<Snippet> getAllSnippets() {
+        return jdbcTemplate.query("SELECT * FROM complete_snippets", ROW_MAPPER);
     }
+
 
     @Override
     public Collection<Snippet> getAllFavoriteSnippets(Long userId) {
-        return jdbcTemplate.query("SELECT s.id, s.user_id, s.code, s.title, s.description, s.language_id, s.date_created FROM snippets AS s JOIN favorites AS fav ON fav.snippet_id = s.id WHERE fav.user_id = ?",ROW_MAPPER, userId);
+        return jdbcTemplate.query("SELECT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language, s.date_created FROM complete_snippets AS s JOIN favorites AS fav ON fav.snippet_id = s.id WHERE fav.user_id = ?", ROW_MAPPER, userId);
     }
 
     @Override
     public Collection<Snippet> getAllFollowingSnippets(Long userId) {
-        return jdbcTemplate.query("SELECT sn.id, sn.user_id, sn.code, sn.title, sn.description, sn.language_id, sn.date_created FROM snippets AS sn JOIN snippet_tags AS st ON st.snippet_id = sn.id JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?",ROW_MAPPER, userId);
+        return jdbcTemplate.query("SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created FROM complete_snippets AS sn JOIN snippet_tags AS st ON st.snippet_id = sn.id JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?", ROW_MAPPER, userId);
+    }
+
+    @Override
+    public Collection<Snippet> findAllSnippetsByOwner(long userId) {
+        return jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.user_id = ?", ROW_MAPPER, userId);
     }
 
     @Override
@@ -89,7 +101,16 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Optional<Snippet> findSnippetById(long id){
-        return Optional.of((Snippet) jdbcTemplate.queryForObject("SELECT * FROM snippets WHERE id = ?", ROW_MAPPER, id));
+    public Optional<Snippet> findSnippetById(long id) {
+        Optional<Snippet> snippet = Optional.of((Snippet) jdbcTemplate.queryForObject("SELECT * FROM complete_snippets AS s WHERE s.id = ?", ROW_MAPPER, id));
+        if (snippet.isPresent() && snippet.get().getTags() == null) {
+            snippet.get().setTags(tagDao.findTagsForSnippet(snippet.get().getId()));
+        }
+        return snippet;
+    }
+
+    @Override
+    public Collection<Snippet> findSnippetsForTag(long tagId) {
+        return jdbcTemplate.query("SELECT DISTINCT * FROM complete_snippets AS cs JOIN snippet_tags AS st ON cs.id = st.snippet_id WHERE st.tag_id = ?", ROW_MAPPER, tagId);
     }
 }

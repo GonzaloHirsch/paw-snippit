@@ -21,8 +21,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User register(String username, String password, String email, Date dateJoined) {
+        return createUser(username, password, email, "", 0, dateJoined);
+    }
+
+    @Override
     public Optional<User> findUserByUsername(String username) {
         return userDao.findUserByUsername(username);
+    }
+
+    @Override
+    public Optional<User> findUserById(long id) {
+        return this.userDao.findUserById(id);
     }
 
     @Override
@@ -30,6 +40,7 @@ public class UserServiceImpl implements UserService {
         userDao.updateDescription(username, newDescription);
     }
 
+    // TODO, should this ask for the current password?
     @Override
     public void changePassword(String email, String password) {
         userDao.changePassword(email, password);
@@ -38,5 +49,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getCurrentUser() {
         return userDao.getCurrentUser();
+    }
+
+    @Override
+    public boolean isEmailUnique(String email) {
+        return !userDao.findUserByEmail(email).isPresent();
+    }
+
+    @Override
+    public boolean isUsernameUnique(String username) {
+        return !userDao.findUserByUsername(username).isPresent();
     }
 }

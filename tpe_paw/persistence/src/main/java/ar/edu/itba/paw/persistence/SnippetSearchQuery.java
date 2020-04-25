@@ -47,10 +47,10 @@ public class SnippetSearchQuery {
         /**
          * Map used to map the locations or sources of snippets to be searched among to the corresponding queries they translate to
          */
-        private final Map<SnippetDao.Locations, String> locationsMap = new HashMap<SnippetDao.Locations, String>(){{
-            put(SnippetDao.Locations.HOME, "(SELECT * FROM snippets)");
-            put(SnippetDao.Locations.FAVORITES, "(SELECT sn.id, sn.user_id, sn.code, sn.title, sn.description, sn.language_id, sn.date_created FROM snippets AS sn JOIN favorites AS fav ON fav.snippet_id = sn.id WHERE fav.user_id = ?)");
-            put(SnippetDao.Locations.FOLLOWING, "(SELECT sn.id, sn.user_id, sn.code, sn.title, sn.description, sn.language_id, sn.date_created FROM snippets AS sn JOIN snippet_tags AS st ON st.snippet_id = sn.id JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?)");
+        private Map<SnippetDao.Locations, String> locationsMap = new HashMap<SnippetDao.Locations, String>(){{
+            put(SnippetDao.Locations.HOME, "(SELECT * FROM complete_snippets)");
+            put(SnippetDao.Locations.FAVORITES, "(SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created FROM complete_snippets AS sn JOIN favorites AS fav ON fav.snippet_id = sn.id WHERE fav.user_id = ?)");
+            put(SnippetDao.Locations.FOLLOWING, "(SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created FROM complete_snippets AS sn JOIN snippet_tags AS st ON st.snippet_id = sn.id JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?)");
         }};
         /**
          * Map used to translate the given enum for order types into their query equivalent

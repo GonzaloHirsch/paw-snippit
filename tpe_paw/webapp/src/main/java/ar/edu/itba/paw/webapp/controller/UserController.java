@@ -74,7 +74,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/{id}")
-    public ModelAndView userProfile(@ModelAttribute("searchForm") final SearchForm searchForm, final @PathVariable("id") long id) {
+    public ModelAndView userProfile(final @PathVariable("id") long id) {
         final ModelAndView mav = new ModelAndView("user/profile");
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
@@ -109,6 +109,11 @@ public class UserController {
     @RequestMapping(value = "/goodbye")
     public ModelAndView logout() {
         return new ModelAndView("user/logout");
+    }
+
+    @ModelAttribute
+    public void addAttributes(ModelAndView model, @Valid final SearchForm searchForm) {
+        model.addObject("searchForm", searchForm);
     }
 
 }

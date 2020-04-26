@@ -1,7 +1,6 @@
 .snippetC-form {
     background-color: white;
-    margin: 20px;
-    flex-basis: 600px;
+    flex-basis: 700px;
     padding: 20px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     border-radius:10px;
@@ -9,7 +8,19 @@
 
 .snippetC-container {
     padding: 15px;
-    max-width: 850px;
+}
+
+.snippetC-header-container{
+    display: flex;
+    align-items: center;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 30px;
+}
+
+.snippetC-header{
+    font-family: "Roboto Mono", 'New Courier', monospace;
+    font-size: xx-large;
 }
 
 .snippetC-elem-container {
@@ -32,11 +43,12 @@
 .snnipetC-submit-container {
     flex:1;
 }
+
 .snippetC-title-input{
     width: 95%;
     padding: 12px 20px;
     margin: 8px 0;
-    font-size: 17px;
+    font-size: 22px;
     height: 50px;
 }
 
@@ -71,15 +83,18 @@
     margin: 10px 0 10px 0;
 }
 
+.snippetC-subtitles{
+    color: #5E35B1 !important;
+}
 
 .snippetC-border{
     border-radius: 4px;
     border-width:thin;
-    border-color: #ccc;
+    border-color: #5E35B1;
 }
 
 .snippetC-button {
-    background-color: cadetblue;
+    background-color: #5E35B1;
     padding: 10px 10px 10px 10px;
     width:100%;
     border: none;

@@ -27,8 +27,8 @@ public class SnippetServiceImpl implements SnippetService {
     private TagService tagService;
 
     @Override
-    public Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId) {
-        return this.snippetDao.findSnippetByCriteria(type, term, location, order, userId);
+    public Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page, int pageSize) {
+        return this.snippetDao.findSnippetByCriteria(SnippetDao.QueryTypes.SEARCH, type, term, location, order, userId, page, pageSize);
     }
 
     @Override
@@ -45,7 +45,17 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
-    public Collection<Snippet> getAllSnippets() { return snippetDao.getAllSnippets(); }
+    public Collection<Snippet> getAllSnippets(int page, int pageSize) { return snippetDao.getAllSnippets(page, pageSize); }
+
+    @Override
+    public int getAllSnippetsCount() {
+        return this.snippetDao.getAllSnippetsCount();
+    }
+
+    @Override
+    public int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId) {
+        return this.snippetDao.getSnippetByCriteriaCount(SnippetDao.QueryTypes.COUNT, type, term, location, userId);
+    }
 
     @Override
     public Collection<Snippet> getAllFavoriteSnippets(Long userId) {

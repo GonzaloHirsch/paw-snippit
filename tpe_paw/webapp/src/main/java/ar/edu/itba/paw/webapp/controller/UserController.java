@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.SnippetService;
+import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
@@ -42,6 +43,9 @@ public class UserController {
     @Autowired
     private LoginAuthentication loginAuthentication;
 
+    @Autowired
+    private TagService tagService;
+
     @RequestMapping(value = "/signup", method = { RequestMethod.GET })
     public ModelAndView signUpForm(@ModelAttribute("registerForm") final RegisterForm form) {
         return new ModelAndView("user/signUpForm");
@@ -72,6 +76,13 @@ public class UserController {
     @RequestMapping(value = "/user/{id}")
     public ModelAndView userProfile(@ModelAttribute("searchForm") final SearchForm searchForm, final @PathVariable("id") long id) {
         final ModelAndView mav = new ModelAndView("user/profile");
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
+        if (currentUser != null){
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+        } else {
+            // ERROR
+        }
         Optional<User> user = this.userService.findUserById(id);
         if (!user.isPresent()){
             // TODO: handle error

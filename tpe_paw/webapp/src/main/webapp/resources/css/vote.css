@@ -9,8 +9,16 @@
     color: tomato;
 }
 
+.vote-down {
+    color: gray;
+}
+
 .vote-up:hover {
     color: lawngreen;
+}
+
+.vote-up {
+    color: gray;
 }
 
 .vote-up-selected {

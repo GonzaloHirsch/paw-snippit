@@ -33,19 +33,31 @@ public class TagsController {
     @RequestMapping("/tags")
     public ModelAndView showAllTags(@ModelAttribute final SearchForm searchForm) {
         ModelAndView mav = new ModelAndView("tag/tags");
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
+        if (currentUser != null){
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+        } else {
+            // ERROR
+        }
         Collection<Tag> allTags = tagService.getAllTags();
+        mav.addObject("searchContext","tags/");
         mav.addObject("tags", allTags); 
         return mav;
     }
     @RequestMapping("/tags/{tagId}")
     public ModelAndView showSnippetsForTag(@PathVariable("tagId") long tagId, @ModelAttribute final SearchForm searchForm){
         ModelAndView mav = new ModelAndView("tag/tagSnippets");
-        User currentUserOpt = loginAuthentication.getLoggedInUser();
-        if ( currentUserOpt != null){
-            // TODO LOGGER + customize error msg
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
+        boolean follows = false;
+        if (currentUser != null){
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+            Collection<Tag> followedTags = tagService.getFollowedTagsForUser(currentUser.getUserId());
+            follows = followedTags.stream().map(Tag::getId).collect(Collectors.toList()).contains(tagId);
+        } else {
+            // ERROR
         }
-        Collection<Tag> followedTags = tagService.getFollowedTagsForUser(currentUserOpt.getUserId());
-        boolean follows = followedTags.stream().map(Tag::getId).collect(Collectors.toList()).contains(tagId);
         Optional<Tag> tag = tagService.findTagById(tagId);
         if (!tag.isPresent()) {
             // TODO customize error msg

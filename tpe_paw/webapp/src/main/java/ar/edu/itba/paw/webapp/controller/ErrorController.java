@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.service.TagService;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -21,6 +24,10 @@ public class ErrorController {
 
     @Autowired
     private MessageSource messageSource;
+    @Autowired
+    private LoginAuthentication loginAuthentication;
+    @Autowired
+    private TagService tagService;
 
     private Set<Integer> supportedErrorPages = new HashSet<Integer>(){{
         add(403);
@@ -33,6 +40,14 @@ public class ErrorController {
         int errorCode = this.getErrorCode(request);
         ModelAndView mav = new ModelAndView("errors/default");
         String message = messageSource.getMessage("error.unknown",null, LocaleContextHolder.getLocale());
+
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
+        if (currentUser != null){
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+        } else {
+            // ERROR
+        }
 
         if (this.supportedErrorPages.contains(errorCode)){
             message =  messageSource.getMessage("error." + String.valueOf(errorCode),null, LocaleContextHolder.getLocale());

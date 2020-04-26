@@ -1,11 +1,11 @@
---drop table if exists votes_for;
---drop table if exists favorites;
---drop table if exists follows;
---drop table if exists snippet_tags;
---drop table if exists tags;
---drop table if exists snippets;
---drop table if exists languages;
---drop table if exists users;
+-- drop table if exists votes_for;
+-- drop table if exists favorites;
+-- drop table if exists follows;
+-- drop table if exists snippet_tags;
+-- drop table if exists tags;
+-- drop table if exists snippets;
+-- drop table if exists languages;
+-- drop table if exists users;
 
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,

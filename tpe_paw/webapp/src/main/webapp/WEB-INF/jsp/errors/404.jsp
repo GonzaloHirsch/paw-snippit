@@ -15,7 +15,7 @@
 <body>
 
 <div class="wrapper">
-    <c:import url="/WEB-INF/jsp/navBar/navigationBar.jsp"/>
+    <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
         <div class="error-page-main">
             <h1>404</h1>

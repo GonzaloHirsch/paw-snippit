@@ -10,11 +10,15 @@
     </head>
     <body>
         <div class="wrapper">
-        <c:import url="/WEB-INF/jsp/navBar/navigationBar.jsp"/>
+        <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
             <div class="main-content">
-                <div class="all-tags-grid">
+                <div class="fw-100 flex-stretch tags-title">
+                    Tags
+                </div>
+                <div class="all-tags-grid main-grid">
                     <c:forEach var="tag" items="${tags}">
                         <c:set var="tag" value="${tag}" scope="request"/>
+                        <c:set var="cssClass" value="tag-container-main" scope="request"/>
                         <c:import url="/WEB-INF/jsp/tag/tag.jsp"/>
                     </c:forEach>
                 </div>

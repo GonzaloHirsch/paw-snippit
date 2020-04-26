@@ -2,6 +2,8 @@ package ar.edu.itba.paw.interfaces.service;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.Tag;
+import ar.edu.itba.paw.models.User;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -16,4 +18,5 @@ public interface SnippetService {
     Collection<Snippet> findSnippetsForTag(long tagId);
     int getAllSnippetsCount();
     int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId);
+    Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<Long> tags);
 }

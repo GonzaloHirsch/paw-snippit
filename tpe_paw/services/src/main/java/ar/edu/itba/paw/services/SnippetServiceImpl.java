@@ -3,10 +3,14 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.dao.TagDao;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
+import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.Tag;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -19,6 +23,9 @@ public class SnippetServiceImpl implements SnippetService {
     @Autowired
     private TagDao tagDao;
 
+    @Autowired
+    private TagService tagService;
+
     @Override
     public Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page, int pageSize) {
         return this.snippetDao.findSnippetByCriteria(SnippetDao.QueryTypes.SEARCH, type, term, location, order, userId, page, pageSize);
@@ -30,9 +37,7 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
-    public Optional<Snippet> findSnippetById(long id) {
-        return snippetDao.findSnippetById(id);
-    }
+    public Optional<Snippet> findSnippetById(long id) { return snippetDao.findSnippetById(id);}
 
     @Override
     public Collection<Snippet> findAllSnippetsByOwner(final long userId) {
@@ -60,5 +65,15 @@ public class SnippetServiceImpl implements SnippetService {
     @Override
     public Collection<Snippet> getAllFollowingSnippets(Long userId) {
         return snippetDao.getAllFollowingSnippets(userId);
+    }
+
+    @Override
+    public Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<Long> tags) {
+        Long snippetId =  snippetDao.createSnippet(owner,title,description,code,dateCreated,language);
+        //TODO: See if its better to call TagService instead of TagDao directly.
+        if(snippetId != null)
+            tagService.addTagsToSnippet(snippetId, tags);
+
+        return snippetId;
     }
 }

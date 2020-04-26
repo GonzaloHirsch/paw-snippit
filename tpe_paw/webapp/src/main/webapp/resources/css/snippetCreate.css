@@ -1,0 +1,95 @@
+.snippetC-form {
+    background-color: white;
+    flex-basis: 700px;
+    padding: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-radius:10px;
+}
+
+.snippetC-container {
+    padding: 15px;
+}
+
+.snippetC-header{
+    font-family: "Roboto Mono", 'New Courier', monospace;
+    font-size: xx-large;
+}
+
+.snippetC-elem-container {
+    margin: 5px;
+}
+
+.snippetC-title-container {
+    margin: 5px;
+    flex:6;
+}
+.snippetC-language-container {
+    margin: 5px;
+    flex:2;
+}
+
+.snippetC-tags-container {
+    flex: 4;
+}
+
+.snnipetC-submit-container {
+    flex:1;
+}
+
+.snippetC-title-input{
+    width: 95%;
+    padding: 12px 20px;
+    font-size: 22px;
+    height: 50px;
+}
+
+
+
+.snippetC-tags{
+    width: 300px !important;
+}
+
+.snippetC-code-input{
+    background: #DCDCDC;
+    margin: 6px 10px 0px 0px;
+    max-width: 700px;
+    padding: 10px 5px 5px 8px;
+    border-width:thin;
+    line-height: 19px;
+}
+
+.snippetC-description-input{
+    margin-top: 5px;
+    padding: 10px 0 0 10px;
+    line-height: 19px;
+}
+
+.snippetC-divider{
+    width: 100%;
+    border: none;
+    height: 1px;
+    background-color: lightgrey;
+    margin: 10px 0 10px 0;
+}
+
+.snippetC-subtitles{
+    color: #5E35B1 !important;
+}
+
+.snippetC-border{
+    border-radius: 4px;
+    border-width:thin;
+    border-color: #5E35B1;
+}
+
+.snippetC-button {
+    background-color: #5E35B1;
+    padding: 10px 10px 10px 10px;
+    width:100%;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 17px;
+    text-align: center;
+    margin: 8px 0px 0px 0px;
+}

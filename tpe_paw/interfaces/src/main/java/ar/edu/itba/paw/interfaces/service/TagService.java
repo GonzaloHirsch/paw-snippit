@@ -11,4 +11,6 @@ public interface TagService {
     void followTag(long userId, long tagId);
     void unfollowTag(long userId, long tagId);
     Optional<Tag> findTagById(long tagId);
+    public Collection<Tag> addTagsToSnippet(Long snippetId, Collection<Long> tagIdList);
+
 }

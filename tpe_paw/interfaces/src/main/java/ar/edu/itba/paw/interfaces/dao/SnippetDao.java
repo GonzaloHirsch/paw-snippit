@@ -35,7 +35,7 @@ public interface SnippetDao {
     Collection<Snippet> getAllFollowingSnippets(Long userId);
     Collection<Snippet> findAllSnippetsByOwner(final long userId);
     Optional<Snippet> findSnippetById(long id);
-    Optional<Snippet> createSnippet(User owner, String title, String description, String code, String dateCreated, Long language);
+    Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language);
     Collection<Snippet> findSnippetsForTag(long tagId);
     int getAllSnippetsCount();
     int getSnippetByCriteriaCount(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId);

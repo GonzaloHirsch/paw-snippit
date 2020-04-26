@@ -18,4 +18,5 @@ public interface SnippetService {
     Collection<Snippet> findSnippetsForTag(long tagId);
     int getAllSnippetsCount();
     int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId);
+    Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<Long> tags);
 }

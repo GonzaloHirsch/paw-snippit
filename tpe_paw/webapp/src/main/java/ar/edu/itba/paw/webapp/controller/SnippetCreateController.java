@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.form.SnippetCreateForm;
@@ -23,10 +24,12 @@ import java.util.Optional;
 
 @Controller
 public class SnippetCreateController {
+
     @Autowired private SnippetService snippetService;
     @Autowired private TagService tagService;
     @Autowired private UserService userService;
     @Autowired private LanguageService languageService;
+    @Autowired private LoginAuthentication loginAuthentication;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -37,7 +40,10 @@ public class SnippetCreateController {
     @RequestMapping(value = "/create")
     public ModelAndView snippetCreateDetail(@ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm) {
 
-        System.out.println("Inside create");
+        User currentUser = loginAuthentication.getLoggedInUser();
+        if(currentUser == null) {
+                return new ModelAndView("forward:/login");
+        }
 
         final ModelAndView mav = new ModelAndView("snippet/snippetCreate");
         mav.addObject("tagList",tagService.getAllTags());
@@ -50,27 +56,22 @@ public class SnippetCreateController {
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ModelAndView snippetCreate( @Valid @ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm, final BindingResult errors,@ModelAttribute("searchForm") final SearchForm searchForm) {
 
-        System.out.println("Data"+ "\n" + userService.getCurrentUser().get() + "\n"
-                + snippetCreateForm.getTitle() + "\n"+
-                snippetCreateForm.getDescription()+"\n"+
-                snippetCreateForm.getCode()+ "\n" +
-                snippetCreateForm.getLanguage() + "\n"+ snippetCreateForm.getTags() +"\n--------------------\n");
-
-
         if (errors.hasErrors())
             return snippetCreateDetail(searchForm,snippetCreateForm);
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String dateCreated = sdf.format(timestamp);
 
-        User currentUser = userService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        User currentUser = loginAuthentication.getLoggedInUser();
+        if(currentUser == null)
+            throw new UserNotFoundException();
 
+        Long snippetId = snippetService.createSnippet(currentUser,snippetCreateForm.getTitle(),snippetCreateForm.getDescription(), snippetCreateForm.getCode(), dateCreated, snippetCreateForm.getLanguage(),snippetCreateForm.getTags());
+        if(snippetId == null){
+            //TODO: Throw new exception
+        }
 
-        Snippet snippet = snippetService.createSnippet(currentUser,snippetCreateForm.getTitle(),snippetCreateForm.getDescription(), snippetCreateForm.getCode(), dateCreated, snippetCreateForm.getLanguage(),snippetCreateForm.getTags()).get();
+        return new ModelAndView("redirect:/snippet/" + snippetId);
 
-        //TODO: Validar que el snippet se haya creado correctamente
-
-        final ModelAndView mav = new ModelAndView("redirect:/snippet/" + snippet.getId());
-        return mav;
     }
 }

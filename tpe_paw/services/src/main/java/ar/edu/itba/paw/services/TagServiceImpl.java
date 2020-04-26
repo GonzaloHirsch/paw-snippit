@@ -47,13 +47,15 @@ public class TagServiceImpl implements TagService {
     @Override
     public Collection<Tag> addTagsToSnippet(Long snippetId, Collection<Long> tagIdList){
         ArrayList<Tag> tagList = new ArrayList<>();
+
+        if(tagIdList == null)
+            return tagList;
+
         for(Long tagId : tagIdList) {
             Optional<Tag> tag = tagDao.findTagById(tagId);
             if(tag.isPresent()) {
                 tagDao.addSnippetTag(snippetId, tagId);
                 tagList.add(tagDao.findTagById(tagId).get());
-
-                System.out.println(tag.get().getName());
             }
         }
         return tagList;

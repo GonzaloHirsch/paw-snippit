@@ -68,12 +68,12 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
-    public Optional<Snippet> createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<Long> tags) {
-        Optional<Snippet> snippet =  snippetDao.createSnippet(owner,title,description,code,dateCreated,language);
+    public Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<Long> tags) {
+        Long snippetId =  snippetDao.createSnippet(owner,title,description,code,dateCreated,language);
         //TODO: See if its better to call TagService instead of TagDao directly.
-        snippet.ifPresent(s ->
-                s.setTags(tagService.addTagsToSnippet(snippet.get().getId(), tags)));
+        if(snippetId != null)
+            tagService.addTagsToSnippet(snippetId, tags);
 
-        return snippet;
+        return snippetId;
     }
 }

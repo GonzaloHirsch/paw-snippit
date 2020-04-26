@@ -111,7 +111,7 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Optional<Snippet> createSnippet(User owner, String title, String description,String code, String dateCreated, Long language){
+    public Long createSnippet(User owner, String title, String description,String code, String dateCreated, Long language){
         final Map<String, Object> snippetDataMap = new HashMap<String,Object>(){{
             put("user_id", owner.getUserId());
             put("title",title);
@@ -122,11 +122,7 @@ public class SnippetDaoImpl implements SnippetDao {
         }};
         final Number snippetId = jdbcInsert.executeAndReturnKey(snippetDataMap);
 
-        Optional<Language> maybeLanguage = languageDao.findById(language);
-        String languageName = "";
-        if(maybeLanguage.isPresent()) languageName = maybeLanguage.get().getName();
-
-        return Optional.of(new Snippet(snippetId.longValue(),owner,code,title,description,dateCreated,languageName,new ArrayList<>()));
+        return snippetId.longValue();
     }
 
     @Override

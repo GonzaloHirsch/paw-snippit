@@ -10,14 +10,6 @@
     padding: 15px;
 }
 
-.snippetC-header-container{
-    display: flex;
-    align-items: center;
-    padding-left: 40px;
-    padding-right: 40px;
-    padding-top: 30px;
-}
-
 .snippetC-header{
     font-family: "Roboto Mono", 'New Courier', monospace;
     font-size: xx-large;
@@ -29,11 +21,11 @@
 
 .snippetC-title-container {
     margin: 5px;
-    flex:4;
+    flex:6;
 }
 .snippetC-language-container {
     margin: 5px;
-    flex:1;
+    flex:2;
 }
 
 .snippetC-tags-container {
@@ -47,14 +39,11 @@
 .snippetC-title-input{
     width: 95%;
     padding: 12px 20px;
-    margin: 8px 0;
     font-size: 22px;
     height: 50px;
 }
 
-.snippetC-language{
-    width:140px !important;
-}
+
 
 .snippetC-tags{
     width: 300px !important;
@@ -62,7 +51,7 @@
 
 .snippetC-code-input{
     background: #DCDCDC;
-    margin: 10px 10px 0px 0px;
+    margin: 6px 10px 0px 0px;
     max-width: 700px;
     padding: 10px 5px 5px 8px;
     border-width:thin;

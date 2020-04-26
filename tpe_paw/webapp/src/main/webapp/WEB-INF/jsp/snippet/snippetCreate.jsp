@@ -32,7 +32,7 @@
     <c:url value="/create" var="postPath"/>
     <div class="main-content">
 
-        <div class="snippetC-header-container">
+        <div class="flex-center">
             <div class="snippetC-header">
                 <spring:message code="snippetCreateForm.header"> </spring:message>
             </div>
@@ -42,13 +42,15 @@
             <form:form class="snippetC-form" modelAttribute="snippetCreateForm" action="${postPath}" method="post">
 
                 <div class="flex-column">
-                    <div class="flex-row flex-center">
+                    <div class="flex-row">
                         <div class="snippetC-title-container">
+                            <form:label class="fw-400 snippetC-subtitles" path="title"><spring:message code="snippetCreateForm.title"/> </form:label>
                             <form:input class="snippetC-title-input snippetC-border fw-400" type="text" path="title" placeholder='${title_hint}'/>
                         </div>
                         <div class="snippetC-language-container">
-                            <form:select class="selectpicker snippetC-language" path="language">
-                                <form:option value="-1">Language</form:option>
+                            <form:label class="fw-400 snippetC-subtitles" path="title"><spring:message code="snippetCreateForm.language"/> </form:label>
+                            <form:select class="selectpicker snippetC-language input-lg" path="language">
+                                <form:option value="-1">No language selected</form:option>
                                 <c:forEach items="${languageList}" var="lan" varStatus="status">
                                     <form:option value="${lan.id}">${lan.name.toUpperCase()}</form:option>
                                 </c:forEach>

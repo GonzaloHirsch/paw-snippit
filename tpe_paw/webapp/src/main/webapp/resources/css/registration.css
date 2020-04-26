@@ -1,13 +1,17 @@
 
-.TODO-delete {
-    background-color: slateblue;
-}
-
 .register-form {
     background-color: white;
     margin: 20px;
     max-width: 500px;
     padding: 40px
+}
+
+.register-block {
+    background-color: #5E35B1;
+    padding: 40px;
+    position: fixed;
+    top: 145px;
+    width: 700px;
 }
 
 .register-form-data {

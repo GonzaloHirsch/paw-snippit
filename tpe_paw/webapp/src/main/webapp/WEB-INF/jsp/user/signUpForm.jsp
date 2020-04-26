@@ -20,55 +20,60 @@
 
 <c:url var="signUpUrl" value="/signup"/>
 
-<div class="flex-column flex-center TODO-delete">
+<div class="wrapper">
+    <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
+    <div class="main-content flex-center">
 
-    <div class="flex-row flex-center register-text-container register-text register-welcome-text fw-300">
-        <i class="material-icons app-icon register-app-icon-margin">code</i>
-        <spring:message code="register.welcome"/>
-        <span class="fw-500 register-title-margin"> <spring:message code="app.name"/></span>
-    </div>
-
-    <form:form class="flex-center register-form register-border register-shadow " modelAttribute="registerForm" method="post" action="${signUpUrl}">
-        <div class="flex-column register-form-data">
-            <div class="register-field-container">
-                <form:errors path="username" cssClass="form-error" element="p" />
-                <label>
-                    <i class="material-icons register-icons">person</i>
-                    <form:input class="register-border register-field-size register-field-padding" path="username" placeholder='${username_hint}'/>
-                </label>
+        <div class="flex-column flex-center register-block register-border">
+            <div class="flex-row flex-center register-text-container white-text register-welcome-text fw-300">
+                <i class="material-icons app-icon register-app-icon-margin">code</i>
+                <spring:message code="register.welcome"/>
+                <span class="fw-500 register-title-margin"> <spring:message code="app.name"/></span>
             </div>
 
-            <div class="register-field-container">
-                <form:errors path="email" cssClass="form-error" element="p "/>
-                <label>
-                    <i class="material-icons register-icons">email</i>
-                    <form:input class="register-border register-field-size register-field-padding" path="email" placeholder='${email_hint}'/>
-                </label>
-            </div>
+            <form:form class="flex-center register-form register-border register-shadow " modelAttribute="registerForm" method="post" action="${signUpUrl}">
+                <div class="flex-column register-form-data">
+                    <div class="register-field-container">
+                        <form:errors path="username" cssClass="form-error" element="p" />
+                        <label>
+                            <i class="material-icons register-icons">person</i>
+                            <form:input class="register-border register-field-size register-field-padding" path="username" placeholder='${username_hint}'/>
+                        </label>
+                    </div>
 
-            <div class="register-field-container">
-                <form:errors path="password" cssClass="form-error" element="p "/>
-                <i class="material-icons register-icons">lock</i>
-                <label><form:input class="register-border register-field-size register-field-padding" path="password" placeholder='${password_hint}' type="password"/></label>
-            </div>
+                    <div class="register-field-container">
+                        <form:errors path="email" cssClass="form-error" element="p "/>
+                        <label>
+                            <i class="material-icons register-icons">email</i>
+                            <form:input class="register-border register-field-size register-field-padding" path="email" placeholder='${email_hint}'/>
+                        </label>
+                    </div>
 
-            <div class="register-field-container">
-                <form:errors path="repeatPassword" cssClass="form-error" element="p "/>
-                <i class="material-icons register-icons">lock</i>
-                <label><form:input class="register-border register-field-size register-field-padding" path="repeatPassword" placeholder='${repeat_password_hint}' type="password"/></label>
-            </div>
+                    <div class="register-field-container">
+                        <form:errors path="password" cssClass="form-error" element="p "/>
+                        <i class="material-icons register-icons">lock</i>
+                        <label><form:input class="register-border register-field-size register-field-padding" path="password" placeholder='${password_hint}' type="password"/></label>
+                    </div>
 
-            <div class="register-field-container">
-                <input class="register-border register-field-size register-button fw-500" type="submit" value="<spring:message code="registerForm.submit"/>"/>
+                    <div class="register-field-container">
+                        <form:errors path="repeatPassword" cssClass="form-error" element="p "/>
+                        <i class="material-icons register-icons">lock</i>
+                        <label><form:input class="register-border register-field-size register-field-padding" path="repeatPassword" placeholder='${repeat_password_hint}' type="password"/></label>
+                    </div>
+
+                    <div class="register-field-container">
+                        <input class="register-border register-field-size register-button fw-500" type="submit" value="<spring:message code="registerForm.submit"/>"/>
+                    </div>
+                </div>
+            </form:form>
+
+            <div class="flex-center register-text-container white-text">
+                <spring:message code="register.hasAccount"/>
+                <a class="white-text register-text-space" href="<c:url value='/login'/>">
+                    <spring:message code="register.loginRedirect"/>
+                </a>
             </div>
         </div>
-    </form:form>
-
-    <div class="flex-center register-text-container register-text">
-        <spring:message code="register.hasAccount"/>
-        <a class="register-text register-text-space" href="<c:url value='/login'/>">
-            <spring:message code="register.loginRedirect"/>
-        </a>
     </div>
 </div>
 </body>

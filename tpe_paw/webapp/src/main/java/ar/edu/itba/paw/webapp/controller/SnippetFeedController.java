@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public class SnippetFeedController {
     private TagService tagService;
 
     @RequestMapping("/")
-    public ModelAndView getHomeSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm/*, @ModelAttribute("pageForm") final PageForm pageForm*/) {
+    public ModelAndView getHomeSnippetFeed(/*@ModelAttribute("pageForm") final PageForm pageForm*/) {
         final ModelAndView mav = new ModelAndView("index");
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
@@ -47,7 +48,7 @@ public class SnippetFeedController {
     }
 
     @RequestMapping("/favorites")
-    public ModelAndView getFavoritesSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm) {
+    public ModelAndView getFavoritesSnippetFeed() {
         final ModelAndView mav = new ModelAndView("index");
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
@@ -62,7 +63,7 @@ public class SnippetFeedController {
     }
 
     @RequestMapping("/following")
-    public ModelAndView getFollowingSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm/*, @ModelAttribute("pageForm") final PageForm pageForm*/) {
+    public ModelAndView getFollowingSnippetFeed(/*, @ModelAttribute("pageForm") final PageForm pageForm*/) {
         final ModelAndView mav = new ModelAndView("index");
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
@@ -74,5 +75,10 @@ public class SnippetFeedController {
         mav.addObject("snippetList", this.snippetService.getAllFollowingSnippets(currentUser.getUserId()));
         mav.addObject("searchContext","following/");
         return mav;
+    }
+
+    @ModelAttribute
+    public void addAttributes(ModelAndView model, @Valid final SearchForm searchForm) {
+        model.addObject("searchForm", searchForm);
     }
 }

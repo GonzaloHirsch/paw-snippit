@@ -87,48 +87,57 @@
     </ul>
 </div>
     <div class="navtop flex-row flex-space-between">
-    <div class="flex-center">
-    <span id="menu-icon" class="material-icons menu-icon" onclick="openNav()">menu</span>
-    <a class="flex-row white-text app-name fw-100" href="<c:url value="/"/>">
-    <span class="material-icons app-icon">code</span>
-    Snippit
-    </a>
-    </div>
-    <div class="flex-row flex-wrap flex-center flex-grow">
-    <form:form modelAttribute="searchForm" method="get" action="${searchUrl}" class="flex-row flex-center flex-wrap search-container">
-        <div class="flex-row flex-grow fw-100">
-        <form:input path="query" type="text" id="search-bar" class="search-input flex-grow fw-100"
-                    placeholder="Search..."/>
-        <button type="submit"><span class="material-icons search-icon">search</span></button>
-        </div>
         <div class="flex-center">
-        <div class="dropdown-type">
-        <form:select path="type" name="Type">
-            <form:option value="all">Search by</form:option>
-            <form:option value="all">All</form:option>
-            <form:option value="title">Title</form:option>
-            <form:option value="tag">Tag</form:option>
-            <form:option value="content">Content</form:option>
-        </form:select>
+            <span id="menu-icon" class="material-icons menu-icon" onclick="openNav()">menu</span>
+            <a class="flex-row white-text app-name fw-100" href="<c:url value="/"/>">
+                <span class="material-icons app-icon">code</span>
+                Snippit
+            </a>
         </div>
-        <div class="dropdown-type">
-        <form:select path="sort" name="Sort" onchange="submitForm(this)">
-            <form:option value="no">Sort by</form:option>
-            <form:option value="asc">Ascending</form:option>
-            <form:option value="desc">Descending</form:option>
-        </form:select>
+        <div class="flex-row flex-wrap flex-center flex-grow">
+        <form:form modelAttribute="searchForm" method="get" action="${searchUrl}" class="flex-row flex-center flex-wrap search-container">
+            <div class="flex-row flex-grow fw-100">
+                <form:input path="query" type="text" id="search-bar" class="search-input flex-grow fw-100"
+                            placeholder="Search..."/>
+                <button type="submit"><span class="material-icons search-icon">search</span></button>
+            </div>
+            <div class="flex-center">
+                <div class="dropdown-type">
+                    <form:select path="type" name="Type">
+                        <form:option value="all">Search by</form:option>
+                        <form:option value="all">All</form:option>
+                        <form:option value="title">Title</form:option>
+                        <form:option value="tag">Tag</form:option>
+                        <form:option value="content">Content</form:option>
+                    </form:select>
+                </div>
+                <div class="dropdown-type">
+                    <form:select path="sort" name="Sort" onchange="submitForm(this)">
+                        <form:option value="no">Sort by</form:option>
+                        <form:option value="asc">Ascending</form:option>
+                        <form:option value="desc">Descending</form:option>
+                    </form:select>
+                </div>
+            </div>
+        </form:form>
         </div>
+        <div class="flex-row navtop-register-buttons">
+            <c:choose>
+                <c:when test="${currentUser == null}">
+                    <a class="flex-center purple-text navtop-button border-radius" href="<c:url value="/login"/>">
+                        <spring:message code="login.title"/>
+                    </a>
+                    <a class="flex-center purple-text navtop-button border-radius" href="<c:url value="/signup"/>">
+                        <spring:message code="register.title"/>
+                    </a>
+                </c:when>
+                <c:otherwise>
+                    <div class="white-text flex-center navtop-welcome-text">
+                        <spring:message code="app.userWelcome" arguments="${currentUser.username}"/>
+                    </div>
+                </c:otherwise>
+            </c:choose>
         </div>
-    </form:form>
-    </div>
-    <div class="flex-row navtop-register-buttons">
-    <a class="flex-center purple-text navtop-button border-radius" href="<c:url value="/login"/>">
-    <spring:message code="login.title"/>
-    </a>
-    <a class="flex-center purple-text navtop-button border-radius" href="<c:url value="/signup"/>">
-    <spring:message code="register.title"/>
-    </a>
-    </div>
     </div>
 
 </body>

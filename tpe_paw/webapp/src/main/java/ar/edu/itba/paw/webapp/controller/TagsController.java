@@ -36,7 +36,7 @@ public class TagsController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
-            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getId()));
+            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
         } else {
             // ERROR
         }
@@ -52,7 +52,7 @@ public class TagsController {
         mav.addObject("currentUser", currentUser);
         boolean follows = false;
         if (currentUser != null){
-            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getId()));
+            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
             Collection<Tag> followedTags = tagService.getFollowedTagsForUser(currentUser.getId());
             follows = followedTags.stream().map(Tag::getId).collect(Collectors.toList()).contains(tagId);
         } else {

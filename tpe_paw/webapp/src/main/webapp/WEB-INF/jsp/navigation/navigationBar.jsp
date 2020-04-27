@@ -80,7 +80,7 @@
             </c:choose>
             <hr/>
             <span class="fw-100 section-title">Following</span>
-            <c:forEach var="tag" items="${tagList}">
+            <c:forEach var="tag" items="${userTags}">
                 <li class="fw-100"><a href="<c:url value="${'/tags/'}${tag.id}"/>">${tag.name}</a></li>
             </c:forEach>
         </c:if>

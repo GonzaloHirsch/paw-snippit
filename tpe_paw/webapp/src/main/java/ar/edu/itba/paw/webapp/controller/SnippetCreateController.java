@@ -38,7 +38,6 @@ public class SnippetCreateController {
 
     @RequestMapping(value = "/snippet/create")
     public ModelAndView snippetCreateDetail(@ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm) {
-
         User currentUser = loginAuthentication.getLoggedInUser();
         if(currentUser == null) {
                 //Todo LOGGER

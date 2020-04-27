@@ -34,7 +34,7 @@ public class SnippetFeedController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
-            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getId()));
+            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
         }
 //        Collection<Snippet> snippets = this.snippetService.getAllSnippets(pageForm.getPage(), 5);
         Collection<Snippet> snippets = this.snippetService.getAllSnippets(1, 30);
@@ -51,7 +51,7 @@ public class SnippetFeedController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
-            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getId()));
+            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
         } else {
             // ERROR
         }
@@ -66,7 +66,7 @@ public class SnippetFeedController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
-            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getId()));
+            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
         } else {
             // ERROR
         }

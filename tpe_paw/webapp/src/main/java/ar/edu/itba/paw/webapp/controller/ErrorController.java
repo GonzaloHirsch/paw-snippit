@@ -44,7 +44,7 @@ public class ErrorController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
-            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getId()));
+            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
         } else {
             // ERROR
         }

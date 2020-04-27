@@ -65,12 +65,12 @@ public class SnippetController {
             }
             voteForm.setType(voteType);
             voteForm.setOldType(voteType);
-            voteForm.setUserId(currentUser.getId());
+            voteForm.setVoteUserId(currentUser.getId());
 
             // Fav
             Optional<Favorite> fav = this.favService.getFavorite(currentUser.getId(), retrievedSnippet.get().getId());
             favForm.setFavorite(fav.isPresent());
-            favForm.setUserId(currentUser.getId());
+            favForm.setFavUserId(currentUser.getId());
         } else {
             // ERROR
         }
@@ -93,7 +93,7 @@ public class SnippetController {
             @ModelAttribute("voteForm") final VoteForm voteForm
     ) {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
-        this.voteService.performVote(voteForm.getUserId(), id, voteForm.getType(), voteForm.getOldType());
+        this.voteService.performVote(voteForm.getVoteUserId(), id, voteForm.getType(), voteForm.getOldType());
         return mav;
     }
 
@@ -103,7 +103,7 @@ public class SnippetController {
             @ModelAttribute("favForm") final FavoriteForm favForm
     ) {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
-        this.favService.updateFavorites(favForm.getUserId(), id, favForm.getFavorite());
+        this.favService.updateFavorites(favForm.getFavUserId(), id, favForm.getFavorite());
         return mav;
     }
 }

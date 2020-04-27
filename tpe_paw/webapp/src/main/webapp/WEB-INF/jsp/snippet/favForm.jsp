@@ -27,7 +27,7 @@
                 </c:otherwise>
             </c:choose>
         </label>
-        <form:input class="hidden" path="userId"/>
+        <form:input class="hidden" path="favUserId"/>
     </form:form>
 </div>
 

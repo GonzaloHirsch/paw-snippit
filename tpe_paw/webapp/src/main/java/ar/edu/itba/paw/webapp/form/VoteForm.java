@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.form;
 public class VoteForm {
     private int type;
     private int oldType;
-    private long userId;
+    private long voteUserId;
 
     public VoteForm() {
     }
@@ -15,12 +15,12 @@ public class VoteForm {
         this.type = newType;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getVoteUserId() {
+        return this.voteUserId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setVoteUserId(long voteUserId) {
+        this.voteUserId = voteUserId;
     }
 
     public int getOldType() {

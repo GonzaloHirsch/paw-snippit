@@ -27,7 +27,6 @@ public class SnippetCreateController {
 
     @Autowired private SnippetService snippetService;
     @Autowired private TagService tagService;
-    @Autowired private UserService userService;
     @Autowired private LanguageService languageService;
     @Autowired private LoginAuthentication loginAuthentication;
 
@@ -37,15 +36,16 @@ public class SnippetCreateController {
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
 
 
-    @RequestMapping(value = "/create")
-    public ModelAndView snippetCreateDetail(@ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm) {
+    @RequestMapping(value = "/snippet/create")
+    public ModelAndView snippetCreateDetail(@ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm) {
 
         User currentUser = loginAuthentication.getLoggedInUser();
         if(currentUser == null) {
-                return new ModelAndView("forward:/login");
+                //Todo LOGGER
         }
 
         final ModelAndView mav = new ModelAndView("snippet/snippetCreate");
+        mav.addObject("currentUser", currentUser);
         mav.addObject("tagList",tagService.getAllTags());
         mav.addObject("languageList", languageService.getAll());
         mav.addObject("searchContext", "");
@@ -53,11 +53,11 @@ public class SnippetCreateController {
         return mav;
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ModelAndView snippetCreate( @Valid @ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm, final BindingResult errors,@ModelAttribute("searchForm") final SearchForm searchForm) {
+    @RequestMapping(value = "/snippet/create", method = RequestMethod.POST)
+    public ModelAndView snippetCreate( @Valid @ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm, final BindingResult errors) {
 
         if (errors.hasErrors())
-            return snippetCreateDetail(searchForm,snippetCreateForm);
+            return snippetCreateDetail(snippetCreateForm);
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String dateCreated = sdf.format(timestamp);
@@ -73,5 +73,10 @@ public class SnippetCreateController {
 
         return new ModelAndView("redirect:/snippet/" + snippetId);
 
+    }
+
+    @ModelAttribute
+    public void addAttributes(ModelAndView model, @Valid final SearchForm searchForm) {
+        model.addObject("searchForm", searchForm);
     }
 }

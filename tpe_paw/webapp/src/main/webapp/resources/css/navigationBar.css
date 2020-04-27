@@ -56,8 +56,6 @@
     margin: 0;
     padding-left: 10px;
     text-decoration: none !important;
-    /*display: inline-block;*/
-    /*word-break: break-word;*/
 }
 
 .sidenav li:hover {
@@ -125,9 +123,9 @@
     font-size: 26px !important;
 }
 
-.navtop .app-icon{
+.navtop-icons{
     color:white;
-    font-size: 26px !important;
+    font-size: 28px !important;
     display: flex !important;
     align-items: center !important;
     margin: 0px 6px;
@@ -219,6 +217,10 @@
 
 .navtop-register-buttons {
     margin: 0px 27px 0px 0px;
+}
+
+.navtop-register-buttons .navtop-add-snippet-icon {
+
 }
 
 .navtop-welcome-text {

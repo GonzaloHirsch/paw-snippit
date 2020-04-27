@@ -90,7 +90,7 @@
         <div class="flex-center">
             <span id="menu-icon" class="material-icons menu-icon" onclick="openNav()">menu</span>
             <a class="flex-row white-text app-name fw-100" href="<c:url value="/"/>">
-                <span class="material-icons app-icon">code</span>
+                <span class="material-icons navtop-icons">code</span>
                 Snippit
             </a>
         </div>
@@ -121,7 +121,7 @@
             </div>
         </form:form>
         </div>
-        <div class="flex-row navtop-register-buttons">
+        <div class="flex-row flex-center navtop-register-buttons">
             <c:choose>
                 <c:when test="${currentUser == null}">
                     <a class="flex-center purple-text navtop-button border-radius" href="<c:url value="/login"/>">
@@ -132,6 +132,9 @@
                     </a>
                 </c:when>
                 <c:otherwise>
+                    <a href="<c:url value="/snippet/create"/>">
+                        <i class="material-icons navtop-icons">add_circle_outline</i>
+                    </a>
                     <div class="white-text flex-center navtop-welcome-text">
                         <spring:message code="app.userWelcome" arguments="${currentUser.username}"/>
                     </div>

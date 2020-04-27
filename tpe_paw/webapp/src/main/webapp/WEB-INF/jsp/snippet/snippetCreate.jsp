@@ -29,7 +29,7 @@
 
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
-    <c:url value="/create" var="postPath"/>
+    <c:url value="/snippet/create" var="postPath"/>
     <div class="main-content">
 
         <div class="flex-center">

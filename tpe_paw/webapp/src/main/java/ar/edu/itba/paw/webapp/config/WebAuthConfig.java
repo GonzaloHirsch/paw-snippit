@@ -41,12 +41,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement()
-                .invalidSessionUrl("/")                                         /* Where to redirect when there is no available session */
-            .and().authorizeRequests()                                          /* How we will authorize HTTP request --> which roles and do which requests */
-                .antMatchers("/goodbye").anonymous()
-                .antMatchers("/login", "/login_error", "/signup").anonymous()
+                .invalidSessionUrl("/")
+            .and().authorizeRequests()
+                .antMatchers("/goodbye", "/login", "/login_error", "/signup").anonymous()
                 .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/favorites/", "/following/", "/snippet/**/vote", "/snippet/**/fav", "/tags/**/follow", "/tags/**/unfollow").hasRole("USER")
+                .antMatchers("/favorites/", "/following/").hasRole("USER")
+                .antMatchers("/snippet/create", "/snippet/**/vote", "/snippet/**/fav"). hasRole("USER")
+                .antMatchers("/tags/**/follow", "/tags/**/unfollow").hasRole("USER")
                 .antMatchers("/**").permitAll()
                 .and().formLogin()
                 .loginPage("/login")
@@ -71,7 +72,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(final WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico", "/403");
+                .antMatchers("/resources/css/**", "/resources/js/**", "/resources/img/**", "/favicon.ico", "/403");
     }
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)

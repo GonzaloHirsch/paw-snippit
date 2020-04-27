@@ -32,15 +32,11 @@ public class SnippetCreateController {
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
-    @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-
-
     @RequestMapping(value = "/snippet/create")
     public ModelAndView snippetCreateDetail(@ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm) {
         User currentUser = loginAuthentication.getLoggedInUser();
         if(currentUser == null) {
-                //Todo LOGGER
+                //TODO: LOGGER
         }
 
         final ModelAndView mav = new ModelAndView("snippet/snippetCreate");
@@ -67,7 +63,7 @@ public class SnippetCreateController {
 
         Long snippetId = snippetService.createSnippet(currentUser,snippetCreateForm.getTitle(),snippetCreateForm.getDescription(), snippetCreateForm.getCode(), dateCreated, snippetCreateForm.getLanguage(),snippetCreateForm.getTags());
         if(snippetId == null){
-            //TODO: Throw new exception
+            //TODO: Logger
         }
 
         return new ModelAndView("redirect:/snippet/" + snippetId);

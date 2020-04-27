@@ -46,7 +46,7 @@
                         </div>
                         <div class="snippetC-language-container">
                             <form:label class="fw-400 snippetC-subtitles" path="title"><spring:message code="snippetCreateForm.language"/> </form:label>
-                            <form:select class="selectpicker snippetC-language input-lg" path="language">
+                            <form:select class="selectpicker snippetC-language"  data-live-search="true" path="language">
                                 <form:option value="-1">No language selected</form:option>
                                 <c:forEach items="${languageList}" var="lan" varStatus="status">
                                     <form:option value="${lan.id}">${lan.name.toUpperCase()}</form:option>

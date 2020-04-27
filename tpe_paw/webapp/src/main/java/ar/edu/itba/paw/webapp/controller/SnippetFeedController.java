@@ -6,7 +6,6 @@ import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.form.PageForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.Optional;
 
 @Controller
 public class SnippetFeedController {
@@ -36,7 +34,7 @@ public class SnippetFeedController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
-            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getId()));
         }
 //        Collection<Snippet> snippets = this.snippetService.getAllSnippets(pageForm.getPage(), 5);
         Collection<Snippet> snippets = this.snippetService.getAllSnippets(1, 30);
@@ -53,11 +51,11 @@ public class SnippetFeedController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
-            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getId()));
         } else {
             // ERROR
         }
-        mav.addObject("snippetList", this.snippetService.getAllFavoriteSnippets(currentUser.getUserId()));
+        mav.addObject("snippetList", this.snippetService.getAllFavoriteSnippets(currentUser.getId()));
         mav.addObject("searchContext","favorites/");
         return mav;
     }
@@ -68,11 +66,11 @@ public class SnippetFeedController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
-            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getId()));
         } else {
             // ERROR
         }
-        mav.addObject("snippetList", this.snippetService.getAllFollowingSnippets(currentUser.getUserId()));
+        mav.addObject("snippetList", this.snippetService.getAllFollowingSnippets(currentUser.getId()));
         mav.addObject("searchContext","following/");
         return mav;
     }

@@ -2,9 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
-import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Snippet;
-import ar.edu.itba.paw.webapp.form.PageForm;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.models.User;
@@ -12,14 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.*;
 
 @Controller
@@ -85,7 +81,7 @@ public class SearchController {
     private Long getCurrentUserId(){
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser != null){
-            return currentUser.getUserId();
+            return currentUser.getId();
         } else {
             return null;
         }

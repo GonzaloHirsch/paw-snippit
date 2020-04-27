@@ -31,7 +31,7 @@ public class User {
         this.dateJoined = dateJoined;
     }
 
-    public long getUserId() { return id; }
+    public long getId() { return id; }
 
     public String getUsername() {
         return username;

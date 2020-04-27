@@ -4,9 +4,7 @@ import ar.edu.itba.paw.interfaces.dao.LanguageDao;
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.dao.TagDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
-import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
-import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -113,7 +111,7 @@ public class SnippetDaoImpl implements SnippetDao {
     @Override
     public Long createSnippet(User owner, String title, String description,String code, String dateCreated, Long language){
         final Map<String, Object> snippetDataMap = new HashMap<String,Object>(){{
-            put("user_id", owner.getUserId());
+            put("user_id", owner.getId());
             put("title",title);
             put("description",description);
             put("code",code);

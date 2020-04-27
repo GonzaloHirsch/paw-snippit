@@ -11,7 +11,6 @@ import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.form.VoteForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,22 +55,22 @@ public class SnippetController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
-            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getId()));
 
             // Vote
-            Optional<Vote> vote = this.voteService.getVote(currentUser.getUserId(), retrievedSnippet.get().getId());
+            Optional<Vote> vote = this.voteService.getVote(currentUser.getId(), retrievedSnippet.get().getId());
             int voteType = 0;
             if (vote.isPresent()) {
                 voteType = vote.get().getType();
             }
             voteForm.setType(voteType);
             voteForm.setOldType(voteType);
-            voteForm.setUserId(currentUser.getUserId());
+            voteForm.setUserId(currentUser.getId());
 
             // Fav
-            Optional<Favorite> fav = this.favService.getFavorite(currentUser.getUserId(), retrievedSnippet.get().getId());
+            Optional<Favorite> fav = this.favService.getFavorite(currentUser.getId(), retrievedSnippet.get().getId());
             favForm.setFavorite(fav.isPresent());
-            favForm.setUserId(currentUser.getUserId());
+            favForm.setUserId(currentUser.getId());
         } else {
             // ERROR
         }

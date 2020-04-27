@@ -46,11 +46,11 @@
             <hr/>
             <c:choose>
                 <c:when test="${searchContext == 'user/'}">
-                    <li class="fw-100 menu-option menu-selected"><a href="<c:url value="${'/user/'}${currentUser.username}"/>">Profile</a>
+                    <li class="fw-100 menu-option menu-selected"><a href="<c:url value="${'/user/'}${currentUser.id}"/>">Profile</a>
                     </li>
                 </c:when>
                 <c:otherwise>
-                    <li class="fw-100 menu-option"><a href="<c:url value="${'/user/'}${currentUser.username}"/>">Profile</a></li>
+                    <li class="fw-100 menu-option"><a href="<c:url value="${'/user/'}${currentUser.id}"/>">Profile</a></li>
                 </c:otherwise>
             </c:choose>
             <c:choose>

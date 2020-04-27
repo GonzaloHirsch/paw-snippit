@@ -36,7 +36,7 @@ public class TagsController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
-            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getId()));
         } else {
             // ERROR
         }
@@ -52,8 +52,8 @@ public class TagsController {
         mav.addObject("currentUser", currentUser);
         boolean follows = false;
         if (currentUser != null){
-            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
-            Collection<Tag> followedTags = tagService.getFollowedTagsForUser(currentUser.getUserId());
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getId()));
+            Collection<Tag> followedTags = tagService.getFollowedTagsForUser(currentUser.getId());
             follows = followedTags.stream().map(Tag::getId).collect(Collectors.toList()).contains(tagId);
         } else {
             // ERROR
@@ -73,7 +73,7 @@ public class TagsController {
         if ( currentUserOpt != null){
             // TODO LOGGER + customize error msg
         } else {
-            tagService.followTag(currentUserOpt.getUserId(), tagId);
+            tagService.followTag(currentUserOpt.getId(), tagId);
         }
         return new ModelAndView("redirect:/tags/" + tagId);
     }
@@ -83,7 +83,7 @@ public class TagsController {
         if ( currentUserOpt != null){
             // TODO LOGGER + customize error msg
         }else {
-            tagService.unfollowTag(currentUserOpt.getUserId(), tagId);
+            tagService.unfollowTag(currentUserOpt.getId(), tagId);
         }
         return new ModelAndView("redirect:/tags/" + tagId);
     }

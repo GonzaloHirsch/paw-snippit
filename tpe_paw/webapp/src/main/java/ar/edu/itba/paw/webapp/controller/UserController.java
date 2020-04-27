@@ -79,7 +79,7 @@ public class UserController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
-            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getUserId()));
+            mav.addObject("tagList", this.tagService.getFollowedTagsForUser(currentUser.getId()));
         } else {
             // ERROR
         }
@@ -87,7 +87,7 @@ public class UserController {
         if (!user.isPresent()){
             // TODO: handle error
         }
-        Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getUserId());
+        Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId());
         mav.addObject("user", user.get());
         mav.addObject("snippets", snippets);
         return mav;

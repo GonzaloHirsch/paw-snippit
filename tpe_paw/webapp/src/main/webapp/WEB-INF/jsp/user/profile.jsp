@@ -19,8 +19,15 @@
             <div class="flex-row">
                 <img class="profile-photo" src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
                 <div class="flex-column profile-info">
-                    <div class="profile-username">
-                        ${user.username}
+                    <div class="flex-row">
+                        <div class="profile-username">
+                            ${user.username}
+                        </div>
+                        <c:if test="${currentUser.id == user.id}">
+                            <a class="flex-center purple-text edit-button" href="<c:url value="/user/${user.id}/edit"/>">
+                                <spring:message code="profile.edit"/>
+                            </a>
+                        </c:if>
                     </div>
                     <div class="fw-100">
                         <spring:message code="profile.joined"/>

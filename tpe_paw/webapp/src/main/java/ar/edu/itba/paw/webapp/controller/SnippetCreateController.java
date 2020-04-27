@@ -34,12 +34,14 @@ public class SnippetCreateController {
 
     @RequestMapping(value = "/snippet/create")
     public ModelAndView snippetCreateDetail(@ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm) {
-        User currentUser = loginAuthentication.getLoggedInUser();
-        if(currentUser == null) {
-                //TODO: LOGGER
-        }
-
         final ModelAndView mav = new ModelAndView("snippet/snippetCreate");
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
+        if (currentUser != null){
+            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
+        } else {
+            // ERROR
+        }
         mav.addObject("currentUser", currentUser);
         mav.addObject("tagList",tagService.getAllTags());
         mav.addObject("languageList", languageService.getAll());

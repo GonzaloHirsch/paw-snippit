@@ -34,6 +34,13 @@
     transition: 0.5s;
 }
 
+.sidenav hr {
+    color: white;
+    margin: 8px 0;
+    border-style: inset;
+    border-width: 1px;
+}
+
 .sidenav li {
     margin-top: 3px;
     margin-right: 3px;

@@ -1,11 +1,12 @@
---drop table if exists votes_for cascade;
---drop table if exists favorites cascade;
---drop table if exists follows cascade;
---drop table if exists snippet_tags cascade;
---drop table if exists tags cascade;
---drop table if exists snippets cascade;
---drop table if exists languages cascade;
---drop table if exists users cascade;
+-- drop table if exists votes_for cascade;
+-- drop table if exists favorites cascade;
+-- drop table if exists follows cascade;
+-- drop table if exists snippet_tags cascade;
+-- drop view if exists complete_snippets;
+-- drop table if exists tags cascade;
+-- drop table if exists snippets cascade;
+-- drop table if exists languages cascade;
+-- drop table if exists users cascade;
 
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,

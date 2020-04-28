@@ -11,9 +11,9 @@ delete from tags where true;
 delete from users where true;
 
 
-insert into users(username, password, email, description, reputation, date_joined) values('JohnDoe','password','johndoe@gmail.com', 'I am the first user created on this website, I own many snippets', 0, timestamp '2019-09-28 12:30:00');
-insert into users(username, password, email, description, reputation, date_joined) values('JaneRoe','password','janeroe@gmail.com', 'I am just visiting', 0, timestamp '2019-09-28 12:30:00');
-insert into users(username, password, email, description, reputation, date_joined) values('admin','password','admin@snippit.com', 'I am the admin and have many important roles. I do not have a user profile and I do not post or vote', 0, timestamp '2019-09-28 12:30:00');
+insert into users(username, password, email, description, reputation, date_joined) values('JohnDoe','password','johndoe@gmail.com', 'I am the first user created on this website, I own many snippets', 0, timestamp '2020-04-20 12:30:00');
+insert into users(username, password, email, description, reputation, date_joined) values('JaneRoe','password','janeroe@gmail.com', 'I am just visiting', 0, timestamp '2020-04-25 05:30:00');
+insert into users(username, password, email, description, reputation, date_joined) values('admin','password','admin@snippit.com', 'I am the admin and have many important roles. I do not have a user profile and I do not post or vote', 0, timestamp '2020-04-19 12:30:00');
 
 insert into languages(name) values('java');
 insert into languages(name) values('c#');
@@ -133,8 +133,8 @@ insert into snippets(user_id, title, description, code, date_created, language_i
         System.out.println("\nSorted array");
         printArray(arr);
     }
-} ', timestamp '2019-09-28 12:40:00', (select id from languages where name='java'));
-insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Get name of current method','Get the name of the current method, might not be classy, but it works','String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();', timestamp '2019-09-28 12:40:00', (select id from languages where name='java'));
+} ', timestamp '2020-4-21 12:40:00', (select id from languages where name='java'));
+insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Get name of current method','Get the name of the current method, might not be classy, but it works','String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();', timestamp '2020-4-21 12:40:00', (select id from languages where name='java'));
 insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Meassure time','Surround your algorithm/function with this Stopwatch in order to meassure the time it takes',
 'using System.Diagnostics;
 // ...
@@ -148,7 +148,7 @@ sw.Start();
 sw.Stop();
 
 Console.WriteLine("Elapsed={0}",sw.Elapsed);
-', timestamp '2020-04-10 12:40:00', (select id from languages where name='c#'));
+', timestamp '2020-4-21 12:40:00', (select id from languages where name='c#'));
 insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Dijkstra Shortest Path Implementation','Implementation of Dijkstras algorithm for the shortest path in graphs, this is a greedy algorithm',
 'import java.util.*; 
 import java.lang.*; 
@@ -243,7 +243,7 @@ class ShortestPath {
         t.dijkstra(graph, 0); 
     } 
 } 
-', timestamp '2019-09-28 12:40:00', (select id from languages where name='java'));
+', timestamp '2020-4-21 12:40:00', (select id from languages where name='java'));
 insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Heapsort Implementation','Implementation of heapsort in java without a Heap class',
 'public class HeapSort 
 { 
@@ -318,7 +318,7 @@ insert into snippets(user_id, title, description, code, date_created, language_i
         printArray(arr); 
     } 
 } 
-', timestamp '2019-09-28 12:40:00', (select id from languages where name='java'));
+', timestamp '2020-4-21 12:40:00', (select id from languages where name='java'));
 insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Append text to file','Append text to a file in java, have to be careful with th exception',
 'BufferedWriter out = null;
 try {
@@ -331,7 +331,7 @@ try {
 		out.close();
 	}
 }
-', timestamp '2019-09-28 12:40:00', (select id from languages where name='java'));
+', timestamp '2020-4-21 12:40:00', (select id from languages where name='java'));
 insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'PDF Generation with iText','Code to generate a PDF in Java using the iText library, heres the link: https://itextpdf.com/en/resources/api-documentation',
 'import java.io.File;
 import java.io.FileOutputStream;
@@ -363,13 +363,13 @@ public class GeneratePDF {
         }
     }
 }
-', timestamp '2019-09-28 12:40:00', (select id from languages where name='java'));
+', timestamp '2020-4-21 12:40:00', (select id from languages where name='java'));
 insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Sigmoid Function','Implementation of a simple sigmoid function in Python',
 'import math
 
 def sigmoid(x):
   return 1 / (1 + math.exp(-x))
-', timestamp '2020-01-20 09:40:00', (select id from languages where name='python'));
+', timestamp '2020-4-21 12:40:00', (select id from languages where name='python'));
 insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Heuns method Implementation','Implementation of Heuns method in Python, includes a plotting of the function',
 'import matplotlib.pyplot as plt
 import math
@@ -451,7 +451,7 @@ plt.show()
 
 # Uncomment the following to print the figure:
 #plt.savefig("Fig_ex1_HeunsMethod.png", dpi=600)
-', timestamp '2020-01-20 09:40:00', (select id from languages where name='python'));
+', timestamp '2020-4-21 12:40:00', (select id from languages where name='python'));
 insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Text Blur','End of text blur in CSS to make it look like there is more text',
 '<div class="sidebar-box">
   <p>malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
@@ -474,7 +474,7 @@ insert into snippets(user_id, title, description, code, date_created, language_i
   /* "transparent" only works here because == rgba(0,0,0,0) */
   background-image: linear-gradient(to bottom, transparent, black);
 }
-', timestamp '2020-02-15 21:47:12', (select id from languages where name='css'));
+', timestamp '2020-4-21 12:40:00', (select id from languages where name='css'));
 insert into snippets(user_id, title, description, code, date_created, language_id) values((select id from users where username='JohnDoe'),'Netflix-like Card Expansion','On hover, cards expand and push other cards to the side. It is similar to the effect Netflix uses',
 '<div class="container">
   <a href="#animals" class="item"><img src="https://placeimg.com/640/480/animals" alt="Animals"></a>
@@ -520,7 +520,7 @@ body {
   display: block;
   max-width: 100%;
 }
-', timestamp '2020-03-01 03:30:12', (select id from languages where name='css'));
+', timestamp '2020-4-21 12:40:00', (select id from languages where name='css'));
 
 insert into votes_for(user_id, snippet_id, type) values((select id from users where username='JaneRoe'),(select id from snippets where title='Implementation of merge sort'), 1);
 insert into votes_for(user_id, snippet_id, type) values((select id from users where username='JaneRoe'),(select id from snippets where title='Dijkstra Shortest Path Implementation'), 1);

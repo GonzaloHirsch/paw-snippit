@@ -113,7 +113,7 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(value = "/user/{id}/image", method = {RequestMethod.POST})
+    @RequestMapping(value = "/user/{id}/save-image", method = {RequestMethod.POST})
     public ModelAndView endEditPhoto(final @PathVariable("id") long id, @Valid @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null || currentUser.getId() != id) {

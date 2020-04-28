@@ -20,4 +20,6 @@ public interface UserDao {
     void changePassword(String email, String password);
 
     void changeProfilePhoto(final long userId, final byte[] photo);
+
+    void changeDescription(final long userId, final String description);
 }

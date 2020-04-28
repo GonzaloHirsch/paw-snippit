@@ -66,4 +66,9 @@ public class UserServiceImpl implements UserService {
     public void changeProfilePhoto(long userId, byte[] photo) {
         this.userDao.changeProfilePhoto(userId, photo);
     }
+
+    @Override
+    public void changeDescription(final long userId, final String description) {
+        this.userDao.changeDescription(userId, description);
+    }
 }

@@ -36,7 +36,7 @@
 
                         </div>
 
-                        <form:form method="POST" action="/user/${user.id}/photo" enctype="multipart/form-data">
+                        <form:form method="POST" action="/user/${user.id}/image" enctype="multipart/form-data">
                             <div class="flex-row flex-center">
                             <span id="image-confirm" class="image-confirm-button hidden-button"
                                   onclick="submitImageForm(this)">
@@ -72,12 +72,24 @@
                         <div class="profile-username">
                             ${user.username}
                         </div>
-                        <c:if test="${currentUser.id == user.id}">
-                            <a class="flex-center purple-text edit-button"
-                               href="<c:url value="/user/${user.id}/edit"/>">
-                                <spring:message code="profile.edit"/>
-                            </a>
-                        </c:if>
+<%--                        <c:if test="${currentUser.id == user.id}">--%>
+<%--                            <c:if test="${!editing}">--%>
+<%--                                <a class="flex-center purple-text edit-button"--%>
+<%--                                href="<c:url value="/user/${user.id}?editing=true"/>">--%>
+<%--                                <spring:message code="profile.edit"/>--%>
+<%--                                </a>--%>
+<%--                            </c:if>--%>
+<%--                            <c:if test="${editing}">--%>
+<%--                                <a class="flex-center purple-text edit-button"--%>
+<%--                                   href="<c:url value="/user/${user.id}/edit"/>">--%>
+<%--                                    <spring:message code="profile.edit.save"/>--%>
+<%--                                </a>--%>
+<%--                                <a class="flex-center purple-text edit-button"--%>
+<%--                                   href="<c:url value="/user/${user.id}?editing=false"/>">--%>
+<%--                                    <spring:message code="profile.edit.discard"/>--%>
+<%--                                </a>--%>
+<%--                            </c:if>--%>
+<%--                        </c:if>--%>
                     </div>
                     <div class="fw-100">
                         <spring:message code="profile.joined"/>
@@ -97,9 +109,18 @@
                             <div class="fw-100 stat"><spring:message code="profile.stats.following"/></div>
                         </div>
                     </div>
-                    <div class="profile-description profile-info-item">
-                        ${user.description}
-                    </div>
+<%--                    <c:if test="${currentUser.id == user.id && editing}">--%>
+<%--                        <div class="profile-description profile-info-item">--%>
+<%--                            <form:label class="fw-400 snippetC-subtitles" path="description"><spring:message code="snippetCreateForm.description"/> </form:label>--%>
+<%--                            <form:textarea class="full-width snippetC-description-input snippetC-border" rows="2" type="text" path="description" placeholder='${desc_hint}'/>--%>
+<%--                            <form:errors path="description" element="p"/>--%>
+<%--                        </div>--%>
+<%--                    </c:if>--%>
+<%--                    <c:if test="${currentUser.id != user.id}">--%>
+                        <div class="profile-description profile-info-item">
+                                ${user.description}
+                        </div>
+<%--                    </c:if>--%>
                 </div>
             </div>
         </div>

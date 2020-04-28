@@ -90,4 +90,9 @@ public class UserDaoImpl implements UserDao {
         jdbcTemplate.update("UPDATE users SET icon = ? WHERE id = ?", photo, userId);
     }
 
+    @Override
+    public void changeDescription(final long userId, final String description) {
+        jdbcTemplate.update("UPDATE users SET description = ? WHERE id = ?", description, userId);
+    }
+
 }

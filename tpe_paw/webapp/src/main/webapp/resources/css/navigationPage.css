@@ -1,0 +1,22 @@
+.navigation-page {
+    border: 2px #5E35B1 solid;
+    text-decoration: none;
+    margin-left: 2px;
+    margin-right: 2px;
+    font-size: 14px;
+    border-radius: 5px;
+    padding: 5px;
+    color: #5E35B1;
+}
+
+.navigation-page-selected {
+    background-color: rgba(163, 163, 163, 0.56);
+}
+
+.navigation-page:hover {
+    background-color: rgba(163, 163, 163, 0.56);
+}
+
+.navigation-page-selected:hover {
+    background-color: rgba(163, 163, 163, 0.56);
+}

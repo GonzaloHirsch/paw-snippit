@@ -78,7 +78,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/{id}")
-    public ModelAndView userProfile(final @PathVariable("id") long id, @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm) {
+    public ModelAndView userProfile(final @PathVariable("id") long id, @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("user/profile");
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
@@ -91,7 +91,11 @@ public class UserController {
         if (!user.isPresent()){
             // TODO: handle error
         }
-        Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId());
+        Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId(), page);
+        int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.get().getId());
+        int pageSize = this.snippetService.getPageSize();
+        mav.addObject("pages", totalSnippetCount/pageSize + (totalSnippetCount % pageSize == 0 ? 0 : 1));
+        mav.addObject("page", page);
         mav.addObject("isEdit", false);
         mav.addObject("user", user.get());
         mav.addObject("snippets", snippets);
@@ -112,18 +116,18 @@ public class UserController {
         if (!user.isPresent()){
             // TODO: handle error
         }
-        Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId());
+        //Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId());
         mav.addObject("isEdit", true);
         mav.addObject("user", user.get());
-        mav.addObject("snippets", snippets);
+        //mav.addObject("snippets", snippets);
         return mav;
     }
 
     @RequestMapping(value = "/user/{id}/photo", method = {RequestMethod.POST})
     public ModelAndView endEditPhoto(final @PathVariable("id") long id, @Valid @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser.getId() != id){
-            throw new RuntimeException();
+        if (currentUser == null || currentUser.getId() != id){
+            return new ModelAndView("redirect:/user/" + id);
         } else {
             try {
                 this.userService.changeProfilePhoto(id, profilePhotoForm.getFile().getBytes());
@@ -163,7 +167,7 @@ public class UserController {
         if (!user.isPresent()){
             // TODO: handle error
         }
-        Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId());
+        //Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId());
         return new ModelAndView("redirect:/user/" + id);
     }
 

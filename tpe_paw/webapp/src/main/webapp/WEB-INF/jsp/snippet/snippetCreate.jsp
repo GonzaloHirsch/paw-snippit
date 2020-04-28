@@ -6,7 +6,7 @@
 
 <html>
 <head>
-    <title>Snippet Create</title>
+    <title><spring:message code="snippetCreateForm.header"/></title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippetCreate.css'/>" rel="stylesheet"/>
@@ -30,7 +30,7 @@
     <div class="main-content">
 
         <div class="flex-center">
-            <div class="snippetC-header">
+            <div class="fw-100 snippetC-header">
                 <spring:message code="snippetCreateForm.header"> </spring:message>
             </div>
         </div>

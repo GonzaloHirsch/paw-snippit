@@ -2,10 +2,11 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
 <head>
-    <title>Snippet Detail</title>
+    <title><spring:message code="snippet"/></title>
     <link href="<c:url value='/resources/css/snippetDetail.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>

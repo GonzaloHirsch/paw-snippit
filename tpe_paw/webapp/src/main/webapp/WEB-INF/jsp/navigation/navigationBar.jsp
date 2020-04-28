@@ -102,6 +102,10 @@
                 <li class="fw-100"><a class="tag-section" href="<c:url value="${'/tags/'}${tag.id}"/>">${tag.name}
                 </a></li>
             </c:forEach>
+            <hr/>
+            <li class="fw-100 menu-option"><a href="<c:url value="/logout"/>">
+            <span class="material-icons menu-option-icon">exit_to_app</span>
+            <spring:message code="menu.logout"/></a></li>
         </c:if>
         </ul>
         </div>

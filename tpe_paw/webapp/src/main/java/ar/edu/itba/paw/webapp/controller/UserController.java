@@ -10,6 +10,8 @@ import ar.edu.itba.paw.webapp.form.DescriptionForm;
 import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
@@ -35,21 +37,18 @@ import java.util.concurrent.TimeUnit;
 
 @Controller
 public class UserController {
-
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private SnippetService snippetService;
-
     @Autowired
     private LoginAuthentication loginAuthentication;
-
     @Autowired
     private TagService tagService;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping(value = "/signup", method = {RequestMethod.GET})
     public ModelAndView signUpForm(@ModelAttribute("registerForm") final RegisterForm form) {
@@ -180,5 +179,4 @@ public class UserController {
     public void addAttributes(ModelAndView model, @Valid final SearchForm searchForm) {
         model.addObject("searchForm", searchForm);
     }
-
 }

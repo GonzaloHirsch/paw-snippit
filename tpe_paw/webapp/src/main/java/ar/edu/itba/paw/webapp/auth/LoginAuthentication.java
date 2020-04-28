@@ -2,6 +2,9 @@ package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.controller.UserController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,8 +25,10 @@ public class LoginAuthentication {
     @Autowired
     private UserService userService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
     private String getLoggedInUsername() {
-        Object userDetails = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final Object userDetails = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (userDetails instanceof UserDetails) {
             return ((UserDetails)userDetails).getUsername();
         }
@@ -31,15 +36,16 @@ public class LoginAuthentication {
     }
 
     public User getLoggedInUser() {
-        String username = this.getLoggedInUsername();
+        final String username = this.getLoggedInUsername();
         if (username == null) {
             return null;
         }
-        Optional<User> user = userService.findUserByUsername(username);
+        final Optional<User> user = userService.findUserByUsername(username);
         if (!user.isPresent()) {
-            // TODO --> Logger the impossible happened
+            LOGGER.error("Logged user {} not found in the database", username);
             return null;
         }
+        LOGGER.debug("Logged user is {}", username);
         return user.get();
     }
 

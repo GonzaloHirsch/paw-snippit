@@ -16,27 +16,29 @@
         <c:set var="pages" value="${requestScope.pages}"/>
         <c:set var="page" value="${requestScope.page}"/>
         <c:set var="qs" value="${pageContext.request.queryString}"/>
-        <div class="search-container flex-center flex-row">
-        <c:if test="${page != 1 && pages > 0}">
-            <a class="navigation-page" href="<c:url value="?page=${page - 1}&${qs}"/>"><span class="material-icons">
-            keyboard_arrow_left </span></a>
+        <c:if test="${pages > 1}">
+            <div class="search-container flex-center flex-row">
+            <c:if test="${page != 1}">
+                <a class="navigation-page" href="<c:url value="?page=${page - 1}&${qs}"/>"><span class="material-icons">
+                keyboard_arrow_left </span></a>
+            </c:if>
+            <c:forEach begin="1" end="${pages}" varStatus="pageIndex">
+                <c:choose>
+                    <c:when test="${page == pageIndex.index}">
+                        <a class="navigation-page navigation-page-selected" href="
+                        <c:url value="?page=${pageIndex.index}&${qs}"/>
+                        ">${pageIndex.index}</a>
+                    </c:when>
+                    <c:otherwise>
+                        <a class="navigation-page" href="<c:url value="?page=${pageIndex.index}&${qs}"/>">${pageIndex.index}</a>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+            <c:if test="${page != pages}">
+                <a class="navigation-page" href="<c:url value="?page=${page + 1}&${qs}"/>"><span class="material-icons">
+                keyboard_arrow_right </span></a>
+            </c:if>
+            </div>
         </c:if>
-        <c:forEach begin="1" end="${pages}" varStatus="pageIndex">
-            <c:choose>
-                <c:when test="${page == pageIndex.index}">
-                    <a class="navigation-page navigation-page-selected" href="
-                    <c:url value="?page=${pageIndex.index}&${qs}"/>
-                    ">${pageIndex.index}</a>
-                </c:when>
-                <c:otherwise>
-                    <a class="navigation-page" href="<c:url value="?page=${pageIndex.index}&${qs}"/>">${pageIndex.index}</a>
-                </c:otherwise>
-            </c:choose>
-        </c:forEach>
-        <c:if test="${page != pages && pages > 0}">
-            <a class="navigation-page" href="<c:url value="?page=${page + 1}&${qs}"/>"><span class="material-icons">
-            keyboard_arrow_right </span></a>
-        </c:if>
-        </div>
         </body>
         </html>

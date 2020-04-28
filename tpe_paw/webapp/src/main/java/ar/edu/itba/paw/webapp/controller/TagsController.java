@@ -78,9 +78,9 @@ public class TagsController {
     public ModelAndView followSnippet(@PathVariable("tagId") long tagId) {
         User currentUserOpt = loginAuthentication.getLoggedInUser();
         if ( currentUserOpt != null){
-            // TODO LOGGER + customize error msg
-        } else {
             tagService.followTag(currentUserOpt.getId(), tagId);
+        } else {
+
         }
         return new ModelAndView("redirect:/tags/" + tagId);
     }
@@ -89,9 +89,9 @@ public class TagsController {
     public ModelAndView unfollowSnippet(@PathVariable("tagId") long tagId) {
         User currentUserOpt = loginAuthentication.getLoggedInUser();
         if ( currentUserOpt != null){
-            // TODO LOGGER + customize error msg
-        }else {
             tagService.unfollowTag(currentUserOpt.getId(), tagId);
+        }else {
+
         }
         return new ModelAndView("redirect:/tags/" + tagId);
     }

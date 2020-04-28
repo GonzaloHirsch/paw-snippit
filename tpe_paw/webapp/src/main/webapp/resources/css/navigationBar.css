@@ -105,6 +105,16 @@
     color: white;
 }
 
+.sidenav img{
+    border-radius: 50%;
+    object-fit: fill;
+    height: 20px;
+    width: 20px;
+    margin-right: 5px;
+    display: flex !important;
+    align-items: center !important;
+}
+
 /*-----------------------------Top nav bar---------------------------------*/
 
 .wrapper .navtop {

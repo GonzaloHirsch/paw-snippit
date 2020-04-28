@@ -46,11 +46,26 @@
             <hr/>
             <c:choose>
                 <c:when test="${searchContext == 'user/'}">
-                    <li class="fw-100 menu-option menu-selected"><a href="<c:url value="${'/user/'}${currentUser.id}"/>">Profile</a>
+                    <li class="fw-100 menu-option menu-selected"><a href="<c:url value="${'/user/'}${currentUser.id}"/>">
+                    <c:if test="${currentUser.icon != null}">
+                        <img src="/user/${currentUser.id}/image" alt="User Icon"/>
+                    </c:if>
+                    <c:if test="${currentUser.icon == null}">
+                        <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
+                    </c:if>
+                    Profile
+                    </a>
                     </li>
                 </c:when>
                 <c:otherwise>
-                    <li class="fw-100 menu-option"><a href="<c:url value="${'/user/'}${currentUser.id}"/>">Profile</a></li>
+                    <li class="fw-100 menu-option"><a href="<c:url value="${'/user/'}${currentUser.id}"/>">
+                    <c:if test="${currentUser.icon != null}">
+                        <img src="/user/${currentUser.id}/image" alt="User Icon"/>
+                    </c:if>
+                    <c:if test="${currentUser.icon == null}">
+                        <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
+                    </c:if>
+                    Profile</a></li>
                 </c:otherwise>
             </c:choose>
             <c:choose>

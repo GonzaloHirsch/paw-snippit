@@ -74,7 +74,8 @@ SELECT
   aux.u_name AS username,
   aux.rep AS reputation,
   aux.lang_id AS language_id,
-  l.name AS language
+  l.name AS language,
+       aux.icon AS icon
 FROM
   (
     SELECT
@@ -86,8 +87,9 @@ FROM
       sn.date_created AS dc,
       u.id AS user_id,
       u.username AS u_name,
-      u.reputation AS rep
-    FROM
+      u.reputation AS rep,
+        u.icon AS icon
+  FROM
       snippets AS sn
       JOIN users AS u ON sn.user_id = u.id
   ) AS aux

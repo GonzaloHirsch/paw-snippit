@@ -10,8 +10,9 @@ public class User {
     private String description;
     private int reputation;
     private Date dateJoined;
+    private byte[] icon;
 
-    public User(long id, String username, String password, String email, Date dateJoined) {
+    public User(long id, String username, String password, String email, Date dateJoined, byte[] icon) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -19,9 +20,10 @@ public class User {
         this.description = "";
         this.reputation = 0;
         this.dateJoined = dateJoined;
+        this.icon = icon;
     }
 
-    public User(long id, String username, String password, String email, String description, int reputation, Date dateJoined) {
+    public User(long id, String username, String password, String email, String description, int reputation, Date dateJoined, byte[] icon) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -29,6 +31,7 @@ public class User {
         this.description = description;
         this.reputation = reputation;
         this.dateJoined = dateJoined;
+        this.icon = icon;
     }
 
     public long getId() { return id; }
@@ -56,4 +59,6 @@ public class User {
     public Date getDateJoined() {
         return dateJoined;
     }
+
+    public byte[] getIcon() { return this.icon; }
 }

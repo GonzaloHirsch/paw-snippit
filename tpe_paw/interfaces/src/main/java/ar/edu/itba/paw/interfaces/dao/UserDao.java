@@ -19,4 +19,5 @@ public interface UserDao {
 
     void changePassword(String email, String password);
 
+    void changeProfilePhoto(final long userId, final byte[] photo);
 }

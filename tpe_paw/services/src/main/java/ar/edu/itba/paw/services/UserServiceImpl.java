@@ -61,4 +61,9 @@ public class UserServiceImpl implements UserService {
     public boolean isUsernameUnique(String username) {
         return !userDao.findUserByUsername(username).isPresent();
     }
+
+    @Override
+    public void changeProfilePhoto(long userId, byte[] photo) {
+        this.userDao.changeProfilePhoto(userId, photo);
+    }
 }

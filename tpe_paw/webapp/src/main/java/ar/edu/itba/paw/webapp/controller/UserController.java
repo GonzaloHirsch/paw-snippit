@@ -6,27 +6,31 @@ import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 public class UserController {
@@ -74,7 +78,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/{id}")
-    public ModelAndView userProfile(final @PathVariable("id") long id) {
+    public ModelAndView userProfile(final @PathVariable("id") long id, @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm) {
         final ModelAndView mav = new ModelAndView("user/profile");
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
@@ -88,9 +92,79 @@ public class UserController {
             // TODO: handle error
         }
         Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId());
+        mav.addObject("isEdit", false);
         mav.addObject("user", user.get());
         mav.addObject("snippets", snippets);
         return mav;
+    }
+
+    @RequestMapping(value = "/user/{id}/edit")
+    public ModelAndView startEditUserProfile(final @PathVariable("id") long id) {
+        final ModelAndView mav = new ModelAndView("user/profile");
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
+        if (currentUser != null){
+            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
+        } else {
+            // ERROR
+        }
+        Optional<User> user = this.userService.findUserById(id);
+        if (!user.isPresent()){
+            // TODO: handle error
+        }
+        Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId());
+        mav.addObject("isEdit", true);
+        mav.addObject("user", user.get());
+        mav.addObject("snippets", snippets);
+        return mav;
+    }
+
+    @RequestMapping(value = "/user/{id}/photo", method = {RequestMethod.POST})
+    public ModelAndView endEditPhoto(final @PathVariable("id") long id, @Valid @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm) {
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser.getId() != id){
+            throw new RuntimeException();
+        } else {
+            try {
+                this.userService.changeProfilePhoto(id, profilePhotoForm.getFile().getBytes());
+            } catch (IOException e){
+                // TODO: ERROR
+            }
+        }
+        return new ModelAndView("redirect:/user/" + id);
+    }
+
+    @RequestMapping(value = "/user/{id}/image", produces ="image/jpeg")
+    @ResponseBody
+    public ResponseEntity<byte[]> getUserImage(final @PathVariable("id") long id) {
+        Optional<User> user = this.userService.findUserById(id);
+        if (!user.isPresent()){
+            // TODO: handle error
+        }
+        CacheControl cacheControl = CacheControl.maxAge(60, TimeUnit.SECONDS)
+                .noTransform()
+                .mustRevalidate();
+        return ResponseEntity.ok()
+                .cacheControl(cacheControl)
+                .body(user.map(User::getIcon).orElse(null));
+    }
+
+    @RequestMapping(value = "/user/{id}/edit", method = {RequestMethod.PUT})
+    public ModelAndView endEditUserProfile(final @PathVariable("id") long id) {
+        final ModelAndView mav = new ModelAndView("user/profile");
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
+        if (currentUser != null){
+            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
+        } else {
+            // ERROR
+        }
+        Optional<User> user = this.userService.findUserById(id);
+        if (!user.isPresent()){
+            // TODO: handle error
+        }
+        Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId());
+        return new ModelAndView("redirect:/user/" + id);
     }
 
     @RequestMapping(value = "/login")

@@ -78,7 +78,12 @@
                             <div class="snippet-text detail-snippet-date">Uploaded ${snippet.dateCreated}</div>
 
                             <div class="flex-row snippet-user-info detail-snippet-user-info">
-                                <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
+                                <c:if test="${snippet.owner.icon != null}">
+                                    <img src="/user/${snippet.owner.id}/image" alt="User Icon"/>
+                                </c:if>
+                                <c:if test="${snippet.owner.icon == null}">
+                                    <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
+                                </c:if>
                                 <div class="flex-column snippet-upload-info">
                                     <div class="snippet-text">
                                         ${snippet.owner.username}

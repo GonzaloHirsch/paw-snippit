@@ -62,5 +62,7 @@ code {
 
 img {
     border-radius: 50%;
+    object-fit: fill;
     height: 45px;
+    width: 45px;
 }

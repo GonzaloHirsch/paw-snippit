@@ -29,7 +29,9 @@ public class UserDaoImpl implements UserDao {
                     rs.getString("email"),
                     rs.getString("description"),
                     rs.getInt("reputation"),
-                    rs.getDate("date_joined")); //ni idea como hacer esto
+                    rs.getDate("date_joined"),
+                    rs.getBytes("icon")
+            ); //ni idea como hacer esto
         }
     };
 
@@ -52,7 +54,7 @@ public class UserDaoImpl implements UserDao {
         args.put("date_joined",dateJoined);
 
         long result = jdbcInsert.executeAndReturnKey(args).longValue();
-        return new User(result, username, password, email, description, reputation, dateJoined);
+        return new User(result, username, password, email, description, reputation, dateJoined, null);
     }
 
     @Override
@@ -81,6 +83,11 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void changePassword(String email, String password){
         jdbcTemplate.update("UPDATE users SET password = ? WHERE email = ?", password, email);
+    }
+
+    @Override
+    public void changeProfilePhoto(long userId, byte[] photo) {
+        jdbcTemplate.update("UPDATE users SET icon = ? WHERE id = ?", photo, userId);
     }
 
 }

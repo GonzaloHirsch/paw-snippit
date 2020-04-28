@@ -21,4 +21,6 @@ public interface UserService {
     boolean isEmailUnique(String email);
 
     boolean isUsernameUnique(String username);
+
+    void changeProfilePhoto(final long userId, final byte[] photo);
 }

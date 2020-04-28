@@ -17,7 +17,7 @@
         <c:set var="page" value="${requestScope.page}"/>
         <c:set var="qs" value="${pageContext.request.queryString}"/>
         <div class="search-container flex-center flex-row">
-        <c:if test="${page != 1}">
+        <c:if test="${page != 1 && pages > 0}">
             <a class="navigation-page" href="<c:url value="?page=${page - 1}&${qs}"/>"><span class="material-icons">
             keyboard_arrow_left </span></a>
         </c:if>
@@ -33,7 +33,7 @@
                 </c:otherwise>
             </c:choose>
         </c:forEach>
-        <c:if test="${page != pages}">
+        <c:if test="${page != pages && pages > 0}">
             <a class="navigation-page" href="<c:url value="?page=${page + 1}&${qs}"/>"><span class="material-icons">
             keyboard_arrow_right </span></a>
         </c:if>

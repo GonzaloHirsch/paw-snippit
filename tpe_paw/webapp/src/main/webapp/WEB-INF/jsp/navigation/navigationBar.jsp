@@ -63,7 +63,7 @@
                 <c:otherwise>
                     <li class="fw-100 menu-option"><a href="<c:url value="${'/user/'}${currentUser.id}"/>">
                     <c:if test="${currentUser.icon != null}">
-                        <img src="/user/${currentUser.id}/image" alt="User Icon"/>
+                        <img src="<c:url value="/user/${currentUser.id}/image"/>" alt="User Icon"/>
                     </c:if>
                     <c:if test="${currentUser.icon == null}">
                         <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>

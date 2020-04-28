@@ -40,7 +40,7 @@ public class ErrorController {
         int errorCode = this.getErrorCode(request);
         ModelAndView mav = new ModelAndView("errors/default");
         String message = messageSource.getMessage("error.unknown",null, LocaleContextHolder.getLocale());
-
+        /*
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
@@ -48,7 +48,7 @@ public class ErrorController {
         } else {
             // ERROR
         }
-
+        */
         if (this.supportedErrorPages.contains(errorCode)){
             message =  messageSource.getMessage("error." + String.valueOf(errorCode),null, LocaleContextHolder.getLocale());
         }

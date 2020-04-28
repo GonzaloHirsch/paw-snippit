@@ -104,6 +104,7 @@ public class UserController {
         Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId(), page);
         int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.get().getId());
         int pageSize = this.snippetService.getPageSize();
+        mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.get().getId()));
         mav.addObject("pages", totalSnippetCount / pageSize + (totalSnippetCount % pageSize == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("editing", editing);

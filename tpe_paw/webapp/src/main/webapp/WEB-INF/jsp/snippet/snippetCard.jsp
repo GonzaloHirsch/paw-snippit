@@ -20,7 +20,7 @@
         <div class="flex-row snippet-upload-spacing">
             <div class="flex-row snippet-user-info">
                 <c:if test="${snippet.owner.icon != null}">
-                    <img src="/user/${snippet.owner.id}/image" alt="User Icon"/>
+                    <img src="<c:url value="/user/${snippet.owner.id}/image"/>" alt="User Icon"/>
                 </c:if>
                 <c:if test="${snippet.owner.icon == null}">
                     <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>

@@ -27,7 +27,7 @@
                             <span class="material-icons profile-photo-edit-icon"
                                   onclick="hiddenClick(this)">create</span>
                             <c:if test="${user.icon != null}">
-                                <img id="profile-image" class="profile-photo edit" src="/user/${id}/image"
+                                <img id="profile-image" class="profile-photo edit" src="<c:url value="/user/${user.id}/image"/>"
                                      alt="User Icon" onclick="hiddenClick(this)"/>
                             </c:if>
                             <c:if test="${user.icon == null}">
@@ -38,7 +38,7 @@
 
                         </div>
 
-                        <form:form method="POST" action="/user/${user.id}/save-image" enctype="multipart/form-data">
+                        <form:form method="POST" action="${user.id}/save-image" enctype="multipart/form-data">
                             <div class="flex-row flex-center">
                             <span id="image-confirm" class="image-confirm-button hidden-button"
                                   onclick="submitImageForm(this)">
@@ -59,7 +59,7 @@
                     <c:if test="${currentUser.id != user.id}">
                         <div class="flex-row flex-center">
                             <c:if test="${user.icon != null}">
-                                <img id="profile-image" class="profile-photo" src="/user/${id}/image"
+                                <img id="profile-image" class="profile-photo" src="<c:url value="/user/${user.id}/image"/>"
                                      alt="User Icon"/>
                             </c:if>
                             <c:if test="${user.icon == null}">
@@ -107,7 +107,7 @@
                             <div class="fw-100 stat"><spring:message code="profile.stats.reputation"/></div>
                         </div>
                         <div class="flex-center stat-bundle">
-                            <div class="fw-700 stat">${userTags.size()}</div>
+                            <div class="fw-700 stat">${followedTags.size()}</div>
                             <div class="fw-100 stat"><spring:message code="profile.stats.following"/></div>
                         </div>
                     </div>

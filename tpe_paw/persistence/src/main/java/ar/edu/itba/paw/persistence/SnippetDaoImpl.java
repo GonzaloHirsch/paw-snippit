@@ -41,7 +41,8 @@ public class SnippetDaoImpl implements SnippetDao {
                     null,
                     null,
                     rs.getInt("reputation"),
-                    null
+                    null,
+                    rs.getBytes("icon")
             );
 
             String language = rs.getString("language");
@@ -69,32 +70,31 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> getAllSnippets(int page, int pageSize) {
-//        return jdbcTemplate.query("SELECT * FROM complete_snippets LIMIT ? OFFSET ?", ROW_MAPPER, pageSize, pageSize * page);
-        return jdbcTemplate.query("SELECT * FROM complete_snippets", ROW_MAPPER);
-    }
-
-
-    @Override
-    public Collection<Snippet> getAllFavoriteSnippets(Long userId) {
-        return jdbcTemplate.query("SELECT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language, s.date_created FROM complete_snippets AS s JOIN favorites AS fav ON fav.snippet_id = s.id WHERE fav.user_id = ?", ROW_MAPPER, userId);
+    public Collection<Snippet> getAllSnippets(int page) {
+        return jdbcTemplate.query("SELECT * FROM complete_snippets LIMIT ? OFFSET ?", ROW_MAPPER, PAGE_SIZE, PAGE_SIZE * (page - 1));
+//        return jdbcTemplate.query("SELECT * FROM complete_snippets", ROW_MAPPER);
     }
 
     @Override
-    public Collection<Snippet> getAllFollowingSnippets(Long userId) {
-        return jdbcTemplate.query("SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created FROM complete_snippets AS sn JOIN snippet_tags AS st ON st.snippet_id = sn.id JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?", ROW_MAPPER, userId);
+    public Collection<Snippet> getAllFavoriteSnippets(final long userId, int page) {
+        return jdbcTemplate.query("SELECT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language, s.date_created, s.icon FROM complete_snippets AS s JOIN favorites AS fav ON fav.snippet_id = s.id WHERE fav.user_id = ? LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
     }
 
     @Override
-    public Collection<Snippet> findAllSnippetsByOwner(long userId) {
-        return jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.user_id = ?", ROW_MAPPER, userId);
+    public Collection<Snippet> getAllFollowingSnippets(final long userId, int page) {
+        return jdbcTemplate.query("SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon FROM complete_snippets AS sn JOIN snippet_tags AS st ON st.snippet_id = sn.id JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ? LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
     }
 
     @Override
-    public Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, Types type, String term, Locations location, Orders order, Long userId, int page, int pageSize) {
+    public Collection<Snippet> findAllSnippetsByOwner(long userId, int page) {
+        return jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.user_id = ? LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
+    }
+
+    @Override
+    public Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, Types type, String term, Locations location, Orders order, Long userId, int page) {
         SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(queryType, location, userId, type, term)
                 .setOrder(order, type)
-//                .setPaging(page, pageSize)
+                .setPaging(page, PAGE_SIZE)
                 .build();
         return jdbcTemplate.query(searchQuery.getQuery(), searchQuery.getParams(), ROW_MAPPER);
     }
@@ -129,8 +129,33 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
+    public int getPageSize() {
+        return PAGE_SIZE;
+    }
+
+    @Override
     public int getAllSnippetsCount() {
-        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM complete_snippets", Integer.class);
+        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT id) FROM complete_snippets", Integer.class);
+    }
+
+    @Override
+    public int getAllFavoriteSnippetsCount(long userId) {
+        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT s.id) FROM complete_snippets AS s JOIN favorites AS fav ON fav.snippet_id = s.id WHERE fav.user_id = ?", new Object[]{userId}, Integer.class);
+    }
+
+    @Override
+    public int getAllFollowingSnippetsCount(long userId) {
+        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT sn.id) FROM complete_snippets AS sn JOIN snippet_tags AS st ON st.snippet_id = sn.id JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?", new Object[]{userId}, Integer.class);
+    }
+
+    @Override
+    public int getAllSnippetsByOwnerCount(long userId) {
+        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT s.id) FROM complete_snippets AS s WHERE s.user_id = ?", new Object[]{userId}, Integer.class);
+    }
+
+    @Override
+    public int getAllSnippetsByTagCount(long tagId) {
+        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT cs.id) FROM complete_snippets AS cs JOIN snippet_tags AS st ON cs.id = st.snippet_id WHERE st.tag_id = ?", new Object[]{tagId}, Integer.class);
     }
 
     @Override

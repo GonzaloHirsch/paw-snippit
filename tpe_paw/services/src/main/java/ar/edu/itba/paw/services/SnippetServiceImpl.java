@@ -27,8 +27,8 @@ public class SnippetServiceImpl implements SnippetService {
     private TagService tagService;
 
     @Override
-    public Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page, int pageSize) {
-        return this.snippetDao.findSnippetByCriteria(SnippetDao.QueryTypes.SEARCH, type, term, location, order, userId, page, pageSize);
+    public Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page) {
+        return this.snippetDao.findSnippetByCriteria(SnippetDao.QueryTypes.SEARCH, type, term, location, order, userId, page);
     }
 
     @Override
@@ -40,16 +40,41 @@ public class SnippetServiceImpl implements SnippetService {
     public Optional<Snippet> findSnippetById(long id) { return snippetDao.findSnippetById(id);}
 
     @Override
-    public Collection<Snippet> findAllSnippetsByOwner(final long userId) {
-        return this.snippetDao.findAllSnippetsByOwner(userId);
+    public Collection<Snippet> findAllSnippetsByOwner(final long userId, int page) {
+        return this.snippetDao.findAllSnippetsByOwner(userId, page);
     }
 
     @Override
-    public Collection<Snippet> getAllSnippets(int page, int pageSize) { return snippetDao.getAllSnippets(page, pageSize); }
+    public int getPageSize() {
+        return this.snippetDao.getPageSize();
+    }
+
+    @Override
+    public Collection<Snippet> getAllSnippets(int page) { return snippetDao.getAllSnippets(page); }
 
     @Override
     public int getAllSnippetsCount() {
         return this.snippetDao.getAllSnippetsCount();
+    }
+
+    @Override
+    public int getAllFavoriteSnippetsCount(long userId) {
+        return this.snippetDao.getAllFavoriteSnippetsCount(userId);
+    }
+
+    @Override
+    public int getAllFollowingSnippetsCount(long userId) {
+        return this.snippetDao.getAllFollowingSnippetsCount(userId);
+    }
+
+    @Override
+    public int getAllSnippetsByOwnerCount(long userId) {
+        return this.snippetDao.getAllSnippetsByOwnerCount(userId);
+    }
+
+    @Override
+    public int getAllSnippetsByTagCount(long tagId) {
+        return this.snippetDao.getAllSnippetsByTagCount(tagId);
     }
 
     @Override
@@ -58,13 +83,13 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
-    public Collection<Snippet> getAllFavoriteSnippets(Long userId) {
-        return snippetDao.getAllFavoriteSnippets(userId);
+    public Collection<Snippet> getAllFavoriteSnippets(final long userId, int page) {
+        return snippetDao.getAllFavoriteSnippets(userId, page);
     }
 
     @Override
-    public Collection<Snippet> getAllFollowingSnippets(Long userId) {
-        return snippetDao.getAllFollowingSnippets(userId);
+    public Collection<Snippet> getAllFollowingSnippets(final long userId, int page) {
+        return snippetDao.getAllFollowingSnippets(userId, page);
     }
 
     @Override

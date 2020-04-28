@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
@@ -45,8 +46,9 @@ public class TagsController {
         mav.addObject("tags", allTags); 
         return mav;
     }
+
     @RequestMapping("/tags/{tagId}")
-    public ModelAndView showSnippetsForTag(@PathVariable("tagId") long tagId, @ModelAttribute final SearchForm searchForm){
+    public ModelAndView showSnippetsForTag(@PathVariable("tagId") long tagId, @ModelAttribute final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         ModelAndView mav = new ModelAndView("tag/tagSnippets");
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
@@ -62,11 +64,16 @@ public class TagsController {
         if (!tag.isPresent()) {
             // TODO customize error msg
         }
+        int totalSnippetCount = this.snippetService.getAllSnippetsByTagCount(tag.get().getId());
+        int pageSize = this.snippetService.getPageSize();
+        mav.addObject("pages", totalSnippetCount/pageSize + (totalSnippetCount % pageSize == 0 ? 0 : 1));
+        mav.addObject("page", page);
         mav.addObject("follows", follows);
         mav.addObject("tag", tag.get());
         mav.addObject("snippets", snippetService.findSnippetsForTag(tagId));
         return mav;
     }
+
     @RequestMapping("/tags/{tagId}/follow")
     public ModelAndView followSnippet(@PathVariable("tagId") long tagId) {
         User currentUserOpt = loginAuthentication.getLoggedInUser();
@@ -77,6 +84,7 @@ public class TagsController {
         }
         return new ModelAndView("redirect:/tags/" + tagId);
     }
+
     @RequestMapping("/tags/{tagId}/unfollow")
     public ModelAndView unfollowSnippet(@PathVariable("tagId") long tagId) {
         User currentUserOpt = loginAuthentication.getLoggedInUser();

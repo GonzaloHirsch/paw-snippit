@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface SnippetDao {
+    int PAGE_SIZE = 6;
     enum Locations {
         HOME,
         FAVORITES,
@@ -29,14 +30,19 @@ public interface SnippetDao {
         COUNT
     }
 
-    Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page, int pageSize);
-    Collection<Snippet> getAllSnippets(int page, int pageSize);
-    Collection<Snippet> getAllFavoriteSnippets(Long userId);
-    Collection<Snippet> getAllFollowingSnippets(Long userId);
-    Collection<Snippet> findAllSnippetsByOwner(final long userId);
+    Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page);
+    Collection<Snippet> getAllSnippets(int page);
+    Collection<Snippet> getAllFavoriteSnippets(final long userId, int page);
+    Collection<Snippet> getAllFollowingSnippets(final long userId, int page);
+    Collection<Snippet> findAllSnippetsByOwner(final long userId, int page);
     Optional<Snippet> findSnippetById(long id);
     Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language);
     Collection<Snippet> findSnippetsForTag(long tagId);
+    int getPageSize();
     int getAllSnippetsCount();
+    int getAllFavoriteSnippetsCount(final long userId);
+    int getAllFollowingSnippetsCount(final long userId);
+    int getAllSnippetsByOwnerCount(final long userId);
+    int getAllSnippetsByTagCount(final long tagId);
     int getSnippetByCriteriaCount(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId);
 }

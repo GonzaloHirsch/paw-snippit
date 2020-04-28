@@ -12,13 +12,14 @@
 </head>
 <body>
 <c:set var="snippetList" value="${requestScope.snippetList}"/>
+<c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>
 <div class="feed-snippets-grid">
-<%--    <c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>--%>
     <c:forEach var="snippet" items="${snippetList}">
         <c:set var="snippet" value="${snippet}" scope="request"/>
         <c:import url="/WEB-INF/jsp/snippet/snippetCard.jsp"/>
     </c:forEach>
 </div>
+<c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>
 <script src="<c:url value='/resources/js/snippetsFeed.js'/>"></script>
 </body>
 </html>

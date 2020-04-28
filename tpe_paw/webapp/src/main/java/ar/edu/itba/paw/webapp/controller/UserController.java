@@ -6,27 +6,32 @@ import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.form.DescriptionForm;
+import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 public class UserController {
@@ -46,12 +51,12 @@ public class UserController {
     @Autowired
     private TagService tagService;
 
-    @RequestMapping(value = "/signup", method = { RequestMethod.GET })
+    @RequestMapping(value = "/signup", method = {RequestMethod.GET})
     public ModelAndView signUpForm(@ModelAttribute("registerForm") final RegisterForm form) {
         return new ModelAndView("user/signUpForm");
     }
 
-    @RequestMapping(value = "/signup",method = { RequestMethod.POST })
+    @RequestMapping(value = "/signup", method = {RequestMethod.POST})
     public ModelAndView signUp(@Valid @ModelAttribute("registerForm") final RegisterForm registerForm, final BindingResult errors, HttpServletRequest request, HttpServletResponse response) {
         if (errors.hasErrors()) {
             return signUpForm(registerForm);
@@ -74,24 +79,82 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/{id}")
-    public ModelAndView userProfile(final @PathVariable("id") long id) {
+    public ModelAndView userProfile(
+            final @PathVariable("id") long id,
+            @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
+            final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing/*,
+            @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm*/) {
         final ModelAndView mav = new ModelAndView("user/profile");
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
-        if (currentUser != null){
+        if (currentUser != null) {
             mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
         } else {
             // ERROR
         }
         Optional<User> user = this.userService.findUserById(id);
-        if (!user.isPresent()){
+        if (!user.isPresent()) {
             // TODO: handle error
         }
-        Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId());
+//        descriptionForm.setDescription(user.get().getDescription());
+        if (currentUser == null || (currentUser.getId() != user.get().getId() && editing)) {
+            // ERROR
+        }
+        Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId(), page);
+        int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.get().getId());
+        int pageSize = this.snippetService.getPageSize();
+        mav.addObject("pages", totalSnippetCount / pageSize + (totalSnippetCount % pageSize == 0 ? 0 : 1));
+        mav.addObject("page", page);
+        mav.addObject("editing", editing);
+        mav.addObject("isEdit", false);
         mav.addObject("user", user.get());
         mav.addObject("snippets", snippets);
         return mav;
     }
+
+    @RequestMapping(value = "/user/{id}/image", method = {RequestMethod.POST})
+    public ModelAndView endEditPhoto(final @PathVariable("id") long id, @Valid @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm) {
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null || currentUser.getId() != id) {
+            return new ModelAndView("redirect:/user/" + id);
+        } else {
+            try {
+                this.userService.changeProfilePhoto(id, profilePhotoForm.getFile().getBytes());
+            } catch (IOException e) {
+                // TODO: ERROR
+            }
+        }
+        return new ModelAndView("redirect:/user/" + id);
+    }
+
+    @RequestMapping(value = "/user/{id}/image", produces = "image/jpeg")
+    @ResponseBody
+    public ResponseEntity<byte[]> getUserImage(final @PathVariable("id") long id) {
+        Optional<User> user = this.userService.findUserById(id);
+        if (!user.isPresent()) {
+            // TODO: handle error
+        }
+        CacheControl cacheControl = CacheControl.maxAge(60, TimeUnit.SECONDS)
+                .noTransform()
+                .mustRevalidate();
+        return ResponseEntity.ok()
+                .cacheControl(cacheControl)
+                .body(user.map(User::getIcon).orElse(null));
+    }
+
+//    @RequestMapping(value = "/user/{id}/edit", method = {RequestMethod.PUT})
+//    public ModelAndView endEditUserProfile(final @PathVariable("id") long id, @Valid @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm, final BindingResult errors) {
+//        if (errors.hasErrors()) {
+//            return userProfile(descriptionForm);
+//        }
+//        User currentUser = this.loginAuthentication.getLoggedInUser();
+//        Optional<User> user = this.userService.findUserById(id);
+//        if (currentUser != null && currentUser.getId() == user.get().getId()) {
+//            this.userService.changeDescription(id, descriptionForm.getDescription());
+//        }
+//        return new ModelAndView("redirect:/user/" + id);
+//    }
 
     @RequestMapping(value = "/login")
     public ModelAndView login() {
@@ -104,7 +167,8 @@ public class UserController {
     public ModelAndView loginError() {
         final ModelAndView mav = new ModelAndView("user/login");
         mav.addObject("error", true);
-        return mav;    }
+        return mav;
+    }
 
     @RequestMapping(value = "/goodbye")
     public ModelAndView logout() {

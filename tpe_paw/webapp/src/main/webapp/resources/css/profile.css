@@ -33,7 +33,82 @@
 
 .profile-photo {
     height: 200px;
-    margin: 20px 25px 20px 25px;
+    width: 200px;
+    object-fit: fill;
+    margin: 25px;
+    transition: 0.3s;
+}
+
+.edit {
+    cursor: pointer;
+}
+
+.profile-photo-edit-icon {
+    position: absolute;
+    font-size: 100px !important;
+    color: black;
+    opacity: 0;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.profile-photo-wrap {
+    position: relative;
+}
+
+.profile-photo-wrap:hover .profile-photo-edit-icon{
+    opacity: 1;
+}
+
+.profile-photo-wrap:hover .profile-photo{
+    opacity: 0.7;
+    background-color: grey;
+}
+
+.image-confirm-button {
+    border: 2px #5E35B1 solid;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 15px;
+    padding: 3px 10px;
+    transition: 0.3s;
+    text-align: center;
+    margin-right: 5px;
+    color: #5E35B1;
+    cursor: pointer;
+}
+
+.image-confirm-button:hover {
+    background-color: rgba(196, 196, 196, 0.65);
+}
+
+.image-discard-button {
+    border: 2px #5E35B1 solid;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 15px;
+    padding: 3px 10px;
+    transition: 0.3s;
+    text-align: center;
+    margin-left: 5px;
+    color: #5E35B1;
+    cursor: pointer;
+}
+
+.image-discard-button:hover {
+    background-color: rgba(196, 196, 196, 0.65);
+}
+
+.hidden-button {
+    visibility: hidden;
+    height: 0;
+    width: 0;
+    opacity: 0;
+}
+
+.visible {
+    visibility: visible;
+    opacity: 1;
 }
 
 .stat {
@@ -48,4 +123,20 @@
 .profile-no-snippet {
     font-size: 30px;
     padding: 50px;
+}
+
+.edit-button {
+    border: 2px #5E35B1 solid;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 14px;
+    padding: 3px 10px;
+    margin-left: 20px;
+    transition: 0.3s;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.edit-button:hover {
+    background-color: rgba(196, 196, 196, 0.65);
 }

@@ -35,12 +35,8 @@
                     </c:choose>
                 </div>
             </div>
-            <div class="tag-snippets-grid">
-                <c:forEach var="snippet" items="${snippets}">
-                    <c:set var="snippet" value="${snippet}" scope="request"/>
-                    <c:import url="/WEB-INF/jsp/snippet/snippetCard.jsp"/>
-                </c:forEach>
-            </div>
+            <c:set var="snippetList" value="${snippets}" scope="request"/>
+            <c:import url="/WEB-INF/jsp/snippet/snippetFeed.jsp"/>
         </div>
     </div>
 </body>

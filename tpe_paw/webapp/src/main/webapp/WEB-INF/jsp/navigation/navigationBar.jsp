@@ -96,12 +96,14 @@
                     <spring:message code="menu.favorites"/></a></li>
                 </c:otherwise>
             </c:choose>
-            <hr/>
-            <span class="fw-100 section-title"><spring:message code="menu.following"/></span>
-            <c:forEach var="tag" items="${userTags}">
-                <li class="fw-100"><a class="tag-section" href="<c:url value="${'/tags/'}${tag.id}"/>">${tag.name}
-                </a></li>
-            </c:forEach>
+            <c:if test="${userTags.size() > 0}">
+                <hr/>
+                <span class="fw-100 section-title"><spring:message code="menu.following"/></span>
+                <c:forEach var="tag" items="${userTags}">
+                    <li class="fw-100"><a class="tag-section" href="<c:url value="${'/tags/'}${tag.id}"/>">${tag.name}
+                    </a></li>
+                </c:forEach>
+            </c:if>
             <hr/>
             <li class="fw-100 menu-option"><a href="<c:url value="/logout"/>">
             <span class="material-icons menu-option-icon">exit_to_app</span>

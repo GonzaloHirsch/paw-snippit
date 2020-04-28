@@ -107,7 +107,7 @@
                             <div class="fw-100 stat"><spring:message code="profile.stats.reputation"/></div>
                         </div>
                         <div class="flex-center stat-bundle">
-                            <div class="fw-700 stat">${user.reputation}</div>
+                            <div class="fw-700 stat">${userTags.size()}</div>
                             <div class="fw-100 stat"><spring:message code="profile.stats.following"/></div>
                         </div>
                     </div>

@@ -15,28 +15,22 @@
     <div class="wrapper">
         <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
         <div class="main-content">
-            <div class="tag-snippets-title-line">
-                <div class="tag-snippets-title">
+            <div class="flex-row flex-center tag-snippets-top-container">
+                <div class="fw-100 title-container">
                     <spring:message code="tagSnippets.title" arguments="${tag.name}"/>
                 </div>
-                <div class="tag-snippets-button">
-                    <c:choose>
-                        <c:when test="${!follows}">
-                            <a href="<c:url value='/tags/${tag.id}/follow'/>" class="follow-button-container">
-                                <div>
-                                    <spring:message code="tags.follow"/>
-                                </div>
-                            </a>
-                        </c:when>
-                        <c:otherwise>
-                            <a href="<c:url value='/tags/${tag.id}/unfollow'/>" class="follow-button-container">
-                                <div>
-                                    <spring:message code="tags.unfollow"/>
-                                </div>
-                            </a>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
+                <c:choose>
+                    <c:when test="${!follows}">
+                        <a href="<c:url value='/tags/${tag.id}/follow'/>" class="tag-snippets-button border-radius flex-center no-text-decoration">
+                            <spring:message code="tags.follow"/>
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="<c:url value='/tags/${tag.id}/unfollow'/>" class="tag-snippets-button border-radius flex-center no-text-decoration">
+                            <spring:message code="tags.unfollow"/>
+                        </a>
+                    </c:otherwise>
+                </c:choose>
             </div>
             <c:set var="snippetList" value="${snippets}" scope="request"/>
             <c:import url="/WEB-INF/jsp/snippet/snippetFeed.jsp"/>

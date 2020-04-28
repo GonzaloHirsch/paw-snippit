@@ -31,7 +31,7 @@
     <div class="main-content">
 
         <div class="flex-center">
-            <div class="fw-100 snippetC-header">
+            <div class="fw-100 title-container">
                 <spring:message code="snippetCreateForm.header"> </spring:message>
             </div>
         </div>

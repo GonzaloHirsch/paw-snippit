@@ -2,20 +2,23 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
-import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Controller
@@ -24,72 +27,77 @@ public class SnippetFeedController {
     @Autowired
     private SnippetService snippetService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private LoginAuthentication loginAuthentication;
     @Autowired
     private TagService tagService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SnippetFeedController.class);
+    private static final String HOME = "";
+    private static final String FOLLOWING = "following/";
+    private static final String FAVORITES = "favorites/";
+
     @RequestMapping("/")
     public ModelAndView getHomeSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
-        User currentUser = this.loginAuthentication.getLoggedInUser();
-        mav.addObject("currentUser", currentUser);
-        if (currentUser != null){
-            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
-        }
+
         Collection<Snippet> snippets = this.snippetService.getAllSnippets(page);
         int totalSnippetCount = this.snippetService.getAllSnippetsCount();
-        int pageSize = this.snippetService.getPageSize();
-        mav.addObject("pages", totalSnippetCount/pageSize + (totalSnippetCount % pageSize == 0 ? 0 : 1));
-        mav.addObject("page", page);
-        mav.addObject("snippetList", snippets);
-        mav.addObject("searchContext","");
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, HOME);
+
         return mav;
     }
 
     @RequestMapping("/favorites")
     public ModelAndView getFavoritesSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
+
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        mav.addObject("currentUser", currentUser);
-        if (currentUser != null){
-            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
-        } else {
-            // ERROR
-        }
+        if (currentUser == null) this.logAndThrow(FAVORITES);
+
         Collection<Snippet> snippets = this.snippetService.getAllFavoriteSnippets(currentUser.getId(), page);
         int totalSnippetCount = this.snippetService.getAllFavoriteSnippetsCount(currentUser.getId());
-        int pageSize = this.snippetService.getPageSize();
-        mav.addObject("pages", totalSnippetCount/pageSize + (totalSnippetCount % pageSize == 0 ? 0 : 1));
-        mav.addObject("page", page);
-        mav.addObject("snippetList", snippets);
-        mav.addObject("searchContext","favorites/");
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FAVORITES);
+
         return mav;
     }
 
     @RequestMapping("/following")
     public ModelAndView getFollowingSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
+
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        mav.addObject("currentUser", currentUser);
-        if (currentUser != null){
-            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
-        } else {
-            // ERROR
-        }
+        if (currentUser == null) this.logAndThrow(FOLLOWING);
+
         Collection<Snippet> snippets = this.snippetService.getAllFollowingSnippets(currentUser.getId(), page);
         int totalSnippetCount = this.snippetService.getAllFollowingSnippetsCount(currentUser.getId());
-        int pageSize = this.snippetService.getPageSize();
-        mav.addObject("pages", totalSnippetCount/pageSize + (totalSnippetCount % pageSize == 0 ? 0 : 1));
-        mav.addObject("page", page);
-        mav.addObject("snippetList", snippets);
-        mav.addObject("searchContext","following/");
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FOLLOWING);
+
         return mav;
     }
 
+    private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
+        int pageSize = this.snippetService.getPageSize();
+        mav.addObject("pages", snippetCount/pageSize + (snippetCount % pageSize == 0 ? 0 : 1));
+        mav.addObject("page", page);
+        mav.addObject("snippetList", snippets);
+        mav.addObject("searchContext",searchContext);
+    }
+
     @ModelAttribute
-    public void addAttributes(ModelAndView model, @Valid final SearchForm searchForm) {
-        model.addObject("searchForm", searchForm);
+    public void addAttributes(Model model, @Valid final SearchForm searchForm) {
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
+        if (currentUser != null) LOGGER.debug("Logged in user {} follows -> {}", currentUser.getUsername(), userTags.toString());
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("userTags", userTags);
+        model.addAttribute("searchForm", searchForm);
+    }
+
+    private void logAndThrow(String location) {
+        LOGGER.warn("Inside {} with no logged in user", location);
+        //TODO -- handle this -> 403 redirect?
     }
 }

@@ -15,7 +15,7 @@
 <body>
 <div class="flex-column">
     <c:set var="snippetId" value="${requestScope.snippetId}"/>
-    <form:form class="form-container" action="${snippetId}/fav" method="post" modelAttribute="favForm">
+    <form:form class="form-container flex-center" action="${snippetId}/fav" method="post" modelAttribute="favForm">
         <form:checkbox class="hidden" id="fav-button" path="favorite" value="true" onclick="updateForm(this)"/>
         <label for="fav-button">
             <c:choose>
@@ -27,7 +27,6 @@
                 </c:otherwise>
             </c:choose>
         </label>
-        <form:input class="hidden" path="favUserId"/>
     </form:form>
 </div>
 

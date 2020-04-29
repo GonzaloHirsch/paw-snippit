@@ -106,10 +106,12 @@ body {
 /* Extra */
 
 .hidden {
+    position: fixed;
     visibility: hidden;
     height: 0px;
     width: 0px;
 }
+
 
 .full-width {
     width: 100%;

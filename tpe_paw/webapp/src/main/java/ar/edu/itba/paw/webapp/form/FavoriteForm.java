@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.form;
 
 public class FavoriteForm {
     private boolean favorite;
-    private long favUserId;
 
     public FavoriteForm() {
     }
@@ -15,11 +14,4 @@ public class FavoriteForm {
         this.favorite = fav;
     }
 
-    public long getFavUserId() {
-        return this.favUserId;
-    }
-
-    public void setFavUserId(long favUserId) {
-        this.favUserId = favUserId;
-    }
 }

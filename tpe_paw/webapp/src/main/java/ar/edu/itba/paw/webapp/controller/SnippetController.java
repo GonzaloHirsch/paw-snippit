@@ -9,6 +9,8 @@ import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.FavoriteForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.form.VoteForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,6 +35,10 @@ public class SnippetController {
     @Autowired
     private TagService tagService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SnippetController.class);
+
+    private static boolean wasLoggedIn = false;
+
 
     @RequestMapping("/snippet/{id}")
     public ModelAndView snippetDetail(
@@ -49,12 +55,14 @@ public class SnippetController {
         });
 
         if (!retrievedSnippet.isPresent()) {
-            // TODO --> Logger + REDIRECT TO 500 ERROR CODE!!
-            // TODO --> throw new ...
+            LOGGER.warn("Pressed on snippet card with id {}, but it is not present", id);
+            // TODO --> throw new ... REDIRECT TO 500 ERROR CODE!!
         }
+
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
+            wasLoggedIn = true;
             mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
 
             // Vote
@@ -65,14 +73,12 @@ public class SnippetController {
             }
             voteForm.setType(voteType);
             voteForm.setOldType(voteType);
-            voteForm.setVoteUserId(currentUser.getId());
 
             // Fav
             Optional<Favorite> fav = this.favService.getFavorite(currentUser.getId(), retrievedSnippet.get().getId());
             favForm.setFavorite(fav.isPresent());
-            favForm.setFavUserId(currentUser.getId());
         } else {
-            // ERROR
+            wasLoggedIn = false;
         }
 
         // Vote Count
@@ -93,7 +99,12 @@ public class SnippetController {
             @ModelAttribute("voteForm") final VoteForm voteForm
     ) {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
-        this.voteService.performVote(voteForm.getVoteUserId(), id, voteForm.getType(), voteForm.getOldType());
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) {
+            LOGGER.warn("Inside the vote form of snippet {} without a logged in user", id);
+        } else if (wasLoggedIn) {
+            this.voteService.performVote(currentUser.getId(), id, voteForm.getType(), voteForm.getOldType());
+        }
         return mav;
     }
 
@@ -103,7 +114,12 @@ public class SnippetController {
             @ModelAttribute("favForm") final FavoriteForm favForm
     ) {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
-        this.favService.updateFavorites(favForm.getFavUserId(), id, favForm.getFavorite());
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) {
+            LOGGER.warn("Inside the favorite form of snippet {} without a logged in user", id);
+        } else if (wasLoggedIn) {
+            this.favService.updateFavorites(currentUser.getId(), id, favForm.getFavorite());
+        }
         return mav;
     }
 }

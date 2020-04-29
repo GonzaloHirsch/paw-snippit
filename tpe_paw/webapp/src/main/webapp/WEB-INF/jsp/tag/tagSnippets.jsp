@@ -19,18 +19,20 @@
                 <div class="fw-100 title-container">
                     <spring:message code="tagSnippets.title" arguments="${tag.name}"/>
                 </div>
-                <c:choose>
-                    <c:when test="${!follows}">
-                        <a href="<c:url value='/tags/${tag.id}/follow'/>" class="tag-snippets-button border-radius flex-center no-text-decoration">
-                            <spring:message code="tags.follow"/>
-                        </a>
-                    </c:when>
-                    <c:otherwise>
-                        <a href="<c:url value='/tags/${tag.id}/unfollow'/>" class="tag-snippets-button border-radius flex-center no-text-decoration">
-                            <spring:message code="tags.unfollow"/>
-                        </a>
-                    </c:otherwise>
-                </c:choose>
+                <c:if test="${currentUser != null}">
+                    <c:choose>
+                        <c:when test="${!follows}">
+                            <a href="<c:url value='/tags/${tag.id}/follow'/>" class="tag-snippets-button border-radius flex-center no-text-decoration">
+                                <spring:message code="tags.follow"/>
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="<c:url value='/tags/${tag.id}/unfollow'/>" class="tag-snippets-button border-radius flex-center no-text-decoration">
+                                <spring:message code="tags.unfollow"/>
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
             </div>
             <c:set var="snippetList" value="${snippets}" scope="request"/>
             <c:import url="/WEB-INF/jsp/snippet/snippetFeed.jsp"/>

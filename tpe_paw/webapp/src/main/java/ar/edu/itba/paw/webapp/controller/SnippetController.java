@@ -38,7 +38,7 @@ public class SnippetController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetController.class);
 
-    private static Boolean isLoggedIn = null;
+    private static boolean wasLoggedIn = false;
 
 
     @RequestMapping("/snippet/{id}")
@@ -61,8 +61,9 @@ public class SnippetController {
         }
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
         if (currentUser != null){
-            isLoggedIn = true;
+            wasLoggedIn = true;
             mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
 
             // Vote
@@ -78,7 +79,7 @@ public class SnippetController {
             Optional<Favorite> fav = this.favService.getFavorite(currentUser.getId(), retrievedSnippet.get().getId());
             favForm.setFavorite(fav.isPresent());
         } else {
-            isLoggedIn = false;
+            wasLoggedIn = false;
         }
 
         // Vote Count
@@ -102,7 +103,7 @@ public class SnippetController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
             LOGGER.error("Inside the vote form of snippet {} without a logged in user", id);
-        } else if (isLoggedIn) {
+        } else if (wasLoggedIn) {
             this.voteService.performVote(currentUser.getId(), id, voteForm.getType(), voteForm.getOldType());
         }
         return mav;
@@ -117,15 +118,9 @@ public class SnippetController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
             LOGGER.error("Inside the favorite form of snippet {} without a logged in user", id);
-        } else if (isLoggedIn) {
+        } else if (wasLoggedIn) {
             this.favService.updateFavorites(currentUser.getId(), id, favForm.getFavorite());
         }
         return mav;
-    }
-
-    @ModelAttribute
-    public void addAttributes(Model model) {
-        User currentUser = this.loginAuthentication.getLoggedInUser();
-        model.addAttribute("currentUser", currentUser);
     }
 }

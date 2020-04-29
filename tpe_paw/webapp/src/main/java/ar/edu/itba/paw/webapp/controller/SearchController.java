@@ -49,6 +49,9 @@ public class SearchController {
     private TagService tagService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
+    private static final String HOME = "";
+    private static final String FOLLOWING = "following/";
+    private static final String FAVORITES = "favorites/";
 
     @RequestMapping("/search")
     public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
@@ -56,7 +59,7 @@ public class SearchController {
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, searchForm.getSort(), null, page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, null);
 
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, "");
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, HOME);
         return mav;
     }
 
@@ -64,10 +67,12 @@ public class SearchController {
     public ModelAndView searchInFavorites(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         final ModelAndView mav = new ModelAndView("index");
         User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) this.logAndThrow(FAVORITES);
+
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, searchForm.getSort(), currentUser.getId(), page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, currentUser.getId());
 
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, "favorites/");
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FAVORITES);
         return mav;
     }
 
@@ -75,10 +80,12 @@ public class SearchController {
     public ModelAndView searchInFollowing(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         final ModelAndView mav = new ModelAndView("index");
         User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) this.logAndThrow(FOLLOWING);
+
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, searchForm.getSort(), currentUser.getId(), page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, currentUser.getId());
 
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, "following/");
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FOLLOWING);
         return mav;
     }
 
@@ -104,6 +111,11 @@ public class SearchController {
                 userId);
     }
 
+    private void logAndThrow(String location) {
+        LOGGER.warn("Searching inside {} with no logged in user", location);
+        //TODO -- handle this -> 403 redirect?
+    }
+
     private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
         int pageSize = this.snippetService.getPageSize();
         mav.addObject("pages", snippetCount/pageSize + (snippetCount % pageSize == 0 ? 0 : 1));
@@ -116,7 +128,6 @@ public class SearchController {
     public void addAttributes(Model model) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
-        if (currentUser != null) LOGGER.debug("Logged in user {} follows -> {}", currentUser.getUsername(), userTags.toString());
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("userTags", userTags);
     }

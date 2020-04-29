@@ -56,7 +56,7 @@ public class SnippetController {
         });
 
         if (!retrievedSnippet.isPresent()) {
-            LOGGER.error("Pressed on snippet card with id {}, but it is not present", id);
+            LOGGER.warn("Pressed on snippet card with id {}, but it is not present", id);
             // TODO --> throw new ... REDIRECT TO 500 ERROR CODE!!
         }
 
@@ -102,7 +102,7 @@ public class SnippetController {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
-            LOGGER.error("Inside the vote form of snippet {} without a logged in user", id);
+            LOGGER.warn("Inside the vote form of snippet {} without a logged in user", id);
         } else if (wasLoggedIn) {
             this.voteService.performVote(currentUser.getId(), id, voteForm.getType(), voteForm.getOldType());
         }
@@ -117,7 +117,7 @@ public class SnippetController {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
-            LOGGER.error("Inside the favorite form of snippet {} without a logged in user", id);
+            LOGGER.warn("Inside the favorite form of snippet {} without a logged in user", id);
         } else if (wasLoggedIn) {
             this.favService.updateFavorites(currentUser.getId(), id, favForm.getFavorite());
         }

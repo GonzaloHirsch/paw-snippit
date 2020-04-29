@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.interfaces.dao;
 
-import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 
 import java.util.Collection;

@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
-import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
@@ -26,8 +25,6 @@ public class TagsController {
     private TagService tagService;
     @Autowired
     private SnippetService snippetService;
-    @Autowired
-    private UserService userService;
     @Autowired
     private LoginAuthentication loginAuthentication;
 

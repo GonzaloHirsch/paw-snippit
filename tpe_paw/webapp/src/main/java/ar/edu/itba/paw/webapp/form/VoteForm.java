@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.form;
 public class VoteForm {
     private int type;
     private int oldType;
-    private long voteUserId;
 
     public VoteForm() {
     }

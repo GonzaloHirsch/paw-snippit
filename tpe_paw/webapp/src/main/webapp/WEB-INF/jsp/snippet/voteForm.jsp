@@ -44,7 +44,6 @@
                 </c:choose>
             </label>
             <form:input class="hidden" path="oldType"/>
-            <form:input class="hidden" path="voteUserId"/>
         </form:form>
     </div>
 </body>

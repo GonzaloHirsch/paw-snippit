@@ -15,11 +15,4 @@ public class FavoriteForm {
         this.favorite = fav;
     }
 
-    public long getFavUserId() {
-        return this.favUserId;
-    }
-
-    public void setFavUserId(long favUserId) {
-        this.favUserId = favUserId;
-    }
 }

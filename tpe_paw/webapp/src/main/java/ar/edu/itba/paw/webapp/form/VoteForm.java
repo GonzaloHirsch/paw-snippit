@@ -15,14 +15,6 @@ public class VoteForm {
         this.type = newType;
     }
 
-    public long getVoteUserId() {
-        return this.voteUserId;
-    }
-
-    public void setVoteUserId(long voteUserId) {
-        this.voteUserId = voteUserId;
-    }
-
     public int getOldType() {
         return oldType;
     }

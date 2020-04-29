@@ -40,6 +40,16 @@ body {
     color: #5E35B1 !important;
 }
 
+.title-container {
+    font-size: 50px;
+    margin: 10px 0px;
+}
+
+.no-text-decoration {
+    color: inherit;
+    text-decoration: none;
+}
+
 /* Flex Properties CSS */
 
 .flex-column {

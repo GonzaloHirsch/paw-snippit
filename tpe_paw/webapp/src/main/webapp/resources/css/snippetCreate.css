@@ -10,18 +10,10 @@
     padding: 15px;
 }
 
-.snippetC-header{
-    font-size: 50px;
-}
-
 .snippetC-elem-container {
     margin: 5px;
 }
 
-.snippetC-title-container {
-    margin: 5px;
-    flex:6;
-}
 .snippetC-language-container {
     margin: 5px;
     flex:2;
@@ -41,8 +33,6 @@
     font-size: 22px;
     height: 50px;
 }
-
-
 
 .snippetC-tags{
     width: 300px !important;

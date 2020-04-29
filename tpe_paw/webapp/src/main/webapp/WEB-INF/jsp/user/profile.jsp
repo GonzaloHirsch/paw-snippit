@@ -11,6 +11,7 @@
     <link href="<c:url value='/resources/css/profile.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="<c:url value='/resources/js/form.js'/>"></script>
     <script src="<c:url value='/resources/js/profile.js'/>"></script>
@@ -38,7 +39,8 @@
 
                         </div>
 
-                        <form:form method="POST" action="${user.id}/save-image" enctype="multipart/form-data">
+                        <form:form method="POST" action="${user.id}" enctype="multipart/form-data" modelAttribute="profilePhotoForm">
+                            <form:errors path="file" cssClass="flex-center form-error" element="p" />
                             <div class="flex-row flex-center">
                             <span id="image-confirm" class="image-confirm-button hidden-button"
                                   onclick="submitImageForm(this)">
@@ -54,6 +56,7 @@
                                        accept="image/jpeg" onchange="preview(this)"/>
                                 <input type="submit" id="image-form-submit">
                             </div>
+
                         </form:form>
                     </c:if>
                     <c:if test="${currentUser.id != user.id}">

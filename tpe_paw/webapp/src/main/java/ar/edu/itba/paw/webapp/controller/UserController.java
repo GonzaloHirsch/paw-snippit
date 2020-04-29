@@ -113,12 +113,14 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(value = "/user/{id}/save-image", method = {RequestMethod.POST})
-    public ModelAndView endEditPhoto(final @PathVariable("id") long id, @Valid @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm) {
+    @RequestMapping(value = "/user/{id}", method = {RequestMethod.POST})
+    public ModelAndView endEditPhoto(final @PathVariable("id") long id, @ModelAttribute("profilePhotoForm") @Valid final ProfilePhotoForm profilePhotoForm, final BindingResult errors) {
+        if (errors.hasErrors()){
+            return userProfile(id, profilePhotoForm, 1, false);
+        }
+
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null || currentUser.getId() != id) {
-            return new ModelAndView("redirect:/user/" + id);
-        } else {
+        if (currentUser != null && currentUser.getId() == id) {
             try {
                 this.userService.changeProfilePhoto(id, profilePhotoForm.getFile().getBytes());
             } catch (IOException e) {

@@ -41,20 +41,15 @@
     border-width: 1px;
 }
 
-.sidenav li {
+.sidenav a {
     margin-top: 3px;
     margin-right: 3px;
     padding: 8px;
     text-decoration: none;
     color: white;
     display: block;
-    transition: 0.5s;
-}
-
-.sidenav li a {
-    text-decoration: none;
     font-size: 20px;
-    color: white;
+    transition: 0.5s;
     border-bottom-left-radius: 10px;
     border-top-left-radius: 10px;
 }
@@ -65,7 +60,7 @@
     text-decoration: none !important;
 }
 
-.sidenav li:hover {
+.sidenav a:hover {
     background-color: rgba(150, 148, 201, 0.84);
     border-bottom-left-radius: 10px;
     border-top-left-radius: 10px;
@@ -81,6 +76,7 @@
 
 .sidenav .menu-option {
     display: flex !important;
+    align-items: center;
 }
 
 .sidenav .menu-option a {
@@ -215,7 +211,6 @@
     cursor: pointer;
     font-size: 12px;
 }
-
 
 .navtop .search-input{
     background-color: #eeedf2;

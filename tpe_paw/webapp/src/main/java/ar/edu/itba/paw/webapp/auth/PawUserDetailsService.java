@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,6 +27,7 @@ public class PawUserDetailsService implements UserDetailsService {
     private PasswordEncoder encoder;
 
     private Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2a?\\$\\d\\d\\$[./0-9A-Za-z]{53}");
+    private static final Logger LOGGER = LoggerFactory.getLogger(PawUserDetailsService.class);
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
@@ -35,8 +38,10 @@ public class PawUserDetailsService implements UserDetailsService {
 
         if(user.getUsername().equals("admin")){
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            LOGGER.debug("Granting authority ROLE_ADMIN");
         } else {
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            LOGGER.debug("Granting authority ROLE_USER");
         }
 
         final String password;

@@ -4,11 +4,15 @@ import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,23 +48,15 @@ public class SearchController {
     @Autowired
     private TagService tagService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
+
     @RequestMapping("/search")
     public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
-        User currentUser = this.loginAuthentication.getLoggedInUser();
-        mav.addObject("currentUser", currentUser);
-        if (currentUser != null){
-            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
-        } else {
-            // ERROR
-        }
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, searchForm.getSort(), null, page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, null);
-        int pageSize = this.snippetService.getPageSize();
-        mav.addObject("pages", totalSnippetCount/pageSize + (totalSnippetCount % pageSize == 0 ? 0 : 1));
-        mav.addObject("page", page);
-        mav.addObject("snippetList", snippets);
-        mav.addObject("searchContext","");
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, "");
         return mav;
     }
 
@@ -68,19 +64,10 @@ public class SearchController {
     public ModelAndView searchInFavorites(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         final ModelAndView mav = new ModelAndView("index");
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        mav.addObject("currentUser", currentUser);
-        if (currentUser != null){
-            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
-        } else {
-            // ERROR
-        }
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, searchForm.getSort(), currentUser.getId(), page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, currentUser.getId());
-        int pageSize = this.snippetService.getPageSize();
-        mav.addObject("pages", totalSnippetCount/pageSize + (totalSnippetCount % pageSize == 0 ? 0 : 1));
-        mav.addObject("page", page);
-        mav.addObject("snippetList", snippets);
-        mav.addObject("searchContext","favorites/");
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, "favorites/");
         return mav;
     }
 
@@ -88,19 +75,10 @@ public class SearchController {
     public ModelAndView searchInFollowing(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         final ModelAndView mav = new ModelAndView("index");
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        mav.addObject("currentUser", currentUser);
-        if (currentUser != null){
-            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
-        } else {
-            // ERROR
-        }
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, searchForm.getSort(), currentUser.getId(), page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, currentUser.getId());
-        int pageSize = this.snippetService.getPageSize();
-        mav.addObject("pages", totalSnippetCount/pageSize + (totalSnippetCount % pageSize == 0 ? 0 : 1));
-        mav.addObject("page", page);
-        mav.addObject("snippetList", snippets);
-        mav.addObject("searchContext","following/");
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, "following/");
         return mav;
     }
 
@@ -125,4 +103,23 @@ public class SearchController {
                 location,
                 userId);
     }
+
+    private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
+        int pageSize = this.snippetService.getPageSize();
+        mav.addObject("pages", snippetCount/pageSize + (snippetCount % pageSize == 0 ? 0 : 1));
+        mav.addObject("page", page);
+        mav.addObject("snippetList", snippets);
+        mav.addObject("searchContext",searchContext);
+    }
+
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
+        if (currentUser != null) LOGGER.debug("Logged in user {} follows -> {}", currentUser.getUsername(), userTags.toString());
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("userTags", userTags);
+    }
+
+
 }

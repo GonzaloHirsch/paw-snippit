@@ -12,6 +12,9 @@
 </head>
 <body>
 <div class="wrapper">
+    <c:set var="currentUser" value="${currentUser}" scope="request"/>
+    <c:set var="userTags" value="${userTags}" scope="request"/>
+    <c:set var="searchForm" value="${searchContext}" scope="request"/>
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
         <c:set var="snippetList" value="${snippetList}" scope="request"/>

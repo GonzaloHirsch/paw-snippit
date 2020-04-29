@@ -1,8 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.service.TagService;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -24,10 +21,6 @@ public class ErrorController {
 
     @Autowired
     private MessageSource messageSource;
-    @Autowired
-    private LoginAuthentication loginAuthentication;
-    @Autowired
-    private TagService tagService;
 
     private Set<Integer> supportedErrorPages = new HashSet<Integer>(){{
         add(403);

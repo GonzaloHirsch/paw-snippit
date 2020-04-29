@@ -10,6 +10,10 @@
     padding: 15px;
 }
 
+.snippetC-title-container{
+    margin:5px;
+    flex:6;
+}
 .snippetC-elem-container {
     margin: 5px;
 }

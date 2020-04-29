@@ -23,7 +23,8 @@
 
 <spring:message code="snippetCreateForm.title" var="title_hint"/>
 <spring:message code="snippetCreateForm.descriptionHint" var="desc_hint"/>
-<spring:message code="snippetCreateFrom.codeHint" var="code_hint"/>
+<spring:message code="snippetCreateForm.codeHint" var="code_hint"/>
+<spring:message code="snippetCreateForm.tagsHint" var="tag_hint"/>
 
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
@@ -48,7 +49,7 @@
                         <div class="snippetC-language-container">
                             <form:label class="fw-400 snippetC-subtitles" path="title"><spring:message code="snippetCreateForm.language"/> </form:label>
                             <form:select class="selectpicker snippetC-language"  data-live-search="true" path="language">
-                                <form:option value="-1">No language selected</form:option>
+                                <form:option value="-1"><spring:message code="snippetCreateForm.languageHint"/></form:option>
                                 <c:forEach items="${languageList}" var="lan" varStatus="status">
                                     <form:option value="${lan.id}">${lan.name.toUpperCase()}</form:option>
                                 </c:forEach>
@@ -82,7 +83,7 @@
 
                         <div class="flex-column snippetC-tags-container">
                             <form:label class="fw-400 snippetC-subtitles" path="tags"><spring:message code="snippetCreateForm.tags"/></form:label>
-                            <form:select class="selectpicker snippetC-tags" multiple="true" data-live-search="true" path="tags" name="tagselect" >
+                            <form:select class="selectpicker snippetC-tags" multiple="true" data-live-search="true" path="tags" title='${tag_hint}' name="tagselect" >
                                 <form:options items="${tagList}" itemValue="id" itemLabel="name"/>
                             </form:select>
                             <form:errors class="form-error" path="tags" element="p"/>

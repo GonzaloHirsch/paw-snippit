@@ -4,8 +4,10 @@ import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
@@ -18,6 +20,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,10 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Controller
@@ -82,16 +82,16 @@ public class UserController {
             final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing/*,
             @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm*/) {
         final ModelAndView mav = new ModelAndView("user/profile");
+
+        /* Set the current user and its following tags */
         User currentUser = this.loginAuthentication.getLoggedInUser();
+        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
         mav.addObject("currentUser", currentUser);
-        if (currentUser != null) {
-            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
-        } else {
-            // ERROR
-        }
+        mav.addObject("userTags", userTags);
+
         Optional<User> user = this.userService.findUserById(id);
         if (!user.isPresent()) {
-            // TODO: handle error
+            this.logAndThrow(id);
         }
 //        descriptionForm.setDescription(user.get().getDescription());
         if (currentUser == null || (currentUser.getId() != user.get().getId() && editing)) {
@@ -120,6 +120,7 @@ public class UserController {
         if (currentUser != null && currentUser.getId() == id) {
             try {
                 this.userService.changeProfilePhoto(id, profilePhotoForm.getFile().getBytes());
+                LOGGER.debug("User {} changed their profile picture", id);
             } catch (IOException e) {
                 // TODO: ERROR
             }
@@ -132,7 +133,7 @@ public class UserController {
     public ResponseEntity<byte[]> getUserImage(final @PathVariable("id") long id) {
         Optional<User> user = this.userService.findUserById(id);
         if (!user.isPresent()) {
-            // TODO: handle error
+            this.logAndThrow(id);
         }
         CacheControl cacheControl = CacheControl.maxAge(60, TimeUnit.SECONDS)
                 .noTransform()
@@ -175,7 +176,12 @@ public class UserController {
     }
 
     @ModelAttribute
-    public void addAttributes(ModelAndView model, @Valid final SearchForm searchForm) {
-        model.addObject("searchForm", searchForm);
+    public void addAttributes(Model model, @Valid final SearchForm searchForm) {
+        model.addAttribute("searchForm", searchForm);
+    }
+
+    private void logAndThrow(long id) {
+        LOGGER.warn("User with id {} doesn't exist", id);
+        throw new UserNotFoundException();
     }
 }

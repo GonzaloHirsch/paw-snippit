@@ -1,3 +1,7 @@
+.navigation-page-container {
+    margin: 10px 0px;
+}
+
 .navigation-page {
     border: 2px #5E35B1 solid;
     text-decoration: none;

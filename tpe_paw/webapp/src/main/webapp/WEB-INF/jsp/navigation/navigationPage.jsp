@@ -1,5 +1,6 @@
     <%@ page contentType="text/html;charset=UTF-8" language="java" %>
         <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+        <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
         <html>
         <head>
@@ -19,23 +20,45 @@
         <c:if test="${pages > 1}">
             <div class="search-container flex-center flex-row">
             <c:if test="${page != 1}">
-                <a class="navigation-page" href="<c:url value="?page=${page - 1}&${qs}"/>"><span class="material-icons">
+                <c:url var="prevUrl" value="">
+                    <c:forEach items="${param}" var="entry">
+                        <c:if test="${entry.key != 'page'}">
+                            <c:param name="${entry.key}" value="${entry.value}" />
+                        </c:if>
+                    </c:forEach>
+                    <c:param name="page" value="${page - 1}" />
+                </c:url>
+                <a class="navigation-page" href="${prevUrl}"><span class="material-icons">
                 keyboard_arrow_left </span></a>
             </c:if>
             <c:forEach begin="1" end="${pages}" varStatus="pageIndex">
+                <c:url var="actUrl" value="">
+                    <c:forEach items="${param}" var="entry">
+                        <c:if test="${entry.key != 'page'}">
+                            <c:param name="${entry.key}" value="${entry.value}" />
+                        </c:if>
+                    </c:forEach>
+                    <c:param name="page" value="${pageIndex.index}" />
+                </c:url>
                 <c:choose>
                     <c:when test="${page == pageIndex.index}">
-                        <a class="navigation-page navigation-page-selected" href="
-                        <c:url value="?page=${pageIndex.index}&${qs}"/>
-                        ">${pageIndex.index}</a>
+                        <a class="navigation-page navigation-page-selected" href="${actUrl}">${pageIndex.index}</a>
                     </c:when>
                     <c:otherwise>
-                        <a class="navigation-page" href="<c:url value="?page=${pageIndex.index}&${qs}"/>">${pageIndex.index}</a>
+                        <a class="navigation-page" href="${actUrl}">${pageIndex.index}</a>
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
             <c:if test="${page != pages}">
-                <a class="navigation-page" href="<c:url value="?page=${page + 1}&${qs}"/>"><span class="material-icons">
+                <c:url var="nextUrl" value="">
+                    <c:forEach items="${param}" var="entry">
+                        <c:if test="${entry.key != 'page'}">
+                            <c:param name="${entry.key}" value="${entry.value}" />
+                        </c:if>
+                    </c:forEach>
+                    <c:param name="page" value="${page + 1}" />
+                </c:url>
+                <a class="navigation-page" href="${nextUrl}"><span class="material-icons">
                 keyboard_arrow_right </span></a>
             </c:if>
             </div>

@@ -85,10 +85,10 @@
                                 </a>
                             </c:if>
                             <c:if test="${editing}">
-                                <a class="flex-center purple-text edit-button"
-                                   href="<c:url value="/user/${user.id}/edit"/>">
+                                <div onclick="submitDescriptionForm(this)" class="flex-center purple-text edit-button">
+<%--                                   href="<c:url value="/user/${user.id}/edit"/>">--%>
                                     <spring:message code="profile.edit.save"/>
-                                </a>
+                                </div>
                                 <a class="flex-center purple-text edit-button"
                                    href="<c:url value="/user/${user.id}?editing=false"/>">
                                     <spring:message code="profile.edit.discard"/>
@@ -114,18 +114,20 @@
                             <div class="fw-100 stat"><spring:message code="profile.stats.following"/></div>
                         </div>
                     </div>
-                    <%--                    <c:if test="${currentUser.id == user.id && editing}">--%>
-                    <%--                        <div class="profile-description profile-info-item">--%>
-                    <%--                            <form:label class="fw-400 snippetC-subtitles" path="description"><spring:message code="snippetCreateForm.description"/> </form:label>--%>
-                    <%--                            <form:textarea class="full-width snippetC-description-input snippetC-border" rows="2" type="text" path="description" placeholder='${desc_hint}'/>--%>
-                    <%--                            <form:errors path="description" element="p"/>--%>
-                    <%--                        </div>--%>
-                    <%--                    </c:if>--%>
-                    <%--                    <c:if test="${currentUser.id != user.id}">--%>
-                    <div class="profile-description profile-info-item">
-                        ${user.description}
-                    </div>
-                    <%--                    </c:if>--%>
+                        <form:form id="description-form" method="PUT" action="${user.id}/edit" modelAttribute="descriptionForm">
+                            <c:if test="${currentUser.id == user.id && editing}">
+                                <div class="profile-description profile-info-item">
+                                    <form:label class="fw-400 snippetC-subtitles" path="description"><spring:message code="snippetCreateForm.description"/> </form:label>
+                                    <form:textarea class="full-width snippetC-description-input snippetC-border" rows="2" type="text" path="description" placeholder='${desc_hint}'/>
+                                    <form:errors path="description" element="p"/>
+                                </div>
+                            </c:if>
+                        </form:form>
+                        <c:if test="${!editing}">
+                            <div class="profile-description profile-info-item">
+                                ${user.description}
+                            </div>
+                        </c:if>
                 </div>
             </div>
         </div>

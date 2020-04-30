@@ -8,10 +8,7 @@ import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.DescriptionForm;
-import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
-import ar.edu.itba.paw.webapp.form.RegisterForm;
-import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -188,13 +185,17 @@ public class UserController {
     }
 
     @RequestMapping(value = "recover-password")
-    public ModelAndView recoverPassword() {
+    public ModelAndView recoverPassword(@ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
         final ModelAndView mav  = new ModelAndView("user/recoverPassword");
         return mav;
     }
 
     @RequestMapping(value = "/send-email")
-    public ModelAndView sendEmail() {
+    public ModelAndView sendEmail(@Valid @ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
+        if (errors.hasErrors()){
+            return recoverPassword(recoveryForm, errors);
+        }
+        LOGGER.debug("RecoveryForm Successful");
         return null;
     }
 

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.service.EmailService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
@@ -36,6 +37,8 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserService userService;
+    @Autowired
+    private EmailService emailService;
     @Autowired
     private SnippetService snippetService;
     @Autowired
@@ -196,6 +199,7 @@ public class UserController {
             return recoverPassword(recoveryForm, errors);
         }
         LOGGER.debug("RecoveryForm Successful");
+//        emailService.sendEmail()
         return null;
     }
 

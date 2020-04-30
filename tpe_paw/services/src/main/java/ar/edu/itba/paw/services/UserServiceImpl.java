@@ -63,6 +63,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean emailExists(String email) {
+        return userDao.findUserByEmail(email).isPresent();
+    }
+
+    @Override
     public void changeProfilePhoto(long userId, byte[] photo) {
         this.userDao.changeProfilePhoto(userId, photo);
     }

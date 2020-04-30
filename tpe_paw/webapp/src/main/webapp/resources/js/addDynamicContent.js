@@ -2,14 +2,15 @@
 function addAdminRow(divId) {
     const div = document.createElement("div");
 
-    div.className = 'flex-row';
+    div.classList.add('flex-row');
+    div.classList.add('form-field-container');
 
     if (divId === "form-dynamic-lang") {
         let langCount = getCounter('langCount');
 
         div.innerHTML = `
-            <input type="text" name="languages[${langCount}]" placeholder='Language'>
-            <input type="button" value="-" onclick="removeRow(this, 'form-dynamic-lang', 'langCount', 'langButton')" />
+            <input type="text" class="form-border form-field-size form-added-field-padding" name="languages[${langCount}]" placeholder='Language'>
+            <input type="button" class="form-remove-button form-border" value="-" onclick="removeRow(this, 'form-dynamic-lang', 'langCount', 'langButton')" />
           `;
         document.getElementById('langCount').value = ++langCount;
         limitFields(langCount, 'langButton');
@@ -18,8 +19,8 @@ function addAdminRow(divId) {
         let tagCount = getCounter('tagCount');
 
         div.innerHTML = `
-             <input type="text" name="tags[${tagCount}]" placeholder='Tag'>
-            <input type="button" value="-" onclick="removeRow(this, 'form-dynamic-tag', 'tagCount', 'tagButton')" />
+            <input type="text" class="form-border form-field-size form-added-field-padding" name="tags[${tagCount}]" placeholder='Tag'>
+            <input type="button" class="form-remove-button form-border" value="-" onclick="removeRow(this, 'form-dynamic-tag', 'tagCount', 'tagButton')" />
           `;
         document.getElementById('tagCount').value = ++tagCount;
         limitFields(tagCount, 'tagButton');

@@ -25,15 +25,15 @@
 
             <div class="flex-center form form-border form-shadow">
                 <div class="flex-column form-data">
-                    <a class="flex-center form-border form-field-size form-button form-buttons-margin fw-500" href="<c:url value='/'/>">
+                    <a class="flex-center form-border form-field-size form-button form-button-basics form-buttons-margin fw-500" href="<c:url value='/'/>">
                         <spring:message code="logout.homeRedirect"/>
                     </a>
 
-                    <a class="flex-center form-border form-field-size form-button form-buttons-margin fw-500" href="<c:url value='/login'/>">
+                    <a class="flex-center form-border form-field-size form-button form-button-basics form-buttons-margin fw-500" href="<c:url value='/login'/>">
                         <spring:message code="logout.loginRedirect"/>
                     </a>
 
-                    <a class="flex-center form-border form-field-size form-button form-buttons-margin fw-500" href="<c:url value='/signup'/>">
+                    <a class="flex-center form-border form-field-size form-button form-button-basics form-buttons-margin fw-500" href="<c:url value='/signup'/>">
                         <spring:message code="logout.signupRedirect"/>
                     </a>
                 </div>

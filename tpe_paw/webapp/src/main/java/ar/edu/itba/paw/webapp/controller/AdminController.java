@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
@@ -43,8 +45,9 @@ public class AdminController {
         if (currentUser == null || currentUser.getUsername().compareTo("admin") != 0) {
             LOGGER.warn("In admin add form and the user is not admin");
         }
-        languageService.addLanguages(adminAddForm.getLanguages());
-        tagService.addTags(adminAddForm.getTags());
+
+        languageService.addLanguages(adminAddForm.getLanguages() != null ? adminAddForm.getLanguages() : new ArrayList<>());
+        tagService.addTags(adminAddForm.getTags() !=null ? adminAddForm.getTags() : new ArrayList<>());
         LOGGER.debug("Admin added languages and tags -> {} and {}", adminAddForm.getLanguages(), adminAddForm.getTags());
 
         return new ModelAndView("redirect:/");

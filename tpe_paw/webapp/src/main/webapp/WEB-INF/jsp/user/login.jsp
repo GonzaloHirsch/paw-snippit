@@ -62,7 +62,7 @@
                     </div>
 
                     <div class="form-field-container">
-                        <input class="form-border form-field-size form-button fw-500" type="submit" value="<spring:message code="loginForm.submit"/>"/>
+                        <input class="form-border form-field-size form-button form-button-basics fw-500" type="submit" value="<spring:message code="loginForm.submit"/>"/>
                     </div>
                 </div>
             </form>

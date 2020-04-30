@@ -77,24 +77,24 @@
                         <div class="profile-username">
                             ${user.username}
                         </div>
-                        <%--                        <c:if test="${currentUser.id == user.id}">--%>
-                        <%--                            <c:if test="${!editing}">--%>
-                        <%--                                <a class="flex-center purple-text edit-button"--%>
-                        <%--                                href="<c:url value="/user/${user.id}?editing=true"/>">--%>
-                        <%--                                <spring:message code="profile.edit"/>--%>
-                        <%--                                </a>--%>
-                        <%--                            </c:if>--%>
-                        <%--                            <c:if test="${editing}">--%>
-                        <%--                                <a class="flex-center purple-text edit-button"--%>
-                        <%--                                   href="<c:url value="/user/${user.id}/edit"/>">--%>
-                        <%--                                    <spring:message code="profile.edit.save"/>--%>
-                        <%--                                </a>--%>
-                        <%--                                <a class="flex-center purple-text edit-button"--%>
-                        <%--                                   href="<c:url value="/user/${user.id}?editing=false"/>">--%>
-                        <%--                                    <spring:message code="profile.edit.discard"/>--%>
-                        <%--                                </a>--%>
-                        <%--                            </c:if>--%>
-                        <%--                        </c:if>--%>
+                        <c:if test="${currentUser.id == user.id}">
+                            <c:if test="${!editing}">
+                                <a class="flex-center purple-text edit-button"
+                                href="<c:url value="/user/${user.id}?editing=true"/>">
+                                <spring:message code="profile.edit"/>
+                                </a>
+                            </c:if>
+                            <c:if test="${editing}">
+                                <a class="flex-center purple-text edit-button"
+                                   href="<c:url value="/user/${user.id}/edit"/>">
+                                    <spring:message code="profile.edit.save"/>
+                                </a>
+                                <a class="flex-center purple-text edit-button"
+                                   href="<c:url value="/user/${user.id}?editing=false"/>">
+                                    <spring:message code="profile.edit.discard"/>
+                                </a>
+                            </c:if>
+                        </c:if>
                     </div>
                     <div class="fw-100">
                         <spring:message code="profile.joined"/>

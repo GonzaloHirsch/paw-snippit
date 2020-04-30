@@ -1,8 +1,24 @@
 /* General CSS stylesheet for all the project */
 
+/* SNIPPIT ICON */
+.app-icon {
+    font-size: 55px !important;
+}
+
 /* Text Properties */
 * {
     font-family: Roboto, "sans-serif";
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #eeedf2;
+    margin: 0;
+    line-height: inherit !important;
+}
+
+*:focus {
+    outline: none;
 }
 
 .fw-100 { font-weight: 100; }
@@ -14,6 +30,24 @@
 
 .justify-text {
     text-align: justify;
+}
+
+.white-text {
+    color: white !important;
+}
+
+.purple-text {
+    color: #5E35B1 !important;
+}
+
+.title-container {
+    font-size: 50px;
+    margin: 20px 0px;
+}
+
+.no-text-decoration {
+    color: inherit;
+    text-decoration: none;
 }
 
 /* Flex Properties CSS */
@@ -42,6 +76,18 @@
     flex-wrap: wrap;
 }
 
+.flex-stretch {
+    align-items: stretch;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.flex-end {
+    justify-content: flex-end;
+}
+
 
 /* Border Properties CSS */
 
@@ -60,11 +106,24 @@
 /* Extra */
 
 .hidden {
+    position: fixed;
     visibility: hidden;
     height: 0px;
     width: 0px;
 }
 
+
 .full-width {
     width: 100%;
+}
+
+.panel {
+    background: lightcyan;
+    border: #00a7b3 1px solid;
+    border-radius: 8px;
+}
+
+.divider {
+    margin-left: 100px;
+    margin-right: 100px;
 }

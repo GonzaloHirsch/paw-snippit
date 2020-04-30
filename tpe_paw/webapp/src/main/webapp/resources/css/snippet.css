@@ -8,12 +8,12 @@
     max-width: 700px;
     outline: dimgray;
     padding: 5px 20px 5px 20px;
+    position: relative;
 }
 
 .snippet-language-tag {
-    border: 2px cadetblue;
-    border-style: solid;
-    color: cadetblue;
+    border: 2px #5e35b1 solid;
+    color: #5e35b1;
     height: 45px;
     justify-content: center;
     padding: 10px;
@@ -36,6 +36,8 @@
 .snippet-upload-info {
     justify-content: space-around;
     margin: 0px 0px 0px 10px;
+    text-decoration: none;
+    color: #5e35b1;
 }
 
 .snippet-user-info {
@@ -60,5 +62,7 @@ code {
 
 img {
     border-radius: 50%;
+    object-fit: fill;
     height: 45px;
+    width: 45px;
 }

@@ -1,22 +1,16 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.dao.FavoriteDao;
-import ar.edu.itba.paw.interfaces.dao.SnippetDao;
-import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.Favorite;
 
-import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,12 +46,14 @@ public class FavoriteDaoImpl implements FavoriteDao {
     @Transactional
     public void addToFavorites(long userId, long snippetId) {
         // Creating the map for the object
-        final Map<String, Object> args = new HashMap<>();
-        args.put("user_id", userId);
-        args.put("snippet_id", snippetId);
-        // Executing the insert
-        //TODO: RETURN VALUE AND USE IT TO SHOW ERROR
-        this.jdbcInsert.execute(args);
+        if (!getFavorite(userId, snippetId).isPresent()) {
+            final Map<String, Object> args = new HashMap<>();
+            args.put("user_id", userId);
+            args.put("snippet_id", snippetId);
+            // Executing the insert
+            //TODO: RETURN VALUE AND USE IT TO SHOW ERROR
+            this.jdbcInsert.execute(args);
+        }
     }
 
     @Override

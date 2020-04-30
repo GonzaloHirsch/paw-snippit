@@ -28,6 +28,6 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     public void addLanguages(List<String> languages) {
-
+        languageDao.addLanguages(languages);
     }
 }

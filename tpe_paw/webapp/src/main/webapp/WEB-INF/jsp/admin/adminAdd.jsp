@@ -14,7 +14,6 @@
     <script src="<c:url value='/resources/js/addDynamicContent.js'/>"></script>
 </head>
 <body>
-
 <c:url var="adminAddUrl" value="/admin/add"/>
 
 <div class="wrapper">
@@ -25,13 +24,15 @@
             <div id="form-lang-container" class="flex-column">
                 <div id="form-dynamic-lang" class="flex-column">
                 </div>
-                <input type="button" value="+" onclick="addAdminRow('form-dynamic-lang')"/>
+                <input type="text" id="langCount" class="hidden" value="0"/>
+                <input type="button" id="langButton" value="+" onclick="addAdminRow('form-dynamic-lang')"/>
             </div>
 
             <div id="form-tag-container" class="flex-column">
                 <div id="form-dynamic-tag" class="flex-column">
                 </div>
-                <input type="button" value="+" onclick="addAdminRow('form-dynamic-tag')" />
+                <input type="text" id="tagCount" class="hidden" value="0"/>
+                <input type="button" id="tagButton" value="+" onclick="addAdminRow('form-dynamic-tag')" />
             </div>
 
             <input class="fw-500" type="submit" value="submit"/>

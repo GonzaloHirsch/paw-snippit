@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -65,7 +66,16 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public void addTags(List<String> tags) {
+        // TODO -> remove repeated
+        List<MapSqlParameterSource> entries = new ArrayList<>();
 
+        for (String tag : tags) {
+            MapSqlParameterSource entry = new MapSqlParameterSource()
+                    .addValue("name", tag);
+            entries.add(entry);
+        }
+        MapSqlParameterSource[] array = entries.toArray(new MapSqlParameterSource[entries.size()]);
+        //jdbcInsert.executeBatch(array);
     }
 
     @Override

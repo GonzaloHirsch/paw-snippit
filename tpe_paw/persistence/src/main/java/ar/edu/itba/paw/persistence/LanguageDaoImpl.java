@@ -5,15 +5,14 @@ import ar.edu.itba.paw.models.Language;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class LanguageDaoImpl implements LanguageDao {
@@ -48,6 +47,16 @@ public class LanguageDaoImpl implements LanguageDao {
 
     @Override
     public void addLanguages(List<String> languages) {
+        // TODO -> remove repeated
+        List<MapSqlParameterSource> entries = new ArrayList<>();
 
+        for (String l : languages) {
+            MapSqlParameterSource entry = new MapSqlParameterSource()
+                    .addValue("name", l);
+            entries.add(entry);
+        }
+
+        MapSqlParameterSource[] array = entries.toArray(new MapSqlParameterSource[entries.size()]);
+        //jdbcInsert.executeBatch(array);
     }
 }

@@ -64,7 +64,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public void addTags(List<String> tags) {
-
+        tagDao.addTags(tags);
     }
 
 

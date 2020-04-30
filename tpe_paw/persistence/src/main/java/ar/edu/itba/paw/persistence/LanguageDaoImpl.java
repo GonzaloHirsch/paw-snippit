@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -43,5 +44,10 @@ public class LanguageDaoImpl implements LanguageDao {
     @Override
     public Collection<Language> getAll() {
         return jdbcTemplate.query("SELECT * FROM languages", ROW_MAPPER);
+    }
+
+    @Override
+    public void addLanguages(List<String> languages) {
+
     }
 }

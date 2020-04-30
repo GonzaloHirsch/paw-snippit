@@ -1,68 +1,68 @@
 
-.register-form {
+.form {
     background-color: white;
     margin: 20px;
     max-width: 500px;
     padding: 40px
 }
 
-.register-block {
+.form-block {
     background-color: #5E35B1;
     padding: 40px;
     width: 700px;
     margin: 20px 0 20px 0;
 }
 
-.register-form-data {
+.form-data {
     padding: 10px;
 }
 
-.register-field-container {
+.form-field-container {
     margin: 5px;
 }
 
-.register-field-size {
+.form-field-size {
     font-size: 17px;
     height: 50px;
     width: 450px;
 }
 
-.register-field-padding {
+.form-field-padding {
     padding: 15px 15px 15px 48px !important;
 }
 
-.register-text-container{
+.form-text-container{
     margin: 10px;
 }
 
-.register-text-error{
+.form-text-error{
     margin: -15px 0px 10px 0px;
 }
 
-.register-text-space {
+.form-text-space {
     margin: 0px 0px 0px 5px;
 }
 
-.register-welcome-text {
+.form-welcome-text {
     font-size: 30px;
 }
 
-.register-title-margin {
+.form-title-margin {
     margin: 0px 6px 0px 8px;
 }
 
-.register-app-icon-margin {
+.form-app-icon-margin {
     margin: 0px 12px 0px 0px;
 }
 
-.register-icons {
+.form-icons {
     font-size: 28px !important;
     color: slateblue;
     position: absolute;
     margin: 11px 0px 11px 12px;
 }
 
-.register-button {
+.form-button {
     background-color: slateblue;
     border: none;
     color: white;
@@ -73,15 +73,15 @@
     margin: 8px 0px 0px 0px;
 }
 
-.register-buttons-margin {
+.form-buttons-margin {
     margin: 7px 0px;
 }
 
-.register-border {
+.form-border {
     border-radius: 12px;
 }
 
-.register-shadow {
+.form-shadow {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 

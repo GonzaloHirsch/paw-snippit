@@ -11,10 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class TagDaoImpl implements TagDao {
@@ -64,6 +61,11 @@ public class TagDaoImpl implements TagDao {
             put("tag_id", tagId);
         }};
         jdbcInsertSnippetTag.execute(snippetTagDataMap);
+    }
+
+    @Override
+    public void addTags(List<String> tags) {
+
     }
 
     @Override

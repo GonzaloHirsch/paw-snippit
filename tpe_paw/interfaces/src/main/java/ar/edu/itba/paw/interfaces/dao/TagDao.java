@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.dao;
 import ar.edu.itba.paw.models.Tag;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface TagDao {
@@ -13,4 +14,5 @@ public interface TagDao {
 
     Optional<Tag> findTagById(long tagId);
     void addSnippetTag(long snippetOd, long tagId);
+    void addTags(List<String> tags);
 }

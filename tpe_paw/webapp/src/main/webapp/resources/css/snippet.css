@@ -1,5 +1,5 @@
 /*
- * CSS stylesheet for the snippet
+ * General CSS stylesheet for the snippet --> snippetCard and snippetDetail
  */
 
 .snippet-code-container {
@@ -8,25 +8,24 @@
     max-width: 700px;
     outline: dimgray;
     padding: 5px 20px 5px 20px;
+    position: relative;
+}
+
+.snippet-language-tag {
+    border: 2px #5e35b1 solid;
+    color: #5e35b1;
+    height: 45px;
+    justify-content: center;
+    padding: 10px;
 }
 
 .snippet-title {
     font-size: 33px;
-    margin: 8px 5px 0px
+    margin: 8px 5px 0px;
 }
 
 .snippet-text {
-    font-family: "sans-serif";
     overflow-wrap: break-word;
-}
-
-.snippet-language-tag {
-    border: 2px cadetblue;
-    border-style: solid;
-    color: cadetblue;
-    height: 45px;
-    justify-content: center;
-    padding: 10px;
 }
 
 .snippet-upload-spacing {
@@ -34,13 +33,15 @@
     margin-right: 10px;
 }
 
-.snippet-user-info {
-    align-items: center;
-}
-
 .snippet-upload-info {
     justify-content: space-around;
     margin: 0px 0px 0px 10px;
+    text-decoration: none;
+    color: #5e35b1;
+}
+
+.snippet-user-info {
+    align-items: center;
 }
 
 .snippet-icon {
@@ -55,11 +56,13 @@ pre {
     word-wrap: break-word;}
 
 code {
-    font-family: Courier, 'New Courier', monospace;
+    font-family: "Roboto Mono", 'New Courier', monospace;
     font-size: 13px;
 }
 
 img {
     border-radius: 50%;
+    object-fit: fill;
     height: 45px;
+    width: 45px;
 }

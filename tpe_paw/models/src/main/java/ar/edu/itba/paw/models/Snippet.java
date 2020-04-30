@@ -1,8 +1,5 @@
 package ar.edu.itba.paw.models;
 
-import org.omg.IOP.TAG_CODE_SETS;
-
-import java.util.Calendar;
 import java.util.Collection;
 
 public class Snippet {
@@ -56,5 +53,9 @@ public class Snippet {
 
     public Collection<Tag> getTags() {
         return tags;
+    }
+
+    public void setTags(Collection<Tag> tags) {
+        this.tags = tags;
     }
 }

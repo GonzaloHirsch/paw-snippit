@@ -1,19 +1,18 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.service.FavoriteService;
-import ar.edu.itba.paw.interfaces.service.SnippetService;
-import ar.edu.itba.paw.interfaces.service.UserService;
-import ar.edu.itba.paw.interfaces.service.VoteService;
+import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Favorite;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Vote;
+import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.FavoriteForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.form.VoteForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,13 +25,20 @@ import java.util.Optional;
 public class SnippetController {
 
     @Autowired
-    private UserService userService;
-    @Autowired
     private SnippetService snippetService;
     @Autowired
     private VoteService voteService;
     @Autowired
     private FavoriteService favService;
+    @Autowired
+    private LoginAuthentication loginAuthentication;
+    @Autowired
+    private TagService tagService;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SnippetController.class);
+
+    private static boolean wasLoggedIn = false;
+
 
     @RequestMapping("/snippet/{id}")
     public ModelAndView snippetDetail(
@@ -47,26 +53,34 @@ public class SnippetController {
         retrievedSnippet.ifPresent(snippet -> {
                 mav.addObject("snippet", snippet);
         });
-        //User
-        Optional<User> user = this.userService.getCurrentUser();
-        // TODO Do we need to pass user logged in to the detail? Why?
-        if (!user.isPresent()) {
-            // TODO No user is logged in -> Fav/vote buttons take to login screen
+
+        if (!retrievedSnippet.isPresent()) {
+            LOGGER.warn("Pressed on snippet card with id {}, but it is not present", id);
+            // TODO --> throw new ... REDIRECT TO 500 ERROR CODE!!
         }
-        mav.addObject("user", user.get());
-        // Vote
-        Optional<Vote> vote = this.voteService.getVote(user.get().getUserId(), retrievedSnippet.get().getId());
-        int voteType = 0;
-        if (vote.isPresent()) {
-            voteType = vote.get().getType();
+
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        mav.addObject("currentUser", currentUser);
+        if (currentUser != null){
+            wasLoggedIn = true;
+            mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
+
+            // Vote
+            Optional<Vote> vote = this.voteService.getVote(currentUser.getId(), retrievedSnippet.get().getId());
+            int voteType = 0;
+            if (vote.isPresent()) {
+                voteType = vote.get().getType();
+            }
+            voteForm.setType(voteType);
+            voteForm.setOldType(voteType);
+
+            // Fav
+            Optional<Favorite> fav = this.favService.getFavorite(currentUser.getId(), retrievedSnippet.get().getId());
+            favForm.setFavorite(fav.isPresent());
+        } else {
+            wasLoggedIn = false;
         }
-        voteForm.setType(voteType);
-        voteForm.setOldType(voteType);
-        voteForm.setUserId(user.get().getUserId());
-        // Fav
-        Optional<Favorite> fav = this.favService.getFavorite(user.get().getUserId(), retrievedSnippet.get().getId());
-        favForm.setFavorite(fav.isPresent());
-        favForm.setUserId(user.get().getUserId());
+
         // Vote Count
         Optional<Integer> voteCount = this.voteService.getVoteBalance(retrievedSnippet.get().getId());
         if (voteCount.isPresent()){
@@ -74,6 +88,7 @@ public class SnippetController {
         } else {
             mav.addObject("voteCount",0);
         }
+
         mav.addObject("searchContext","");
         return mav;
     }
@@ -84,7 +99,14 @@ public class SnippetController {
             @ModelAttribute("voteForm") final VoteForm voteForm
     ) {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
-        this.voteService.performVote(voteForm.getUserId(), id, voteForm.getType(), voteForm.getOldType());
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) {
+            LOGGER.warn("Inside the vote form of snippet {} without a logged in user", id);
+        } else if (wasLoggedIn) {
+            this.voteService.performVote(currentUser.getId(), id, voteForm.getType(), voteForm.getOldType());
+        } else {
+            this.voteService.performVote(currentUser.getId(), id, voteForm.getType(), 0);
+        }
         return mav;
     }
 
@@ -94,7 +116,12 @@ public class SnippetController {
             @ModelAttribute("favForm") final FavoriteForm favForm
     ) {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
-        this.favService.updateFavorites(favForm.getUserId(), id, favForm.getFavorite());
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) {
+            LOGGER.warn("Inside the favorite form of snippet {} without a logged in user", id);
+        } else {
+            this.favService.updateFavorites(currentUser.getId(), id, favForm.getFavorite());
+        }
         return mav;
     }
 }

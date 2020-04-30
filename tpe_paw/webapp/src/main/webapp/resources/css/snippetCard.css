@@ -15,16 +15,8 @@
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.card-snippet-icon {
-    height: 40px;
-}
-
 .card-snippet-content {
     padding: 20px;
-}
-
-.card-snippet-descr-block {
-    margin: 15px 10px;
 }
 
 .card-snippet-block {
@@ -32,6 +24,14 @@
     overflow: hidden;
     position: relative;
     text-align: justify;
+}
+
+.card-snippet-descr-block {
+    margin: 15px 10px;
+}
+
+.card-snippet-icon {
+    height: 40px;
 }
 
 .card-snippet-fade-out {

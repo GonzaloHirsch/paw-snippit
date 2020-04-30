@@ -1,57 +1,119 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.SnippetService;
-import ar.edu.itba.paw.interfaces.service.UserService;
+import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 
 @Controller
 public class SnippetFeedController {
 
     @Autowired
     private SnippetService snippetService;
-
     @Autowired
-    private UserService userService;
+    private LoginAuthentication loginAuthentication;
+    @Autowired
+    private TagService tagService;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SnippetFeedController.class);
+    private static final String HOME = "";
+    private static final String FOLLOWING = "following/";
+    private static final String FAVORITES = "favorites/";
+    private static final String UPVOTED = "upvoted/";
 
     @RequestMapping("/")
-    public ModelAndView getHomeSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm) {
+    public ModelAndView getHomeSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("snippetList", this.snippetService.getAllSnippets());
-        mav.addObject("searchContext","");
+
+        Collection<Snippet> snippets = this.snippetService.getAllSnippets(page);
+        int totalSnippetCount = this.snippetService.getAllSnippetsCount();
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, HOME);
+
         return mav;
     }
 
     @RequestMapping("/favorites")
-    public ModelAndView getFavoritesSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm) {
+    public ModelAndView getFavoritesSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
-        Optional<User> user = this.userService.getCurrentUser();
-        if (!user.isPresent()){
-            // REddirect to error
-        }
-        mav.addObject("snippetList", this.snippetService.getAllFavoriteSnippets(user.get().getUserId()));
-        mav.addObject("searchContext","favorites/");
+
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) this.logAndThrow(FAVORITES);
+
+        Collection<Snippet> snippets = this.snippetService.getAllFavoriteSnippets(currentUser.getId(), page);
+        int totalSnippetCount = this.snippetService.getAllFavoriteSnippetsCount(currentUser.getId());
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FAVORITES);
+
         return mav;
     }
 
     @RequestMapping("/following")
-    public ModelAndView getFollowingSnippetFeed(@ModelAttribute("searchForm") final SearchForm searchForm) {
+    public ModelAndView getFollowingSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
-        Optional<User> user = this.userService.getCurrentUser();
-        if (!user.isPresent()){
-            // REddirect to error
-        }
-        mav.addObject("snippetList", this.snippetService.getAllFollowingSnippets(user.get().getUserId()));
-        mav.addObject("searchContext","following/");
+
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) this.logAndThrow(FOLLOWING);
+
+        Collection<Snippet> snippets = this.snippetService.getAllFollowingSnippets(currentUser.getId(), page);
+        int totalSnippetCount = this.snippetService.getAllFollowingSnippetsCount(currentUser.getId());
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FOLLOWING);
+
         return mav;
+    }
+
+    @RequestMapping("/upvoted")
+    public ModelAndView getUpVotedSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+        final ModelAndView mav = new ModelAndView("index");
+
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) this.logAndThrow(UPVOTED);
+
+        Collection<Snippet> snippets = this.snippetService.getAllUpVotedSnippets(currentUser.getId(), page);
+        int totalSnippetCount = snippets.size();
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, UPVOTED);
+
+        return mav;
+    }
+
+    private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
+        int pageSize = this.snippetService.getPageSize();
+        mav.addObject("pages", snippetCount/pageSize + (snippetCount % pageSize == 0 ? 0 : 1));
+        mav.addObject("page", page);
+        mav.addObject("snippetList", snippets);
+        mav.addObject("searchContext",searchContext);
+    }
+
+    @ModelAttribute
+    public void addAttributes(Model model, @Valid final SearchForm searchForm) {
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
+        if (currentUser != null) LOGGER.debug("Logged in user {} follows -> {}", currentUser.getUsername(), userTags.toString());
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("userTags", userTags);
+        model.addAttribute("searchForm", searchForm);
+    }
+
+    private void logAndThrow(String location) {
+        LOGGER.warn("Inside {} with no logged in user", location);
+        //TODO -- handle this -> 403 redirect?
     }
 }

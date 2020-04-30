@@ -9,8 +9,11 @@ function addAdminRow(divId) {
         let langCount = getCounter('langCount');
 
         div.innerHTML = `
-            <input type="text" class="form-border form-field-size form-added-field-padding" name="languages[${langCount}]" placeholder='Language'>
-            <input type="button" class="form-remove-button form-border" value="-" onclick="removeRow(this, 'form-dynamic-lang', 'langCount', 'langButton')" />
+            <input type="text" class="form-border form-field-size form-added-field-padding form-border-style" name="languages[${langCount}]" placeholder='Language'>
+            <label>
+                <i class="material-icons form-delete-icon">delete</i>
+                <input type="button" class="form-remove-button form-border form-button-basics" onclick="removeRow(this, 'form-dynamic-lang', 'langCount', 'langButton')" />
+            </label>
           `;
         document.getElementById('langCount').value = ++langCount;
         limitFields(langCount, 'langButton');
@@ -19,8 +22,11 @@ function addAdminRow(divId) {
         let tagCount = getCounter('tagCount');
 
         div.innerHTML = `
-            <input type="text" class="form-border form-field-size form-added-field-padding" name="tags[${tagCount}]" placeholder='Tag'>
-            <input type="button" class="form-remove-button form-border" value="-" onclick="removeRow(this, 'form-dynamic-tag', 'tagCount', 'tagButton')" />
+            <input type="text" class="form-border form-field-size form-added-field-padding form-border-style" name="tags[${tagCount}]" placeholder='Tag'>
+            <label>
+                <i class="material-icons form-delete-icon">delete</i>
+                <input type="button" class="form-remove-button form-border form-button-basics" onclick="removeRow(this, 'form-dynamic-tag', 'tagCount', 'tagButton')" />
+            </label>
           `;
         document.getElementById('tagCount').value = ++tagCount;
         limitFields(tagCount, 'tagButton');
@@ -30,7 +36,7 @@ function addAdminRow(divId) {
 }
 
 function removeRow(input, divId, counterId, buttonId) {
-    document.getElementById(divId).removeChild(input.parentNode);
+    document.getElementById(divId).removeChild(input.parentNode.parentElement);
     let counter = getCounter(counterId);
     document.getElementById(counterId).value = --counter;
     limitFields(counter, buttonId);

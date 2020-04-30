@@ -38,7 +38,7 @@
                         <form:errors path="username" cssClass="form-error" element="p" />
                         <label>
                             <i class="material-icons form-icons">person</i>
-                            <form:input class="form-border form-field-size form-field-padding" path="username" placeholder='${username_hint}'/>
+                            <form:input class="form-border form-field-size form-field-layout" path="username" placeholder='${username_hint}'/>
                         </label>
                     </div>
 
@@ -46,20 +46,20 @@
                         <form:errors path="email" cssClass="form-error" element="p "/>
                         <label>
                             <i class="material-icons form-icons">email</i>
-                            <form:input class="form-border form-field-size form-field-padding" path="email" placeholder='${email_hint}'/>
+                            <form:input class="form-border form-field-size form-field-layout" path="email" placeholder='${email_hint}'/>
                         </label>
                     </div>
 
                     <div class="form-field-container">
                         <form:errors path="password" cssClass="form-error" element="p "/>
                         <i class="material-icons form-icons">lock</i>
-                        <label><form:input class="form-border form-field-size form-field-padding" path="password" placeholder='${password_hint}' type="password"/></label>
+                        <label><form:input class="form-border form-field-size form-field-layout" path="password" placeholder='${password_hint}' type="password"/></label>
                     </div>
 
                     <div class="form-field-container">
                         <form:errors path="repeatPassword" cssClass="form-error" element="p "/>
                         <i class="material-icons form-icons">lock</i>
-                        <label><form:input class="form-border form-field-size form-field-padding" path="repeatPassword" placeholder='${repeat_password_hint}' type="password"/></label>
+                        <label><form:input class="form-border form-field-size form-field-layout" path="repeatPassword" placeholder='${repeat_password_hint}' type="password"/></label>
                     </div>
 
                     <div class="form-field-container">

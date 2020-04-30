@@ -42,14 +42,14 @@
                     <div class="form-field-container">
                         <label>
                             <i class="material-icons form-icons">person</i>
-                            <input class="form-border form-field-size form-field-padding" name="username" placeholder="<spring:message code='registerForm.username'/>">
+                            <input class="form-border form-field-size form-field-layout" name="username" placeholder="<spring:message code='registerForm.username'/>">
                         </label>
                     </div>
 
                     <div class="form-field-container">
                         <label>
                             <i class="material-icons form-icons">lock</i>
-                            <input class="form-border form-field-size form-field-padding" name="password" type="password" placeholder="<spring:message code='registerForm.password'/>">
+                            <input class="form-border form-field-size form-field-layout" name="password" type="password" placeholder="<spring:message code='registerForm.password'/>">
                         </label>
                     </div>
 

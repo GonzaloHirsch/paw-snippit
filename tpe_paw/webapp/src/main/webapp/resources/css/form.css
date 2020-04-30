@@ -27,7 +27,8 @@
     width: 450px;
 }
 
-.form-field-padding {
+.form-field-layout {
+    border-style: ridge;
     padding: 15px 15px 15px 48px !important;
 }
 
@@ -62,6 +63,14 @@
     margin: 11px 0px 11px 12px;
 }
 
+.form-delete-icon {
+    font-size: 34px !important;
+    color: gray;
+    cursor: pointer;
+    margin: 8px 8px 8px 28px;
+    position: absolute;
+}
+
 .form-button {
     background-color: slateblue;
     color: white;
@@ -82,13 +91,20 @@
     border-radius: 12px;
 }
 
+.form-border-style {
+    border-style: ridge;
+}
+
 .form-shadow {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
 .form-remove-button {
-    flex-basis: 50px;
+    color: #ddd;
+    font-size: 30px;
+    height: 50px;
     margin: 0px 0px 0px 20px;
+    width: 50px;
 }
 
 .form-button-basics {
@@ -100,14 +116,29 @@
 
 .form-add-field-container {
     height: 50px;
+    margin: 10px 0px;
 }
 
 .form-add-icons {
     color: #5e35b1;
     font-size: 40px !important;
-    margin: 5px 20px 5px 0px;
+    margin: 5px 10px 5px 0px;
+}
+
+.form-add-description {
+    background-color: white;
+    color: #404040;
+    font-size: 20px;
 }
 
 .form-added-field-padding {
     padding: 20px !important;
+}
+
+.form hr {
+    border-style: inset;
+    border-width: 1px;
+    color: #404040;
+    margin: 15px 0;
+    width: 500px;
 }

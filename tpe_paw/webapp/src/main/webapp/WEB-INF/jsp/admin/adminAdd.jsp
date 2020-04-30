@@ -18,31 +18,39 @@
 
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
-    <div class="main-content flex-center">
+    <div class="main-content flex-column flex-center">
+
+        <div class="flex-center">
+            <div class="fw-100 title-container">
+                <spring:message code="admin.add.header"> </spring:message>
+            </div>
+        </div>
 
         <form:form class="flex-center flex-column form form-width form-border form-shadow" action="${adminAddUrl}" method="post" modelAttribute="adminAddForm">
             <div id="form-lang-container" class="flex-column">
-                <div id="form-dynamic-lang" class="flex-column">
+                <div id="form-dynamic-lang" class="flex-column form-buttons-margin">
                 </div>
                 <input type="text" id="langCount" class="hidden" value="0"/>
 
-                <div class="flex-center form-add-field-container">
+                <div id="langButton" class="flex-center form-add-field-container">
                     <label class="flex-center">
                         <i class="material-icons form-add-icons">add_circle_outline</i>
-                        <input class="form-button-basics" type="button" id="langButton" value="<spring:message code="admin.add.language"/>" onclick="addAdminRow('form-dynamic-lang')"/>
+                        <input class="form-add-description form-button-basics" type="button" value="<spring:message code="admin.add.language"/>" onclick="addAdminRow('form-dynamic-lang')"/>
                     </label>
                 </div>
             </div>
 
+            <hr/>
+
             <div id="form-tag-container" class="flex-column">
-                <div id="form-dynamic-tag" class="flex-column">
+                <div id="form-dynamic-tag" class="flex-column form-buttons-margin">
                 </div>
                 <input type="text" id="tagCount" class="hidden" value="0"/>
 
-                <div class="flex-center form-add-field-container">
+                <div id="tagButton" class="flex-center form-add-field-container">
                     <label class="flex-center">
                         <i class="material-icons form-add-icons">add_circle_outline</i>
-                        <input class="form-button-basics" type="button" id="tagButton" value="<spring:message code="admin.add.tag"/>" onclick="addAdminRow('form-dynamic-tag')" />
+                        <input class="form-add-description form-button-basics" type="button" value="<spring:message code="admin.add.tag"/>" onclick="addAdminRow('form-dynamic-tag')" />
                     </label>
                 </div>
             </div>

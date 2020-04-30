@@ -29,6 +29,7 @@
         <form:form class="flex-center flex-column form form-width form-border form-shadow" action="${adminAddUrl}" method="post" modelAttribute="adminAddForm">
             <div id="form-lang-container" class="flex-column">
                 <div id="form-dynamic-lang" class="flex-column form-buttons-margin">
+                    <form:errors path="languages" cssClass="form-error" element="p "/>
                 </div>
                 <input type="text" id="langCount" class="hidden" value="0"/>
 
@@ -44,6 +45,7 @@
 
             <div id="form-tag-container" class="flex-column">
                 <div id="form-dynamic-tag" class="flex-column form-buttons-margin">
+                    <form:errors path="tags" cssClass="form-error" element="p "/>
                 </div>
                 <input type="text" id="tagCount" class="hidden" value="0"/>
 

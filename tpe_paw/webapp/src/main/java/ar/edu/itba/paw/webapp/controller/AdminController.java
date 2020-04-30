@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,24 +41,27 @@ public class AdminController {
     }
 
     @RequestMapping(value="/admin/add", method= RequestMethod.POST)
-    public ModelAndView adminAdd(@ModelAttribute("adminAddForm") final AdminAddForm adminAddForm) {
+    public ModelAndView adminAdd(@Valid @ModelAttribute("adminAddForm") final AdminAddForm adminAddForm, final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return adminAddForm(adminAddForm);
+        }
         User currentUser = this.loginAuthentication.getLoggedInUser();
 
         if (currentUser == null || currentUser.getUsername().compareTo("admin") != 0) {
             LOGGER.warn("In admin add form and the user is not admin");
         }
+
         /* Language List */
-        if (adminAddForm.getLanguages() != null) {
-            List<String> languages = Arrays.asList(adminAddForm.getLanguages());
-            if (!languages.isEmpty()) languageService.addLanguages(languages);
-            LOGGER.debug("Admin added languages -> {}", languages.toString());
-        }
+        List<String> languages = adminAddForm.getLanguages() != null ? adminAddForm.getLanguages() : new ArrayList<>();
+        languages.removeAll(Arrays.asList("", null));
+        if (!languages.isEmpty()) languageService.addLanguages(languages);
+
         /* Tag List */
-        if (adminAddForm.getTags() != null) {
-            List<String> tags = Arrays.asList(adminAddForm.getTags());
-            if (!tags.isEmpty()) tagService.addTags(tags);
-            LOGGER.debug("Admin added tags -> {}", tags.toString());
-        }
+        List<String> tags = adminAddForm.getTags() != null ? adminAddForm.getTags() : new ArrayList<>();
+        tags.removeAll(Arrays.asList("", null));
+        if (!tags.isEmpty()) tagService.addTags(tags);
+
+        LOGGER.debug("Admin added languages and tags -> {} and {}", languages.toString(), tags.toString());
 
         return new ModelAndView("redirect:/");
     }

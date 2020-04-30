@@ -26,38 +26,38 @@ public class UniqueTagOrLangValidator implements ConstraintValidator<UniqueTagOr
 
     private final String TAG = "TAG";
 
-    public void initialize(UniqueTagOrLang constraint) {
-        this.type = constraint.type();
+    public void initialize(final UniqueTagOrLang constraint) {
         this.message = constraint.message();
         this.element = constraint.element();
     }
 
     public boolean isValid(String value, ConstraintValidatorContext context) {
 
-        String typeValue = (String) new BeanWrapperImpl(value)
-                .getPropertyValue(type);
-
-        StringBuilder error = new StringBuilder(message);
-        boolean valid = true;
-
-        if (typeValue.compareTo(TAG) == 0) {
-            for (String tag : element) {
-                String tagValue = (String) new BeanWrapperImpl(value)
-                        .getPropertyValue(tag);
-                if (tagValue != null && tagValue.compareTo("") != 0) {
-                    error.append(tagService.isUniqueTag(tagValue) ? "" : tagValue + ", ");
-                    valid = false;
-                }
-                LOGGER.debug("Inside TAG = {}", tagValue);
-            }
-        } else {
-            //LOGGER.debug("Inside LANG = {}", elementValue);
-        }
-        if (!valid){
-            context.buildConstraintViolationWithTemplate(error.toString())
-                    .addConstraintViolation()
-                    .disableDefaultConstraintViolation();
-        }
+//        String typeValue = (String) new BeanWrapperImpl(value)
+//                .getPropertyValue(type);
+//
+//        StringBuilder error = new StringBuilder(message);
+//        boolean valid = true;
+//
+//        if (typeValue.compareTo(TAG) == 0) {
+//            for (String tag : element) {
+//                String tagValue = (String) new BeanWrapperImpl(value)
+//                        .getPropertyValue(tag);
+//                if (tagValue != null && tagValue.compareTo("") != 0) {
+//                    error.append(tagService.isUniqueTag(tagValue) ? "" : tagValue + ", ");
+//                    valid = false;
+//                }
+//                LOGGER.debug("Inside TAG = {}", tagValue);
+//            }
+//        } else {
+//            //LOGGER.debug("Inside LANG = {}", elementValue);
+//        }
+//        if (!valid){
+//            context.buildConstraintViolationWithTemplate(error.toString())
+//                    .addNode(element[0])
+//                    .addConstraintViolation()
+//                    .disableDefaultConstraintViolation();
+//        }
         return true;
     }
 }

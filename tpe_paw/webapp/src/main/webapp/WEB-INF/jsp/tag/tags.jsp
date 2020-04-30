@@ -15,8 +15,10 @@
         <div class="wrapper">
         <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
             <div class="main-content">
-                <div class="fw-100 flex-stretch tags-title">
-                    Tags
+                <div class="flex-center">
+                    <div class="fw-100 title-container">
+                        <spring:message code="tags.title"> </spring:message>
+                    </div>
                 </div>
                 <div class="all-tags-grid main-grid">
                     <c:forEach var="tag" items="${tags}">

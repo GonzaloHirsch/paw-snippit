@@ -35,6 +35,7 @@ public class SnippetFeedController {
     private static final String HOME = "";
     private static final String FOLLOWING = "following/";
     private static final String FAVORITES = "favorites/";
+    private static final String UPVOTED = "upvoted/";
 
     @RequestMapping("/")
     public ModelAndView getHomeSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
@@ -74,6 +75,21 @@ public class SnippetFeedController {
         int totalSnippetCount = this.snippetService.getAllFollowingSnippetsCount(currentUser.getId());
 
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FOLLOWING);
+
+        return mav;
+    }
+
+    @RequestMapping("/upvoted")
+    public ModelAndView getUpVotedSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+        final ModelAndView mav = new ModelAndView("index");
+
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) this.logAndThrow(UPVOTED);
+
+        Collection<Snippet> snippets = this.snippetService.getAllUpVotedSnippets(currentUser.getId(), page);
+        int totalSnippetCount = snippets.size();
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, UPVOTED);
 
         return mav;
     }

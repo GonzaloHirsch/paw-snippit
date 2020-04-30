@@ -33,6 +33,7 @@ public interface SnippetDao {
     Collection<Snippet> getAllSnippets(int page);
     Collection<Snippet> getAllFavoriteSnippets(final long userId, int page);
     Collection<Snippet> getAllFollowingSnippets(final long userId, int page);
+    Collection<Snippet> getAllUpVotedSnippets(final long userId, int page);
     Collection<Snippet> findAllSnippetsByOwner(final long userId, int page);
     Optional<Snippet> findSnippetById(long id);
     Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language);

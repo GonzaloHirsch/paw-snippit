@@ -86,6 +86,11 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
+    public Collection<Snippet> getAllUpVotedSnippets(final long userId, int page) {
+        return jdbcTemplate.query("SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon FROM complete_snippets AS sn JOIN votes_for AS v ON sn.id = v.snippet_id WHERE v.user_id = ? AND v.type = 1 LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
+    }
+
+    @Override
     public Collection<Snippet> findAllSnippetsByOwner(long userId, int page) {
         return jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.user_id = ? LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
     }

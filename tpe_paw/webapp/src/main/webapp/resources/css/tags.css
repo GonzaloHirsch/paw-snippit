@@ -11,11 +11,6 @@
 }
 
 .main-grid {
-    padding: 40px;
+    padding: 10px;
     grid-gap: 20px;
-}
-
-.tags-title {
-    font-size: 50px;
-    padding-left: 50px;
 }

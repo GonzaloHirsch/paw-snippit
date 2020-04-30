@@ -12,6 +12,7 @@ public interface SnippetService {
     Collection<Snippet> getAllSnippets(int page);
     Collection<Snippet> getAllFavoriteSnippets(final long userId, int page);
     Collection<Snippet> getAllFollowingSnippets(final long userId, int page);
+    Collection<Snippet> getAllUpVotedSnippets(final long userId, int page);
     Optional<Snippet> findSnippetById(long id);
     Collection<Snippet> findAllSnippetsByOwner(final long userId, int page);
     Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page);

@@ -97,6 +97,18 @@
                             <spring:message code="menu.favorites"/></a>
                         </c:otherwise>
                     </c:choose>
+                    <c:choose>
+                        <c:when test="${searchContext == 'upvoted/'}">
+                            <a class="fw-100 menu-option menu-selected" href="<c:url value="/upvoted/"/>"><span
+                            class="material-icons menu-option-icon">thumb_up</span>
+                            <spring:message code="menu.upvoted"/></a>
+                        </c:when>
+                        <c:otherwise>
+                            <a class="fw-100 menu-option" href="<c:url value="/upvoted/"/>"><span
+                            class="material-icons menu-option-icon">thumb_up</span>
+                            <spring:message code="menu.upvoted"/></a>
+                        </c:otherwise>
+                    </c:choose>
                     <c:if test="${userTags.size() > 0}">
                         <hr/>
                         <span class="fw-100 section-title"><spring:message code="menu.following"/></span>

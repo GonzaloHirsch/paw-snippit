@@ -91,6 +91,11 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
+    public Collection<Snippet> getAllUpVotedSnippets(long userId, int page) {
+        return snippetDao.getAllUpVotedSnippets(userId, page);
+    }
+
+    @Override
     public Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<Long> tags) {
         Long snippetId =  snippetDao.createSnippet(owner,title,description,code,dateCreated,language);
         //TODO: See if its better to call TagService instead of TagDao directly.

@@ -67,11 +67,12 @@
 }
 
 .sidenav .menu-option-icon {
+    align-items: center !important;
     color:white;
     display: flex !important;
     font-size: 20px;
-    align-items: center !important;
-    margin-right: 5px;
+    margin-right: 6px;
+    width: 20px;
 }
 
 .sidenav .menu-option {

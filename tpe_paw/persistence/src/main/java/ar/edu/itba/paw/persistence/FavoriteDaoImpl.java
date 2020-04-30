@@ -46,12 +46,14 @@ public class FavoriteDaoImpl implements FavoriteDao {
     @Transactional
     public void addToFavorites(long userId, long snippetId) {
         // Creating the map for the object
-        final Map<String, Object> args = new HashMap<>();
-        args.put("user_id", userId);
-        args.put("snippet_id", snippetId);
-        // Executing the insert
-        //TODO: RETURN VALUE AND USE IT TO SHOW ERROR
-        this.jdbcInsert.execute(args);
+        if (!getFavorite(userId, snippetId).isPresent()) {
+            final Map<String, Object> args = new HashMap<>();
+            args.put("user_id", userId);
+            args.put("snippet_id", snippetId);
+            // Executing the insert
+            //TODO: RETURN VALUE AND USE IT TO SHOW ERROR
+            this.jdbcInsert.execute(args);
+        }
     }
 
     @Override

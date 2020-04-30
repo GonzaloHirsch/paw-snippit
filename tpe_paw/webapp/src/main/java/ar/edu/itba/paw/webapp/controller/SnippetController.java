@@ -104,6 +104,8 @@ public class SnippetController {
             LOGGER.warn("Inside the vote form of snippet {} without a logged in user", id);
         } else if (wasLoggedIn) {
             this.voteService.performVote(currentUser.getId(), id, voteForm.getType(), voteForm.getOldType());
+        } else {
+            this.voteService.performVote(currentUser.getId(), id, voteForm.getType(), 0);
         }
         return mav;
     }
@@ -117,7 +119,7 @@ public class SnippetController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
             LOGGER.warn("Inside the favorite form of snippet {} without a logged in user", id);
-        } else if (wasLoggedIn) {
+        } else {
             this.favService.updateFavorites(currentUser.getId(), id, favForm.getFavorite());
         }
         return mav;

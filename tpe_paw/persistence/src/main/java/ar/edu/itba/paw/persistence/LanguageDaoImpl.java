@@ -51,9 +51,11 @@ public class LanguageDaoImpl implements LanguageDao {
         List<MapSqlParameterSource> entries = new ArrayList<>();
 
         for (String l : languages) {
-            MapSqlParameterSource entry = new MapSqlParameterSource()
-                    .addValue("name", l);
-            entries.add(entry);
+            if (l != null && l.compareTo("") != 0) {
+                MapSqlParameterSource entry = new MapSqlParameterSource()
+                        .addValue("name", l);
+                entries.add(entry);
+            }
         }
 
         MapSqlParameterSource[] array = entries.toArray(new MapSqlParameterSource[entries.size()]);

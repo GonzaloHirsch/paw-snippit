@@ -15,4 +15,5 @@ public interface TagDao {
     Optional<Tag> findTagById(long tagId);
     void addSnippetTag(long snippetOd, long tagId);
     void addTags(List<String> tags);
+    boolean isUniqueTag(String tag);
 }

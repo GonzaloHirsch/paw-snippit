@@ -67,5 +67,9 @@ public class TagServiceImpl implements TagService {
         tagDao.addTags(tags);
     }
 
+    @Override
+    public boolean isUniqueTag(String tag) {
+        return tagDao.isUniqueTag(tag);
+    }
 
 }

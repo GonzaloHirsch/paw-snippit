@@ -70,12 +70,19 @@ public class TagDaoImpl implements TagDao {
         List<MapSqlParameterSource> entries = new ArrayList<>();
 
         for (String tag : tags) {
-            MapSqlParameterSource entry = new MapSqlParameterSource()
-                    .addValue("name", tag);
-            entries.add(entry);
+            if (tag != null && tag.compareTo("") != 0) {
+                MapSqlParameterSource entry = new MapSqlParameterSource()
+                        .addValue("name", tag);
+                entries.add(entry);
+            }
         }
         MapSqlParameterSource[] array = entries.toArray(new MapSqlParameterSource[entries.size()]);
         //jdbcInsert.executeBatch(array);
+    }
+
+    @Override
+    public boolean isUniqueTag(String tag) {
+        return false;
     }
 
     @Override
@@ -87,4 +94,5 @@ public class TagDaoImpl implements TagDao {
     public Optional<Tag> findTagById(long tagId) {
         return jdbcTemplate.query("SELECT * FROM tags WHERE id = ?", ROW_MAPPER, tagId).stream().findFirst();
     }
+
 }

@@ -1,24 +1,26 @@
 package ar.edu.itba.paw.webapp.form;
 
-import java.util.List;
+
+import ar.edu.itba.paw.webapp.validations.UniqueTagOrLang;
+
 
 public class AdminAddForm {
-    private List<String> languages;
-    private List<String> tags;
+    private String[] languages;
+    private String[] tags;
 
-    public List<String> getLanguages() {
+    public String[] getLanguages() {
         return languages;
     }
 
-    public void setLanguages(List<String> languages) {
+    public void setLanguages(String[] languages) {
         this.languages = languages;
     }
 
-    public List<String> getTags() {
+    public String[] getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(String[] tags) {
         this.tags = tags;
     }
 }

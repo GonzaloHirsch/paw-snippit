@@ -187,6 +187,17 @@ public class UserController {
         model.addAttribute("searchForm", searchForm);
     }
 
+    @RequestMapping(value = "recover-password")
+    public ModelAndView recoverPassword() {
+        final ModelAndView mav  = new ModelAndView("user/recoverPassword");
+        return mav;
+    }
+
+    @RequestMapping(value = "/send-email")
+    public ModelAndView sendEmail() {
+        return null;
+    }
+
     private void logAndThrow(long id) {
         LOGGER.warn("User with id {} doesn't exist", id);
         throw new UserNotFoundException();

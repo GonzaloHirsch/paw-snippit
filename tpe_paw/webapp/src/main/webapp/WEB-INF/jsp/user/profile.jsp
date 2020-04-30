@@ -85,7 +85,7 @@
                                 </a>
                             </c:if>
                             <c:if test="${editing}">
-                                <div onclick="submitDescriptionForm(this)" class="flex-center purple-text edit-button">
+                                <div onclick="submitDescriptionForm(this)" class="flex-center purple-text edit-button clickable-entity">
 <%--                                   href="<c:url value="/user/${user.id}/edit"/>">--%>
                                     <spring:message code="profile.edit.save"/>
                                 </div>

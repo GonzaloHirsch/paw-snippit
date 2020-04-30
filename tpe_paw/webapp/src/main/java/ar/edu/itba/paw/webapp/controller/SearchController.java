@@ -2,28 +2,34 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
-import ar.edu.itba.paw.interfaces.service.UserService;
+import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.Tag;
+import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.*;
 
 @Controller
 public class SearchController {
 
     private Map<String, SnippetDao.Types> typesMap = new HashMap<String, SnippetDao.Types>(){{
+        put(null, SnippetDao.Types.ALL);
+        put("all", SnippetDao.Types.ALL);
         put("tag", SnippetDao.Types.TAG);
         put("title", SnippetDao.Types.TITLE);
         put("content", SnippetDao.Types.CONTENT);
@@ -38,59 +44,93 @@ public class SearchController {
     @Autowired
     private SnippetService snippetService;
     @Autowired
-    private UserService userService;
+    private LoginAuthentication loginAuthentication;
+    @Autowired
+    private TagService tagService;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
+    private static final String HOME = "";
+    private static final String FOLLOWING = "following/";
+    private static final String FAVORITES = "favorites/";
 
     @RequestMapping("/search")
-    public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm) {
-
-
+    public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, searchForm.getSort(), null);
-        mav.addObject("snippetList", snippets);
-        mav.addObject("searchContext","");
+        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, searchForm.getSort(), null, page);
+        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, null);
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, HOME);
         return mav;
     }
 
     @RequestMapping("/favorites/search")
-    public ModelAndView searchInFavorites(@Valid @ModelAttribute("searchForm") final SearchForm searchForm){
-
+    public ModelAndView searchInFavorites(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         final ModelAndView mav = new ModelAndView("index");
-        Long currentUserId = this.getCurrentUserId();
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, searchForm.getSort(), currentUserId);
-        mav.addObject("snippetList", snippets);
-        mav.addObject("searchContext","favorites/");
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) this.logAndThrow(FAVORITES);
+
+        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, searchForm.getSort(), currentUser.getId(), page);
+        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, currentUser.getId());
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FAVORITES);
         return mav;
     }
 
     @RequestMapping("/following/search")
-    public ModelAndView searchInFollowing(@Valid @ModelAttribute("searchForm") final SearchForm searchForm){
+    public ModelAndView searchInFollowing(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         final ModelAndView mav = new ModelAndView("index");
-        Long currentUserId = this.getCurrentUserId();
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, searchForm.getSort(), currentUserId);
-        mav.addObject("snippetList", snippets);
-        mav.addObject("searchContext","following/");
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) this.logAndThrow(FOLLOWING);
+
+        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, searchForm.getSort(), currentUser.getId(), page);
+        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, currentUser.getId());
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FOLLOWING);
         return mav;
     }
 
-    private Long getCurrentUserId(){
-        Optional<User> user = this.userService.getCurrentUser();
-        Long userId = null;
-        if (user.isPresent()){
-            userId = user.get().getUserId();
-        }
-        return userId;
-    }
-
-    private Collection<Snippet> findByCriteria(String type, String query, SnippetDao.Locations location, String sort, Long userId){
+    private Collection<Snippet> findByCriteria(String type, String query, SnippetDao.Locations location, String sort, Long userId, int page){
         if (!this.typesMap.containsKey(type) || !this.ordersMap.containsKey(sort)){
             return new ArrayList<>();
         } else {
             return this.snippetService.findSnippetByCriteria(
                     this.typesMap.get(type),
-                    query,
+                    query == null ? "" : query,
                     location,
                     this.ordersMap.get(sort),
-                    userId);
+                    userId,
+                    page);
         }
     }
+
+    private int getSnippetByCriteriaCount(String type, String query, SnippetDao.Locations location, Long userId){
+        return this.snippetService.getSnippetByCriteriaCount(
+                this.typesMap.get(type),
+                query == null ? "" : query,
+                location,
+                userId);
+    }
+
+    private void logAndThrow(String location) {
+        LOGGER.warn("Searching inside {} with no logged in user", location);
+        //TODO -- handle this -> 403 redirect?
+    }
+
+    private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
+        int pageSize = this.snippetService.getPageSize();
+        mav.addObject("pages", snippetCount/pageSize + (snippetCount % pageSize == 0 ? 0 : 1));
+        mav.addObject("page", page);
+        mav.addObject("snippetList", snippets);
+        mav.addObject("searchContext",searchContext);
+    }
+
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("userTags", userTags);
+    }
+
+
 }

@@ -2,103 +2,191 @@
 
 .wrapper{
     position:absolute;
-    right: 175px;
-    left: 0px;
+    right: 0;
+    left: 0;
+    background-color: inherit;
 }
 
 .wrapper .main-content{
+    padding-top:10px;
     width:100%;
-    margin-left:180px;
+    height: 100%;
+    /*margin-left:180px;*/
     margin-top:45px;
-    background: #f0ffff;
+    background-color: inherit;
 }
 
 /*----------------------------Side nav bar --------------------------- */
+.open {
+    width: 180px !important;
+}
 
-.wrapper .sidebar{
-    position: fixed;
-    width: 180px;
+.sidenav {
     height: 100%;
-    background: darkslategrey;
-    padding: 40px 0;
-    z-index:999;
+    padding-top: 55px;
+    width: 0;
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    background-color: #2a2a2a;
+    overflow-x: hidden;
+    transition: 0.5s;
 }
 
-.wrapper .sidebar ul{
-    padding:0px;
-}
-
-.wrapper .sidebar ul li{
-    padding: 15px;
-    text-align: left;
-}
-
-.wrapper .sidebar ul li a{
+.sidenav hr {
     color: white;
-    font-weight: bold;
-    display:block;
-    text-decoration:none;
+    margin: 8px 0;
+    border-style: inset;
+    border-width: 1px;
 }
 
-.wrapper .sidebar ul li:hover{
-    background: #86b0b3;
+.sidenav a {
+    margin-top: 3px;
+    margin-right: 3px;
+    padding: 8px;
+    text-decoration: none;
+    color: white;
+    display: block;
+    font-size: 20px;
+    transition: 0.5s;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+.sidenav ul {
+    margin: 0;
+    padding-left: 10px;
+    text-decoration: none !important;
+}
+
+.sidenav a:hover {
+    background-color: rgba(150, 148, 201, 0.84);
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+.sidenav .menu-option-icon {
+    align-items: center !important;
+    color:white;
+    display: flex !important;
+    font-size: 20px;
+    margin-right: 6px;
+    width: 20px;
+}
+
+.sidenav .menu-option {
+    display: flex !important;
+    align-items: center;
+}
+
+.sidenav .menu-option a {
+    display: flex !important;
+    align-items: center;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav li {font-size: 18px;}
 }
 
 .menu-selected {
-    background: #86b0b3;
-    border-left: #00a7b3;
-    border-left-style: solid;
-    border-left-width: 5px;
+    background: rgba(150, 148, 201, 0.84);
+    border-right: #5e35b1;
+    border-right-style: solid;
+    border-right-width: 5px;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
 }
 
+.sidenav .section-title {
+    color: white;
+    text-transform: uppercase;
+}
+
+.sidenav img{
+    border-radius: 50%;
+    object-fit: fill;
+    height: 20px;
+    width: 20px;
+    margin-right: 5px;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.sidenav .tag-section {
+    font-size: 16px;
+}
 
 /*-----------------------------Top nav bar---------------------------------*/
 
-* {box-sizing: border-box;}
-
-body {
-    margin: 0;
-}
-
 .wrapper .navtop {
     overflow: hidden;
-    position:fixed;
+    position: fixed;
     width:100%;
-    background-color: #00a7b3;
+    background-color: #5e35b1;
     z-index:999;
     display: flex;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
 }
 
 .navtop a {
-    float: left;
-    display: block;
-    color: black;
     text-align: center;
     padding: 10px;
     text-decoration: none;
-    font-size: 17px;
+    /*font-size: 17px;*/
 }
 .navtop .app-name{
-    background-color: darkslategrey;
-    color:white;
-    width:180px;
+    width:150px;
     letter-spacing: 2px;
-    font-size: 26px;
-    border-bottom: white;
-    border-bottom-width: thin;
-    border-bottom-style: solid;
+    font-size: 26px !important;
 }
 
-/*.navtop .app-name:hover{*/
+.navtop-icons{
+    color:white;
+    font-size: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    margin: 0px 6px;
+}
+
+.navtop .navtop-button {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    height: 40px;
+    font-size: 17px;
+    margin: 5px 3px;
+    min-width: 78px;
+    text-align: center;
+    text-decoration: none;
+}
+
+/*
+.navtop .app-name:hover{*/
 /*    background: #ccc;*/
-/*}*/
+/*}
+*/
+
+#searchForm {
+    margin: 0;
+}
+
+.menu-icon{
+    margin-left: 20px;
+    text-align: center;
+    font-size: 30px !important;
+    cursor: pointer;
+    color: white;
+    display: flex !important;
+}
 
 .navtop .search-container {
-    float: right;
-    overflow:hidden;
-    padding: 10px;
-    flex-basis: 75%;
-    min-width: 50%;
+    display: flex;
+    flex-grow: 1;
+    max-width: 800px;
+    padding: 5px;
 }
 
 .navtop .search-container button:hover {
@@ -112,7 +200,7 @@ body {
     margin-right: 5px;
 }
 .navtop .search-container .dropdown-type select{
-    width: 100px;
+    width: 75px;
     height: 25px;
     padding: 4px;
     border-radius:4px;
@@ -122,36 +210,41 @@ body {
     outline: none;
     -webkit-appearance:none;
     cursor: pointer;
-}
-
-
-.navtop .search-container .search-bar{
-    float: left;
-    margin-left: 20px;
-    width:550px;
-    /*min-width: 65%;*/
+    font-size: 12px;
 }
 
 .navtop .search-input{
-    padding: 6px;
-    font-size: 17px;
+    background-color: #eeedf2;
     border: none;
-    height:29px;
-    flex-basis: 60%;
-    width: 480px;
-    float: left;
+    border-radius: 5px 0px 0px 5px;
+    font-size: 17px;
+    height:40px;
+    padding: 6px;
+}
+
+.navtop .search-icon {
+    font-size: 28px;
 }
 
 .navtop .search-container button {
-    float: left;
-    left: 0;
     padding: 6px 10px;
-    margin-right: 16px;
+    margin: 0px 16px 0px 0px;
     background: #ddd;
     font-size: 17px;
     border: none;
     cursor: pointer;
+    border-radius: 0px 5px 5px 0px;
 }
 
+.navtop-register-buttons {
+    margin: 0px 27px 0px 0px;
+}
 
+.navtop-register-buttons .navtop-add-snippet-icon {
 
+}
+
+.navtop-welcome-text {
+    font-size: 18px;
+    font-style: italic;
+}

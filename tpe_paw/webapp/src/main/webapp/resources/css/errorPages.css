@@ -1,5 +1,4 @@
 .error-page-main {
-    background: #f0ffff;
     padding: 45px;
 }
 
@@ -32,4 +31,8 @@ h2 {
 
 .link-button-holder{
     text-align: center;
+}
+
+.form-error {
+    color:red;
 }

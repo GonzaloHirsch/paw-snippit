@@ -38,10 +38,8 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public void updateFavorites(long userId, long snippetId, boolean isFav) {
         if (isFav) {
-            System.out.println("ADD TO FAV");
             addToFavorites(userId, snippetId);
         } else {
-            System.out.println("REMOVE TO FAV");
             removeFromFavorites(userId, snippetId);
         }
     }

@@ -29,7 +29,9 @@ public class UserDaoImpl implements UserDao {
                     rs.getString("email"),
                     rs.getString("description"),
                     rs.getInt("reputation"),
-                    rs.getDate("date_joined")); //ni idea como hacer esto
+                    rs.getDate("date_joined"),
+                    rs.getBytes("icon")
+            ); //ni idea como hacer esto
         }
     };
 
@@ -38,7 +40,7 @@ public class UserDaoImpl implements UserDao {
 
         jdbcTemplate = new JdbcTemplate(ds);
 
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("users");
+        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("users").usingGeneratedKeyColumns("id");
     }
 
     @Override
@@ -52,7 +54,7 @@ public class UserDaoImpl implements UserDao {
         args.put("date_joined",dateJoined);
 
         long result = jdbcInsert.executeAndReturnKey(args).longValue();
-        return new User(result, username, password, email, description, reputation, dateJoined);
+        return new User(result, username, password, email, description, reputation, dateJoined, null);
     }
 
     @Override
@@ -65,7 +67,12 @@ public class UserDaoImpl implements UserDao {
     public Optional<User> findUserByUsername(String username) {
         return jdbcTemplate.query("SELECT * FROM users WHERE username = ?", ROW_MAPPER, username)
                 .stream().findFirst();
+    }
 
+    @Override
+    public Optional<User> findUserByEmail(String email) {
+        return jdbcTemplate.query("SELECT * FROM users WHERE email = ?", ROW_MAPPER, email)
+                .stream().findFirst();
     }
 
     @Override
@@ -79,8 +86,13 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> getCurrentUser() {
-        return jdbcTemplate.query("SELECT * FROM users WHERE username = ?", ROW_MAPPER, "JaneRoe")
-                .stream().findFirst();
+    public void changeProfilePhoto(long userId, byte[] photo) {
+        jdbcTemplate.update("UPDATE users SET icon = ? WHERE id = ?", photo, userId);
     }
+
+    @Override
+    public void changeDescription(final long userId, final String description) {
+        jdbcTemplate.update("UPDATE users SET description = ? WHERE id = ?", description, userId);
+    }
+
 }

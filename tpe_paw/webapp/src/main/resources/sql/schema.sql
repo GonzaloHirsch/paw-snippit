@@ -1,16 +1,17 @@
---drop table if exists votes_for;
---drop table if exists favorites;
---drop table if exists follows;
---drop table if exists snippet_tags;
---drop table if exists tags;
---drop table if exists snippets;
---drop table if exists languages;
---drop table if exists users;
+-- drop table if exists votes_for cascade;
+-- drop table if exists favorites cascade;
+-- drop table if exists follows cascade;
+-- drop table if exists snippet_tags cascade;
+-- drop view if exists complete_snippets;
+-- drop table if exists tags cascade;
+-- drop table if exists snippets cascade;
+-- drop table if exists languages cascade;
+-- drop table if exists users cascade;
 
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(30) UNIQUE,
-    password VARCHAR(30) NOT NULL,
+    password VARCHAR(60) NOT NULL,
     email VARCHAR(60) UNIQUE,
     description VARCHAR(300),
     reputation INT,
@@ -62,6 +63,38 @@ CREATE TABLE IF NOT EXISTS snippet_tags (
     tag_id INT REFERENCES tags(id) ON UPDATE CASCADE ON DELETE CASCADE,
     PRIMARY KEY(snippet_id, tag_id)
 );
+
+CREATE OR REPLACE VIEW complete_snippets AS
+SELECT
+  aux.sn_id AS id,
+  aux.code AS code,
+  aux.title AS title,
+  aux.descr AS description,
+  aux.dc AS date_created,
+  aux.user_id AS user_id,
+  aux.u_name AS username,
+  aux.rep AS reputation,
+  aux.lang_id AS language_id,
+  l.name AS language,
+       aux.icon AS icon
+FROM
+  (
+    SELECT
+      sn.id AS sn_id,
+      sn.code AS code,
+      sn.title AS title,
+      sn.description AS descr,
+      sn.language_id AS lang_id,
+      sn.date_created AS dc,
+      u.id AS user_id,
+      u.username AS u_name,
+      u.reputation AS rep,
+        u.icon AS icon
+  FROM
+      snippets AS sn
+      JOIN users AS u ON sn.user_id = u.id
+  ) AS aux
+  JOIN languages AS l ON aux.lang_id = l.id;
 
 -- Notation of trigger uses single quotes instead of $$ due to parser errors while parsing
 -- The use of TG_OP is needed to avoid the error of not assigned variables NEW or OLD

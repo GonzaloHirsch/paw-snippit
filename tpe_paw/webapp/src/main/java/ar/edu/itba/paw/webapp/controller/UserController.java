@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
+import ar.edu.itba.paw.webapp.form.DescriptionForm;
 import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
@@ -81,9 +82,10 @@ public class UserController {
     public ModelAndView userProfile(
             final @PathVariable("id") long id,
             @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
+            @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
             final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-            final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing/*,
-            @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm*/) {
+            final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
+           ) {
         final ModelAndView mav = new ModelAndView("user/profile");
 
         /* Set the current user and its following tags */
@@ -96,7 +98,7 @@ public class UserController {
         if (!user.isPresent()) {
             this.logAndThrow(id);
         }
-//        descriptionForm.setDescription(user.get().getDescription());
+        descriptionForm.setDescription(user.get().getDescription());
         if (currentUser == null || (currentUser.getId() != user.get().getId() && editing)) {
             // ERROR
         }
@@ -116,7 +118,7 @@ public class UserController {
     @RequestMapping(value = "/user/{id}", method = {RequestMethod.POST})
     public ModelAndView endEditPhoto(final @PathVariable("id") long id, @ModelAttribute("profilePhotoForm") @Valid final ProfilePhotoForm profilePhotoForm, final BindingResult errors) {
         if (errors.hasErrors()){
-            return userProfile(id, profilePhotoForm, 1, false);
+            return userProfile(id, profilePhotoForm, new DescriptionForm(), 1, false);
         }
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
@@ -146,18 +148,23 @@ public class UserController {
                 .body(user.map(User::getIcon).orElse(null));
     }
 
-//    @RequestMapping(value = "/user/{id}/edit", method = {RequestMethod.PUT})
-//    public ModelAndView endEditUserProfile(final @PathVariable("id") long id, @Valid @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm, final BindingResult errors) {
-//        if (errors.hasErrors()) {
-//            return userProfile(descriptionForm);
-//        }
-//        User currentUser = this.loginAuthentication.getLoggedInUser();
-//        Optional<User> user = this.userService.findUserById(id);
-//        if (currentUser != null && currentUser.getId() == user.get().getId()) {
-//            this.userService.changeDescription(id, descriptionForm.getDescription());
-//        }
-//        return new ModelAndView("redirect:/user/" + id);
-//    }
+    @RequestMapping(value = "/user/{id}/edit", method = {RequestMethod.POST})
+    public ModelAndView endEditUserProfile(final @PathVariable("id") long id,
+                                           @Valid @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
+                                           @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
+                                           final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                           final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing,
+                                           final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return userProfile(id, profilePhotoForm, descriptionForm, page, editing);
+        }
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        Optional<User> user = this.userService.findUserById(id);
+        if (currentUser != null && currentUser.getId() == user.get().getId()) {
+            this.userService.changeDescription(id, descriptionForm.getDescription());
+        }
+        return new ModelAndView("redirect:/user/" + id);
+    }
 
     @RequestMapping(value = "/login")
     public ModelAndView login() {

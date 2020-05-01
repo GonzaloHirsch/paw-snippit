@@ -107,6 +107,12 @@ body {
     border-radius: 8px;
 }
 
+/* Common Event Styles */
+
+.clickable-entity {
+    cursor: pointer;
+}
+
 /* Extra */
 
 .hidden {

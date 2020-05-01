@@ -42,6 +42,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findUserByEmail(String email) {
+        return this.userDao.findUserByEmail(email);
+    }
+
+    @Override
     public void updateDescription(String username, String newDescription) {
         userDao.updateDescription(username, newDescription);
     }

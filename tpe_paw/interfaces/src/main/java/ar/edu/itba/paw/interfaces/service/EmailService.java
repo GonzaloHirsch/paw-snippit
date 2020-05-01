@@ -4,4 +4,6 @@ public interface EmailService {
     void sendEmail(String to, String subject, String body);
 
     void sendRegistrationEmail(String to, String username);
+
+    void sendRecoveryEmail(String to, String username, String token);
 }

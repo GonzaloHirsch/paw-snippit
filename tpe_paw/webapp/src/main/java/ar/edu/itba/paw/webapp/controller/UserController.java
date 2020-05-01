@@ -28,8 +28,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+
 
 @Controller
 public class UserController {
@@ -193,15 +197,26 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(value = "/send-email")
-    public ModelAndView sendEmail(@Valid @ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
+    @RequestMapping(value = "/send-email", method = RequestMethod.POST)
+    public ModelAndView sendEmail(@Valid @ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) throws NoSuchAlgorithmException {
         if (errors.hasErrors()){
             return recoverPassword(recoveryForm, errors);
         }
         LOGGER.debug("RecoveryForm Successful");
-//        emailService.sendEmail()
+        User searchedUser = userService.findUserByEmail(recoveryForm.getEmail()).get();
+//
+//        if (!searchedUser.isPresent()) {
+//            // this SHOULD NOT happen, Exists validation SHOULD prevent it
+//        }
+        String currentPass = searchedUser.getPassword();
+        MessageDigest sha256Digest = MessageDigest.getInstance("SHA-256");
+        String userPassHash = new String(sha256Digest.digest((recoveryForm.getEmail() + ":" + currentPass).getBytes(StandardCharsets.UTF_8)));
+        LOGGER.debug("Generated SHA256 hash for user {}: {}", searchedUser.getId(), userPassHash);
+        emailService.sendRecoveryEmail(recoveryForm.getEmail(), searchedUser.getUsername(), userPassHash);
         return null;
     }
+
+
 
     private void logAndThrow(long id) {
         LOGGER.warn("User with id {} doesn't exist", id);

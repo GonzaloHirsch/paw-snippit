@@ -10,8 +10,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-
 @Service
 public class EmailServiceImpl implements EmailService {
     @Autowired
@@ -39,6 +37,15 @@ public class EmailServiceImpl implements EmailService {
     public void sendRegistrationEmail(String to, String username) {
         String subject = messageSource.getMessage("email.register.subject",null, LocaleContextHolder.getLocale());
         String body = messageSource.getMessage("email.register.body",new Object[]{username}, LocaleContextHolder.getLocale());
+        this.sendEmail(to, subject, body);
+    }
+
+    @Async
+    @Override
+    public void sendRecoveryEmail(String to, String username, String token) {
+//        String link = "http://localhost:9092/"
+        String subject = messageSource.getMessage("email.recovery.subject", null, LocaleContextHolder.getLocale());
+        String body = messageSource.getMessage("email.recovery.body", new Object[]{username, token}, LocaleContextHolder.getLocale());
         this.sendEmail(to, subject, body);
     }
 }

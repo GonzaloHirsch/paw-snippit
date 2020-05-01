@@ -46,8 +46,12 @@ public class SnippetDeepSearchQuery {
          */
         private final List<Object> params = new ArrayList<>();
 
-        public Builder() {
-            this.query.append("SELECT DISTINCT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language, s.date_created, s.icon, s.votes FROM complete_snippets AS s");
+        public Builder(boolean isCount) {
+            if (isCount){
+                this.query.append("SELECT COUNT(s.id) FROM (SELECT DISTINCT cs.id, cs.user_id, cs.username, cs.reputation, cs.code, cs.title, cs.description, cs.language, cs.date_created, cs.icon, cs.votes, cs.language_id, st.tag_id FROM complete_snippets AS cs LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = cs.id) AS s");
+            } else {
+                this.query.append("SELECT * FROM (SELECT DISTINCT cs.id, cs.user_id, cs.username, cs.reputation, cs.code, cs.title, cs.description, cs.language, cs.date_created, cs.icon, cs.votes, cs.language_id, st.tag_id FROM complete_snippets AS cs LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = cs.id) AS s");
+            }
         }
 
         public Builder where(){
@@ -60,17 +64,41 @@ public class SnippetDeepSearchQuery {
             return this;
         }
 
-        public Builder addDateRange(Calendar min, Calendar max){
+        public Builder addUsername(String username){
+            if (username != null){
+                this.query.append(" LOWER(s.username) LIKE LOWER(?) ");
+                this.params.add("%"+username+"%");
+            }
+            return this;
+        }
+
+        public Builder addTitle(String title){
+            if (title != null){
+                this.query.append(" LOWER(s.title) LIKE LOWER(?) ");
+                this.params.add("%"+title+"%");
+            }
+            return this;
+        }
+
+        public Builder addTag(Long tagId){
+            if (tagId != null){
+                this.query.append(" s.tag_id = ? ");
+                this.params.add(tagId);
+            }
+            return this;
+        }
+
+        public Builder addDateRange(String min, String max){
             if (min != null && max != null){
-                this.query.append(" s.date_created::date >= date ? AND s.date_created::date <= date ? ");
-                this.params.add(min.getTime().getTime());
-                this.params.add(max.getTime().getTime());
+                this.query.append(" s.date_created::date >= ?::date AND s.date_created::date <= ?::date ");
+                this.params.add(min);
+                this.params.add(max);
             } else if (min != null){
-                this.query.append(" s.date_created::date >= date ? ");
-                this.params.add(min.getTime().getTime());
+                this.query.append(" s.date_created::date >= ?::date ");
+                this.params.add(min);
             } else if (max != null){
-                this.query.append(" s.date_created::date <= date ? ");
-                this.params.add(max.getTime().getTime());
+                this.query.append(" s.date_created::date <= ?::date ");
+                this.params.add(max);
             }
             return this;
         }
@@ -105,16 +133,40 @@ public class SnippetDeepSearchQuery {
             return this;
         }
 
-        public Builder addLanguage(String language){
-            if (language != null){
-                this.query.append(" LOWER(s.language) = LOWER(?) ");
-                this.params.add(language);
+        public Builder addLanguage(Long languageId){
+            if (languageId != null){
+                this.query.append(" s.language_id = ? ");
+                this.params.add(languageId);
             }
             return this;
         }
 
-        public Builder setOrder(){
-            this.query.append(" ORDER BY s.id ASC");
+        public Builder setOrder(String order, String sort){
+            this.query.append(" ORDER BY ");
+            switch(order.toLowerCase()){
+                case "reputation":
+                    this.query.append(" s.reputation ");
+                    break;
+                case "votes":
+                    this.query.append(" s.votes ");
+                    break;
+                case "date":
+                    this.query.append(" s.date_created ");
+                    break;
+                case "title":
+                default:
+                    this.query.append(" s.title ");
+                    break;
+            }
+            switch(sort.toLowerCase()){
+                case "desc":
+                    this.query.append(" DESC ");
+                    break;
+                case "asc":
+                default:
+                    this.query.append(" ASC ");
+                    break;
+            }
             return this;
         }
 

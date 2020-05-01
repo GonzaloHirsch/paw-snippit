@@ -105,42 +105,8 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> findSnippetByDeepCriteria(Calendar dateMin, Calendar dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, String language, int page) {
-        SnippetDeepSearchQuery.Builder queryBuilder = new SnippetDeepSearchQuery.Builder();
-        SnippetDeepSearchQuery searchQuery;
-        if (dateMin == null && dateMax == null && repMin == null && repMax == null && voteMin == null && voteMax == null){
-            searchQuery = queryBuilder.setPaging(page, PAGE_SIZE).build();
-        } else {
-            boolean isFirst = true;
-            queryBuilder = queryBuilder.where();
-            if (dateMin != null || dateMax != null){
-                queryBuilder = queryBuilder.addDateRange(dateMin, dateMax);
-                isFirst = false;
-            }
-            if (repMin != null || repMax != null){
-                if (!isFirst){
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addReputationRange(repMin, repMax);
-            }
-            if (voteMin != null || voteMax != null){
-                if (!isFirst){
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addVotesRange(voteMin, voteMax);
-            }
-            if (language != null){
-                if (!isFirst){
-                    queryBuilder = queryBuilder.and();
-                }
-                queryBuilder = queryBuilder.addLanguage(language);
-            }
-            searchQuery = queryBuilder.setOrder().setPaging(page, PAGE_SIZE).build();
-        }
+    public Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, int page) {
+        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, page, false);
         return jdbcTemplate.query(searchQuery.getQuery(), searchQuery.getParams(), ROW_MAPPER);
     }
 
@@ -208,5 +174,82 @@ public class SnippetDaoImpl implements SnippetDao {
         SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(queryType, location, userId, type, term)
                 .build();
         return jdbcTemplate.queryForObject(searchQuery.getQuery(), searchQuery.getParams(), Integer.class);
+    }
+
+    @Override
+    public int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort) {
+        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort,null,true);
+        return jdbcTemplate.queryForObject(searchQuery.getQuery(), searchQuery.getParams(), Integer.class);
+    }
+
+    private SnippetDeepSearchQuery createDeepQuery(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Integer page, boolean isCount){
+        SnippetDeepSearchQuery.Builder queryBuilder = new SnippetDeepSearchQuery.Builder(isCount);
+        if (dateMin == null && dateMax == null && repMin == null && repMax == null && voteMin == null && voteMax == null && languageId != null && tagId != null && title != null && username != null && order != null && sort != null){
+            if (page != null){
+                return queryBuilder.setOrder("title", "asc").setPaging(page, PAGE_SIZE).build();
+            } else {
+                return queryBuilder.build();
+            }
+        } else {
+            boolean isFirst = true;
+            queryBuilder = queryBuilder.where();
+            if (dateMin != null || dateMax != null){
+                queryBuilder = queryBuilder.addDateRange(dateMin, dateMax);
+                isFirst = false;
+            }
+            if (repMin != null || repMax != null){
+                if (!isFirst){
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addReputationRange(repMin, repMax);
+            }
+            if (voteMin != null || voteMax != null){
+                if (!isFirst){
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addVotesRange(voteMin, voteMax);
+            }
+            if (languageId != null){
+                if (!isFirst){
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addLanguage(languageId);
+            }
+            if (tagId != null){
+                if (!isFirst){
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addTag(tagId);
+            }
+            if (title != null){
+                if (!isFirst){
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addTitle(title);
+            }
+            if (username != null){
+                if (!isFirst){
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addUsername(username);
+            }
+            if (page == null){
+                return queryBuilder.build();
+            } else {
+                return queryBuilder.setOrder(order, sort).setPaging(page, PAGE_SIZE).build();
+            }
+        }
     }
 }

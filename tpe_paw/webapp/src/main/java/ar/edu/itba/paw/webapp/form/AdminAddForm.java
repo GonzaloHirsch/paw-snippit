@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.webapp.form;
 
-
-
 import java.util.List;
 
 public class AdminAddForm {

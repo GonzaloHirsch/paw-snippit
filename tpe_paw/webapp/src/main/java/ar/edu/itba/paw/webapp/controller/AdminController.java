@@ -6,9 +6,11 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.AdminAddForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.validations.ValidatorHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,11 +29,13 @@ import java.util.List;
 public class AdminController {
 
     @Autowired
-    LoginAuthentication loginAuthentication;
+    private LoginAuthentication loginAuthentication;
     @Autowired
-    LanguageService languageService;
+    private LanguageService languageService;
     @Autowired
-    TagService tagService;
+    private TagService tagService;
+    @Autowired
+    private ValidatorHelper validator;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
 
@@ -42,6 +46,16 @@ public class AdminController {
 
     @RequestMapping(value="/admin/add", method= RequestMethod.POST)
     public ModelAndView adminAdd(@Valid @ModelAttribute("adminAddForm") final AdminAddForm adminAddForm, final BindingResult errors) {
+        /* Language List */
+        List<String> languages = adminAddForm.getLanguages() != null ? adminAddForm.getLanguages() : new ArrayList<>();
+        languages.removeAll(Arrays.asList("", null));
+
+        /* Tag List */
+        List<String> tags = adminAddForm.getTags() != null ? adminAddForm.getTags() : new ArrayList<>();
+        tags.removeAll(Arrays.asList("", null));
+
+        validator.validateAddedTags(tags, errors, LocaleContextHolder.getLocale());
+
         if (errors.hasErrors()) {
             return adminAddForm(adminAddForm);
         }
@@ -51,14 +65,7 @@ public class AdminController {
             LOGGER.warn("In admin add form and the user is not admin");
         }
 
-        /* Language List */
-        List<String> languages = adminAddForm.getLanguages() != null ? adminAddForm.getLanguages() : new ArrayList<>();
-        languages.removeAll(Arrays.asList("", null));
         if (!languages.isEmpty()) languageService.addLanguages(languages);
-
-        /* Tag List */
-        List<String> tags = adminAddForm.getTags() != null ? adminAddForm.getTags() : new ArrayList<>();
-        tags.removeAll(Arrays.asList("", null));
         if (!tags.isEmpty()) tagService.addTags(tags);
 
         LOGGER.debug("Admin added languages and tags -> {} and {}", languages.toString(), tags.toString());

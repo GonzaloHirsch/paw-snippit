@@ -36,7 +36,7 @@
                 <div id="langButton" class="flex-center form-add-field-container">
                     <label class="flex-center">
                         <i class="material-icons form-add-icons">add_circle_outline</i>
-                        <input class="form-add-description form-button-basics" type="button" value="<spring:message code="admin.add.language"/>" onclick="addAdminRow('form-dynamic-lang')"/>
+                        <input class="form-add-description form-button-basics" type="button" value="<spring:message code="admin.add.language"/>" onclick="addAdminRow('form-dynamic-lang', '')"/>
                     </label>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                 <div id="tagButton" class="flex-center form-add-field-container">
                     <label class="flex-center">
                         <i class="material-icons form-add-icons">add_circle_outline</i>
-                        <input class="form-add-description form-button-basics" type="button" value="<spring:message code="admin.add.tag"/>" onclick="addAdminRow('form-dynamic-tag')" />
+                        <input class="form-add-description form-button-basics" type="button" value="<spring:message code="admin.add.tag"/>" onclick="addAdminRow('form-dynamic-tag', '')" />
                     </label>
                 </div>
             </div>

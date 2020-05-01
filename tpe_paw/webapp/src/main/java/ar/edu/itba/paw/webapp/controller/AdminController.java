@@ -42,8 +42,6 @@ public class AdminController {
     @RequestMapping("/admin/add")
     public ModelAndView adminAddForm(@ModelAttribute("adminAddForm") final AdminAddForm adminAddForm) {
         ModelAndView mav = new ModelAndView("admin/adminAdd");
-        mav.addObject("languages", adminAddForm.getLanguages());
-        mav.addObject("tags", adminAddForm.getTags());
         return mav;
     }
 
@@ -57,8 +55,7 @@ public class AdminController {
         List<String> tags = adminAddForm.getTags() != null ? adminAddForm.getTags() : new ArrayList<>();
         tags.removeAll(Arrays.asList("", null));
 
-        validator.validateAddedLanguages(languages, errors, LocaleContextHolder.getLocale());
-        validator.validateAddedTags(tags, errors, LocaleContextHolder.getLocale());
+        validator.validateAdminAdd(languages, tags, errors, LocaleContextHolder.getLocale());
 
         if (errors.hasErrors()) {
             adminAddForm.setLanguages(languages);

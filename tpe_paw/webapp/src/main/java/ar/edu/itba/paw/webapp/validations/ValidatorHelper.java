@@ -24,7 +24,12 @@ public class ValidatorHelper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidatorHelper.class);
 
-    public void validateAddedTags (List<String> tags, BindingResult errors, Locale locale){
+    public void validateAdminAdd (List<String> languages, List<String> tags, BindingResult errors, Locale locale) {
+        this.validateAddedLanguages(languages, errors, locale);
+        this.validateAddedTags(tags, errors, locale);
+    }
+
+    private void validateAddedTags (List<String> tags, BindingResult errors, Locale locale){
         StringBuilder error = new StringBuilder();
         int errorAmount = 0;
 
@@ -42,7 +47,7 @@ public class ValidatorHelper {
         }
     }
 
-    public void validateAddedLanguages (List<String> languages, BindingResult errors, Locale locale){
+    private void validateAddedLanguages (List<String> languages, BindingResult errors, Locale locale){
         StringBuilder error = new StringBuilder();
         int errorAmount = 0;
 

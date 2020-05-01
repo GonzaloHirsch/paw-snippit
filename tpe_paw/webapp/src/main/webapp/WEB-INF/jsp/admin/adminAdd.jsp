@@ -16,8 +16,6 @@
 </head>
 <body>
 <c:url var="adminAddUrl" value="/admin/add"/>
-<c:set var="tags" value="${requestScope.tags}"/>
-<c:set var="languages" value="${requestScope.languages}"/>
 
 <spring:message code="admin.add.tag.placeholder" var="tagPlaceholder"/>
 <spring:message code="admin.add.tag" var="addTag"/>
@@ -42,7 +40,7 @@
 
                     <form:errors path="languages" cssClass="form-error" element="p "/>
                     <c:set var="langCounter" value="0"/>
-                    <c:forEach var="lang" items="${languages}">
+                    <c:forEach var="lang" items="${adminAddForm.languages}">
                         <div class="flex-row form-field-container">
                             <input type="text" class="form-border form-field-size form-added-field-padding form-border-style" value="${lang}" name="languages[${langCounter}]" placeholder="${langPlaceholder}">
                             <label>
@@ -71,7 +69,7 @@
 
                     <form:errors path="tags" cssClass="form-error" element="p "/>
                     <c:set var="tagCounter" value="0"/>
-                    <c:forEach var="tag" items="${tags}">
+                    <c:forEach var="tag" items="${adminAddForm.tags}">
                         <div class="flex-row form-field-container">
                             <input type="text" class="form-border form-field-size form-added-field-padding form-border-style" value="${tag}" name="tags[${tagCounter}]" placeholder="${tagPlaceholder}">
                             <label>

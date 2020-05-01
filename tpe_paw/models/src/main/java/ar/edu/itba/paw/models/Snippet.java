@@ -11,8 +11,9 @@ public class Snippet {
     private String dateCreated;
     private String language;
     private Collection<Tag> tags;
+    private boolean flagged;
 
-    public Snippet(long id, User owner, String code, String title, String description, String dateCreated, String language, Collection<Tag> tags) {
+    public Snippet(long id, User owner, String code, String title, String description, String dateCreated, String language, Collection<Tag> tags, boolean flagged) {
         this.id = id;
         this.owner = owner;
         this.code = code;
@@ -21,6 +22,7 @@ public class Snippet {
         this.dateCreated = dateCreated;
         this.language = language;
         this.tags = tags;
+        this.flagged = flagged;
     }
 
     public long getId() {
@@ -57,5 +59,13 @@ public class Snippet {
 
     public void setTags(Collection<Tag> tags) {
         this.tags = tags;
+    }
+
+    public boolean isFlagged() {
+        return flagged;
+    }
+
+    public void setFlagged(boolean flagged) {
+        this.flagged = flagged;
     }
 }

@@ -33,7 +33,6 @@ public class UserServiceImplTest
 
     @Test
     public void testCreate() {
-        // 1. Setup!
         Mockito.when(mockDao.createUser(
                 Mockito.eq(USERNAME),
                 Mockito.eq(PASSWORD),
@@ -43,15 +42,8 @@ public class UserServiceImplTest
                 Mockito.eq(DATE.format(Calendar.getInstance().getTime().getTime()))))
                 .thenReturn((new User(1, USERNAME, PASSWORD, EMAIL, "", 0, DATE.format(Calendar.getInstance().getTime().getTime()), null)).getId());
 
-        // 2. "ejercito" la class under test
-        long user = userService.createUser(USERNAME, PASSWORD, EMAIL, "", 0, DATE.format(Calendar.getInstance().getTime().getTime()));
+        long userId = userService.createUser(USERNAME, PASSWORD, EMAIL, "", 0, DATE.format(Calendar.getInstance().getTime().getTime()));
 
-        // 3. Asserts!
-//        Assert.assertNotNull(user);
-//        Assert.assertEquals(USERNAME, user.getUsername());
-//        Assert.assertEquals(PASSWORD, user.getPassword());
-//        Assert.assertEquals(EMAIL, user.getEmail());
-//        Assert.assertEquals(DATE, user.getDateJoined());
-
+        Assert.assertEquals(userId, 1);
     }
 }

@@ -37,14 +37,14 @@ import java.util.concurrent.TimeUnit;
 
 @EnableAsync
 @EnableWebMvc
-@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.webapp.validations", "ar.edu.itba.paw.services",  "ar.edu.itba.paw.persistence"})
+@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.validations", "ar.edu.itba.paw.services",  "ar.edu.itba.paw.persistence"})
 @Configuration
 @EnableTransactionManagement
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-    @Value("classpath:sql/schema.sql")
+    @Value("classpath:schema.sql")
     private Resource schemaSql;
-    @Value("classpath:sql/populate.sql")
+    @Value("classpath:populate.sql")
     private Resource populatorSql;
 
     @Bean
@@ -70,9 +70,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public DataSourceInitializer dataSourceInitializer(){
+    public DataSourceInitializer dataSourceInitializer(final DataSource ds){
         DataSourceInitializer dsi = new DataSourceInitializer();
-        dsi.setDataSource(dataSource());
+        dsi.setDataSource(ds);
         dsi.setDatabasePopulator(databasePopulator());
         return dsi;
     }

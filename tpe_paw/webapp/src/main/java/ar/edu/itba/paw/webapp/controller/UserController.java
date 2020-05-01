@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -45,6 +46,8 @@ public class UserController {
     @Autowired
     private TagService tagService;
 
+    private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping(value = "/signup", method = {RequestMethod.GET})
@@ -58,11 +61,11 @@ public class UserController {
             return signUpForm(registerForm);
         }
 
-        User user = userService.register(
+        long userId = userService.register(
                 registerForm.getUsername(),
                 passwordEncoder.encode(registerForm.getPassword()),
                 registerForm.getEmail(),
-                new Date()                  //TODO how to getTimeZone, switch to calendar
+                DATE.format(Calendar.getInstance().getTime().getTime())
         );
 
         final Collection<? extends GrantedAuthority> authorities = Arrays.asList(

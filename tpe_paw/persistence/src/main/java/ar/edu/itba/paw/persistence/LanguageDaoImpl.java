@@ -52,6 +52,14 @@ public class LanguageDaoImpl implements LanguageDao {
     }
 
     @Override
+    public Language addLanguage(String lang) {
+        final Map<String, Object> args = new HashMap<>();
+        args.put("name", lang);
+        final Number langId = jdbcInsert.executeAndReturnKey(args);
+        return new Language(langId.longValue(), lang);
+    }
+
+    @Override
     public void addLanguages(List<String> languages) {
         // TODO -> remove repeated
         List<MapSqlParameterSource> entries = new ArrayList<>();

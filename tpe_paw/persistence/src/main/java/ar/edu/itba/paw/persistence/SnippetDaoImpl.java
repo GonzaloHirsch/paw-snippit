@@ -120,9 +120,8 @@ public class SnippetDaoImpl implements SnippetDao {
             put("date_created",dateCreated);
             put("language_id",language);
         }};
-        final Number snippetId = jdbcInsert.executeAndReturnKey(snippetDataMap);
 
-        return snippetId.longValue();
+        return jdbcInsert.executeAndReturnKey(snippetDataMap).longValue();
     }
 
     @Override

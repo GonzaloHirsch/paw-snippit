@@ -20,15 +20,15 @@ public class UserServiceImpl implements UserService {
     private EmailService emailService;
 
     @Override
-    public User createUser(String username, String password, String email, String description, int reputation, Date dateJoined) {
+    public long createUser(String username, String password, String email, String description, int reputation, String dateJoined) {
         return userDao.createUser(username, password, email, description, reputation, dateJoined);
     }
 
     @Override
-    public User register(String username, String password, String email, Date dateJoined) {
-        User user = createUser(username, password, email, "", 0, dateJoined);
+    public long register(String username, String password, String email, String dateJoined) {
+        long userId = createUser(username, password, email, "", 0, dateJoined);
         this.emailService.sendRegistrationEmail(email, username);
-        return user;
+        return userId;
     }
 
     @Override

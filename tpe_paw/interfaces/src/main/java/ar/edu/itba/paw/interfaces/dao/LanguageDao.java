@@ -10,5 +10,6 @@ public interface LanguageDao {
     Optional<Language> findById(long id);
     Optional<Language> findByName(String name);
     Collection<Language> getAll();
+    Language addLanguage(String lang);
     void addLanguages(List<String> languages);
 }

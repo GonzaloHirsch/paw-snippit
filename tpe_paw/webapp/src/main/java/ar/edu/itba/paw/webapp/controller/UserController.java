@@ -203,11 +203,11 @@ public class UserController {
         }
         LOGGER.debug("RecoveryForm Successful");
         User searchedUser = userService.findUserByEmail(recoveryForm.getEmail()).get();
-//
-//        if (!searchedUser.isPresent()) {
-//            // this SHOULD NOT happen, Exists validation SHOULD prevent it
-//        }
+        /*if (!searchedUser.isPresent()) {
+            // this SHOULD NOT happen, Exists validation SHOULD prevent it
+        }*/
         String currentPass = searchedUser.getPassword();
+
         try {
             // TODO generate private method
             MessageDigest sha256Digest = MessageDigest.getInstance("SHA-256");
@@ -219,25 +219,46 @@ public class UserController {
             //TODO handle exception better
             e.printStackTrace();
         }
-        return null;
+        // TODO create dedicated view
+        return new ModelAndView("redirect:/");
     }
 
-    @RequestMapping("/reset-password")
-    public ModelAndView recoverPassword(final @RequestParam(value="id") long id, final @RequestParam(value="token") String token) {
+    @RequestMapping(value = "/reset-password", method = RequestMethod.GET)
+    public ModelAndView resetPassword(final @RequestParam(value="id") long id,
+                                        final @RequestParam(value="token") String token,
+                                        @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm,
+                                        BindingResult errors) {
         Optional<User> userOpt = userService.findUserById(id);
         if(!userOpt.isPresent()) {
             // TODO Resource Not Found
         }
         User user = userOpt.get();
+        resetPasswordForm.setEmail(user.getEmail());
         try {
             MessageDigest sha256Digest = MessageDigest.getInstance("SHA-256");
             byte[] userPassHash = sha256Digest.digest((user.getEmail() + ":" + user.getPassword()).getBytes(StandardCharsets.UTF_8));
             String base64Token = new String(Base64.getUrlEncoder().encode(userPassHash));
             boolean pass = token.compareTo(base64Token) == 0;
+            if (!pass) {
+                // TODO 404
+            }
+            resetPasswordForm.setEmail(user.getEmail());
+            return new ModelAndView("user/resetPassword");
         } catch (Exception e) {
             // TODO handle
         }
         return null;
+    }
+
+    @RequestMapping(value = "/reset-password", method = RequestMethod.POST)
+    public ModelAndView endResetPassword (@ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm, BindingResult errors){
+        // TODO redirect to previous page KEEPING pathVariables
+        if(errors.hasErrors()) {
+            return new ModelAndView("redirect:/");
+        }
+        userService.changePassword(resetPasswordForm.getEmail(), resetPasswordForm.getNewPassword());
+        // TODO inform user everything went fine
+        return new ModelAndView("redirect:/login");
     }
 
 

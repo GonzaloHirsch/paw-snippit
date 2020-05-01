@@ -31,7 +31,7 @@ public class WebappCrypto {
             String encodedKey = new String(base32.encode(key.getBytes()));
             String secretKeyHex = Hex.encodeHexString(base32.decode(encodedKey));
             Long utcNow = Instant.now().getEpochSecond();
-            utcNow = utcNow / 30;
+            utcNow = utcNow / 300;
             utcNow--;
             for (int i = 0; i < 3; i++) {
                 int otp = generateSingleCode(secretKeyHex, utcNow);
@@ -54,7 +54,7 @@ public class WebappCrypto {
             String encodedKey = new String(base32.encode(key.getBytes()));
             String secretKeyHex = Hex.encodeHexString(base32.decode(encodedKey));
             Long utcNow = Instant.now().getEpochSecond();
-            utcNow = utcNow / 30;
+            utcNow = utcNow / 300;
             int otp = generateSingleCode(secretKeyHex, utcNow);
             result = Integer.toString(otp);
             while (result.length() < 6) {

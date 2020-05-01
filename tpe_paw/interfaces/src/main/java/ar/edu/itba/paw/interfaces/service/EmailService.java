@@ -5,5 +5,5 @@ public interface EmailService {
 
     void sendRegistrationEmail(String to, String username);
 
-    void sendRecoveryEmail(String to, String username, String token);
+    void sendRecoveryEmail(long userId, String to, String username, String token);
 }

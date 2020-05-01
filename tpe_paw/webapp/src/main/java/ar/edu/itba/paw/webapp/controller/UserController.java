@@ -30,7 +30,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -198,7 +197,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/send-email", method = RequestMethod.POST)
-    public ModelAndView sendEmail(@Valid @ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) throws NoSuchAlgorithmException {
+    public ModelAndView sendEmail(@Valid @ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
         if (errors.hasErrors()){
             return recoverPassword(recoveryForm, errors);
         }
@@ -209,13 +208,37 @@ public class UserController {
 //            // this SHOULD NOT happen, Exists validation SHOULD prevent it
 //        }
         String currentPass = searchedUser.getPassword();
-        MessageDigest sha256Digest = MessageDigest.getInstance("SHA-256");
-        String userPassHash = new String(sha256Digest.digest((recoveryForm.getEmail() + ":" + currentPass).getBytes(StandardCharsets.UTF_8)));
-        LOGGER.debug("Generated SHA256 hash for user {}: {}", searchedUser.getId(), userPassHash);
-        emailService.sendRecoveryEmail(recoveryForm.getEmail(), searchedUser.getUsername(), userPassHash);
+        try {
+            // TODO generate private method
+            MessageDigest sha256Digest = MessageDigest.getInstance("SHA-256");
+            byte[] userPassHash = sha256Digest.digest((recoveryForm.getEmail() + ":" + currentPass).getBytes(StandardCharsets.UTF_8));
+            String base64Token = new String(Base64.getUrlEncoder().encode(userPassHash));
+            LOGGER.debug("Generated SHA256 hash for user {}: {}", searchedUser.getId(), userPassHash);
+            emailService.sendRecoveryEmail(searchedUser.getId(), recoveryForm.getEmail(), searchedUser.getUsername(), base64Token);
+        } catch (Exception e) {
+            //TODO handle exception better
+            e.printStackTrace();
+        }
         return null;
     }
 
+    @RequestMapping("/reset-password")
+    public ModelAndView recoverPassword(final @RequestParam(value="id") long id, final @RequestParam(value="token") String token) {
+        Optional<User> userOpt = userService.findUserById(id);
+        if(!userOpt.isPresent()) {
+            // TODO Resource Not Found
+        }
+        User user = userOpt.get();
+        try {
+            MessageDigest sha256Digest = MessageDigest.getInstance("SHA-256");
+            byte[] userPassHash = sha256Digest.digest((user.getEmail() + ":" + user.getPassword()).getBytes(StandardCharsets.UTF_8));
+            String base64Token = new String(Base64.getUrlEncoder().encode(userPassHash));
+            boolean pass = token.compareTo(base64Token) == 0;
+        } catch (Exception e) {
+            // TODO handle
+        }
+        return null;
+    }
 
 
     private void logAndThrow(long id) {

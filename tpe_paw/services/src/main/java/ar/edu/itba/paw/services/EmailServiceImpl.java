@@ -29,6 +29,7 @@ public class EmailServiceImpl implements EmailService {
             emailSender.send(message);
         } catch (MailException e){
             // TODO: LOG EMAIL ERROR
+            return;
         }
     }
 
@@ -39,13 +40,12 @@ public class EmailServiceImpl implements EmailService {
         String body = messageSource.getMessage("email.register.body",new Object[]{username}, LocaleContextHolder.getLocale());
         this.sendEmail(to, subject, body);
     }
-
     @Async
     @Override
-    public void sendRecoveryEmail(String to, String username, String token) {
-//        String link = "http://localhost:9092/"
+    public void sendRecoveryEmail(long id, String to, String username, String token) {
+        String link = "http://localhost:9092/reset-password?id=" + id + "&token=" + token;
         String subject = messageSource.getMessage("email.recovery.subject", null, LocaleContextHolder.getLocale());
-        String body = messageSource.getMessage("email.recovery.body", new Object[]{username, token}, LocaleContextHolder.getLocale());
+        String body = messageSource.getMessage("email.recovery.body", new Object[]{username, link}, LocaleContextHolder.getLocale());
         this.sendEmail(to, subject, body);
     }
 }

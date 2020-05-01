@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.dao;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -30,6 +31,7 @@ public interface SnippetDao {
     }
 
     Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page);
+    Collection<Snippet> findSnippetByDeepCriteria(Calendar dateMin, Calendar dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, String language, int page);
     Collection<Snippet> getAllSnippets(int page);
     Collection<Snippet> getAllFavoriteSnippets(final long userId, int page);
     Collection<Snippet> getAllFollowingSnippets(final long userId, int page);

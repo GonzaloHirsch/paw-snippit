@@ -58,7 +58,8 @@ public class SnippetDaoImpl implements SnippetDao {
                     rs.getString("description"),
                     new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(calendar.getTime()),
                     language != null ? language : "",
-                    null
+                    null,
+                    rs.getInt("votes")
             );
         }
     };
@@ -72,22 +73,21 @@ public class SnippetDaoImpl implements SnippetDao {
     @Override
     public Collection<Snippet> getAllSnippets(int page) {
         return jdbcTemplate.query("SELECT * FROM complete_snippets LIMIT ? OFFSET ?", ROW_MAPPER, PAGE_SIZE, PAGE_SIZE * (page - 1));
-//        return jdbcTemplate.query("SELECT * FROM complete_snippets", ROW_MAPPER);
     }
 
     @Override
     public Collection<Snippet> getAllFavoriteSnippets(final long userId, int page) {
-        return jdbcTemplate.query("SELECT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language, s.date_created, s.icon FROM complete_snippets AS s JOIN favorites AS fav ON fav.snippet_id = s.id WHERE fav.user_id = ? LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
+        return jdbcTemplate.query("SELECT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language, s.date_created, s.icon, s.votes FROM complete_snippets AS s JOIN favorites AS fav ON fav.snippet_id = s.id WHERE fav.user_id = ? LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
     }
 
     @Override
     public Collection<Snippet> getAllFollowingSnippets(final long userId, int page) {
-        return jdbcTemplate.query("SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon FROM complete_snippets AS sn JOIN snippet_tags AS st ON st.snippet_id = sn.id JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ? LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
+        return jdbcTemplate.query("SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, s.votes FROM complete_snippets AS sn JOIN snippet_tags AS st ON st.snippet_id = sn.id JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ? LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
     }
 
     @Override
     public Collection<Snippet> getAllUpVotedSnippets(final long userId, int page) {
-        return jdbcTemplate.query("SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon FROM complete_snippets AS sn JOIN votes_for AS v ON sn.id = v.snippet_id WHERE v.user_id = ? AND v.type = 1 LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
+        return jdbcTemplate.query("SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, s.votes FROM complete_snippets AS sn JOIN votes_for AS v ON sn.id = v.snippet_id WHERE v.user_id = ? AND v.type = 1 LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
     }
 
     @Override
@@ -101,6 +101,46 @@ public class SnippetDaoImpl implements SnippetDao {
                 .setOrder(order, type)
                 .setPaging(page, PAGE_SIZE)
                 .build();
+        return jdbcTemplate.query(searchQuery.getQuery(), searchQuery.getParams(), ROW_MAPPER);
+    }
+
+    @Override
+    public Collection<Snippet> findSnippetByDeepCriteria(Calendar dateMin, Calendar dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, String language, int page) {
+        SnippetDeepSearchQuery.Builder queryBuilder = new SnippetDeepSearchQuery.Builder();
+        SnippetDeepSearchQuery searchQuery;
+        if (dateMin == null && dateMax == null && repMin == null && repMax == null && voteMin == null && voteMax == null){
+            searchQuery = queryBuilder.setPaging(page, PAGE_SIZE).build();
+        } else {
+            boolean isFirst = true;
+            queryBuilder = queryBuilder.where();
+            if (dateMin != null || dateMax != null){
+                queryBuilder = queryBuilder.addDateRange(dateMin, dateMax);
+                isFirst = false;
+            }
+            if (repMin != null || repMax != null){
+                if (!isFirst){
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addReputationRange(repMin, repMax);
+            }
+            if (voteMin != null || voteMax != null){
+                if (!isFirst){
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addVotesRange(voteMin, voteMax);
+            }
+            if (language != null){
+                if (!isFirst){
+                    queryBuilder = queryBuilder.and();
+                }
+                queryBuilder = queryBuilder.addLanguage(language);
+            }
+            searchQuery = queryBuilder.setOrder().setPaging(page, PAGE_SIZE).build();
+        }
         return jdbcTemplate.query(searchQuery.getQuery(), searchQuery.getParams(), ROW_MAPPER);
     }
 

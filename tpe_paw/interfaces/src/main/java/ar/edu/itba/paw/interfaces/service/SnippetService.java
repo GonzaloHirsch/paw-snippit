@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ public interface SnippetService {
     Collection<Snippet> findAllSnippetsByOwner(final long userId, int page);
     Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page);
     Collection<Snippet> findSnippetsForTag(long tagId);
+    Collection<Snippet> findSnippetByDeepCriteria(Calendar dateMin, Calendar dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, String language, int page);
     int getAllSnippetsCount();
     int getAllFavoriteSnippetsCount(final long userId);
     int getAllFollowingSnippetsCount(final long userId);

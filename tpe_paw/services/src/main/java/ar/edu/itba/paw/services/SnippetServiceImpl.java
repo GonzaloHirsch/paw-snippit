@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -32,6 +33,11 @@ public class SnippetServiceImpl implements SnippetService {
     @Override
     public Collection<Snippet> findSnippetsForTag(long tagId) {
         return snippetDao.findSnippetsForTag(tagId);
+    }
+
+    @Override
+    public Collection<Snippet> findSnippetByDeepCriteria(Calendar dateMin, Calendar dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, String language, int page) {
+        return this.findSnippetByDeepCriteria(dateMin, dateMax, repMin, repMax, voteMin, voteMax, language, page);
     }
 
     @Override

@@ -181,10 +181,10 @@
             <c:choose>
                 <c:when test="${currentUser == null}">
                     <a class="flex-center purple-text navtop-button border-radius" href="<c:url value="/login"/>">
-                    <spring:message code="login.title"/>
+                    <spring:message code="login.button"/>
                     </a>
                     <a class="flex-center purple-text navtop-button border-radius" href="<c:url value="/signup"/>">
-                    <spring:message code="register.title"/>
+                    <spring:message code="register.button"/>
                     </a>
                 </c:when>
                 <c:otherwise>

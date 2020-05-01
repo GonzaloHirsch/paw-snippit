@@ -49,30 +49,32 @@
                 </c:choose>
                 <c:if test="${currentUser != null}">
                     <hr/>
-                    <c:choose>
-                        <c:when test="${searchContext == 'user/'}">
-                            <a class="fw-100 menu-option menu-selected flex-center" href="<c:url
-                                value="${'/user/'}${currentUser.id}"/>">
-                            <c:if test="${currentUser.icon != null}">
-                                <img src="<c:url value="/user/${currentUser.id}/image"/>" alt="User Icon"/>
-                            </c:if>
-                            <c:if test="${currentUser.icon == null}">
-                                <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
-                            </c:if>
-                            <spring:message code="menu.profile"/>
-                            </a>
-                        </c:when>
-                        <c:otherwise>
-                            <a class="fw-100 menu-option" href="<c:url value="${'/user/'}${currentUser.id}"/>">
-                            <c:if test="${currentUser.icon != null}">
-                                <img src="<c:url value="/user/${currentUser.id}/image"/>" alt="User Icon"/>
-                            </c:if>
-                            <c:if test="${currentUser.icon == null}">
-                                <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
-                            </c:if>
-                            <spring:message code="menu.profile"/></a>
-                        </c:otherwise>
-                    </c:choose>
+                    <c:if test="${currentUser.username != 'admin'}">
+                        <c:choose>
+                            <c:when test="${searchContext == 'user/'}">
+                                <a class="fw-100 menu-option menu-selected flex-center" href="<c:url
+                                    value="${'/user/'}${currentUser.id}"/>">
+                                <c:if test="${currentUser.icon != null}">
+                                    <img src="<c:url value="/user/${currentUser.id}/image"/>" alt="User Icon"/>
+                                </c:if>
+                                <c:if test="${currentUser.icon == null}">
+                                    <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
+                                </c:if>
+                                <spring:message code="menu.profile"/>
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <a class="fw-100 menu-option" href="<c:url value="${'/user/'}${currentUser.id}"/>">
+                                <c:if test="${currentUser.icon != null}">
+                                    <img src="<c:url value="/user/${currentUser.id}/image"/>" alt="User Icon"/>
+                                </c:if>
+                                <c:if test="${currentUser.icon == null}">
+                                    <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
+                                </c:if>
+                                <spring:message code="menu.profile"/></a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
                     <c:choose>
                         <c:when test="${searchContext == 'following/'}">
                             <a class="fw-100 menu-option menu-selected" href="<c:url value="/following/"/>">
@@ -179,18 +181,28 @@
             <c:choose>
                 <c:when test="${currentUser == null}">
                     <a class="flex-center purple-text navtop-button border-radius" href="<c:url value="/login"/>">
-                    <spring:message code="login.title"/>
+                    <spring:message code="login.button"/>
                     </a>
                     <a class="flex-center purple-text navtop-button border-radius" href="<c:url value="/signup"/>">
-                    <spring:message code="register.title"/>
+                    <spring:message code="register.button"/>
                     </a>
                 </c:when>
                 <c:otherwise>
-                    <a href="<c:url value="/snippet/create"/>">
-                    <i class="material-icons navtop-icons">add_circle_outline</i>
-                    </a>
+                    <c:choose>
+                        <c:when test="${currentUser.username == 'admin'}">
+                            <a href="<c:url value="/admin/add"/>">
+                                <i class="material-icons navtop-icons">add_circle_outline</i>
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="<c:url value="/snippet/create"/>">
+                                <i class="material-icons navtop-icons">add_circle_outline</i>
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+
                     <div class="white-text flex-center navtop-welcome-text">
-                    <spring:message code="app.userWelcome" arguments="${currentUser.username}"/>
+                        <spring:message code="app.userWelcome" arguments="${currentUser.username}"/>
                     </div>
                 </c:otherwise>
             </c:choose>

@@ -45,8 +45,8 @@
 
                 <div class="flex-column">
                     <!-- CODE -->
-                    <div class="full-width snippet-code-container detail-snippet-block-code">
-                        <span class="material-icons copy-icon" onclick="copyContent(this)">
+                    <div class="full-width snippet-code-container border-radius detail-snippet-block-code">
+                        <span class="material-icons copy-icon border-radius" onclick="copyContent(this)">
                             file_copy
                         </span>
                         <pre><code id="code-block">${fn:escapeXml(snippet.code)}</code></pre>

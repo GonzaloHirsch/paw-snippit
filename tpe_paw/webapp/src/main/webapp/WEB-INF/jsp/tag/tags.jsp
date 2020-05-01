@@ -4,7 +4,7 @@
 
 <html>
     <head>
-        <title><spring:message code="menu.tags"/></title>
+        <title><spring:message code="tags.title"/></title>
         <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon.ico'/>"/>
         <link href="<c:url value='/resources/css/general.css'/>" type="text/css" rel="stylesheet"/>
         <link href="<c:url value='/resources/css/navigationBar.css'/>" type="text/css" rel="stylesheet"/>
@@ -17,7 +17,7 @@
             <div class="main-content">
                 <div class="flex-center">
                     <div class="fw-100 title-container">
-                        <spring:message code="tags.title"> </spring:message>
+                        <spring:message code="menu.tags"> </spring:message>
                     </div>
                 </div>
                 <div class="all-tags-grid main-grid">

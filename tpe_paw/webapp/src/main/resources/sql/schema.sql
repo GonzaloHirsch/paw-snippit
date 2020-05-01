@@ -39,6 +39,9 @@ CREATE TABLE IF NOT EXISTS snippets (
     language_id INT REFERENCES languages(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
+ALTER TABLE snippets
+ADD COLUMN IF NOT EXISTS flagged INT DEFAULT 0;
+
 CREATE TABLE IF NOT EXISTS votes_for (
     user_id INT REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL,
     snippet_id INT REFERENCES snippets(id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -75,8 +78,9 @@ SELECT
   aux.u_name AS username,
   aux.rep AS reputation,
   aux.lang_id AS language_id,
+  aux.flag AS flagged,
   l.name AS language,
-       aux.icon AS icon
+  aux.icon AS icon
 FROM
   (
     SELECT
@@ -86,10 +90,11 @@ FROM
       sn.description AS descr,
       sn.language_id AS lang_id,
       sn.date_created AS dc,
+      sn.flagged AS flag,
       u.id AS user_id,
       u.username AS u_name,
       u.reputation AS rep,
-        u.icon AS icon
+      u.icon AS icon
   FROM
       snippets AS sn
       JOIN users AS u ON sn.user_id = u.id

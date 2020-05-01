@@ -76,14 +76,14 @@ public class TagDaoImpl implements TagDao {
         List<MapSqlParameterSource> entries = new ArrayList<>();
 
         for (String tag : tags) {
-            if (tag != null || tag.compareTo("") != 0) {
+            if (tag != null && tag.compareTo("") != 0) {
                 MapSqlParameterSource entry = new MapSqlParameterSource()
-                        .addValue("name", tag);
+                        .addValue("name", tag.toLowerCase());
                 entries.add(entry);
             }
         }
         MapSqlParameterSource[] array = entries.toArray(new MapSqlParameterSource[entries.size()]);
-        //jdbcInsert.executeBatch(array);
+        jdbcInsert.executeBatch(array);
     }
 
 

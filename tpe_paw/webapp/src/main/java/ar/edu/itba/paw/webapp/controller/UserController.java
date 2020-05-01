@@ -212,7 +212,7 @@ public class UserController {
         emailService.sendRecoveryEmail(searchedUser.getId(), recoveryForm.getEmail(), searchedUser.getUsername(), base64Token);
 
         // TODO create dedicated view
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("user/email-sent");
     }
 
     @RequestMapping(value = "/reset-password", method = RequestMethod.GET)
@@ -234,7 +234,7 @@ public class UserController {
             pass = pass || token.compareTo(base64Token) == 0;
         }
         if (!pass) {
-            // TODO 404
+            return new ModelAndView("errors/404");
         }
         resetPasswordForm.setEmail(user.getEmail());
         return new ModelAndView("user/resetPassword");
@@ -248,7 +248,7 @@ public class UserController {
         }
         userService.changePassword(resetPasswordForm.getEmail(), resetPasswordForm.getNewPassword());
         // TODO inform user everything went fine
-        return new ModelAndView("redirect:/login");
+        return new ModelAndView("user/password-reset");
     }
 
 

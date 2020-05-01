@@ -8,6 +8,8 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.crypto.HashGenerator;
+import ar.edu.itba.paw.webapp.crypto.WebappCrypto;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
@@ -28,8 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -207,18 +207,10 @@ public class UserController {
             // this SHOULD NOT happen, Exists validation SHOULD prevent it
         }*/
         String currentPass = searchedUser.getPassword();
+        String otp = WebappCrypto.generateOtp(WebappCrypto.TEST_KEY);
+        String base64Token = HashGenerator.getInstance().generateRecoveryHash(recoveryForm.getEmail(), currentPass, otp);
+        emailService.sendRecoveryEmail(searchedUser.getId(), recoveryForm.getEmail(), searchedUser.getUsername(), base64Token);
 
-        try {
-            // TODO generate private method
-            MessageDigest sha256Digest = MessageDigest.getInstance("SHA-256");
-            byte[] userPassHash = sha256Digest.digest((recoveryForm.getEmail() + ":" + currentPass).getBytes(StandardCharsets.UTF_8));
-            String base64Token = new String(Base64.getUrlEncoder().encode(userPassHash));
-            LOGGER.debug("Generated SHA256 hash for user {}: {}", searchedUser.getId(), userPassHash);
-            emailService.sendRecoveryEmail(searchedUser.getId(), recoveryForm.getEmail(), searchedUser.getUsername(), base64Token);
-        } catch (Exception e) {
-            //TODO handle exception better
-            e.printStackTrace();
-        }
         // TODO create dedicated view
         return new ModelAndView("redirect:/");
     }
@@ -234,20 +226,18 @@ public class UserController {
         }
         User user = userOpt.get();
         resetPasswordForm.setEmail(user.getEmail());
-        try {
-            MessageDigest sha256Digest = MessageDigest.getInstance("SHA-256");
-            byte[] userPassHash = sha256Digest.digest((user.getEmail() + ":" + user.getPassword()).getBytes(StandardCharsets.UTF_8));
-            String base64Token = new String(Base64.getUrlEncoder().encode(userPassHash));
-            boolean pass = token.compareTo(base64Token) == 0;
-            if (!pass) {
-                // TODO 404
-            }
-            resetPasswordForm.setEmail(user.getEmail());
-            return new ModelAndView("user/resetPassword");
-        } catch (Exception e) {
-            // TODO handle
+        String[] otps = WebappCrypto.generateOtps(WebappCrypto.TEST_KEY);
+        String base64Token;
+        boolean pass = false;
+        for (int i = 0; i < 3; i++) {
+            base64Token = HashGenerator.getInstance().generateRecoveryHash(user.getEmail(), user.getPassword(), otps[i]);
+            pass = pass || token.compareTo(base64Token) == 0;
         }
-        return null;
+        if (!pass) {
+            // TODO 404
+        }
+        resetPasswordForm.setEmail(user.getEmail());
+        return new ModelAndView("user/resetPassword");
     }
 
     @RequestMapping(value = "/reset-password", method = RequestMethod.POST)

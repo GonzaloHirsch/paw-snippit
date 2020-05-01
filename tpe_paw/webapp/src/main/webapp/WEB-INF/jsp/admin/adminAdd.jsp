@@ -9,12 +9,15 @@
     <title><spring:message code="admin.title"/></title>
     <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon.ico'/>"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/form.css'/>" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="<c:url value='/resources/js/addDynamicContent.js'/>"></script>
 </head>
 <body>
 <c:url var="adminAddUrl" value="/admin/add"/>
+<c:set var="tags" value="${requestScope.tags}"/>
+<c:set var="languages" value="${requestScope.languages}"/>
 
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
@@ -28,15 +31,28 @@
 
         <form:form class="flex-center flex-column form form-width form-border form-shadow" action="${adminAddUrl}" method="post" modelAttribute="adminAddForm">
             <div id="form-lang-container" class="flex-column">
+
                 <div id="form-dynamic-lang" class="flex-column form-buttons-margin">
+
                     <form:errors path="languages" cssClass="form-error" element="p "/>
+                    <c:set var="langCounter" value="0"/>
+                    <c:forEach var="lang" items="${languages}">
+                        <div class="flex-row form-field-container">
+                            <input type="text" class="form-border form-field-size form-added-field-padding form-border-style" value="${lang}" name="languages[${langCounter}]" placeholder='Language'>
+                            <label>
+                                <i class="material-icons form-delete-icon">delete</i>
+                                <input type="button" class="form-remove-button form-border form-button-basics" onclick="removeRow(this, 'form-dynamic-lang', 'langCount', 'langButton')" />
+                            </label>
+                        </div>
+                        <c:set var="langCounter" value="${langCounter + 1}"/>
+                    </c:forEach>
+                    <input type="text" id="langCount" class="hidden" value="${langCounter}"/>
                 </div>
-                <input type="text" id="langCount" class="hidden" value="0"/>
 
                 <div id="langButton" class="flex-center form-add-field-container">
                     <label class="flex-center">
                         <i class="material-icons form-add-icons">add_circle_outline</i>
-                        <input class="form-add-description form-button-basics" type="button" value="<spring:message code="admin.add.language"/>" onclick="addAdminRow('form-dynamic-lang', '')"/>
+                        <input class="form-add-description form-button-basics" type="button" value="<spring:message code="admin.add.language"/>" onclick="addAdminRow('form-dynamic-lang')"/>
                     </label>
                 </div>
             </div>
@@ -44,15 +60,28 @@
             <hr/>
 
             <div id="form-tag-container" class="flex-column">
+
                 <div id="form-dynamic-tag" class="flex-column form-buttons-margin">
+
                     <form:errors path="tags" cssClass="form-error" element="p "/>
+                    <c:set var="tagCounter" value="0"/>
+                    <c:forEach var="tag" items="${tags}">
+                        <div class="flex-row form-field-container">
+                            <input type="text" class="form-border form-field-size form-added-field-padding form-border-style" value="${tag}" name="languages[${tagCounter}]" placeholder='Language'>
+                            <label>
+                                <i class="material-icons form-delete-icon">delete</i>
+                                <input type="button" class="form-remove-button form-border form-button-basics" onclick="removeRow(this, 'form-dynamic-tag', 'tagCount', 'langButton')" />
+                            </label>
+                        </div>
+                        <c:set var="langCounter" value="${langCounter + 1}"/>
+                    </c:forEach>
+                    <input type="text" id="tagCount" class="hidden" value="${tagCounter}"/>
                 </div>
-                <input type="text" id="tagCount" class="hidden" value="0"/>
 
                 <div id="tagButton" class="flex-center form-add-field-container">
                     <label class="flex-center">
                         <i class="material-icons form-add-icons">add_circle_outline</i>
-                        <input class="form-add-description form-button-basics" type="button" value="<spring:message code="admin.add.tag"/>" onclick="addAdminRow('form-dynamic-tag', '')" />
+                        <input class="form-add-description form-button-basics" type="button" value="<spring:message code="admin.add.tag"/>" onclick="addAdminRow('form-dynamic-tag')" />
                     </label>
                 </div>
             </div>

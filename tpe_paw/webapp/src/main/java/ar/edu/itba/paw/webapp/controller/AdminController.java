@@ -41,7 +41,10 @@ public class AdminController {
 
     @RequestMapping("/admin/add")
     public ModelAndView adminAddForm(@ModelAttribute("adminAddForm") final AdminAddForm adminAddForm) {
-        return new ModelAndView("admin/adminAdd");
+        ModelAndView mav = new ModelAndView("admin/adminAdd");
+        mav.addObject("languages", adminAddForm.getLanguages());
+        mav.addObject("tags", adminAddForm.getTags());
+        return mav;
     }
 
     @RequestMapping(value="/admin/add", method= RequestMethod.POST)
@@ -57,6 +60,8 @@ public class AdminController {
         validator.validateAddedTags(tags, errors, LocaleContextHolder.getLocale());
 
         if (errors.hasErrors()) {
+            adminAddForm.setLanguages(languages);
+            adminAddForm.setTags(tags);
             return adminAddForm(adminAddForm);
         }
         User currentUser = this.loginAuthentication.getLoggedInUser();

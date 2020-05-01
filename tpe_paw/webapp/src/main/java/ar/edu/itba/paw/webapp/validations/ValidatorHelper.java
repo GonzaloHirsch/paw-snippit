@@ -34,9 +34,8 @@ public class ValidatorHelper {
                 errorAmount++;
             }
         }
-        error.setLength(error.length() - 2);
-
-        if (errorAmount != 0) {
+        if (errorAmount > 0) {
+            error.setLength(error.length() - 2);
             FieldError tagExists = new FieldError("addAdminForm","tags" ,messageSource.getMessage("admin.add.tags.exists",new Object[] {error.toString()}, locale));
             errors.addError(tagExists);
             LOGGER.debug("Tags that already exists = {}", error.toString());

@@ -25,11 +25,11 @@ public class ValidatorHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidatorHelper.class);
 
     public void validateAddedTags (List<String> tags, BindingResult errors, Locale locale){
-        StringBuilder error = new StringBuilder("");
+        StringBuilder error = new StringBuilder();
         int errorAmount = 0;
 
         for (String tag : tags) {
-            if (!tagService.isUniqueTag(tag)) {
+            if (!tagService.isUnique(tag)) {
                 error.append(tag).append(", ");
                 errorAmount++;
             }
@@ -42,22 +42,22 @@ public class ValidatorHelper {
         }
     }
 
-//    public void validateAddedLanguages (List<String> languages, BindingResult errors, Locale locale){
-//        StringBuilder error = new StringBuilder("");
-//        int errorAmount = 0;
-//
-//        for (String lang : languages) {
-//            if (!languageService.isUniqueLang(lang)) {
-//                error.append(lang).append(", ");
-//                errorAmount++;
-//            }
-//        }
-//        error.setLength(error.length() - 2);
-//
-//        if (errorAmount != 0) {
-//            FieldError tagExists = new FieldError("addAdminForm","languages" ,messageSource.getMessage("admin.add.lang.exists",new Object[] {error.toString()}, locale));
-//            errors.addError(tagExists);
-//        }
-//    }
+    public void validateAddedLanguages (List<String> languages, BindingResult errors, Locale locale){
+        StringBuilder error = new StringBuilder();
+        int errorAmount = 0;
+
+        for (String lang : languages) {
+            if (!languageService.isUnique(lang)) {
+                error.append(lang).append(", ");
+                errorAmount++;
+            }
+        }
+
+        if (errorAmount != 0) {
+            error.setLength(error.length() - 2);
+            FieldError tagExists = new FieldError("addAdminForm","languages" ,messageSource.getMessage("admin.add.lang.exists",new Object[] {error.toString()}, locale));
+            errors.addError(tagExists);
+        }
+    }
 
 }

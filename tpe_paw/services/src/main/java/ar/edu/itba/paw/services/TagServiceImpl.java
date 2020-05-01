@@ -32,7 +32,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Optional<Tag> findTagById(long tagId) {
-        return tagDao.findTagById(tagId);
+        return tagDao.findById(tagId);
     }
 
     @Override
@@ -53,10 +53,10 @@ public class TagServiceImpl implements TagService {
             return tagList;
 
         for(Long tagId : tagIdList) {
-            Optional<Tag> tag = tagDao.findTagById(tagId);
+            Optional<Tag> tag = tagDao.findById(tagId);
             if(tag.isPresent()) {
                 tagDao.addSnippetTag(snippetId, tagId);
-                tagList.add(tagDao.findTagById(tagId).get());
+                tagList.add(tagDao.findById(tagId).get());
             }
         }
         return tagList;
@@ -68,8 +68,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public boolean isUniqueTag(String tag) {
-        return tagDao.isUniqueTag(tag);
+    public boolean isUnique(String tag) {
+        return !tagDao.findByName(tag).isPresent();
     }
 
 }

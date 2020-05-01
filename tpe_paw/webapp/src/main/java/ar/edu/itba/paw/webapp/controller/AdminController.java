@@ -57,6 +57,7 @@ public class AdminController {
         List<String> tags = adminAddForm.getTags() != null ? adminAddForm.getTags() : new ArrayList<>();
         tags.removeAll(Arrays.asList("", null));
 
+        validator.validateAddedLanguages(languages, errors, LocaleContextHolder.getLocale());
         validator.validateAddedTags(tags, errors, LocaleContextHolder.getLocale());
 
         if (errors.hasErrors()) {

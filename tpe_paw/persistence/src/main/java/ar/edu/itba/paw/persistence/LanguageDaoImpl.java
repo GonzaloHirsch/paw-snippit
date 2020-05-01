@@ -41,6 +41,12 @@ public class LanguageDaoImpl implements LanguageDao {
     }
 
     @Override
+    public Optional<Language> findByName(final String name) {
+        return jdbcTemplate.query("SELECT * FROM languages WHERE LOWER(name) = LOWER(?)", ROW_MAPPER, name)
+                .stream().findFirst();
+    }
+
+    @Override
     public Collection<Language> getAll() {
         return jdbcTemplate.query("SELECT * FROM languages", ROW_MAPPER);
     }
@@ -61,4 +67,5 @@ public class LanguageDaoImpl implements LanguageDao {
         MapSqlParameterSource[] array = entries.toArray(new MapSqlParameterSource[entries.size()]);
         //jdbcInsert.executeBatch(array);
     }
+
 }

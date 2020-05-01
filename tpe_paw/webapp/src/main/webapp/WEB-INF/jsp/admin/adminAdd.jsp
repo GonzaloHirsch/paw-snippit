@@ -19,6 +19,12 @@
 <c:set var="tags" value="${requestScope.tags}"/>
 <c:set var="languages" value="${requestScope.languages}"/>
 
+<spring:message code="admin.add.tag.placeholder" var="tagPlaceholder"/>
+<spring:message code="admin.add.tag" var="addTag"/>
+<spring:message code="admin.add.language.placeholder" var="langPlaceholder"/>
+<spring:message code="admin.add.language" var="addLang"/>
+
+
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content flex-column flex-center">
@@ -38,7 +44,7 @@
                     <c:set var="langCounter" value="0"/>
                     <c:forEach var="lang" items="${languages}">
                         <div class="flex-row form-field-container">
-                            <input type="text" class="form-border form-field-size form-added-field-padding form-border-style" value="${lang}" name="languages[${langCounter}]" placeholder='Language'>
+                            <input type="text" class="form-border form-field-size form-added-field-padding form-border-style" value="${lang}" name="languages[${langCounter}]" placeholder="${langPlaceholder}">
                             <label>
                                 <i class="material-icons form-delete-icon">delete</i>
                                 <input type="button" class="form-remove-button form-border form-button-basics" onclick="removeRow(this, 'form-dynamic-lang', 'langCount', 'langButton')" />
@@ -52,7 +58,7 @@
                 <div id="langButton" class="flex-center form-add-field-container">
                     <label class="flex-center">
                         <i class="material-icons form-add-icons">add_circle_outline</i>
-                        <input class="form-add-description form-button-basics" type="button" value="<spring:message code="admin.add.language"/>" onclick="addAdminRow('form-dynamic-lang')"/>
+                        <input class="form-add-description form-button-basics" type="button" value="${addLang}" onclick="addAdminRow('form-dynamic-lang', '${langPlaceholder}')"/>
                     </label>
                 </div>
             </div>
@@ -67,13 +73,13 @@
                     <c:set var="tagCounter" value="0"/>
                     <c:forEach var="tag" items="${tags}">
                         <div class="flex-row form-field-container">
-                            <input type="text" class="form-border form-field-size form-added-field-padding form-border-style" value="${tag}" name="languages[${tagCounter}]" placeholder='Language'>
+                            <input type="text" class="form-border form-field-size form-added-field-padding form-border-style" value="${tag}" name="tags[${tagCounter}]" placeholder="${tagPlaceholder}">
                             <label>
                                 <i class="material-icons form-delete-icon">delete</i>
-                                <input type="button" class="form-remove-button form-border form-button-basics" onclick="removeRow(this, 'form-dynamic-tag', 'tagCount', 'langButton')" />
+                                <input type="button" class="form-remove-button form-border form-button-basics" onclick="removeRow(this, 'form-dynamic-tag', 'tagCount', 'tagButton')" />
                             </label>
                         </div>
-                        <c:set var="langCounter" value="${langCounter + 1}"/>
+                        <c:set var="tagCounter" value="${tagCounter + 1}"/>
                     </c:forEach>
                     <input type="text" id="tagCount" class="hidden" value="${tagCounter}"/>
                 </div>
@@ -81,7 +87,7 @@
                 <div id="tagButton" class="flex-center form-add-field-container">
                     <label class="flex-center">
                         <i class="material-icons form-add-icons">add_circle_outline</i>
-                        <input class="form-add-description form-button-basics" type="button" value="<spring:message code="admin.add.tag"/>" onclick="addAdminRow('form-dynamic-tag')" />
+                        <input class="form-add-description form-button-basics" type="button" value="${addTag}" onclick="addAdminRow('form-dynamic-tag', '${tagPlaceholder}')" />
                     </label>
                 </div>
             </div>

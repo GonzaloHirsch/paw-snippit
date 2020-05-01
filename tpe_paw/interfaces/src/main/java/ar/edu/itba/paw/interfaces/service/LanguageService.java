@@ -10,4 +10,5 @@ public interface LanguageService {
     Optional<Language> findById(long id);
     Collection<Language> getAll();
     void addLanguages(List<String> languages);
+    boolean isUnique(String language);
 }

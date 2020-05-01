@@ -30,4 +30,9 @@ public class LanguageServiceImpl implements LanguageService {
     public void addLanguages(List<String> languages) {
         languageDao.addLanguages(languages);
     }
+
+    @Override
+    public boolean isUnique(String language) {
+        return !languageDao.findByName(language).isPresent();
+    }
 }

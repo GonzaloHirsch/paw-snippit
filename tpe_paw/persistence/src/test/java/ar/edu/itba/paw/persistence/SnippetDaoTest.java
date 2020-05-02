@@ -29,7 +29,6 @@ import java.util.Optional;
 
 import static junit.framework.TestCase.*;
 
-@Sql("classpath:schema.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class SnippetDaoTest {

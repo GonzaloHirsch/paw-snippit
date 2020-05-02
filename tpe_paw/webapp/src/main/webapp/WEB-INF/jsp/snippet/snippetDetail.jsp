@@ -14,19 +14,23 @@
     <link href="<c:url value='/resources/css/tag.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/tags.css'/>" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-          rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+          rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <script src="<c:url value='/resources/js/snippetDetail.js'/>"></script>
 </head>
 
 <body>
 
+<c:set var="snippet" value="${requestScope.snippet}"/>
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
         <div class="flex-row detail-snippet-container flex-center">
 
             <div class="flex-column detail-snippet-center">
+                <c:if test="${snippet.flagged}">
+                    <c:import url="/WEB-INF/jsp/snippet/flaggedWarning.jsp"/>
+                </c:if>
 
                 <div class="flex-row flex-center flex-space-between">
                     <div class="snippet-text snippet-title">

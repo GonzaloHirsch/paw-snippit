@@ -13,7 +13,8 @@ public interface SnippetDao {
         HOME,
         FAVORITES,
         FOLLOWING,
-        UPVOTED
+        UPVOTED,
+        FLAGGED
     }
     enum Types {
         ALL,

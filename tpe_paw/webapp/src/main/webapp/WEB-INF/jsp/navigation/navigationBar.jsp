@@ -47,6 +47,18 @@
                 <spring:message code="menu.tags"/></a>
             </c:otherwise>
         </c:choose>
+        <c:choose>
+            <c:when test="${searchContext == 'explore/'}">
+                <a class="fw-100 menu-option menu-selected" href="<c:url value="/explore/"/>"><span
+                class="material-icons menu-option-icon">search</span>
+                <spring:message code="menu.explore"/></a>
+            </c:when>
+            <c:otherwise>
+                <a class="fw-100 menu-option" href="<c:url value="/explore/"/>"><span
+                class="material-icons menu-option-icon">search</span>
+                <spring:message code="menu.explore"/></a>
+            </c:otherwise>
+        </c:choose>
         <c:if test="${currentUser != null}">
             <hr/>
             <c:choose>

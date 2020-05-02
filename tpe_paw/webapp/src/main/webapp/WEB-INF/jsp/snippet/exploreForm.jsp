@@ -18,15 +18,19 @@
           href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 </head>
 <body>
+<spring:message code="advanced.title.hint" var="advanced_title_hint" />
+<spring:message code="advanced.username.hint" var="advanced_username_hint" />
+<spring:message code="advanced.reputation.hint" var="advanced_reputation_hint" />
+<spring:message code="advanced.votes.hint" var="advanced_votes_hint" />
+<spring:message code="advanced.date.hint" var="advanced_date_hint" />
 <div class="flex-column explore-container">
     <form:form class="form-container" action="/explore/search" method="get" modelAttribute="exploreForm">
 
-        <form:label cssClass="flex-stretch" path="field"><spring:message code="advanced.ordersort"/></form:label>
+        <form:label cssClass="flex-stretch fw-700" path="field"><spring:message code="advanced.ordersort"/></form:label>
         <div class="flex-row">
             <div class="flex-column flex-grow">
                 <form:label cssClass="flex-stretch" path="field"><spring:message code="advanced.orderby"/></form:label>
-            <div class="dropdown-type">
-                <form:select path="field" name="Type">
+                <form:select class="selectpicker flex-grow" path="field">
                     <form:option value="date">
                         <spring:message code="advanced.orderby"/>
                     </form:option>
@@ -41,116 +45,116 @@
                     </form:option>
                 </form:select>
             </div>
-            </div>
             <div class="flex-column flex-grow">
-                <form:label cssClass="flex-stretch" path="title"><spring:message code="advanced.title"/></form:label>
-                <div class="dropdown-type">
-                    <form:select path="sort" name="Sort">
-                        <form:option value="asc">
-                            <spring:message code="sort.sortby"/>
-                        </form:option>
-                        <form:option value="asc">
-                            <spring:message code="sort.asc"/>
-                        </form:option>
-                        <form:option value="desc">
-                            <spring:message code="sort.desc"/>
-                        </form:option>
-                    </form:select>
-                </div>
+                <form:label cssClass="flex-stretch" path="title"><spring:message code="advanced.sortby"/></form:label>
+                <form:select class="selectpicker flex-grow" path="sort">
+                    <form:option value="asc">
+                        <spring:message code="sort.sortby"/>
+                    </form:option>
+                    <form:option value="asc">
+                        <spring:message code="sort.asc"/>
+                    </form:option>
+                    <form:option value="desc">
+                        <spring:message code="sort.desc"/>
+                    </form:option>
+                </form:select>
             </div>
         </div>
 
-        <form:label cssClass="flex-stretch" path="title"><spring:message code="advanced.title"/></form:label>
+        <form:label cssClass="flex-stretch fw-700" path="title"><spring:message code="advanced.title"/></form:label>
         <div class="flex-row">
-            <form:input path="title" type="text" class="search-input flex-grow fw-100"
-                        placeholder="${search_hint}"/>
+            <form:input path="title" type="text" class="flex-grow fw-100 advanced-input text-input"
+                        placeholder="${advanced_title_hint}"/>
         </div>
         <form:errors class="form-error" path="title" element="p"/>
 
-        <form:label cssClass="flex-stretch" path="language"><spring:message code="advanced.language"/></form:label>
         <div class="flex-row">
-            <form:select class="selectpicker flex-grow" data-live-search="true" path="language">
-                <form:option value="-1"><spring:message code="snippetCreateForm.languageHint"/></form:option>
-                <c:forEach items="${languageList}" var="lan" varStatus="status">
-                    <form:option value="${lan.id}">${lan.name.toUpperCase()}</form:option>
-                </c:forEach>
-            </form:select>
-        </div>
-        <form:errors path="language" cssClass="form-error" element="p"/>
+            <div class="flex-column flex-grow">
+                <form:label cssClass="flex-stretch fw-700" path="language"><spring:message code="advanced.language"/></form:label>
 
-        <form:label cssClass="flex-stretch" path="language"><spring:message code="advanced.tag"/></form:label>
-        <div class="flex-row">
-            <form:select class="selectpicker flex-grow" data-live-search="true" path="tag">
-                <form:option value="-1"><spring:message code="snippetCreateForm.languageHint"/></form:option>
-                <c:forEach items="${tagList}" var="tag" varStatus="status">
-                    <form:option value="${tag.id}">${tag.name.toLowerCase()}</form:option>
-                </c:forEach>
-            </form:select>
+                <form:select class="selectpicker flex-grow" data-live-search="true" path="language">
+                    <form:option value="-1"><spring:message code="advanced.language.hint"/></form:option>
+                    <c:forEach items="${languageList}" var="lan" varStatus="status">
+                        <form:option value="${lan.id}">${lan.name.toUpperCase()}</form:option>
+                    </c:forEach>
+                </form:select>
+            </div>
+            <div class="flex-column flex-grow">
+                <form:label cssClass="flex-stretch fw-700" path="language"><spring:message code="advanced.tag"/></form:label>
+
+                <form:select class="selectpicker flex-grow" data-live-search="true" path="tag">
+                    <form:option value="-1"><spring:message code="advanced.tag.hint"/></form:option>
+                    <c:forEach items="${tagList}" var="tag" varStatus="status">
+                        <form:option value="${tag.id}">${tag.name.toLowerCase()}</form:option>
+                    </c:forEach>
+                </form:select>
+            </div>
         </div>
         <form:errors class="form-error" path="tag" element="p"/>
+        <form:errors path="language" cssClass="form-error" element="p"/>
 
-        <form:label cssClass="flex-stretch" path="username"><spring:message code="advanced.username"/></form:label>
+        <form:label cssClass="flex-stretch fw-700" path="username"><spring:message code="advanced.username"/></form:label>
         <div class="flex-row">
-            <form:input path="username" type="text" class="search-input flex-grow fw-100"
-                        placeholder="${search_hint}"/>
+            <form:input path="username" type="text" class="flex-grow fw-100 advanced-input text-input"
+                        placeholder="${advanced_username_hint}"/>
         </div>
         <form:errors class="form-error" path="username" element="p"/>
 
-        <form:label cssClass="flex-stretch" path="minDate"><spring:message code="advanced.uploadDate"/></form:label>
+        <form:label cssClass="flex-stretch fw-700" path="minDate"><spring:message code="advanced.uploadDate"/></form:label>
         <div class="flex-row">
             <div class="flex-column flex-grow">
                 <form:label cssClass="flex-stretch" path="minDate"><spring:message
                         code="advanced.uploadDate.from"/></form:label>
-                <form:input path="minDate" type="date" class="search-input flex-grow fw-100"
-                            placeholder="${search_hint}"/>
+                <form:input path="minDate" type="date" class="flex-grow fw-100 advanced-input date-input"
+                            placeholder="${advanced_date_hint}"/>
             </div>
             <div class="flex-column flex-grow">
                 <form:label cssClass="flex-stretch" path="maxDate"><spring:message
                         code="advanced.uploadDate.to"/></form:label>
-                <form:input path="maxDate" type="date" class="search-input flex-grow fw-100"
-                            placeholder="${search_hint}"/>
+                <form:input path="maxDate" type="date" class="flex-grow fw-100 advanced-input date-input"
+                            placeholder="${advanced_date_hint}"/>
             </div>
         </div>
         <form:errors path="minDate" cssClass="form-error" element="p"/>
         <form:errors path="maxDate" cssClass="form-error" element="p"/>
 
-        <form:label cssClass="flex-stretch" path="minRep"><spring:message code="advanced.reputation"/></form:label>
+        <form:label cssClass="flex-stretch fw-700" path="minRep"><spring:message code="advanced.reputation"/></form:label>
         <div class="flex-row">
             <div class="flex-column flex-grow">
                 <form:label cssClass="flex-stretch" path="minRep"><spring:message
                         code="advanced.reputation.from"/></form:label>
-                <form:input path="minRep" type="number" class="search-input flex-grow fw-100"
-                            placeholder="${search_hint}"/>
+                <form:input path="minRep" type="number" class="fw-100 flex-grow advanced-input text-input"
+                            placeholder="${advanced_reputation_hint}"/>
             </div>
             <div class="flex-column flex-grow">
                 <form:label cssClass="flex-stretch" path="maxRep"><spring:message
                         code="advanced.reputation.to"/></form:label>
-                <form:input path="maxRep" type="number" class="search-input flex-grow fw-100"
-                            placeholder="${search_hint}"/>
+                <form:input path="maxRep" type="number" class="fw-100 flex-grow advanced-input text-input"
+                            placeholder="${advanced_reputation_hint}"/>
             </div>
         </div>
         <form:errors path="minRep" cssClass="form-error" element="p"/>
         <form:errors path="maxRep" cssClass="form-error" element="p"/>
 
-        <form:label cssClass="flex-stretch" path="minVotes"><spring:message code="advanced.votes"/></form:label>
+        <form:label cssClass="flex-stretch fw-700" path="minVotes"><spring:message code="advanced.votes"/></form:label>
         <div class="flex-row">
             <div class="flex-column flex-grow">
                 <form:label cssClass="flex-stretch" path="minVotes"><spring:message
                         code="advanced.votes.from"/></form:label>
-                <form:input path="minVotes" type="number" class="search-input flex-grow fw-100"
-                            placeholder="${search_hint}"/>
+                <form:input path="minVotes" type="number" class="flex-grow fw-100 advanced-input text-input"
+                            placeholder="${advanced_votes_hint}"/>
             </div>
             <div class="flex-column flex-grow">
                 <form:label cssClass="flex-stretch" path="maxVotes"><spring:message
                         code="advanced.votes.to"/></form:label>
-                <form:input path="maxVotes" type="number" class="search-input flex-grow fw-100"
-                            placeholder="${search_hint}"/>
+                <form:input path="maxVotes" type="number" class="flex-grow fw-100 advanced-input text-input"
+                            placeholder="${advanced_votes_hint}"/>
             </div>
         </div>
         <form:errors path="minVotes" cssClass="form-error" element="p"/>
         <form:errors path="maxVotes" cssClass="form-error" element="p"/>
         <div class="flex-row">
-            <button type="submit"><span class="material-icons search-icon">search</span></button>
+            <button class="flex-grow purple-text border-radius advanced-submit-button" type="submit"><spring:message code="search"/></button>
         </div>
     </form:form>
 </div>

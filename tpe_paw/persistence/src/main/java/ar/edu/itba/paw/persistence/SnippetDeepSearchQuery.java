@@ -48,9 +48,9 @@ public class SnippetDeepSearchQuery {
 
         public Builder(boolean isCount) {
             if (isCount){
-                this.query.append("SELECT COUNT(s.id) FROM (SELECT DISTINCT cs.id, cs.user_id, cs.username, cs.reputation, cs.code, cs.title, cs.description, cs.language, cs.date_created, cs.icon, cs.votes, cs.language_id, st.tag_id FROM complete_snippets AS cs LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = cs.id) AS s");
+                this.query.append("SELECT COUNT(s.id) FROM (SELECT DISTINCT cs.id, cs.user_id, cs.username, cs.reputation, cs.code, cs.title, cs.description, cs.language, cs.date_created, cs.icon, cs.votes, cs.language_id, st.tag_id, cs.flagged FROM complete_snippets AS cs LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = cs.id) AS s");
             } else {
-                this.query.append("SELECT * FROM (SELECT DISTINCT cs.id, cs.user_id, cs.username, cs.reputation, cs.code, cs.title, cs.description, cs.language, cs.date_created, cs.icon, cs.votes, cs.language_id, st.tag_id FROM complete_snippets AS cs LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = cs.id) AS s");
+                this.query.append("SELECT * FROM (SELECT DISTINCT cs.id, cs.user_id, cs.username, cs.reputation, cs.code, cs.title, cs.description, cs.language, cs.date_created, cs.icon, cs.votes, cs.language_id, st.tag_id, cs.flagged FROM complete_snippets AS cs LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = cs.id) AS s");
             }
         }
 

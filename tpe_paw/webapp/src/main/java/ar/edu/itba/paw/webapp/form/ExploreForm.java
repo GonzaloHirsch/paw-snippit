@@ -1,20 +1,37 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.validations.BeforeToday;
+import ar.edu.itba.paw.webapp.validations.DateOrder;
+import ar.edu.itba.paw.webapp.validations.IntegerOrder;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
+@DateOrder(min = "minDate", max = "maxDate", message = "{DateOrder.exploreForm.dates}")
+@IntegerOrder(min = "minRep", max = "maxRep", message = "{IntegerOrder.exploreForm.order}")
+@IntegerOrder(min = "minVotes", max = "maxVotes", message = "{IntegerOrder.exploreForm.order}")
 public class ExploreForm {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @BeforeToday(message = "{BeforeToday.exploreForm.date}")
     private Date minDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @BeforeToday(message = "{BeforeToday.exploreForm.date}")
     private Date maxDate;
+    @Max(value = Integer.MAX_VALUE, message = "{Integer.maxValue}")
+    @Min(value = Integer.MIN_VALUE, message = "{Integer.minValue}")
     private Integer minRep;
+    @Max(value = Integer.MAX_VALUE, message = "{Integer.maxValue}")
+    @Min(value = Integer.MIN_VALUE, message = "{Integer.minValue}")
     private Integer maxRep;
+    @Max(value = Integer.MAX_VALUE, message = "{Integer.maxValue}")
+    @Min(value = Integer.MIN_VALUE, message = "{Integer.minValue}")
     private Integer minVotes;
+    @Max(value = Integer.MAX_VALUE, message = "{Integer.maxValue}")
+    @Min(value = Integer.MIN_VALUE, message = "{Integer.minValue}")
     private Integer maxVotes;
     @Min(value=-1)
     private Long language;

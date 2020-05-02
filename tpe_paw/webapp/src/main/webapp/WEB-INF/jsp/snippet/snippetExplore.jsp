@@ -4,8 +4,8 @@
 
 <html>
 <head>
-    <title><spring:message code="app.name"/> | <spring:message code="menu.home"/></title>
-    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon.ico'/>"/>
+    <title><spring:message code="app.name"/> | <spring:message code="menu.explore"/></title>
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon/favicon.ico'/>"/>
     <link href="<c:url value='/resources/css/snippetFeed.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippetExplore.css'/>" rel="stylesheet"/>

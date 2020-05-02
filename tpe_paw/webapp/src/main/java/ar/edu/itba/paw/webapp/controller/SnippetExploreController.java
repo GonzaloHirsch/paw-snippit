@@ -50,7 +50,7 @@ public class SnippetExploreController {
     }
 
     @RequestMapping("/explore/search")
-    public ModelAndView exploreSearch(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, @Valid @ModelAttribute("exploreForm") final ExploreForm exploreForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page, final BindingResult errors) {
+    public ModelAndView exploreSearch(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, @Valid @ModelAttribute("exploreForm") final ExploreForm exploreForm, final BindingResult errors, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         if (errors.hasErrors()) {
             return explore(searchForm, exploreForm, page);
         }

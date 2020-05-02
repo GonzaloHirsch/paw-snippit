@@ -63,6 +63,14 @@
                 </div>
                 <div class="flex-row flex-center">
                     <c:set var="snippetId" value="${snippet.id}" scope="request"/>
+                    <c:set var="currentUser" value="${currentUser}" scope="request"/>
+                    <!-- FLAG -->
+                    <c:if test="${currentUser != null && currentUser.username == 'admin'}">
+                        <div class="flex-center detail-snippet-block border-radius">
+                            <c:import url="/WEB-INF/jsp/admin/adminFlagForm.jsp"/>
+                        </div>
+                    </c:if>
+
                     <!-- FAVORITES -->
                     <div class="flex-center detail-snippet-block border-radius">
                         <c:import url="/WEB-INF/jsp/snippet/favForm.jsp"/>

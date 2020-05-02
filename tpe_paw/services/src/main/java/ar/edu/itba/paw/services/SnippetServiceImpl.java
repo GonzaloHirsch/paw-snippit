@@ -35,6 +35,11 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
+    public boolean isFlaggedByAdmin(Snippet snippet) {
+        return snippet.isFlagged();
+    }
+
+    @Override
     public Optional<Snippet> findSnippetById(long id) { return snippetDao.findSnippetById(id);}
 
     @Override
@@ -108,5 +113,14 @@ public class SnippetServiceImpl implements SnippetService {
             tagService.addTagsToSnippet(snippetId, tags);
 
         return snippetId;
+    }
+
+    @Override
+    public void updateFlagged(long snippetId, boolean isFlagged) {
+        if (isFlagged) {
+            snippetDao.flagSnippet(snippetId);
+        } else {
+            snippetDao.unflagSnippet(snippetId);
+        }
     }
 }

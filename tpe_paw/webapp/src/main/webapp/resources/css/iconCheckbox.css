@@ -1,0 +1,13 @@
+/* CSS for the favorite icon --> favForm.jsp */
+
+.selected-icon {
+    color: crimson !important;
+}
+
+.unselected-icon:hover {
+    color: crimson;
+}
+
+.unselected-icon {
+    color: gray !important;
+}

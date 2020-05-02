@@ -38,6 +38,8 @@ public interface SnippetDao {
     Optional<Snippet> findSnippetById(long id);
     Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language);
     Collection<Snippet> findSnippetsForTag(long tagId);
+    void flagSnippet(long snippetId);
+    void unflagSnippet(long snippetId);
     int getPageSize();
     int getAllSnippetsCount();
     int getAllFavoriteSnippetsCount(final long userId);

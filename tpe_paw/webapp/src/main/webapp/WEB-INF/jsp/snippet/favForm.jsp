@@ -4,7 +4,7 @@
 
 <html>
 <head>
-    <link href="<c:url value='/resources/css/favorites.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/iconCheckbox.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
           rel="stylesheet">
@@ -20,10 +20,10 @@
         <label for="fav-button">
             <c:choose>
                 <c:when test="${favForm.favorite}">
-                    <i class="fav-icon-selected material-icons snippet-icon">favorite</i>
+                    <i class="selected-icon material-icons snippet-icon">favorite</i>
                 </c:when>
                 <c:otherwise>
-                    <i class="fav-icon material-icons snippet-icon">favorite_border</i>
+                    <i class="unselected-icon material-icons snippet-icon">favorite_border</i>
                 </c:otherwise>
             </c:choose>
         </label>

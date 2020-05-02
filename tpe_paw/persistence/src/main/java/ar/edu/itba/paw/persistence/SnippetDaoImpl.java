@@ -130,6 +130,16 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
+    public void flagSnippet(long snippetId) {
+        jdbcTemplate.update("UPDATE snippets SET flagged = 1 WHERE id = ?", snippetId);
+    }
+
+    @Override
+    public void unflagSnippet(long snippetId) {
+        jdbcTemplate.update("UPDATE snippets SET flagged = 0 WHERE id = ?", snippetId);
+    }
+
+    @Override
     public int getPageSize() {
         return PAGE_SIZE;
     }

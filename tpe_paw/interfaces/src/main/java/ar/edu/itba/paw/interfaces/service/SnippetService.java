@@ -17,6 +17,8 @@ public interface SnippetService {
     Collection<Snippet> findAllSnippetsByOwner(final long userId, int page);
     Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page);
     Collection<Snippet> findSnippetsForTag(long tagId);
+    boolean isFlaggedByAdmin(Snippet snippet);
+    void updateFlagged(long snippetId, boolean isFlagged);
     int getAllSnippetsCount();
     int getAllFavoriteSnippetsCount(final long userId);
     int getAllFollowingSnippetsCount(final long userId);

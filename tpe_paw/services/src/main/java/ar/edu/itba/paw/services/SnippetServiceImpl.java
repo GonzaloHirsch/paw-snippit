@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -32,6 +33,11 @@ public class SnippetServiceImpl implements SnippetService {
     @Override
     public Collection<Snippet> findSnippetsForTag(long tagId) {
         return snippetDao.findSnippetsForTag(tagId);
+    }
+
+    @Override
+    public Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, int page) {
+        return this.snippetDao.findSnippetByDeepCriteria(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, page);
     }
 
     @Override
@@ -93,6 +99,11 @@ public class SnippetServiceImpl implements SnippetService {
     @Override
     public int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId) {
         return this.snippetDao.getSnippetByCriteriaCount(SnippetDao.QueryTypes.COUNT, type, term, location, userId);
+    }
+
+    @Override
+    public int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort) {
+        return this.snippetDao.getSnippetByDeepCriteriaCount(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort);
     }
 
     @Override

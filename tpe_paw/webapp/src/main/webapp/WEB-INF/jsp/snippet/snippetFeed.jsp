@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
 <head>
@@ -12,12 +13,20 @@
 <body>
 <c:set var="snippetList" value="${requestScope.snippetList}"/>
 <c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>
-<div class="feed-snippets-grid">
-    <c:forEach var="snippet" items="${snippetList}">
-        <c:set var="snippet" value="${snippet}" scope="request"/>
-        <c:import url="/WEB-INF/jsp/snippet/snippetCard.jsp"/>
-    </c:forEach>
-</div>
+<c:if test="${snippetList.size() == 0}">
+    <div class="no-snippet flex-center fw-100">
+        <spring:message code="feed.no-snippets"/>
+    </div>
+</c:if>
+<c:if test="${snippetList.size() > 0}">
+    <div class="feed-snippets-grid">
+
+        <c:forEach var="snippet" items="${snippetList}">
+            <c:set var="snippet" value="${snippet}" scope="request"/>
+            <c:import url="/WEB-INF/jsp/snippet/snippetCard.jsp"/>
+        </c:forEach>
+    </div>
+</c:if>
 <c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>
 <script src="<c:url value='/resources/js/snippetsFeed.js'/>"></script>
 </body>

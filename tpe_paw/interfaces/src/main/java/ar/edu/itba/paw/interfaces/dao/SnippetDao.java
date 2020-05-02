@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.dao;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -11,7 +12,8 @@ public interface SnippetDao {
     enum Locations {
         HOME,
         FAVORITES,
-        FOLLOWING
+        FOLLOWING,
+        UPVOTED
     }
     enum Types {
         ALL,
@@ -30,6 +32,7 @@ public interface SnippetDao {
     }
 
     Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page);
+    Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, int page);
     Collection<Snippet> getAllSnippets(int page);
     Collection<Snippet> getAllFavoriteSnippets(final long userId, int page);
     Collection<Snippet> getAllFollowingSnippets(final long userId, int page);
@@ -50,4 +53,5 @@ public interface SnippetDao {
     int getAllSnippetsByOwnerCount(final long userId);
     int getAllSnippetsByTagCount(final long tagId);
     int getSnippetByCriteriaCount(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId);
+    int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort);
 }

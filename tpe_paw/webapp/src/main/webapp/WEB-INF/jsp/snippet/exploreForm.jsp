@@ -27,10 +27,10 @@
 <div class="flex-column explore-container">
     <form:form class="form-container" action="/explore/search" method="get" modelAttribute="exploreForm">
 
-        <form:label cssClass="flex-stretch fw-700" path="field"><spring:message code="advanced.ordersort"/></form:label>
+        <form:label cssClass="flex-stretch fw-500" path="field"><spring:message code="advanced.ordersort"/></form:label>
         <div class="flex-row">
             <div class="flex-column flex-grow">
-                <form:label cssClass="flex-stretch" path="field"><spring:message code="advanced.orderby"/></form:label>
+                <form:label cssClass="flex-stretch sub-label" path="field"><spring:message code="advanced.orderby"/></form:label>
                 <form:select class="selectpicker flex-grow" path="field">
                     <form:option value="date">
                         <spring:message code="advanced.orderby"/>
@@ -47,7 +47,7 @@
                 </form:select>
             </div>
             <div class="flex-column flex-grow">
-                <form:label cssClass="flex-stretch" path="title"><spring:message code="advanced.sortby"/></form:label>
+                <form:label cssClass="flex-stretch sub-label" path="title"><spring:message code="advanced.sortby"/></form:label>
                 <form:select class="selectpicker flex-grow" path="sort">
                     <form:option value="asc">
                         <spring:message code="sort.sortby"/>
@@ -62,16 +62,20 @@
             </div>
         </div>
 
-        <form:label cssClass="flex-stretch fw-700" path="title"><spring:message code="advanced.title"/></form:label>
+        <hr/>
+
+        <form:label cssClass="flex-stretch fw-500" path="title"><spring:message code="advanced.title"/></form:label>
         <div class="flex-row">
             <form:input path="title" type="text" class="flex-grow fw-100 advanced-input text-input"
                         placeholder="${advanced_title_hint}"/>
         </div>
         <form:errors class="form-error" path="title" element="p"/>
 
+        <hr/>
+
         <div class="flex-row">
             <div class="flex-column flex-grow">
-                <form:label cssClass="flex-stretch fw-700" path="language"><spring:message code="advanced.language"/></form:label>
+                <form:label cssClass="flex-stretch fw-500" path="language"><spring:message code="advanced.language"/></form:label>
 
                 <form:select class="selectpicker flex-grow" data-live-search="true" path="language">
                     <form:option value="-1"><spring:message code="advanced.language.hint"/></form:option>
@@ -81,7 +85,7 @@
                 </form:select>
             </div>
             <div class="flex-column flex-grow">
-                <form:label cssClass="flex-stretch fw-700" path="language"><spring:message code="advanced.tag"/></form:label>
+                <form:label cssClass="flex-stretch fw-500" path="language"><spring:message code="advanced.tag"/></form:label>
 
                 <form:select class="selectpicker flex-grow" data-live-search="true" path="tag">
                     <form:option value="-1"><spring:message code="advanced.tag.hint"/></form:option>
@@ -94,23 +98,27 @@
         <form:errors class="form-error" path="tag" element="p"/>
         <form:errors path="language" cssClass="form-error" element="p"/>
 
-        <form:label cssClass="flex-stretch fw-700" path="username"><spring:message code="advanced.username"/></form:label>
+        <hr/>
+
+        <form:label cssClass="flex-stretch fw-500" path="username"><spring:message code="advanced.username"/></form:label>
         <div class="flex-row">
             <form:input path="username" type="text" class="flex-grow fw-100 advanced-input text-input"
                         placeholder="${advanced_username_hint}"/>
         </div>
         <form:errors class="form-error" path="username" element="p"/>
 
-        <form:label cssClass="flex-stretch fw-700" path="minDate"><spring:message code="advanced.uploadDate"/></form:label>
+        <hr/>
+
+        <form:label cssClass="flex-stretch fw-500" path="minDate"><spring:message code="advanced.uploadDate"/></form:label>
         <div class="flex-row">
             <div class="flex-column flex-grow">
-                <form:label cssClass="flex-stretch" path="minDate"><spring:message
+                <form:label cssClass="flex-stretch sub-label" path="minDate"><spring:message
                         code="advanced.uploadDate.from"/></form:label>
                 <form:input path="minDate" type="date" class="flex-grow fw-100 advanced-input date-input"
                             placeholder="${advanced_date_hint}"/>
             </div>
             <div class="flex-column flex-grow">
-                <form:label cssClass="flex-stretch" path="maxDate"><spring:message
+                <form:label cssClass="flex-stretch sub-label" path="maxDate"><spring:message
                         code="advanced.uploadDate.to"/></form:label>
                 <form:input path="maxDate" type="date" class="flex-grow fw-100 advanced-input date-input"
                             placeholder="${advanced_date_hint}"/>
@@ -119,16 +127,18 @@
         <form:errors path="minDate" cssClass="form-error" element="p"/>
         <form:errors path="maxDate" cssClass="form-error" element="p"/>
 
-        <form:label cssClass="flex-stretch fw-700" path="minRep"><spring:message code="advanced.reputation"/></form:label>
+        <hr/>
+
+        <form:label cssClass="flex-stretch fw-500" path="minRep"><spring:message code="advanced.reputation"/></form:label>
         <div class="flex-row">
             <div class="flex-column flex-grow">
-                <form:label cssClass="flex-stretch" path="minRep"><spring:message
+                <form:label cssClass="flex-stretch sub-label" path="minRep"><spring:message
                         code="advanced.reputation.from"/></form:label>
                 <form:input path="minRep" type="number" class="fw-100 flex-grow advanced-input text-input"
                             placeholder="${advanced_reputation_hint}"/>
             </div>
             <div class="flex-column flex-grow">
-                <form:label cssClass="flex-stretch" path="maxRep"><spring:message
+                <form:label cssClass="flex-stretch sub-label" path="maxRep"><spring:message
                         code="advanced.reputation.to"/></form:label>
                 <form:input path="maxRep" type="number" class="fw-100 flex-grow advanced-input text-input"
                             placeholder="${advanced_reputation_hint}"/>
@@ -137,16 +147,18 @@
         <form:errors path="minRep" cssClass="form-error" element="p"/>
         <form:errors path="maxRep" cssClass="form-error" element="p"/>
 
-        <form:label cssClass="flex-stretch fw-700" path="minVotes"><spring:message code="advanced.votes"/></form:label>
+        <hr/>
+
+        <form:label cssClass="flex-stretch fw-500" path="minVotes"><spring:message code="advanced.votes"/></form:label>
         <div class="flex-row">
             <div class="flex-column flex-grow">
-                <form:label cssClass="flex-stretch" path="minVotes"><spring:message
+                <form:label cssClass="flex-stretch sub-label" path="minVotes"><spring:message
                         code="advanced.votes.from"/></form:label>
                 <form:input path="minVotes" type="number" class="flex-grow fw-100 advanced-input text-input"
                             placeholder="${advanced_votes_hint}"/>
             </div>
             <div class="flex-column flex-grow">
-                <form:label cssClass="flex-stretch" path="maxVotes"><spring:message
+                <form:label cssClass="flex-stretch sub-label" path="maxVotes"><spring:message
                         code="advanced.votes.to"/></form:label>
                 <form:input path="maxVotes" type="number" class="flex-grow fw-100 advanced-input text-input"
                             placeholder="${advanced_votes_hint}"/>
@@ -155,7 +167,7 @@
         <form:errors path="minVotes" cssClass="form-error" element="p"/>
         <form:errors path="maxVotes" cssClass="form-error" element="p"/>
         <div class="flex-row">
-            <button class="flex-grow purple-text border-radius advanced-submit-button" type="submit"><spring:message code="search"/></button>
+            <button class="flex-grow border-radius advanced-submit-button" type="submit"><spring:message code="search"/></button>
         </div>
     </form:form>
 </div>

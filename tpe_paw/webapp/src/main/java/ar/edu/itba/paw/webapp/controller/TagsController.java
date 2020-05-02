@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
+import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
@@ -32,6 +33,8 @@ public class TagsController {
     private SnippetService snippetService;
     @Autowired
     private LoginAuthentication loginAuthentication;
+    @Autowired
+    private UserService userService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TagsController.class);
 
@@ -93,6 +96,18 @@ public class TagsController {
             LOGGER.warn("No user logged in but tag {} was unfollowed", tagId);
         }
         return new ModelAndView("redirect:/tags/" + tagId);
+    }
+
+    @RequestMapping("/tags/{tagId}/delete")
+    public ModelAndView deleteTag(@PathVariable("tagId") long tagId) {
+        User currentUser = loginAuthentication.getLoggedInUser();
+        if ( currentUser != null && userService.isAdmin(currentUser)){
+            //tagService.unfollowTag(currentUser.getId(), tagId);
+            LOGGER.debug("Admin deleted tag with id {}", tagId);
+        } else {
+            LOGGER.warn("No user logged in or logged in user not admin but tag {} was deleted", tagId);
+        }
+        return new ModelAndView("redirect:/tags");
     }
 
     @ModelAttribute

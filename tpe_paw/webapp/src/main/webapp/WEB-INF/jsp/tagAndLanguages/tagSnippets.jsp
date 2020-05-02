@@ -32,6 +32,11 @@
                             </a>
                         </c:otherwise>
                     </c:choose>
+                    <c:if test="${currentUser.username == 'admin'}">
+                        <a href="<c:url value='/tags/${tag.id}/delete'/>" class="flex-center no-text-decoration">
+                            <div class="delete-element-icon material-icons border-radius">delete</div>
+                        </a>
+                    </c:if>
                 </c:if>
             </div>
             <c:set var="snippetList" value="${snippets}" scope="request"/>

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
+import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
@@ -30,12 +31,15 @@ public class SnippetFeedController {
     private LoginAuthentication loginAuthentication;
     @Autowired
     private TagService tagService;
+    @Autowired
+    UserService userService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetFeedController.class);
     private static final String HOME = "";
     private static final String FOLLOWING = "following/";
     private static final String FAVORITES = "favorites/";
     private static final String UPVOTED = "upvoted/";
+    private static final String FLAGGED = "flagged/";
 
     @RequestMapping("/")
     public ModelAndView getHomeSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
@@ -90,6 +94,21 @@ public class SnippetFeedController {
         int totalSnippetCount = this.snippetService.getAllUpvotedSnippetsCount(currentUser.getId());
 
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, UPVOTED);
+
+        return mav;
+    }
+
+    @RequestMapping("/flagged")
+    public ModelAndView getFlaggedSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+        final ModelAndView mav = new ModelAndView("index");
+
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null || userService.isAdmin(currentUser)) this.logAndThrow(FLAGGED);
+
+        Collection<Snippet> snippets = this.snippetService.getAllFlaggedSnippets(page);
+        int totalSnippetCount = this.snippetService.getAllFlaggedSnippetsCount();
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FLAGGED);
 
         return mav;
     }

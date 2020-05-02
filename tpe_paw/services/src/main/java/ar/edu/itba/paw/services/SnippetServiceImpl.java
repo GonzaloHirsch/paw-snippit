@@ -41,6 +41,11 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
+    public boolean isFlaggedByAdmin(Snippet snippet) {
+        return snippet.isFlagged();
+    }
+
+    @Override
     public Optional<Snippet> findSnippetById(long id) { return snippetDao.findSnippetById(id);}
 
     @Override
@@ -74,6 +79,11 @@ public class SnippetServiceImpl implements SnippetService {
     @Override
     public int getAllUpvotedSnippetsCount(long userId) {
         return snippetDao.getAllUpvotedSnippetsCount(userId);
+    }
+
+    @Override
+    public int getAllFlaggedSnippetsCount() {
+        return snippetDao.getAllFlaggedSnippetsCount();
     }
 
     @Override
@@ -112,6 +122,11 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
+    public Collection<Snippet> getAllFlaggedSnippets(int page) {
+        return snippetDao.getAllFlaggedSnippets(page);
+    }
+
+    @Override
     public Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<Long> tags) {
         Long snippetId =  snippetDao.createSnippet(owner,title,description,code,dateCreated,language);
         //TODO: See if its better to call TagService instead of TagDao directly.
@@ -119,5 +134,14 @@ public class SnippetServiceImpl implements SnippetService {
             tagService.addTagsToSnippet(snippetId, tags);
 
         return snippetId;
+    }
+
+    @Override
+    public void updateFlagged(long snippetId, boolean isFlagged) {
+        if (isFlagged) {
+            snippetDao.flagSnippet(snippetId);
+        } else {
+            snippetDao.unflagSnippet(snippetId);
+        }
     }
 }

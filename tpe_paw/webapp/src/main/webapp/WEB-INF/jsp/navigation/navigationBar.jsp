@@ -61,32 +61,48 @@
         </c:choose>
         <c:if test="${currentUser != null}">
             <hr/>
-            <c:if test="${currentUser.username != 'admin'}">
-                <c:choose>
-                    <c:when test="${searchContext == 'user/'}">
-                        <a class="fw-100 menu-option menu-selected flex-center" href="<c:url
-                            value="${'/user/'}${currentUser.id}"/>">
-                        <c:if test="${currentUser.icon != null}">
-                            <img src="<c:url value="/user/${currentUser.id}/image"/>" alt="User Icon"/>
-                        </c:if>
-                        <c:if test="${currentUser.icon == null}">
-                            <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
-                        </c:if>
-                        <spring:message code="menu.profile"/>
-                        </a>
-                    </c:when>
-                    <c:otherwise>
-                        <a class="fw-100 menu-option" href="<c:url value="${'/user/'}${currentUser.id}"/>">
-                        <c:if test="${currentUser.icon != null}">
-                            <img src="<c:url value="/user/${currentUser.id}/image"/>" alt="User Icon"/>
-                        </c:if>
-                        <c:if test="${currentUser.icon == null}">
-                            <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
-                        </c:if>
-                        <spring:message code="menu.profile"/></a>
-                    </c:otherwise>
-                </c:choose>
-            </c:if>
+            <c:choose>
+                <c:when test="${currentUser.username != 'admin'}">
+                    <c:choose>
+                        <c:when test="${searchContext == 'user/'}">
+                            <a class="fw-100 menu-option menu-selected flex-center" href="<c:url
+                                value="${'/user/'}${currentUser.id}"/>">
+                            <c:if test="${currentUser.icon != null}">
+                                <img src="<c:url value="/user/${currentUser.id}/image"/>" alt="User Icon"/>
+                            </c:if>
+                            <c:if test="${currentUser.icon == null}">
+                                <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
+                            </c:if>
+                            <spring:message code="menu.profile"/>
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <a class="fw-100 menu-option" href="<c:url value="${'/user/'}${currentUser.id}"/>">
+                            <c:if test="${currentUser.icon != null}">
+                                <img src="<c:url value="/user/${currentUser.id}/image"/>" alt="User Icon"/>
+                            </c:if>
+                            <c:if test="${currentUser.icon == null}">
+                                <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
+                            </c:if>
+                            <spring:message code="menu.profile"/></a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:when>
+                <c:otherwise>
+                    <c:choose>
+                        <c:when test="${searchContext == 'flagged/'}">
+                            <a class="fw-100 menu-option menu-selected" href="<c:url value="/flagged/"/>">
+                            <span class="material-icons menu-option-icon">flag</span>
+                            <spring:message code="menu.flagged"/></a>
+                        </c:when>
+                        <c:otherwise>
+                            <a class="fw-100 menu-option" href="<c:url value="/flagged/"/>"><span
+                            class="material-icons menu-option-icon">flag</span>
+                            <spring:message code="menu.flagged"/></a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:otherwise>
+            </c:choose>
             <c:choose>
                 <c:when test="${searchContext == 'following/'}">
                     <a class="fw-100 menu-option menu-selected" href="<c:url value="/following/"/>">

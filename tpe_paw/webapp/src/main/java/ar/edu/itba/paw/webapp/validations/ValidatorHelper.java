@@ -25,6 +25,10 @@ public class ValidatorHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidatorHelper.class);
 
     public void validateAdminAdd (List<String> languages, List<String> tags, BindingResult errors, Locale locale) {
+        if (languages.isEmpty() && tags.isEmpty()) {
+            FieldError noData = new FieldError("addAdminForm","languages" ,messageSource.getMessage("admin.add.no.data",null, locale));
+            errors.addError(noData);
+        }
         this.validateAddedLanguages(languages, errors, locale);
         this.validateAddedTags(tags, errors, locale);
     }
@@ -58,10 +62,10 @@ public class ValidatorHelper {
             }
         }
 
-        if (errorAmount != 0) {
+        if (errorAmount > 0) {
             error.setLength(error.length() - 2);
-            FieldError tagExists = new FieldError("addAdminForm","languages" ,messageSource.getMessage("admin.add.lang.exists",new Object[] {error.toString()}, locale));
-            errors.addError(tagExists);
+            FieldError langExists = new FieldError("addAdminForm","languages" ,messageSource.getMessage("admin.add.lang.exists",new Object[] {error.toString()}, locale));
+            errors.addError(langExists);
         }
     }
 

@@ -47,6 +47,7 @@
 .snippet-icon {
     font-size: 60px !important;
     color: lightgray;
+    cursor: pointer;
 }
 
 pre {

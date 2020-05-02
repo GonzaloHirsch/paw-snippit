@@ -1,0 +1,22 @@
+.flagged-container {
+    border: solid red 2px;
+    margin: 0px 0px 15px 0px;
+    padding: 12px;
+}
+
+.flagged-message-container {
+    height: 80px;
+    justify-content: center;
+    padding: 0px 5px;
+}
+
+.flagged-message-container h3 {
+    padding: 0px;
+    margin: 0px
+}
+
+
+.flagged-message-container p {
+    padding: 0px;
+    margin: 0px;
+}

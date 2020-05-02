@@ -14,7 +14,7 @@
 <body>
 <c:set var="snippet" value="${requestScope.snippet}"/>
 <a href="<c:url value='/snippet/${snippet.id}'/>" class="flex-column card-snippet-container">
-    <div class="flex-column card-snippet-content">
+    <div class="flex-column card-snippet-content border-radius">
 
         <!-- Top card section containing icon, username, date and language -->
         <div class="flex-row snippet-upload-spacing">
@@ -43,7 +43,7 @@
             </div>
         </c:if>
 
-        <div class="flex-column snippet-code-container">
+        <div class="flex-column snippet-code-container border-radius">
             <div class="card-snippet-block">
                 <pre><code>${fn:escapeXml(snippet.code)}</code></pre>
                 <p class="card-snippet-fade-out card-snippet-fade-out-code"></p>

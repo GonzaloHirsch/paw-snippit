@@ -20,7 +20,9 @@ public interface SnippetDao {
         ALL,
         TAG,
         CONTENT,
-        TITLE
+        TITLE,
+        USER,
+        LANGUAGE
     }
     enum Orders {
         NO,

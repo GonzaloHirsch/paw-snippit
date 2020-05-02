@@ -39,10 +39,12 @@ public class SnippetSearchQuery {
          * Map used to map types of search to the corresponding queries they translate to
          */
         private final Map<SnippetDao.Types, String> typeMap = new HashMap<SnippetDao.Types, String>(){{
-            put(SnippetDao.Types.ALL, " AS s LEFT OUTER JOIN snippet_tags AS ts ON s.id = ts.snippet_id LEFT OUTER JOIN tags AS t ON t.id = ts.tag_id WHERE lower(t.name) LIKE lower(?) OR lower(s.title) LIKE lower(?) OR lower(s.code) LIKE lower(?)");
+            put(SnippetDao.Types.ALL, " AS s LEFT OUTER JOIN snippet_tags AS ts ON s.id = ts.snippet_id LEFT OUTER JOIN tags AS t ON t.id = ts.tag_id WHERE lower(t.name) LIKE lower(?) OR lower(s.title) LIKE lower(?) OR lower(s.code) LIKE lower(?) OR lower(s.username) LIKE lower(?) OR lower(s.language) LIKE lower(?)");
             put(SnippetDao.Types.TAG, " AS s INNER JOIN snippet_tags AS ts ON s.id = ts.snippet_id INNER JOIN tags AS t ON t.id = ts.tag_id WHERE lower(t.name) LIKE lower(?)");
             put(SnippetDao.Types.TITLE, " AS s WHERE lower(s.title) LIKE lower(?)");
             put(SnippetDao.Types.CONTENT, " AS s WHERE lower(s.code) LIKE lower(?)");
+            put(SnippetDao.Types.USER, " AS s WHERE lower(s.username) LIKE lower(?)");
+            put(SnippetDao.Types.LANGUAGE, " AS s WHERE lower(s.language) LIKE lower(?)");
         }};
         /**
          * Map used to map the locations or sources of snippets to be searched among to the corresponding queries they translate to
@@ -69,6 +71,8 @@ public class SnippetSearchQuery {
             put(SnippetDao.Types.TAG, " t.name ");
             put(SnippetDao.Types.TITLE, " s.title ");
             put(SnippetDao.Types.CONTENT, " s.code ");
+            put(SnippetDao.Types.USER, " s.username ");
+            put(SnippetDao.Types.LANGUAGE, " s.language ");
         }};
         private final Map<SnippetDao.QueryTypes, String> queryTypesMap = new HashMap<SnippetDao.QueryTypes, String>(){{
             put(SnippetDao.QueryTypes.COUNT, "SELECT COUNT(DISTINCT s.id) FROM ");

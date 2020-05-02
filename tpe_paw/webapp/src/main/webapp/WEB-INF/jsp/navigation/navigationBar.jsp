@@ -188,6 +188,12 @@
                     <form:option value="content">
                         <spring:message code="search.content"/>
                     </form:option>
+                    <form:option value="username">
+                        <spring:message code="search.username"/>
+                    </form:option>
+                    <form:option value="language">
+                        <spring:message code="search.language"/>
+                    </form:option>
                 </form:select>
                 </div>
                 <div class="dropdown-type">

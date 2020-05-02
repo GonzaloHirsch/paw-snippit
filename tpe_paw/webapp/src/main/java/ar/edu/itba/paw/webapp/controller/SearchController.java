@@ -33,6 +33,8 @@ public class SearchController {
         put("tag", SnippetDao.Types.TAG);
         put("title", SnippetDao.Types.TITLE);
         put("content", SnippetDao.Types.CONTENT);
+        put("username", SnippetDao.Types.USER);
+        put("language", SnippetDao.Types.LANGUAGE);
     }};
 
     private Map<String, SnippetDao.Orders> ordersMap = new HashMap<String, SnippetDao.Orders>(){{

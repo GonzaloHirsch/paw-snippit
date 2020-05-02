@@ -150,6 +150,11 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
+    public int getAllUpvotedSnippetsCount(long userId) {
+        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT sn.id) FROM complete_snippets AS sn JOIN votes_for AS vf ON vf.snippet_id = sn.id WHERE vf.user_id = ?", new Object[]{userId}, Integer.class);
+    }
+
+    @Override
     public int getAllSnippetsByOwnerCount(long userId) {
         return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT s.id) FROM complete_snippets AS s WHERE s.user_id = ?", new Object[]{userId}, Integer.class);
     }

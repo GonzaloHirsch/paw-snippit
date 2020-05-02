@@ -66,6 +66,11 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
+    public int getAllUpvotedSnippetsCount(long userId) {
+        return snippetDao.getAllUpvotedSnippetsCount(userId);
+    }
+
+    @Override
     public int getAllSnippetsByOwnerCount(long userId) {
         return this.snippetDao.getAllSnippetsByOwnerCount(userId);
     }

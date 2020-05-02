@@ -20,6 +20,7 @@ public interface SnippetService {
     int getAllSnippetsCount();
     int getAllFavoriteSnippetsCount(final long userId);
     int getAllFollowingSnippetsCount(final long userId);
+    int getAllUpvotedSnippetsCount(final long userId);
     int getAllSnippetsByOwnerCount(final long userId);
     int getAllSnippetsByTagCount(final long tagId);
     int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId);

@@ -87,7 +87,7 @@ public class SnippetFeedController {
         if (currentUser == null) this.logAndThrow(UPVOTED);
 
         Collection<Snippet> snippets = this.snippetService.getAllUpVotedSnippets(currentUser.getId(), page);
-        int totalSnippetCount = snippets.size();
+        int totalSnippetCount = this.snippetService.getAllUpvotedSnippetsCount(currentUser.getId());
 
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, UPVOTED);
 

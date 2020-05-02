@@ -34,6 +34,7 @@ public interface SnippetDao {
     Collection<Snippet> getAllFavoriteSnippets(final long userId, int page);
     Collection<Snippet> getAllFollowingSnippets(final long userId, int page);
     Collection<Snippet> getAllUpVotedSnippets(final long userId, int page);
+    Collection<Snippet> getAllFlaggedSnippets(int page);
     Collection<Snippet> findAllSnippetsByOwner(final long userId, int page);
     Optional<Snippet> findSnippetById(long id);
     Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language);
@@ -45,6 +46,7 @@ public interface SnippetDao {
     int getAllFavoriteSnippetsCount(final long userId);
     int getAllFollowingSnippetsCount(final long userId);
     int getAllUpvotedSnippetsCount(final long userId);
+    int getAllFlaggedSnippetsCount();
     int getAllSnippetsByOwnerCount(final long userId);
     int getAllSnippetsByTagCount(final long tagId);
     int getSnippetByCriteriaCount(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId);

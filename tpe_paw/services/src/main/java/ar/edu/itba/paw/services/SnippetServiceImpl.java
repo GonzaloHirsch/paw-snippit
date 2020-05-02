@@ -76,6 +76,11 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
+    public int getAllFlaggedSnippetsCount() {
+        return snippetDao.getAllFlaggedSnippetsCount();
+    }
+
+    @Override
     public int getAllSnippetsByOwnerCount(long userId) {
         return this.snippetDao.getAllSnippetsByOwnerCount(userId);
     }
@@ -103,6 +108,11 @@ public class SnippetServiceImpl implements SnippetService {
     @Override
     public Collection<Snippet> getAllUpVotedSnippets(long userId, int page) {
         return snippetDao.getAllUpVotedSnippets(userId, page);
+    }
+
+    @Override
+    public Collection<Snippet> getAllFlaggedSnippets(int page) {
+        return snippetDao.getAllFlaggedSnippets(page);
     }
 
     @Override

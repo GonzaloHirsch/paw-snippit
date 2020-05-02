@@ -88,6 +88,11 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
+    public Collection<Snippet> getAllFlaggedSnippets(int page) {
+        return jdbcTemplate.query("SELECT * FROM complete_snippets WHERE flagged = 1 LIMIT ? OFFSET ?", ROW_MAPPER, PAGE_SIZE, PAGE_SIZE * (page - 1));
+    }
+
+    @Override
     public Collection<Snippet> findAllSnippetsByOwner(long userId, int page) {
         return jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.user_id = ? LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
     }
@@ -162,6 +167,11 @@ public class SnippetDaoImpl implements SnippetDao {
     @Override
     public int getAllUpvotedSnippetsCount(long userId) {
         return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT sn.id) FROM complete_snippets AS sn JOIN votes_for AS vf ON vf.snippet_id = sn.id WHERE vf.user_id = ?", new Object[]{userId}, Integer.class);
+    }
+
+    @Override
+    public int getAllFlaggedSnippetsCount() {
+        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT id) FROM complete_snippets WHERE flagged = 1", Integer.class);
     }
 
     @Override

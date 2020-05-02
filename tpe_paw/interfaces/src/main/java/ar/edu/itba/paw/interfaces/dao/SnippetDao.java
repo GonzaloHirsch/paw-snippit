@@ -12,7 +12,8 @@ public interface SnippetDao {
     enum Locations {
         HOME,
         FAVORITES,
-        FOLLOWING
+        FOLLOWING,
+        UPVOTED
     }
     enum Types {
         ALL,

@@ -22,4 +22,6 @@ public interface UserDao {
     void changeProfilePhoto(final long userId, final byte[] photo);
 
     void changeDescription(final long userId, final String description);
+
+    void changeReputation(long userId, int value, boolean add);
 }

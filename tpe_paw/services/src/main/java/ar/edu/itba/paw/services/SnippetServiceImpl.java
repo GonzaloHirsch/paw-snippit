@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.dao.TagDao;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
+import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class SnippetServiceImpl implements SnippetService {
     private SnippetDao snippetDao;
 
     @Autowired
-    private TagDao tagDao;
+    private UserService userService;
 
     @Autowired
     private TagService tagService;
@@ -41,7 +42,7 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
-    public boolean isFlaggedByAdmin(Snippet snippet) {
+    public boolean isFlaggedByAdmin(final Snippet snippet) {
         return snippet.isFlagged();
     }
 
@@ -137,11 +138,13 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
-    public void updateFlagged(long snippetId, boolean isFlagged) {
+    public void updateFlagged(long snippetId, long userId, boolean isFlagged) {
         if (isFlagged) {
             snippetDao.flagSnippet(snippetId);
+            userService.changeReputationForFlaggedSnippet(userId, false);
         } else {
             snippetDao.unflagSnippet(snippetId);
+            userService.changeReputationForFlaggedSnippet(userId, true);
         }
     }
 }

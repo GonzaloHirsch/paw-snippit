@@ -17,3 +17,10 @@
     font-size: 70px !important;
     margin: 5px 15px 5px 0px;
 }
+
+.card-flagged-warning-icon {
+    color: red;
+    font-size: 30px !important;
+    height: 30px;
+    margin: 0px 15px 0px 0px;
+}

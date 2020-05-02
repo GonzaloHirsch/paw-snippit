@@ -19,9 +19,13 @@
     padding: 10px;
 }
 
+.snippet-title-container {
+    margin: 8px 0px 0px 0px;
+}
+
 .snippet-title {
     font-size: 33px;
-    margin: 8px 5px 0px;
+    margin: 0px 5px;
 }
 
 .snippet-text {

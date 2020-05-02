@@ -20,6 +20,7 @@ public interface SnippetService {
     Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page);
     Collection<Snippet> findSnippetsForTag(long tagId);
     Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, int page);
+    Collection<Snippet> findSnippetsWithLanguage(long langId, int page);
     boolean isFlaggedByAdmin(final Snippet snippet);
     void updateFlagged(long snippetId, long userId, boolean isFlagged);
     int getAllSnippetsCount();
@@ -29,6 +30,7 @@ public interface SnippetService {
     int getAllFlaggedSnippetsCount();
     int getAllSnippetsByOwnerCount(final long userId);
     int getAllSnippetsByTagCount(final long tagId);
+    int getAllSnippetsByLanguageCount(final long langId);
     int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId);
     int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort);
     Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<Long> tags);

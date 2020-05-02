@@ -37,7 +37,7 @@ public class TagsController {
 
     @RequestMapping("/tags")
     public ModelAndView showAllTags() {
-        ModelAndView mav = new ModelAndView("tag/tags");
+        ModelAndView mav = new ModelAndView("tagAndLanguages/tags");
 
         Collection<Tag> allTags = tagService.getAllTags();
         mav.addObject("searchContext","tags/");
@@ -47,7 +47,7 @@ public class TagsController {
 
     @RequestMapping("/tags/{tagId}")
     public ModelAndView showSnippetsForTag(@PathVariable("tagId") long tagId, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
-        ModelAndView mav = new ModelAndView("tag/tagSnippets");
+        ModelAndView mav = new ModelAndView("tagAndLanguages/tagSnippets");
 
         /* Retrieve the tag */
         Optional<Tag> tag = tagService.findTagById(tagId);

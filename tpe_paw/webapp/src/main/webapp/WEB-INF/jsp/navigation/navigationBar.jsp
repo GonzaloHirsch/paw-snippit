@@ -48,6 +48,18 @@
             </c:otherwise>
         </c:choose>
         <c:choose>
+            <c:when test="${searchContext == 'languages/'}">
+                <a class="fw-100 menu-option menu-selected" href="<c:url value="/languages/"/>"><span
+                class="material-icons menu-option-icon">desktop_windows</span>
+                <spring:message code="menu.languages"/></a>
+            </c:when>
+            <c:otherwise>
+                <a class="fw-100 menu-option" href="<c:url value="/languages/"/>"><span
+                class="material-icons menu-option-icon">desktop_windows</span>
+                <spring:message code="menu.languages"/></a>
+            </c:otherwise>
+        </c:choose>
+        <c:choose>
             <c:when test="${searchContext == 'explore/'}">
                 <a class="fw-100 menu-option menu-selected" href="<c:url value="/explore/"/>"><span
                 class="material-icons menu-option-icon">search</span>

@@ -1,0 +1,64 @@
+.explore-container {
+    border: #5E35B1 solid 2px;
+    border-radius: 5px;
+    margin: 15px 0 30px 30px;
+    padding: 10px;
+    max-width: 300px;
+}
+
+.explore-container div {
+    margin: 5px;
+}
+
+.explore-title {
+    font-size: 50px;
+    margin-left: 30px;
+    margin-top: 15px;
+}
+
+.bootstrap-select>.dropdown-toggle {
+    padding: 0 10px 0 0;
+    border: 1px solid grey;
+}
+
+.bootstrap-select .dropdown-toggle .filter-option-inner-inner{
+    font-size: 12px;
+}
+
+.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn){
+    width: auto !important;
+}
+
+.bootstrap-select .dropdown-toggle .filter-option{
+    margin: 0;
+}
+
+.advanced-input {
+    border-radius: 5px;
+    padding: 5px;
+    border: 1px solid grey;
+    width: 123px;
+    height: 24px;
+}
+
+.text-input {
+    font-size: 11px;
+}
+
+.date-input {
+    font-size: 10px;
+}
+
+.advanced-submit-button {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 17px;
+    min-width: 78px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.explore-container label {
+    margin-bottom: 5px;
+}

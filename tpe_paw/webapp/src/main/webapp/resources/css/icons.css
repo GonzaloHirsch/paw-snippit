@@ -26,6 +26,16 @@
 }
 
 .delete-element-icon {
+    border: gray solid;
     color: gray;
-    font-size: 30px !important;
+    cursor:pointer;
+    font-size: 40px !important;
+    margin: 0px 0px 0px 30px;
+    padding: 5px;
+    transition: 0.3s;
+}
+
+.delete-element-icon:hover {
+    border: black solid;
+    color: black;
 }

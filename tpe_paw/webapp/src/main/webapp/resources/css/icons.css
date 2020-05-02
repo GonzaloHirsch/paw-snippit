@@ -5,7 +5,7 @@
 }
 
 .unselected-icon:hover {
-    color: crimson;
+    color: crimson !important;
 }
 
 .unselected-icon {

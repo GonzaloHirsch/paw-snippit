@@ -8,7 +8,7 @@
         <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon.ico'/>"/>
         <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
         <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
-        <link href="<c:url value='/resources/css/registration.css'/>" rel="stylesheet"/>
+        <link href="<c:url value='/resources/css/form.css'/>" rel="stylesheet"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <body>
 
@@ -16,24 +16,24 @@
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content flex-center">
 
-        <div class="flex-column flex-center register-block register-border">
+        <div class="flex-column flex-center form-block form-border">
 
-            <div class="flex-row flex-center register-text-container white-text register-welcome-text fw-300">
-                <i class="material-icons app-icon register-app-icon-margin">code</i>
+            <div class="flex-row flex-center form-text-container white-text form-welcome-text fw-300">
+                <i class="material-icons app-icon form-app-icon-margin">code</i>
                 <spring:message code="logout.goodbye"/>
             </div>
 
-            <div class="flex-center register-form register-border register-shadow">
-                <div class="flex-column register-form-data">
-                    <a class="flex-center register-border register-field-size register-button register-buttons-margin fw-500" href="<c:url value='/'/>">
+            <div class="flex-center form form-border form-shadow">
+                <div class="flex-column form-data">
+                    <a class="flex-center form-border form-field-size form-button form-button-basics form-buttons-margin fw-500" href="<c:url value='/'/>">
                         <spring:message code="logout.homeRedirect"/>
                     </a>
 
-                    <a class="flex-center register-border register-field-size register-button register-buttons-margin fw-500" href="<c:url value='/login'/>">
+                    <a class="flex-center form-border form-field-size form-button form-button-basics form-buttons-margin fw-500" href="<c:url value='/login'/>">
                         <spring:message code="logout.loginRedirect"/>
                     </a>
 
-                    <a class="flex-center register-border register-field-size register-button register-buttons-margin fw-500" href="<c:url value='/signup'/>">
+                    <a class="flex-center form-border form-field-size form-button form-button-basics form-buttons-margin fw-500" href="<c:url value='/signup'/>">
                         <spring:message code="logout.signupRedirect"/>
                     </a>
                 </div>

@@ -44,6 +44,7 @@ public interface SnippetDao {
     int getAllSnippetsCount();
     int getAllFavoriteSnippetsCount(final long userId);
     int getAllFollowingSnippetsCount(final long userId);
+    int getAllUpvotedSnippetsCount(final long userId);
     int getAllSnippetsByOwnerCount(final long userId);
     int getAllSnippetsByTagCount(final long tagId);
     int getSnippetByCriteriaCount(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId);

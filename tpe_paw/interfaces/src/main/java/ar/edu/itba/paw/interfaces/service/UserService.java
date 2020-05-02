@@ -6,9 +6,9 @@ import java.util.Date;
 import java.util.Optional;
 
 public interface UserService {
-    User createUser(String username, String password, String email, String description, int reputation, Date dateJoined);
+    long createUser(String username, String password, String email, String description, int reputation, String dateJoined);
 
-    User register(String username, String password, String email, Date dateJoined);
+    long register(String username, String password, String email, String dateJoined);
 
     Optional<User> findUserByUsername(String username);
 

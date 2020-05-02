@@ -21,3 +21,8 @@ function submitImageForm(element){
     let frm = document.getElementById('image-form-submit');
     frm.click();
 }
+
+function submitDescriptionForm (element) {
+    let descriptionForm = document.getElementById('description-form');
+    descriptionForm.submit();
+}

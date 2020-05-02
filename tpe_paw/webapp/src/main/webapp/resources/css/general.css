@@ -36,13 +36,17 @@ body {
     color: white !important;
 }
 
+.black-text {
+    color: black !important;
+}
+
 .purple-text {
     color: #5E35B1 !important;
 }
 
 .title-container {
     font-size: 50px;
-    margin: 20px 0px;
+    margin: 20px 0px 10px 0px;
 }
 
 .no-text-decoration {
@@ -101,6 +105,12 @@ body {
 
 .border-radius {
     border-radius: 8px;
+}
+
+/* Common Event Styles */
+
+.clickable-entity {
+    cursor: pointer;
 }
 
 /* Extra */

@@ -29,7 +29,7 @@ public class UserDaoImpl implements UserDao {
                     rs.getString("email"),
                     rs.getString("description"),
                     rs.getInt("reputation"),
-                    rs.getDate("date_joined"),
+                    rs.getString("date_joined"),
                     rs.getBytes("icon")
             ); //ni idea como hacer esto
         }
@@ -44,7 +44,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User createUser(String username,String password, String email, String description, int reputation, Date dateJoined) {
+    public long createUser(String username,String password, String email, String description, int reputation, String dateJoined) {
         final Map<String, Object> args = new HashMap<>();
         args.put("username",username);
         args.put("password",password);
@@ -53,8 +53,7 @@ public class UserDaoImpl implements UserDao {
         args.put("reputation",reputation);
         args.put("date_joined",dateJoined);
 
-        long result = jdbcInsert.executeAndReturnKey(args).longValue();
-        return new User(result, username, password, email, description, reputation, dateJoined, null);
+        return jdbcInsert.executeAndReturnKey(args).longValue();
     }
 
     @Override

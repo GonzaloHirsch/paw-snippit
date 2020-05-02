@@ -5,16 +5,14 @@ import ar.edu.itba.paw.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class TagDaoImpl implements TagDao {
@@ -40,7 +38,13 @@ public class TagDaoImpl implements TagDao {
     @Override
     public Optional<Tag> findById(final long id) {
         return jdbcTemplate.query("SELECT * FROM tags WHERE id = ?", ROW_MAPPER, id)
-                .stream().findFirst(); //Tiene incorporado el optional
+                .stream().findFirst();
+    }
+
+    @Override
+    public Optional<Tag> findByName(final String name) {
+        return jdbcTemplate.query("SELECT * FROM tags WHERE LOWER(name) = LOWER(?)", ROW_MAPPER, name)
+                .stream().findFirst();
     }
 
     @Override
@@ -67,12 +71,25 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
+    public void addTags(List<String> tags) {
+        // TODO -> remove repeated
+        List<MapSqlParameterSource> entries = new ArrayList<>();
+
+        for (String tag : tags) {
+            if (tag != null && tag.compareTo("") != 0) {
+                MapSqlParameterSource entry = new MapSqlParameterSource()
+                        .addValue("name", tag.toLowerCase());
+                entries.add(entry);
+            }
+        }
+        MapSqlParameterSource[] array = entries.toArray(new MapSqlParameterSource[entries.size()]);
+        jdbcInsert.executeBatch(array);
+    }
+
+
+    @Override
     public Collection<Tag> getAllTags() {
         return jdbcTemplate.query("SELECT * FROM tags", ROW_MAPPER);
     }
 
-    @Override
-    public Optional<Tag> findTagById(long tagId) {
-        return jdbcTemplate.query("SELECT * FROM tags WHERE id = ?", ROW_MAPPER, tagId).stream().findFirst();
-    }
 }

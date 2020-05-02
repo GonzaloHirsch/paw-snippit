@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.form.DeleteForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +50,7 @@ public class TagsController {
     }
 
     @RequestMapping("/tags/{tagId}")
-    public ModelAndView showSnippetsForTag(@PathVariable("tagId") long tagId, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
+    public ModelAndView showSnippetsForTag(@PathVariable("tagId") long tagId, @ModelAttribute("deleteForm") final DeleteForm deleteForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         ModelAndView mav = new ModelAndView("tagAndLanguages/tagSnippets");
 
         /* Retrieve the tag */
@@ -99,7 +100,7 @@ public class TagsController {
     }
 
     @RequestMapping("/tags/{tagId}/delete")
-    public ModelAndView deleteTag(@PathVariable("tagId") long tagId) {
+    public ModelAndView deleteTag(@PathVariable("tagId") long tagId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
         User currentUser = loginAuthentication.getLoggedInUser();
         if ( currentUser != null && userService.isAdmin(currentUser)){
             //tagService.unfollowTag(currentUser.getId(), tagId);

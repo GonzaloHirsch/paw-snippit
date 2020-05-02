@@ -3,10 +3,12 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.service.LanguageService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
+import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.form.DeleteForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,8 @@ public class LanguagesController {
     private LoginAuthentication loginAuthentication;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private UserService userService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LanguagesController.class);
 
@@ -48,7 +52,7 @@ public class LanguagesController {
     }
 
     @RequestMapping("/languages/{langId}")
-    public ModelAndView showSnippetsForTag(@PathVariable("langId") long langId, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
+    public ModelAndView showSnippetsForTag(@PathVariable("langId") long langId, @ModelAttribute("deleteForm") final DeleteForm deleteForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         ModelAndView mav = new ModelAndView("tagAndLanguages/languageSnippets");
 
         /* Retrieve the tag */
@@ -68,14 +72,14 @@ public class LanguagesController {
     }
 
     @RequestMapping("/languages/{langId}/delete")
-    public ModelAndView followSnippet(@PathVariable("langId") long langId) {
-//        User currentUser = loginAuthentication.getLoggedInUser();
-//        if ( currentUser != null){
-//            tagService.followTag(currentUser.getId(), tagId);
-//            LOGGER.debug("User {} followed tag with id {}", currentUser.getUsername(), tagId);
-//        } else {
-//            LOGGER.warn("No user logged in but tag {} was followed", tagId);
-//        }
+    public ModelAndView followSnippet(@PathVariable("langId") long langId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
+        User currentUser = loginAuthentication.getLoggedInUser();
+        if ( currentUser != null && userService.isAdmin(currentUser)){
+         //   tagService.followTag(currentUser.getId(), tagId);
+            LOGGER.debug("Admin removed language with id {}", langId);
+        } else {
+            LOGGER.warn("No user logged in or logged in user not admin but language {} is trying to be deleted", langId);
+        }
         return new ModelAndView("redirect:/languages");
     }
 

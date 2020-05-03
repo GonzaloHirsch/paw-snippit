@@ -72,4 +72,9 @@ public class TagServiceImpl implements TagService {
         return !tagDao.findByName(tag).isPresent();
     }
 
+    @Override
+    public void deleteTag(long tagId) {
+        this.tagDao.deleteTag(tagId);
+    }
+
 }

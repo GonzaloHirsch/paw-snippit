@@ -54,7 +54,7 @@ public class TagsController {
         ModelAndView mav = new ModelAndView("tagAndLanguages/tagSnippets");
 
         /* Retrieve the tag */
-        Optional<Tag> tag = tagService.findTagById(tagId);
+        Optional<Tag> tag = this.tagService.findTagById(tagId);
         if (!tag.isPresent()) {
             LOGGER.warn("No tag found with id {}", tagId);
             //TODO throw new
@@ -79,7 +79,7 @@ public class TagsController {
     public ModelAndView followSnippet(@PathVariable("tagId") long tagId) {
         User currentUser = loginAuthentication.getLoggedInUser();
         if ( currentUser != null){
-            tagService.followTag(currentUser.getId(), tagId);
+            this.tagService.followTag(currentUser.getId(), tagId);
             LOGGER.debug("User {} followed tag with id {}", currentUser.getUsername(), tagId);
         } else {
             LOGGER.warn("No user logged in but tag {} was followed", tagId);
@@ -91,7 +91,7 @@ public class TagsController {
     public ModelAndView unfollowSnippet(@PathVariable("tagId") long tagId) {
         User currentUser = loginAuthentication.getLoggedInUser();
         if ( currentUser != null){
-            tagService.unfollowTag(currentUser.getId(), tagId);
+            this.tagService.unfollowTag(currentUser.getId(), tagId);
             LOGGER.debug("User {} unfollowed tag with id {}", currentUser.getUsername(), tagId);
         } else {
             LOGGER.warn("No user logged in but tag {} was unfollowed", tagId);
@@ -103,7 +103,7 @@ public class TagsController {
     public ModelAndView deleteTag(@PathVariable("tagId") long tagId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
         User currentUser = loginAuthentication.getLoggedInUser();
         if ( currentUser != null && userService.isAdmin(currentUser)){
-            //tagService.unfollowTag(currentUser.getId(), tagId);
+            this.tagService.deleteTag(tagId);
             LOGGER.debug("Admin deleted tag with id {}", tagId);
         } else {
             LOGGER.warn("No user logged in or logged in user not admin but tag {} was deleted", tagId);

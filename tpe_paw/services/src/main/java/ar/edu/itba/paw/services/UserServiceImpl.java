@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 
@@ -82,5 +83,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changeReputationForFlaggedSnippet(long userId, boolean add) {
         userDao.changeReputation(userId, FLAGGED_SNIPPET_REP_VALUE, add);
+    }
+
+    public Collection<User> getAllUsers() {
+        return this.userDao.getAllUsers();
     }
 }

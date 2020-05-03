@@ -69,14 +69,15 @@ public class SnippetExploreController {
                 exploreForm.getMinVotes(), exploreForm.getMaxVotes(),
                 exploreForm.getLanguage() == -1 ? null : exploreForm.getLanguage(), exploreForm.getTag() == -1 ? null : exploreForm.getTag(),
                 exploreForm.getTitle(), exploreForm.getUsername(),
-                exploreForm.getField(), exploreForm.getSort(), page);
+                exploreForm.getField(), exploreForm.getSort(), exploreForm.getIncludeFlagged(), page);
         int snippetCount =  this.snippetService.getSnippetByDeepCriteriaCount(
                 minDate, maxDate,
                 exploreForm.getMinRep(), exploreForm.getMaxRep(),
                 exploreForm.getMinVotes(), exploreForm.getMaxVotes(),
                 exploreForm.getLanguage() == -1 ? null : exploreForm.getLanguage(), exploreForm.getTag() == -1 ? null : exploreForm.getTag(),
                 exploreForm.getTitle(), exploreForm.getUsername(),
-                exploreForm.getField(), exploreForm.getSort());
+                exploreForm.getField(), exploreForm.getSort(),
+                exploreForm.getIncludeFlagged());
         this.addModelAttributesHelper(mav, snippetCount, page, snippets, "explore/");
         return mav;
     }

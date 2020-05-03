@@ -116,10 +116,10 @@ public class SnippetDaoTest {
 
     @Test
     public void testCreate() {
-        // Ejercitacion
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
+
         final long snippetId = snippetDao.createSnippet(defaultUser, TITLE, DESCR, CODE, DATE.format(Calendar.getInstance().getTime().getTime()), defaultLanguage.getId());
 
-        // Evaluacion
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "snippets"));
     }
 

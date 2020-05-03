@@ -23,7 +23,7 @@ import java.util.*;
 import static junit.framework.TestCase.*;
 
 /*
-Metodos Testeados:
+Tested Methods:
     long createUser(String username, String password, String email, String description, int reputation, String dateJoined);
     Optional<User> findUserByUsername(String username);
     Optional<User> findUserById(final long id);
@@ -32,7 +32,7 @@ Metodos Testeados:
     void changePassword(String email, String password);
     void changeDescription(final long userId, final String description);
 
-Metodos no testeados:
+Not tested Methods:
     void changeProfilePhoto(final long userId, final byte[] photo);
 
 */
@@ -57,21 +57,16 @@ public class UserDaoTest {
     private static final String EMAIL2 = "email2@email.com";
     private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
-    private final static RowMapper<User> ROW_MAPPER = new RowMapper<User>() {
-        @Override
-        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new User(
-                    rs.getLong("id"),
-                    rs.getString("username"),
-                    rs.getString("password"),
-                    rs.getString("email"),
-                    rs.getString("description"),
-                    rs.getInt("reputation"),
-                    rs.getString("date_joined"),
-                    rs.getBytes("icon")
-            );
-        }
-    };
+    private final static RowMapper<User> ROW_MAPPER = (rs, rowNum) -> new User(
+            rs.getLong("id"),
+            rs.getString("username"),
+            rs.getString("password"),
+            rs.getString("email"),
+            rs.getString("description"),
+            rs.getInt("reputation"),
+            rs.getString("date_joined"),
+            rs.getBytes("icon")
+    );
 
 
     @Before

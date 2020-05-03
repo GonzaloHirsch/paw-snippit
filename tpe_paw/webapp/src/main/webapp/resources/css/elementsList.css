@@ -1,5 +1,5 @@
 
-.all-tags-grid {
+.all-elements-grid {
     display: grid;
     grid-template-rows: max-content;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

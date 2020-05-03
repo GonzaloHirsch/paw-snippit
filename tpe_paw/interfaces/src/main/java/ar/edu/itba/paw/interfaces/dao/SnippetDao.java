@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface SnippetDao {
     int PAGE_SIZE = 6;
+    int SMALL_ELEMENT_PAGE_SIZE = 6;
     enum Locations {
         HOME,
         FAVORITES,
@@ -43,6 +44,7 @@ public interface SnippetDao {
     Collection<Snippet> getAllUpVotedSnippets(final long userId, int page);
     Collection<Snippet> getAllFlaggedSnippets(int page);
     Collection<Snippet> findAllSnippetsByOwner(final long userId, int page);
+    Collection<Snippet> findSnippetsWithLanguage(long langId, int page);
     Optional<Snippet> findSnippetById(long id);
     int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId);
     Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language);
@@ -57,6 +59,7 @@ public interface SnippetDao {
     int getAllFlaggedSnippetsCount();
     int getAllSnippetsByOwnerCount(final long userId);
     int getAllSnippetsByTagCount(final long tagId);
+    int getAllSnippetsByLanguageCount(final long langId);
     int getSnippetByCriteriaCount(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId);
     int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged);
 }

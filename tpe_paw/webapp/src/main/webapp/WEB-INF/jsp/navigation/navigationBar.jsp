@@ -20,6 +20,7 @@
         <c:set var="userTags" value="${requestScope.userTags}"/>
         <c:set var="searchContext" value="${requestScope.searchContext}"/>
         <c:url var="searchUrl" value="/${searchContext}search"/>
+        <c:url var="searchForm" value="${requestScope.searchForm}"/>
         <spring:message code="search.hint" var="search_hint"/>
         <div id="sidenav" class="sidenav">
         <ul>
@@ -45,6 +46,18 @@
                 <a class="fw-100 menu-option" href="<c:url value="/tags/"/>"><span
                 class="material-icons menu-option-icon">local_offer</span>
                 <spring:message code="menu.tags"/></a>
+            </c:otherwise>
+        </c:choose>
+        <c:choose>
+            <c:when test="${searchContext == 'languages/'}">
+                <a class="fw-100 menu-option menu-selected" href="<c:url value="/languages/"/>"><span
+                class="material-icons menu-option-icon">desktop_windows</span>
+                <spring:message code="menu.languages"/></a>
+            </c:when>
+            <c:otherwise>
+                <a class="fw-100 menu-option" href="<c:url value="/languages/"/>"><span
+                class="material-icons menu-option-icon">desktop_windows</span>
+                <spring:message code="menu.languages"/></a>
             </c:otherwise>
         </c:choose>
         <c:choose>
@@ -161,7 +174,7 @@
         <spring:message code="app.name"/>
         </a>
         </div>
-        <c:if test="${searchContext != 'explore/'}">
+        <c:if test="${searchContext != 'error/' && searchContext != 'explore/'}">
             <div class="flex-row flex-wrap flex-center flex-grow">
             <form:form modelAttribute="searchForm" method="get" action="${searchUrl}"
                        class="flex-row flex-center flex-wrap search-container">

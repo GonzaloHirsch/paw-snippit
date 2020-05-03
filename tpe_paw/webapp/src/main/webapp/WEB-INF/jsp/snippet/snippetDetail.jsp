@@ -11,8 +11,8 @@
     <link href="<c:url value='/resources/css/snippetDetail.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
-    <link href="<c:url value='/resources/css/tag.css'/>" rel="stylesheet"/>
-    <link href="<c:url value='/resources/css/tags.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/element.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/elementsList.css'/>" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
           rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
@@ -57,11 +57,12 @@
                         <input id="hidden-code-input" class="hidden-code"/>
                     </div>
                     <!-- TAGS -->
-                    <div class="all-tags-grid detail-grid">
+                    <div class="all-elements-grid detail-grid">
                         <c:forEach var="tag" items="${snippet.tags}">
-                            <c:set var="tag" value="${tag}" scope="request"/>
+                            <c:set var="element" value="${tag}" scope="request"/>
+                            <c:set var="context" value="tags" scope="request"/>
                             <c:set var="cssClass" value="tag-container-detail" scope="request"/>
-                            <c:import url="/WEB-INF/jsp/tag/tag.jsp"/>
+                            <c:import url="/WEB-INF/jsp/tagAndLanguages/element.jsp"/>
                         </c:forEach>
                     </div>
                 </div>

@@ -27,7 +27,9 @@ public interface UserService {
 
     void changeDescription(final long userId, final String description);
 
-    boolean isAdmin(User user);
-
     Collection<User> getAllUsers();
+
+    boolean isAdmin(final User user);
+
+    void changeReputationForFlaggedSnippet(final long userId, boolean add);
 }

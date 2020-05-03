@@ -20,6 +20,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private EmailService emailService;
 
+    private final int FLAGGED_SNIPPET_REP_VALUE = 10;
+
     @Override
     public long createUser(String username, String password, String email, String description, int reputation, String dateJoined) {
         return userDao.createUser(username, password, email, description, reputation, dateJoined);
@@ -74,11 +76,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isAdmin(User user) {
+    public boolean isAdmin(final User user) {
         return user.getUsername().compareTo("admin") == 0;
     }
 
     @Override
+    public void changeReputationForFlaggedSnippet(long userId, boolean add) {
+        userDao.changeReputation(userId, FLAGGED_SNIPPET_REP_VALUE, add);
+    }
+
     public Collection<User> getAllUsers() {
         return this.userDao.getAllUsers();
     }

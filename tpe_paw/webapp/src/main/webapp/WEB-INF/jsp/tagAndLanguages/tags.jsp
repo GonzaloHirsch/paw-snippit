@@ -8,8 +8,8 @@
         <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon/favicon.ico'/>"/>
         <link href="<c:url value='/resources/css/general.css'/>" type="text/css" rel="stylesheet"/>
         <link href="<c:url value='/resources/css/navigationBar.css'/>" type="text/css" rel="stylesheet"/>
-        <link href="<c:url value='/resources/css/tags.css'/>" type="text/css" rel="stylesheet"/>
-        <link href="<c:url value='/resources/css/tag.css'/>" type="text/css" rel="stylesheet"/>
+        <link href="<c:url value='/resources/css/elementsList.css'/>" type="text/css" rel="stylesheet"/>
+        <link href="<c:url value='/resources/css/element.css'/>" type="text/css" rel="stylesheet"/>
     </head>
     <body>
         <div class="wrapper">
@@ -20,11 +20,12 @@
                         <spring:message code="menu.tags"> </spring:message>
                     </div>
                 </div>
-                <div class="all-tags-grid main-grid">
+                <div class="all-elements-grid main-grid">
                     <c:forEach var="tag" items="${tags}">
-                        <c:set var="tag" value="${tag}" scope="request"/>
-                        <c:set var="cssClass" value="tag-container-main" scope="request"/>
-                        <c:import url="/WEB-INF/jsp/tag/tag.jsp"/>
+                        <c:set var="element" value="${tag}" scope="request"/>
+                        <c:set var="context" value="tags" scope="request"/>
+                        <c:set var="cssClass" value="element-container-main" scope="request"/>
+                        <c:import url="/WEB-INF/jsp/tagAndLanguages/element.jsp"/>
                     </c:forEach>
                 </div>
             </div>

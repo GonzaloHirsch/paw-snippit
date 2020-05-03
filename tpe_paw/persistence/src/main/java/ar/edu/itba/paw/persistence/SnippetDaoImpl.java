@@ -100,6 +100,11 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
+    public Collection<Snippet> findSnippetsWithLanguage(long langId, int page) {
+        return jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.language_id = ? LIMIT ? OFFSET ?", ROW_MAPPER, langId, SMALL_ELEMENT_PAGE_SIZE, SMALL_ELEMENT_PAGE_SIZE * (page - 1));
+    }
+
+    @Override
     public Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, Types type, String term, Locations location, Orders order, Long userId, int page) {
         SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(queryType, location, userId, type, term)
                 .setOrder(order, type)
@@ -212,6 +217,11 @@ public class SnippetDaoImpl implements SnippetDao {
     @Override
     public int getAllSnippetsByTagCount(long tagId) {
         return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT cs.id) FROM complete_snippets AS cs JOIN snippet_tags AS st ON cs.id = st.snippet_id WHERE st.tag_id = ?", new Object[]{tagId}, Integer.class);
+    }
+
+    @Override
+    public int getAllSnippetsByLanguageCount(long langId) {
+        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT s.id) FROM complete_snippets AS s WHERE s.language_id = ?", new Object[]{langId}, Integer.class);
     }
 
     @Override

@@ -12,4 +12,6 @@ public interface LanguageDao {
     Collection<Language> getAll();
     Language addLanguage(String lang);
     void addLanguages(List<String> languages);
+    void removeLanguage(final long langId);
+    boolean languageInUse(final long langId);
 }

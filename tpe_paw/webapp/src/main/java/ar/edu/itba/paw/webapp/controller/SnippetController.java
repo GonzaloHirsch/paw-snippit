@@ -134,7 +134,7 @@ public class SnippetController {
     }
 
     @RequestMapping(value="/snippet/{id}/flag", method=RequestMethod.POST)
-    public ModelAndView favSnippet(
+    public ModelAndView flagSnippet(
             @ModelAttribute("snippetId") @PathVariable("id") long id,
             @ModelAttribute("adminFlagForm") final FlagSnippetForm adminFlagForm
     ) {
@@ -143,9 +143,20 @@ public class SnippetController {
         if (currentUser == null || !userService.isAdmin(currentUser)) {
             LOGGER.warn("Inside the flagged form of snippet {} without admin logged in", id);
         } else {
-            this.snippetService.updateFlagged(id, adminFlagForm.isFlagged());
+            this.snippetService.updateFlagged(id, this.getOwnerIdOfSnippet(id), adminFlagForm.isFlagged());
             LOGGER.debug("Marked snippet {} as flagged by admin", id);
         }
         return mav;
+    }
+
+    private long getOwnerIdOfSnippet(final long snippetId) {
+        Optional<Snippet> snip = this.snippetService.findSnippetById(snippetId);
+        if (snip.isPresent()) {
+            return snip.get().getOwner().getId();
+        } else {
+            LOGGER.warn("No snippet found for id {}", snippetId);
+            //TODO handle error!
+        }
+        return 1; //TODO remove this when exception is handled!!!!
     }
 }

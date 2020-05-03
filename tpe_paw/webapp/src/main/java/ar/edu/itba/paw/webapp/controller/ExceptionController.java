@@ -59,15 +59,13 @@ public class ExceptionController {
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
     public ModelAndView noSuchUser(UserNotFoundException ex) {
-        String errorMessage = ex.hasMessage() ? ex.getMessage() : messageSource.getMessage("error.user.notFound.default", null, LocaleContextHolder.getLocale());
-        return this.createErrorModel(errorMessage, 404);
+        return this.createErrorModel(ex.getMessage(), 404);
     }
 
     @ResponseStatus(code = HttpStatus.CONFLICT)
     @ExceptionHandler(RemovingLanguageInUseException.class)
     public ModelAndView cannotRemoveLanguage(RemovingLanguageInUseException ex) {
-        String errorMessage = ex.hasMessage() ? ex.getMessage() : messageSource.getMessage("error.removing.language.default", null, LocaleContextHolder.getLocale());
-        return this.createErrorModel(errorMessage, 409);
+        return this.createErrorModel(ex.getMessage(), 409);
     }
 
     private ModelAndView createErrorModel(String errorMessage, int errorCode) {

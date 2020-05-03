@@ -50,7 +50,7 @@ public class SnippetDeepSearchQuery {
             if (isCount){
                 this.query.append("SELECT COUNT(DISTINCT s.id) FROM (SELECT DISTINCT cs.id, cs.user_id, cs.username, cs.reputation, cs.code, cs.title, cs.description, cs.language, cs.date_created, cs.icon, cs.votes, cs.language_id, st.tag_id, cs.flagged FROM complete_snippets AS cs LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = cs.id ORDER BY cs.id ASC) AS s");
             } else {
-                this.query.append("SELECT DISTINCT ON (s.id) * FROM (SELECT DISTINCT cs.id, cs.user_id, cs.username, cs.reputation, cs.code, cs.title, cs.description, cs.language, cs.date_created, cs.icon, cs.votes, cs.language_id, st.tag_id, cs.flagged FROM complete_snippets AS cs LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = cs.id ORDER BY cs.id ASC) AS s");
+                this.query.append("SELECT DISTINCT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language, s.date_created, s.icon, s.votes, s.language_id, s.flagged FROM complete_snippets AS s LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = s.id ");
             }
         }
 
@@ -82,7 +82,7 @@ public class SnippetDeepSearchQuery {
 
         public Builder addTag(Long tagId){
             if (tagId != null){
-                this.query.append(" s.tag_id = ? ");
+                this.query.append(" st.tag_id = ? ");
                 this.params.add(tagId);
             }
             return this;
@@ -152,17 +152,17 @@ public class SnippetDeepSearchQuery {
             this.query.append(" ORDER BY ");
             switch(order.toLowerCase()){
                 case "reputation":
-                    this.query.append(" s.id, s.reputation ");
+                    this.query.append(" s.reputation ");
                     break;
                 case "votes":
-                    this.query.append(" s.id, s.votes ");
+                    this.query.append(" s.votes ");
                     break;
                 case "date":
-                    this.query.append(" s.id, s.date_created ");
+                    this.query.append(" s.date_created ");
                     break;
                 case "title":
                 default:
-                    this.query.append(" s.id, s.title ");
+                    this.query.append(" s.title ");
                     break;
             }
             switch(sort.toLowerCase()){

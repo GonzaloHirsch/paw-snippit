@@ -103,7 +103,7 @@ public class TagsController {
     public ModelAndView deleteTag(@PathVariable("tagId") long tagId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
         User currentUser = loginAuthentication.getLoggedInUser();
         if ( currentUser != null && userService.isAdmin(currentUser)){
-            this.tagService.deleteTag(tagId);
+            this.tagService.removeTag(tagId);
             LOGGER.debug("Admin deleted tag with id {}", tagId);
         } else {
             LOGGER.warn("No user logged in or logged in user not admin but tag {} was deleted", tagId);

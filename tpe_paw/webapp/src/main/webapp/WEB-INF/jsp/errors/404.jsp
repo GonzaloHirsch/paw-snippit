@@ -13,6 +13,11 @@
 </head>
 
 <body>
+<c:set var="currentUser" value="${requestScope.currentUser}"/>
+<c:set var="userTags" value="${requestScope.userTags}"/>
+<c:set var="searchContext" value="${requestScope.searchContext}"/>
+<c:url var="searchUrl" value="/${searchContext}search"/>
+<c:url var="searchForm" value="${searchForm}"/>
 
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>

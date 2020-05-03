@@ -20,6 +20,7 @@
         <c:set var="userTags" value="${requestScope.userTags}"/>
         <c:set var="searchContext" value="${requestScope.searchContext}"/>
         <c:url var="searchUrl" value="/${searchContext}search"/>
+        <c:url var="searchForm" value="${requestScope.searchForm}"/>
         <spring:message code="search.hint" var="search_hint"/>
         <div id="sidenav" class="sidenav">
         <ul>

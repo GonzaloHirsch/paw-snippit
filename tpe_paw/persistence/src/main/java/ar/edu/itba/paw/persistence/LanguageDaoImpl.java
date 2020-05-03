@@ -79,10 +79,9 @@ public class LanguageDaoImpl implements LanguageDao {
     // TODO Transactional
     @Override
     public void removeLanguage(final long langId) {
-        if (this.languageInUse(langId)) {
-            // TODO throw new custom error
+        if (!this.languageInUse(langId)) {
+            jdbcTemplate.update("DELETE FROM languages WHERE id = ?", new Object[]{langId});
         }
-        jdbcTemplate.update("DELETE FROM languages WHERE id = ?", new Object[]{langId});
     }
 
     @Override

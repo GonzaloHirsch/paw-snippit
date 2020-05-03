@@ -1,6 +1,6 @@
 .flagged-container {
     border: solid red 2px;
-    margin: 0px 0px 15px 0px;
+    margin: 0px 0px 17px 0px;
     padding: 12px;
 }
 
@@ -14,7 +14,6 @@
     padding: 0px;
     margin: 0px
 }
-
 
 .flagged-message-container p {
     padding: 0px;

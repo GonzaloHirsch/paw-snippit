@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.exception.RemovingLanguageInUseException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.DescriptionForm;
 import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
@@ -15,6 +16,8 @@ import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,7 +38,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Controller
-public class UserController {
+public class  UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -46,6 +49,8 @@ public class UserController {
     private LoginAuthentication loginAuthentication;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private MessageSource messageSource;
 
     private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -192,6 +197,6 @@ public class UserController {
 
     private void logAndThrow(long id) {
         LOGGER.warn("User with id {} doesn't exist", id);
-        throw new UserNotFoundException();
+        throw new UserNotFoundException(messageSource.getMessage("error.user.notFound", new Object[]{id}, LocaleContextHolder.getLocale()));
     }
 }

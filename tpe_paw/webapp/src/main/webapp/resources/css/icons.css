@@ -5,7 +5,7 @@
 }
 
 .unselected-icon:hover {
-    color: crimson;
+    color: crimson !important;
 }
 
 .unselected-icon {
@@ -16,4 +16,26 @@
     color: red;
     font-size: 70px !important;
     margin: 5px 15px 5px 0px;
+}
+
+.card-flagged-warning-icon {
+    color: red;
+    font-size: 30px !important;
+    height: 30px;
+    margin: 0px 15px 0px 0px;
+}
+
+.delete-element-icon {
+    border: gray solid;
+    color: gray;
+    cursor:pointer;
+    font-size: 40px !important;
+    margin: 0px 0px 0px 30px;
+    padding: 5px;
+    transition: 0.3s;
+}
+
+.delete-element-icon:hover {
+    border: black solid;
+    color: black;
 }

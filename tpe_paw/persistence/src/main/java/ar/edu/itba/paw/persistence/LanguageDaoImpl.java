@@ -56,7 +56,7 @@ public class LanguageDaoImpl implements LanguageDao {
         final Map<String, Object> args = new HashMap<>();
         args.put("name", lang);
         final Number langId = jdbcInsert.executeAndReturnKey(args);
-        return new Language(langId.longValue(), lang);
+        return new Language(langId.longValue(), lang.toLowerCase());
     }
 
     @Override
@@ -74,6 +74,19 @@ public class LanguageDaoImpl implements LanguageDao {
 
         MapSqlParameterSource[] array = entries.toArray(new MapSqlParameterSource[entries.size()]);
         jdbcInsert.executeBatch(array);
+    }
+
+    // TODO Transactional
+    @Override
+    public void removeLanguage(final long langId) {
+        if (!this.languageInUse(langId)) {
+            jdbcTemplate.update("DELETE FROM languages WHERE id = ?", new Object[]{langId});
+        }
+    }
+
+    @Override
+    public boolean languageInUse(final long langId) {
+        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT s.id) FROM complete_snippets AS s WHERE s.language_id = ?", new Object[]{langId}, Integer.class) != 0;
     }
 
 }

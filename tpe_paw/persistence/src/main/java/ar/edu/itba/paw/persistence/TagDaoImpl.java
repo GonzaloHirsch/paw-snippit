@@ -86,6 +86,11 @@ public class TagDaoImpl implements TagDao {
         jdbcInsert.executeBatch(array);
     }
 
+    @Override
+    public void removeTag(long tagId) {
+        jdbcTemplate.update("DELETE FROM tags WHERE id = ?", new Object[]{tagId});
+    }
+
 
     @Override
     public Collection<Tag> getAllTags() {

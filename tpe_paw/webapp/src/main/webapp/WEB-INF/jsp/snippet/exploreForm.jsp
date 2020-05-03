@@ -24,6 +24,7 @@
 <spring:message code="advanced.reputation.hint" var="advanced_reputation_hint" />
 <spring:message code="advanced.votes.hint" var="advanced_votes_hint" />
 <spring:message code="advanced.date.hint" var="advanced_date_hint" />
+<spring:message code="advanced.includeFlagged" var="advanced_include_flagged" />
 <div class="flex-column explore-container">
     <form:form class="form-container" action="/explore/search" method="get" modelAttribute="exploreForm">
 
@@ -61,6 +62,14 @@
                 </form:select>
             </div>
         </div>
+
+        <hr/>
+
+        <form:label cssClass="flex-stretch fw-500" path="includeFlagged"><spring:message code="advanced.flagged"/></form:label>
+        <div class="flex-row">
+            <form:checkbox path="includeFlagged" value="true" label="${advanced_include_flagged}" class="fw-100 advanced-input check-input"/>
+        </div>
+        <form:errors class="form-error" path="includeFlagged" element="p"/>
 
         <hr/>
 

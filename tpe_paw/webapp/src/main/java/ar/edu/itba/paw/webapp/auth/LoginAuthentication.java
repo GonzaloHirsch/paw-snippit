@@ -8,12 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Component
@@ -34,14 +37,35 @@ public class LoginAuthentication {
         return null;
     }
 
+    private String getLoggedInUsernameWithSession(HttpServletRequest request) {
+        HttpSession session = request.getSession(true);
+        final Object userDetails = ((SecurityContext)session.getAttribute("SPRING_SECURITY_CONTEXT")).getAuthentication().getPrincipal();
+        if (userDetails instanceof UserDetails) {
+            return ((UserDetails)userDetails).getUsername();
+        }
+        return null;
+    }
+
     public User getLoggedInUser() {
         final String username = this.getLoggedInUsername();
         if (username == null) {
             return null;
         }
+        return this.findUser(username);
+    }
+
+    public User getLoggedInUser(HttpServletRequest request) {
+        final String username = this.getLoggedInUsernameWithSession(request);
+        if (username == null) {
+            return null;
+        }
+        return this.findUser(username);
+    }
+
+    private User findUser(String username) {
         final Optional<User> user = userService.findUserByUsername(username);
         if (!user.isPresent()) {
-            LOGGER.error("Logged user {} not found in the database", username);
+            LOGGER.warn("Logged user {} not found in the database", username);
             return null;
         }
         LOGGER.debug("Logged user is {}", username);
@@ -53,7 +77,8 @@ public class LoginAuthentication {
         authToken.setDetails(new WebAuthenticationDetails(request));
 
         // Generate session if one doesn't already exist
-        request.getSession();
+        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
+        request.getSession().setAttribute("PRINCIPAL_NAME_INDEX_NAME", username);
 
         Authentication authentication = authenticationManager.authenticate(authToken);
 

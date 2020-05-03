@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.dao.TagDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class SnippetDaoImpl implements SnippetDao {
@@ -119,6 +121,28 @@ public class SnippetDaoImpl implements SnippetDao {
             snippet.get().setTags(tagDao.findTagsForSnippet(snippet.get().getId()));
         }
         return snippet;
+    }
+
+    @Override
+    public int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId) {
+        List<Long> tagIds = tags.stream().mapToLong(Tag::getId).boxed().collect(Collectors.toList());
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        for (Long id : tagIds){
+            sb.append("st.tag_id = ?");
+            if (count < tagIds.size() - 1){
+                sb.append(" OR ");
+            }
+            count++;
+        }
+        Object[] params = new Object[tagIds.size() + 2];
+        params[0] = userId;
+        params[1] = dateMin;
+        int i = 2;
+        for (Long id : tagIds){
+            params[i++] = id;
+        }
+        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT s.id) FROM complete_snippets AS s LEFT OUTER JOIN snippet_tags AS st ON s.id = st.snippet_id WHERE s.user_id != ? AND s.date_created::date >= ?::date AND (" + sb.toString() + ")", params, Integer.class);
     }
 
     @Override

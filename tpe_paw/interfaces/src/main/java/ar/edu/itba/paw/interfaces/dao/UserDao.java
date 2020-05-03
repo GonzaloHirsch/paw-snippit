@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.dao;
 
 import ar.edu.itba.paw.models.User;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 
@@ -22,4 +23,6 @@ public interface UserDao {
     void changeProfilePhoto(final long userId, final byte[] photo);
 
     void changeDescription(final long userId, final String description);
+
+    Collection<User> getAllUsers();
 }

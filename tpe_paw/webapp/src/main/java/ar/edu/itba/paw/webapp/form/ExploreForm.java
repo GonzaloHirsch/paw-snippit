@@ -43,6 +43,15 @@ public class ExploreForm {
     private String title;
     private String sort;
     private String field;
+    private boolean includeFlagged;
+
+    public boolean getIncludeFlagged() {
+        return includeFlagged;
+    }
+
+    public void setIncludeFlagged(boolean includeFlagged) {
+        this.includeFlagged = includeFlagged;
+    }
 
     public String getSort() {
         return sort;

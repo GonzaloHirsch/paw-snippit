@@ -48,9 +48,9 @@ public class SnippetDeepSearchQuery {
 
         public Builder(boolean isCount) {
             if (isCount){
-                this.query.append("SELECT COUNT(s.id) FROM (SELECT DISTINCT cs.id, cs.user_id, cs.username, cs.reputation, cs.code, cs.title, cs.description, cs.language, cs.date_created, cs.icon, cs.votes, cs.language_id, st.tag_id, cs.flagged FROM complete_snippets AS cs LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = cs.id) AS s");
+                this.query.append("SELECT COUNT(DISTINCT s.id) FROM (SELECT DISTINCT cs.id, cs.user_id, cs.username, cs.reputation, cs.code, cs.title, cs.description, cs.language, cs.date_created, cs.icon, cs.votes, cs.language_id, st.tag_id, cs.flagged FROM complete_snippets AS cs LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = cs.id ORDER BY cs.id ASC) AS s");
             } else {
-                this.query.append("SELECT * FROM (SELECT DISTINCT cs.id, cs.user_id, cs.username, cs.reputation, cs.code, cs.title, cs.description, cs.language, cs.date_created, cs.icon, cs.votes, cs.language_id, st.tag_id, cs.flagged FROM complete_snippets AS cs LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = cs.id) AS s");
+                this.query.append("SELECT DISTINCT ON (s.id) * FROM (SELECT DISTINCT cs.id, cs.user_id, cs.username, cs.reputation, cs.code, cs.title, cs.description, cs.language, cs.date_created, cs.icon, cs.votes, cs.language_id, st.tag_id, cs.flagged FROM complete_snippets AS cs LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = cs.id ORDER BY cs.id ASC) AS s");
             }
         }
 
@@ -141,21 +141,28 @@ public class SnippetDeepSearchQuery {
             return this;
         }
 
+        public Builder addIncludeFlagged(boolean includeFlagged){
+            if (!includeFlagged){
+                this.query.append(" s.flagged = 0 ");
+            }
+            return this;
+        }
+
         public Builder setOrder(String order, String sort){
             this.query.append(" ORDER BY ");
             switch(order.toLowerCase()){
                 case "reputation":
-                    this.query.append(" s.reputation ");
+                    this.query.append(" s.id, s.reputation ");
                     break;
                 case "votes":
-                    this.query.append(" s.votes ");
+                    this.query.append(" s.id, s.votes ");
                     break;
                 case "date":
-                    this.query.append(" s.date_created ");
+                    this.query.append(" s.id, s.date_created ");
                     break;
                 case "title":
                 default:
-                    this.query.append(" s.title ");
+                    this.query.append(" s.id, s.title ");
                     break;
             }
             switch(sort.toLowerCase()){

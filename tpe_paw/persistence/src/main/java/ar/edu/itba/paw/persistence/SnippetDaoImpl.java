@@ -107,8 +107,8 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, int page) {
-        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, page, false);
+    public Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page) {
+        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, includeFlagged, page, false);
         return jdbcTemplate.query(searchQuery.getQuery(), searchQuery.getParams(), ROW_MAPPER);
     }
 
@@ -198,14 +198,14 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort) {
-        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort,null,true);
+    public int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged) {
+        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, includeFlagged, null,true);
         return jdbcTemplate.queryForObject(searchQuery.getQuery(), searchQuery.getParams(), Integer.class);
     }
 
-    private SnippetDeepSearchQuery createDeepQuery(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Integer page, boolean isCount){
+    private SnippetDeepSearchQuery createDeepQuery(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, Integer page, boolean isCount){
         SnippetDeepSearchQuery.Builder queryBuilder = new SnippetDeepSearchQuery.Builder(isCount);
-        if (dateMin == null && dateMax == null && repMin == null && repMax == null && voteMin == null && voteMax == null && languageId != null && tagId != null && title != null && username != null && order != null && sort != null){
+        if (dateMin == null && dateMax == null && repMin == null && repMax == null && voteMin == null && voteMax == null && languageId != null && tagId != null && title != null && username != null && order != null && sort != null && includeFlagged != null){
             if (page != null){
                 return queryBuilder.setOrder("title", "asc").setPaging(page, PAGE_SIZE).build();
             } else {
@@ -265,6 +265,14 @@ public class SnippetDaoImpl implements SnippetDao {
                     isFirst = false;
                 }
                 queryBuilder = queryBuilder.addUsername(username);
+            }
+            if (includeFlagged != null && !includeFlagged){
+                if (!isFirst){
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addIncludeFlagged(includeFlagged);
             }
             if (page == null){
                 return queryBuilder.build();

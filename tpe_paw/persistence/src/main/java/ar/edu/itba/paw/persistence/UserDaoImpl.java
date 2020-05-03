@@ -94,4 +94,9 @@ public class UserDaoImpl implements UserDao {
         jdbcTemplate.update("UPDATE users SET description = ? WHERE id = ?", description, userId);
     }
 
+    @Override
+    public Collection<User> getAllUsers() {
+        return jdbcTemplate.query("SELECT * FROM users", ROW_MAPPER);
+    }
+
 }

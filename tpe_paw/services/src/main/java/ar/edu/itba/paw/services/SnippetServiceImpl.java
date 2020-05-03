@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.dao.TagDao;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,11 @@ public class SnippetServiceImpl implements SnippetService {
     @Override
     public Collection<Snippet> findSnippetsForTag(long tagId) {
         return snippetDao.findSnippetsForTag(tagId);
+    }
+
+    @Override
+    public int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId) {
+        return this.snippetDao.getNewSnippetsForTagsCount(dateMin, tags, userId);
     }
 
     @Override

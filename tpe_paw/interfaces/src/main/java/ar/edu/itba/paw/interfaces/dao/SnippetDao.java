@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.dao;
 
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 
 import java.util.Calendar;
@@ -43,6 +44,7 @@ public interface SnippetDao {
     Collection<Snippet> getAllFlaggedSnippets(int page);
     Collection<Snippet> findAllSnippetsByOwner(final long userId, int page);
     Optional<Snippet> findSnippetById(long id);
+    int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId);
     Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language);
     Collection<Snippet> findSnippetsForTag(long tagId);
     void flagSnippet(long snippetId);

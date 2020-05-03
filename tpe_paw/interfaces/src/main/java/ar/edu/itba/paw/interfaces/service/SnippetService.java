@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.service;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 
 import java.util.Calendar;
@@ -19,6 +20,7 @@ public interface SnippetService {
     Collection<Snippet> findAllSnippetsByOwner(final long userId, int page);
     Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page);
     Collection<Snippet> findSnippetsForTag(long tagId);
+    int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId);
     Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page);
     boolean isFlaggedByAdmin(Snippet snippet);
     void updateFlagged(long snippetId, boolean isFlagged);

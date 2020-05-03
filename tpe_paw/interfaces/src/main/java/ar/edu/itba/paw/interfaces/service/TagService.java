@@ -15,5 +15,5 @@ public interface TagService {
     Collection<Tag> addTagsToSnippet(Long snippetId, Collection<Long> tagIdList);
     void addTags(List<String> tags);
     boolean isUnique(String tag);
-    void deleteTag(final long tagId);
+    void removeTag(final long tagId);
 }

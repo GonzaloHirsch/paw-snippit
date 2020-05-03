@@ -17,5 +17,5 @@ public interface TagDao {
     void addSnippetTag(long snippetOd, long tagId);
     void addTags(List<String> tags);
 
-    void deleteTag(final long tagId);
+    void removeTag(final long tagId);
 }

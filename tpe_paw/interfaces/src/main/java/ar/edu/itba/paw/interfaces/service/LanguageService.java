@@ -11,4 +11,6 @@ public interface LanguageService {
     Collection<Language> getAll();
     void addLanguages(List<String> languages);
     boolean isUnique(String language);
+    void removeLanguage(final long langId);
+    boolean languageInUse(final long langId);
 }

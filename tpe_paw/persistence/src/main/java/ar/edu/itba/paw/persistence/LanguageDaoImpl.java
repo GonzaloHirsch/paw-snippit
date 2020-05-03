@@ -76,4 +76,18 @@ public class LanguageDaoImpl implements LanguageDao {
         jdbcInsert.executeBatch(array);
     }
 
+    // TODO Transactional
+    @Override
+    public void removeLanguage(final long langId) {
+        if (this.languageInUse(langId)) {
+            // TODO throw new custom error
+        }
+        jdbcTemplate.update("DELETE FROM languages WHERE id = ?", new Object[]{langId});
+    }
+
+    @Override
+    public boolean languageInUse(final long langId) {
+        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT s.id) FROM complete_snippets AS s WHERE s.language_id = ?", new Object[]{langId}, Integer.class) != 0;
+    }
+
 }

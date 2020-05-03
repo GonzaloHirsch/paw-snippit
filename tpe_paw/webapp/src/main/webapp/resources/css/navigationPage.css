@@ -1,5 +1,5 @@
 .navigation-page-container {
-    margin: 10px 0px;
+    margin: 10px 0;
 }
 
 .navigation-page {
@@ -19,6 +19,8 @@
 
 .navigation-page:hover {
     background-color: rgba(163, 163, 163, 0.56);
+    color: initial;
+    text-decoration: none;
 }
 
 .navigation-page-selected:hover {

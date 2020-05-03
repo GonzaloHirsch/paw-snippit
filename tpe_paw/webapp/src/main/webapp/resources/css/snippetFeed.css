@@ -10,6 +10,11 @@
     padding: 30px;
 }
 
+.no-snippet {
+    font-size: 30px;
+    padding: 50px;
+}
+
 /*
  * repeat --> create multiple similar columns
  * auto-fill --> create as many columns will fit in the available grid width

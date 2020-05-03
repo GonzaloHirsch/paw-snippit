@@ -25,4 +25,6 @@ public interface UserService {
     void changeProfilePhoto(final long userId, final byte[] photo);
 
     void changeDescription(final long userId, final String description);
+
+    boolean isAdmin(User user);
 }

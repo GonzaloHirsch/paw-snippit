@@ -5,7 +5,7 @@
 <html>
 <head>
     <title><spring:message code="tag.title" arguments="${tag.name}"/></title>
-    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon.ico'/>"/>
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon/favicon.ico'/>"/>
     <link href="<c:url value='/resources/css/navigationBar.css'/>" type="text/css" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/tagSnippets.css'/>" type="text/css" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" type="text/css" rel="stylesheet"/>

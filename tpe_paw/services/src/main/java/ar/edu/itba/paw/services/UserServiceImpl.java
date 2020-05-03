@@ -71,4 +71,9 @@ public class UserServiceImpl implements UserService {
     public void changeDescription(final long userId, final String description) {
         this.userDao.changeDescription(userId, description);
     }
+
+    @Override
+    public boolean isAdmin(User user) {
+        return user.getUsername().compareTo("admin") == 0;
+    }
 }

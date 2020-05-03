@@ -7,26 +7,30 @@
 <html>
 <head>
     <title><spring:message code="snippet"/></title>
-    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon.ico'/>"/>
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon/favicon.ico'/>"/>
     <link href="<c:url value='/resources/css/snippetDetail.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/tag.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/tags.css'/>" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-          rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+          rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <script src="<c:url value='/resources/js/snippetDetail.js'/>"></script>
 </head>
 
 <body>
 
+<c:set var="snippet" value="${requestScope.snippet}"/>
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
         <div class="flex-row detail-snippet-container flex-center">
 
             <div class="flex-column detail-snippet-center">
+                <c:if test="${snippet.flagged}">
+                    <c:import url="/WEB-INF/jsp/snippet/flaggedWarning.jsp"/>
+                </c:if>
 
                 <div class="flex-row flex-center flex-space-between">
                     <div class="snippet-text snippet-title">
@@ -63,6 +67,14 @@
                 </div>
                 <div class="flex-row flex-center">
                     <c:set var="snippetId" value="${snippet.id}" scope="request"/>
+                    <c:set var="currentUser" value="${currentUser}" scope="request"/>
+                    <!-- FLAG -->
+                    <c:if test="${currentUser != null && currentUser.username == 'admin'}">
+                        <div class="flex-center detail-snippet-block border-radius">
+                            <c:import url="/WEB-INF/jsp/admin/adminFlagForm.jsp"/>
+                        </div>
+                    </c:if>
+
                     <!-- FAVORITES -->
                     <div class="flex-center detail-snippet-block border-radius">
                         <c:import url="/WEB-INF/jsp/snippet/favForm.jsp"/>

@@ -33,6 +33,8 @@ public class SearchController {
         put("tag", SnippetDao.Types.TAG);
         put("title", SnippetDao.Types.TITLE);
         put("content", SnippetDao.Types.CONTENT);
+        put("username", SnippetDao.Types.USER);
+        put("language", SnippetDao.Types.LANGUAGE);
     }};
 
     private Map<String, SnippetDao.Orders> ordersMap = new HashMap<String, SnippetDao.Orders>(){{
@@ -52,6 +54,8 @@ public class SearchController {
     private static final String HOME = "";
     private static final String FOLLOWING = "following/";
     private static final String FAVORITES = "favorites/";
+    private static final String UPVOTED = "upvoted/";
+    private static final String FLAGGED = "flagged/";
 
     @RequestMapping("/search")
     public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
@@ -86,6 +90,32 @@ public class SearchController {
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, currentUser.getId());
 
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FOLLOWING);
+        return mav;
+    }
+
+    @RequestMapping("/upvoted/search")
+    public ModelAndView searchInUpvoted(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
+        final ModelAndView mav = new ModelAndView("index");
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) this.logAndThrow(UPVOTED);
+
+        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.UPVOTED, searchForm.getSort(), currentUser.getId(), page);
+        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.UPVOTED, currentUser.getId());
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, UPVOTED);
+        return mav;
+    }
+
+    @RequestMapping("/flagged/search")
+    public ModelAndView searchInFlagged(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
+        final ModelAndView mav = new ModelAndView("index");
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) this.logAndThrow(FLAGGED);
+
+        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FLAGGED, searchForm.getSort(), null, page);
+        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FLAGGED, null);
+
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FLAGGED);
         return mav;
     }
 

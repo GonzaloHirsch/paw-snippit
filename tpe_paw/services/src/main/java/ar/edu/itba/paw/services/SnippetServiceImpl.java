@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -32,6 +33,16 @@ public class SnippetServiceImpl implements SnippetService {
     @Override
     public Collection<Snippet> findSnippetsForTag(long tagId) {
         return snippetDao.findSnippetsForTag(tagId);
+    }
+
+    @Override
+    public Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, int page) {
+        return this.snippetDao.findSnippetByDeepCriteria(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, page);
+    }
+
+    @Override
+    public boolean isFlaggedByAdmin(Snippet snippet) {
+        return snippet.isFlagged();
     }
 
     @Override
@@ -66,6 +77,16 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
+    public int getAllUpvotedSnippetsCount(long userId) {
+        return snippetDao.getAllUpvotedSnippetsCount(userId);
+    }
+
+    @Override
+    public int getAllFlaggedSnippetsCount() {
+        return snippetDao.getAllFlaggedSnippetsCount();
+    }
+
+    @Override
     public int getAllSnippetsByOwnerCount(long userId) {
         return this.snippetDao.getAllSnippetsByOwnerCount(userId);
     }
@@ -78,6 +99,11 @@ public class SnippetServiceImpl implements SnippetService {
     @Override
     public int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId) {
         return this.snippetDao.getSnippetByCriteriaCount(SnippetDao.QueryTypes.COUNT, type, term, location, userId);
+    }
+
+    @Override
+    public int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort) {
+        return this.snippetDao.getSnippetByDeepCriteriaCount(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort);
     }
 
     @Override
@@ -96,6 +122,11 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
+    public Collection<Snippet> getAllFlaggedSnippets(int page) {
+        return snippetDao.getAllFlaggedSnippets(page);
+    }
+
+    @Override
     public Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<Long> tags) {
         Long snippetId =  snippetDao.createSnippet(owner,title,description,code,dateCreated,language);
         //TODO: See if its better to call TagService instead of TagDao directly.
@@ -103,5 +134,14 @@ public class SnippetServiceImpl implements SnippetService {
             tagService.addTagsToSnippet(snippetId, tags);
 
         return snippetId;
+    }
+
+    @Override
+    public void updateFlagged(long snippetId, boolean isFlagged) {
+        if (isFlagged) {
+            snippetDao.flagSnippet(snippetId);
+        } else {
+            snippetDao.unflagSnippet(snippetId);
+        }
     }
 }

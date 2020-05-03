@@ -56,7 +56,7 @@ public class LanguageDaoImpl implements LanguageDao {
         final Map<String, Object> args = new HashMap<>();
         args.put("name", lang);
         final Number langId = jdbcInsert.executeAndReturnKey(args);
-        return new Language(langId.longValue(), lang);
+        return new Language(langId.longValue(), lang.toLowerCase());
     }
 
     @Override

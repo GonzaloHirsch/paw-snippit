@@ -103,4 +103,8 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    public Collection<User> getAllUsers() {
+        return jdbcTemplate.query("SELECT * FROM users", ROW_MAPPER);
+    }
+
 }

@@ -38,7 +38,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Controller
-public class UserController {
+public class  UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired

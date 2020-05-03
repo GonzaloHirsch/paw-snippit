@@ -174,7 +174,7 @@
         <spring:message code="app.name"/>
         </a>
         </div>
-        <c:if test="${searchContext != 'explore/'}">
+        <c:if test="${searchContext != 'error/' && searchContext != 'explore/'}">
             <div class="flex-row flex-wrap flex-center flex-grow">
             <form:form modelAttribute="searchForm" method="get" action="${searchUrl}"
                        class="flex-row flex-center flex-wrap search-container">

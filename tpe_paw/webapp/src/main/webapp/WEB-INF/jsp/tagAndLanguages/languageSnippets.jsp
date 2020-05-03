@@ -23,7 +23,7 @@
             <div class="flex-row flex-center fw-100 title-container">
                 <spring:message code="languageSnippets.title" arguments="${language.name.toUpperCase()}"/>
 
-                <c:if test="${currentUser != null && currentUser.username == 'admin'}">
+                <c:if test="${currentUser != null && currentUser.username == 'admin' && snippetList.size() == 0}">
                     <form:form action="${langId}/delete" class="form-container" method="post" modelAttribute="deleteForm">
                         <form:checkbox class="hidden" path="delete" value="true" id="lang-delete-button" onclick="updateForm(this)"/>
                         <label for="lang-delete-button" class="flex-center">

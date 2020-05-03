@@ -14,12 +14,12 @@ import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -39,6 +39,8 @@ public class LanguagesController {
     private TagService tagService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LanguagesController.class);
 
@@ -77,8 +79,11 @@ public class LanguagesController {
     public ModelAndView deleteLanguage (@PathVariable("langId") long langId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
         User currentUser = loginAuthentication.getLoggedInUser();
         if ( currentUser != null && userService.isAdmin(currentUser)){
+            /* Language was assigned to a snippet and can no longer be deleted */
             if (this.languageService.languageInUse(langId)) {
-                throw new RemovingLanguageInUseException();
+                Optional<Language> language = this.languageService.findById(langId);
+                Object[] obj = language.map(value -> new Object[]{value.getName().toUpperCase()}).orElseGet(() -> new Object[]{langId});
+                throw new RemovingLanguageInUseException(messageSource.getMessage("error.removing.language", obj, LocaleContextHolder.getLocale()));
             }
             this.languageService.removeLanguage(langId);
             LOGGER.debug("Admin removed language with id {}", langId);

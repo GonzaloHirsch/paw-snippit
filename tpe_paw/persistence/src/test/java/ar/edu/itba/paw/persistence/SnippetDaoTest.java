@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
+import ar.edu.itba.paw.interfaces.dao.TagDao;
 import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
@@ -8,6 +9,10 @@ import ar.edu.itba.paw.models.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -16,10 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static ar.edu.itba.paw.persistence.TestHelper.*;
 import static junit.framework.TestCase.assertEquals;
@@ -31,11 +33,15 @@ public class SnippetDaoTest {
 
     @Autowired
     private DataSource ds;
+
     @Autowired
+    @InjectMocks
     private SnippetDao snippetDao;
+
+    @Mock
+    private TagDao mockTagDao;
+
     private JdbcTemplate jdbcTemplate;
-
-
     private SimpleJdbcInsert jdbcInsertUser;
     private SimpleJdbcInsert jdbcInsertSnippet;
     private SimpleJdbcInsert jdbcInsertLanguage;
@@ -51,6 +57,7 @@ public class SnippetDaoTest {
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
+        MockitoAnnotations.initMocks(this); // Replaces @RunWith(MockitJUnitRunner.class)
 
         jdbcInsertSnippet = new SimpleJdbcInsert(ds).withTableName(SNIPPETS_TABLE).usingGeneratedKeyColumns("id");
         jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
@@ -85,6 +92,8 @@ public class SnippetDaoTest {
         // Precondiciones
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser,TITLE,DESCR,CODE, defaultLanguage);
+        Collection<Tag> tagList = Collections.singletonList(defaultTag);
+        Mockito.when(mockTagDao.findTagsForSnippet(snippetId)).thenReturn(tagList);
 
         // Ejercitacion
         Optional<Snippet> maybeSnippet = snippetDao.findSnippetById(snippetId);
@@ -94,6 +103,7 @@ public class SnippetDaoTest {
         assertEquals(defaultUser.getUsername(), maybeSnippet.get().getOwner().getUsername());
         assertEquals(TITLE, maybeSnippet.get().getTitle());
         assertEquals(DESCR, maybeSnippet.get().getDescription());
+        assertTrue(maybeSnippet.get().getTags().contains(defaultTag));
     }
 
     @Test

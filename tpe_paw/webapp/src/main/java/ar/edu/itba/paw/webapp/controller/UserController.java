@@ -242,7 +242,7 @@ public class UserController {
     @RequestMapping(value = "/reset-password", method = RequestMethod.POST)
     public ModelAndView endResetPassword (final @RequestParam(value="id") long id,
                                           final @RequestParam(value="token") String token,
-                                          @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm,
+                                          @ModelAttribute("resetPasswordForm") @Valid final ResetPasswordForm resetPasswordForm,
                                           BindingResult errors){
         // TODO redirect to previous page KEEPING pathVariables
         if(errors.hasErrors()) {

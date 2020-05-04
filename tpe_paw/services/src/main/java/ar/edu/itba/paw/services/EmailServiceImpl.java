@@ -58,7 +58,7 @@ public class EmailServiceImpl implements EmailService {
         this.sendEmail(to, subject, body);
     }
 
-    @Scheduled(cron = "0 0 12 ? * Mon")
+    @Scheduled(cron = "0 0 12 * * Mon")
     @Override
     public void sendDailyDigest() {
         // Getting timestamp for week before

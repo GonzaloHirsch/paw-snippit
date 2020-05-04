@@ -104,6 +104,8 @@ public class SnippetSearchQuery {
             if (type.equals(SnippetDao.Types.ALL)){
                 params.add("%" + term + "%");
                 params.add("%" + term + "%");
+                params.add("%" + term + "%");
+                params.add("%" + term + "%");
             }
         }
 

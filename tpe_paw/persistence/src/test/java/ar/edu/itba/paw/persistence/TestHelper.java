@@ -76,5 +76,14 @@ public class TestHelper {
         return jdbcInsertTag.executeAndReturnKey(map).longValue();
     }
 
+    public static void insertSnippetTagIntoDb(SimpleJdbcInsert jdbcInsert, long snippet, long tag){
+        final Map<String, Object> map = new HashMap<String,Object>(){{
+            put("snippet_id", snippet);
+            put("tag_id",tag);
+        }};
+
+        jdbcInsert.execute(map);
+    }
+
 
 }

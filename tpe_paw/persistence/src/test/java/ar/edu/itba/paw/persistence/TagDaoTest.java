@@ -35,7 +35,6 @@ import static org.junit.Assert.*;
     Optional<Tag> findByName(String name);
      Collection<Tag> getAllTags();
  Not tested Methods:
-    Collection<Tag> findTagsForSnippet(long snippetId);
     void addSnippetTag(long snippetOd, long tagId);
 
 */
@@ -52,9 +51,10 @@ public class TagDaoTest {
     private SimpleJdbcInsert jdbcInsertSnippet;
     private SimpleJdbcInsert jdbcInsertUser;
     private SimpleJdbcInsert jdbcInsertLanguage;
+    private SimpleJdbcInsert jdbcInsertTagSnippet;
 
 
-    private Snippet defaultSnippet;
+    private long defaultSnippetId;
 
     private final static RowMapper<Tag> ROW_MAPPER = (rs, rowNum) -> new Tag(rs.getInt("id"), rs.getString("name"));
 
@@ -65,6 +65,7 @@ public class TagDaoTest {
         jdbcInsertSnippet = new SimpleJdbcInsert(ds).withTableName(SNIPPETS_TABLE).usingGeneratedKeyColumns("id");
         jdbcInsertLanguage = new SimpleJdbcInsert(ds).withTableName(LANGUAGES_TABLE).usingGeneratedKeyColumns("id");
         jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
+        jdbcInsertTagSnippet = new SimpleJdbcInsert(ds).withTableName(SNIPPET_TAGS_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
         User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR);
@@ -73,7 +74,7 @@ public class TagDaoTest {
         Language language =new Language(insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE),LANGUAGE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        final long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,user,TITLE,DESCR,CODE, language);
+        defaultSnippetId = insertSnippetIntoDb(jdbcInsertSnippet,user,TITLE,DESCR,CODE, language);
     }
 
 
@@ -136,14 +137,25 @@ public class TagDaoTest {
             maybeList.add(t.getName());
         }
         assertTrue(maybeList.contains(TAG));
-        assertTrue(maybeList.contains(TAG));
+        assertTrue(maybeList.contains(TAG2));
     }
 
     @Test
-    public void testAddSnippetTag(){
+    public void testFindTagsForSnippet(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
-        long tagId = insertTagIntoDb(jdbcInsertTag,TAG);
-    }
+        long tagId1 = insertTagIntoDb(jdbcInsertTag,TAG);
+        long tagId2 = insertTagIntoDb(jdbcInsertTag,TAG2);
+        insertSnippetTagIntoDb(jdbcInsertTagSnippet,defaultSnippetId,tagId1);
+        insertSnippetTagIntoDb(jdbcInsertTagSnippet,defaultSnippetId,tagId2);
 
+        Collection<Tag> maybeTags = tagDao.findTagsForSnippet(defaultSnippetId);
+
+        assertEquals(2,maybeTags.size());
+        List<String> tagNames = new ArrayList<>();
+        for(Tag t:maybeTags){
+            tagNames.add(t.getName());
+        }
+        assertTrue(tagNames.contains(TAG));
+    }
 
 }

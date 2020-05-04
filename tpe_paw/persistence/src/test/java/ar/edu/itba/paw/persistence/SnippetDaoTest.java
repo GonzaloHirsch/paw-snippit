@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.dao.LanguageDao;
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
-import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
@@ -14,21 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
-
-
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import static ar.edu.itba.paw.persistence.TestHelper.*;
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -72,11 +67,7 @@ public class SnippetDaoTest {
         defaultLanguage = new Language(insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE), "language1");
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
-        Map<String, Object> tagDataMap = new HashMap<String, Object>() {{
-            put("name", "tag1");
-        }};
-        long tagId = jdbcInsertTag.executeAndReturnKey(tagDataMap).longValue();
-        defaultTag = new Tag(tagId,"tag1");
+        defaultTag = new Tag(insertTagIntoDb(jdbcInsertTag,TAG),TAG);
     }
 
 

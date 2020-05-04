@@ -20,7 +20,10 @@
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content flex-center">
 
-        <c:url var="resetPassUrl" value="/reset-password"/>
+        <c:url var="resetPassUrl" value="/reset-password">
+            <c:param name="id" value="${param.id}"/>
+            <c:param name="token" value="${param.token}"/>
+        </c:url>
         <div class="flex-column flex-center register-block register-border">
 
             <!-- Title -->
@@ -34,13 +37,13 @@
 
                 <div class="flex-column register-form-data">
                     <div class="register-field-container">
-                        <form:errors path="newPassword" cssClass="form-error" element="p "/>
+                        <form:errors path="newPassword" cssClass="form-error" element="p"/>
                         <i class="material-icons register-icons">lock</i>
                         <label><form:input class="register-border register-field-size register-field-padding" path="newPassword" placeholder='${password_hint}' type="password"/></label>
                     </div>
 
                     <div class="register-field-container">
-                        <form:errors path="repeatNewPassword" cssClass="form-error" element="p "/>
+                        <form:errors path="repeatNewPassword" cssClass="form-error" element="p"/>
                         <i class="material-icons register-icons">lock</i>
                         <label><form:input class="register-border register-field-size register-field-padding" path="repeatNewPassword" placeholder='${repeat_password_hint}' type="password"/></label>
                     </div>

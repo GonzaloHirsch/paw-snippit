@@ -11,9 +11,9 @@ public class ResetPasswordForm {
     @Size(min=8)
     @NotBlank
     private String newPassword;
-    @Size(min=8)
-    @NotBlank
+
     private String repeatNewPassword;
+
     private String email;
 
     public String getNewPassword() {

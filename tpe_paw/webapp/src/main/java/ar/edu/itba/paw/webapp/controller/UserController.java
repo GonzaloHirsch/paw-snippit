@@ -218,8 +218,7 @@ public class UserController {
     @RequestMapping(value = "/reset-password", method = RequestMethod.GET)
     public ModelAndView resetPassword(final @RequestParam(value="id") long id,
                                         final @RequestParam(value="token") String token,
-                                        @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm,
-                                        BindingResult errors) {
+                                        @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm) {
         Optional<User> userOpt = userService.findUserById(id);
         if(!userOpt.isPresent()) {
             // TODO Resource Not Found
@@ -241,10 +240,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/reset-password", method = RequestMethod.POST)
-    public ModelAndView endResetPassword (@ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm, BindingResult errors){
+    public ModelAndView endResetPassword (final @RequestParam(value="id") long id,
+                                          final @RequestParam(value="token") String token,
+                                          @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm,
+                                          BindingResult errors){
         // TODO redirect to previous page KEEPING pathVariables
         if(errors.hasErrors()) {
-            return new ModelAndView("redirect:/");
+            return resetPassword(id, token, resetPasswordForm);
         }
         userService.changePassword(resetPasswordForm.getEmail(), resetPasswordForm.getNewPassword());
         // TODO inform user everything went fine

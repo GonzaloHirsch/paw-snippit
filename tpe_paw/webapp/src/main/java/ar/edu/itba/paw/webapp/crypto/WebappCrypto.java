@@ -12,6 +12,7 @@ import java.time.Instant;
 public class WebappCrypto {
 
     public static final String TEST_KEY = "thakeyyy";
+    private static final int DURATION = 3000;
 
     //TODO StackOverflow
     private static byte[] hexStringToBytes(String s) {
@@ -31,7 +32,7 @@ public class WebappCrypto {
             String encodedKey = new String(base32.encode(key.getBytes()));
             String secretKeyHex = Hex.encodeHexString(base32.decode(encodedKey));
             Long utcNow = Instant.now().getEpochSecond();
-            utcNow = utcNow / 300;
+            utcNow = utcNow / DURATION;
             utcNow--;
             for (int i = 0; i < 3; i++) {
                 int otp = generateSingleCode(secretKeyHex, utcNow);
@@ -54,7 +55,7 @@ public class WebappCrypto {
             String encodedKey = new String(base32.encode(key.getBytes()));
             String secretKeyHex = Hex.encodeHexString(base32.decode(encodedKey));
             Long utcNow = Instant.now().getEpochSecond();
-            utcNow = utcNow / 300;
+            utcNow = utcNow / DURATION;
             int otp = generateSingleCode(secretKeyHex, utcNow);
             result = Integer.toString(otp);
             while (result.length() < 6) {

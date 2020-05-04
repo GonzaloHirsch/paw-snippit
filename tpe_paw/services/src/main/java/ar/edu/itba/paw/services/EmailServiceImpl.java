@@ -1,15 +1,12 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.service.EmailService;
-import ar.edu.itba.paw.interfaces.service.SnippetService;
-import ar.edu.itba.paw.interfaces.service.UserService;
+import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -22,7 +19,8 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -35,7 +33,10 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private SnippetService snippetService;
     @Autowired
-    private TagServiceImpl tagService;
+    private TagService tagService;
+    @Autowired
+    private TemplateService templateService;
+
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     @Async
@@ -61,8 +62,10 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendRegistrationEmail(String to, String username) {
         try {
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("username", username);
+            String body = this.templateService.merge("/WEB-INF/templates/register.vm", data, LocaleContextHolder.getLocale());
             String subject = messageSource.getMessage("email.register.subject",null, LocaleContextHolder.getLocale());
-            String body = messageSource.getMessage("email.register.body",new Object[]{username}, LocaleContextHolder.getLocale());
             this.sendEmail(to, subject, body);
         } catch (Exception e){
             // TODO: DO SMTH

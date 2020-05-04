@@ -17,6 +17,12 @@
     padding: 10px;
 }
 
+.register-form-title {
+    font-size: 24px;
+    font-weight: 400;
+    padding-bottom: 30px;
+}
+
 .register-field-container {
     margin: 5px;
 }

@@ -212,7 +212,7 @@ public class UserController {
         emailService.sendRecoveryEmail(searchedUser.getId(), recoveryForm.getEmail(), searchedUser.getUsername(), base64Token);
 
         // TODO create dedicated view
-        return new ModelAndView("user/email-sent");
+        return new ModelAndView("user/emailSent");
     }
 
     @RequestMapping(value = "/reset-password", method = RequestMethod.GET)
@@ -248,7 +248,7 @@ public class UserController {
         }
         userService.changePassword(resetPasswordForm.getEmail(), resetPasswordForm.getNewPassword());
         // TODO inform user everything went fine
-        return new ModelAndView("user/password-reset");
+        return new ModelAndView("user/passwordReset");
     }
 
 

@@ -24,13 +24,25 @@
             <!-- Title -->
             <div class="flex-row flex-center register-text-container white-text register-welcome-text fw-300">
                 <i class="material-icons app-icon register-app-icon-margin">code</i>
-                <spring:message code="passwordReset.title"/>
+                <spring:message code="app.name"/>
             </div>
-
-            <div>
-                <a href="<c:url value="/"/>" class="register-button">
-                    <spring:message code="passwordReset.goHome"/>
-                </a>
+            <div class="flex-center register-form register-border register-shadow">
+                <div class="register-form-data">
+                    <div class="register-form-title">
+                        <div class="register-field-container">
+                            <div class="">
+                                <spring:message code="passwordReset.title"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="register-field-container">
+                        <a class="no-text-decoration" href="<c:url value="/"/>">
+                            <div class="flex-center register-border register-field-size register-button fw-500">
+                                <spring:message code="shared.goHome"/>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

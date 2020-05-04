@@ -2,13 +2,14 @@ package ar.edu.itba.paw.interfaces.service;
 
 import ar.edu.itba.paw.models.User;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 
 public interface UserService {
-    User createUser(String username, String password, String email, String description, int reputation, Date dateJoined);
+    long createUser(String username, String password, String email, String description, int reputation, String dateJoined);
 
-    User register(String username, String password, String email, Date dateJoined);
+    long register(String username, String password, String email, String dateJoined);
 
     Optional<User> findUserByUsername(String username);
 
@@ -29,4 +30,10 @@ public interface UserService {
     void changeProfilePhoto(final long userId, final byte[] photo);
 
     void changeDescription(final long userId, final String description);
+
+    Collection<User> getAllUsers();
+
+    boolean isAdmin(final User user);
+
+    void changeReputationForFlaggedSnippet(final long userId, boolean add);
 }

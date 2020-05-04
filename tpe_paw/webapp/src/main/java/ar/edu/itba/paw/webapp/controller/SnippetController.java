@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Vote;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.FavoriteForm;
+import ar.edu.itba.paw.webapp.form.FlagSnippetForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.form.VoteForm;
 import org.slf4j.Logger;
@@ -24,6 +25,8 @@ import java.util.Optional;
 @Controller
 public class SnippetController {
 
+    @Autowired
+    private UserService userService;
     @Autowired
     private SnippetService snippetService;
     @Autowired
@@ -44,6 +47,7 @@ public class SnippetController {
     public ModelAndView snippetDetail(
             @ModelAttribute("snippetId") @PathVariable("id") long id,
             @ModelAttribute("searchForm") final SearchForm searchForm,
+            @ModelAttribute("adminFlagForm") final FlagSnippetForm adminFlagForm,
             @ModelAttribute("favForm") final FavoriteForm favForm,
            @ModelAttribute("voteForm") final VoteForm voteForm
     ) {
@@ -77,6 +81,10 @@ public class SnippetController {
             // Fav
             Optional<Favorite> fav = this.favService.getFavorite(currentUser.getId(), retrievedSnippet.get().getId());
             favForm.setFavorite(fav.isPresent());
+
+            if (userService.isAdmin(currentUser)) {
+                adminFlagForm.setFlagged(retrievedSnippet.get().isFlagged());
+            }
         } else {
             wasLoggedIn = false;
         }
@@ -123,5 +131,32 @@ public class SnippetController {
             this.favService.updateFavorites(currentUser.getId(), id, favForm.getFavorite());
         }
         return mav;
+    }
+
+    @RequestMapping(value="/snippet/{id}/flag", method=RequestMethod.POST)
+    public ModelAndView flagSnippet(
+            @ModelAttribute("snippetId") @PathVariable("id") long id,
+            @ModelAttribute("adminFlagForm") final FlagSnippetForm adminFlagForm
+    ) {
+        final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null || !userService.isAdmin(currentUser)) {
+            LOGGER.warn("Inside the flagged form of snippet {} without admin logged in", id);
+        } else {
+            this.snippetService.updateFlagged(id, this.getOwnerIdOfSnippet(id), adminFlagForm.isFlagged());
+            LOGGER.debug("Marked snippet {} as flagged by admin", id);
+        }
+        return mav;
+    }
+
+    private long getOwnerIdOfSnippet(final long snippetId) {
+        Optional<Snippet> snip = this.snippetService.findSnippetById(snippetId);
+        if (snip.isPresent()) {
+            return snip.get().getOwner().getId();
+        } else {
+            LOGGER.warn("No snippet found for id {}", snippetId);
+            //TODO handle error!
+        }
+        return 1; //TODO remove this when exception is handled!!!!
     }
 }

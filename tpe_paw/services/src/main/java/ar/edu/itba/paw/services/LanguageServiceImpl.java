@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,5 +24,25 @@ public class LanguageServiceImpl implements LanguageService {
     @Override
     public Collection<Language> getAll() {
         return languageDao.getAll();
+    }
+
+    @Override
+    public void addLanguages(List<String> languages) {
+        languageDao.addLanguages(languages);
+    }
+
+    @Override
+    public boolean isUnique(String language) {
+        return !languageDao.findByName(language).isPresent();
+    }
+
+    @Override
+    public void removeLanguage(final long langId) {
+        this.languageDao.removeLanguage(langId);
+    }
+
+    @Override
+    public boolean languageInUse(final long langId) {
+        return this.languageDao.languageInUse(langId);
     }
 }

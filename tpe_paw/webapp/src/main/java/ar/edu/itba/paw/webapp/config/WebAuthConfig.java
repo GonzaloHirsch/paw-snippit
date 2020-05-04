@@ -44,11 +44,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .invalidSessionUrl("/")
             .and().authorizeRequests()
                 .antMatchers("/goodbye", "/login", "/login_error", "/signup").anonymous()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/favorites/", "/following/").hasRole("USER")
-                .antMatchers("/snippet/create", "/snippet/**/vote", "/snippet/**/fav"). hasRole("USER")
+                .antMatchers("/admin/add").hasRole("ADMIN")
+                .antMatchers("/flagged/**").hasRole("ADMIN")
+                .antMatchers("/favorites/**", "/following/**", "/upvoted/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/snippet/create", "/snippet/**/vote", "/snippet/**/fav"). hasAnyRole("USER", "ADMIN")
                 .antMatchers("/user/**/save-image"). hasRole("USER")
-                .antMatchers("/tags/**/follow", "/tags/**/unfollow").hasRole("USER")
+                .antMatchers("/tags/**/follow", "/tags/**/unfollow").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/tags/**/delete, /languages/**/delete").hasRole("ADMIN")
                 .antMatchers("/**").permitAll()
                 .and().formLogin()
                 .loginPage("/login")
@@ -74,7 +76,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(final WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/resources/css/**", "/resources/js/**", "/resources/img/**", "/favicon.ico", "/403");
+                .antMatchers("/src/main/resources/css/**", "/src/main/resources/js/**", "/src/main/resources/img/**", "/favicon.ico", "/403");
     }
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)

@@ -2,9 +2,11 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
+import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.form.DeleteForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +34,14 @@ public class TagsController {
     private SnippetService snippetService;
     @Autowired
     private LoginAuthentication loginAuthentication;
+    @Autowired
+    private UserService userService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TagsController.class);
 
     @RequestMapping("/tags")
     public ModelAndView showAllTags() {
-        ModelAndView mav = new ModelAndView("tag/tags");
+        ModelAndView mav = new ModelAndView("tagAndLanguages/tags");
 
         Collection<Tag> allTags = tagService.getAllTags();
         mav.addObject("searchContext","tags/");
@@ -46,11 +50,11 @@ public class TagsController {
     }
 
     @RequestMapping("/tags/{tagId}")
-    public ModelAndView showSnippetsForTag(@PathVariable("tagId") long tagId, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
-        ModelAndView mav = new ModelAndView("tag/tagSnippets");
+    public ModelAndView showSnippetsForTag(@PathVariable("tagId") long tagId, @ModelAttribute("deleteForm") final DeleteForm deleteForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
+        ModelAndView mav = new ModelAndView("tagAndLanguages/tagSnippets");
 
         /* Retrieve the tag */
-        Optional<Tag> tag = tagService.findTagById(tagId);
+        Optional<Tag> tag = this.tagService.findTagById(tagId);
         if (!tag.isPresent()) {
             LOGGER.warn("No tag found with id {}", tagId);
             //TODO throw new
@@ -75,7 +79,7 @@ public class TagsController {
     public ModelAndView followSnippet(@PathVariable("tagId") long tagId) {
         User currentUser = loginAuthentication.getLoggedInUser();
         if ( currentUser != null){
-            tagService.followTag(currentUser.getId(), tagId);
+            this.tagService.followTag(currentUser.getId(), tagId);
             LOGGER.debug("User {} followed tag with id {}", currentUser.getUsername(), tagId);
         } else {
             LOGGER.warn("No user logged in but tag {} was followed", tagId);
@@ -87,12 +91,24 @@ public class TagsController {
     public ModelAndView unfollowSnippet(@PathVariable("tagId") long tagId) {
         User currentUser = loginAuthentication.getLoggedInUser();
         if ( currentUser != null){
-            tagService.unfollowTag(currentUser.getId(), tagId);
+            this.tagService.unfollowTag(currentUser.getId(), tagId);
             LOGGER.debug("User {} unfollowed tag with id {}", currentUser.getUsername(), tagId);
         } else {
             LOGGER.warn("No user logged in but tag {} was unfollowed", tagId);
         }
         return new ModelAndView("redirect:/tags/" + tagId);
+    }
+
+    @RequestMapping("/tags/{tagId}/delete")
+    public ModelAndView deleteTag(@PathVariable("tagId") long tagId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
+        User currentUser = loginAuthentication.getLoggedInUser();
+        if ( currentUser != null && userService.isAdmin(currentUser)){
+            this.tagService.removeTag(tagId);
+            LOGGER.debug("Admin deleted tag with id {}", tagId);
+        } else {
+            LOGGER.warn("No user logged in or logged in user not admin but tag {} was deleted", tagId);
+        }
+        return new ModelAndView("redirect:/tags");
     }
 
     @ModelAttribute

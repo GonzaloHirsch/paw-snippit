@@ -49,6 +49,11 @@
     font-size: 10px;
 }
 
+.check-input {
+    height: 20px !important;;
+    width: 24px !important;
+}
+
 .advanced-submit-button {
     background-color: #5E35B1;
     border: none;

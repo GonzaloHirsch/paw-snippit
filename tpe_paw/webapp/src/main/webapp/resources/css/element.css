@@ -1,12 +1,11 @@
 /*
- * CSS for the snippet tags --> tag.jsp
+ * CSS for the snippet tags and languages --> element.jsp
  */
 
 .tag-text {
     font-size: 13px;
     color: black;
 }
-
 
 .tag-container-detail {
     background: white;
@@ -22,11 +21,11 @@
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.tag-container-detail  .tag-title{
+.element-container-detail  .tag-title{
     font-size: 12px;
 }
 
-.tag-container-main{
+.element-container-main{
     background: white;
     border-radius: 5px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
@@ -36,7 +35,7 @@
     padding: 15px;
 }
 
-.tag-container-main:hover{
+.element-container-main:hover{
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 

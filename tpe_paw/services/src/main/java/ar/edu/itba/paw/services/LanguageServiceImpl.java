@@ -35,4 +35,14 @@ public class LanguageServiceImpl implements LanguageService {
     public boolean isUnique(String language) {
         return !languageDao.findByName(language).isPresent();
     }
+
+    @Override
+    public void removeLanguage(final long langId) {
+        this.languageDao.removeLanguage(langId);
+    }
+
+    @Override
+    public boolean languageInUse(final long langId) {
+        return this.languageDao.languageInUse(langId);
+    }
 }

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.service;
 
 import ar.edu.itba.paw.models.User;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 
@@ -26,5 +27,9 @@ public interface UserService {
 
     void changeDescription(final long userId, final String description);
 
-    boolean isAdmin(User user);
+    Collection<User> getAllUsers();
+
+    boolean isAdmin(final User user);
+
+    void changeReputationForFlaggedSnippet(final long userId, boolean add);
 }

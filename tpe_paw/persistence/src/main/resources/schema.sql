@@ -2,7 +2,7 @@
 -- drop table if exists favorites cascade;
 -- drop table if exists follows cascade;
 -- drop table if exists snippet_tags cascade;
-drop view if exists complete_snippets;
+-- drop view if exists complete_snippets;
 -- drop table if exists tags cascade;
 -- drop table if exists snippets cascade;
 -- drop table if exists languages cascade;
@@ -43,8 +43,16 @@ CREATE TABLE IF NOT EXISTS snippets
     language_id  INT REFERENCES languages (id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
-ALTER TABLE snippets
-    ADD COLUMN IF NOT EXISTS flagged INT DEFAULT 0;
+DO
+'
+    BEGIN
+        BEGIN
+            ALTER TABLE snippets ADD COLUMN flagged INT DEFAULT 0;
+        EXCEPTION
+            WHEN duplicate_column THEN RAISE NOTICE ''column flagged already exists in  table snippets.'';
+        END;
+    END;
+';
 
 CREATE TABLE IF NOT EXISTS votes_for
 (

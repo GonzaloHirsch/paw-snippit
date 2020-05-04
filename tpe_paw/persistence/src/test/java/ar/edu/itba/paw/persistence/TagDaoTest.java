@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static ar.edu.itba.paw.persistence.TestHelper.SNIPPETS_TABLE;
+import static ar.edu.itba.paw.persistence.TestHelper.*;
 import static org.junit.Assert.*;
 
 /*
@@ -34,8 +36,6 @@ import static org.junit.Assert.*;
      Collection<Tag> getAllTags();
  Not tested Methods:
     Collection<Tag> findTagsForSnippet(long snippetId);
-
-
     void addSnippetTag(long snippetOd, long tagId);
 
 */
@@ -53,14 +53,6 @@ public class TagDaoTest {
     private SimpleJdbcInsert jdbcInsertUser;
     private SimpleJdbcInsert jdbcInsertLanguage;
 
-    private final String TAGS_TABLE = "tags";
-    private final String SNIPPETS_TABLE = "snippets";
-    private final String USERS_TABLE = "users";
-    private final String LANGUAGES_TABLE = "languages";
-
-    private final String TAG = "tag1";
-    private final String TAG2 = "tag2";
-    private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     private Snippet defaultSnippet;
 
@@ -74,39 +66,17 @@ public class TagDaoTest {
         jdbcInsertLanguage = new SimpleJdbcInsert(ds).withTableName(LANGUAGES_TABLE).usingGeneratedKeyColumns("id");
         jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
 
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
-        Map<String, Object> map = new HashMap<String, Object>() {{
-            put("username", "username");
-            put("password", "password");
-            put("email", "email@email.com");
-            put("reputation", 0);
-            put("date_joined", DATE.format(Calendar.getInstance().getTime().getTime()));
-        }};
-        long userId = jdbcInsertUser.executeAndReturnKey(map).longValue();
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, LANGUAGES_TABLE);
-        Map<String, Object> languageDataMap = new HashMap<String, Object>() {{
-            put("name", "language1");
-        }};
-        long languageId = jdbcInsertLanguage.executeAndReturnKey(languageDataMap).longValue();
+        Language language =new Language(insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE),LANGUAGE);
 
-        final Map<String, Object> snippetDataMap = new HashMap<String,Object>(){{
-            put("user_id", userId);
-            put("title", "title");
-            put("description","description");
-            put("code","code code code");
-            put("date_created", DATE.format(Calendar.getInstance().getTime().getTime()));
-            put("language_id", languageId);
-        }};
-        final long snippetId = jdbcInsertSnippet.executeAndReturnKey(snippetDataMap).longValue();
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
+        final long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,user,TITLE,DESCR,CODE, language);
     }
 
-    private long insertTagIntoDatabase(String name){
-        final Map<String, Object> map = new HashMap<String,Object>(){{
-            put("name", name);
-        }};
-        return jdbcInsertTag.executeAndReturnKey(map).longValue();
-    }
+
     @Test
     public void testAddTag(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
@@ -131,7 +101,7 @@ public class TagDaoTest {
     @Test
     public void testFindById(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
-        long tagId = insertTagIntoDatabase(TAG);
+        long tagId = insertTagIntoDb(jdbcInsertTag,TAG);
 
         Optional<Tag> maybeTag = tagDao.findById(tagId);
 
@@ -143,7 +113,7 @@ public class TagDaoTest {
     @Test
     public void testFindByName(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
-        long tagId = insertTagIntoDatabase(TAG);
+        long tagId = insertTagIntoDb(jdbcInsertTag,TAG);
 
         Optional<Tag> maybeTag = tagDao.findByName(TAG);
 
@@ -155,8 +125,8 @@ public class TagDaoTest {
     @Test
     public void testGetAllTags(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
-        long tagId1 = insertTagIntoDatabase(TAG);
-        long tagId2 = insertTagIntoDatabase(TAG2);
+        long tagId1 = insertTagIntoDb(jdbcInsertTag,TAG);
+        long tagId2 = insertTagIntoDb(jdbcInsertTag,TAG2);
 
         Collection<Tag> maybeTags = tagDao.getAllTags();
 
@@ -172,7 +142,7 @@ public class TagDaoTest {
     @Test
     public void testAddSnippetTag(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
-        long tagId = insertTagIntoDatabase(TAG);
+        long tagId = insertTagIntoDb(jdbcInsertTag,TAG);
     }
 
 

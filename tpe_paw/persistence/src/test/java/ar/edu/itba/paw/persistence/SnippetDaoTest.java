@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestHelper.*;
 import static junit.framework.TestCase.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -39,6 +40,7 @@ public class SnippetDaoTest {
     private SnippetDao snippetDao;
     private JdbcTemplate jdbcTemplate;
 
+
     private SimpleJdbcInsert jdbcInsertUser;
     private SimpleJdbcInsert jdbcInsertSnippet;
     private SimpleJdbcInsert jdbcInsertLanguage;
@@ -48,20 +50,8 @@ public class SnippetDaoTest {
     private User defaultUser;
     private Language defaultLanguage;
     private Tag defaultTag;
-    private final String SNIPPETS_TABLE = "snippets";
-    private final String USERS_TABLE = "users";
-    private final String LANGUAGES_TABLE = "languages";
-    private final String TAGS_TABLE = "tags";
-    private final String SNIPPET_TAGS_TABLE = "snippet_tags";
 
-    private static final String PASSWORD = "Password";
-    private static final String USERNAME = "Username";
-    private static final String EMAIL = "email@email.com";
-    private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    private static final String TITLE = "Snippet Title";
-    private static final String TITLE2 = "Snippet Title 2";
-    private static final String DESCR = "Description";
-    private static final String CODE = "Snippet Code";
+
 
     @Before
     public void setUp() {
@@ -76,22 +66,10 @@ public class SnippetDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, SNIPPETS_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
-        Map<String, Object> map = new HashMap<String, Object>() {{
-            put("username", USERNAME);
-            put("password", PASSWORD);
-            put("email", EMAIL);
-            put("reputation", 0);
-            put("date_joined", DATE.format(Calendar.getInstance().getTime().getTime()));
-        }};
-        long userId = jdbcInsertUser.executeAndReturnKey(map).longValue();
-        defaultUser = new User(userId, USERNAME, PASSWORD, EMAIL, "", 0, DATE.format(Calendar.getInstance().getTime().getTime()), null);
+        defaultUser = insertUserIntoDb(jdbcInsertUser, USERNAME, PASSWORD, EMAIL, "");
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, LANGUAGES_TABLE);
-        Map<String, Object> languageDataMap = new HashMap<String, Object>() {{
-            put("name", "language1");
-        }};
-        long languageId = jdbcInsertLanguage.executeAndReturnKey(languageDataMap).longValue();
-        defaultLanguage = new Language(languageId, "language1");
+        defaultLanguage = new Language(insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE), "language1");
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
         Map<String, Object> tagDataMap = new HashMap<String, Object>() {{
@@ -101,18 +79,6 @@ public class SnippetDaoTest {
         defaultTag = new Tag(tagId,"tag1");
     }
 
-    private long insertSnippetInDatabase(User user, String title, String description, String code, Language language){
-        final Map<String, Object> snippetDataMap = new HashMap<String,Object>(){{
-            put("user_id", user.getId());
-            put("title", title);
-            put("description",description);
-            put("code",code);
-            put("date_created", DATE.format(Calendar.getInstance().getTime().getTime()));
-            put("language_id", language.getId());
-        }};
-        final long snippetId = jdbcInsertSnippet.executeAndReturnKey(snippetDataMap).longValue();
-        return snippetId;
-    }
 
     @Test
     public void testCreate() {
@@ -127,7 +93,7 @@ public class SnippetDaoTest {
     public void testFindById() {
         // Precondiciones
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        long snippetId = insertSnippetInDatabase(defaultUser,TITLE,DESCR,CODE, defaultLanguage);
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser,TITLE,DESCR,CODE, defaultLanguage);
 
         // Ejercitacion
         Optional<Snippet> maybeSnippet = snippetDao.findSnippetById(snippetId);
@@ -142,7 +108,7 @@ public class SnippetDaoTest {
     @Test
     public void testFindAllSnippetsForUser(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        long snippetId = insertSnippetInDatabase(defaultUser,TITLE,DESCR,CODE,defaultLanguage);
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser,TITLE,DESCR,CODE,defaultLanguage);
 
         Optional<Snippet> maybeSnippet = snippetDao.findAllSnippetsByOwner(defaultUser.getId(),1).stream().findFirst();
 
@@ -153,8 +119,8 @@ public class SnippetDaoTest {
     @Test
     public void testGetAllSnippetsCount(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        insertSnippetInDatabase(defaultUser,TITLE,DESCR,CODE,defaultLanguage);
-        insertSnippetInDatabase(defaultUser,TITLE2,DESCR,CODE,defaultLanguage);
+        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser,TITLE,DESCR,CODE,defaultLanguage);
+        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser,TITLE2,DESCR,CODE,defaultLanguage);
 
         int snippetCount = snippetDao.getAllSnippetsCount();
 
@@ -164,7 +130,7 @@ public class SnippetDaoTest {
     @Test
     public void testFindSnippetForTag() {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, SNIPPETS_TABLE);
-        long snippetId = insertSnippetInDatabase(defaultUser, TITLE, DESCR, CODE, defaultLanguage);
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser, TITLE, DESCR, CODE, defaultLanguage);
         Map<String, Object> map = new HashMap<String, Object>() {{
             put("snippet_id", snippetId); put("tag_id", defaultTag.getId());
         }};
@@ -179,7 +145,7 @@ public class SnippetDaoTest {
     @Test
     public void testGetAllFollowingSnippetsCount(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        long snippetId = insertSnippetInDatabase(defaultUser, TITLE, DESCR, CODE, defaultLanguage);
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser, TITLE, DESCR, CODE, defaultLanguage);
 
         int count = snippetDao.getAllFavoriteSnippetsCount(defaultUser.getId());
 

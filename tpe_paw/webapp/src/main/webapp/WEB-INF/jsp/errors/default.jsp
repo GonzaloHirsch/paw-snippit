@@ -21,13 +21,17 @@
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
-        <div class="error-page-main">
-            <h1>${err}</h1>
-            <h2>
-                ${msg}
-            </h2>
-            <div class="link-button-holder">
-                <a class="link-button" href="<c:url value='/'/>">
+        <div class="flex-column flex-center error-page-main">
+            <div class="error-code border-radius">${err}</div>
+
+            <div class="error-dialog border-radius flex-column flex-column">
+                <h2>
+                    ${msg}
+                </h2>
+                <h3>
+                    <spring:message code="error.home"/>
+                </h3>
+                <a class="link-button border-radius flex-center" href="<c:url value='/'/>">
                     <spring:message code="error.home.redirect"/>
                 </a>
             </div>

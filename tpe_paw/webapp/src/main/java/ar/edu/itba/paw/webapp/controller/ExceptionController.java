@@ -43,13 +43,7 @@ public class ExceptionController {
 
         String errorMessage = messageSource.getMessage("error.404", null, LocaleContextHolder.getLocale());
 
-        //Otherwise setup and send the user to a default error-view.
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("msg", errorMessage);
-        mav.addObject("searchContext", ERROR_CONTEXT);
-        mav.setViewName(NOT_FOUND_ERROR_VIEW);
-
-        return mav;
+        return this.createErrorModel(NOT_FOUND_ERROR_VIEW, errorMessage, 404);
     }
 
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)

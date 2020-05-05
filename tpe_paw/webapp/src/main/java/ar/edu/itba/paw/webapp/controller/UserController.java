@@ -1,10 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.service.EmailService;
-import ar.edu.itba.paw.interfaces.service.RoleService;
-import ar.edu.itba.paw.interfaces.service.SnippetService;
-import ar.edu.itba.paw.interfaces.service.TagService;
-import ar.edu.itba.paw.interfaces.service.UserService;
+import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
@@ -12,10 +8,7 @@ import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.crypto.HashGenerator;
 import ar.edu.itba.paw.webapp.crypto.WebappCrypto;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.DescriptionForm;
-import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
-import ar.edu.itba.paw.webapp.form.RegisterForm;
-import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +16,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +28,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Controller

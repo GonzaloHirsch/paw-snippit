@@ -12,7 +12,7 @@ import java.time.Instant;
 public class WebappCrypto {
 
     public static final String TEST_KEY = "thakeyyy";
-    private static final int DURATION = 3000;
+    private static final int DURATION = 300;
 
     //TODO StackOverflow
     private static byte[] hexStringToBytes(String s) {

@@ -98,7 +98,7 @@ public class VoteDaoTest {
         //To mock a method of the same class.
         VoteDao voteSpyDao = Mockito.spy(voteDao);
         Mockito.doReturn(Optional.of(new Vote(defaultUser,null,-1))).when(voteSpyDao).getVote(defaultUser.getId(),defaultSnippetId);
-        
+
         voteSpyDao.addVote(defaultUser.getId(),defaultSnippetId,1);
 
         assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,VOTES_FOR_TABLE));

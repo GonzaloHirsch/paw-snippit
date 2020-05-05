@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.dao.TagDao;
-import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
@@ -42,10 +41,7 @@ public class SnippetDaoTest {
     private TagDao mockTagDao;
 
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsertUser;
     private SimpleJdbcInsert jdbcInsertSnippet;
-    private SimpleJdbcInsert jdbcInsertLanguage;
-    private SimpleJdbcInsert jdbcInsertTag;
     private SimpleJdbcInsert jdbcInsertSnippetTags;
 
     private User defaultUser;
@@ -58,9 +54,9 @@ public class SnippetDaoTest {
         MockitoAnnotations.initMocks(this); // Replaces @RunWith(MockitJUnitRunner.class)
 
         jdbcInsertSnippet = new SimpleJdbcInsert(ds).withTableName(SNIPPETS_TABLE).usingGeneratedKeyColumns("id");
-        jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
-        jdbcInsertLanguage = new SimpleJdbcInsert(ds).withTableName(LANGUAGES_TABLE).usingGeneratedKeyColumns("id");
-        jdbcInsertTag = new SimpleJdbcInsert(ds).withTableName(TAGS_TABLE).usingGeneratedKeyColumns("id");
+        SimpleJdbcInsert jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
+        SimpleJdbcInsert jdbcInsertLanguage = new SimpleJdbcInsert(ds).withTableName(LANGUAGES_TABLE).usingGeneratedKeyColumns("id");
+        SimpleJdbcInsert jdbcInsertTag = new SimpleJdbcInsert(ds).withTableName(TAGS_TABLE).usingGeneratedKeyColumns("id");
         jdbcInsertSnippetTags = new SimpleJdbcInsert(ds).withTableName(SNIPPET_TAGS_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, SNIPPETS_TABLE);

@@ -18,6 +18,8 @@ public class TestHelper {
     public static final String TAGS_TABLE = "tags";
     public static final String SNIPPET_TAGS_TABLE = "snippet_tags";
     public static final String VOTES_FOR_TABLE = "votes_for";
+    public static final String FAVORITES_TABLE = "favorites";
+    public static final String FOLLOWS_TABLE = "follows";
 
     public static final String PASSWORD = "Password";
     public static final String USERNAME = "Username";
@@ -91,6 +93,23 @@ public class TestHelper {
             put("snippet_id", snippetId);
             put("user_id",userId);
             put("type", type);
+        }};
+
+        jdbcInsert.execute(map);
+    }
+
+    public static void insertFavoriteIntoDb(SimpleJdbcInsert jdbcInsert, long snippetId, long userId){
+        final Map<String, Object> map = new HashMap<String,Object>(){{
+            put("snippet_id", snippetId);
+            put("user_id",userId);
+        }};
+
+        jdbcInsert.execute(map);
+    }
+    public static void insertFollowingIntoDb(SimpleJdbcInsert jdbcInsert, long tagId, long userId){
+        final Map<String, Object> map = new HashMap<String,Object>(){{
+            put("tag_id", tagId);
+            put("user_id",userId);
         }};
 
         jdbcInsert.execute(map);

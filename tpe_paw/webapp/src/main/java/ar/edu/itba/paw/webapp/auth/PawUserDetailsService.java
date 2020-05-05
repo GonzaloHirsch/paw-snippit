@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class PawUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         final User user = userService.findUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username + " not found!"));
+                .orElseThrow(() -> new UserNotFoundException(username + " not found!"));
 
         final Collection<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
 

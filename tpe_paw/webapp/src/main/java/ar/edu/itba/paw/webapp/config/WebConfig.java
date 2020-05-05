@@ -48,6 +48,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     private Resource schemaSql;
     @Value("classpath:populate.sql")
     private Resource populatorSql;
+    @Value("classpath:populateRole.sql")
+    private Resource populatorRoleSql;
 
     @Bean
     public ViewResolver viewResolver() {
@@ -84,6 +86,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(schemaSql);
 //        populator.addScript(populatorSql);
+//        populator.addScript(populatorRoleSql);
         return populator;
     }
 

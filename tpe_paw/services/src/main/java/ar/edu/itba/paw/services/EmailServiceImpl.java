@@ -57,6 +57,14 @@ public class EmailServiceImpl implements EmailService {
         String body = messageSource.getMessage("email.register.body",new Object[]{username}, LocaleContextHolder.getLocale());
         this.sendEmail(to, subject, body);
     }
+    @Async
+    @Override
+    public void sendRecoveryEmail(long id, String to, String username, String token) {
+        String link = "http://localhost:9092/webapp_war_exploded/reset-password?id=" + id + "&token=" + token;
+        String subject = messageSource.getMessage("email.recovery.subject", null, LocaleContextHolder.getLocale());
+        String body = messageSource.getMessage("email.recovery.body", new Object[]{username, link}, LocaleContextHolder.getLocale());
+        this.sendEmail(to, subject, body);
+    }
 
     @Scheduled(cron = "0 0 12 * * Mon")
     @Override

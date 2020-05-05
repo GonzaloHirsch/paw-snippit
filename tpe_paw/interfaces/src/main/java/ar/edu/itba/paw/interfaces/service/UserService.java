@@ -15,6 +15,8 @@ public interface UserService {
 
     Optional<User> findUserById(final long id);
 
+    Optional<User> findUserByEmail(String email);
+
     void updateDescription(String username, String newDescription);
 
     void changePassword(String email, String password);
@@ -22,6 +24,8 @@ public interface UserService {
     boolean isEmailUnique(String email);
 
     boolean isUsernameUnique(String username);
+
+    boolean emailExists(String email);
 
     void changeProfilePhoto(final long userId, final byte[] photo);
 

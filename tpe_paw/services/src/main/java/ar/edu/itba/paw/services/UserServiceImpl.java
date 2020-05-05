@@ -46,6 +46,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findUserByEmail(String email) {
+        return this.userDao.findUserByEmail(email);
+    }
+
+    @Override
     public void updateDescription(String username, String newDescription) {
         userDao.updateDescription(username, newDescription);
     }
@@ -64,6 +69,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isUsernameUnique(String username) {
         return !userDao.findUserByUsername(username).isPresent();
+    }
+
+    @Override
+    public boolean emailExists(String email) {
+        return userDao.findUserByEmail(email).isPresent();
     }
 
     @Override

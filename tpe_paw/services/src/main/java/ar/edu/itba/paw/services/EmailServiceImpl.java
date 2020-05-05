@@ -51,9 +51,9 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(body, true);
             helper.setFrom(messageSource.getMessage("app.name", null, LocaleContextHolder.getLocale()));
             emailSender.send(message);
-        } catch (MailException e){
+        } catch (MailException e) {
             // TODO: LOG EMAIL ERROR
-        } catch (MessagingException e){
+        } catch (MessagingException e) {
             // TODO: LOG ERROR
         }
     }
@@ -65,9 +65,9 @@ public class EmailServiceImpl implements EmailService {
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("username", username);
             String body = this.templateService.merge("/templates/register.vm", data, LocaleContextHolder.getLocale());
-            String subject = messageSource.getMessage("email.register.subject",new Object[]{username}, LocaleContextHolder.getLocale());
+            String subject = messageSource.getMessage("email.register.subject", new Object[]{username}, LocaleContextHolder.getLocale());
             this.sendEmail(to, subject, body);
-        } catch (Exception e){
+        } catch (Exception e) {
             // TODO: DO SMTH
             String a = e.getMessage();
         }
@@ -75,7 +75,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Scheduled(cron = "0 0 12 * * Mon")
     @Override
-    public void sendDailyDigest() {
+    public void scheduledWeeklyDigest() {
         // Getting timestamp for week before
         Calendar weekBefore = Calendar.getInstance();
         weekBefore.add(Calendar.WEEK_OF_YEAR, -1);
@@ -83,17 +83,66 @@ public class EmailServiceImpl implements EmailService {
         // Getting all users
         Collection<User> users = this.userService.getAllUsers();
         Collection<Tag> followedTags;
-        int snippetsForDay;
-        for (User user : users){
+        int snippetsForWeek;
+        for (User user : users) {
             // Getting all followed tags
             followedTags = this.tagService.getFollowedTagsForUser(user.getId());
-            if (followedTags.size() > 0){
+            if (followedTags.size() > 0) {
                 // Getting how many new snippets were found
-                snippetsForDay = this.snippetService.getNewSnippetsForTagsCount(sdf.format(weekBeforeTs), followedTags, user.getId());
-                if (snippetsForDay > 0){
-                    this.sendEmail(user.getEmail(), "Daily Digest" , "This is your daily digest, " + snippetsForDay + " snippets were added! Come check them out!");
+                snippetsForWeek = this.snippetService.getNewSnippetsForTagsCount(sdf.format(weekBeforeTs), followedTags, user.getId());
+                if (snippetsForWeek > 0) {
+                    this.sendDigestEmail(user.getEmail(), user.getUsername(), snippetsForWeek);
+                } else {
+                    this.sendDigestFollowOtherEmail(user.getEmail(), user.getUsername());
                 }
+            } else {
+                this.sendDigestNoFollowEmail(user.getEmail(), user.getUsername());
             }
         }
     }
+
+    @Override
+    public void sendDigestEmail(String to, String username, int count) {
+        try {
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("itemCount", count);
+            data.put("username", username);
+            String body = this.templateService.merge("/templates/weeklyDigest.vm", data, LocaleContextHolder.getLocale());
+            String subject = messageSource.getMessage("email.wd.subject", null, LocaleContextHolder.getLocale());
+            this.sendEmail(to, subject, body);
+        } catch (Exception e) {
+            // TODO: DO SMTH
+            String a = e.getMessage();
+        }
+    }
+
+    @Override
+    public void sendDigestNoFollowEmail(String to, String username) {
+        try {
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("username", username);
+            String body = this.templateService.merge("/templates/weeklyDigestNoItmes.vm", data, LocaleContextHolder.getLocale());
+            String subject = messageSource.getMessage("email.wdni.subject", null, LocaleContextHolder.getLocale());
+            this.sendEmail(to, subject, body);
+        } catch (Exception e) {
+            // TODO: DO SMTH
+            String a = e.getMessage();
+        }
+    }
+
+    @Override
+    public void sendDigestFollowOtherEmail(String to, String username) {
+        try {
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("username", username);
+            String body = this.templateService.merge("/templates/weeklyDigestSuggestFollowing.vm", data, LocaleContextHolder.getLocale());
+            String subject = messageSource.getMessage("email.wdsf.subject", null, LocaleContextHolder.getLocale());
+            this.sendEmail(to, subject, body);
+        } catch (Exception e) {
+            // TODO: DO SMTH
+            String a = e.getMessage();
+        }
+    }
+
+
 }

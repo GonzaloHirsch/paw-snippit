@@ -101,11 +101,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public MessageSource messageSource() {
         final ReloadableResourceBundleMessageSource ms = new ReloadableResourceBundleMessageSource();
-
         ms.setCacheSeconds((int) TimeUnit.MINUTES.toSeconds(5));
-        ms.setBasename("classpath:i18n/messages");
+        ms.setBasenames("classpath:i18n/messages", "classpath:i18n/email_messages");
         ms.setDefaultEncoding(StandardCharsets.UTF_8.name());
-
         return ms;
     }
 
@@ -165,9 +163,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         props.put("resource.loader", "class");
         props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 //        props.put("resource.loader.path", "/WEB-INF/templates/");
-        Map<String, String> velocityProps = new HashMap<>();
-        velocityProps.put("velocimacro.library", "/WEB-INF/templates/macros/macro.vm");
-        props.put("velocity.properties", velocityProps);
+//        Map<String, String> velocityProps = new HashMap<>();
+//        velocityProps.put("velocimacro.library", "/WEB-INF/templates/macros/macro.vm");
+//        props.put("velocity.properties", velocityProps);
         velocityEngineFactory.setVelocityProperties(props);
         return velocityEngineFactory.createVelocityEngine();
     }

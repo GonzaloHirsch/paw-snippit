@@ -64,8 +64,8 @@ public class EmailServiceImpl implements EmailService {
         try {
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("username", username);
-            String body = this.templateService.merge("/WEB-INF/templates/register.vm", data, LocaleContextHolder.getLocale());
-            String subject = messageSource.getMessage("email.register.subject",null, LocaleContextHolder.getLocale());
+            String body = this.templateService.merge("/templates/register.vm", data, LocaleContextHolder.getLocale());
+            String subject = messageSource.getMessage("email.register.subject",new Object[]{username}, LocaleContextHolder.getLocale());
             this.sendEmail(to, subject, body);
         } catch (Exception e){
             // TODO: DO SMTH

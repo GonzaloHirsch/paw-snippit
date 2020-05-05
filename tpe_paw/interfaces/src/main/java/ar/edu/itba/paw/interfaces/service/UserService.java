@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface UserService {
     long createUser(String username, String password, String email, String description, int reputation, String dateJoined);
 
-    long register(String username, String password, String email, String dateJoined);
+    Optional<User> register(String username, String password, String email, String dateJoined);
 
     Optional<User> findUserByUsername(String username);
 
@@ -32,4 +32,5 @@ public interface UserService {
     boolean isAdmin(final User user);
 
     void changeReputationForFlaggedSnippet(final long userId, boolean add);
+
 }

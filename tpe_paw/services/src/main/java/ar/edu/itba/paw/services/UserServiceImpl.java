@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.dao.RoleDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.interfaces.service.EmailService;
 import ar.edu.itba.paw.interfaces.service.UserService;
@@ -28,10 +29,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long register(String username, String password, String email, String dateJoined) {
+    public Optional<User> register(String username, String password, String email, String dateJoined) {
         long userId = createUser(username, password, email, "", 0, dateJoined);
         this.emailService.sendRegistrationEmail(email, username);
-        return userId;
+        return this.findUserById(userId);
     }
 
     @Override
@@ -85,7 +86,9 @@ public class UserServiceImpl implements UserService {
         userDao.changeReputation(userId, FLAGGED_SNIPPET_REP_VALUE, add);
     }
 
+    @Override
     public Collection<User> getAllUsers() {
         return this.userDao.getAllUsers();
     }
+
 }

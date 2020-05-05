@@ -8,7 +8,7 @@ delete from user_roles where true;
 insert into roles(role) values('ADMIN');
 insert into roles(role) values('USER');
 
-insert into user_roles(user_id,role_id) values((select id from users where username='JohnDoe'),(select id from roles where name='USER'));
-insert into user_roles(user_id,role_id) values((select id from users where username='JaneRoe'),(select id from roles where name='USER'));
-insert into user_roles(user_id,role_id) values((select id from users where username='admin'),(select id from roles where name='USER'));
-insert into user_roles(user_id,role_id) values((select id from users where username='admin'),(select id from roles where name='ADMIN'));
+insert into user_roles(user_id,role_id) values((select id from users where username='JohnDoe'),(select id from roles where role='USER'));
+insert into user_roles(user_id,role_id) values((select id from users where username='JaneRoe'),(select id from roles where role='USER'));
+insert into user_roles(user_id,role_id) values((select id from users where username='admin'),(select id from roles where role='USER'));
+insert into user_roles(user_id,role_id) values((select id from users where username='admin'),(select id from roles where role='ADMIN'));

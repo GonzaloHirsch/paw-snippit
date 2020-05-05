@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
@@ -50,6 +51,8 @@ public class  UserController {
     @Autowired
     private TagService tagService;
     @Autowired
+    private RoleService roleService;
+    @Autowired
     private MessageSource messageSource;
 
     private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -67,16 +70,19 @@ public class  UserController {
             return signUpForm(registerForm);
         }
 
-        long userId = userService.register(
+        Optional<User> user = userService.register(
                 registerForm.getUsername(),
                 passwordEncoder.encode(registerForm.getPassword()),
                 registerForm.getEmail(),
                 DATE.format(Calendar.getInstance().getTime().getTime())
         );
 
-        final Collection<? extends GrantedAuthority> authorities = Arrays.asList(
-                new SimpleGrantedAuthority("ROLE_USER")
-        );
+        if (!user.isPresent()) {
+            //TODO throw new error
+            throw new RuntimeException("Error"); // TODO correct!
+        }
+
+        roleService.assignUserRole(user.get());
 
         loginAuthentication.authWithAuthManager(request, registerForm.getUsername(), registerForm.getPassword());
 

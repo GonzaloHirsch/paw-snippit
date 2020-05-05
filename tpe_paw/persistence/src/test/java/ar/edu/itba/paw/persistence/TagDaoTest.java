@@ -48,9 +48,6 @@ public class TagDaoTest {
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertTag;
-    private SimpleJdbcInsert jdbcInsertSnippet;
-    private SimpleJdbcInsert jdbcInsertUser;
-    private SimpleJdbcInsert jdbcInsertLanguage;
     private SimpleJdbcInsert jdbcInsertTagSnippet;
 
 
@@ -62,9 +59,9 @@ public class TagDaoTest {
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsertTag = new SimpleJdbcInsert(ds).withTableName(TAGS_TABLE).usingGeneratedKeyColumns("id");
-        jdbcInsertSnippet = new SimpleJdbcInsert(ds).withTableName(SNIPPETS_TABLE).usingGeneratedKeyColumns("id");
-        jdbcInsertLanguage = new SimpleJdbcInsert(ds).withTableName(LANGUAGES_TABLE).usingGeneratedKeyColumns("id");
-        jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
+        SimpleJdbcInsert jdbcInsertSnippet = new SimpleJdbcInsert(ds).withTableName(SNIPPETS_TABLE).usingGeneratedKeyColumns("id");
+        SimpleJdbcInsert jdbcInsertLanguage = new SimpleJdbcInsert(ds).withTableName(LANGUAGES_TABLE).usingGeneratedKeyColumns("id");
+        SimpleJdbcInsert jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
         jdbcInsertTagSnippet = new SimpleJdbcInsert(ds).withTableName(SNIPPET_TAGS_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);

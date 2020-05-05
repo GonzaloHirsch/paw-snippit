@@ -23,18 +23,9 @@
                     <spring:message code="tagSnippets.title" arguments="${tag.name.toUpperCase()}"/>
                 </div>
                 <c:if test="${currentUser != null}">
-                    <c:choose>
-                        <c:when test="${!follows}">
-                            <a href="<c:url value='/tags/${tag.id}/follow'/>" class="tag-snippets-button border-radius flex-center no-text-decoration">
-                                <spring:message code="tags.follow"/>
-                            </a>
-                        </c:when>
-                        <c:otherwise>
-                            <a href="<c:url value='/tags/${tag.id}/unfollow'/>" class="tag-snippets-button border-radius flex-center no-text-decoration">
-                                <spring:message code="tags.unfollow"/>
-                            </a>
-                        </c:otherwise>
-                    </c:choose>
+                    <c:set var="tagId" value="${tag.id}" scope="request"/>
+                    <c:import url="/WEB-INF/jsp/tagAndLanguages/tagFollowForm.jsp"/>
+
                     <c:if test="${currentUser.username == 'admin'}">
                         <form:form action="${tag.id}/delete" class="form-container" method="post" modelAttribute="deleteForm">
                             <form:checkbox class="hidden" path="delete" value="true" id="tag-delete-button" onclick="updateForm(this)"/>

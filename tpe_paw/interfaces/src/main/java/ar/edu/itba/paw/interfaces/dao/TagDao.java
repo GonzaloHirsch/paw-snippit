@@ -8,14 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TagDao {
-    Optional<Tag> findById(long id);
-    Optional<Tag> findByName(String name);
-    Tag addTag(String name);
-    Collection<Tag> findTagsForSnippet(long snippetId);
+    Optional<Tag> findById(final long id);
+    Optional<Tag> findByName(final String name);
+    Tag addTag(final String name);
+    Collection<Tag> findTagsForSnippet(final long snippetId);
     Collection<Tag> getAllTags();
-
-    void addSnippetTag(long snippetOd, long tagId);
-    void addTags(List<String> tags);
-
+    void addSnippetTag(final long snippetId, final long tagId);
+    void addTags(final List<String> tags);
     void removeTag(final long tagId);
 }

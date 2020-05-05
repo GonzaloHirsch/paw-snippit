@@ -37,25 +37,29 @@ public class ExceptionController {
     public static final String DEFAULT_ERROR_VIEW = "errors/default";
     private static final String ERROR_CONTEXT = "error/";
 
-    @ExceptionHandler(value = Exception.class)
-    public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
-        // If the exception is annotated with @ResponseStatus rethrow it and let
-        // the framework handle it
-        if (AnnotationUtils.findAnnotation
-                (e.getClass(), ResponseStatus.class) != null)
-            throw e;
+//    @ExceptionHandler(value = Exception.class)
+//    public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
+//        // If the exception is annotated with @ResponseStatus rethrow it and let
+//        // the framework handle it
+//        if (AnnotationUtils.findAnnotation
+//                (e.getClass(), ResponseStatus.class) != null)
+//            throw e;
+//
+//        String errorMessage = messageSource.getMessage("error.unknown", null, LocaleContextHolder.getLocale());
+//
+//        //Otherwise setup and send the user to a default error-view.
+//        ModelAndView mav = new ModelAndView();
+//        mav.addObject("err", 404);
+//        mav.addObject("msg", errorMessage);
+//        mav.addObject("searchContext", ERROR_CONTEXT);
+//        mav.setViewName(DEFAULT_ERROR_VIEW);
+//
+//        return mav;
+//    }
 
-        String errorMessage = messageSource.getMessage("error.unknown", null, LocaleContextHolder.getLocale());
-
-        //Otherwise setup and send the user to a default error-view.
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("err", 404);
-        mav.addObject("msg", errorMessage);
-        mav.addObject("searchContext", ERROR_CONTEXT);
-        mav.setViewName(DEFAULT_ERROR_VIEW);
-
-        return mav;
-    }
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public ModelAndView internalServerError(Exception e) { return this.createErrorModel(messageSource.getMessage("error.500", null, LocaleContextHolder.getLocale()), 500); }
 
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)

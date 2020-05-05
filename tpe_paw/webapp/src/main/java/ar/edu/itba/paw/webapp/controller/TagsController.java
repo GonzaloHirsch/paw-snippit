@@ -7,16 +7,14 @@ import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.DeleteForm;
+import ar.edu.itba.paw.webapp.form.FollowForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -50,7 +48,11 @@ public class TagsController {
     }
 
     @RequestMapping("/tags/{tagId}")
-    public ModelAndView showSnippetsForTag(@PathVariable("tagId") long tagId, @ModelAttribute("deleteForm") final DeleteForm deleteForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
+    public ModelAndView showSnippetsForTag(@PathVariable("tagId") long tagId,
+                                           @ModelAttribute("followForm") final FollowForm followForm,
+                                           @ModelAttribute("deleteForm") final DeleteForm deleteForm,
+                                           final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
+
         ModelAndView mav = new ModelAndView("tagAndLanguages/tagSnippets");
 
         /* Retrieve the tag */
@@ -62,8 +64,7 @@ public class TagsController {
         /* If user is logged in, check if they follow the tag */
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser != null){
-            Collection<Tag> followedTags = tagService.getFollowedTagsForUser(currentUser.getId());
-            mav.addObject("follows", followedTags.stream().map(Tag::getId).collect(Collectors.toList()).contains(tagId));
+            followForm.setFollows(this.tagService.userFollowsTag(currentUser.getId(), tagId));
         }
 
         int totalSnippetCount = this.snippetService.getAllSnippetsByTagCount(tag.get().getId());
@@ -75,31 +76,22 @@ public class TagsController {
         return mav;
     }
 
-    @RequestMapping("/tags/{tagId}/follow")
-    public ModelAndView followSnippet(@PathVariable("tagId") long tagId) {
-        User currentUser = loginAuthentication.getLoggedInUser();
-        if ( currentUser != null){
-            this.tagService.followTag(currentUser.getId(), tagId);
-            LOGGER.debug("User {} followed tag with id {}", currentUser.getUsername(), tagId);
+    @RequestMapping(value="/tags/{tagId}/follow", method= RequestMethod.POST)
+    public ModelAndView favSnippet(
+            @ModelAttribute("tagId") @PathVariable("tagId") long tagId,
+            @ModelAttribute("followForm") final FollowForm followForm
+    ) {
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) {
+            LOGGER.warn("Inside the follow form of tag {} without a logged in user", tagId);
         } else {
-            LOGGER.warn("No user logged in but tag {} was followed", tagId);
+            this.tagService.updateFollowing(currentUser.getId(), tagId, followForm.isFollows());
         }
         return new ModelAndView("redirect:/tags/" + tagId);
     }
 
-    @RequestMapping("/tags/{tagId}/unfollow")
-    public ModelAndView unfollowSnippet(@PathVariable("tagId") long tagId) {
-        User currentUser = loginAuthentication.getLoggedInUser();
-        if ( currentUser != null){
-            this.tagService.unfollowTag(currentUser.getId(), tagId);
-            LOGGER.debug("User {} unfollowed tag with id {}", currentUser.getUsername(), tagId);
-        } else {
-            LOGGER.warn("No user logged in but tag {} was unfollowed", tagId);
-        }
-        return new ModelAndView("redirect:/tags/" + tagId);
-    }
 
-    @RequestMapping("/tags/{tagId}/delete")
+    @RequestMapping(value = "/tags/{tagId}/delete",  method= RequestMethod.POST)
     public ModelAndView deleteTag(@PathVariable("tagId") long tagId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
         User currentUser = loginAuthentication.getLoggedInUser();
         if ( currentUser != null && userService.isAdmin(currentUser)){
@@ -119,4 +111,9 @@ public class TagsController {
         model.addAttribute("userTags", userTags);
         model.addAttribute("searchForm", searchForm);
     }
+
+//    @ModelAttribute
+//    public FollowForm followForm(final FollowForm followForm) {
+//        return followForm;
+//    }
 }

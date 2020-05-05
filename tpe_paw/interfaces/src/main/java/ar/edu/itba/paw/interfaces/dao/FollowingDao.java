@@ -8,4 +8,5 @@ public interface FollowingDao {
     Collection<Tag> getFollowedTagsForUser(long userId);
     void followTag(long userId, long tagId);
     void unfollowTag(long userId, long tagId);
+    boolean userFollowsTag(final long userId, final long tagId);
 }

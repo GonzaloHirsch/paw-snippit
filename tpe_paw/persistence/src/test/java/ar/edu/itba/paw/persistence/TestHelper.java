@@ -17,6 +17,7 @@ public class TestHelper {
     public static final String LANGUAGES_TABLE = "languages";
     public static final String TAGS_TABLE = "tags";
     public static final String SNIPPET_TAGS_TABLE = "snippet_tags";
+    public static final String VOTES_FOR_TABLE = "votes_for";
 
     public static final String PASSWORD = "Password";
     public static final String USERNAME = "Username";
@@ -37,14 +38,14 @@ public class TestHelper {
     public static final String TAG = "tag1";
     public static final String TAG2 = "tag2";
 
-    public static long insertSnippetIntoDb(SimpleJdbcInsert jdbcInsert, User user, String title, String description, String code, Language language){
+    public static long insertSnippetIntoDb(SimpleJdbcInsert jdbcInsert, long userId, String title, String description, String code, long languageId){
         final Map<String, Object> snippetDataMap = new HashMap<String,Object>(){{
-            put("user_id", user.getId());
+            put("user_id", userId);
             put("title", title);
             put("description",description);
             put("code",code);
             put("date_created", DATE.format(Calendar.getInstance().getTime().getTime()));
-            put("language_id", language.getId());
+            put("language_id", languageId);
         }};
         return jdbcInsert.executeAndReturnKey(snippetDataMap).longValue();
     }
@@ -80,6 +81,16 @@ public class TestHelper {
         final Map<String, Object> map = new HashMap<String,Object>(){{
             put("snippet_id", snippet);
             put("tag_id",tag);
+        }};
+
+        jdbcInsert.execute(map);
+    }
+
+    public static void insertVotesForIntoDb(SimpleJdbcInsert jdbcInsert, long snippetId, long userId,int type){
+        final Map<String, Object> map = new HashMap<String,Object>(){{
+            put("snippet_id", snippetId);
+            put("user_id",userId);
+            put("type", type);
         }};
 
         jdbcInsert.execute(map);

@@ -49,10 +49,8 @@ public class SnippetDaoTest {
     private SimpleJdbcInsert jdbcInsertSnippetTags;
 
     private User defaultUser;
-    private Language defaultLanguage;
+    private long defaultLanguageId;
     private Tag defaultTag;
-
-
 
     @Before
     public void setUp() {
@@ -68,10 +66,10 @@ public class SnippetDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, SNIPPETS_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
-        defaultUser = insertUserIntoDb(jdbcInsertUser, USERNAME, PASSWORD, EMAIL, "");
+        defaultUser = insertUserIntoDb(jdbcInsertUser, USERNAME, PASSWORD, EMAIL, DESCR);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, LANGUAGES_TABLE);
-        defaultLanguage = new Language(insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE), "language1");
+        defaultLanguageId = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
         defaultTag = new Tag(insertTagIntoDb(jdbcInsertTag,TAG),TAG);
@@ -82,16 +80,16 @@ public class SnippetDaoTest {
     public void testCreate() {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
 
-        final long snippetId = snippetDao.createSnippet(defaultUser, TITLE, DESCR, CODE, DATE.format(Calendar.getInstance().getTime().getTime()), defaultLanguage.getId());
+        final long snippetId = snippetDao.createSnippet(defaultUser.getId(), TITLE, DESCR, CODE, DATE.format(Calendar.getInstance().getTime()), defaultLanguageId);
 
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "snippets"));
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, SNIPPETS_TABLE));
     }
 
     @Test
     public void testFindById() {
         // Precondiciones
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser,TITLE,DESCR,CODE, defaultLanguage);
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE, defaultLanguageId);
         Collection<Tag> tagList = Collections.singletonList(defaultTag);
         Mockito.when(mockTagDao.findTagsForSnippet(snippetId)).thenReturn(tagList);
 
@@ -109,7 +107,7 @@ public class SnippetDaoTest {
     @Test
     public void testFindAllSnippetsForUser(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser,TITLE,DESCR,CODE,defaultLanguage);
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId);
 
         Optional<Snippet> maybeSnippet = snippetDao.findAllSnippetsByOwner(defaultUser.getId(),1).stream().findFirst();
 
@@ -120,8 +118,8 @@ public class SnippetDaoTest {
     @Test
     public void testGetAllSnippetsCount(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser,TITLE,DESCR,CODE,defaultLanguage);
-        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser,TITLE2,DESCR,CODE,defaultLanguage);
+        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId);
+        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE2,DESCR,CODE,defaultLanguageId);
 
         int snippetCount = snippetDao.getAllSnippetsCount();
 
@@ -131,7 +129,7 @@ public class SnippetDaoTest {
     @Test
     public void testFindSnippetForTag() {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, SNIPPETS_TABLE);
-        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser, TITLE, DESCR, CODE, defaultLanguage);
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(), TITLE, DESCR, CODE, defaultLanguageId);
         Map<String, Object> map = new HashMap<String, Object>() {{
             put("snippet_id", snippetId); put("tag_id", defaultTag.getId());
         }};
@@ -146,7 +144,7 @@ public class SnippetDaoTest {
     @Test
     public void testGetAllFollowingSnippetsCount(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser, TITLE, DESCR, CODE, defaultLanguage);
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(), TITLE, DESCR, CODE, defaultLanguageId);
 
         int count = snippetDao.getAllFavoriteSnippetsCount(defaultUser.getId());
 
@@ -158,7 +156,7 @@ public class SnippetDaoTest {
     public void testFindSnippetByCriteria(){
         // Precondiciones
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        long snippetId = insertSnippetInDatabase(defaultUser,TITLE,DESCR,CODE, defaultLanguage);
+        long snippetId = insertSnippetInDatabase(defaultUser,TITLE,DESCR,CODE, defaultLanguageId);
 
         // Ejercitacion
         Optional<Snippet> maybeSnippet = snippetDao.findSnippetByCriteria(SnippetDao.QueryTypes.SEARCH,SnippetDao.Types.TITLE, TITLE,SnippetDao.Locations.HOME,SnippetDao.Orders.ASC, user.getId(),1).stream().findFirst();

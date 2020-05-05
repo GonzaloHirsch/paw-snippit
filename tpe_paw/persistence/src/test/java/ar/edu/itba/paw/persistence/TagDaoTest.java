@@ -71,10 +71,10 @@ public class TagDaoTest {
         User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, LANGUAGES_TABLE);
-        Language language =new Language(insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE),LANGUAGE);
+        long languageId = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        defaultSnippetId = insertSnippetIntoDb(jdbcInsertSnippet,user,TITLE,DESCR,CODE, language);
+        defaultSnippetId = insertSnippetIntoDb(jdbcInsertSnippet,user.getId(),TITLE,DESCR,CODE, languageId);
     }
 
 

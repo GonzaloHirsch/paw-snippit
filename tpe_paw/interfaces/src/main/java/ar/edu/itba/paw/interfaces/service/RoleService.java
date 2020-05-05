@@ -6,12 +6,14 @@ import ar.edu.itba.paw.models.User;
 import java.util.Collection;
 
 public interface RoleService {
-    Role getAdminRole();
-    Role getUserRole();
+    String getAdminRole();
+    String getUserRole();
 
-    void assignUserRole(User user);
+    void assignAdminRole(long userId);
 
-    void assignAdminRole(User user);
+    void assignUserRole(long userId);
 
     Collection<String> getUserRoles(long userId);
+
+    boolean isAdmin(long userId);
 }

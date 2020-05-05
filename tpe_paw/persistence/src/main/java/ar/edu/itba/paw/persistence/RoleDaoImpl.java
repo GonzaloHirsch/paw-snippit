@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Repository
 public class RoleDaoImpl implements RoleDao {
@@ -54,33 +53,32 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
-    public String assignUserRole(long userId) {
+    public void assignUserRole(long userId) {
        long roleId = jdbcTemplate.queryForObject("SELECT id FROM roles WHERE role = ?", new Object[]{USER_ROLE}, Long.class);
 
-        this.addToUserRoles(userId, roleId);
+       this.addToUserRoles(userId, roleId);
 
-        return USER_ROLE;
     }
 
     @Override
-    public String assignAdminRole(long userId) {
+    public void assignAdminRole(long userId) {
         long roleId = jdbcTemplate.queryForObject("SELECT id FROM roles WHERE role = ?", new Object[]{ADMIN_ROLE}, Long.class);
 
         this.addToUserRoles(userId, roleId);
-
-        return USER_ROLE;
     }
 
     @Override
-    public Role getAdminRole() {
-        return jdbcTemplate.query("SELECT * FROM roles WHERE role = ?", ROW_MAPPER, ADMIN_ROLE).stream().findFirst()
+    public String getAdminRole() {
+        Role role = jdbcTemplate.query("SELECT * FROM roles WHERE role = ?", ROW_MAPPER, ADMIN_ROLE).stream().findFirst()
                 .orElseThrow(() -> new RuntimeException(ADMIN_ROLE_ERROR));
+        return role.getName();
     }
 
     @Override
-    public Role getUserRole() {
-        return jdbcTemplate.query("SELECT * FROM roles WHERE role = ?", ROW_MAPPER, USER_ROLE).stream().findFirst()
+    public String getUserRole() {
+        Role role = jdbcTemplate.query("SELECT * FROM roles WHERE role = ?", ROW_MAPPER, USER_ROLE).stream().findFirst()
                 .orElseThrow(() -> new RuntimeException(USER_ROLE_ERROR));
+        return role.getName();
     }
 
     private void addToUserRoles(final long userId, final long roleId) {

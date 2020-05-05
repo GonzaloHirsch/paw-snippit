@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
@@ -28,6 +29,8 @@ public class ExceptionController {
     private LoginAuthentication loginAuthentication;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private RoleService roleService;
 
     public static final String DEFAULT_ERROR_VIEW = "errors/default";
     public static final String NOT_FOUND_ERROR_VIEW = "errors/404";
@@ -67,11 +70,14 @@ public class ExceptionController {
         ModelAndView mav = new ModelAndView(modelName);
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
+        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);
         mav.addObject("searchContext", ERROR_CONTEXT);
         mav.addObject("err", errorCode);
         mav.addObject("msg", errorMessage);
+        mav.addObject("userRoles", userRoles);
+
         return mav;
     }
 

@@ -8,9 +8,9 @@ import java.util.Collection;
 public interface RoleDao {
     Collection<Role> getAllRoles();
     Collection<String> getUserRoles(final long userId);
-    String assignUserRole(final long userId);
-    String assignAdminRole(final long userId);
+    void assignUserRole(final long userId);
+    void assignAdminRole(final long userId);
 
-    Role getAdminRole();
-    Role getUserRole();
+    String getAdminRole();
+    String getUserRole();
 }

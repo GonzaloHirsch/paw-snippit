@@ -70,19 +70,14 @@ public class  UserController {
             return signUpForm(registerForm);
         }
 
-        Optional<User> user = userService.register(
+        long userId = userService.register(
                 registerForm.getUsername(),
                 passwordEncoder.encode(registerForm.getPassword()),
                 registerForm.getEmail(),
                 DATE.format(Calendar.getInstance().getTime().getTime())
         );
 
-        if (!user.isPresent()) {
-            //TODO throw new error
-            throw new RuntimeException("Error"); // TODO correct!
-        }
-
-        roleService.assignUserRole(user.get());
+        roleService.assignUserRole(userId);
 
         loginAuthentication.authWithAuthManager(request, registerForm.getUsername(), registerForm.getPassword());
 
@@ -102,8 +97,11 @@ public class  UserController {
         /* Set the current user and its following tags */
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
+        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
+
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);
+        mav.addObject("userRoles", userRoles);
 
         Optional<User> user = this.userService.findUserById(id);
         if (!user.isPresent()) {

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
@@ -33,7 +34,7 @@ public class TagsController {
     @Autowired
     private LoginAuthentication loginAuthentication;
     @Autowired
-    private UserService userService;
+    private RoleService roleService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TagsController.class);
 
@@ -94,7 +95,7 @@ public class TagsController {
     @RequestMapping(value = "/tags/{tagId}/delete",  method= RequestMethod.POST)
     public ModelAndView deleteTag(@PathVariable("tagId") long tagId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
         User currentUser = loginAuthentication.getLoggedInUser();
-        if ( currentUser != null && userService.isAdmin(currentUser)){
+        if ( currentUser != null && roleService.isAdmin(currentUser.getId())){
             this.tagService.removeTag(tagId);
             LOGGER.debug("Admin deleted tag with id {}", tagId);
         } else {
@@ -107,13 +108,11 @@ public class TagsController {
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
+        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("userTags", userTags);
         model.addAttribute("searchForm", searchForm);
+        model.addAttribute("userRoles", userRoles);
     }
 
-//    @ModelAttribute
-//    public FollowForm followForm(final FollowForm followForm) {
-//        return followForm;
-//    }
 }

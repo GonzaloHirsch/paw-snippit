@@ -22,6 +22,9 @@
 <body>
 
 <c:set var="snippet" value="${requestScope.snippet}"/>
+<c:set var="currentUser" value="${requestScope.currentUser}"/>
+<c:url var="userRoles" value="${requestScope.userRoles}"/>
+
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
@@ -69,8 +72,9 @@
                 <div class="flex-row flex-center">
                     <c:set var="snippetId" value="${snippet.id}" scope="request"/>
                     <c:set var="currentUser" value="${currentUser}" scope="request"/>
+                    <c:set var="userRoles" value="${userRoles}" scope="request"/>
                     <!-- FLAG -->
-                    <c:if test="${currentUser != null && currentUser.username == 'admin'}">
+                    <c:if test="${userRoles.contains('ADMIN')}">
                         <div class="flex-center detail-snippet-block border-radius">
                             <c:import url="/WEB-INF/jsp/admin/adminFlagForm.jsp"/>
                         </div>

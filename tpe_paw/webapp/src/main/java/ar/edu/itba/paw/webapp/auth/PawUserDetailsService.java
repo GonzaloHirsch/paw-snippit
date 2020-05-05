@@ -2,9 +2,7 @@ package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.UserService;
-import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,22 +34,21 @@ public class PawUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         final User user = userService.findUserByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username + " not found!"));
+                .orElseThrow(() -> new UsernameNotFoundException(username + " not found!"));
 
         final Collection<GrantedAuthority> authorities = new HashSet<>();
 
         Collection<String> roles = roleService.getUserRoles(user.getId());
         if (roles.isEmpty()) {
-            this.roleService.assignUserRole(user);
-        } else {
-            user.setRoles(roles);
+            this.roleService.assignUserRole(user.getId());
+            roles.add(this.roleService.getUserRole());
         }
-
-        if(roles.contains(this.roleService.getAdminRole().getName())){
+        
+        if(roles.contains(this.roleService.getAdminRole())) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
             LOGGER.debug("Granting authority ROLE_ADMIN");
         }
-        if (roles.contains(this.roleService.getUserRole().getName())){
+        if (roles.contains(this.roleService.getUserRole())) {
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
             LOGGER.debug("Granting authority ROLE_USER");
         }

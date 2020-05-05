@@ -29,10 +29,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> register(String username, String password, String email, String dateJoined) {
+    public long register(String username, String password, String email, String dateJoined) {
         long userId = createUser(username, password, email, "", 0, dateJoined);
         this.emailService.sendRegistrationEmail(email, username);
-        return this.findUserById(userId);
+        return userId;
     }
 
     @Override
@@ -76,10 +76,6 @@ public class UserServiceImpl implements UserService {
         this.userDao.changeDescription(userId, description);
     }
 
-    @Override
-    public boolean isAdmin(final User user) {
-        return user.getUsername().compareTo("admin") == 0;
-    }
 
     @Override
     public void changeReputationForFlaggedSnippet(long userId, boolean add) {

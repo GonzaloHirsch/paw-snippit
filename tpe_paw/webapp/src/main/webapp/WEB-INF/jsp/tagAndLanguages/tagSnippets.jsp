@@ -26,7 +26,7 @@
                     <c:set var="tagId" value="${tag.id}" scope="request"/>
                     <c:import url="/WEB-INF/jsp/tagAndLanguages/tagFollowForm.jsp"/>
 
-                    <c:if test="${currentUser.username == 'admin'}">
+                    <c:if test="${userRoles.contains('ADMIN')}">
                         <form:form action="${tag.id}/delete" class="form-container" method="post" modelAttribute="deleteForm">
                             <form:checkbox class="hidden" path="delete" value="true" id="tag-delete-button" onclick="updateForm(this)"/>
                             <label for="tag-delete-button" class="flex-center">

@@ -24,7 +24,6 @@ public class User {
         this.reputation = 0;
         this.dateJoined = dateJoined;
         this.icon = icon;
-        this.roles = new ArrayList<>();
     }
 
     public User(long id, String username, String password, String email, String description, int reputation, String dateJoined, byte[] icon) {
@@ -36,7 +35,6 @@ public class User {
         this.reputation = reputation;
         this.dateJoined = dateJoined;
         this.icon = icon;
-        this.roles = new ArrayList<>();
     }
 
     public long getId() { return id; }
@@ -67,14 +65,4 @@ public class User {
 
     public byte[] getIcon() { return this.icon; }
 
-    public Collection<String> getRoles() {
-        return roles;
-    }
-    public void setRoles(Collection<String> roles) {
-        this.roles = roles;
-    }
-
-    public void addRole(String role) {
-        this.roles.add(role);
-    }
 }

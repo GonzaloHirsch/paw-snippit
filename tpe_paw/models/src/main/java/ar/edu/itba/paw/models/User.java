@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 public class User {
@@ -11,6 +13,7 @@ public class User {
     private int reputation;
     private String dateJoined;
     private byte[] icon;
+    private Collection<String> roles;
 
     public User(long id, String username, String password, String email, String dateJoined, byte[] icon) {
         this.id = id;
@@ -61,4 +64,5 @@ public class User {
     }
 
     public byte[] getIcon() { return this.icon; }
+
 }

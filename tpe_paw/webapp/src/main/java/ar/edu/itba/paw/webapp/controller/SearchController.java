@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
+import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Snippet;
@@ -49,6 +50,8 @@ public class SearchController {
     private LoginAuthentication loginAuthentication;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private RoleService roleService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
     private static final String HOME = "";
@@ -158,8 +161,11 @@ public class SearchController {
     public void addAttributes(Model model) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
+        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("userTags", userTags);
+        model.addAttribute("userRoles", userRoles);
+
     }
 
 

@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.LanguageService;
+import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Snippet;
@@ -23,7 +23,6 @@ import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 
 @Controller
@@ -37,6 +36,8 @@ public class SnippetExploreController {
     private TagService tagService;
     @Autowired
     private LanguageService languageService;
+    @Autowired
+    private RoleService roleService;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -86,8 +87,10 @@ public class SnippetExploreController {
     public void addAttributes(Model model) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
+        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("userTags", userTags);
+        model.addAttribute("userRoles", userRoles);
     }
 
     private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {

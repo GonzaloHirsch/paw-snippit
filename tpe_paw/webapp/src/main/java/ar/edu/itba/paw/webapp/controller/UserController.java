@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.EmailService;
+import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
@@ -11,7 +12,10 @@ import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.crypto.HashGenerator;
 import ar.edu.itba.paw.webapp.crypto.WebappCrypto;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.*;
+import ar.edu.itba.paw.webapp.form.DescriptionForm;
+import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
+import ar.edu.itba.paw.webapp.form.RegisterForm;
+import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +40,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-
 @Controller
 public class  UserController {
     @Autowired
@@ -51,6 +54,8 @@ public class  UserController {
     private LoginAuthentication loginAuthentication;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private RoleService roleService;
     @Autowired
     private MessageSource messageSource;
 
@@ -76,9 +81,7 @@ public class  UserController {
                 DATE.format(Calendar.getInstance().getTime().getTime())
         );
 
-        final Collection<? extends GrantedAuthority> authorities = Arrays.asList(
-                new SimpleGrantedAuthority("ROLE_USER")
-        );
+        roleService.assignUserRole(userId);
 
         loginAuthentication.authWithAuthManager(request, registerForm.getUsername(), registerForm.getPassword());
 
@@ -98,8 +101,11 @@ public class  UserController {
         /* Set the current user and its following tags */
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
+        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
+
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);
+        mav.addObject("userRoles", userRoles);
 
         Optional<User> user = this.userService.findUserById(id);
         if (!user.isPresent()) {

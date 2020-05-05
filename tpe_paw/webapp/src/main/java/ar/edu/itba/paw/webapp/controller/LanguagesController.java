@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.service.LanguageService;
-import ar.edu.itba.paw.interfaces.service.SnippetService;
-import ar.edu.itba.paw.interfaces.service.TagService;
-import ar.edu.itba.paw.interfaces.service.UserService;
+import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
@@ -39,6 +36,8 @@ public class LanguagesController {
     private TagService tagService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleService roleService;
     @Autowired
     private MessageSource messageSource;
 
@@ -78,7 +77,7 @@ public class LanguagesController {
     @RequestMapping("/languages/{langId}/delete")
     public ModelAndView deleteLanguage (@PathVariable("langId") long langId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
         User currentUser = loginAuthentication.getLoggedInUser();
-        if ( currentUser != null && userService.isAdmin(currentUser)){
+        if ( currentUser != null && roleService.isAdmin(currentUser.getId())){
             /* Language was assigned to a snippet and can no longer be deleted */
             if (this.languageService.languageInUse(langId)) {
                 Optional<Language> language = this.languageService.findById(langId);
@@ -97,9 +96,11 @@ public class LanguagesController {
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
+        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("userTags", userTags);
         model.addAttribute("searchForm", searchForm);
+        model.addAttribute("userRoles", userRoles);
     }
 
 }

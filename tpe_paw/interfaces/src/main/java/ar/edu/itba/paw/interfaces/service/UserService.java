@@ -33,7 +33,6 @@ public interface UserService {
 
     Collection<User> getAllUsers();
 
-    boolean isAdmin(final User user);
-
     void changeReputationForFlaggedSnippet(final long userId, boolean add);
+
 }

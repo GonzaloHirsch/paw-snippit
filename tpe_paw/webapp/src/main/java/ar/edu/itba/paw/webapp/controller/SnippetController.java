@@ -20,13 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Controller
 public class SnippetController {
 
     @Autowired
-    private UserService userService;
+    private RoleService roleService;
     @Autowired
     private SnippetService snippetService;
     @Autowired
@@ -82,11 +83,13 @@ public class SnippetController {
             Optional<Favorite> fav = this.favService.getFavorite(currentUser.getId(), retrievedSnippet.get().getId());
             favForm.setFavorite(fav.isPresent());
 
-            if (userService.isAdmin(currentUser)) {
+            if (roleService.isAdmin(currentUser.getId())) {
                 adminFlagForm.setFlagged(retrievedSnippet.get().isFlagged());
+                mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
             }
         } else {
             wasLoggedIn = false;
+            mav.addObject("userRoles", new ArrayList<>());
         }
 
         // Vote Count
@@ -140,7 +143,7 @@ public class SnippetController {
     ) {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null || !userService.isAdmin(currentUser)) {
+        if (currentUser == null || !roleService.isAdmin(currentUser.getId())) {
             LOGGER.warn("Inside the flagged form of snippet {} without admin logged in", id);
         } else {
             this.snippetService.updateFlagged(id, this.getOwnerIdOfSnippet(id), adminFlagForm.isFlagged());

@@ -10,10 +10,17 @@ delete from languages where true;
 delete from tags where true;
 delete from users where true;
 
+insert into roles(role) values('ADMIN');
+insert into roles(role) values('USER');
 
 insert into users(username, password, email, description, reputation, date_joined) values('JohnDoe','password','johndoe@gmail.com', 'I am the first user created on this website, I own many snippets', 0, timestamp '2020-04-20 12:30:00');
 insert into users(username, password, email, description, reputation, date_joined) values('JaneRoe','password','janeroe@gmail.com', 'I am just visiting', 0, timestamp '2020-04-25 05:30:00');
 insert into users(username, password, email, description, reputation, date_joined) values('admin','password','admin@snippit.com', 'I am the admin and have many important roles. I do not have a user profile and I do not post or vote', 0, timestamp '2020-04-19 12:30:00');
+
+insert into user_roles(user_id,role_id) values((select id from users where username='JohnDoe'),(select id from roles where name='USER'));
+insert into user_roles(user_id,role_id) values((select id from users where username='JaneRoe'),(select id from roles where name='USER'));
+insert into user_roles(user_id,role_id) values((select id from users where username='admin'),(select id from roles where name='USER'));
+insert into user_roles(user_id,role_id) values((select id from users where username='admin'),(select id from roles where name='ADMIN'));
 
 insert into languages(name) values('java');
 insert into languages(name) values('c#');

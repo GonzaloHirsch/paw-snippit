@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.LanguageService;
+import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Tag;
@@ -29,6 +30,7 @@ public class SnippetCreateController {
     @Autowired private TagService tagService;
     @Autowired private LanguageService languageService;
     @Autowired private LoginAuthentication loginAuthentication;
+    @Autowired private RoleService roleService;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetCreateController.class);
@@ -39,12 +41,14 @@ public class SnippetCreateController {
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
+        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
 
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);
         mav.addObject("tagList",tagService.getAllTags());
         mav.addObject("languageList", languageService.getAll());
         mav.addObject("searchContext", "");
+        mav.addObject("userRoles", userRoles);
 
         return mav;
     }

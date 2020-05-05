@@ -21,7 +21,9 @@
         <c:set var="searchContext" value="${requestScope.searchContext}"/>
         <c:url var="searchUrl" value="/${searchContext}search"/>
         <c:url var="searchForm" value="${requestScope.searchForm}"/>
+        <c:url var="userRoles" value="${requestScope.userRoles}"/>
         <spring:message code="search.hint" var="search_hint"/>
+
         <div id="sidenav" class="sidenav">
         <ul>
         <c:choose>
@@ -75,7 +77,7 @@
         <c:if test="${currentUser != null}">
             <hr/>
             <c:choose>
-                <c:when test="${currentUser.username != 'admin'}">
+                <c:when test="${!userRoles.contains('ADMIN')}">
                     <c:choose>
                         <c:when test="${searchContext == 'user/'}">
                             <a class="fw-100 menu-option menu-selected flex-center" href="<c:url
@@ -238,7 +240,7 @@
             </c:when>
             <c:otherwise>
                 <c:choose>
-                    <c:when test="${currentUser.username == 'admin'}">
+                    <c:when test="${userRoles.contains('ADMIN')}">
                         <a href="<c:url value="/admin/add"/>">
                         <i class="material-icons navtop-icons">add_circle_outline</i>
                         </a>

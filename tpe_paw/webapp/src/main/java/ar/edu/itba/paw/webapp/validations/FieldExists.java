@@ -7,13 +7,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = EmailExistsValidator.class)
+@Constraint(validatedBy = FieldExistsValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
-public @interface EmailExists {
+public @interface FieldExists {
     String message() default "{Exists.notFound}";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default{};
+
+    String fieldName();
 }

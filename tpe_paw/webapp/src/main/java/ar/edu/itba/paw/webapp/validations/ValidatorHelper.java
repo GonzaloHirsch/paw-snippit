@@ -40,7 +40,7 @@ public class ValidatorHelper {
         int errorAmount = 0;
 
         for (String tag : tags) {
-            if (!tagService.isUnique(tag)) {
+            if (tagService.tagExists(tag)) {
                 error.append(tag).append(", ");
                 errorAmount++;
             }
@@ -60,7 +60,7 @@ public class ValidatorHelper {
         int errorAmount = 0;
 
         for (String lang : languages) {
-            if (!languageService.isUnique(lang)) {
+            if (languageService.languageExists(lang)) {
                 error.append(lang).append(", ");
                 errorAmount++;
             }

@@ -87,5 +87,4 @@ public class LanguageDaoImpl implements LanguageDao {
     public boolean languageInUse(final long langId) {
         return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT s.id) FROM complete_snippets AS s WHERE s.language_id = ?", new Object[]{langId}, Integer.class) != 0;
     }
-
 }

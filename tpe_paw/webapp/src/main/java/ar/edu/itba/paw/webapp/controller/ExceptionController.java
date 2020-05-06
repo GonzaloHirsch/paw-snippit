@@ -76,7 +76,7 @@ public class ExceptionController {
     }
 
     @ResponseStatus(code = HttpStatus.CONFLICT)
-    @ExceptionHandler(RemovingLanguageInUseException.class)
+    @ExceptionHandler({RemovingLanguageInUseException.class, ElementDeletionException.class})
     public ModelAndView cannotRemoveLanguage(RemovingLanguageInUseException ex) {
         String errorName = messageSource.getMessage("error.409.name", null, LocaleContextHolder.getLocale());
         return this.createErrorModel(errorName, ex.getMessage(), 409);

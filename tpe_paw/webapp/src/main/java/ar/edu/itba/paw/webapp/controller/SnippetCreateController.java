@@ -47,15 +47,18 @@ public class SnippetCreateController {
         final ModelAndView mav = new ModelAndView("snippet/snippetCreate");
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
-        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
-
+        if (currentUser == null) {
+            throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.snippet.create", null, LocaleContextHolder.getLocale()));
+        } else if (this.roleService.isAdmin(currentUser.getId())) {
+            throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.admin.snippet.create", null, LocaleContextHolder.getLocale()));
+        }
+        
         mav.addObject("currentUser", currentUser);
-        mav.addObject("userTags", userTags);
+        mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
         mav.addObject("tagList", this.tagService.getAllTags());
         mav.addObject("languageList", this.languageService.getAllLanguages());
         mav.addObject("searchContext", "");
-        mav.addObject("userRoles", userRoles);
+        mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
 
         return mav;
     }
@@ -74,7 +77,7 @@ public class SnippetCreateController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if(currentUser == null) {
             LOGGER.warn("Creating a snippet when no user is logged in");
-            throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.create", null, LocaleContextHolder.getLocale()));
+            throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.snippet.create", null, LocaleContextHolder.getLocale()));
         }
         Long snippetId = this.snippetService.createSnippet(currentUser,snippetCreateForm.getTitle(),snippetCreateForm.getDescription(), snippetCreateForm.getCode(), dateCreated, snippetCreateForm.getLanguage(),snippetCreateForm.getTags());
         if(snippetId == null){

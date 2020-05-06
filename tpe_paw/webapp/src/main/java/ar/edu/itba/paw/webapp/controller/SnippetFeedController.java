@@ -104,7 +104,7 @@ public class SnippetFeedController {
         final ModelAndView mav = new ModelAndView("index");
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null || roleService.isAdmin(currentUser.getId())) this.logAndThrow(FLAGGED);
+        if (currentUser == null || !roleService.isAdmin(currentUser.getId())) this.logAndThrow(FLAGGED);
 
         Collection<Snippet> snippets = this.snippetService.getAllFlaggedSnippets(page);
         int totalSnippetCount = this.snippetService.getAllFlaggedSnippetsCount();

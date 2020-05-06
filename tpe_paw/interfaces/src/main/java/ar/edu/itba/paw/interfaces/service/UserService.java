@@ -33,6 +33,6 @@ public interface UserService {
 
     Collection<User> getAllUsers();
 
-    void changeReputationForFlaggedSnippet(final long userId, boolean add);
+    void changeReputation(final long userId, final int amount);
 
 }

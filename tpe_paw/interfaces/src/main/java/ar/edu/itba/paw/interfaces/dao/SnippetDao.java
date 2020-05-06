@@ -44,8 +44,9 @@ public interface SnippetDao {
     Collection<Snippet> getAllUpVotedSnippets(final long userId, int page);
     Collection<Snippet> getAllFlaggedSnippets(int page);
     Collection<Snippet> findAllSnippetsByOwner(final long userId, int page);
-    Collection<Snippet> findSnippetsWithLanguage(long langId, int page);
-    Optional<Snippet> findSnippetById(long id);
+    Collection<Snippet> findSnippetsWithLanguage(final long langId, int page);
+    Optional<Snippet> findSnippetById(final long id);
+    boolean deleteSnippetById(final long id);
     int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId);
     Long createSnippet(long ownerId, String title, String description,String code, String dateCreated, Long languageId);
     Collection<Snippet> findSnippetsForTag(long tagId);

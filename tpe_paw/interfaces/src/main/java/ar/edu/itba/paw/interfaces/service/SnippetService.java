@@ -21,7 +21,9 @@ public interface SnippetService {
     Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page);
     Collection<Snippet> findSnippetsForTag(long tagId);
     Collection<Snippet> findSnippetsWithLanguage(long langId, int page);
+    int getReputationImportanceBalance(final Snippet snippet);
     boolean isFlaggedByAdmin(final Snippet snippet);
+    boolean deleteSnippetById(final long id);
     void updateFlagged(long snippetId, long userId, boolean isFlagged);
     int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId);
     Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page);

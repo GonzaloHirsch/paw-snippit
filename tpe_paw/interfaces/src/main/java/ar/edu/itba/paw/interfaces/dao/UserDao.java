@@ -24,7 +24,7 @@ public interface UserDao {
 
     void changeDescription(final long userId, final String description);
 
-    void changeReputation(long userId, int value, boolean add);
+    void changeReputation(long userId, int value);
 
     Collection<User> getAllUsers();
 }

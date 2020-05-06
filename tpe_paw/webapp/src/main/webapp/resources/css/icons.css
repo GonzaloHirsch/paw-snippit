@@ -1,21 +1,32 @@
 /* CSS for the favorite icon --> favForm.jsp */
 
-.selected-icon {
+.selected-red-icon {
     color: crimson !important;
 }
 
-.unselected-icon:hover {
+.unselected-red-icon:hover {
     color: crimson !important;
 }
 
-.unselected-icon {
+.unselected-red-icon {
     color: gray !important;
+    transition: 0.3s;
+}
+
+.delete-snippet-icon {
+    color: gray !important;
+    transition: 0.3s;
+}
+
+.delete-snippet-icon:hover {
+    color: black !important;
 }
 
 .flagged-warning-icon {
     color: red;
     font-size: 70px !important;
     margin: 5px 15px 5px 0px;
+    transition: 0.3s;
 }
 
 .card-flagged-warning-icon {

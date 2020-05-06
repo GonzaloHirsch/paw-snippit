@@ -48,9 +48,11 @@ public class SnippetCreateController {
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
-            throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.create", null, LocaleContextHolder.getLocale()));
+            throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.snippet.create", null, LocaleContextHolder.getLocale()));
+        } else if (this.roleService.isAdmin(currentUser.getId())) {
+            throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.admin.snippet.create", null, LocaleContextHolder.getLocale()));
         }
-
+        
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
         mav.addObject("tagList", this.tagService.getAllTags());

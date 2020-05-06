@@ -40,8 +40,6 @@ public class LanguagesController {
     @Autowired
     private TagService tagService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private RoleService roleService;
     @Autowired
     private MessageSource messageSource;

@@ -8,10 +8,13 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,14 +29,11 @@ import java.util.Collection;
 @Controller
 public class SnippetFeedController {
 
-    @Autowired
-    private SnippetService snippetService;
-    @Autowired
-    private LoginAuthentication loginAuthentication;
-    @Autowired
-    private TagService tagService;
-    @Autowired
-    RoleService roleService;
+    @Autowired private SnippetService snippetService;
+    @Autowired private LoginAuthentication loginAuthentication;
+    @Autowired private TagService tagService;
+    @Autowired private RoleService roleService;
+    @Autowired private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetFeedController.class);
     private static final String HOME = "";
@@ -135,6 +135,6 @@ public class SnippetFeedController {
 
     private void logAndThrow(String location) {
         LOGGER.warn("Inside {} with no logged in user", location);
-        //TODO -- handle this -> 403 redirect?
+        throw new ForbiddenAccessException(messageSource.getMessage("error.403", new Object[]{location}, LocaleContextHolder.getLocale()));
     }
 }

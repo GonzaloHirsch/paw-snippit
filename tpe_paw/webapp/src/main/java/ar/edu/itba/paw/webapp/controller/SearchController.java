@@ -7,11 +7,14 @@ import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -44,14 +47,11 @@ public class SearchController {
         put("no", SnippetDao.Orders.NO);
     }};
 
-    @Autowired
-    private SnippetService snippetService;
-    @Autowired
-    private LoginAuthentication loginAuthentication;
-    @Autowired
-    private TagService tagService;
-    @Autowired
-    private RoleService roleService;
+    @Autowired private SnippetService snippetService;
+    @Autowired private LoginAuthentication loginAuthentication;
+    @Autowired private TagService tagService;
+    @Autowired private RoleService roleService;
+    @Autowired private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
     private static final String HOME = "";
@@ -146,7 +146,7 @@ public class SearchController {
 
     private void logAndThrow(String location) {
         LOGGER.warn("Searching inside {} with no logged in user", location);
-        //TODO -- handle this -> 403 redirect?
+        throw new ForbiddenAccessException(messageSource.getMessage("error.403", new Object[]{location}, LocaleContextHolder.getLocale()));
     }
 
     private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {

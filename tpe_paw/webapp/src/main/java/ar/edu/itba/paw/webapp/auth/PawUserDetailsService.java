@@ -41,16 +41,16 @@ public class PawUserDetailsService implements UserDetailsService {
         Collection<String> roles = roleService.getUserRoles(user.getId());
         if (roles.isEmpty()) {
             this.roleService.assignUserRole(user.getId());
-            roles.add(this.roleService.getUserRole());
+            roles.add(this.roleService.getUserRoleName());
         }
         
-        if(roles.contains(this.roleService.getAdminRole())) {
+        if(roles.contains(this.roleService.getAdminRoleName())) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-            LOGGER.debug("Granting authority ROLE_ADMIN");
+            LOGGER.debug("Granting authority ROLE_ADMIN to user ?", username);
         }
-        if (roles.contains(this.roleService.getUserRole())) {
+        if (roles.contains(this.roleService.getUserRoleName())) {
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-            LOGGER.debug("Granting authority ROLE_USER");
+            LOGGER.debug("Granting authority ROLE_USER to user ?", username);
         }
 
         final String password;

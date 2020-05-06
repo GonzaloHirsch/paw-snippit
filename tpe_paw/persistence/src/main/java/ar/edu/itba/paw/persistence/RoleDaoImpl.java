@@ -24,9 +24,6 @@ public class RoleDaoImpl implements RoleDao {
     private final static String USER_ROLE = "USER";
     private final static String ADMIN_ROLE = "ADMIN";
 
-    private final static String ADMIN_ROLE_ERROR = "[PSQL] Missing ADMIN role in database";
-    private final static String USER_ROLE_ERROR = "[PSQL] Missing USER role in database";
-
 
     private final static RowMapper<Role> ROW_MAPPER = new RowMapper<Role>(){
 
@@ -68,17 +65,13 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
-    public String getAdminRole() {
-        Role role = jdbcTemplate.query("SELECT * FROM roles WHERE role = ?", ROW_MAPPER, ADMIN_ROLE).stream().findFirst()
-                .orElseThrow(() -> new RuntimeException(ADMIN_ROLE_ERROR));
-        return role.getName();
+    public String getAdminRoleName() {
+        return ADMIN_ROLE;
     }
 
     @Override
-    public String getUserRole() {
-        Role role = jdbcTemplate.query("SELECT * FROM roles WHERE role = ?", ROW_MAPPER, USER_ROLE).stream().findFirst()
-                .orElseThrow(() -> new RuntimeException(USER_ROLE_ERROR));
-        return role.getName();
+    public String getUserRoleName() {
+        return USER_ROLE;
     }
 
     private void addToUserRoles(final long userId, final long roleId) {

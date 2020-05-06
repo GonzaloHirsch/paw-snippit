@@ -23,6 +23,7 @@
     <div class="main-content">
         <div class="flex-column flex-center error-page-main">
             <div class="error-code border-radius">${err}</div>
+            <div class="error-page-not-found">${errName}</div>
 
             <div class="error-dialog border-radius flex-column flex-column">
                 <h2>

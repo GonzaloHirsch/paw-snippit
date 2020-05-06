@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Vote;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.exception.SnippetNotFoundException;
 import ar.edu.itba.paw.webapp.form.FavoriteForm;
 import ar.edu.itba.paw.webapp.form.FlagSnippetForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
@@ -13,6 +14,8 @@ import ar.edu.itba.paw.webapp.form.VoteForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,18 +29,13 @@ import java.util.Optional;
 @Controller
 public class SnippetController {
 
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private SnippetService snippetService;
-    @Autowired
-    private VoteService voteService;
-    @Autowired
-    private FavoriteService favService;
-    @Autowired
-    private LoginAuthentication loginAuthentication;
-    @Autowired
-    private TagService tagService;
+    @Autowired private RoleService roleService;
+    @Autowired private SnippetService snippetService;
+    @Autowired private VoteService voteService;
+    @Autowired private FavoriteService favService;
+    @Autowired private LoginAuthentication loginAuthentication;
+    @Autowired private TagService tagService;
+    @Autowired private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetController.class);
 
@@ -50,7 +48,7 @@ public class SnippetController {
             @ModelAttribute("searchForm") final SearchForm searchForm,
             @ModelAttribute("adminFlagForm") final FlagSnippetForm adminFlagForm,
             @ModelAttribute("favForm") final FavoriteForm favForm,
-           @ModelAttribute("voteForm") final VoteForm voteForm
+            @ModelAttribute("voteForm") final VoteForm voteForm
     ) {
         final ModelAndView mav = new ModelAndView("snippet/snippetDetail");
         // Snippet
@@ -60,8 +58,7 @@ public class SnippetController {
         });
 
         if (!retrievedSnippet.isPresent()) {
-            LOGGER.warn("Pressed on snippet card with id {}, but it is not present", id);
-            // TODO --> throw new ... REDIRECT TO 500 ERROR CODE!!
+            logAndThrow(id);
         }
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
@@ -157,9 +154,14 @@ public class SnippetController {
         if (snip.isPresent()) {
             return snip.get().getOwner().getId();
         } else {
-            LOGGER.warn("No snippet found for id {}", snippetId);
-            //TODO handle error!
+            this.logAndThrow(snippetId);
         }
-        return 1; //TODO remove this when exception is handled!!!!
+        /* This statement is unreachable */
+        return 0;
+    }
+
+    private void logAndThrow(final long snippetId) {
+        LOGGER.warn("No snippet found for id {}", snippetId);
+        throw new SnippetNotFoundException(messageSource.getMessage("error.snippet.notFound", new Object[]{snippetId}, LocaleContextHolder.getLocale()));
     }
 }

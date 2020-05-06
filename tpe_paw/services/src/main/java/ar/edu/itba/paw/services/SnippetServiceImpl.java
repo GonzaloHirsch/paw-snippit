@@ -147,9 +147,9 @@ public class SnippetServiceImpl implements SnippetService {
     public Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<Long> tags) {
         Long snippetId =  snippetDao.createSnippet(owner,title,description,code,dateCreated,language);
         //TODO: See if its better to call TagService instead of TagDao directly.
-        if(snippetId != null)
+        if(snippetId != null) {
             this.tagService.addTagsToSnippet(snippetId, tags);
-
+        }
         return snippetId;
     }
 

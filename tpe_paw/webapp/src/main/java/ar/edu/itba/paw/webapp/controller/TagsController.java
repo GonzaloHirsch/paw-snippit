@@ -94,7 +94,7 @@ public class TagsController {
 
     @RequestMapping(value = "/tags/{tagId}/delete",  method= RequestMethod.POST)
     public ModelAndView deleteTag(@PathVariable("tagId") long tagId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
-        User currentUser = loginAuthentication.getLoggedInUser();
+        User currentUser = this.loginAuthentication.getLoggedInUser();
         if ( currentUser != null && roleService.isAdmin(currentUser.getId())){
             this.tagService.removeTag(tagId);
             LOGGER.debug("Admin deleted tag with id {}", tagId);

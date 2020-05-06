@@ -6,8 +6,8 @@ import ar.edu.itba.paw.models.User;
 import java.util.Collection;
 
 public interface RoleService {
-    String getAdminRole();
-    String getUserRole();
+    String getAdminRoleName();
+    String getUserRoleName();
 
     void assignAdminRole(long userId);
 

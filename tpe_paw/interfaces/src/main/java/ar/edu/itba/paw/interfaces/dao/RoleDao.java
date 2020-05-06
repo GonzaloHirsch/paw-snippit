@@ -11,6 +11,6 @@ public interface RoleDao {
     void assignUserRole(final long userId);
     void assignAdminRole(final long userId);
 
-    String getAdminRole();
-    String getUserRole();
+    String getAdminRoleName();
+    String getUserRoleName();
 }

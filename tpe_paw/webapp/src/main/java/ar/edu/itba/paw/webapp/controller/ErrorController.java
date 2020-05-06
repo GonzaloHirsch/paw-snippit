@@ -31,7 +31,6 @@ public class ErrorController {
     private RoleService roleService;
 
     private Set<Integer> supportedErrorPages = new HashSet<Integer>(){{
-        add(403);
         add(404);
         add(500);
     }};
@@ -41,10 +40,14 @@ public class ErrorController {
         int errorCode = this.getErrorCode(request);
         ModelAndView mav = new ModelAndView("errors/default");
         String message = messageSource.getMessage("error.unknown",null, LocaleContextHolder.getLocale());
+        String errorName = messageSource.getMessage("error.unknown.name",null, LocaleContextHolder.getLocale());
+
         if (this.supportedErrorPages.contains(errorCode)){
             message =  messageSource.getMessage("error." + String.valueOf(errorCode),null, LocaleContextHolder.getLocale());
+            errorName = messageSource.getMessage("error." + String.valueOf(errorCode) +".name",null, LocaleContextHolder.getLocale());
         }
         mav.addObject("err", errorCode);
+        mav.addObject("errName", errorName);
         mav.addObject("msg", message);
         return mav;
     }
@@ -56,7 +59,7 @@ public class ErrorController {
 
     @ModelAttribute
     public void addAttributes(Model model, HttpServletRequest request) {
-        User currentUser = this.loginAuthentication.getLoggedInUser();
+        User currentUser = this.loginAuthentication.getLoggedInUser(request);
         Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
         Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
         model.addAttribute("currentUser", currentUser);

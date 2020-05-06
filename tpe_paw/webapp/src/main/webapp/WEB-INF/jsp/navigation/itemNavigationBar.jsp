@@ -27,7 +27,6 @@ rel="stylesheet">
                                 <button type="submit"><span class="material-icons item-search-icon">search</span></button>
                         </div>
                 </form:form>
-        <c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>
         </div>
 </body>
 </html>

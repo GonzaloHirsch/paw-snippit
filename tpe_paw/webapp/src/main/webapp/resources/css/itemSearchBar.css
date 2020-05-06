@@ -2,12 +2,9 @@
     display: flex;
     flex-grow: 1;
     max-width: 400px;
-    padding: 5px;
-    background-color: #5E35B1;
+    border: #5E35B1 2px solid;
+    margin: 0 30px 0 30px;
     border-radius: 5px;
-    margin-right: 30px;
-    margin-left: 30px;
-    margin-bottom: 0px;
 }
 
 .item-nav-container {

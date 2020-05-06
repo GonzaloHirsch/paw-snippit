@@ -5,10 +5,12 @@ import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.LanguageNotFoundException;
 import ar.edu.itba.paw.webapp.exception.RemovingLanguageInUseException;
 import ar.edu.itba.paw.webapp.form.DeleteForm;
+import ar.edu.itba.paw.webapp.form.ItemSearchForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,12 +49,28 @@ public class LanguagesController {
     private static final Logger LOGGER = LoggerFactory.getLogger(LanguagesController.class);
 
     @RequestMapping("/languages")
-    public ModelAndView showAllLanguages() {
+    public ModelAndView showAllLanguages(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         ModelAndView mav = new ModelAndView("tagAndLanguages/languages");
-
-        Collection<Language> allLanguages = languageService.getAll();
+        Collection<Language> allLanguages = this.languageService.getAllLanguages(page);
+        int languageCount = this.languageService.getAllLanguagesCount();
+        mav.addObject("pages", (languageCount/Constants.LANGUAGE_PAGE_SIZE) + (languageCount % Constants.LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
+        mav.addObject("page", page);
         mav.addObject("searchContext","languages/");
         mav.addObject("languages", allLanguages);
+        mav.addObject("itemSearchContext", "languages/");
+        return mav;
+    }
+
+    @RequestMapping("/languages/search")
+    public ModelAndView searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
+        final ModelAndView mav = new ModelAndView("tagAndLanguages/languages");
+        Collection<Language> allLanguages = this.languageService.findAllLanguagesByName(searchForm.getName(), page);
+        int languageCount = this.languageService.getAllLanguagesCountByName(searchForm.getName());
+        mav.addObject("pages", (languageCount/Constants.LANGUAGE_PAGE_SIZE) + (languageCount % Constants.LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
+        mav.addObject("page", page);
+        mav.addObject("searchContext","languages/");
+        mav.addObject("languages", allLanguages);
+        mav.addObject("itemSearchContext", "languages/");
         return mav;
     }
 

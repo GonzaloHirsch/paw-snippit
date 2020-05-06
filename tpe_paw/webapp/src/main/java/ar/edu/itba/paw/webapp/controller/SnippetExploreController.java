@@ -100,6 +100,6 @@ public class SnippetExploreController {
         mav.addObject("snippetList", snippets);
         mav.addObject("searchContext", searchContext);
         mav.addObject("tagList", this.tagService.getAllTags());
-        mav.addObject("languageList", this.languageService.getAll());
+        mav.addObject("languageList", this.languageService.getAllLanguages());
     }
 }

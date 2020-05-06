@@ -53,7 +53,7 @@ public class SnippetCreateController {
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);
         mav.addObject("tagList", this.tagService.getAllTags());
-        mav.addObject("languageList", this.languageService.getAll());
+        mav.addObject("languageList", this.languageService.getAllLanguages());
         mav.addObject("searchContext", "");
         mav.addObject("userRoles", userRoles);
 

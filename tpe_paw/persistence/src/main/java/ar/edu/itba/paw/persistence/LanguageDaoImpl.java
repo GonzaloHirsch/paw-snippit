@@ -47,8 +47,28 @@ public class LanguageDaoImpl implements LanguageDao {
     }
 
     @Override
-    public Collection<Language> getAll() {
+    public Collection<Language> getAllLanguages() {
         return jdbcTemplate.query("SELECT * FROM languages", ROW_MAPPER);
+    }
+
+    @Override
+    public Collection<Language> getAllLanguages(int page) {
+        return jdbcTemplate.query("SELECT * FROM languages ORDER BY id LIMIT ? OFFSET ?", ROW_MAPPER, PAGE_SIZE, PAGE_SIZE * (page - 1));
+    }
+
+    @Override
+    public Collection<Language> findAllLanguagesByName(String name, int page) {
+        return this.jdbcTemplate.query("SELECT * FROM languages AS t WHERE LOWER(t.name) LIKE LOWER(?) ORDER BY t.id LIMIT ? OFFSET ?", ROW_MAPPER, "%"+name+"%", PAGE_SIZE, PAGE_SIZE * (page - 1));
+    }
+
+    @Override
+    public int getAllLanguagesCountByName(String name) {
+        return this.jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT id) FROM languages WHERE LOWER(name) LIKE LOWER(?)", new Object[]{"%"+name+"%"}, Integer.class);
+    }
+
+    @Override
+    public int getAllLanguagesCount() {
+        return this.jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT id) FROM languages", Integer.class);
     }
 
     @Override

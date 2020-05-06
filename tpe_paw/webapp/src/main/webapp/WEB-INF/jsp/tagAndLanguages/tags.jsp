@@ -35,6 +35,9 @@
                                 <c:import url="/WEB-INF/jsp/tagAndLanguages/element.jsp"/>
                             </c:forEach>
                         </div>
+                        <div class="flex-row flex-wrap flex-center flex-grow">
+                            <c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>
+                        </div>
                     </c:when>
                     <c:otherwise>
                         <div class="no-elements flex-center fw-100">

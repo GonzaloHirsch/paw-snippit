@@ -96,7 +96,7 @@ public class LanguageDaoTest {
         long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
         long lanId2 = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE2);
         
-        Collection<Language> maybeLanguages = languageDao.getAll();
+        Collection<Language> maybeLanguages = languageDao.getAllLanguages();
         
         assertFalse(maybeLanguages.isEmpty());
         assertEquals(2,maybeLanguages.size());

@@ -20,14 +20,31 @@
                 <spring:message code="menu.languages"/>
             </div>
         </div>
-        <div class="all-elements-grid main-grid">
-            <c:forEach var="language" items="${languages}">
-                <c:set var="element" value="${language}" scope="request"/>
-                <c:set var="context" value="languages" scope="request"/>
-                <c:set var="cssClass" value="element-container-main" scope="request"/>
-                <c:import url="/WEB-INF/jsp/tagAndLanguages/element.jsp"/>
-            </c:forEach>
+        <div>
+            <spring:message code="search.languages.hint" var="search_hint"/>
+            <c:set var="hint" value="${search_hint}" scope="request"/>
+            <c:import url="/WEB-INF/jsp/navigation/itemNavigationBar.jsp"/>
         </div>
+        <c:choose>
+            <c:when test="${languages.size() > 0}">
+                <div class="all-elements-grid main-grid">
+                    <c:forEach var="language" items="${languages}">
+                        <c:set var="element" value="${language}" scope="request"/>
+                        <c:set var="context" value="languages" scope="request"/>
+                        <c:set var="cssClass" value="element-container-main" scope="request"/>
+                        <c:import url="/WEB-INF/jsp/tagAndLanguages/element.jsp"/>
+                    </c:forEach>
+                </div>
+                <div class="flex-row flex-wrap flex-center flex-grow">
+                    <c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="no-elements flex-center fw-100">
+                    <spring:message code="feed.no-languages"/>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 </div>
 </body>

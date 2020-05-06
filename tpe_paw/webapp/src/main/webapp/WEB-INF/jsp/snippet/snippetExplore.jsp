@@ -18,16 +18,23 @@
     <c:set var="userTags" value="${userTags}" scope="request"/>
     <c:set var="searchForm" value="${searchContext}" scope="request"/>
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
-    <div class="main-content flex-row">
-        <div class="flex-column">
-            <div class="fw-100 explore-title">
+    <div class="main-content flex-column">
+        <div class="flex-row title-section">
+            <div class="flex-column fw-100 flex-grow page-title">
                 <spring:message code="explore.title"> </spring:message>
             </div>
-            <c:import url="exploreForm.jsp"/>
+            <div class="flex-column flex-center">
+                <c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>
+            </div>
         </div>
-        <div class="flex-column explore-feed">
-            <c:set var="snippetList" value="${snippetList}" scope="request"/>
-            <c:import url="snippetFeed.jsp"/>
+        <div class="flex-row">
+            <div class="flex-column">
+                <c:import url="exploreForm.jsp"/>
+            </div>
+            <div class="flex-column explore-feed">
+                <c:set var="snippetList" value="${snippetList}" scope="request"/>
+                <c:import url="snippetFeed.jsp"/>
+            </div>
         </div>
     </div>
 </div>

@@ -17,6 +17,30 @@
     <c:set var="searchForm" value="${searchContext}" scope="request"/>
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
+        <div class="flex-row title-section">
+            <div class="flex-column fw-100 flex-grow page-title">
+                <c:choose>
+                    <c:when test="${searchContext == ''}">
+                        <spring:message code="menu.home"/>
+                    </c:when>
+                    <c:when test="${searchContext == 'flagged/'}">
+                        <spring:message code="menu.flagged"/>
+                    </c:when>
+                    <c:when test="${searchContext == 'following/'}">
+                        <spring:message code="menu.following"/>
+                    </c:when>
+                    <c:when test="${searchContext == 'favorites/'}">
+                        <spring:message code="menu.favorites"/>
+                    </c:when>
+                    <c:when test="${searchContext == 'upvoted/'}">
+                        <spring:message code="menu.upvoted"/>
+                    </c:when>
+                </c:choose>
+            </div>
+            <div class="flex-column flex-center">
+                <c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>
+            </div>
+        </div>
         <c:set var="snippetList" value="${snippetList}" scope="request"/>
         <c:import url="snippet/snippetFeed.jsp"/>
     </div>

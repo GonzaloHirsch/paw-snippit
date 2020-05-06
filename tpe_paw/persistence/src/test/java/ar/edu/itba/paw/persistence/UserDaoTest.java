@@ -5,21 +5,21 @@ import ar.edu.itba.paw.models.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestHelper.*;
 import static junit.framework.TestCase.*;
 
 /*
@@ -42,20 +42,12 @@ Not tested Methods:
 public class UserDaoTest {
 
     @Autowired private DataSource ds;
-    @Autowired private UserDao userDao;
+    @Autowired @InjectMocks private UserDao userDao;
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertUser;
 
-    private final String USERS_TABLE = "users";
 
-    private static final String PASSWORD = "Password";
-    private static final String USERNAME = "Username";
-    private static final String EMAIL = "email@email.com";
-    private static final String PASSWORD2 = "Password2";
-    private static final String USERNAME2 = "Username2";
-    private static final String EMAIL2 = "email2@email.com";
-    private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     private final static RowMapper<User> ROW_MAPPER = (rs, rowNum) -> new User(
             rs.getLong("id"),
@@ -71,28 +63,18 @@ public class UserDaoTest {
 
     @Before
     public void setUp() {
+        MockitoAnnotations.initMocks(this); // Replaces @RunWith(MockitJUnitRunner.class)
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "users");
     }
 
-    private User insertUserIntoDatabase(String username, String password, String email,String description){
-        Map<String, Object> map = new HashMap<String, Object>() {{
-            put("username", username);
-            put("password", password);
-            put("email", email);
-            put("reputation", 0);
-            put("date_joined", DATE.format(Calendar.getInstance().getTime().getTime()));
-        }};
-        long userId = jdbcInsertUser.executeAndReturnKey(map).longValue();
-        return new User(userId, username, password, email, description, 0, DATE.format(Calendar.getInstance().getTime().getTime()), null);
-
-    }
 
     @Test
     public void testCreateUser() {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
+
         final long userId = userDao.createUser(USERNAME, PASSWORD, EMAIL, "", 0, DATE.format(Calendar.getInstance().getTime().getTime()));
 
         assertNotNull(userId);
@@ -102,7 +84,7 @@ public class UserDaoTest {
     @Test
     public void testFindUserById(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        User expectedUser = insertUserIntoDatabase(USERNAME,PASSWORD,EMAIL,"");
+        User expectedUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"");
 
         Optional<User> maybeUser = userDao.findUserById(expectedUser.getId());
 
@@ -116,8 +98,8 @@ public class UserDaoTest {
     @Test
     public void testFindUserByUsername(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        User expectedUser = insertUserIntoDatabase(USERNAME,PASSWORD,EMAIL,"");
-        insertUserIntoDatabase(USERNAME2,PASSWORD2,EMAIL2,"");
+        User expectedUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"");
+        insertUserIntoDb(jdbcInsertUser,USERNAME2,PASSWORD2,EMAIL2,"");
 
         Optional<User> maybeUser = userDao.findUserByUsername(USERNAME);
 
@@ -131,8 +113,8 @@ public class UserDaoTest {
     @Test
     public void testFindUserByEmail(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        User expectedUser = insertUserIntoDatabase(USERNAME,PASSWORD,EMAIL,"");
-        insertUserIntoDatabase(USERNAME2,PASSWORD2,EMAIL2,"");
+        User expectedUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"");
+        insertUserIntoDb(jdbcInsertUser,USERNAME2,PASSWORD2,EMAIL2,"");
 
         Optional<User> maybeUser = userDao.findUserByEmail(EMAIL);
 
@@ -146,7 +128,7 @@ public class UserDaoTest {
     @Test
     public void testFindUpdateDescription(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        User user = insertUserIntoDatabase(USERNAME,PASSWORD,EMAIL,"");
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"");
         String newDescription = "New Description";
 
         userDao.updateDescription(user.getUsername(),newDescription);
@@ -162,7 +144,7 @@ public class UserDaoTest {
     @Test
     public void testChangePassowrd(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        User user = insertUserIntoDatabase(USERNAME,PASSWORD,EMAIL,"");
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"");
         String newPassword = "newpassword";
 
         userDao.changePassword(user.getEmail(),newPassword);
@@ -177,7 +159,7 @@ public class UserDaoTest {
     @Test
     public void testChangeDescription(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        User user = insertUserIntoDatabase(USERNAME,PASSWORD,EMAIL,"");
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"");
         String newDescription = "new description";
 
         userDao.changeDescription(user.getId(),newDescription);

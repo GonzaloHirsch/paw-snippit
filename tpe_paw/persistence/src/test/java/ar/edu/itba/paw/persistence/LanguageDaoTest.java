@@ -24,6 +24,7 @@ import java.util.*;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
 import static junit.framework.TestCase.*;
+import static ar.edu.itba.paw.persistence.TestHelper.*;
 
 /*
  Tested Methods:
@@ -47,11 +48,6 @@ public class LanguageDaoTest {
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertLanguage;
 
-    private final String LANGUAGE_TABLE = "languages";
-
-    private final String LANGUAGE = "Language 1";
-    private final String LANGUAGE2 = "Language 2";
-    private final String LANGUAGE3 = "Language 3";
 
     private final static RowMapper<Language> ROW_MAPPER = (rs, rowNum) -> new Language(rs.getInt("id"), rs.getString("name"));
 
@@ -59,37 +55,31 @@ public class LanguageDaoTest {
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsertLanguage = new SimpleJdbcInsert(ds).withTableName(LANGUAGE_TABLE).usingGeneratedKeyColumns("id");
+        jdbcInsertLanguage = new SimpleJdbcInsert(ds).withTableName(LANGUAGES_TABLE).usingGeneratedKeyColumns("id");
     }
 
     
-    private long insertLanguageInDatabase(String name){
-        final Map<String, Object> map = new HashMap<String,Object>(){{
-            put("name", name);
-        }};
-        return jdbcInsertLanguage.executeAndReturnKey(map).longValue();
-    }
 
     @Test
     public void testAddLanguage(){
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGE_TABLE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
 
         Language maybeLanguage = languageDao.addLanguage(LANGUAGE);
 
         assertNotNull(maybeLanguage);
         assertEquals(LANGUAGE.toLowerCase(),maybeLanguage.getName());
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate,  LANGUAGE_TABLE));
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate,  LANGUAGES_TABLE));
     }
 
     @Test
     public void testAddLanguageS(){
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGE_TABLE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
         List<String> stringList = Arrays.asList(LANGUAGE,LANGUAGE2,LANGUAGE3,null);
 
         languageDao.addLanguages(stringList);
 
         Collection<Language> maybeLanguages = jdbcTemplate.query("SELECT * FROM languages", ROW_MAPPER);
-        assertEquals(3,JdbcTestUtils.countRowsInTable(jdbcTemplate,LANGUAGE_TABLE));
+        assertEquals(3,JdbcTestUtils.countRowsInTable(jdbcTemplate,LANGUAGES_TABLE));
         assertFalse(maybeLanguages.isEmpty());
         List<String> maybeStringList = new ArrayList<String>();
         for(Language l:maybeLanguages){
@@ -102,9 +92,9 @@ public class LanguageDaoTest {
     
     @Test 
     public void testGetAll(){ 
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGE_TABLE);
-        long lanId1 = insertLanguageInDatabase(LANGUAGE);
-        long lanId2 = insertLanguageInDatabase(LANGUAGE2);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
+        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
+        long lanId2 = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE2);
         
         Collection<Language> maybeLanguages = languageDao.getAll();
         
@@ -120,8 +110,8 @@ public class LanguageDaoTest {
 
     @Test
     public void testFindById(){
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGE_TABLE);
-        long lanId1 = insertLanguageInDatabase(LANGUAGE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
+        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);
 
         Optional<Language> maybeLanguage = languageDao.findById(lanId1);
 
@@ -132,8 +122,8 @@ public class LanguageDaoTest {
 
     @Test
     public void testFindByName(){
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGE_TABLE);
-        long lanId1 = insertLanguageInDatabase(LANGUAGE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
+        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);
 
         Optional<Language> maybeLanguage = languageDao.findByName(LANGUAGE);
 

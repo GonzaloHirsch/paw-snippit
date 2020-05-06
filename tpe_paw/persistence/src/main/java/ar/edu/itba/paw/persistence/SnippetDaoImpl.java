@@ -151,14 +151,14 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Long createSnippet(User owner, String title, String description,String code, String dateCreated, Long language){
+    public Long createSnippet(long ownerId, String title, String description,String code, String dateCreated, Long languageId){
         final Map<String, Object> snippetDataMap = new HashMap<String,Object>(){{
-            put("user_id", owner.getId());
+            put("user_id", ownerId);
             put("title",title);
             put("description",description);
             put("code",code);
             put("date_created",dateCreated);
-            put("language_id",language);
+            put("language_id",languageId);
         }};
 
         return this.jdbcInsert.executeAndReturnKey(snippetDataMap).longValue();

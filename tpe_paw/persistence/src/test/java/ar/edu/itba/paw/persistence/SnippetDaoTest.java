@@ -162,7 +162,7 @@ public class SnippetDaoTest {
                 TITLE,
                 SnippetDao.Locations.HOME,
                 SnippetDao.Orders.ASC,
-                defaultUser.getId(),
+                null,
                 1).stream().findFirst();
 
         //Evaluacion

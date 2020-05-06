@@ -24,11 +24,20 @@ import java.util.Map;
 
 @Service
 public class EmailServiceImpl implements EmailService {
-    @Autowired public JavaMailSender emailSender;
-    @Autowired private MessageSource messageSource;
-    @Autowired private UserService userService;
-    @Autowired private SnippetService snippetService;
-    @Autowired private TagServiceImpl tagService;
+    @Autowired
+    public JavaMailSender emailSender;
+    @Autowired
+    private MessageSource messageSource;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private SnippetService snippetService;
+    @Autowired
+    private TagService tagService;
+    @Autowired
+    private TemplateService templateService;
+    @Autowired
+    private CryptoService cryptoService;
 
     @Autowired
     private TemplateService templateService;
@@ -69,11 +78,17 @@ public class EmailServiceImpl implements EmailService {
     }
     @Async
     @Override
-    public void sendRecoveryEmail(long id, String to, String username, String token) {
-        String link = "http://localhost:9092/webapp_war_exploded/reset-password?id=" + id + "&token=" + token;
+    public void sendRecoveryEmail(String userEmail) {
+        User searchedUser = userService.findUserByEmail(userEmail).get(); // User SHOULD be found
+        String base64Token = cryptoService.generateTOTP(userEmail, searchedUser.getPassword());
+        String link = "http://localhost:9092/webapp_war_exploded/reset-password?id=" + searchedUser.getId() + "&token=" + base64Token;
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("recoveryURL", link);
+        data.put("username", searchedUser.getUsername());
+        data.put("userEmail", searchedUser.getEmail());
+        String body = this.templateService.merge("/templates/passwordRecovery.vm", data, LocaleContextHolder.getLocale());
         String subject = messageSource.getMessage("email.recovery.subject", null, LocaleContextHolder.getLocale());
-        String body = messageSource.getMessage("email.recovery.body", new Object[]{username, link}, LocaleContextHolder.getLocale());
-        this.sendEmail(to, subject, body);
+        this.sendEmail(userEmail, subject, body);
     }
 
     @Scheduled(cron = "0 0 12 * * Mon")

@@ -59,8 +59,8 @@ public class TagsController {
     @RequestMapping("/tags/search")
     public ModelAndView searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         final ModelAndView mav = new ModelAndView("tagAndLanguages/tags");
-        Collection<Tag> allTags = this.tagService.findTagsByName(searchForm.getQuery(), page);
-        int tagCount = this.tagService.getAllTagsCountByName(searchForm.getQuery());
+        Collection<Tag> allTags = this.tagService.findTagsByName(searchForm.getName(), page);
+        int tagCount = this.tagService.getAllTagsCountByName(searchForm.getName());
         mav.addObject("pages", (tagCount/Constants.TAG_PAGE_SIZE) + (tagCount % Constants.TAG_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("searchContext","tags/");

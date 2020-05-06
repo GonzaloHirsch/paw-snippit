@@ -10,6 +10,11 @@
     margin-bottom: 0px;
 }
 
+.item-nav-container {
+    display: flex;
+    justify-content: space-between;
+}
+
 .item-search-container button:hover {
     background: #ccc;
     display: flex;

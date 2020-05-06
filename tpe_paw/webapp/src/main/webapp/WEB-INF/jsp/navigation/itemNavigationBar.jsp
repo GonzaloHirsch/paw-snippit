@@ -17,16 +17,17 @@ rel="stylesheet">
 <body>
         <c:set var="itemSearchContext" value="${requestScope.itemSearchContext}"/>
         <c:url var="itemSearchUrl" value="/${itemSearchContext}search"/>
-        <spring:message code="search.tags.hint" var="search_hint"/>
+        <c:url var="search_hint" value="${requestScope.hint}"/>
         <div class="flex-row flex-wrap flex-center flex-grow">
                 <form:form modelAttribute="itemSearchForm" method="get" action="${itemSearchUrl}"
                    class="flex-row flex-center flex-wrap item-search-container">
                         <div class="flex-row flex-grow fw-100">
-                                <form:input path="query" type="text" id="item-search-bar" class="item-search-input flex-grow fw-100"
+                                <form:input path="name" type="text" id="item-search-bar" class="item-search-input flex-grow fw-100"
                                 placeholder="${search_hint}"/>
                                 <button type="submit"><span class="material-icons item-search-icon">search</span></button>
                         </div>
                 </form:form>
+        <c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>
         </div>
 </body>
 </html>

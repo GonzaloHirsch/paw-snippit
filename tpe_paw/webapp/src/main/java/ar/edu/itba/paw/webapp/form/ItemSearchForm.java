@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.webapp.form;
 
 public class ItemSearchForm {
-    private String query;
+    private String name;
 
-    public String getQuery() {
-        return query;
+    public String getName() {
+        return name;
     }
 
-    public void setQuery(String query) {
-        this.query = query;
+    public void setName(String query) {
+        this.name = query;
     }
 }

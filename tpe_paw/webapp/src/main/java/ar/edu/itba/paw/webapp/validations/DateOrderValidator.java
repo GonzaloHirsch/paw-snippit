@@ -1,6 +1,10 @@
 package ar.edu.itba.paw.webapp.validations;
 
+import ar.edu.itba.paw.webapp.exception.FormErrorException;
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -9,6 +13,8 @@ import java.util.Date;
 
 public class DateOrderValidator implements ConstraintValidator<DateOrder, Object> {
 
+    @Autowired
+    private MessageSource messageSource;
     private String minField;
     private String maxField;
     private String message;
@@ -32,7 +38,7 @@ public class DateOrderValidator implements ConstraintValidator<DateOrder, Object
         }
         catch (final Exception e)
         {
-            // TODO LOGGER
+            throw new FormErrorException(messageSource.getMessage("error.404.form", null, LocaleContextHolder.getLocale()));
         }
 
         if (!valid){

@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.validations.EmailExists;
+import ar.edu.itba.paw.webapp.validations.FieldExists;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 public class RecoveryForm {
     @Email
     @NotBlank
-    @EmailExists
+    @FieldExists(fieldName = "Email")
     private String email;
 
     public String getEmail() {

@@ -14,7 +14,8 @@ public interface TagService {
     Optional<Tag> findTagById(long tagId);
     Collection<Tag> addTagsToSnippet(Long snippetId, Collection<Long> tagIdList);
     void addTags(List<String> tags);
-    boolean isUnique(String tag);
+    boolean tagExists(final String tag);
+    boolean tagExists(final long tag);
     void removeTag(final long tagId);
     void updateFollowing(long userId, long tagId, boolean followed);
     boolean userFollowsTag(long userId, long tagId);

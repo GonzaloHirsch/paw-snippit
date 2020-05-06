@@ -7,7 +7,10 @@ import ar.edu.itba.paw.webapp.form.RecoveryForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.webapp.form.ResetPasswordForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,26 +44,8 @@ public class RegistrationController {
     @Autowired
     private CryptoService cryptoService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
     private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
-    @RequestMapping(value = "/login")
-    public ModelAndView login() {
-        final ModelAndView mav = new ModelAndView("user/login");
-        mav.addObject("error", false);
-        return mav;
-    }
-
-    @RequestMapping(value = "/login_error")
-    public ModelAndView loginError() {
-        final ModelAndView mav = new ModelAndView("user/login");
-        mav.addObject("error", true);
-        return mav;
-    }
-
-    @RequestMapping(value = "/goodbye")
-    public ModelAndView logout() {
-        return new ModelAndView("user/logout");
-    }
 
     @RequestMapping(value = "/signup", method = {RequestMethod.GET})
     public ModelAndView signUpForm(@ModelAttribute("registerForm") final RegisterForm form) {
@@ -79,11 +64,14 @@ public class RegistrationController {
                 registerForm.getEmail(),
                 DATE.format(Calendar.getInstance().getTime().getTime())
         );
+        try {
+            this.emailService.sendRegistrationEmail(registerForm.getEmail(), registerForm.getUsername());
+        } catch (MailException e) {
+            LOGGER.warn("Failed to send registration email to user ?", registerForm.getUsername());
+        }
 
         roleService.assignUserRole(userId);
-
         loginAuthentication.authWithAuthManager(request, registerForm.getUsername(), registerForm.getPassword());
-
         return new ModelAndView("redirect:/");
     }
 

@@ -10,7 +10,8 @@ public interface LanguageService {
     Optional<Language> findById(long id);
     Collection<Language> getAll();
     void addLanguages(List<String> languages);
-    boolean isUnique(String language);
+    boolean languageExists(final String language);
+    boolean languageExists(final long id);
     void removeLanguage(final long langId);
     boolean languageInUse(final long langId);
 }

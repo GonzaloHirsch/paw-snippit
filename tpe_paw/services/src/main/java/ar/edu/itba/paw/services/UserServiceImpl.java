@@ -31,7 +31,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public long register(String username, String password, String email, String dateJoined) {
         long userId = createUser(username, password, email, "", 0, dateJoined);
-        this.emailService.sendRegistrationEmail(email, username);
         return userId;
     }
 

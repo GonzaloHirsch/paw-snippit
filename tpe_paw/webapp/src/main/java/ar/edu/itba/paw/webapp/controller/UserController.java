@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 
 @Controller
 public class  UserController {
+    
     @Autowired
     private UserService userService;
     @Autowired
@@ -45,7 +46,7 @@ public class  UserController {
     private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-
+    
     @RequestMapping(value = "/user/{id}")
     public ModelAndView userProfile(
             final @PathVariable("id") long id,
@@ -146,4 +147,5 @@ public class  UserController {
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         model.addAttribute("searchForm", searchForm);
     }
+
 }

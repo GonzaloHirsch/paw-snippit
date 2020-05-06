@@ -3,8 +3,6 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.helpers.crypto.HashGenerator;
-import ar.edu.itba.paw.services.helpers.crypto.WebappCrypto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -38,6 +36,8 @@ public class EmailServiceImpl implements EmailService {
     private TagService tagService;
     @Autowired
     private TemplateService templateService;
+    @Autowired
+    private CryptoService cryptoService;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -78,12 +78,14 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendRecoveryEmail(String userEmail) {
         User searchedUser = userService.findUserByEmail(userEmail).get(); // User SHOULD be found
-        String currentPass = searchedUser.getPassword();
-        String otp = WebappCrypto.generateOtp(WebappCrypto.TEST_KEY);
-        String base64Token = HashGenerator.getInstance().generateRecoveryHash(userEmail, currentPass, otp);
+        String base64Token = cryptoService.generateTOTP(userEmail, searchedUser.getPassword());
         String link = "http://localhost:9092/webapp_war_exploded/reset-password?id=" + searchedUser.getId() + "&token=" + base64Token;
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("recoveryURL", link);
+        data.put("username", searchedUser.getUsername());
+        data.put("userEmail", searchedUser.getEmail());
+        String body = this.templateService.merge("/templates/passwordRecovery.vm", data, LocaleContextHolder.getLocale());
         String subject = messageSource.getMessage("email.recovery.subject", null, LocaleContextHolder.getLocale());
-        String body = messageSource.getMessage("email.recovery.body", new Object[]{searchedUser.getUsername(), link}, LocaleContextHolder.getLocale());
         this.sendEmail(userEmail, subject, body);
     }
 

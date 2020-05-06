@@ -32,4 +32,10 @@ public class CryptoServiceImpl implements CryptoService {
         }
         return pass;
     }
+
+    @Override
+    public String generateTOTP(String userEmail, String password) {
+        String otp = WebappCrypto.generateOtp(WebappCrypto.TEST_KEY);
+        return HashGenerator.getInstance().generateRecoveryHash(userEmail, password, otp);
+    }
 }

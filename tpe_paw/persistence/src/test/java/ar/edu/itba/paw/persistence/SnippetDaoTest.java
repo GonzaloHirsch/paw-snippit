@@ -25,6 +25,7 @@ import java.util.*;
 import static ar.edu.itba.paw.persistence.TestHelper.*;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -147,24 +148,68 @@ public class SnippetDaoTest {
         assertEquals(0,count);
     }
 
-    /*
+
     @Test
     public void testFindSnippetByCriteria(){
         // Precondiciones
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        long snippetId = insertSnippetInDatabase(defaultUser,TITLE,DESCR,CODE, defaultLanguageId);
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE, defaultLanguageId);
 
         // Ejercitacion
-        Optional<Snippet> maybeSnippet = snippetDao.findSnippetByCriteria(SnippetDao.QueryTypes.SEARCH,SnippetDao.Types.TITLE, TITLE,SnippetDao.Locations.HOME,SnippetDao.Orders.ASC, user.getId(),1).stream().findFirst();
+        Optional<Snippet> maybeSnippet = snippetDao.findSnippetByCriteria(
+                SnippetDao.QueryTypes.SEARCH,
+                SnippetDao.Types.TITLE,
+                TITLE,
+                SnippetDao.Locations.HOME,
+                SnippetDao.Orders.ASC,
+                defaultUser.getId(),
+                1).stream().findFirst();
 
         //Evaluacion
-        assertNotNull(maybeSnippet);
         assertTrue(maybeSnippet.isPresent());
-        assertEquals(user.getUsername(), maybeSnippet.get().getOwner().getUsername());
+        assertEquals(defaultUser.getUsername(), maybeSnippet.get().getOwner().getUsername());
         assertEquals(TITLE, maybeSnippet.get().getTitle());
         assertEquals(DESCR, maybeSnippet.get().getDescription());
     }
 
-     */
+    @Test
+    public void findSnippetByDeepCriteriaTest(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId);
+
+        Optional<Snippet> maybeSnippet = snippetDao.findSnippetByDeepCriteria(null,
+                null,
+                0,
+                10,
+                0,
+                10,
+                defaultLanguageId,
+                null,
+                TITLE,
+                defaultUser.getUsername(),
+                "title",
+                "asc",
+                true,
+                1).stream().findFirst();
+
+        assertTrue(maybeSnippet.isPresent());
+        assertEquals(TITLE,maybeSnippet.get().getTitle());
+
+    }
+
+    @Test
+    public void findSnippetByCriteriaMultiTest(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId);
+
+
+
+
+
+
+
+    }
+
+
 
 }

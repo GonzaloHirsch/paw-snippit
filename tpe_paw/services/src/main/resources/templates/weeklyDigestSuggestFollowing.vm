@@ -1,0 +1,107 @@
+#parse("/templates/macros/macro.vm")
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Snippit!</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            font-family: Roboto, "sans-serif";
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #eeedf2;
+            width: 100%;
+        }
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+        li {
+            margin: 5px;
+            list-style-type: none;
+        }
+        body {
+            background-color: #5E35B1;
+            margin: 0;
+            line-height: inherit !important;
+        }
+        .mid-container {
+            background-color: #eeedf2;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            padding-bottom: 20px;
+            width: 100%;
+        }
+        .disclaimer {
+            color: grey;
+            font-size: 12px;
+        }
+        *:focus {
+            outline: none;
+        }
+        .fw-100 {
+            font-weight: 100;
+        }
+        .fw-300 {
+            font-weight: 300;
+        }
+        .fw-500 {
+            font-weight: 500;
+        }
+        .white-text {
+            color: white !important;
+        }
+        .black-text {
+            color: black !important;
+        }
+        .title-container {
+            font-size: 60px !important;
+            padding: 20px 0 20px 0;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            background: #5E35B1;
+        }
+        .bottom-container {
+            max-height: 100px;
+            padding: 10px;
+            width: 100%;
+        }
+        .greeting {
+            margin-top: 15px;
+            font-size: 30px;
+        }
+        .info {
+            font-size: 20px;
+        }
+        .center {
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .full-width {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="full-width">
+    <div class="fw-100 mid-container">
+        <div class="center white-text fw-300 title-container full-width">
+            <span class="fw-500">#msg("email.app.title")</span>
+        </div>
+        <h1 class="center black-text greeting full-width">
+            #msg("email.wdsf")
+        </h1>
+        <p class="center black-text info full-width">
+            #msgArgs("email.wdsf.description", [${username}])
+        </p>
+    </div>s
+</div>
+<div class="bottom-container fw-100 center disclaimer">
+    #msg("email.wdsf.disclaimer")
+</div>
+<div class="bottom-container fw-100 center disclaimer">
+    #msg("email.end")
+</div>
+</body>
+</html>

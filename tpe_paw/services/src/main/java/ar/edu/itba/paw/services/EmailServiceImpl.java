@@ -38,9 +38,6 @@ public class EmailServiceImpl implements EmailService {
     private TemplateService templateService;
     @Autowired
     private CryptoService cryptoService;
-
-    @Autowired
-    private TemplateService templateService;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     @Async

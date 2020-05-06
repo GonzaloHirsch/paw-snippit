@@ -27,6 +27,7 @@
         <mockito.version>2.25.1</mockito.version>
         <org.hsqldb.version>2.3.1</org.hsqldb.version>
         <velocity.version>1.7</velocity.version>
+        <commons.codec.verion>1.14</commons.codec.verion>
     </properties>
 
     <dependencyManagement>
@@ -181,6 +182,12 @@
                 <groupId>org.apache.velocity</groupId>
                 <artifactId>velocity</artifactId>
                 <version>${velocity.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons.codec.verion}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

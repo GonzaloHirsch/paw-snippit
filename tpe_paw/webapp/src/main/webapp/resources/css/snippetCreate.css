@@ -11,7 +11,7 @@
 }
 
 .snippetC-title-container{
-    margin:5px;
+    margin: 0px 5px 5px 0px;
     flex:6;
 }
 .snippetC-elem-container {
@@ -19,8 +19,12 @@
 }
 
 .snippetC-language-container {
-    margin: 5px;
+    margin: 0px 5px 5px 0px;
     flex:2;
+}
+
+.snippetC-top-container {
+    padding: 5px;
 }
 
 .snippetC-tags-container {

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
@@ -7,10 +8,13 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,14 +29,11 @@ import java.util.Collection;
 @Controller
 public class SnippetFeedController {
 
-    @Autowired
-    private SnippetService snippetService;
-    @Autowired
-    private LoginAuthentication loginAuthentication;
-    @Autowired
-    private TagService tagService;
-    @Autowired
-    UserService userService;
+    @Autowired private SnippetService snippetService;
+    @Autowired private LoginAuthentication loginAuthentication;
+    @Autowired private TagService tagService;
+    @Autowired private RoleService roleService;
+    @Autowired private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetFeedController.class);
     private static final String HOME = "";
@@ -103,7 +104,7 @@ public class SnippetFeedController {
         final ModelAndView mav = new ModelAndView("index");
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null || userService.isAdmin(currentUser)) this.logAndThrow(FLAGGED);
+        if (currentUser == null || roleService.isAdmin(currentUser.getId())) this.logAndThrow(FLAGGED);
 
         Collection<Snippet> snippets = this.snippetService.getAllFlaggedSnippets(page);
         int totalSnippetCount = this.snippetService.getAllFlaggedSnippetsCount();
@@ -125,14 +126,15 @@ public class SnippetFeedController {
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
-        if (currentUser != null) LOGGER.debug("Logged in user {} follows -> {}", currentUser.getUsername(), userTags.toString());
+        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("userTags", userTags);
         model.addAttribute("searchForm", searchForm);
+        model.addAttribute("userRoles", userRoles);
     }
 
     private void logAndThrow(String location) {
         LOGGER.warn("Inside {} with no logged in user", location);
-        //TODO -- handle this -> 403 redirect?
+        throw new ForbiddenAccessException(messageSource.getMessage("error.403", new Object[]{location}, LocaleContextHolder.getLocale()));
     }
 }

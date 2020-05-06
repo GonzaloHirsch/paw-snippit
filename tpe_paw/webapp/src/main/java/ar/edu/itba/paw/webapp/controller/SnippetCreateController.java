@@ -1,16 +1,21 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.LanguageService;
+import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
+import ar.edu.itba.paw.webapp.exception.FormErrorException;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.form.SnippetCreateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +34,8 @@ public class SnippetCreateController {
     @Autowired private TagService tagService;
     @Autowired private LanguageService languageService;
     @Autowired private LoginAuthentication loginAuthentication;
+    @Autowired private RoleService roleService;
+    @Autowired private MessageSource messageSource;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetCreateController.class);
@@ -39,12 +46,14 @@ public class SnippetCreateController {
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
+        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
 
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);
         mav.addObject("tagList",tagService.getAllTags());
         mav.addObject("languageList", languageService.getAll());
         mav.addObject("searchContext", "");
+        mav.addObject("userRoles", userRoles);
 
         return mav;
     }
@@ -60,12 +69,13 @@ public class SnippetCreateController {
 
         User currentUser = loginAuthentication.getLoggedInUser();
         if(currentUser == null) {
-            LOGGER.warn("[SnippetCreateController] Creating a snippet when no user is logged in");
-            // TODO --> what to throw? throw new UserNotFoundException(); ?
+            LOGGER.warn("Creating a snippet when no user is logged in");
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.create", null, LocaleContextHolder.getLocale()));
         }
         Long snippetId = snippetService.createSnippet(currentUser,snippetCreateForm.getTitle(),snippetCreateForm.getDescription(), snippetCreateForm.getCode(), dateCreated, snippetCreateForm.getLanguage(),snippetCreateForm.getTags());
         if(snippetId == null){
-            LOGGER.warn("[SnippetCreateController] Snippet creation was unsuccessful. Return id was null.");
+            LOGGER.warn("Snippet creation was unsuccessful. Return id was null.");
+            throw new FormErrorException(messageSource.getMessage("error.404.form", null, LocaleContextHolder.getLocale()));
         }
 
         return new ModelAndView("redirect:/snippet/" + snippetId);

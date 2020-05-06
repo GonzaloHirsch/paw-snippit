@@ -24,19 +24,14 @@ import java.util.Map;
 
 @Service
 public class EmailServiceImpl implements EmailService {
-    @Autowired
-    public JavaMailSender emailSender;
-    @Autowired
-    private MessageSource messageSource;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private SnippetService snippetService;
-    @Autowired
-    private TagService tagService;
+    @Autowired public JavaMailSender emailSender;
+    @Autowired private MessageSource messageSource;
+    @Autowired private UserService userService;
+    @Autowired private SnippetService snippetService;
+    @Autowired private TagServiceImpl tagService;
+
     @Autowired
     private TemplateService templateService;
-
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     @Async
@@ -71,6 +66,14 @@ public class EmailServiceImpl implements EmailService {
             // TODO: DO SMTH
             String a = e.getMessage();
         }
+    }
+    @Async
+    @Override
+    public void sendRecoveryEmail(long id, String to, String username, String token) {
+        String link = "http://localhost:9092/webapp_war_exploded/reset-password?id=" + id + "&token=" + token;
+        String subject = messageSource.getMessage("email.recovery.subject", null, LocaleContextHolder.getLocale());
+        String body = messageSource.getMessage("email.recovery.body", new Object[]{username, link}, LocaleContextHolder.getLocale());
+        this.sendEmail(to, subject, body);
     }
 
     @Scheduled(cron = "0 0 12 * * Mon")

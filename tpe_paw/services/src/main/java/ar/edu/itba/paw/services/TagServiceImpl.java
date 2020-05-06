@@ -68,8 +68,13 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public boolean isUnique(String tag) {
-        return !tagDao.findByName(tag).isPresent();
+    public boolean tagExists(String tag) {
+        return tagDao.findByName(tag).isPresent();
+    }
+
+    @Override
+    public boolean tagExists(long tagId) {
+        return tagDao.findById(tagId).isPresent();
     }
 
     @Override

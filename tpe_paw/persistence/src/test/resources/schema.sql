@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS snippets
     description  VARCHAR(500),
     code         VARCHAR(6000),
     date_created TIMESTAMP,
-    flagged      INT DEFAULT 0;
+    flagged      INT DEFAULT 0,
     language_id  INT REFERENCES languages (id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS snippet_tags
 
 CREATE TABLE IF NOT EXISTS roles
 (
-    id   SERIAL PRIMARY KEY,
+    id  INTEGER IDENTITY PRIMARY KEY,
     role VARCHAR(20) UNIQUE
 );
 

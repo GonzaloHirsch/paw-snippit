@@ -41,32 +41,33 @@
             <form:form class="snippetC-form" modelAttribute="snippetCreateForm" action="${postPath}" method="post">
 
                 <div class="flex-column">
-                    <div class="flex-row">
-                        <div class="snippetC-title-container">
-                            <form:label class="fw-400 snippetC-subtitles" path="title"><spring:message code="snippetCreateForm.title"/> </form:label>
-                            <form:input class="snippetC-title-input snippetC-border fw-400" type="text" path="title" placeholder='${title_hint}'/>
+                    <div class="flex-column snippetC-top-container">
+                        <div class="flex-row">
+                            <div class="snippetC-title-container">
+                                <form:label class="fw-400 snippetC-subtitles" path="title"><spring:message code="snippetCreateForm.title"/> </form:label>
+                                <form:input class="snippetC-title-input snippetC-border fw-400" type="text" path="title" placeholder='${title_hint}'/>
+                            </div>
+                            <div class="snippetC-language-container">
+                                <form:label class="fw-400 snippetC-subtitles" path="title"><spring:message code="snippetCreateForm.language"/> </form:label>
+                                <form:select class="selectpicker snippetC-language"  data-live-search="true" path="language">
+                                    <form:option value="-1"><spring:message code="snippetCreateForm.languageHint"/></form:option>
+                                    <c:forEach items="${languageList}" var="lan" varStatus="status">
+                                        <form:option value="${lan.id}">${lan.name.toUpperCase()}</form:option>
+                                    </c:forEach>
+                                </form:select>
+                            </div>
                         </div>
-                        <div class="snippetC-language-container">
-                            <form:label class="fw-400 snippetC-subtitles" path="title"><spring:message code="snippetCreateForm.language"/> </form:label>
-                            <form:select class="selectpicker snippetC-language"  data-live-search="true" path="language">
-                                <form:option value="-1"><spring:message code="snippetCreateForm.languageHint"/></form:option>
-                                <c:forEach items="${languageList}" var="lan" varStatus="status">
-                                    <form:option value="${lan.id}">${lan.name.toUpperCase()}</form:option>
-                                </c:forEach>
-                            </form:select>
+                        <div class="flex-column">
+                            <form:errors class="form-error" path="title"  element="p"/>
+                            <form:errors class="form-error" path="language" element="p"/>
                         </div>
                     </div>
-                    <div>
-                        <form:errors class="form-error" path="title"  element="p"/>
-                        <form:errors class="form-error" path="language" element="p"/>
-                    </div>
-
                     <hr class="snippetC-divider"/>
 
                     <div class="snippetC-elem-container">
                         <form:label class="fw-400 snippetC-subtitles" path="description"><spring:message code="snippetCreateForm.description"/> </form:label>
                         <form:textarea class="full-width snippetC-description-input snippetC-border" rows="2" type="text" path="description" placeholder='${desc_hint}'/>
-                        <form:errors path="description" element="p"/>
+                        <form:errors class="form-error" path="description" element="p"/>
                     </div>
 
                     <hr class="snippetC-divider"/>
@@ -74,7 +75,7 @@
                     <div class="snippetC-elem-container">
                         <form:label class="fw-400 snippetC-subtitles" path="code"><spring:message code="snippetCreateForm.code"/> </form:label>
                         <form:textarea class="full-width snippetC-code-input snippetC-border"  rows="5" type="text" path="code" placeholder='${code_hint}'/>
-                        <form:errors class="form-error" path="code" element="p"/>
+                        <form:errors class="form-error error-extra-margins" path="code" element="p"/>
                     </div>
 
                     <hr class="snippetC-divider"/>

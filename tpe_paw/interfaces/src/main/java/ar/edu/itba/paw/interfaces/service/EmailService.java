@@ -12,4 +12,6 @@ public interface EmailService {
     void sendDigestNoFollowEmail(String to, String username);
 
     void sendDigestFollowOtherEmail(String to, String username);
+    
+    void sendRecoveryEmail(long userId, String to, String username, String token);
 }

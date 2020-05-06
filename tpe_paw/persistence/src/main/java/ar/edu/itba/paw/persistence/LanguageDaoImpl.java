@@ -61,7 +61,6 @@ public class LanguageDaoImpl implements LanguageDao {
 
     @Override
     public void addLanguages(List<String> languages) {
-        // TODO -> remove repeated
         List<MapSqlParameterSource> entries = new ArrayList<>();
 
         for (String l : languages) {
@@ -88,5 +87,4 @@ public class LanguageDaoImpl implements LanguageDao {
     public boolean languageInUse(final long langId) {
         return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT s.id) FROM complete_snippets AS s WHERE s.language_id = ?", new Object[]{langId}, Integer.class) != 0;
     }
-
 }

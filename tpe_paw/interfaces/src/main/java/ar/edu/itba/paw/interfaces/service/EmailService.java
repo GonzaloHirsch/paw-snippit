@@ -5,7 +5,13 @@ public interface EmailService {
 
     void sendRegistrationEmail(String to, String username);
 
-    void sendRecoveryEmail(long userId, String to, String username, String token);
+    void sendRecoveryEmail(String userEmail);
 
-    void sendDailyDigest();
+    void scheduledWeeklyDigest();
+
+    void sendDigestEmail(String to, String username, int count);
+
+    void sendDigestNoFollowEmail(String to, String username);
+
+    void sendDigestFollowOtherEmail(String to, String username);
 }

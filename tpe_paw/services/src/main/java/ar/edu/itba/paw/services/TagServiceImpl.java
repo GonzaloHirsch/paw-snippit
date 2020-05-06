@@ -21,8 +21,28 @@ public class TagServiceImpl implements TagService {
     private FollowingDao followingDao;
 
     @Override
+    public Collection<Tag> getAllTags(int page) {
+        return tagDao.getAllTags(page);
+    }
+
+    @Override
     public Collection<Tag> getAllTags() {
         return tagDao.getAllTags();
+    }
+
+    @Override
+    public int getAllTagsCountByName(String name) {
+        return this.tagDao.getAllTagsCountByName(name);
+    }
+
+    @Override
+    public int getAllTagsCount() {
+        return this.tagDao.getAllTagsCount();
+    }
+
+    @Override
+    public Collection<Tag> findTagsByName(String name, int page) {
+        return this.tagDao.findTagsByName(name, page);
     }
 
     @Override

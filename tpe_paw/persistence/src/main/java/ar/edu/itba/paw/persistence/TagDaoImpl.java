@@ -20,7 +20,7 @@ public class TagDaoImpl implements TagDao {
     private JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final SimpleJdbcInsert jdbcInsertSnippetTag;
-    private final static RowMapper<Tag> ROW_MAPPER = new RowMapper<Tag>(){
+    private final static RowMapper<Tag> ROW_MAPPER = new RowMapper<Tag>() {
 
         @Override
         public Tag mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -62,8 +62,8 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public void addSnippetTag(long snippetId, long tagId){
-        final Map<String, Object> snippetTagDataMap = new HashMap<String,Object>(){{
+    public void addSnippetTag(long snippetId, long tagId) {
+        final Map<String, Object> snippetTagDataMap = new HashMap<String, Object>() {{
             put("snippet_id", snippetId);
             put("tag_id", tagId);
         }};
@@ -92,8 +92,27 @@ public class TagDaoImpl implements TagDao {
 
 
     @Override
-    public Collection<Tag> getAllTags() {
-        return jdbcTemplate.query("SELECT * FROM tags", ROW_MAPPER);
+    public Collection<Tag> getAllTags(int page) {
+        return jdbcTemplate.query("SELECT * FROM tags ORDER BY id LIMIT ? OFFSET ?", ROW_MAPPER, PAGE_SIZE, PAGE_SIZE * (page - 1));
     }
 
+    @Override
+    public Collection<Tag> getAllTags() {
+        return jdbcTemplate.query("SELECT * FROM tags ORDER BY id", ROW_MAPPER);
+    }
+
+    @Override
+    public int getAllTagsCountByName(String name) {
+        return this.jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT id) FROM tags WHERE LOWER(name) LIKE LOWER(?)", new Object[]{"%"+name+"%"}, Integer.class);
+    }
+
+    @Override
+    public int getAllTagsCount() {
+        return this.jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT id) FROM tags", Integer.class);
+    }
+
+    @Override
+    public Collection<Tag> findTagsByName(String name, int page) {
+        return this.jdbcTemplate.query("SELECT * FROM tags AS t WHERE LOWER(t.name) LIKE LOWER(?) ORDER BY t.id LIMIT ? OFFSET ?", ROW_MAPPER, "%"+name+"%", PAGE_SIZE, PAGE_SIZE * (page - 1));
+    }
 }

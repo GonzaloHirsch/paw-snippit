@@ -1,16 +1,20 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.RoleService;
+import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
+import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.TagNotFoundException;
+import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.form.DeleteForm;
 import ar.edu.itba.paw.webapp.form.FollowForm;
+import ar.edu.itba.paw.webapp.form.ItemSearchForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,12 +44,28 @@ public class TagsController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TagsController.class);
 
     @RequestMapping("/tags")
-    public ModelAndView showAllTags() {
+    public ModelAndView showAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         ModelAndView mav = new ModelAndView("tagAndLanguages/tags");
-
-        Collection<Tag> allTags = tagService.getAllTags();
+        Collection<Tag> allTags = tagService.getAllTags(page);
+        int tagCount = this.tagService.getAllTagsCount();
+        mav.addObject("pages", (tagCount/Constants.TAG_PAGE_SIZE) + (tagCount % Constants.TAG_PAGE_SIZE == 0 ? 0 : 1));
+        mav.addObject("page", page);
         mav.addObject("searchContext","tags/");
-        mav.addObject("tags", allTags); 
+        mav.addObject("tags", allTags);
+        mav.addObject("itemSearchContext", "tags/");
+        return mav;
+    }
+
+    @RequestMapping("/tags/search")
+    public ModelAndView searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
+        final ModelAndView mav = new ModelAndView("tagAndLanguages/tags");
+        Collection<Tag> allTags = this.tagService.findTagsByName(searchForm.getName(), page);
+        int tagCount = this.tagService.getAllTagsCountByName(searchForm.getName());
+        mav.addObject("pages", (tagCount/Constants.TAG_PAGE_SIZE) + (tagCount % Constants.TAG_PAGE_SIZE == 0 ? 0 : 1));
+        mav.addObject("page", page);
+        mav.addObject("searchContext","tags/");
+        mav.addObject("tags", allTags);
+        mav.addObject("itemSearchContext", "tags/");
         return mav;
     }
 

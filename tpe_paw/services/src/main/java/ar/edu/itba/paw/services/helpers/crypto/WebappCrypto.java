@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.crypto;
+package ar.edu.itba.paw.services.helpers.crypto;
 
 import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.codec.binary.Hex;

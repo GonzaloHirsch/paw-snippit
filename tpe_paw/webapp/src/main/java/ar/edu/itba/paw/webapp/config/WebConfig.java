@@ -1,6 +1,8 @@
 
 package ar.edu.itba.paw.webapp.config;
 
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.exception.VelocityException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +21,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.ui.velocity.VelocityEngineFactory;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.LocaleResolver;
@@ -32,13 +35,16 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 @EnableAsync
 @EnableWebMvc
-@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.validations", "ar.edu.itba.paw.services",  "ar.edu.itba.paw.persistence"})
+@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.validations", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence"})
 @Configuration
 @EnableScheduling
 @EnableTransactionManagement
@@ -86,7 +92,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(schemaSql);
 //        populator.addScript(populatorSql);
-//        populator.addScript(populatorRoleSql);
+        //populator.addScript(populatorRoleSql);
         return populator;
     }
 
@@ -98,11 +104,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public MessageSource messageSource() {
         final ReloadableResourceBundleMessageSource ms = new ReloadableResourceBundleMessageSource();
-
         ms.setCacheSeconds((int) TimeUnit.MINUTES.toSeconds(5));
-        ms.setBasename("classpath:i18n/messages");
+        ms.setBasenames("classpath:i18n/messages", "classpath:i18n/email_messages");
         ms.setDefaultEncoding(StandardCharsets.UTF_8.name());
-
         return ms;
     }
 
@@ -153,5 +157,19 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
 //        multipartResolver.setMaxUploadSize(1 * 1048576);
         return multipartResolver;
+    }
+
+    @Bean
+    public VelocityEngine getVelocityEngine() throws VelocityException, IOException {
+        VelocityEngineFactory velocityEngineFactory = new VelocityEngineFactory();
+        Properties props = new Properties();
+        props.put("resource.loader", "class");
+        props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+//        props.put("resource.loader.path", "/WEB-INF/templates/");
+//        Map<String, String> velocityProps = new HashMap<>();
+//        velocityProps.put("velocimacro.library", "/WEB-INF/templates/macros/macro.vm");
+//        props.put("velocity.properties", velocityProps);
+        velocityEngineFactory.setVelocityProperties(props);
+        return velocityEngineFactory.createVelocityEngine();
     }
 }

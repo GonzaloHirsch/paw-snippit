@@ -35,5 +35,5 @@ public interface SnippetService {
     int getAllSnippetsByLanguageCount(final long langId);
     int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId);
     int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged);
-    Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<Long> tags);
+    Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<String> tags);
 }

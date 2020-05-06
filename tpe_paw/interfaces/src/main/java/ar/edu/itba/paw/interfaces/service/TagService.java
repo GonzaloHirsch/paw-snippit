@@ -12,7 +12,7 @@ public interface TagService {
     void followTag(long userId, long tagId);
     void unfollowTag(long userId, long tagId);
     Optional<Tag> findTagById(long tagId);
-    Collection<Tag> addTagsToSnippet(Long snippetId, Collection<Long> tagIdList);
+    Collection<Tag> addTagsToSnippet(Long snippetId, Collection<String> tagList);
     void addTags(List<String> tags);
     boolean tagExists(final String tag);
     boolean tagExists(final long tag);

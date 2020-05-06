@@ -20,7 +20,7 @@ public class SnippetCreateForm {
     @FieldExists(fieldName = "Language")
     private Long language;
 
-    private Collection<Long> tags;
+    private Collection<String> tags;
 
 
     public void setCode(String code) {
@@ -39,7 +39,7 @@ public class SnippetCreateForm {
         this.language = language;
     }
 
-    public void setTags(Collection<Long> tags) {
+    public void setTags(Collection<String> tags) {
         this.tags = tags;
     }
 
@@ -61,7 +61,7 @@ public class SnippetCreateForm {
         return language;
     }
 
-    public Collection<Long> getTags() {
+    public Collection<String> getTags() {
         return tags;
     }
 }

@@ -20,6 +20,9 @@
                         <spring:message code="menu.tags"> </spring:message>
                     </div>
                 </div>
+                <div>
+                    <c:import url="/WEB-INF/jsp/navigation/itemNavigationBar.jsp"/>
+                </div>
                 <div class="all-elements-grid main-grid">
                     <c:forEach var="tag" items="${tags}">
                         <c:set var="element" value="${tag}" scope="request"/>

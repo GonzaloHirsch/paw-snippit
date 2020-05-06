@@ -162,6 +162,6 @@ public class SnippetController {
 
     private void logAndThrow(final long snippetId) {
         LOGGER.warn("No snippet found for id {}", snippetId);
-        throw new SnippetNotFoundException(messageSource.getMessage("error.snippet.notFound", new Object[]{snippetId}, LocaleContextHolder.getLocale()));
+        throw new SnippetNotFoundException(messageSource.getMessage("error.404.snippet", new Object[]{snippetId}, LocaleContextHolder.getLocale()));
     }
 }

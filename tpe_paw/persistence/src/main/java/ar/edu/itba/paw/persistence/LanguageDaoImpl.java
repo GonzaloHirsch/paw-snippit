@@ -61,7 +61,6 @@ public class LanguageDaoImpl implements LanguageDao {
 
     @Override
     public void addLanguages(List<String> languages) {
-        // TODO -> remove repeated
         List<MapSqlParameterSource> entries = new ArrayList<>();
 
         for (String l : languages) {

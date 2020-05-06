@@ -23,31 +23,23 @@ import java.util.Date;
 
 @Service
 public class EmailServiceImpl implements EmailService {
-    @Autowired
-    public JavaMailSender emailSender;
-    @Autowired
-    private MessageSource messageSource;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private SnippetService snippetService;
-    @Autowired
-    private TagServiceImpl tagService;
+    @Autowired public JavaMailSender emailSender;
+    @Autowired private MessageSource messageSource;
+    @Autowired private UserService userService;
+    @Autowired private SnippetService snippetService;
+    @Autowired private TagServiceImpl tagService;
+
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     @Async
     @Override
     public void sendEmail(String to, String subject, String body) {
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(to);
-            message.setSubject(subject);
-            message.setText(body);
-            message.setFrom(messageSource.getMessage("app.name", null, LocaleContextHolder.getLocale()));
-            emailSender.send(message);
-        } catch (MailException e){
-            // TODO: LOG EMAIL ERROR
-        }
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(body);
+        message.setFrom(messageSource.getMessage("app.name", null, LocaleContextHolder.getLocale()));
+        emailSender.send(message);
     }
 
     @Async

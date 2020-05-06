@@ -16,6 +16,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,22 +37,14 @@ import java.util.concurrent.TimeUnit;
 
 @Controller
 public class  UserController {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private EmailService emailService;
-    @Autowired
-    private SnippetService snippetService;
-    @Autowired
-    private LoginAuthentication loginAuthentication;
-    @Autowired
-    private TagService tagService;
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private MessageSource messageSource;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private UserService userService;
+    @Autowired private EmailService emailService;
+    @Autowired private SnippetService snippetService;
+    @Autowired private LoginAuthentication loginAuthentication;
+    @Autowired private TagService tagService;
+    @Autowired private RoleService roleService;
+    @Autowired private MessageSource messageSource;
 
     private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -74,11 +67,14 @@ public class  UserController {
                 registerForm.getEmail(),
                 DATE.format(Calendar.getInstance().getTime().getTime())
         );
+        try {
+            this.emailService.sendRegistrationEmail(registerForm.getEmail(), registerForm.getUsername());
+        } catch (MailException e) {
+            LOGGER.warn("Failed to send registration email to user ?", registerForm.getUsername());
+        }
 
         roleService.assignUserRole(userId);
-
         loginAuthentication.authWithAuthManager(request, registerForm.getUsername(), registerForm.getPassword());
-
         return new ModelAndView("redirect:/");
     }
 
@@ -199,8 +195,7 @@ public class  UserController {
 
     @RequestMapping(value = "recover-password")
     public ModelAndView recoverPassword(@ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
-        final ModelAndView mav  = new ModelAndView("user/recoverPassword");
-        return mav;
+        return new ModelAndView("user/recoverPassword");
     }
 
     @RequestMapping(value = "/send-email", method = RequestMethod.POST)
@@ -216,19 +211,22 @@ public class  UserController {
         String currentPass = searchedUser.getPassword();
         String otp = WebappCrypto.generateOtp(WebappCrypto.TEST_KEY);
         String base64Token = HashGenerator.getInstance().generateRecoveryHash(recoveryForm.getEmail(), currentPass, otp);
-        emailService.sendRecoveryEmail(searchedUser.getId(), recoveryForm.getEmail(), searchedUser.getUsername(), base64Token);
-
+        try {
+            emailService.sendRecoveryEmail(searchedUser.getId(), recoveryForm.getEmail(), searchedUser.getUsername(), base64Token);
+        } catch (MailException e) {
+            LOGGER.warn("Mail Exception when sending recovery email. Error = ?", e.getMessage());
+        }
         // TODO create dedicated view
         return new ModelAndView("user/emailSent");
     }
 
     @RequestMapping(value = "/reset-password", method = RequestMethod.GET)
     public ModelAndView resetPassword(final @RequestParam(value="id") long id,
-                                        final @RequestParam(value="token") String token,
-                                        @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm) {
+                                      final @RequestParam(value="token") String token,
+                                      @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm) {
         Optional<User> userOpt = userService.findUserById(id);
         if(!userOpt.isPresent()) {
-            // TODO Resource Not Found
+            logAndThrow(id);
         }
         User user = userOpt.get();
         resetPasswordForm.setEmail(user.getEmail());
@@ -260,9 +258,8 @@ public class  UserController {
         return new ModelAndView("user/passwordReset");
     }
 
-
     private void logAndThrow(long id) {
         LOGGER.warn("User with id {} doesn't exist", id);
-        throw new UserNotFoundException(messageSource.getMessage("error.user.notFound", new Object[]{id}, LocaleContextHolder.getLocale()));
+        throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{id}, LocaleContextHolder.getLocale()));
     }
 }

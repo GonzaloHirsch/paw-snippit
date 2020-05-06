@@ -11,6 +11,7 @@
 
 .vote-down {
     color: gray;
+    transition: 0.3s;
 }
 
 .vote-up:hover {
@@ -19,6 +20,7 @@
 
 .vote-up {
     color: gray;
+    transition: 0.3s;
 }
 
 .vote-up-selected {

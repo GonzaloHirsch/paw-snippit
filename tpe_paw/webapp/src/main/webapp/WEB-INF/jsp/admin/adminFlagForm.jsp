@@ -20,10 +20,10 @@
         <label for="flag-button">
             <c:choose>
                 <c:when test="${adminFlagForm.flagged}">
-                    <i class="selected-icon material-icons snippet-icon">flag</i>
+                    <i class="selected-red-icon material-icons snippet-icon">flag</i>
                 </c:when>
                 <c:otherwise>
-                    <i class="unselected-icon material-icons snippet-icon">outlined_flag</i>
+                    <i class="unselected-red-icon material-icons snippet-icon">outlined_flag</i>
                 </c:otherwise>
             </c:choose>
         </label>

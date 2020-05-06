@@ -10,6 +10,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon/favicon.ico'/>"/>
     <link href="<c:url value='/resources/css/snippetDetail.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/icons.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/element.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/elementsList.css'/>" rel="stylesheet"/>
@@ -77,6 +78,13 @@
                     <c:if test="${userRoles.contains('ADMIN')}">
                         <div class="flex-center detail-snippet-block border-radius">
                             <c:import url="/WEB-INF/jsp/admin/adminFlagForm.jsp"/>
+                        </div>
+                    </c:if>
+
+                    <!-- DELETE -->
+                    <c:if test="${currentUser.id == snippet.owner.id}">
+                        <div class="flex-column flex-center detail-snippet-block border-radius">
+                            <c:import url="/WEB-INF/jsp/snippet/snippetDeleteForm.jsp"/>
                         </div>
                     </c:if>
 

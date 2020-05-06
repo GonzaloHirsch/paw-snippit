@@ -47,6 +47,25 @@ public class RegistrationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
     private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
+    @RequestMapping(value = "/login")
+    public ModelAndView login() {
+        final ModelAndView mav = new ModelAndView("user/login");
+        mav.addObject("error", false);
+        return mav;
+    }
+
+    @RequestMapping(value = "/login_error")
+    public ModelAndView loginError() {
+        final ModelAndView mav = new ModelAndView("user/login");
+        mav.addObject("error", true);
+        return mav;
+    }
+
+    @RequestMapping(value = "/goodbye")
+    public ModelAndView logout() {
+        return new ModelAndView("user/logout");
+    }
+
     @RequestMapping(value = "/signup", method = {RequestMethod.GET})
     public ModelAndView signUpForm(@ModelAttribute("registerForm") final RegisterForm form) {
         return new ModelAndView("user/signUpForm");

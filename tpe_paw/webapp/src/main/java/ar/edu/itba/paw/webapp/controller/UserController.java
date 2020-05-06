@@ -5,8 +5,6 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.crypto.HashGenerator;
-import ar.edu.itba.paw.webapp.crypto.WebappCrypto;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
@@ -52,6 +50,8 @@ public class  UserController {
     private RoleService roleService;
     @Autowired
     private MessageSource messageSource;
+    @Autowired
+    private CryptoService cryptoService;
 
     private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -208,17 +208,7 @@ public class  UserController {
         if (errors.hasErrors()){
             return recoverPassword(recoveryForm, errors);
         }
-        LOGGER.debug("RecoveryForm Successful");
-        User searchedUser = userService.findUserByEmail(recoveryForm.getEmail()).get();
-        /*if (!searchedUser.isPresent()) {
-            // this SHOULD NOT happen, Exists validation SHOULD prevent it
-        }*/
-        String currentPass = searchedUser.getPassword();
-        String otp = WebappCrypto.generateOtp(WebappCrypto.TEST_KEY);
-        String base64Token = HashGenerator.getInstance().generateRecoveryHash(recoveryForm.getEmail(), currentPass, otp);
-        emailService.sendRecoveryEmail(searchedUser.getId(), recoveryForm.getEmail(), searchedUser.getUsername(), base64Token);
-
-        // TODO create dedicated view
+        emailService.sendRecoveryEmail(recoveryForm.getEmail());
         return new ModelAndView("user/emailSent");
     }
 
@@ -231,17 +221,10 @@ public class  UserController {
             // TODO Resource Not Found
         }
         User user = userOpt.get();
-        resetPasswordForm.setEmail(user.getEmail());
-        String[] otps = WebappCrypto.generateOtps(WebappCrypto.TEST_KEY);
-        String base64Token;
-        boolean pass = false;
-        for (int i = 0; i < 3; i++) {
-            base64Token = HashGenerator.getInstance().generateRecoveryHash(user.getEmail(), user.getPassword(), otps[i]);
-            pass = pass || token.compareTo(base64Token) == 0;
-        }
-        if (!pass) {
+        boolean pass = cryptoService.checkValidRecoveryToken(id, token);
+        if (!pass)
             return new ModelAndView("errors/404");
-        }
+
         resetPasswordForm.setEmail(user.getEmail());
         return new ModelAndView("user/resetPassword");
     }
@@ -251,12 +234,10 @@ public class  UserController {
                                           final @RequestParam(value="token") String token,
                                           @ModelAttribute("resetPasswordForm") @Valid final ResetPasswordForm resetPasswordForm,
                                           BindingResult errors){
-        // TODO redirect to previous page KEEPING pathVariables
         if(errors.hasErrors()) {
             return resetPassword(id, token, resetPasswordForm);
         }
         userService.changePassword(resetPasswordForm.getEmail(), resetPasswordForm.getNewPassword());
-        // TODO inform user everything went fine
         return new ModelAndView("user/passwordReset");
     }
 

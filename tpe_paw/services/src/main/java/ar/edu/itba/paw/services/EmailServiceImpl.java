@@ -3,6 +3,8 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.services.helpers.crypto.HashGenerator;
+import ar.edu.itba.paw.services.helpers.crypto.WebappCrypto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -74,11 +76,15 @@ public class EmailServiceImpl implements EmailService {
     }
     @Async
     @Override
-    public void sendRecoveryEmail(long id, String to, String username, String token) {
-        String link = "http://localhost:9092/webapp_war_exploded/reset-password?id=" + id + "&token=" + token;
+    public void sendRecoveryEmail(String userEmail) {
+        User searchedUser = userService.findUserByEmail(userEmail).get(); // User SHOULD be found
+        String currentPass = searchedUser.getPassword();
+        String otp = WebappCrypto.generateOtp(WebappCrypto.TEST_KEY);
+        String base64Token = HashGenerator.getInstance().generateRecoveryHash(userEmail, currentPass, otp);
+        String link = "http://localhost:9092/webapp_war_exploded/reset-password?id=" + searchedUser.getId() + "&token=" + base64Token;
         String subject = messageSource.getMessage("email.recovery.subject", null, LocaleContextHolder.getLocale());
-        String body = messageSource.getMessage("email.recovery.body", new Object[]{username, link}, LocaleContextHolder.getLocale());
-        this.sendEmail(to, subject, body);
+        String body = messageSource.getMessage("email.recovery.body", new Object[]{searchedUser.getUsername(), link}, LocaleContextHolder.getLocale());
+        this.sendEmail(userEmail, subject, body);
     }
 
     @Scheduled(cron = "0 0 12 * * Mon")

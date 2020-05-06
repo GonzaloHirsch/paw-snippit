@@ -20,6 +20,8 @@ public class TestHelper {
     public static final String VOTES_FOR_TABLE = "votes_for";
     public static final String FAVORITES_TABLE = "favorites";
     public static final String FOLLOWS_TABLE = "follows";
+    public static final String ROLES_TABLE = "roles";
+    public static final String ROLES_USER_TABLE = "user_roles";
 
     public static final String PASSWORD = "Password";
     public static final String USERNAME = "Username";
@@ -39,6 +41,9 @@ public class TestHelper {
 
     public static final String TAG = "tag1";
     public static final String TAG2 = "tag2";
+
+    public static final String ADMIN_ROLE = "ADMIN";
+    public static final String USER_ROLE = "USER";
 
     public static long insertSnippetIntoDb(SimpleJdbcInsert jdbcInsert, long userId, String title, String description, String code, long languageId){
         final Map<String, Object> snippetDataMap = new HashMap<String,Object>(){{
@@ -110,6 +115,23 @@ public class TestHelper {
         final Map<String, Object> map = new HashMap<String,Object>(){{
             put("tag_id", tagId);
             put("user_id",userId);
+        }};
+
+        jdbcInsert.execute(map);
+    }
+
+    public static long insertRoleIntoDb(SimpleJdbcInsert jdbcInsert, String role){
+        final Map<String, Object> map = new HashMap<String,Object>(){{
+            put("role", role);
+        }};
+
+        return jdbcInsert.executeAndReturnKey(map).longValue();
+    }
+
+    public static void insertUserRoleIntoDb(SimpleJdbcInsert jdbcInsert, long roleid, long userid){
+        final Map<String, Object> map = new HashMap<String,Object>(){{
+            put("role_id", roleid);
+            put("user_id",userid);
         }};
 
         jdbcInsert.execute(map);

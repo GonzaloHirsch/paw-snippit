@@ -25,13 +25,7 @@ public class RoleDaoImpl implements RoleDao {
     private final static String ADMIN_ROLE = "ADMIN";
 
 
-    private final static RowMapper<Role> ROW_MAPPER = new RowMapper<Role>(){
-
-        @Override
-        public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Role(rs.getInt("id"), rs.getString("role"));
-        }
-    };
+    private final static RowMapper<Role> ROW_MAPPER = (rs, rowNum) -> new Role(rs.getInt("id"), rs.getString("role"));
 
     @Autowired
     RoleDaoImpl(DataSource ds) {

@@ -6,7 +6,9 @@ import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.*;
+import ar.edu.itba.paw.webapp.form.DescriptionForm;
+import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
+import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +16,15 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -35,11 +32,7 @@ import java.util.concurrent.TimeUnit;
 @Controller
 public class  UserController {
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
     private UserService userService;
-    @Autowired
-    private EmailService emailService;
     @Autowired
     private SnippetService snippetService;
     @Autowired
@@ -50,37 +43,8 @@ public class  UserController {
     private RoleService roleService;
     @Autowired
     private MessageSource messageSource;
-    @Autowired
-    private CryptoService cryptoService;
-
-    private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-
-    @RequestMapping(value = "/signup", method = {RequestMethod.GET})
-    public ModelAndView signUpForm(@ModelAttribute("registerForm") final RegisterForm form) {
-        return new ModelAndView("user/signUpForm");
-    }
-
-    @RequestMapping(value = "/signup", method = {RequestMethod.POST})
-    public ModelAndView signUp(@Valid @ModelAttribute("registerForm") final RegisterForm registerForm, final BindingResult errors, HttpServletRequest request, HttpServletResponse response) {
-        if (errors.hasErrors()) {
-            return signUpForm(registerForm);
-        }
-
-        long userId = userService.register(
-                registerForm.getUsername(),
-                passwordEncoder.encode(registerForm.getPassword()),
-                registerForm.getEmail(),
-                DATE.format(Calendar.getInstance().getTime().getTime())
-        );
-
-        roleService.assignUserRole(userId);
-
-        loginAuthentication.authWithAuthManager(request, registerForm.getUsername(), registerForm.getPassword());
-
-        return new ModelAndView("redirect:/");
-    }
 
     @RequestMapping(value = "/user/{id}")
     public ModelAndView userProfile(
@@ -173,77 +137,13 @@ public class  UserController {
         return new ModelAndView("redirect:/user/" + id);
     }
 
-    @RequestMapping(value = "/login")
-    public ModelAndView login() {
-        final ModelAndView mav = new ModelAndView("user/login");
-        mav.addObject("error", false);
-        return mav;
-    }
-
-    @RequestMapping(value = "/login_error")
-    public ModelAndView loginError() {
-        final ModelAndView mav = new ModelAndView("user/login");
-        mav.addObject("error", true);
-        return mav;
-    }
-
-    @RequestMapping(value = "/goodbye")
-    public ModelAndView logout() {
-        return new ModelAndView("user/logout");
+    private void logAndThrow(long id) {
+        LOGGER.warn("User with id {} doesn't exist", id);
+        throw new UserNotFoundException(messageSource.getMessage("error.user.notFound", new Object[]{id}, LocaleContextHolder.getLocale()));
     }
 
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         model.addAttribute("searchForm", searchForm);
-    }
-
-    @RequestMapping(value = "recover-password")
-    public ModelAndView recoverPassword(@ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
-        final ModelAndView mav  = new ModelAndView("user/recoverPassword");
-        return mav;
-    }
-
-    @RequestMapping(value = "/send-email", method = RequestMethod.POST)
-    public ModelAndView sendEmail(@Valid @ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
-        if (errors.hasErrors()){
-            return recoverPassword(recoveryForm, errors);
-        }
-        emailService.sendRecoveryEmail(recoveryForm.getEmail());
-        return new ModelAndView("user/emailSent");
-    }
-
-    @RequestMapping(value = "/reset-password", method = RequestMethod.GET)
-    public ModelAndView resetPassword(final @RequestParam(value="id") long id,
-                                        final @RequestParam(value="token") String token,
-                                        @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm) {
-        Optional<User> userOpt = userService.findUserById(id);
-        if(!userOpt.isPresent()) {
-            // TODO Resource Not Found
-        }
-        User user = userOpt.get();
-        boolean pass = cryptoService.checkValidRecoveryToken(id, token);
-        if (!pass)
-            return new ModelAndView("errors/404");
-
-        resetPasswordForm.setEmail(user.getEmail());
-        return new ModelAndView("user/resetPassword");
-    }
-
-    @RequestMapping(value = "/reset-password", method = RequestMethod.POST)
-    public ModelAndView endResetPassword (final @RequestParam(value="id") long id,
-                                          final @RequestParam(value="token") String token,
-                                          @ModelAttribute("resetPasswordForm") @Valid final ResetPasswordForm resetPasswordForm,
-                                          BindingResult errors){
-        if(errors.hasErrors()) {
-            return resetPassword(id, token, resetPasswordForm);
-        }
-        userService.changePassword(resetPasswordForm.getEmail(), resetPasswordForm.getNewPassword());
-        return new ModelAndView("user/passwordReset");
-    }
-
-
-    private void logAndThrow(long id) {
-        LOGGER.warn("User with id {} doesn't exist", id);
-        throw new UserNotFoundException(messageSource.getMessage("error.user.notFound", new Object[]{id}, LocaleContextHolder.getLocale()));
     }
 }

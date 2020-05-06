@@ -50,9 +50,9 @@ public class TagDaoImpl implements TagDao {
     @Override
     public Tag addTag(String name) {
         final Map<String, Object> args = new HashMap<>();
-        args.put("name", name);
+        args.put("name", name.toLowerCase());
         final Number tagId = jdbcInsert.executeAndReturnKey(args);
-        return new Tag(tagId.longValue(), name);
+        return new Tag(tagId.longValue(), name.toLowerCase());
     }
 
     @Override

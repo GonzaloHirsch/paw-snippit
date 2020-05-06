@@ -71,37 +71,37 @@ public class SnippetDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> getAllSnippets(int page) {
-        return this.jdbcTemplate.query("SELECT * FROM complete_snippets LIMIT ? OFFSET ?", ROW_MAPPER, PAGE_SIZE, PAGE_SIZE * (page - 1));
+        return this.jdbcTemplate.query("SELECT * FROM complete_snippets ORDER BY id LIMIT ? OFFSET ?", ROW_MAPPER, PAGE_SIZE, PAGE_SIZE * (page - 1));
     }
 
     @Override
     public Collection<Snippet> getAllFavoriteSnippets(final long userId, int page) {
-        return this.jdbcTemplate.query("SELECT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language, s.date_created, s.icon, s.flagged, s.votes FROM complete_snippets AS s JOIN favorites AS fav ON fav.snippet_id = s.id WHERE fav.user_id = ? LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
+        return this.jdbcTemplate.query("SELECT DISTINCT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language, s.date_created, s.icon, s.flagged, s.votes FROM complete_snippets AS s JOIN favorites AS fav ON fav.snippet_id = s.id WHERE fav.user_id = ? ORDER BY s.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
     }
 
     @Override
     public Collection<Snippet> getAllFollowingSnippets(final long userId, int page) {
-        return this.jdbcTemplate.query("SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn JOIN snippet_tags AS st ON st.snippet_id = sn.id JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ? LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
+        return this.jdbcTemplate.query("SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id INNER JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ? ORDER BY sn.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
     }
 
     @Override
     public Collection<Snippet> getAllUpVotedSnippets(final long userId, int page) {
-        return this.jdbcTemplate.query("SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn JOIN votes_for AS v ON sn.id = v.snippet_id WHERE v.user_id = ? AND v.type = 1 LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
+        return this.jdbcTemplate.query("SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn JOIN votes_for AS v ON sn.id = v.snippet_id WHERE v.user_id = ? AND v.type = 1 ORDER BY sn.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
     }
 
     @Override
     public Collection<Snippet> getAllFlaggedSnippets(int page) {
-        return this.jdbcTemplate.query("SELECT * FROM complete_snippets WHERE flagged = 1 LIMIT ? OFFSET ?", ROW_MAPPER, PAGE_SIZE, PAGE_SIZE * (page - 1));
+        return this.jdbcTemplate.query("SELECT * FROM complete_snippets WHERE flagged = 1 ORDER BY id LIMIT ? OFFSET ?", ROW_MAPPER, PAGE_SIZE, PAGE_SIZE * (page - 1));
     }
 
     @Override
     public Collection<Snippet> findAllSnippetsByOwner(long userId, int page) {
-        return this.jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.user_id = ? LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
+        return this.jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.user_id = ? ORDER BY s.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
     }
 
     @Override
     public Collection<Snippet> findSnippetsWithLanguage(long langId, int page) {
-        return this.jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.language_id = ? LIMIT ? OFFSET ?", ROW_MAPPER, langId, SMALL_ELEMENT_PAGE_SIZE, SMALL_ELEMENT_PAGE_SIZE * (page - 1));
+        return this.jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.language_id = ? ORDER BY s.id LIMIT ? OFFSET ?", ROW_MAPPER, langId, SMALL_ELEMENT_PAGE_SIZE, SMALL_ELEMENT_PAGE_SIZE * (page - 1));
     }
 
     @Override

@@ -72,7 +72,6 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public void addTags(List<String> tags) {
-        // TODO -> remove repeated
         List<MapSqlParameterSource> entries = new ArrayList<>();
 
         for (String tag : tags) {

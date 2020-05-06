@@ -73,8 +73,22 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void removeTag(long tagId) {
+    public void removeTag(final long tagId) {
         this.tagDao.removeTag(tagId);
+    }
+
+    @Override
+    public void updateFollowing(long userId, long tagId, boolean followed) {
+        if (followed) {
+            this.followTag(userId, tagId);
+        } else {
+            this.unfollowTag(userId, tagId);
+        }
+    }
+
+    @Override
+    public boolean userFollowsTag(long userId, long tagId) {
+        return followingDao.userFollowsTag(userId, tagId);
     }
 
 }

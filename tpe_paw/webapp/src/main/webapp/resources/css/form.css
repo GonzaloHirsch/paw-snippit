@@ -135,6 +135,10 @@
     padding: 20px !important;
 }
 
+.form-admin-add-width {
+    width: 530px;
+}
+
 .form hr {
     border-style: inset;
     border-width: 1px;

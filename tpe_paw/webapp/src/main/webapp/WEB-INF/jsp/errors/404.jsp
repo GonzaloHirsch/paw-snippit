@@ -7,6 +7,7 @@
 <html>
 <head>
     <title><spring:message code="error.title"/></title>
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon/favicon.ico'/>"/>
     <link href="<c:url value='/resources/css/snippetDetail.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
@@ -17,18 +18,26 @@
 <c:set var="currentUser" value="${requestScope.currentUser}"/>
 <c:set var="userTags" value="${requestScope.userTags}"/>
 <c:set var="searchContext" value="${requestScope.searchContext}"/>
+<c:set var="msg" value="${requestScope.msg}"/>
 <c:url var="searchUrl" value="/${searchContext}search"/>
 
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
-        <div class="error-page-main">
-            <h1>404</h1>
-            <h2>
-                <spring:message code="error.404"/>
-            </h2>
-            <div class="link-button-holder">
-                <a class="link-button" href="<c:url value='/'/>">Take me Home</a>
+        <div class="flex-column flex-center error-page-main">
+            <div class="error-code border-radius">404</div>
+            <div class="error-page-not-found"><spring:message code="error.page.not.found"/></div>
+
+            <div class="error-dialog border-radius flex-column flex-column">
+                <h2>
+                    ${msg}
+                </h2>
+                <h3>
+                    <spring:message code="error.home"/>
+                </h3>
+                <a class="link-button border-radius flex-center" href="<c:url value='/'/>">
+                    <spring:message code="error.home.redirect"/>
+                </a>
             </div>
         </div>
     </div>

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.dao.RoleDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.interfaces.service.EmailService;
 import ar.edu.itba.paw.interfaces.service.UserService;
@@ -45,6 +46,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findUserByEmail(String email) {
+        return this.userDao.findUserByEmail(email);
+    }
+
+    @Override
     public void updateDescription(String username, String newDescription) {
         userDao.updateDescription(username, newDescription);
     }
@@ -66,6 +72,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean emailExists(String email) {
+        return userDao.findUserByEmail(email).isPresent();
+    }
+
+    @Override
     public void changeProfilePhoto(long userId, byte[] photo) {
         this.userDao.changeProfilePhoto(userId, photo);
     }
@@ -75,17 +86,15 @@ public class UserServiceImpl implements UserService {
         this.userDao.changeDescription(userId, description);
     }
 
-    @Override
-    public boolean isAdmin(final User user) {
-        return user.getUsername().compareTo("admin") == 0;
-    }
 
     @Override
     public void changeReputationForFlaggedSnippet(long userId, boolean add) {
         userDao.changeReputation(userId, FLAGGED_SNIPPET_REP_VALUE, add);
     }
 
+    @Override
     public Collection<User> getAllUsers() {
         return this.userDao.getAllUsers();
     }
+
 }

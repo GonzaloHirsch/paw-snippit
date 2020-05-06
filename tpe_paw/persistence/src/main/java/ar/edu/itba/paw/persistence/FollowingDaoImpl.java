@@ -53,4 +53,11 @@ public class FollowingDaoImpl implements FollowingDao {
     public void unfollowTag(long userId, long tagId) {
         jdbcTemplate.update("DELETE FROM follows WHERE user_id = ? AND tag_id = ?", new Object[]{userId, tagId});
     }
+
+    @Override
+    public boolean userFollowsTag(long userId, long tagId) {
+        return jdbcTemplate.query("SELECT * FROM tags AS t1 WHERE EXISTS" +
+                "(SELECT * FROM follows AS f WHERE f.user_id = ? AND f.tag_id = ?)", ROW_MAPPER, userId, tagId)
+                .stream().findFirst().isPresent();
+    }
 }

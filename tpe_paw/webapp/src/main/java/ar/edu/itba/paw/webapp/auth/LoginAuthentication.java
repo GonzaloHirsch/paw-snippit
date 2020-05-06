@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.User;
 import org.slf4j.Logger;
@@ -30,18 +31,26 @@ public class LoginAuthentication {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginAuthentication.class);
 
     private String getLoggedInUsername() {
-        final Object userDetails = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (userDetails instanceof UserDetails) {
-            return ((UserDetails)userDetails).getUsername();
+        final SecurityContext securityContext = SecurityContextHolder.getContext();
+
+        if (securityContext != null) {
+            final Object userDetails = securityContext.getAuthentication().getPrincipal();
+            if (userDetails instanceof UserDetails) {
+                return ((UserDetails) userDetails).getUsername();
+            }
         }
         return null;
     }
 
     private String getLoggedInUsernameWithSession(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
-        final Object userDetails = ((SecurityContext)session.getAttribute("SPRING_SECURITY_CONTEXT")).getAuthentication().getPrincipal();
-        if (userDetails instanceof UserDetails) {
-            return ((UserDetails)userDetails).getUsername();
+        final SecurityContext securityContext = (SecurityContext)session.getAttribute("SPRING_SECURITY_CONTEXT");
+
+        if (securityContext != null) {
+            final Object userDetails = securityContext.getAuthentication().getPrincipal();
+            if (userDetails instanceof UserDetails) {
+                return ((UserDetails) userDetails).getUsername();
+            }
         }
         return null;
     }
@@ -78,7 +87,6 @@ public class LoginAuthentication {
 
         // Generate session if one doesn't already exist
         request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
-        request.getSession().setAttribute("PRINCIPAL_NAME_INDEX_NAME", username);
 
         Authentication authentication = authenticationManager.authenticate(authToken);
 

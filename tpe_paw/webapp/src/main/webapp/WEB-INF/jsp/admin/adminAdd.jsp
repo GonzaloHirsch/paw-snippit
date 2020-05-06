@@ -34,9 +34,9 @@
         </div>
 
         <form:form class="flex-center flex-column form form-width form-border form-shadow" action="${adminAddUrl}" method="post" modelAttribute="adminAddForm">
-            <div id="form-lang-container" class="flex-column">
+            <div id="form-lang-container" class="flex-column form-admin-add-width">
 
-                <div id="form-dynamic-lang" class="flex-column form-buttons-margin">
+                <div id="form-dynamic-lang" class="flex-column flex-center form-buttons-margin">
 
                     <form:errors path="languages" cssClass="form-error" element="p "/>
                     <c:set var="langCounter" value="0"/>
@@ -63,9 +63,9 @@
 
             <hr/>
 
-            <div id="form-tag-container" class="flex-column">
+            <div id="form-tag-container" class="flex-column form-admin-add-width">
 
-                <div id="form-dynamic-tag" class="flex-column form-buttons-margin">
+                <div id="form-dynamic-tag" class="flex-column flex-center form-buttons-margin">
 
                     <form:errors path="tags" cssClass="form-error" element="p "/>
                     <c:set var="tagCounter" value="0"/>

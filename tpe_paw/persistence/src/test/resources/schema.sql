@@ -40,11 +40,9 @@ CREATE TABLE IF NOT EXISTS snippets
     description  VARCHAR(500),
     code         VARCHAR(6000),
     date_created TIMESTAMP,
+    flagged      INT DEFAULT 0,
     language_id  INT REFERENCES languages (id) ON UPDATE CASCADE ON DELETE SET NULL
 );
-
-ALTER TABLE snippets
-    ADD COLUMN flagged INT DEFAULT 0;
 
 CREATE TABLE IF NOT EXISTS votes_for
 (
@@ -75,6 +73,18 @@ CREATE TABLE IF NOT EXISTS snippet_tags
     PRIMARY KEY (snippet_id, tag_id)
 );
 
+CREATE TABLE IF NOT EXISTS roles
+(
+    id  INTEGER IDENTITY PRIMARY KEY,
+    role VARCHAR(20) UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS user_roles
+(
+    user_id INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    role_id INT REFERENCES roles (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    PRIMARY KEY (user_id, role_id)
+);
 
 CREATE VIEW complete_snippets AS
 SELECT aux.sn_id   AS id,

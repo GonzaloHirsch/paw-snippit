@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.validations.FieldExists;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.util.Collection;
@@ -15,6 +17,7 @@ public class SnippetCreateForm {
     private String code;
 
     @Min(value=1)
+    @FieldExists(fieldName = "Language")
     private Long language;
 
     private Collection<Long> tags;

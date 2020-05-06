@@ -20,14 +20,28 @@
                         <spring:message code="menu.tags"> </spring:message>
                     </div>
                 </div>
-                <div class="all-elements-grid main-grid">
-                    <c:forEach var="tag" items="${tags}">
-                        <c:set var="element" value="${tag}" scope="request"/>
-                        <c:set var="context" value="tags" scope="request"/>
-                        <c:set var="cssClass" value="element-container-main" scope="request"/>
-                        <c:import url="/WEB-INF/jsp/tagAndLanguages/element.jsp"/>
-                    </c:forEach>
+                <div>
+                    <spring:message code="search.tags.hint" var="search_hint"/>
+                    <c:set var="hint" value="${search_hint}" scope="request"/>
+                    <c:import url="/WEB-INF/jsp/navigation/itemNavigationBar.jsp"/>
                 </div>
+                <c:choose>
+                    <c:when test="${tags.size() > 0}">
+                        <div class="all-elements-grid main-grid">
+                            <c:forEach var="tag" items="${tags}">
+                                <c:set var="element" value="${tag}" scope="request"/>
+                                <c:set var="context" value="tags" scope="request"/>
+                                <c:set var="cssClass" value="element-container-main" scope="request"/>
+                                <c:import url="/WEB-INF/jsp/tagAndLanguages/element.jsp"/>
+                            </c:forEach>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="no-elements flex-center fw-100">
+                            <spring:message code="feed.no-tags"/>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
     </body>

@@ -21,8 +21,28 @@ public class TagServiceImpl implements TagService {
     private FollowingDao followingDao;
 
     @Override
+    public Collection<Tag> getAllTags(int page) {
+        return tagDao.getAllTags(page);
+    }
+
+    @Override
     public Collection<Tag> getAllTags() {
         return tagDao.getAllTags();
+    }
+
+    @Override
+    public int getAllTagsCountByName(String name) {
+        return this.tagDao.getAllTagsCountByName(name);
+    }
+
+    @Override
+    public int getAllTagsCount() {
+        return this.tagDao.getAllTagsCount();
+    }
+
+    @Override
+    public Collection<Tag> findTagsByName(String name, int page) {
+        return this.tagDao.findTagsByName(name, page);
     }
 
     @Override
@@ -46,15 +66,15 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Collection<Tag> addTagsToSnippet(Long snippetId, Collection<Long> tagIdList){
+    public Collection<Tag> addTagsToSnippet(Long snippetId, Collection<Long> tagIdList) {
         ArrayList<Tag> tagList = new ArrayList<>();
 
-        if(tagIdList == null)
+        if (tagIdList == null)
             return tagList;
 
-        for(Long tagId : tagIdList) {
+        for (Long tagId : tagIdList) {
             Optional<Tag> tag = tagDao.findById(tagId);
-            if(tag.isPresent()) {
+            if (tag.isPresent()) {
                 tagDao.addSnippetTag(snippetId, tagId);
                 tagList.add(tagDao.findById(tagId).get());
             }
@@ -68,8 +88,13 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public boolean isUnique(String tag) {
-        return !tagDao.findByName(tag).isPresent();
+    public boolean tagExists(String tag) {
+        return tagDao.findByName(tag).isPresent();
+    }
+
+    @Override
+    public boolean tagExists(long tagId) {
+        return tagDao.findById(tagId).isPresent();
     }
 
     @Override

@@ -32,8 +32,13 @@ public class LanguageServiceImpl implements LanguageService {
     }
 
     @Override
-    public boolean isUnique(String language) {
-        return !languageDao.findByName(language).isPresent();
+    public boolean languageExists(String language) {
+        return languageDao.findByName(language).isPresent();
+    }
+
+    @Override
+    public boolean languageExists(long id) {
+        return languageDao.findById(id).isPresent();
     }
 
     @Override
@@ -45,4 +50,5 @@ public class LanguageServiceImpl implements LanguageService {
     public boolean languageInUse(final long langId) {
         return this.languageDao.languageInUse(langId);
     }
+
 }

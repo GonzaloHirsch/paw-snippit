@@ -17,7 +17,7 @@ rel="stylesheet">
 <body>
         <c:set var="itemSearchContext" value="${requestScope.itemSearchContext}"/>
         <c:url var="itemSearchUrl" value="/${itemSearchContext}search"/>
-        <spring:message code="search.hint" var="search_hint"/>
+        <spring:message code="search.tags.hint" var="search_hint"/>
         <div class="flex-row flex-wrap flex-center flex-grow">
                 <form:form modelAttribute="itemSearchForm" method="get" action="${itemSearchUrl}"
                    class="flex-row flex-center flex-wrap item-search-container">

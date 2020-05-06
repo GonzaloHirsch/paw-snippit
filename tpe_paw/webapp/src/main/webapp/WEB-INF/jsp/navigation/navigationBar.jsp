@@ -19,7 +19,17 @@
         <c:set var="currentUser" value="${requestScope.currentUser}"/>
         <c:set var="userTags" value="${requestScope.userTags}"/>
         <c:set var="searchContext" value="${requestScope.searchContext}"/>
-        <c:url var="searchUrl" value="/${searchContext}search"/>
+        <c:choose>
+            <c:when test="${searchContext == 'tags/'}">
+                <c:url var="searchUrl" value="/search"/>
+            </c:when>
+            <c:when test="${searchContext == 'languages/'}">
+                <c:url var="searchUrl" value="/search"/>
+            </c:when>
+            <c:otherwise>
+                <c:url var="searchUrl" value="/${searchContext}search"/>
+            </c:otherwise>
+        </c:choose>
         <c:url var="searchForm" value="${requestScope.searchForm}"/>
         <c:url var="userRoles" value="${requestScope.userRoles}"/>
         <spring:message code="search.hint" var="search_hint"/>

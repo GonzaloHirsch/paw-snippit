@@ -50,7 +50,7 @@ public class TagsController {
         int tagCount = this.tagService.getAllTagsCount();
         mav.addObject("pages", (tagCount/Constants.TAG_PAGE_SIZE) + (tagCount % Constants.TAG_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
-        mav.addObject("searchContext","");
+        mav.addObject("searchContext","tags/");
         mav.addObject("tags", allTags);
         mav.addObject("itemSearchContext", "tags/");
         return mav;
@@ -63,7 +63,7 @@ public class TagsController {
         int tagCount = this.tagService.getAllTagsCountByName(searchForm.getQuery());
         mav.addObject("pages", (tagCount/Constants.TAG_PAGE_SIZE) + (tagCount % Constants.TAG_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
-        mav.addObject("searchContext","");
+        mav.addObject("searchContext","tags/");
         mav.addObject("tags", allTags);
         mav.addObject("itemSearchContext", "tags/");
         return mav;

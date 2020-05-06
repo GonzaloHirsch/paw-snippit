@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Vote;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.exception.ElementDeletionException;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.SnippetNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
@@ -33,6 +34,7 @@ public class SnippetController {
     @Autowired private FavoriteService favService;
     @Autowired private LoginAuthentication loginAuthentication;
     @Autowired private TagService tagService;
+    @Autowired private UserService userService;
     @Autowired private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetController.class);
@@ -111,9 +113,16 @@ public class SnippetController {
         if (!snippet.isPresent()) {
             logAndThrow(id);
         }
-
         if (currentUser == null || currentUser.getUsername().compareTo(snippet.get().getOwner().getUsername()) != 0) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.delete", null, LocaleContextHolder.getLocale()));
+        } else {
+            /* Want to reverse the voteBalance on the users reputation */
+            int voteBalance = this.snippetService.getReputationImportanceBalance(snippet.get());
+            if (!this.snippetService.deleteSnippetById(id)) {
+                /* Operation was unsuccessful */
+                throw new ElementDeletionException(messageSource.getMessage("error.409.deletion.snippet", null, LocaleContextHolder.getLocale()));
+            }
+            this.userService.changeReputation(currentUser.getId(), voteBalance);
         }
         return new ModelAndView("redirect:/");
     }

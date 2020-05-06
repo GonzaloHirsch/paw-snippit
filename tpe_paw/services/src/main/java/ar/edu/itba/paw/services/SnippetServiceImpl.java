@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.dao.TagDao;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
+import ar.edu.itba.paw.interfaces.service.VoteService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
@@ -20,12 +21,14 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Autowired
     private SnippetDao snippetDao;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private TagService tagService;
+    @Autowired
+    private VoteService voteService;
+
+    private final int FLAGGED_SNIPPET_REP_VALUE = 10;
 
     @Override
     public Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page) {
@@ -53,8 +56,20 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
+    public int getReputationImportanceBalance(Snippet snippet) {
+        int voteBalance = (-1) * this.voteService.getVoteBalance(snippet.getId()).orElse(0);
+        voteBalance += this.isFlaggedByAdmin(snippet) ? FLAGGED_SNIPPET_REP_VALUE : 0;
+        return voteBalance;
+    }
+
+    @Override
     public boolean isFlaggedByAdmin(final Snippet snippet) {
         return snippet.isFlagged();
+    }
+
+    @Override
+    public boolean deleteSnippetById(long id) {
+        return snippetDao.deleteSnippetById(id);
     }
 
     @Override
@@ -152,14 +167,15 @@ public class SnippetServiceImpl implements SnippetService {
         return snippetId;
     }
 
+
     @Override
     public void updateFlagged(long snippetId, long userId, boolean isFlagged) {
         if (isFlagged) {
             this.snippetDao.flagSnippet(snippetId);
-            this.userService.changeReputationForFlaggedSnippet(userId, false);
+            this.userService.changeReputation(userId, FLAGGED_SNIPPET_REP_VALUE * (-1));
         } else {
             this.snippetDao.unflagSnippet(snippetId);
-            this.userService.changeReputationForFlaggedSnippet(userId, true);
+            this.userService.changeReputation(userId, FLAGGED_SNIPPET_REP_VALUE);
         }
     }
 }

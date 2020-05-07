@@ -107,8 +107,7 @@ public class RegistrationController {
 
     @RequestMapping(value = "recover-password")
     public ModelAndView recoverPassword(@ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
-        final ModelAndView mav  = new ModelAndView("user/recoverPassword");
-        return mav;
+        return new ModelAndView("user/recoverPassword");
     }
 
     @RequestMapping(value = "/send-email", method = RequestMethod.POST)

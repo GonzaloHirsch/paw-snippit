@@ -31,6 +31,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.*;
 
+import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
+
 @Controller
 public class SearchController {
 
@@ -205,7 +207,8 @@ public class SearchController {
                     this.ordersMap.get(sort),
                     userId,
                     resourceId,
-                    page);
+                    page,
+                    SNIPPET_PAGE_SIZE);
         }
     }
 
@@ -224,8 +227,7 @@ public class SearchController {
     }
 
     private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
-        int pageSize = this.snippetService.getPageSize();
-        mav.addObject("pages", snippetCount / pageSize + (snippetCount % pageSize == 0 ? 0 : 1));
+        mav.addObject("pages", snippetCount / SNIPPET_PAGE_SIZE + (snippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("snippetList", snippets);
         mav.addObject("searchContext", searchContext);

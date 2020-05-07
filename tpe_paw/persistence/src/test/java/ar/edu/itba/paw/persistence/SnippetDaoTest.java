@@ -106,7 +106,7 @@ public class SnippetDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId);
 
-        Optional<Snippet> maybeSnippet = snippetDao.findAllSnippetsByOwner(defaultUser.getId(),1).stream().findFirst();
+        Optional<Snippet> maybeSnippet = snippetDao.findAllSnippetsByOwner(defaultUser.getId(),1, 6).stream().findFirst();
 
         assertTrue(maybeSnippet.isPresent());
         assertEquals(snippetId, maybeSnippet.get().getId());
@@ -164,7 +164,8 @@ public class SnippetDaoTest {
                 SnippetDao.Orders.ASC,
                 null,
                 null,
-                1).stream().findFirst();
+                1,
+                6).stream().findFirst();
 
         //Evaluacion
         assertTrue(maybeSnippet.isPresent());
@@ -191,7 +192,7 @@ public class SnippetDaoTest {
                 "title",
                 "asc",
                 true,
-                1).stream().findFirst();
+                1, 6).stream().findFirst();
 
         assertTrue(maybeSnippet.isPresent());
         assertEquals(TITLE,maybeSnippet.get().getTitle());

@@ -9,8 +9,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface SnippetDao {
-    int PAGE_SIZE = 6;
-    int SMALL_ELEMENT_PAGE_SIZE = 6;
     enum Locations {
         HOME,
         FAVORITES,
@@ -39,15 +37,15 @@ public interface SnippetDao {
         COUNT
     }
 
-    Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, Long resourceId, int page);
-    Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page);
-    Collection<Snippet> getAllSnippets(int page);
-    Collection<Snippet> getAllFavoriteSnippets(final long userId, int page);
-    Collection<Snippet> getAllFollowingSnippets(final long userId, int page);
-    Collection<Snippet> getAllUpVotedSnippets(final long userId, int page);
-    Collection<Snippet> getAllFlaggedSnippets(int page);
-    Collection<Snippet> findAllSnippetsByOwner(final long userId, int page);
-    Collection<Snippet> findSnippetsWithLanguage(final long langId, int page);
+    Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, Long resourceId, int page, int pageSize);
+    Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page, int pageSize);
+    Collection<Snippet> getAllSnippets(int page, int pageSize);
+    Collection<Snippet> getAllFavoriteSnippets(final long userId, int page, int pageSize);
+    Collection<Snippet> getAllFollowingSnippets(final long userId, int page, int pageSize);
+    Collection<Snippet> getAllUpVotedSnippets(final long userId, int page, int pageSize);
+    Collection<Snippet> getAllFlaggedSnippets(int page, int pageSize);
+    Collection<Snippet> findAllSnippetsByOwner(final long userId, int page, int pageSize);
+    Collection<Snippet> findSnippetsWithLanguage(final long langId, int page, int pageSize);
     Optional<Snippet> findSnippetById(final long id);
     boolean deleteSnippetById(final long id);
     int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId);
@@ -55,7 +53,6 @@ public interface SnippetDao {
     Collection<Snippet> findSnippetsForTag(long tagId);
     void flagSnippet(long snippetId);
     void unflagSnippet(long snippetId);
-    int getPageSize();
     int getAllSnippetsCount();
     int getAllFavoriteSnippetsCount(final long userId);
     int getAllFollowingSnippetsCount(final long userId);

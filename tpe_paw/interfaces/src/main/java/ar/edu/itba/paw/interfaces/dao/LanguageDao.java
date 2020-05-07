@@ -8,12 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LanguageDao {
-    int PAGE_SIZE = 15;
     Optional<Language> findById(long id);
     Optional<Language> findByName(String name);
     Collection<Language> getAllLanguages();
-    Collection<Language> getAllLanguages(int page);
-    Collection<Language> findAllLanguagesByName(String name, int page);
+    Collection<Language> getAllLanguages(int page, int pageSize);
+    Collection<Language> findAllLanguagesByName(String name, int page, int pageSize);
     int getAllLanguagesCountByName(String name);
     int getAllLanguagesCount();
     Language addLanguage(String lang);

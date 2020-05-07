@@ -52,13 +52,13 @@ public class LanguageDaoImpl implements LanguageDao {
     }
 
     @Override
-    public Collection<Language> getAllLanguages(int page) {
-        return jdbcTemplate.query("SELECT * FROM languages ORDER BY id LIMIT ? OFFSET ?", ROW_MAPPER, PAGE_SIZE, PAGE_SIZE * (page - 1));
+    public Collection<Language> getAllLanguages(int page, int pageSize) {
+        return jdbcTemplate.query("SELECT * FROM languages ORDER BY id LIMIT ? OFFSET ?", ROW_MAPPER, pageSize, pageSize * (page - 1));
     }
 
     @Override
-    public Collection<Language> findAllLanguagesByName(String name, int page) {
-        return this.jdbcTemplate.query("SELECT * FROM languages AS t WHERE LOWER(t.name) LIKE LOWER(?) ORDER BY t.id LIMIT ? OFFSET ?", ROW_MAPPER, "%"+name+"%", PAGE_SIZE, PAGE_SIZE * (page - 1));
+    public Collection<Language> findAllLanguagesByName(String name, int page, int pageSize) {
+        return this.jdbcTemplate.query("SELECT * FROM languages AS t WHERE LOWER(t.name) LIKE LOWER(?) ORDER BY t.id LIMIT ? OFFSET ?", ROW_MAPPER, "%"+name+"%", pageSize, pageSize * (page - 1));
     }
 
     @Override

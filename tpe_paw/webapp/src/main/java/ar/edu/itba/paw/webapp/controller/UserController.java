@@ -29,6 +29,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
+
 @Controller
 public class  UserController {
     
@@ -74,11 +76,10 @@ public class  UserController {
         if (currentUser == null || (currentUser.getId() != user.get().getId() && editing)) {
             // ERROR
         }
-        Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId(), page);
+        Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.get().getId());
-        int pageSize = this.snippetService.getPageSize();
         mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.get().getId()));
-        mav.addObject("pages", totalSnippetCount / pageSize + (totalSnippetCount % pageSize == 0 ? 0 : 1));
+        mav.addObject("pages", totalSnippetCount / SNIPPET_PAGE_SIZE + (totalSnippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("editing", editing);
         mav.addObject("isEdit", false);

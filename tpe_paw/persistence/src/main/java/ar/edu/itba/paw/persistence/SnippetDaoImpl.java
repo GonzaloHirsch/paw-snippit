@@ -70,52 +70,52 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> getAllSnippets(int page) {
-        return this.jdbcTemplate.query("SELECT * FROM complete_snippets ORDER BY id LIMIT ? OFFSET ?", ROW_MAPPER, PAGE_SIZE, PAGE_SIZE * (page - 1));
+    public Collection<Snippet> getAllSnippets(int page, int pageSize) {
+        return this.jdbcTemplate.query("SELECT * FROM complete_snippets ORDER BY id LIMIT ? OFFSET ?", ROW_MAPPER, pageSize, pageSize * (page - 1));
     }
 
     @Override
-    public Collection<Snippet> getAllFavoriteSnippets(final long userId, int page) {
-        return this.jdbcTemplate.query("SELECT DISTINCT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language, s.date_created, s.icon, s.flagged, s.votes FROM complete_snippets AS s JOIN favorites AS fav ON fav.snippet_id = s.id WHERE fav.user_id = ? ORDER BY s.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
+    public Collection<Snippet> getAllFavoriteSnippets(final long userId, int page, int pageSize) {
+        return this.jdbcTemplate.query("SELECT DISTINCT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language, s.date_created, s.icon, s.flagged, s.votes FROM complete_snippets AS s JOIN favorites AS fav ON fav.snippet_id = s.id WHERE fav.user_id = ? ORDER BY s.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, pageSize, pageSize * (page - 1));
     }
 
     @Override
-    public Collection<Snippet> getAllFollowingSnippets(final long userId, int page) {
-        return this.jdbcTemplate.query("SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id INNER JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ? ORDER BY sn.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
+    public Collection<Snippet> getAllFollowingSnippets(final long userId, int page, int pageSize) {
+        return this.jdbcTemplate.query("SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id INNER JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ? ORDER BY sn.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, pageSize, pageSize * (page - 1));
     }
 
     @Override
-    public Collection<Snippet> getAllUpVotedSnippets(final long userId, int page) {
-        return this.jdbcTemplate.query("SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn JOIN votes_for AS v ON sn.id = v.snippet_id WHERE v.user_id = ? AND v.type = 1 ORDER BY sn.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
+    public Collection<Snippet> getAllUpVotedSnippets(final long userId, int page, int pageSize) {
+        return this.jdbcTemplate.query("SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn JOIN votes_for AS v ON sn.id = v.snippet_id WHERE v.user_id = ? AND v.type = 1 ORDER BY sn.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, pageSize, pageSize * (page - 1));
     }
 
     @Override
-    public Collection<Snippet> getAllFlaggedSnippets(int page) {
-        return this.jdbcTemplate.query("SELECT * FROM complete_snippets WHERE flagged = 1 ORDER BY id LIMIT ? OFFSET ?", ROW_MAPPER, PAGE_SIZE, PAGE_SIZE * (page - 1));
+    public Collection<Snippet> getAllFlaggedSnippets(int page, int pageSize) {
+        return this.jdbcTemplate.query("SELECT * FROM complete_snippets WHERE flagged = 1 ORDER BY id LIMIT ? OFFSET ?", ROW_MAPPER, pageSize, pageSize * (page - 1));
     }
 
     @Override
-    public Collection<Snippet> findAllSnippetsByOwner(long userId, int page) {
-        return this.jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.user_id = ? ORDER BY s.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, PAGE_SIZE, PAGE_SIZE * (page - 1));
+    public Collection<Snippet> findAllSnippetsByOwner(long userId, int page, int pageSize) {
+        return this.jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.user_id = ? ORDER BY s.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, pageSize, pageSize * (page - 1));
     }
 
     @Override
-    public Collection<Snippet> findSnippetsWithLanguage(long langId, int page) {
-        return this.jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.language_id = ? ORDER BY s.id LIMIT ? OFFSET ?", ROW_MAPPER, langId, SMALL_ELEMENT_PAGE_SIZE, SMALL_ELEMENT_PAGE_SIZE * (page - 1));
+    public Collection<Snippet> findSnippetsWithLanguage(long langId, int page, int pageSize) {
+        return this.jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.language_id = ? ORDER BY s.id LIMIT ? OFFSET ?", ROW_MAPPER, langId, pageSize, pageSize * (page - 1));
     }
 
     @Override
-    public Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, Types type, String term, Locations location, Orders order, Long userId, Long resourceId, int page) {
+    public Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, Types type, String term, Locations location, Orders order, Long userId, Long resourceId, int page, int pageSize) {
         SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(queryType, location, userId, type, term, resourceId)
                 .setOrder(order, type)
-                .setPaging(page, PAGE_SIZE)
+                .setPaging(page, pageSize)
                 .build();
         return this.jdbcTemplate.query(searchQuery.getQuery(), searchQuery.getParams(), ROW_MAPPER);
     }
 
     @Override
-    public Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page) {
-        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, includeFlagged, page, false);
+    public Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page, int pageSize) {
+        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, includeFlagged, page, pageSize, false);
         return this.jdbcTemplate.query(searchQuery.getQuery(), searchQuery.getParams(), ROW_MAPPER);
     }
 
@@ -191,11 +191,6 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public int getPageSize() {
-        return PAGE_SIZE;
-    }
-
-    @Override
     public int getAllSnippetsCount() {
         return this.jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT id) FROM complete_snippets", Integer.class);
     }
@@ -244,15 +239,15 @@ public class SnippetDaoImpl implements SnippetDao {
 
     @Override
     public int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged) {
-        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, includeFlagged, null,true);
+        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, includeFlagged, null, null,true);
         return this.jdbcTemplate.queryForObject(searchQuery.getQuery(), searchQuery.getParams(), Integer.class);
     }
 
-    private SnippetDeepSearchQuery createDeepQuery(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, Integer page, boolean isCount){
+    private SnippetDeepSearchQuery createDeepQuery(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, Integer page, Integer pageSize, boolean isCount){
         SnippetDeepSearchQuery.Builder queryBuilder = new SnippetDeepSearchQuery.Builder(isCount);
         if (dateMin == null && dateMax == null && repMin == null && repMax == null && voteMin == null && voteMax == null && languageId != null && tagId != null && title != null && username != null && order != null && sort != null && includeFlagged != null){
             if (page != null){
-                return queryBuilder.setOrder("title", "asc").setPaging(page, PAGE_SIZE).build();
+                return queryBuilder.setOrder("title", "asc").setPaging(page, pageSize).build();
             } else {
                 return queryBuilder.build();
             }
@@ -322,7 +317,7 @@ public class SnippetDaoImpl implements SnippetDao {
             if (page == null){
                 return queryBuilder.build();
             } else {
-                return queryBuilder.setOrder(order, sort).setPaging(page, PAGE_SIZE).build();
+                return queryBuilder.setOrder(order, sort).setPaging(page, pageSize).build();
             }
         }
     }

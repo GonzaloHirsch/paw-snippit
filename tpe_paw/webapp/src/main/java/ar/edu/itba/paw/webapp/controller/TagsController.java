@@ -11,7 +11,6 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.TagNotFoundException;
-import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.form.DeleteForm;
 import ar.edu.itba.paw.webapp.form.FollowForm;
 import ar.edu.itba.paw.webapp.form.ItemSearchForm;
@@ -32,6 +31,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.constants.Constants.TAG_PAGE_SIZE;
+
 @Controller
 public class TagsController {
 
@@ -46,9 +47,9 @@ public class TagsController {
     @RequestMapping("/tags")
     public ModelAndView showAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         ModelAndView mav = new ModelAndView("tagAndLanguages/tags");
-        Collection<Tag> allTags = tagService.getAllTags(page);
+        Collection<Tag> allTags = tagService.getAllTags(page, TAG_PAGE_SIZE);
         int tagCount = this.tagService.getAllTagsCount();
-        mav.addObject("pages", (tagCount/Constants.TAG_PAGE_SIZE) + (tagCount % Constants.TAG_PAGE_SIZE == 0 ? 0 : 1));
+        mav.addObject("pages", (tagCount/TAG_PAGE_SIZE) + (tagCount % TAG_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("searchContext","tags/");
         mav.addObject("tags", allTags);
@@ -59,9 +60,9 @@ public class TagsController {
     @RequestMapping("/tags/search")
     public ModelAndView searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         final ModelAndView mav = new ModelAndView("tagAndLanguages/tags");
-        Collection<Tag> allTags = this.tagService.findTagsByName(searchForm.getName(), page);
+        Collection<Tag> allTags = this.tagService.findTagsByName(searchForm.getName(), page, TAG_PAGE_SIZE);
         int tagCount = this.tagService.getAllTagsCountByName(searchForm.getName());
-        mav.addObject("pages", (tagCount/Constants.TAG_PAGE_SIZE) + (tagCount % Constants.TAG_PAGE_SIZE == 0 ? 0 : 1));
+        mav.addObject("pages", (tagCount/TAG_PAGE_SIZE) + (tagCount % TAG_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("searchContext","tags/");
         mav.addObject("tags", allTags);
@@ -90,8 +91,7 @@ public class TagsController {
         }
 
         int totalSnippetCount = this.snippetService.getAllSnippetsByTagCount(tag.get().getId());
-        int pageSize = this.snippetService.getPageSize();
-        mav.addObject("pages", totalSnippetCount/pageSize + (totalSnippetCount % pageSize == 0 ? 0 : 1));
+        mav.addObject("pages", totalSnippetCount/TAG_PAGE_SIZE + (totalSnippetCount % TAG_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("tag", tag.get());
         mav.addObject("searchContext","tags/"+tagId+"/");

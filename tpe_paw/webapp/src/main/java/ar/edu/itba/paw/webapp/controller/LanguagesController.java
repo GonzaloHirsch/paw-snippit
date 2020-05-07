@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.webapp.constants.Constants.LANGUAGE_PAGE_SIZE;
+import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
+
 @Controller
 public class LanguagesController {
     @Autowired
@@ -49,9 +52,9 @@ public class LanguagesController {
     @RequestMapping("/languages")
     public ModelAndView showAllLanguages(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         ModelAndView mav = new ModelAndView("tagAndLanguages/languages");
-        Collection<Language> allLanguages = this.languageService.getAllLanguages(page);
+        Collection<Language> allLanguages = this.languageService.getAllLanguages(page, LANGUAGE_PAGE_SIZE);
         int languageCount = this.languageService.getAllLanguagesCount();
-        mav.addObject("pages", (languageCount/Constants.LANGUAGE_PAGE_SIZE) + (languageCount % Constants.LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
+        mav.addObject("pages", (languageCount/ LANGUAGE_PAGE_SIZE) + (languageCount % LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("searchContext","languages/");
         mav.addObject("languages", allLanguages);
@@ -62,9 +65,9 @@ public class LanguagesController {
     @RequestMapping("/languages/search")
     public ModelAndView searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         final ModelAndView mav = new ModelAndView("tagAndLanguages/languages");
-        Collection<Language> allLanguages = this.languageService.findAllLanguagesByName(searchForm.getName(), page);
+        Collection<Language> allLanguages = this.languageService.findAllLanguagesByName(searchForm.getName(), page, LANGUAGE_PAGE_SIZE);
         int languageCount = this.languageService.getAllLanguagesCountByName(searchForm.getName());
-        mav.addObject("pages", (languageCount/Constants.LANGUAGE_PAGE_SIZE) + (languageCount % Constants.LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
+        mav.addObject("pages", (languageCount/ LANGUAGE_PAGE_SIZE) + (languageCount % LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("searchContext","languages/");
         mav.addObject("languages", allLanguages);
@@ -82,14 +85,12 @@ public class LanguagesController {
             LOGGER.warn("No language found with id {}", langId);
             throw new LanguageNotFoundException(messageSource.getMessage("error.404.language", new Object[]{langId}, LocaleContextHolder.getLocale()));
         }
-
         int totalSnippetCount = this.snippetService.getAllSnippetsByLanguageCount(langId);
-        int pageSize = this.snippetService.getPageSize();
-        mav.addObject("pages", totalSnippetCount/pageSize + (totalSnippetCount % pageSize == 0 ? 0 : 1));
+        mav.addObject("pages", totalSnippetCount/SNIPPET_PAGE_SIZE + (totalSnippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("language", language.get());
         mav.addObject("searchContext","languages/"+langId+"/");
-        mav.addObject("snippetList", snippetService.findSnippetsWithLanguage(langId, page));
+        mav.addObject("snippetList", snippetService.findSnippetsWithLanguage(langId, page, SNIPPET_PAGE_SIZE));
         return mav;
     }
 

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.auth.SignUpAuthentication;
 import ar.edu.itba.paw.webapp.form.RecoveryForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.webapp.form.ResetPasswordForm;
@@ -38,7 +39,7 @@ public class RegistrationController {
     @Autowired
     private EmailService emailService;
     @Autowired
-    private LoginAuthentication loginAuthentication;
+    private SignUpAuthentication signUpAuthentication;
     @Autowired
     private RoleService roleService;
     @Autowired
@@ -48,7 +49,10 @@ public class RegistrationController {
     private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     @RequestMapping(value = "/login")
-    public ModelAndView login() {
+    public ModelAndView login(HttpServletRequest request) {
+        String referrer = request.getHeader("Referer");
+        request.getSession().setAttribute("url_prior_login", referrer);
+
         final ModelAndView mav = new ModelAndView("user/login");
         mav.addObject("error", false);
         return mav;
@@ -67,31 +71,35 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/signup", method = {RequestMethod.GET})
-    public ModelAndView signUpForm(@ModelAttribute("registerForm") final RegisterForm form) {
+    public ModelAndView signUpForm(HttpServletRequest request, @ModelAttribute("registerForm") final RegisterForm form) {
+        String referrer = request.getHeader("Referer");
+        request.getSession().setAttribute("url_prior_login", referrer);
+
         return new ModelAndView("user/signUpForm");
     }
 
     @RequestMapping(value = "/signup", method = {RequestMethod.POST})
     public ModelAndView signUp(@Valid @ModelAttribute("registerForm") final RegisterForm registerForm, final BindingResult errors, HttpServletRequest request, HttpServletResponse response) {
         if (errors.hasErrors()) {
-            return signUpForm(registerForm);
+            return signUpForm(request, registerForm);
         }
 
-        long userId = userService.register(
+        long userId = this.userService.register(
                 registerForm.getUsername(),
-                passwordEncoder.encode(registerForm.getPassword()),
+                this.passwordEncoder.encode(registerForm.getPassword()),
                 registerForm.getEmail(),
                 DATE.format(Calendar.getInstance().getTime().getTime())
         );
         try {
             this.emailService.sendRegistrationEmail(registerForm.getEmail(), registerForm.getUsername());
         } catch (MailException e) {
-            LOGGER.warn("Failed to send registration email to user ?", registerForm.getUsername());
+            LOGGER.warn("Failed to send registration email to user {}", registerForm.getUsername());
         }
 
-        roleService.assignUserRole(userId);
-        loginAuthentication.authWithAuthManager(request, registerForm.getUsername(), registerForm.getPassword());
-        return new ModelAndView("redirect:/");
+        this.roleService.assignUserRole(userId);
+        this.signUpAuthentication.authWithAuthManager(request, registerForm.getUsername(), registerForm.getPassword());
+        String redirectUrl = this.signUpAuthentication.redirectionAuthenticationSuccess(request);
+        return new ModelAndView("redirect:" + redirectUrl);
     }
 
     @RequestMapping(value = "recover-password")

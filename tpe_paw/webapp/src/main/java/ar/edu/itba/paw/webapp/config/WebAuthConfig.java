@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.webapp.auth.RefererRedirectionAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -52,12 +53,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/tags/**/follow").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/tags/**/delete, /languages/**/delete").hasRole("ADMIN")
                 .antMatchers("/**").permitAll()
-                .and().formLogin()
+            .and().formLogin()
                 .loginPage("/login")
                 .failureUrl("/login_error")
                 .usernameParameter("username")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/", false)
+                .successHandler(new RefererRedirectionAuthenticationSuccessHandler())
+                //.defaultSuccessUrl("/", false)
             .and().rememberMe()
                 .rememberMeParameter("rememberme")
                 .userDetailsService(userDetails)

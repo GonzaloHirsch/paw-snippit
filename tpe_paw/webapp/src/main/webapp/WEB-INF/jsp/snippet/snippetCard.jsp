@@ -4,13 +4,6 @@
 
 <html>
 <head>
-    <link href="<c:url value='/resources/css/snippetCard.css'/>" rel="stylesheet"/>
-    <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet"/>
-    <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
-    <link href="<c:url value='/resources/css/icons.css'/>" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-          rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 <c:set var="snippet" value="${requestScope.snippet}"/>
@@ -52,7 +45,7 @@
 
         <div class="flex-column snippet-code-container border-radius">
             <div class="card-snippet-block">
-                <pre><code>${fn:escapeXml(snippet.code)}</code></pre>
+                <pre><code class="${snippet.language}">${fn:escapeXml(snippet.code)}</code></pre>
                 <p class="card-snippet-fade-out card-snippet-fade-out-code"></p>
             </div>
         </div>

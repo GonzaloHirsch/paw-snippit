@@ -4,11 +4,9 @@
 
 <html>
 <head>
-    <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/icons.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/flaggedSnippet.css'/>" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 </head>
 <body>
     <div class="flex-row flex-center flagged-container border-radius">

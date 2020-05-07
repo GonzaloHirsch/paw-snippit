@@ -18,6 +18,12 @@
           rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <script src="<c:url value='/resources/js/snippetDetail.js'/>"></script>
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.0/styles/lightfair.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script charset="UTF-8"
+            src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.0/languages/go.min.js"></script>
 </head>
 
 <body>
@@ -57,7 +63,7 @@
                         <span class="material-icons copy-icon border-radius" onclick="copyContent(this)">
                             file_copy
                         </span>
-                        <pre><code id="code-block">${fn:escapeXml(snippet.code)}</code></pre>
+                        <pre><code id="code-block" class="${snippet.language}">${fn:escapeXml(snippet.code)}</code></pre>
                         <input id="hidden-code-input" class="hidden-code"/>
                     </div>
                     <!-- TAGS -->
@@ -128,5 +134,6 @@
 
         </div>
     </div>
+        <script>hljs.initHighlightingOnLoad();</script>
 </body>
 </html>

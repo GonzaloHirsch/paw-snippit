@@ -1,19 +1,13 @@
 .explore-container {
     border: #5E35B1 solid 2px;
     border-radius: 5px;
-    margin: 15px 0 30px 30px;
+    margin: 30px 0 30px 30px;
     padding: 10px;
     max-width: 300px;
 }
 
 .explore-container div {
     margin: 5px;
-}
-
-.explore-title {
-    font-size: 50px;
-    margin-left: 30px;
-    margin-top: 15px;
 }
 
 .bootstrap-select>.dropdown-toggle {

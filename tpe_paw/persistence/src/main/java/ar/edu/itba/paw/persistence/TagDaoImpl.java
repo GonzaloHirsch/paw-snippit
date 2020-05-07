@@ -57,8 +57,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Collection<Tag> findTagsForSnippet(long snippetId) {
-        return jdbcTemplate.query("SELECT * FROM tags WHERE id IN " +
-                "(SELECT tag_id FROM snippet_tags WHERE snippet_id = ?)", ROW_MAPPER, snippetId);
+        return jdbcTemplate.query("SELECT * FROM tags WHERE id IN (SELECT tag_id FROM snippet_tags WHERE snippet_id = ?)", ROW_MAPPER, snippetId);
     }
 
     @Override
@@ -92,8 +91,8 @@ public class TagDaoImpl implements TagDao {
 
 
     @Override
-    public Collection<Tag> getAllTags(int page) {
-        return jdbcTemplate.query("SELECT * FROM tags ORDER BY id LIMIT ? OFFSET ?", ROW_MAPPER, PAGE_SIZE, PAGE_SIZE * (page - 1));
+    public Collection<Tag> getAllTags(int page, int pageSize) {
+        return jdbcTemplate.query("SELECT * FROM tags ORDER BY id LIMIT ? OFFSET ?", ROW_MAPPER, pageSize, pageSize * (page - 1));
     }
 
     @Override
@@ -103,7 +102,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public int getAllTagsCountByName(String name) {
-        return this.jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT id) FROM tags WHERE LOWER(name) LIKE LOWER(?)", new Object[]{"%"+name+"%"}, Integer.class);
+        return this.jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT id) FROM tags WHERE LOWER(name) LIKE LOWER(?)", new Object[]{"%" + name + "%"}, Integer.class);
     }
 
     @Override
@@ -112,7 +111,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public Collection<Tag> findTagsByName(String name, int page) {
-        return this.jdbcTemplate.query("SELECT * FROM tags AS t WHERE LOWER(t.name) LIKE LOWER(?) ORDER BY t.id LIMIT ? OFFSET ?", ROW_MAPPER, "%"+name+"%", PAGE_SIZE, PAGE_SIZE * (page - 1));
+    public Collection<Tag> findTagsByName(String name, int page, int pageSize) {
+        return this.jdbcTemplate.query("SELECT * FROM tags AS t WHERE LOWER(t.name) LIKE LOWER(?) ORDER BY t.id LIMIT ? OFFSET ?", ROW_MAPPER, "%" + name + "%", pageSize, pageSize * (page - 1));
     }
 }

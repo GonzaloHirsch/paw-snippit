@@ -12,7 +12,6 @@
 </head>
 <body>
 <c:set var="snippetList" value="${requestScope.snippetList}"/>
-<c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>
 <c:if test="${snippetList.size() == 0}">
     <div class="no-snippet flex-center fw-100">
         <spring:message code="feed.no-snippets"/>

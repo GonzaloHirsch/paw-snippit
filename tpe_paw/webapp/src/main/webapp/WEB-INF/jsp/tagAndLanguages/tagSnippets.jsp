@@ -38,7 +38,7 @@
                     </c:if>
                 </c:if>
             </div>
-            <c:set var="snippetList" value="${snippets}" scope="request"/>
+            <c:set var="snippetList" value="${snippetList}" scope="request"/>
             <c:import url="/WEB-INF/jsp/snippet/snippetFeed.jsp"/>
         </div>
     </div>

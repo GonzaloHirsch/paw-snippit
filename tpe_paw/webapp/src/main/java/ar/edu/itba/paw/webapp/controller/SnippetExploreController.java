@@ -25,6 +25,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
+
 @Controller
 public class SnippetExploreController {
 
@@ -44,7 +46,7 @@ public class SnippetExploreController {
     @RequestMapping("/explore")
     public ModelAndView explore(@ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("exploreForm") final ExploreForm exploreForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("snippet/snippetExplore");
-        Collection<Snippet> snippets = this.snippetService.getAllSnippets(page);
+        Collection<Snippet> snippets = this.snippetService.getAllSnippets(page, SNIPPET_PAGE_SIZE);
         int snippetCount = this.snippetService.getAllSnippetsCount();
         this.addModelAttributesHelper(mav, snippetCount, page, snippets, "explore/");
         return mav;
@@ -70,7 +72,7 @@ public class SnippetExploreController {
                 exploreForm.getMinVotes(), exploreForm.getMaxVotes(),
                 exploreForm.getLanguage() == -1 ? null : exploreForm.getLanguage(), exploreForm.getTag() == -1 ? null : exploreForm.getTag(),
                 exploreForm.getTitle(), exploreForm.getUsername(),
-                exploreForm.getField(), exploreForm.getSort(), exploreForm.getIncludeFlagged(), page);
+                exploreForm.getField(), exploreForm.getSort(), exploreForm.getIncludeFlagged(), page, SNIPPET_PAGE_SIZE);
         int snippetCount =  this.snippetService.getSnippetByDeepCriteriaCount(
                 minDate, maxDate,
                 exploreForm.getMinRep(), exploreForm.getMaxRep(),
@@ -94,8 +96,7 @@ public class SnippetExploreController {
     }
 
     private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
-        int pageSize = this.snippetService.getPageSize();
-        mav.addObject("pages", snippetCount / pageSize + (snippetCount % pageSize == 0 ? 0 : 1));
+        mav.addObject("pages", snippetCount / SNIPPET_PAGE_SIZE + (snippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("snippetList", snippets);
         mav.addObject("searchContext", searchContext);

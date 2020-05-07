@@ -51,10 +51,13 @@ public class SnippetSearchQuery {
          */
         private Map<SnippetDao.Locations, String> locationsMap = new HashMap<SnippetDao.Locations, String>(){{
             put(SnippetDao.Locations.HOME, "(SELECT * FROM complete_snippets)");
-            put(SnippetDao.Locations.FAVORITES, "(SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn JOIN favorites AS fav ON fav.snippet_id = sn.id WHERE fav.user_id = ?)");
-            put(SnippetDao.Locations.FOLLOWING, "(SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn JOIN snippet_tags AS st ON st.snippet_id = sn.id JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?)");
-            put(SnippetDao.Locations.UPVOTED, "(SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn JOIN votes_for AS vf ON vf.snippet_id = sn.id WHERE vf.user_id = ? AND vf.type = 1)");
-            put(SnippetDao.Locations.FLAGGED, "(SELECT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn WHERE sn.flagged = 1)");
+            put(SnippetDao.Locations.USER, "(SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn WHERE sn.user_id = ?)");
+            put(SnippetDao.Locations.LANGUAGES, "(SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn WHERE sn.language_id = ?)");
+            put(SnippetDao.Locations.TAGS, "(SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn JOIN snippet_tags AS st ON st.snippet_id = sn.id WHERE st.tag_id = ?)");
+            put(SnippetDao.Locations.FAVORITES, "(SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn JOIN favorites AS fav ON fav.snippet_id = sn.id WHERE fav.user_id = ?)");
+            put(SnippetDao.Locations.FOLLOWING, "(SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id INNER JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?)");
+            put(SnippetDao.Locations.UPVOTED, "(SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn JOIN votes_for AS vf ON vf.snippet_id = sn.id WHERE vf.user_id = ? AND vf.type = 1)");
+            put(SnippetDao.Locations.FLAGGED, "(SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn WHERE sn.flagged = 1)");
         }};
         /**
          * Map used to translate the given enum for order types into their query equivalent
@@ -94,11 +97,12 @@ public class SnippetSearchQuery {
          * @param type Type of search, over which parameter the search is going to be performed
          * @param term Term to be used for the search
          */
-        public Builder(SnippetDao.QueryTypes queryType, SnippetDao.Locations location, Long userId, SnippetDao.Types type, String term){
+        public Builder(SnippetDao.QueryTypes queryType, SnippetDao.Locations location, Long userId, SnippetDao.Types type, String term, Long resourceId){
             this.query
                     .append(this.queryTypesMap.get(queryType))
                     .append(this.locationsMap.get(location));
             if (userId != null){ params.add(userId); }
+            if (resourceId != null) { params.add(resourceId); }
             this.query.append(this.typeMap.get(type));
             params.add("%" + term + "%");
             if (type.equals(SnippetDao.Types.ALL)){

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.validations;
 
 import ar.edu.itba.paw.interfaces.service.LanguageService;
 import ar.edu.itba.paw.interfaces.service.TagService;
+import ar.edu.itba.paw.models.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class ValidatorHelper {
@@ -39,10 +37,12 @@ public class ValidatorHelper {
         StringBuilder error = new StringBuilder();
         int errorAmount = 0;
 
-        for (String tag : tags) {
-            if (tagService.tagExists(tag)) {
-                error.append(tag).append(", ");
-                errorAmount++;
+        if (tags != null) {
+            for (String tag : tags) {
+                if (tagService.tagExists(tag)) {
+                    error.append(tag).append(", ");
+                    errorAmount++;
+                }
             }
         }
         if (errorAmount > 0) {
@@ -59,10 +59,12 @@ public class ValidatorHelper {
         StringBuilder error = new StringBuilder();
         int errorAmount = 0;
 
-        for (String lang : languages) {
-            if (languageService.languageExists(lang)) {
-                error.append(lang).append(", ");
-                errorAmount++;
+        if (languages != null) {
+            for (String lang : languages) {
+                if (languageService.languageExists(lang)) {
+                    error.append(lang).append(", ");
+                    errorAmount++;
+                }
             }
         }
 
@@ -78,13 +80,36 @@ public class ValidatorHelper {
     private void checkForDuplicated(List<String> list, String field, BindingResult errors, Locale locale) {
         Set<String> set = new HashSet<>();
 
-        for (String element : list) {
-            if (!set.add(element)) {
-                FieldError dupFound = new FieldError("addAdminForm",field ,messageSource.getMessage("admin.add.duplicates.error", null, locale));
-                errors.addError(dupFound);
-                return;
+        if (list != null) {
+            for (String element : list) {
+                if (!set.add(element)) {
+                    FieldError dupFound = new FieldError("addAdminForm", field, messageSource.getMessage("admin.add.duplicates.error", null, locale));
+                    errors.addError(dupFound);
+                    return;
+                }
             }
         }
+    }
+
+    public void validateTagsExists(Collection<String> tags, BindingResult errors, Locale locale) {
+        StringBuilder error = new StringBuilder();
+        int errorAmount = 0;
+
+        if (tags != null) {
+            for (String tag : tags) {
+                if (!tagService.tagExists(tag)) {
+                    error.append(tag).append(", ");
+                    errorAmount++;
+                }
+            }
+        }
+        if (errorAmount > 0) {
+            error.setLength(error.length() - 2);
+            FieldError tagExists = new FieldError("snippetCreateForm","tags" ,messageSource.getMessage("Exists.notFound.tags",new Object[] {error.toString()}, locale));
+            errors.addError(tagExists);
+            LOGGER.debug("Tags that no longer exists = {}", error.toString());
+        }
+
     }
 
 }

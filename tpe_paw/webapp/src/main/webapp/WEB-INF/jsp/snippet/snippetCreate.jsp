@@ -85,9 +85,9 @@
                         <div class="flex-column snippetC-tags-container">
                             <form:label class="fw-400 snippetC-subtitles" path="tags"><spring:message code="snippetCreateForm.tags"/></form:label>
                             <form:select class="selectpicker snippetC-tags" multiple="true" data-live-search="true" path="tags" title='${tag_hint}' name="tagselect" >
-                                <form:options items="${tagList}" itemValue="id" itemLabel="name"/>
+                                <form:options items="${tagList}" itemValue="name" itemLabel="name"/>
                             </form:select>
-                            <form:errors class="form-error" path="tags" element="p"/>
+                            <form:errors class="form-error error-extra-margins" path="tags" element="p"/>
                         </div>
                         <div class="snippetC-submit-container">
                             <input class="snippetC-button snippetC-border" type="submit" value='<spring:message code="snippetCreateForm.save"/>'/>

@@ -95,12 +95,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void changeReputation(long userId, int value, boolean add) {
-        if (add) {
-            jdbcTemplate.update("UPDATE users SET reputation = reputation + ? WHERE id = ?", value, userId);
-        } else {
-            jdbcTemplate.update("UPDATE users SET reputation = reputation - ? WHERE id = ?", value, userId);
-        }
+    public void changeReputation(long userId, int value) {
+        jdbcTemplate.update("UPDATE users SET reputation = reputation + ? WHERE id = ?", value, userId);
     }
 
     public Collection<User> getAllUsers() {

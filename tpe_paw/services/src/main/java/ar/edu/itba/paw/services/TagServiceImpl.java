@@ -21,8 +21,8 @@ public class TagServiceImpl implements TagService {
     private FollowingDao followingDao;
 
     @Override
-    public Collection<Tag> getAllTags(int page) {
-        return tagDao.getAllTags(page);
+    public Collection<Tag> getAllTags(int page, int pageSize) {
+        return tagDao.getAllTags(page, pageSize);
     }
 
     @Override
@@ -41,8 +41,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Collection<Tag> findTagsByName(String name, int page) {
-        return this.tagDao.findTagsByName(name, page);
+    public Collection<Tag> findTagsByName(String name, int page, int pageSize) {
+        return this.tagDao.findTagsByName(name, page, pageSize);
     }
 
     @Override
@@ -66,17 +66,17 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Collection<Tag> addTagsToSnippet(Long snippetId, Collection<Long> tagIdList) {
+    public Collection<Tag> addTagsToSnippet(Long snippetId, Collection<String> tagNameList){
         ArrayList<Tag> tagList = new ArrayList<>();
 
-        if (tagIdList == null)
+        if(tagNameList == null)
             return tagList;
 
-        for (Long tagId : tagIdList) {
-            Optional<Tag> tag = tagDao.findById(tagId);
-            if (tag.isPresent()) {
-                tagDao.addSnippetTag(snippetId, tagId);
-                tagList.add(tagDao.findById(tagId).get());
+        for(String tagName : tagNameList) {
+            Optional<Tag> tag = tagDao.findByName(tagName);
+            if(tag.isPresent()) {
+                tagDao.addSnippetTag(snippetId, tag.get().getId());
+                tagList.add(tag.get());
             }
         }
         return tagList;

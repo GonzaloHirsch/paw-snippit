@@ -22,8 +22,28 @@ public class LanguageServiceImpl implements LanguageService {
     }
 
     @Override
-    public Collection<Language> getAll() {
-        return languageDao.getAll();
+    public Collection<Language> getAllLanguages() {
+        return languageDao.getAllLanguages();
+    }
+
+    @Override
+    public Collection<Language> getAllLanguages(int page, int pageSize) {
+        return this.languageDao.getAllLanguages(page, pageSize);
+    }
+
+    @Override
+    public Collection<Language> findAllLanguagesByName(String name, int page, int pageSize) {
+        return this.languageDao.findAllLanguagesByName(name, page, pageSize);
+    }
+
+    @Override
+    public int getAllLanguagesCountByName(String name) {
+        return this.languageDao.getAllLanguagesCountByName(name);
+    }
+
+    @Override
+    public int getAllLanguagesCount() {
+        return this.languageDao.getAllLanguagesCount();
     }
 
     @Override

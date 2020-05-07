@@ -24,8 +24,6 @@ import java.util.Optional;
 public class LoginAuthentication {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
     private UserService userService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginAuthentication.class);
@@ -79,18 +77,6 @@ public class LoginAuthentication {
         }
         LOGGER.debug("Logged user is {}", username);
         return user.get();
-    }
-
-    public void authWithAuthManager(HttpServletRequest request, String username, String password) {
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
-        authToken.setDetails(new WebAuthenticationDetails(request));
-
-        // Generate session if one doesn't already exist
-        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
-
-        Authentication authentication = authenticationManager.authenticate(authToken);
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
 }

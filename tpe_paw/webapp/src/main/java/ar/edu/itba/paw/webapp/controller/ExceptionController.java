@@ -30,57 +30,57 @@ public class ExceptionController {
     public static final String DEFAULT_ERROR_VIEW = "errors/default";
     private static final String ERROR_CONTEXT = "error/";
 
-    @ExceptionHandler(value = Exception.class)
-    public ModelAndView defaultErrorHandler(Exception e) throws Exception {
-        /*
-         * If the exception is annotated with @ResponseStatus rethrow it and let
-         * the framework handle it
-         */
-        if (AnnotationUtils.findAnnotation
-                (e.getClass(), ResponseStatus.class) != null)
-            throw e;
-
-        String errorMessage = messageSource.getMessage("error.404", null, LocaleContextHolder.getLocale());
-        String errorName = messageSource.getMessage("error.404.name", null, LocaleContextHolder.getLocale());
-
-        return this.createErrorModel(errorName, errorMessage, 404);
-    }
-
-    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler({PSQLException.class, BadSqlGrammarException.class})
-    public ModelAndView internalServerError(Exception e) {
-        String errorName = messageSource.getMessage("error.500.name", null, LocaleContextHolder.getLocale());
-        String errorMessage = messageSource.getMessage("error.500", null, LocaleContextHolder.getLocale());
-        return this.createErrorModel(errorName, errorMessage, 500); }
-
-
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    @ExceptionHandler({UserNotFoundException.class, LanguageNotFoundException.class, TagNotFoundException.class, SnippetNotFoundException.class})
-    public ModelAndView elementNotFound(Exception ex) {
-        String errorName = messageSource.getMessage("error.404.name", null, LocaleContextHolder.getLocale());
-        return this.createErrorModel(errorName, ex.getMessage(), 404);
-    }
-
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    @ExceptionHandler(FormErrorException.class)
-    public ModelAndView formError(Exception ex) {
-        String errorName = messageSource.getMessage("error.404.name", null, LocaleContextHolder.getLocale());
-        return this.createErrorModel(errorName, ex.getMessage(), 404);
-    }
-
-    @ResponseStatus(code = HttpStatus.FORBIDDEN)
-    @ExceptionHandler(ForbiddenAccessException.class)
-    public ModelAndView forbiddenAccess(Exception ex) {
-        String errorName = messageSource.getMessage("error.403.name", null, LocaleContextHolder.getLocale());
-        return this.createErrorModel(errorName, ex.getMessage(), 403);
-    }
-
-    @ResponseStatus(code = HttpStatus.CONFLICT)
-    @ExceptionHandler(RemovingLanguageInUseException.class)
-    public ModelAndView cannotRemoveLanguage(RemovingLanguageInUseException ex) {
-        String errorName = messageSource.getMessage("error.409.name", null, LocaleContextHolder.getLocale());
-        return this.createErrorModel(errorName, ex.getMessage(), 409);
-    }
+//    @ExceptionHandler(value = Exception.class)
+//    public ModelAndView defaultErrorHandler(Exception e) throws Exception {
+//        /*
+//         * If the exception is annotated with @ResponseStatus rethrow it and let
+//         * the framework handle it
+//         */
+//        if (AnnotationUtils.findAnnotation
+//                (e.getClass(), ResponseStatus.class) != null)
+//            throw e;
+//
+//        String errorMessage = messageSource.getMessage("error.404", null, LocaleContextHolder.getLocale());
+//        String errorName = messageSource.getMessage("error.404.name", null, LocaleContextHolder.getLocale());
+//
+//        return this.createErrorModel(errorName, errorMessage, 404);
+//    }
+//
+//    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+//    @ExceptionHandler({PSQLException.class, BadSqlGrammarException.class})
+//    public ModelAndView internalServerError(Exception e) {
+//        String errorName = messageSource.getMessage("error.500.name", null, LocaleContextHolder.getLocale());
+//        String errorMessage = messageSource.getMessage("error.500", null, LocaleContextHolder.getLocale());
+//        return this.createErrorModel(errorName, errorMessage, 500); }
+//
+//
+//    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+//    @ExceptionHandler({UserNotFoundException.class, LanguageNotFoundException.class, TagNotFoundException.class, SnippetNotFoundException.class})
+//    public ModelAndView elementNotFound(Exception ex) {
+//        String errorName = messageSource.getMessage("error.404.name", null, LocaleContextHolder.getLocale());
+//        return this.createErrorModel(errorName, ex.getMessage(), 404);
+//    }
+//
+//    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+//    @ExceptionHandler(FormErrorException.class)
+//    public ModelAndView formError(Exception ex) {
+//        String errorName = messageSource.getMessage("error.404.name", null, LocaleContextHolder.getLocale());
+//        return this.createErrorModel(errorName, ex.getMessage(), 404);
+//    }
+//
+//    @ResponseStatus(code = HttpStatus.FORBIDDEN)
+//    @ExceptionHandler(ForbiddenAccessException.class)
+//    public ModelAndView forbiddenAccess(Exception ex) {
+//        String errorName = messageSource.getMessage("error.403.name", null, LocaleContextHolder.getLocale());
+//        return this.createErrorModel(errorName, ex.getMessage(), 403);
+//    }
+//
+//    @ResponseStatus(code = HttpStatus.CONFLICT)
+//    @ExceptionHandler({RemovingLanguageInUseException.class, ElementDeletionException.class})
+//    public ModelAndView cannotRemoveLanguage(RemovingLanguageInUseException ex) {
+//        String errorName = messageSource.getMessage("error.409.name", null, LocaleContextHolder.getLocale());
+//        return this.createErrorModel(errorName, ex.getMessage(), 409);
+//    }
 
     private ModelAndView createErrorModel(String errorName, String errorMessage, int errorCode) {
         ModelAndView mav = new ModelAndView(DEFAULT_ERROR_VIEW);

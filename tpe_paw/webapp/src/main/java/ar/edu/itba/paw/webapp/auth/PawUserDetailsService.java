@@ -48,7 +48,7 @@ public class PawUserDetailsService implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
             LOGGER.debug("Granting authority ROLE_ADMIN to user ?", username);
         }
-        if (roles.contains(this.roleService.getUserRoleName())) {
+        else if (roles.contains(this.roleService.getUserRoleName())) {
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
             LOGGER.debug("Granting authority ROLE_USER to user ?", username);
         }

@@ -11,6 +11,7 @@ import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.FormErrorException;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.form.SnippetCreateForm;
+import ar.edu.itba.paw.webapp.validations.ValidatorHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class SnippetCreateController {
     @Autowired private LoginAuthentication loginAuthentication;
     @Autowired private RoleService roleService;
     @Autowired private MessageSource messageSource;
+    @Autowired private ValidatorHelper validator;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetCreateController.class);
@@ -45,15 +47,18 @@ public class SnippetCreateController {
         final ModelAndView mav = new ModelAndView("snippet/snippetCreate");
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
-        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
-
+        if (currentUser == null) {
+            throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.snippet.create", null, LocaleContextHolder.getLocale()));
+        } else if (this.roleService.isAdmin(currentUser.getId())) {
+            throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.admin.snippet.create", null, LocaleContextHolder.getLocale()));
+        }
+        
         mav.addObject("currentUser", currentUser);
-        mav.addObject("userTags", userTags);
-        mav.addObject("tagList",tagService.getAllTags());
-        mav.addObject("languageList", languageService.getAll());
+        mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
+        mav.addObject("tagList", this.tagService.getAllTags());
+        mav.addObject("languageList", this.languageService.getAllLanguages());
         mav.addObject("searchContext", "");
-        mav.addObject("userRoles", userRoles);
+        mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
 
         return mav;
     }
@@ -61,21 +66,23 @@ public class SnippetCreateController {
     @RequestMapping(value = "/snippet/create", method = RequestMethod.POST)
     public ModelAndView snippetCreate( @Valid @ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm, final BindingResult errors) {
 
-        if (errors.hasErrors())
-            return snippetCreateDetail(snippetCreateForm);
+        this.validator.validateTagsExists(snippetCreateForm.getTags(), errors, LocaleContextHolder.getLocale());
 
+        if (errors.hasErrors()) {
+            return snippetCreateDetail(snippetCreateForm);
+        }
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String dateCreated = sdf.format(timestamp);
 
-        User currentUser = loginAuthentication.getLoggedInUser();
+        User currentUser = this.loginAuthentication.getLoggedInUser();
         if(currentUser == null) {
             LOGGER.warn("Creating a snippet when no user is logged in");
-            throw new ForbiddenAccessException(messageSource.getMessage("error.403.create", null, LocaleContextHolder.getLocale()));
+            throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.snippet.create", null, LocaleContextHolder.getLocale()));
         }
-        Long snippetId = snippetService.createSnippet(currentUser,snippetCreateForm.getTitle(),snippetCreateForm.getDescription(), snippetCreateForm.getCode(), dateCreated, snippetCreateForm.getLanguage(),snippetCreateForm.getTags());
+        Long snippetId = this.snippetService.createSnippet(currentUser,snippetCreateForm.getTitle(),snippetCreateForm.getDescription(), snippetCreateForm.getCode(), dateCreated, snippetCreateForm.getLanguage(),snippetCreateForm.getTags());
         if(snippetId == null){
             LOGGER.warn("Snippet creation was unsuccessful. Return id was null.");
-            throw new FormErrorException(messageSource.getMessage("error.404.form", null, LocaleContextHolder.getLocale()));
+            throw new FormErrorException(this.messageSource.getMessage("error.404.form", null, LocaleContextHolder.getLocale()));
         }
 
         return new ModelAndView("redirect:/snippet/" + snippetId);

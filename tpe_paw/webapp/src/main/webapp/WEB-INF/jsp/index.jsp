@@ -5,10 +5,10 @@
 <head>
     <title><spring:message code="menu.home"/></title>
     <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon/favicon.ico'/>"/>
-    <link href="<c:url value='/resources/css/snippetFeed.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
           rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 <div class="wrapper">
@@ -22,18 +22,23 @@
                 <c:choose>
                     <c:when test="${searchContext == ''}">
                         <spring:message code="menu.home"/>
+                        <spring:message code="menu.home" var="title"/>
                     </c:when>
                     <c:when test="${searchContext == 'flagged/'}">
                         <spring:message code="menu.flagged"/>
+                        <spring:message code="menu.flagged" var="title"/>
                     </c:when>
                     <c:when test="${searchContext == 'following/'}">
                         <spring:message code="menu.following"/>
+                        <spring:message code="menu.following" var="title"/>
                     </c:when>
                     <c:when test="${searchContext == 'favorites/'}">
                         <spring:message code="menu.favorites"/>
+                        <spring:message code="menu.favorites" var="title"/>
                     </c:when>
                     <c:when test="${searchContext == 'upvoted/'}">
                         <spring:message code="menu.upvoted"/>
+                        <spring:message code="menu.upvoted" var="title"/>
                     </c:when>
                 </c:choose>
             </div>

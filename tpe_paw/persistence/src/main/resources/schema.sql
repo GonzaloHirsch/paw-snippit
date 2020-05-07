@@ -67,7 +67,7 @@ DO '
 DO '
     BEGIN
         BEGIN
-            ALTER TABLE users ADD COLUMN lang VAR(5) DEFAULT ''en'';
+            ALTER TABLE users ADD COLUMN lang VARCHAR(5) DEFAULT ''en'';
         EXCEPTION
             WHEN duplicate_column THEN RAISE NOTICE ''column lang already exists in users.'';
         END;
@@ -77,7 +77,7 @@ DO '
 DO '
     BEGIN
         BEGIN
-            ALTER TABLE users ADD COLUMN region VAR(5) DEFAULT ''US'';
+            ALTER TABLE users ADD COLUMN region VARCHAR(5) DEFAULT ''US'';
         EXCEPTION
             WHEN duplicate_column THEN RAISE NOTICE ''column region already exists in users.'';
         END;
@@ -138,7 +138,7 @@ SELECT aux.sn_id   AS id,
        aux.u_name  AS username,
        aux.rep     AS reputation,
        aux.lang    AS lang,
-       aux.reg     AS region
+       aux.reg     AS region,
        aux.ver     AS verified,
        aux.lang_id AS language_id,
        l.name      AS language,
@@ -156,8 +156,8 @@ FROM (
                 u.username      AS u_name,
                 u.reputation    AS rep,
                 u.icon          AS icon,
-                u.locale        AS locale,
-                u.region        AS reg
+                u.lang          AS lang,
+                u.region        AS reg,
                 u.verified      AS ver,
                 sn.votes        AS votes,
                 sn.flag         AS flag

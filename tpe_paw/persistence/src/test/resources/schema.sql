@@ -18,8 +18,9 @@ CREATE TABLE IF NOT EXISTS users
     reputation  INT,
     date_joined TIMESTAMP,
     icon        BINARY,
-    lang VAR(5) DEFAULT 'en',
-    region VAR(5) DEFAULT 'US'
+    lang        VARCHAR(5) DEFAULT 'en',
+    region      VARCHAR(5) DEFAULT 'US',
+    verified    INT DEFAULT 0;
 );
 
 CREATE TABLE IF NOT EXISTS languages
@@ -99,7 +100,7 @@ SELECT aux.sn_id   AS id,
        aux.u_name  AS username,
        aux.rep     AS reputation,
        aux.lang    AS lang,
-       aux.reg     AS region
+       aux.reg     AS region,
        aux.ver     AS verified,
        aux.lang_id AS language_id,
        l.name      AS language,
@@ -118,7 +119,7 @@ FROM (
                 u.reputation    AS rep,
                 u.icon          AS icon,
                 u.lang          AS lang,
-                u.region        AS reg
+                u.region        AS reg,
                 u.verified      AS ver,
                 sn.votes        AS votes,
                 sn.flag         AS flag

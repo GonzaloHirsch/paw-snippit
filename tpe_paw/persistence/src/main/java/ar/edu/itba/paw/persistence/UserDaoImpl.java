@@ -31,7 +31,7 @@ public class UserDaoImpl implements UserDao {
                     rs.getInt("reputation"),
                     rs.getString("date_joined"),
                     rs.getBytes("icon"),
-                    new Locale(rs.getString("locale")),
+                    new Locale(rs.getString("lang"), rs.getString("region")),
                     rs.getInt("verified") == 1
             );
         }
@@ -54,7 +54,8 @@ public class UserDaoImpl implements UserDao {
         args.put("description", description);
         args.put("reputation",reputation);
         args.put("date_joined",dateJoined);
-        args.put("locale", locale.getLanguage());
+        args.put("lang", locale.getLanguage());
+        args.put("region", locale.getCountry());
         args.put("verified", 0);
 
         return jdbcInsert.executeAndReturnKey(args).longValue();

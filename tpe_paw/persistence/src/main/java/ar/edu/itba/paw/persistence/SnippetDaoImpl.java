@@ -41,7 +41,7 @@ public class SnippetDaoImpl implements SnippetDao {
                     rs.getInt("reputation"),
                     null,
                     rs.getBytes("icon"),
-                    new Locale(rs.getString("locale")),
+                    new Locale(rs.getString("lang"), rs.getString("region")),
                     rs.getInt("verified") == 1
             );
 

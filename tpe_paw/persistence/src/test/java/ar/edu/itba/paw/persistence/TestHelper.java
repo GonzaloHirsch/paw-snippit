@@ -65,7 +65,8 @@ public class TestHelper {
             put("email", email);
             put("reputation", 0);
             put("date_joined", DATE.format(Calendar.getInstance().getTime().getTime()));
-            put("locale", "en");
+            put("lang", "en");
+            put("region", "US");
             put("verified", 0);
         }};
         long userId = jdbcInsertUser.executeAndReturnKey(map).longValue();

@@ -96,7 +96,8 @@ SELECT aux.sn_id   AS id,
        aux.user_id AS user_id,
        aux.u_name  AS username,
        aux.rep     AS reputation,
-       aux.locale  AS locale,
+       aux.lang    AS lang,
+       aux.reg     AS region
        aux.ver     AS verified,
        aux.lang_id AS language_id,
        l.name      AS language,
@@ -115,6 +116,7 @@ FROM (
                 u.reputation    AS rep,
                 u.icon          AS icon,
                 u.locale        AS locale,
+                u.region        AS reg
                 u.verified      AS ver,
                 sn.votes        AS votes,
                 sn.flag         AS flag

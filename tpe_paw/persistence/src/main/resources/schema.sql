@@ -67,9 +67,19 @@ DO '
 DO '
     BEGIN
         BEGIN
-            ALTER TABLE users ADD COLUMN locale VAR(5) DEFAULT ''en'';
+            ALTER TABLE users ADD COLUMN lang VAR(5) DEFAULT ''en'';
         EXCEPTION
-            WHEN duplicate_column THEN RAISE NOTICE ''column locale already exists in users.'';
+            WHEN duplicate_column THEN RAISE NOTICE ''column lang already exists in users.'';
+        END;
+    END;
+' language plpgsql;
+
+DO '
+    BEGIN
+        BEGIN
+            ALTER TABLE users ADD COLUMN region VAR(5) DEFAULT ''US'';
+        EXCEPTION
+            WHEN duplicate_column THEN RAISE NOTICE ''column region already exists in users.'';
         END;
     END;
 ' language plpgsql;
@@ -127,7 +137,8 @@ SELECT aux.sn_id   AS id,
        aux.user_id AS user_id,
        aux.u_name  AS username,
        aux.rep     AS reputation,
-       aux.locale  AS locale,
+       aux.lang    AS lang,
+       aux.reg     AS region
        aux.ver     AS verified,
        aux.lang_id AS language_id,
        l.name      AS language,
@@ -146,6 +157,7 @@ FROM (
                 u.reputation    AS rep,
                 u.icon          AS icon,
                 u.locale        AS locale,
+                u.region        AS reg
                 u.verified      AS ver,
                 sn.votes        AS votes,
                 sn.flag         AS flag

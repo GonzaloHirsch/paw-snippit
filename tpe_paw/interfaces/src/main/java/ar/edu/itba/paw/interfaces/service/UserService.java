@@ -4,12 +4,13 @@ import ar.edu.itba.paw.models.User;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 
 public interface UserService {
-    long createUser(String username, String password, String email, String description, int reputation, String dateJoined);
+    long createUser(String username, String password, String email, String description, int reputation, String dateJoined, Locale locale);
 
-    long register(String username, String password, String email, String dateJoined);
+    long register(String username, String password, String email, String dateJoined, Locale locale);
 
     Optional<User> findUserByUsername(String username);
 

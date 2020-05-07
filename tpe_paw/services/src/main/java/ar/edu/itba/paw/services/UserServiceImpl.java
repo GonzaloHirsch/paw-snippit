@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -23,13 +24,13 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public long createUser(String username, String password, String email, String description, int reputation, String dateJoined) {
-        return userDao.createUser(username, password, email, description, reputation, dateJoined);
+    public long createUser(String username, String password, String email, String description, int reputation, String dateJoined, Locale locale) {
+        return userDao.createUser(username, password, email, description, reputation, dateJoined, locale);
     }
 
     @Override
-    public long register(String username, String password, String email, String dateJoined) {
-        long userId = createUser(username, password, email, "", 0, dateJoined);
+    public long register(String username, String password, String email, String dateJoined, Locale locale) {
+        long userId = createUser(username, password, email, "", 0, dateJoined, locale);
         return userId;
     }
 

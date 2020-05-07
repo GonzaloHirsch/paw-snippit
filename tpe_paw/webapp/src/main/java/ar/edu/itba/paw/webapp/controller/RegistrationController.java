@@ -11,6 +11,7 @@ import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Optional;
 
 @Controller
@@ -88,7 +90,8 @@ public class RegistrationController {
                 registerForm.getUsername(),
                 this.passwordEncoder.encode(registerForm.getPassword()),
                 registerForm.getEmail(),
-                DATE.format(Calendar.getInstance().getTime().getTime())
+                DATE.format(Calendar.getInstance().getTime().getTime()),
+                LocaleContextHolder.getLocale()
         );
         try {
             this.emailService.sendRegistrationEmail(registerForm.getEmail(), registerForm.getUsername());

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 
 public class User {
     private long id;
@@ -13,9 +14,10 @@ public class User {
     private int reputation;
     private String dateJoined;
     private byte[] icon;
-    private Collection<String> roles;
+    private Locale locale;
+    private boolean verified;
 
-    public User(long id, String username, String password, String email, String dateJoined, byte[] icon) {
+    public User(long id, String username, String password, String email, String dateJoined, byte[] icon, Locale locale, boolean verified) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -24,9 +26,11 @@ public class User {
         this.reputation = 0;
         this.dateJoined = dateJoined;
         this.icon = icon;
+        this.locale = locale;
+        this.verified = verified;
     }
 
-    public User(long id, String username, String password, String email, String description, int reputation, String dateJoined, byte[] icon) {
+    public User(long id, String username, String password, String email, String description, int reputation, String dateJoined, byte[] icon, Locale locale, boolean verified) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -35,6 +39,8 @@ public class User {
         this.reputation = reputation;
         this.dateJoined = dateJoined;
         this.icon = icon;
+        this.locale = locale;
+        this.verified = verified;
     }
 
     public long getId() { return id; }
@@ -65,4 +71,19 @@ public class User {
 
     public byte[] getIcon() { return this.icon; }
 
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
 }

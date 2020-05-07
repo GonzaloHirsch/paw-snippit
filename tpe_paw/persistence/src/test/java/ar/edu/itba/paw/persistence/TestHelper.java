@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class TestHelper {
@@ -64,9 +65,11 @@ public class TestHelper {
             put("email", email);
             put("reputation", 0);
             put("date_joined", DATE.format(Calendar.getInstance().getTime().getTime()));
+            put("locale", "en");
+            put("verified", 0);
         }};
         long userId = jdbcInsertUser.executeAndReturnKey(map).longValue();
-        return new User(userId, username, password, email, description, 0, DATE.format(Calendar.getInstance().getTime().getTime()), null);
+        return new User(userId, username, password, email, description, 0, DATE.format(Calendar.getInstance().getTime().getTime()), null, new Locale("en"), false);
 
     }
 

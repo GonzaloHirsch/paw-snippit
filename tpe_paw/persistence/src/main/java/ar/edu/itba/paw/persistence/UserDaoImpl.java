@@ -30,8 +30,10 @@ public class UserDaoImpl implements UserDao {
                     rs.getString("description"),
                     rs.getInt("reputation"),
                     rs.getString("date_joined"),
-                    rs.getBytes("icon")
-            ); //ni idea como hacer esto
+                    rs.getBytes("icon"),
+                    new Locale(rs.getString("locale")),
+                    rs.getInt("verified") == 1
+            );
         }
     };
 
@@ -44,7 +46,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public long createUser(String username,String password, String email, String description, int reputation, String dateJoined) {
+    public long createUser(String username,String password, String email, String description, int reputation, String dateJoined, Locale locale) {
         final Map<String, Object> args = new HashMap<>();
         args.put("username",username);
         args.put("password",password);
@@ -52,6 +54,8 @@ public class UserDaoImpl implements UserDao {
         args.put("description", description);
         args.put("reputation",reputation);
         args.put("date_joined",dateJoined);
+        args.put("locale", locale.getLanguage());
+        args.put("verified", 0);
 
         return jdbcInsert.executeAndReturnKey(args).longValue();
     }

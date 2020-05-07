@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface SnippetService {
+    int FLAGGED_SNIPPET_REP_VALUE = 10;
+
     Collection<Snippet> getAllSnippets(int page, int pageSize);
     Collection<Snippet> getAllFavoriteSnippets(final long userId, int page, int pageSize);
     Collection<Snippet> getAllFollowingSnippets(final long userId, int page, int pageSize);

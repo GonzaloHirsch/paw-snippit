@@ -36,4 +36,10 @@ public interface UserService {
 
     void changeReputation(final long userId, final int amount);
 
+    void updateLocale(final long userId, final Locale locale);
+
+    String getLocaleLanguage(final long userId);
+
+    String getLocaleRegion(final long userId);
+
 }

@@ -39,10 +39,8 @@ public class UserDaoImpl implements UserDao {
 
     @Autowired
     public UserDaoImpl(final DataSource ds){
-
         jdbcTemplate = new JdbcTemplate(ds);
-
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("users").usingGeneratedKeyColumns("id");
+        jdbcInsert = new SimpleJdbcInsert(this.jdbcTemplate).withTableName("users").usingGeneratedKeyColumns("id");
     }
 
     @Override
@@ -63,49 +61,64 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findUserById(long id) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE id = ?", ROW_MAPPER, id)
+        return this.jdbcTemplate.query("SELECT * FROM users WHERE id = ?", ROW_MAPPER, id)
                 .stream().findFirst();
     }
 
     @Override
     public Optional<User> findUserByUsername(String username) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE username = ?", ROW_MAPPER, username)
+        return this.jdbcTemplate.query("SELECT * FROM users WHERE username = ?", ROW_MAPPER, username)
                 .stream().findFirst();
     }
 
     @Override
     public Optional<User> findUserByEmail(String email) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE email = ?", ROW_MAPPER, email)
+        return this.jdbcTemplate.query("SELECT * FROM users WHERE email = ?", ROW_MAPPER, email)
                 .stream().findFirst();
     }
 
     @Override
     public void updateDescription(String username, String newDescription){
-        jdbcTemplate.update("UPDATE users SET description = ? WHERE username = ?", newDescription, username);
+        this.jdbcTemplate.update("UPDATE users SET description = ? WHERE username = ?", newDescription, username);
     }
 
     @Override
     public void changePassword(String email, String password){
-        jdbcTemplate.update("UPDATE users SET password = ? WHERE email = ?", password, email);
+        this.jdbcTemplate.update("UPDATE users SET password = ? WHERE email = ?", password, email);
     }
 
     @Override
     public void changeProfilePhoto(long userId, byte[] photo) {
-        jdbcTemplate.update("UPDATE users SET icon = ? WHERE id = ?", photo, userId);
+        this.jdbcTemplate.update("UPDATE users SET icon = ? WHERE id = ?", photo, userId);
     }
 
     @Override
     public void changeDescription(final long userId, final String description) {
-        jdbcTemplate.update("UPDATE users SET description = ? WHERE id = ?", description, userId);
+        this.jdbcTemplate.update("UPDATE users SET description = ? WHERE id = ?", description, userId);
     }
 
     @Override
     public void changeReputation(long userId, int value) {
-        jdbcTemplate.update("UPDATE users SET reputation = reputation + ? WHERE id = ?", value, userId);
+        this.jdbcTemplate.update("UPDATE users SET reputation = reputation + ? WHERE id = ?", value, userId);
     }
 
     public Collection<User> getAllUsers() {
-        return jdbcTemplate.query("SELECT * FROM users", ROW_MAPPER);
+        return this.jdbcTemplate.query("SELECT * FROM users", ROW_MAPPER);
+    }
+
+    @Override
+    public void updateLocale(long userId, Locale locale) {
+        this.jdbcTemplate.update("UPDATE users SET lang = ? AND region = ? WHERE id = ?", locale.getLanguage(), locale.getCountry());
+    }
+
+    @Override
+    public String getLocaleLanguage(long userId) {
+        return this.jdbcTemplate.queryForObject("SELECT lang FROM users WHERE id = ?", new Object[]{userId}, String.class);
+    }
+
+    @Override
+    public String getLocaleRegion(long userId) {
+        return this.jdbcTemplate.queryForObject("SELECT region FROM users WHERE id = ?", new Object[]{userId}, String.class);
     }
 
 }

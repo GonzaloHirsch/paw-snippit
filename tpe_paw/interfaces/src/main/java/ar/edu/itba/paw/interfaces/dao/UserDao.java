@@ -28,4 +28,10 @@ public interface UserDao {
     void changeReputation(long userId, int value);
 
     Collection<User> getAllUsers();
+
+    void updateLocale(final long userId, final Locale locale);
+
+    String getLocaleLanguage(final long userId);
+
+    String getLocaleRegion(final long userId);
 }

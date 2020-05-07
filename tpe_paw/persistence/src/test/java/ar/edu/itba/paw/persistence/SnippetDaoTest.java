@@ -200,17 +200,16 @@ public class SnippetDaoTest {
     }
 
     @Test
-    public void findSnippetByCriteriaMultiTest(){
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
+    public void testGetAllSnippets(){
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId);
+        long snippetId2 = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId);
 
+        Collection<Snippet> maybeColl = snippetDao.getAllSnippets(1,PAGE_SIZE);
 
-
-
-
-
-
+        assertEquals(2,JdbcTestUtils.countRowsInTable(jdbcTemplate,SNIPPETS_TABLE));
     }
+
+    @Test
 
 
 

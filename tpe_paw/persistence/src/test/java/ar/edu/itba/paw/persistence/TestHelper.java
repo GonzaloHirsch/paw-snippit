@@ -45,6 +45,8 @@ public class TestHelper {
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String USER_ROLE = "USER";
 
+    public static final int PAGE_SIZE = 6;
+
     public static long insertSnippetIntoDb(SimpleJdbcInsert jdbcInsert, long userId, String title, String description, String code, long languageId){
         final Map<String, Object> snippetDataMap = new HashMap<String,Object>(){{
             put("user_id", userId);

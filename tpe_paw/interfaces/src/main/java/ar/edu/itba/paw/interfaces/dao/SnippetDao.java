@@ -18,7 +18,8 @@ public interface SnippetDao {
         UPVOTED,
         FLAGGED,
         LANGUAGES,
-        TAGS
+        TAGS,
+        USER
     }
     enum Types {
         ALL,

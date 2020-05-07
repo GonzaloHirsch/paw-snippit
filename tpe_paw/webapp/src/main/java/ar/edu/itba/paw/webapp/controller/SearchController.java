@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
-import ar.edu.itba.paw.interfaces.service.LanguageService;
-import ar.edu.itba.paw.interfaces.service.RoleService;
-import ar.edu.itba.paw.interfaces.service.SnippetService;
-import ar.edu.itba.paw.interfaces.service.TagService;
+import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
@@ -12,9 +9,8 @@ import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.LanguageNotFoundException;
 import ar.edu.itba.paw.webapp.exception.TagNotFoundException;
-import ar.edu.itba.paw.webapp.form.DeleteForm;
-import ar.edu.itba.paw.webapp.form.FollowForm;
-import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
+import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +62,8 @@ public class SearchController {
     private MessageSource messageSource;
     @Autowired
     private LanguageService languageService;
+    @Autowired
+    private UserService userService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
     private static final String HOME = "";
@@ -75,6 +73,7 @@ public class SearchController {
     private static final String FLAGGED = "flagged/";
     private static final String LANGUAGES = "languages/";
     private static final String TAGS = "tags/";
+    private static final String USER = "user/";
 
     @RequestMapping("/search")
     public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
@@ -168,6 +167,30 @@ public class SearchController {
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.TAGS, null, tagId);
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, TAGS + tagId + "/");
         mav.addObject("tag", tag.get());
+        return mav;
+    }
+
+    @RequestMapping("/user/{id}/search")
+    public ModelAndView searchInTags(final @PathVariable("id") long id, @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm, @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm, @Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page, final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing) {
+        final ModelAndView mav = new ModelAndView("user/profile");
+        /* Set the current user and its following tags */
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        Optional<User> user = this.userService.findUserById(id);
+        if (!user.isPresent()) {
+            this.logAndThrow("/user/"+id+"/search");
+        }
+        descriptionForm.setDescription(user.get().getDescription());
+        if (currentUser == null || (currentUser.getId() != user.get().getId() && editing)) {
+            // ERROR
+        }
+        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
+        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, id, null);
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, USER + id + "/");
+        mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.get().getId()));
+        mav.addObject("editing", editing);
+        mav.addObject("isEdit", false);
+        mav.addObject("user", user.get());
+        mav.addObject("snippets", snippets);
         return mav;
     }
 

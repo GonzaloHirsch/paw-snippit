@@ -17,7 +17,9 @@ CREATE TABLE IF NOT EXISTS users
     description VARCHAR(300),
     reputation  INT,
     date_joined TIMESTAMP,
-    icon        BINARY
+    icon        BINARY,
+    lang VAR(5) DEFAULT 'en',
+    region VAR(5) DEFAULT 'US'
 );
 
 CREATE TABLE IF NOT EXISTS languages
@@ -115,7 +117,7 @@ FROM (
                 u.username      AS u_name,
                 u.reputation    AS rep,
                 u.icon          AS icon,
-                u.locale        AS locale,
+                u.lang          AS lang,
                 u.region        AS reg
                 u.verified      AS ver,
                 sn.votes        AS votes,

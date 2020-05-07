@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.MailException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletContext;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,6 +40,8 @@ public class EmailServiceImpl implements EmailService {
     private TemplateService templateService;
     @Autowired
     private CryptoService cryptoService;
+    @Autowired
+    private ServletContext context;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     @Async

@@ -34,4 +34,8 @@ public interface UserDao {
     String getLocaleLanguage(final long userId);
 
     String getLocaleRegion(final long userId);
+
+    boolean userEmailIsVerified(final long userId);
+
+    void verifyUserEmail(final long userId);
 }

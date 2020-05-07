@@ -108,7 +108,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void updateLocale(long userId, Locale locale) {
-        this.jdbcTemplate.update("UPDATE users SET lang = ? AND region = ? WHERE id = ?", locale.getLanguage(), locale.getCountry());
+        this.jdbcTemplate.update("UPDATE users SET lang = ? AND region = ? WHERE id = ?", locale.getLanguage(), locale.getCountry(), userId);
     }
 
     @Override
@@ -119,6 +119,16 @@ public class UserDaoImpl implements UserDao {
     @Override
     public String getLocaleRegion(long userId) {
         return this.jdbcTemplate.queryForObject("SELECT region FROM users WHERE id = ?", new Object[]{userId}, String.class);
+    }
+
+    @Override
+    public boolean userEmailIsVerified(long userId) {
+        return this.jdbcTemplate.queryForObject("SELECT verified FROM users WHERE id = ?", new Object[]{userId}, Integer.class) == 1;
+    }
+
+    @Override
+    public void verifyUserEmail(long userId) {
+        this.jdbcTemplate.update("UPDATE users SET verified = 1 WHERE id = ?", userId);
     }
 
 }

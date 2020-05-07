@@ -108,6 +108,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean userEmailIsVerified(long userId) {
+        return this.userDao.userEmailIsVerified(userId);
+    }
+
+    @Override
+    public void verifyUserEmail(long userId) {
+        this.userDao.verifyUserEmail(userId);
+    }
+
+    @Override
     public Collection<User> getAllUsers() {
         return this.userDao.getAllUsers();
     }

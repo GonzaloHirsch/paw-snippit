@@ -105,8 +105,8 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, Types type, String term, Locations location, Orders order, Long userId, int page) {
-        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(queryType, location, userId, type, term)
+    public Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, Types type, String term, Locations location, Orders order, Long userId, Long resourceId, int page) {
+        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(queryType, location, userId, type, term, resourceId)
                 .setOrder(order, type)
                 .setPaging(page, PAGE_SIZE)
                 .build();
@@ -236,8 +236,8 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public int getSnippetByCriteriaCount(QueryTypes queryType, Types type, String term, Locations location, Long userId) {
-        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(queryType, location, userId, type, term)
+    public int getSnippetByCriteriaCount(QueryTypes queryType, Types type, String term, Locations location, Long userId,Long resourceId) {
+        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(queryType, location, userId, type, term, resourceId)
                 .build();
         return this.jdbcTemplate.queryForObject(searchQuery.getQuery(), searchQuery.getParams(), Integer.class);
     }

@@ -94,7 +94,8 @@ public class TagsController {
         mav.addObject("pages", totalSnippetCount/pageSize + (totalSnippetCount % pageSize == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("tag", tag.get());
-        mav.addObject("snippets", snippetService.findSnippetsForTag(tagId));
+        mav.addObject("searchContext","tags/"+tagId+"/");
+        mav.addObject("snippetList", snippetService.findSnippetsForTag(tagId));
         return mav;
     }
 

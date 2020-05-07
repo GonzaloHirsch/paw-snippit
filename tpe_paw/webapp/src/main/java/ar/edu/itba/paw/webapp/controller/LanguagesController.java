@@ -88,7 +88,8 @@ public class LanguagesController {
         mav.addObject("pages", totalSnippetCount/pageSize + (totalSnippetCount % pageSize == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("language", language.get());
-        mav.addObject("snippets", snippetService.findSnippetsWithLanguage(langId, page));
+        mav.addObject("searchContext","languages/"+langId+"/");
+        mav.addObject("snippetList", snippetService.findSnippetsWithLanguage(langId, page));
         return mav;
     }
 

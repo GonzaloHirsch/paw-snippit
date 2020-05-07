@@ -16,7 +16,9 @@ public interface SnippetDao {
         FAVORITES,
         FOLLOWING,
         UPVOTED,
-        FLAGGED
+        FLAGGED,
+        LANGUAGES,
+        TAGS
     }
     enum Types {
         ALL,
@@ -36,7 +38,7 @@ public interface SnippetDao {
         COUNT
     }
 
-    Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, int page);
+    Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, Long resourceId, int page);
     Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page);
     Collection<Snippet> getAllSnippets(int page);
     Collection<Snippet> getAllFavoriteSnippets(final long userId, int page);
@@ -61,6 +63,6 @@ public interface SnippetDao {
     int getAllSnippetsByOwnerCount(final long userId);
     int getAllSnippetsByTagCount(final long tagId);
     int getAllSnippetsByLanguageCount(final long langId);
-    int getSnippetByCriteriaCount(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId);
+    int getSnippetByCriteriaCount(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId, Long resourceId);
     int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged);
 }

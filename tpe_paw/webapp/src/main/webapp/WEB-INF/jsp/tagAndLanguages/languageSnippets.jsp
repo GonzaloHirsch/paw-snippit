@@ -15,7 +15,7 @@
     <script src="<c:url value='/resources/js/form.js'/>"></script>
 </head>
 <body>
-<c:set var="snippetList" value="${snippets}" scope="request"/>
+<c:set var="snippetList" value="${snippetList}" scope="request"/>
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">

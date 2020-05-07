@@ -163,6 +163,7 @@ public class SnippetDaoTest {
                 SnippetDao.Locations.HOME,
                 SnippetDao.Orders.ASC,
                 null,
+                null,
                 1).stream().findFirst();
 
         //Evaluacion

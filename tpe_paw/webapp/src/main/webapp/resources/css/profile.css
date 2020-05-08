@@ -21,6 +21,7 @@
     display: inline-block;
     font-size: 20px;
     word-break: break-word;
+    padding: 0;
 }
 
 .profile-date {

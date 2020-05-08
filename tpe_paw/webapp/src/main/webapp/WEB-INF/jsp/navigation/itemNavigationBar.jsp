@@ -6,7 +6,6 @@
 
 <html>
 <head>
-<link href="<c:url value='/resources/css/navigationBar.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/resources/css/itemSearchBar.css'/>" rel="stylesheet"/>
 </head>
 <body>

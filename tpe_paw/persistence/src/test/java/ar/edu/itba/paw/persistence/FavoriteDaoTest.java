@@ -56,7 +56,7 @@ public class FavoriteDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
         long languageId = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        defaultSnippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,languageId);
+        defaultSnippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,languageId,0);
     }
 
     @Test

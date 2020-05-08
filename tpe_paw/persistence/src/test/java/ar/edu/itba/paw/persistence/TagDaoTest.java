@@ -64,6 +64,8 @@ public class TagDaoTest {
         SimpleJdbcInsert jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
         jdbcInsertTagSnippet = new SimpleJdbcInsert(ds).withTableName(SNIPPET_TAGS_TABLE);
 
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
+
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
         User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR);
 
@@ -71,7 +73,7 @@ public class TagDaoTest {
         long languageId = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        defaultSnippetId = insertSnippetIntoDb(jdbcInsertSnippet,user.getId(),TITLE,DESCR,CODE, languageId);
+        defaultSnippetId = insertSnippetIntoDb(jdbcInsertSnippet,user.getId(),TITLE,DESCR,CODE, languageId,0);
     }
 
 

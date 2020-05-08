@@ -26,7 +26,7 @@ public class SnippetDaoImpl implements SnippetDao {
     @Autowired
     private TagDao tagDao;
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
     private final RowMapper<Snippet> ROW_MAPPER = new RowMapper<Snippet>() {
@@ -120,7 +120,7 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Optional<Snippet> findSnippetById(long id) {
+        public Optional<Snippet> findSnippetById(long id) {
         Optional<Snippet> snippet = this.jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.id = ?", ROW_MAPPER, id).stream().findFirst();
         if (snippet.isPresent() && snippet.get().getTags() == null) {
             snippet.get().setTags(this.tagDao.findTagsForSnippet(snippet.get().getId()));

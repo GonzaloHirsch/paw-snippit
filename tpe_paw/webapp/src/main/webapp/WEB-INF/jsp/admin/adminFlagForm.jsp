@@ -4,11 +4,7 @@
 
 <html>
 <head>
-    <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/form.css'/>" rel="stylesheet"/>
-    <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet"/>
-    <link href="<c:url value='/resources/css/icons.css'/>" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="<c:url value='/resources/js/form.js'/>"></script>
 </head>
 <body>

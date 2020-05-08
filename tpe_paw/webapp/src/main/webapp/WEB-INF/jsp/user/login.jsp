@@ -75,7 +75,7 @@
                 </a>
             </div>
             <!-- REDIRECT to recover password -->
-            <div class="flex-center register-text-container white-text">
+            <div class="flex-center form-text-container white-text">
                 <spring:message code="login.forgotPassword"/>
                 <a class="white-text form-text-space" href="<c:url value='/recover-password'/>">
                     <spring:message code="login.recoverPassword"/>

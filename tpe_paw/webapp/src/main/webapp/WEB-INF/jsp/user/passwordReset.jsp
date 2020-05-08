@@ -5,11 +5,11 @@
 
 <html>
 <head>
-    <title><spring:message code="login.title"/></title>
+    <title><spring:message code="passwordRecovery.finished.title"/></title>
     <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon.ico'/>"/>
     <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
-    <link href="<c:url value='/resources/css/registration.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/form.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/checkbox.css'/>" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <body>
@@ -19,29 +19,28 @@
     <div class="main-content flex-center">
 
         <c:set var="error" value="${requestScope.error}" scope="request"/>
-        <div class="flex-column flex-center register-block register-border">
+        <div class="flex-column flex-center form-block form-border">
 
             <!-- Title -->
-            <div class="flex-row flex-center register-text-container white-text register-welcome-text fw-300">
-                <i class="material-icons app-icon register-app-icon-margin">code</i>
+            <div class="flex-row flex-center form-text-container white-text form-welcome-text fw-300">
+                <i class="material-icons app-icon form-app-icon-margin">code</i>
                 <spring:message code="app.name"/>
             </div>
-            <div class="flex-center register-form register-border register-shadow">
-                <div class="register-form-data">
-                    <div class="register-form-title">
-                        <div class="register-field-container">
+            <div class="flex-center form form-border form-shadow">
+                <div class="form-data">
+                    <div class="form-info-text">
+                        <div class="form-field-container">
                             <div class="">
                                 <spring:message code="passwordReset.title"/>
                             </div>
                         </div>
                     </div>
-                    <div class="register-field-container">
-                        <a class="no-text-decoration" href="<c:url value="/"/>">
-                            <div class="flex-center register-border register-field-size register-button fw-500">
-                                <spring:message code="shared.goHome"/>
-                            </div>
-                        </a>
-                    </div>
+                    <a class="flex-center form-border form-field-size form-button form-button-basics form-buttons-margin fw-500" href="<c:url value='/login'/>">
+                        <spring:message code="logout.loginRedirect"/>
+                    </a>
+                    <a class="flex-center form-border form-field-size form-button form-button-basics form-buttons-margin fw-500" href="<c:url value='/'/>">
+                        <spring:message code="shared.goHome"/>
+                    </a>
                 </div>
             </div>
         </div>

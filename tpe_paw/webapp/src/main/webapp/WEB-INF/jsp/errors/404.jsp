@@ -26,7 +26,7 @@
     <div class="main-content">
         <div class="flex-column flex-center error-page-main">
             <div class="error-code border-radius">404</div>
-            <div class="error-page-not-found"><spring:message code="error.page.not.found"/></div>
+            <div class="error-page-not-found"><spring:message code="error.404"/></div>
 
             <div class="error-dialog border-radius flex-column flex-column">
                 <h2>

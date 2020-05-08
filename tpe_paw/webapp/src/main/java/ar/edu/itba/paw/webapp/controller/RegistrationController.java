@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.auth.SignUpAuthentication;
+import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.RecoveryForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
 import ar.edu.itba.paw.webapp.form.ResetPasswordForm;
@@ -11,6 +12,7 @@ import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,6 +48,8 @@ public class RegistrationController {
     private RoleService roleService;
     @Autowired
     private CryptoService cryptoService;
+    @Autowired
+    private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
     private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -125,13 +129,13 @@ public class RegistrationController {
                                       @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm) {
         Optional<User> userOpt = userService.findUserById(id);
         if(!userOpt.isPresent()) {
-            return new ModelAndView("errors/404");
+            throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{id}, LocaleContextHolder.getLocale()));
         }
         User user = userOpt.get();
         boolean pass = cryptoService.checkValidRecoveryToken(id, token);
-        if (!pass)
-            return new ModelAndView("errors/404");
-
+        if (!pass) {
+            //TODO WHAT IS THIS
+        }
         // TODO pass email instead of id in recovery link?
         //in order to avoid calling db twice for user email
         resetPasswordForm.setEmail(user.getEmail());

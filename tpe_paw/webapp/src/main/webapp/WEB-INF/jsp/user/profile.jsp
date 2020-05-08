@@ -12,6 +12,9 @@
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/snippetCreate.css'/>" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="<c:url value='/resources/js/form.js'/>"></script>
     <script src="<c:url value='/resources/js/profile.js'/>"></script>
@@ -114,20 +117,20 @@
                             <div class="fw-100 stat"><spring:message code="profile.stats.following"/></div>
                         </div>
                     </div>
-                        <form:form id="description-form" method="PUT" action="${user.id}/edit" modelAttribute="descriptionForm">
-                            <c:if test="${currentUser.id == user.id && editing}">
-                                <div class="profile-description profile-info-item">
-                                    <form:label class="fw-400 snippetC-subtitles" path="description"><spring:message code="snippetCreateForm.description"/> </form:label>
-                                    <form:textarea class="full-width snippetC-description-input snippetC-border" rows="2" type="text" path="description" placeholder='${desc_hint}'/>
-                                    <form:errors path="description" element="p"/>
-                                </div>
-                            </c:if>
-                        </form:form>
+                    <form:form id="description-form" method="POST" cssClass="profile-info-item" action="${user.id}/edit" modelAttribute="descriptionForm">
                         <c:if test="${!editing}">
                             <div class="profile-description profile-info-item">
-                                ${user.description}
+                                    ${user.description}
                             </div>
                         </c:if>
+                        <c:if test="${currentUser.id == user.id && editing}">
+                            <form:label class="fw-400 snippetC-subtitles" path="description"><spring:message code="snippetCreateForm.description"/> </form:label>
+                            <div class="profile-description flex-row flex-grow">
+                                <form:textarea class="flex-grow snippetC-description-input snippetC-border" rows="2" type="text" path="description" placeholder='${desc_hint}'/>
+                            </div>
+                        </c:if>
+                        <form:errors path="description" cssClass="form-error" element="p"/>
+                    </form:form>
                 </div>
             </div>
         </div>

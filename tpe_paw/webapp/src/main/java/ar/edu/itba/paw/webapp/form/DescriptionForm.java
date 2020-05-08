@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 
 public class DescriptionForm {
 
-    @Size(max=300)
+    @Size(max=300, message = "{Size.profileForm.description}")
     @NotBlank
     private String description;
 

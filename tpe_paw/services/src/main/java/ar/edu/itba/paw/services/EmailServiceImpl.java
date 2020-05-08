@@ -17,10 +17,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -42,7 +39,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendEmail(String to, String subject, String body) {
+    public void sendEmail(String to, String subject, String body, Locale locale) {
         try {
             MimeMessage message = this.emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -50,7 +47,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setSubject(subject);
             // True flag to inform the helper it's html
             helper.setText(body, true);
-            helper.setFrom(messageSource.getMessage("app.name", null, LocaleContextHolder.getLocale()));
+            helper.setFrom(messageSource.getMessage("app.name", null, locale));
             emailSender.send(message);
         } catch (MailException e) {
             // TODO: LOG EMAIL ERROR
@@ -61,21 +58,22 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendRegistrationEmail(String to, String username) {
+    public void sendRegistrationEmail(String to, String username, Locale locale) {
         try {
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("username", username);
-            String body = this.templateService.merge("/templates/register.vm", data, LocaleContextHolder.getLocale());
-            String subject = messageSource.getMessage("email.register.subject", new Object[]{username}, LocaleContextHolder.getLocale());
-            this.sendEmail(to, subject, body);
+            String body = this.templateService.merge("/templates/register.vm", data, locale);
+            String subject = messageSource.getMessage("email.register.subject", new Object[]{username}, locale);
+            this.sendEmail(to, subject, body, locale);
         } catch (Exception e) {
             // TODO: DO SMTH
             String a = e.getMessage();
         }
     }
+
     @Async
     @Override
-    public void sendRecoveryEmail(String baseUrl, String userEmail) {
+    public void sendRecoveryEmail(String baseUrl, String userEmail, Locale locale) {
         User searchedUser = userService.findUserByEmail(userEmail).get(); // User SHOULD be found
         String base64Token = cryptoService.generateTOTP(userEmail, searchedUser.getPassword());
         String link = baseUrl + "/reset-password?id=" + searchedUser.getId() + "&token=" + base64Token;
@@ -83,9 +81,9 @@ public class EmailServiceImpl implements EmailService {
         data.put("recoveryURL", link);
         data.put("username", searchedUser.getUsername());
         data.put("userEmail", searchedUser.getEmail());
-        String body = this.templateService.merge("/templates/passwordRecovery.vm", data, LocaleContextHolder.getLocale());
-        String subject = messageSource.getMessage("email.recovery.subject", null, LocaleContextHolder.getLocale());
-        this.sendEmail(userEmail, subject, body);
+        String body = this.templateService.merge("/templates/passwordRecovery.vm", data, locale);
+        String subject = messageSource.getMessage("email.recovery.subject", null, locale);
+        this.sendEmail(userEmail, subject, body, locale);
     }
 
     @Scheduled(cron = "0 0 12 * * Mon")
@@ -99,32 +97,34 @@ public class EmailServiceImpl implements EmailService {
         Collection<User> users = this.userService.getAllUsers();
         Collection<Tag> followedTags;
         int snippetsForWeek;
+        Locale locale;
         for (User user : users) {
+            locale = user.getLocale();
             // Getting all followed tags
             followedTags = this.tagService.getFollowedTagsForUser(user.getId());
             if (followedTags.size() > 0) {
                 // Getting how many new snippets were found
                 snippetsForWeek = this.snippetService.getNewSnippetsForTagsCount(sdf.format(weekBeforeTs), followedTags, user.getId());
                 if (snippetsForWeek > 0) {
-                    this.sendDigestEmail(user.getEmail(), user.getUsername(), snippetsForWeek);
+                    this.sendDigestEmail(user.getEmail(), user.getUsername(), snippetsForWeek, locale);
                 } else {
-                    this.sendDigestFollowOtherEmail(user.getEmail(), user.getUsername());
+                    this.sendDigestFollowOtherEmail(user.getEmail(), user.getUsername(), locale);
                 }
             } else {
-                this.sendDigestNoFollowEmail(user.getEmail(), user.getUsername());
+                this.sendDigestNoFollowEmail(user.getEmail(), user.getUsername(), locale);
             }
         }
     }
 
     @Override
-    public void sendDigestEmail(String to, String username, int count) {
+    public void sendDigestEmail(String to, String username, int count, Locale locale) {
         try {
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("itemCount", count);
             data.put("username", username);
-            String body = this.templateService.merge("/templates/weeklyDigest.vm", data, LocaleContextHolder.getLocale());
-            String subject = messageSource.getMessage("email.wd.subject", null, LocaleContextHolder.getLocale());
-            this.sendEmail(to, subject, body);
+            String body = this.templateService.merge("/templates/weeklyDigest.vm", data, locale);
+            String subject = messageSource.getMessage("email.wd.subject", null, locale);
+            this.sendEmail(to, subject, body, locale);
         } catch (Exception e) {
             // TODO: DO SMTH
             String a = e.getMessage();
@@ -132,13 +132,13 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendDigestNoFollowEmail(String to, String username) {
+    public void sendDigestNoFollowEmail(String to, String username, Locale locale) {
         try {
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("username", username);
-            String body = this.templateService.merge("/templates/weeklyDigestNoItmes.vm", data, LocaleContextHolder.getLocale());
-            String subject = messageSource.getMessage("email.wdni.subject", null, LocaleContextHolder.getLocale());
-            this.sendEmail(to, subject, body);
+            String body = this.templateService.merge("/templates/weeklyDigestNoItems.vm", data, locale);
+            String subject = messageSource.getMessage("email.wdni.subject", null, locale);
+            this.sendEmail(to, subject, body, locale);
         } catch (Exception e) {
             // TODO: DO SMTH
             String a = e.getMessage();
@@ -146,13 +146,13 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendDigestFollowOtherEmail(String to, String username) {
+    public void sendDigestFollowOtherEmail(String to, String username, Locale locale) {
         try {
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("username", username);
-            String body = this.templateService.merge("/templates/weeklyDigestSuggestFollowing.vm", data, LocaleContextHolder.getLocale());
-            String subject = messageSource.getMessage("email.wdsf.subject", null, LocaleContextHolder.getLocale());
-            this.sendEmail(to, subject, body);
+            String body = this.templateService.merge("/templates/weeklyDigestSuggestFollowing.vm", data, locale);
+            String subject = messageSource.getMessage("email.wdsf.subject", null, locale);
+            this.sendEmail(to, subject, body, locale);
         } catch (Exception e) {
             // TODO: DO SMTH
             String a = e.getMessage();

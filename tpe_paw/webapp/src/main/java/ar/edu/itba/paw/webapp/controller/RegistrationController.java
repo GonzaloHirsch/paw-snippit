@@ -100,7 +100,7 @@ public class RegistrationController {
                 LocaleContextHolder.getLocale()
         );
         try {
-            this.emailService.sendRegistrationEmail(registerForm.getEmail(), registerForm.getUsername());
+            this.emailService.sendRegistrationEmail(registerForm.getEmail(), registerForm.getUsername(), LocaleContextHolder.getLocale());
         } catch (MailException e) {
             LOGGER.warn("Failed to send registration email to user {}", registerForm.getUsername());
         }
@@ -123,7 +123,7 @@ public class RegistrationController {
             return recoverPassword(recoveryForm, errors);
         }
         final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        emailService.sendRecoveryEmail(baseUrl, recoveryForm.getEmail());
+        emailService.sendRecoveryEmail(baseUrl, recoveryForm.getEmail(), LocaleContextHolder.getLocale());
         return new ModelAndView("user/emailSent");
     }
 

@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS users
     icon        BINARY,
     lang        VARCHAR(5) DEFAULT 'en',
     region      VARCHAR(5) DEFAULT 'US',
-    verified    INT DEFAULT 0;
+    verified    INT DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS languages
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS user_roles
 );
 
 
-CREATE OR REPLACE VIEW complete_snippets AS
+CREATE VIEW complete_snippets AS
 SELECT aux.sn_id   AS id,
        aux.code    AS code,
        aux.title   AS title,

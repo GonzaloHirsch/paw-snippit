@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.User;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
@@ -30,6 +29,8 @@ public class TestHelper {
     public static final String PASSWORD2 = "Password2";
     public static final String USERNAME2 = "Username2";
     public static final String EMAIL2 = "email2@email.com";
+    public static final Locale LOCALE_EN = new Locale("en");
+    public static final Locale LOCALE_ES = new Locale("es");
 
     public static final String TITLE = "Snippet Title";
     public static final String TITLE2 = "Snippet Title 2";
@@ -58,7 +59,7 @@ public class TestHelper {
         return jdbcInsert.executeAndReturnKey(snippetDataMap).longValue();
     }
 
-    public static User insertUserIntoDb(SimpleJdbcInsert jdbcInsertUser, String username, String password, String email,String description){
+    public static User insertUserIntoDb(SimpleJdbcInsert jdbcInsertUser, String username, String password, String email,String description, Locale locale){
         Map<String, Object> map = new HashMap<String, Object>() {{
             put("username", username);
             put("password", password);
@@ -70,7 +71,7 @@ public class TestHelper {
             put("verified", 0);
         }};
         long userId = jdbcInsertUser.executeAndReturnKey(map).longValue();
-        return new User(userId, username, password, email, description, 0, DATE.format(Calendar.getInstance().getTime().getTime()), null, new Locale("en"), false);
+        return new User(userId, username, password, email, description, 0, DATE.format(Calendar.getInstance().getTime().getTime()), null,locale , false);
 
     }
 

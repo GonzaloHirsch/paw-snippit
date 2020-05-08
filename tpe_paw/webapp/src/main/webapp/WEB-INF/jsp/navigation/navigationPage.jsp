@@ -14,26 +14,39 @@
         <c:set var="qs" value="${pageContext.request.queryString}"/>
         <c:if test="${pages > 1}">
             <div class="navigation-page-container search-container flex-center flex-row">
+            <c:if test="${page > 2}">
+                <c:url var="prevUrl" value="">
+                    <c:forEach items="${param}" var="entry">
+                        <c:if test="${entry.key != 'page'}">
+                            <c:param name="${entry.key}" value="${entry.value}"/>
+                        </c:if>
+                    </c:forEach>
+                    <c:param name="page" value="${1}"/>
+                </c:url>
+                <a class="navigation-page" href="${prevUrl}"><span class="material-icons">
+                first_page </span></a>
+            </c:if>
             <c:if test="${page != 1}">
                 <c:url var="prevUrl" value="">
                     <c:forEach items="${param}" var="entry">
                         <c:if test="${entry.key != 'page'}">
-                            <c:param name="${entry.key}" value="${entry.value}" />
+                            <c:param name="${entry.key}" value="${entry.value}"/>
                         </c:if>
                     </c:forEach>
-                    <c:param name="page" value="${page - 1}" />
+                    <c:param name="page" value="${page - 1}"/>
                 </c:url>
                 <a class="navigation-page" href="${prevUrl}"><span class="material-icons">
-                keyboard_arrow_left </span></a>
+                chevron_left </span></a>
             </c:if>
-            <c:forEach begin="1" end="${pages}" varStatus="pageIndex">
+            <c:forEach begin="${page - 1 > 0 ? page - 1 : 1}" end="${pages > page + 1 ? page + 1 : pages}"
+                       varStatus="pageIndex">
                 <c:url var="actUrl" value="">
                     <c:forEach items="${param}" var="entry">
                         <c:if test="${entry.key != 'page'}">
-                            <c:param name="${entry.key}" value="${entry.value}" />
+                            <c:param name="${entry.key}" value="${entry.value}"/>
                         </c:if>
                     </c:forEach>
-                    <c:param name="page" value="${pageIndex.index}" />
+                    <c:param name="page" value="${pageIndex.index}"/>
                 </c:url>
                 <c:choose>
                     <c:when test="${page == pageIndex.index}">
@@ -48,13 +61,25 @@
                 <c:url var="nextUrl" value="">
                     <c:forEach items="${param}" var="entry">
                         <c:if test="${entry.key != 'page'}">
-                            <c:param name="${entry.key}" value="${entry.value}" />
+                            <c:param name="${entry.key}" value="${entry.value}"/>
                         </c:if>
                     </c:forEach>
-                    <c:param name="page" value="${page + 1}" />
+                    <c:param name="page" value="${page + 1}"/>
                 </c:url>
                 <a class="navigation-page" href="${nextUrl}"><span class="material-icons">
-                keyboard_arrow_right </span></a>
+                chevron_right </span></a>
+            </c:if>
+            <c:if test="${page < pages - 1}">
+                <c:url var="nextUrl" value="">
+                    <c:forEach items="${param}" var="entry">
+                        <c:if test="${entry.key != 'page'}">
+                            <c:param name="${entry.key}" value="${entry.value}"/>
+                        </c:if>
+                    </c:forEach>
+                    <c:param name="page" value="${pages}"/>
+                </c:url>
+                <a class="navigation-page" href="${nextUrl}"><span class="material-icons">
+                last_page </span></a>
             </c:if>
             </div>
         </c:if>

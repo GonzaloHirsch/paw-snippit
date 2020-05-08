@@ -33,7 +33,7 @@ public class FieldExistsValidator implements ConstraintValidator<FieldExists, Ob
         if (fieldName != null ) {
             switch (fieldName) {
                 case EMAIL:
-                    if (value instanceof String) valid = userService.emailExists((String) value);
+                    if (value instanceof String && !((String)value).isEmpty()) valid = userService.emailExists((String) value);
                     messageTemplate = "{Exists.notFound.email}";
                     break;
                 case LANGUAGE:

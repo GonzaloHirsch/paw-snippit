@@ -18,7 +18,6 @@
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content flex-center">
 
-        <c:url var="sendEmailUrl" value="/send-email"/>
         <c:set var="error" value="${requestScope.error}" scope="request"/>
         <div class="flex-column flex-center form-block form-border">
 

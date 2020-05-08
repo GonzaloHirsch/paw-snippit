@@ -54,7 +54,7 @@
 
                     <form:input class="hidden" path="email"/>
                     <div class="form-field-container">
-                        <input class="form-border form-field-size form-button form-button-basics fw-500" type="submit" value="<spring:message code="recoverPassword.submit"/>"/>
+                        <input class="form-border form-field-size form-button form-button-basics fw-500" type="submit" value="<spring:message code="recoverPassword.reset.submit"/>"/>
                     </div>
                 </div>
             </form:form>

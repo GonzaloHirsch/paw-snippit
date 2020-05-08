@@ -5,7 +5,9 @@ import ar.edu.itba.paw.interfaces.service.EmailService;
 import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.auth.SignUpAuthentication;
+import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.RecoveryForm;
 import ar.edu.itba.paw.webapp.form.RegisterForm;
@@ -33,32 +35,27 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.Optional;
 
 @Controller
 public class RegistrationController {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private EmailService emailService;
-    @Autowired
-    private SignUpAuthentication signUpAuthentication;
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private CryptoService cryptoService;
-    @Autowired
-    private MessageSource messageSource;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private UserService userService;
+    @Autowired private EmailService emailService;
+    @Autowired private SignUpAuthentication signUpAuthentication;
+    @Autowired private LoginAuthentication loginAuthentication;
+    @Autowired private RoleService roleService;
+    @Autowired private CryptoService cryptoService;
+    @Autowired private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
     private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     @RequestMapping(value = "/login")
     public ModelAndView login(HttpServletRequest request) {
+        this.throwIfUserIsLoggedIn();
+
         String referrer = request.getHeader("Referer");
         request.getSession().setAttribute("url_prior_login", referrer);
 
@@ -81,6 +78,8 @@ public class RegistrationController {
 
     @RequestMapping(value = "/signup", method = {RequestMethod.GET})
     public ModelAndView signUpForm(HttpServletRequest request, @ModelAttribute("registerForm") final RegisterForm form) {
+        this.throwIfUserIsLoggedIn();
+
         String referrer = request.getHeader("Referer");
         request.getSession().setAttribute("url_prior_login", referrer);
 
@@ -112,12 +111,13 @@ public class RegistrationController {
         return new ModelAndView("redirect:" + redirectUrl);
     }
 
-    @RequestMapping(value = "recover-password")
+    @RequestMapping(value = "/recover-password")
     public ModelAndView recoverPassword(@ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
+        this.throwIfUserIsLoggedIn();
         return new ModelAndView("user/recoverPassword");
     }
 
-    @RequestMapping(value = "/send-email", method = RequestMethod.POST)
+    @RequestMapping(value = "/recover-password", method = RequestMethod.POST)
     public ModelAndView sendEmail(@Valid @ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
         if (errors.hasErrors()){
             return recoverPassword(recoveryForm, errors);
@@ -131,14 +131,15 @@ public class RegistrationController {
     public ModelAndView resetPassword(final @RequestParam(value="id") long id,
                                       final @RequestParam(value="token") String token,
                                       @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm) {
+        this.throwIfUserIsLoggedIn();
         Optional<User> userOpt = userService.findUserById(id);
         if(!userOpt.isPresent()) {
             throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{id}, LocaleContextHolder.getLocale()));
         }
         User user = userOpt.get();
-        boolean pass = cryptoService.checkValidRecoveryToken(id, token);
+        boolean pass = cryptoService.checkValidRecoveryToken(user, token);
         if (!pass) {
-            //TODO WHAT IS THIS
+            //TODO what is this?
         }
         // TODO pass email instead of id in recovery link?
         //in order to avoid calling db twice for user email
@@ -154,12 +155,18 @@ public class RegistrationController {
         if(errors.hasErrors()) {
             return resetPassword(id, token, resetPasswordForm);
         }
-        userService.changePassword(resetPasswordForm.getEmail(), resetPasswordForm.getNewPassword());
+        userService.changePassword(resetPasswordForm.getEmail(), passwordEncoder.encode(resetPasswordForm.getNewPassword()));
         return new ModelAndView("user/passwordReset");
     }
 
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         model.addAttribute("searchForm", searchForm);
+    }
+
+    private void throwIfUserIsLoggedIn() {
+        if (this.loginAuthentication.getLoggedInUser() != null) {
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.anonymous", null, LocaleContextHolder.getLocale()));
+        }
     }
 }

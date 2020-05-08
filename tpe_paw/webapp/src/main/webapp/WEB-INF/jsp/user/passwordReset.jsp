@@ -26,22 +26,20 @@
                 <i class="material-icons app-icon form-app-icon-margin">code</i>
                 <spring:message code="app.name"/>
             </div>
-            <div class="flex-center form form-border form-shadow">
-                <div class="form-data">
-                    <div class="form-info-text">
-                        <div class="form-field-container">
-                            <div class="">
-                                <spring:message code="passwordReset.title"/>
-                            </div>
+            <div class="flex-center flex-column form form-border form-shadow">
+                <div class="form-info-text">
+                    <div class="form-field-container">
+                        <div class="">
+                            <spring:message code="passwordReset.title"/>
                         </div>
                     </div>
-                    <a class="flex-center form-border form-field-size form-button form-button-basics form-buttons-margin fw-500" href="<c:url value='/login'/>">
-                        <spring:message code="logout.loginRedirect"/>
-                    </a>
-                    <a class="flex-center form-border form-field-size form-button form-button-basics form-buttons-margin fw-500" href="<c:url value='/'/>">
-                        <spring:message code="shared.goHome"/>
-                    </a>
                 </div>
+                <a class="flex-center form-border form-field-size form-button form-button-basics form-buttons-margin fw-500" href="<c:url value='/login'/>">
+                    <spring:message code="logout.loginRedirect"/>
+                </a>
+                <a class="flex-center form-border form-field-size form-button form-button-basics form-buttons-margin fw-500" href="<c:url value='/'/>">
+                    <spring:message code="shared.goHome"/>
+                </a>
             </div>
         </div>
     </div>

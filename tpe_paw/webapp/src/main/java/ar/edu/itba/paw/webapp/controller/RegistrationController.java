@@ -138,8 +138,9 @@ public class RegistrationController {
         }
         User user = userOpt.get();
         boolean pass = cryptoService.checkValidRecoveryToken(user, token);
+        /* If link is no longer valid */
         if (!pass) {
-            //TODO what is this?
+            return new ModelAndView("user/recoveryLinkInvalid");
         }
         // TODO pass email instead of id in recovery link?
         //in order to avoid calling db twice for user email

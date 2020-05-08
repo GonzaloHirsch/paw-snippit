@@ -133,7 +133,6 @@ public class UserDaoTest {
 
         userDao.updateDescription(user.getUsername(),newDescription);
 
-        // Manually obtaining the snippet. The idea is not to use other methods of the dao, because its unit testing
         Optional<User> maybeUser = jdbcTemplate.query("SELECT * FROM users WHERE id = ?", ROW_MAPPER, user.getId()).stream().findFirst();
         assertTrue(maybeUser.isPresent());
         assertEquals(newDescription, maybeUser.get().getDescription());
@@ -149,7 +148,6 @@ public class UserDaoTest {
 
         userDao.changePassword(user.getEmail(),newPassword);
 
-        // Manually obtaining the snippet. The idea is not to use other methods of the dao, because its unit testing
         Optional<User> maybeUser = jdbcTemplate.query("SELECT * FROM users WHERE id = ?", ROW_MAPPER, user.getId()).stream().findFirst();
         assertTrue(maybeUser.isPresent());
         assertEquals(newPassword, maybeUser.get().getPassword());

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.dao.LanguageDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.Language;
+import ar.edu.itba.paw.models.Tag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,11 +21,13 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
 import static junit.framework.TestCase.*;
 import static ar.edu.itba.paw.persistence.TestHelper.*;
+import static org.junit.Assert.assertTrue;
 
 /*
  Tested Methods:
@@ -100,10 +103,7 @@ public class LanguageDaoTest {
         
         assertFalse(maybeLanguages.isEmpty());
         assertEquals(2,maybeLanguages.size());
-        List<Long> maybeIdList = new ArrayList<Long>();
-        for(Language l:maybeLanguages){
-            maybeIdList.add(l.getId());
-        }
+        List<Long> maybeIdList = maybeLanguages.stream().mapToLong(Language::getId).boxed().collect(Collectors.toList());
         assertTrue(maybeIdList.contains(lanId1));
         assertTrue(maybeIdList.contains(lanId2));
     }

@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.persistence.TestHelper.SNIPPETS_TABLE;
 import static ar.edu.itba.paw.persistence.TestHelper.*;
@@ -130,13 +131,11 @@ public class TagDaoTest {
 
         Collection<Tag> maybeTags = tagDao.getAllTags();
 
+        assertNotNull(maybeTags);
         assertEquals(2,maybeTags.size());
-        List<String> maybeList = new ArrayList<>();
-        for(Tag t:maybeTags){
-            maybeList.add(t.getName());
-        }
-        assertTrue(maybeList.contains(TAG));
-        assertTrue(maybeList.contains(TAG2));
+        List<Long> maybeList = maybeTags.stream().mapToLong(Tag::getId).boxed().collect(Collectors.toList());
+        assertTrue(maybeList.contains(tagId1));
+        assertTrue(maybeList.contains(tagId2));
     }
 
     @Test
@@ -150,11 +149,9 @@ public class TagDaoTest {
         Collection<Tag> maybeTags = tagDao.findTagsForSnippet(defaultSnippetId);
 
         assertEquals(2,maybeTags.size());
-        List<String> tagNames = new ArrayList<>();
-        for(Tag t:maybeTags){
-            tagNames.add(t.getName());
-        }
-        assertTrue(tagNames.contains(TAG));
+        List<Long> maybeList = maybeTags.stream().mapToLong(Tag::getId).boxed().collect(Collectors.toList());
+        assertTrue(maybeList.contains(tagId1));
+        assertTrue(maybeList.contains(tagId2));
     }
 
 }

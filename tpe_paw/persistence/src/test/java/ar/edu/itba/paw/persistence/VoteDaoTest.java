@@ -151,7 +151,7 @@ public class VoteDaoTest {
 
         voteDao.withdrawVote(defaultUser.getId(),defaultSnippetId);
 
-        //TODO: How to verify it does not exists?
+        assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,VOTES_FOR_TABLE));
     }
 
     @Test

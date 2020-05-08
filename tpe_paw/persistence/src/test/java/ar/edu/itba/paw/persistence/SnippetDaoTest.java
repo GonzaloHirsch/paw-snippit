@@ -23,6 +23,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -258,7 +259,7 @@ public class SnippetDaoTest {
 
     @Test
     public void testDeleteSnippetById(){
-        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);;
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
         long decoyId = insertSnippetIntoDb(jdbcInsertSnippet,altUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
 
         boolean result = snippetDao.deleteSnippetById(snippetId);
@@ -268,9 +269,18 @@ public class SnippetDaoTest {
 
     }
 
+    //FALLA TODO: Check why
     @Test
     public void testGetNewSnippetsForTagsCount(){
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+        insertSnippetTagIntoDb(jdbcInsertSnippetTags,snippetId,defaultTag.getId());
+        Calendar weekBefore = Calendar.getInstance();
+        weekBefore.add(Calendar.WEEK_OF_YEAR, -1);
+        Timestamp weekBeforeTs = new Timestamp(weekBefore.getTime().getTime());
 
+        int result = snippetDao.getNewSnippetsForTagsCount(DATE.format(weekBeforeTs),Arrays.asList(defaultTag),defaultUser.getId());
+
+        assertEquals(1,result);
     }
 
     @Test

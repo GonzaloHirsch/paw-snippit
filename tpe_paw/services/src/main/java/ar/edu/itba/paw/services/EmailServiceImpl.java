@@ -75,10 +75,10 @@ public class EmailServiceImpl implements EmailService {
     }
     @Async
     @Override
-    public void sendRecoveryEmail(String userEmail) {
+    public void sendRecoveryEmail(String baseUrl, String userEmail) {
         User searchedUser = userService.findUserByEmail(userEmail).get(); // User SHOULD be found
         String base64Token = cryptoService.generateTOTP(userEmail, searchedUser.getPassword());
-        String link = "http://localhost:9092/webapp_war_exploded/reset-password?id=" + searchedUser.getId() + "&token=" + base64Token;
+        String link = baseUrl + "/reset-password?id=" + searchedUser.getId() + "&token=" + base64Token;
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("recoveryURL", link);
         data.put("username", searchedUser.getUsername());

@@ -28,8 +28,6 @@ public class SnippetServiceImpl implements SnippetService {
     @Autowired
     private VoteService voteService;
 
-    private final int FLAGGED_SNIPPET_REP_VALUE = 10;
-
     @Override
     public Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, Long resourceId, int page, int pageSize) {
         return this.snippetDao.findSnippetByCriteria(SnippetDao.QueryTypes.SEARCH, type, term, location, order, userId, resourceId, page, pageSize);

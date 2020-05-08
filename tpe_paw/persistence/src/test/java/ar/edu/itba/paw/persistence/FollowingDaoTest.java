@@ -55,7 +55,7 @@ public class FollowingDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
         defaultTagId = insertTagIntoDb(jdbcInsertTag,TAG);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        defaultUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR);
+        defaultUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR,LOCALE_EN);
 
     }
 

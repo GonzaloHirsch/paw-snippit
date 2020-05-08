@@ -44,7 +44,7 @@ public class RoleDaoTest {
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
         SimpleJdbcInsert jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
-        defaultUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR);
+        defaultUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR,LOCALE_EN);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,ROLES_TABLE);
         adminRoleId = insertRoleIntoDb(jdbcInsertRole,ADMIN_ROLE);

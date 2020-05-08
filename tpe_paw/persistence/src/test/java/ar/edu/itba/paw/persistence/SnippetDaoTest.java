@@ -63,7 +63,7 @@ public class SnippetDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, SNIPPETS_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
-        defaultUser = insertUserIntoDb(jdbcInsertUser, USERNAME, PASSWORD, EMAIL, DESCR);
+        defaultUser = insertUserIntoDb(jdbcInsertUser, USERNAME, PASSWORD, EMAIL, DESCR,LOCALE_EN);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, LANGUAGES_TABLE);
         defaultLanguageId = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);

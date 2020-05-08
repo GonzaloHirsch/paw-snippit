@@ -90,9 +90,9 @@ public class  UserController {
     }
 
     @RequestMapping(value = "/user/{id}", method = {RequestMethod.POST})
-    public ModelAndView endEditPhoto(final @PathVariable("id") long id, @ModelAttribute("profilePhotoForm") @Valid final ProfilePhotoForm profilePhotoForm, final BindingResult errors) {
+    public ModelAndView endEditPhoto(final @PathVariable("id") long id, @ModelAttribute("profilePhotoForm") @Valid final ProfilePhotoForm profilePhotoForm, final BindingResult errors, @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm) {
         if (errors.hasErrors()){
-            return userProfile(id, profilePhotoForm, new DescriptionForm(), 1, false);
+            return userProfile(id, profilePhotoForm, descriptionForm, 1, false);
         }
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
@@ -125,10 +125,10 @@ public class  UserController {
     @RequestMapping(value = "/user/{id}/edit", method = {RequestMethod.POST})
     public ModelAndView endEditUserProfile(final @PathVariable("id") long id,
                                            @Valid @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
+                                           final BindingResult errors,
                                            @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
                                            final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                           final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing,
-                                           final BindingResult errors) {
+                                           final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing) {
         if (errors.hasErrors()) {
             return userProfile(id, profilePhotoForm, descriptionForm, page, editing);
         }

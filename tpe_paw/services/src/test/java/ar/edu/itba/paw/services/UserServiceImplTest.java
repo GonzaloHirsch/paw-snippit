@@ -18,8 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserServiceImplTest
-{
+public class UserServiceImplTest {
     private static final String PASSWORD = "passwordpassword";
     private static final String USERNAME = "username";
     private static final String EMAIL = "email@email.com";

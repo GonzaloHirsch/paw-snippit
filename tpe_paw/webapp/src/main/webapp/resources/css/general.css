@@ -12,7 +12,7 @@
 }
 
 body {
-    background-color: #eeedf2;
+    background-color: #eeedf2 !important;
     margin: 0;
     line-height: inherit !important;
 }

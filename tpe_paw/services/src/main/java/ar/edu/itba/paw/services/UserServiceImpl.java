@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -18,24 +19,20 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
 
-    @Autowired
-    private EmailService emailService;
-
-
     @Override
-    public long createUser(String username, String password, String email, String description, int reputation, String dateJoined) {
-        return userDao.createUser(username, password, email, description, reputation, dateJoined);
+    public long createUser(String username, String password, String email, String description, int reputation, String dateJoined, Locale locale) {
+        return this.userDao.createUser(username, password, email, description, reputation, dateJoined, locale);
     }
 
     @Override
-    public long register(String username, String password, String email, String dateJoined) {
-        long userId = createUser(username, password, email, "", 0, dateJoined);
+    public long register(String username, String password, String email, String dateJoined, Locale locale) {
+        long userId = createUser(username, password, email, "", 0, dateJoined, locale);
         return userId;
     }
 
     @Override
     public Optional<User> findUserByUsername(String username) {
-        return userDao.findUserByUsername(username);
+        return this.userDao.findUserByUsername(username);
     }
 
     @Override
@@ -56,22 +53,22 @@ public class UserServiceImpl implements UserService {
     // TODO, should this ask for the current password?
     @Override
     public void changePassword(String email, String password) {
-        userDao.changePassword(email, password);
+        this.userDao.changePassword(email, password);
     }
 
     @Override
     public boolean isEmailUnique(String email) {
-        return !userDao.findUserByEmail(email).isPresent();
+        return !this.userDao.findUserByEmail(email).isPresent();
     }
 
     @Override
     public boolean isUsernameUnique(String username) {
-        return !userDao.findUserByUsername(username).isPresent();
+        return !this.userDao.findUserByUsername(username).isPresent();
     }
 
     @Override
     public boolean emailExists(String email) {
-        return userDao.findUserByEmail(email).isPresent();
+        return this.userDao.findUserByEmail(email).isPresent();
     }
 
     @Override
@@ -87,7 +84,37 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changeReputation(long userId, int amount) {
-        userDao.changeReputation(userId, amount);
+        this.userDao.changeReputation(userId, amount);
+    }
+
+    @Override
+    public void updateLocale(long userId, Locale locale) {
+        String language = this.userDao.getLocaleLanguage(userId);
+        String region = this.userDao.getLocaleRegion(userId);
+
+        if (!locale.getLanguage().equals(language) || !locale.getCountry().equals(region)) {
+            this.userDao.updateLocale(userId, locale);
+        }
+    }
+
+    @Override
+    public String getLocaleLanguage(long userId) {
+        return this.userDao.getLocaleLanguage(userId);
+    }
+
+    @Override
+    public String getLocaleRegion(long userId) {
+        return this.userDao.getLocaleRegion(userId);
+    }
+
+    @Override
+    public boolean userEmailIsVerified(long userId) {
+        return this.userDao.userEmailIsVerified(userId);
+    }
+
+    @Override
+    public void verifyUserEmail(long userId) {
+        this.userDao.verifyUserEmail(userId);
     }
 
     @Override

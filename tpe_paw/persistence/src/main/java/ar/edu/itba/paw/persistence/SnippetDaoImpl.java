@@ -40,7 +40,9 @@ public class SnippetDaoImpl implements SnippetDao {
                     null,
                     rs.getInt("reputation"),
                     null,
-                    rs.getBytes("icon")
+                    rs.getBytes("icon"),
+                    new Locale(rs.getString("lang"), rs.getString("region")),
+                    rs.getInt("verified") == 1
             );
 
             String language = rs.getString("language");
@@ -76,17 +78,17 @@ public class SnippetDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> getAllFavoriteSnippets(final long userId, int page, int pageSize) {
-        return this.jdbcTemplate.query("SELECT DISTINCT s.id, s.user_id, s.username, s.reputation, s.code, s.title, s.description, s.language, s.date_created, s.icon, s.flagged, s.votes FROM complete_snippets AS s JOIN favorites AS fav ON fav.snippet_id = s.id WHERE fav.user_id = ? ORDER BY s.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, pageSize, pageSize * (page - 1));
+        return this.jdbcTemplate.query("SELECT DISTINCT s.id, s.user_id, s.username, s.reputation, s.lang, s.region, s.verified, s.code, s.title, s.description, s.language, s.date_created, s.icon, s.flagged, s.votes FROM complete_snippets AS s JOIN favorites AS fav ON fav.snippet_id = s.id WHERE fav.user_id = ? ORDER BY s.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, pageSize, pageSize * (page - 1));
     }
 
     @Override
     public Collection<Snippet> getAllFollowingSnippets(final long userId, int page, int pageSize) {
-        return this.jdbcTemplate.query("SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id INNER JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ? ORDER BY sn.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, pageSize, pageSize * (page - 1));
+        return this.jdbcTemplate.query("SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.lang, sn.region, sn.verified, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id INNER JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ? ORDER BY sn.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, pageSize, pageSize * (page - 1));
     }
 
     @Override
     public Collection<Snippet> getAllUpVotedSnippets(final long userId, int page, int pageSize) {
-        return this.jdbcTemplate.query("SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn JOIN votes_for AS v ON sn.id = v.snippet_id WHERE v.user_id = ? AND v.type = 1 ORDER BY sn.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, pageSize, pageSize * (page - 1));
+        return this.jdbcTemplate.query("SELECT DISTINCT sn.id, sn.user_id, sn.username, sn.reputation, sn.lang, sn.region, sn.verified, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes FROM complete_snippets AS sn JOIN votes_for AS v ON sn.id = v.snippet_id WHERE v.user_id = ? AND v.type = 1 ORDER BY sn.id LIMIT ? OFFSET ?", ROW_MAPPER, userId, pageSize, pageSize * (page - 1));
     }
 
     @Override

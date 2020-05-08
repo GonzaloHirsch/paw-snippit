@@ -17,7 +17,10 @@ CREATE TABLE IF NOT EXISTS users
     description VARCHAR(300),
     reputation  INT,
     date_joined TIMESTAMP,
-    icon        BINARY
+    icon        BINARY,
+    lang        VARCHAR(5) DEFAULT 'en',
+    region      VARCHAR(5) DEFAULT 'US',
+    verified    INT DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS languages
@@ -86,6 +89,7 @@ CREATE TABLE IF NOT EXISTS user_roles
     PRIMARY KEY (user_id, role_id)
 );
 
+
 CREATE VIEW complete_snippets AS
 SELECT aux.sn_id   AS id,
        aux.code    AS code,
@@ -95,6 +99,9 @@ SELECT aux.sn_id   AS id,
        aux.user_id AS user_id,
        aux.u_name  AS username,
        aux.rep     AS reputation,
+       aux.lang    AS lang,
+       aux.reg     AS region,
+       aux.ver     AS verified,
        aux.lang_id AS language_id,
        l.name      AS language,
        aux.icon    AS icon,
@@ -111,6 +118,9 @@ FROM (
                 u.username      AS u_name,
                 u.reputation    AS rep,
                 u.icon          AS icon,
+                u.lang          AS lang,
+                u.region        AS reg,
+                u.verified      AS ver,
                 sn.votes        AS votes,
                 sn.flag         AS flag
          FROM (SELECT sni.id                    AS id,
@@ -128,4 +138,3 @@ FROM (
                   JOIN users AS u ON sn.user_id = u.id
      ) AS aux
          JOIN languages AS l ON aux.lang_id = l.id;
-

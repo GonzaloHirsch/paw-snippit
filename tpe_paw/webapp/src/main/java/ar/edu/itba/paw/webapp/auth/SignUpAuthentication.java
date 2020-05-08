@@ -37,7 +37,7 @@ public class SignUpAuthentication {
                 /* Remove the attribute from the session --> clean up */
                 session.removeAttribute("url_prior_login");
                 /* Don't want to redirect to any of these urls */
-                if (!(redirectUrl.contains("login") || redirectUrl.contains("signUp") || redirectUrl.contains("goodbye"))) {
+                if (!(redirectUrl.contains("login") || redirectUrl.contains("signUp") || redirectUrl.contains("goodbye") || redirectUrl.contains("reset-password") || redirectUrl.contains("recover-password"))) {
                     return redirectUrl;
                 }
             }

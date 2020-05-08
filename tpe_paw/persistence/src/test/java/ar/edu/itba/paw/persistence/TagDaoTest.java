@@ -68,7 +68,7 @@ public class TagDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR);
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR,LOCALE_EN);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, LANGUAGES_TABLE);
         long languageId = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);

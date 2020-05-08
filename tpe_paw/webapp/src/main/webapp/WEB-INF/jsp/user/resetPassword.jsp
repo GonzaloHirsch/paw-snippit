@@ -5,11 +5,11 @@
 
 <html>
 <head>
-    <title><spring:message code="login.title"/></title>
-    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon.ico'/>"/>
+    <title><spring:message code="passwordRecovery.title"/></title>
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon/favicon.ico'/>"/>
     <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
-    <link href="<c:url value='/resources/css/registration.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/form.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/checkbox.css'/>" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <body>
@@ -24,32 +24,37 @@
             <c:param name="id" value="${param.id}"/>
             <c:param name="token" value="${param.token}"/>
         </c:url>
-        <div class="flex-column flex-center register-block register-border">
+        <div class="flex-column flex-center form-block form-border">
 
             <!-- Title -->
-            <div class="flex-row flex-center register-text-container white-text register-welcome-text fw-300">
-                <i class="material-icons app-icon register-app-icon-margin">code</i>
+            <div class="flex-row flex-center form-text-container white-text form-welcome-text fw-300">
+                <i class="material-icons app-icon form-app-icon-margin">code</i>
                 <spring:message code="resetPassword.title"/>
             </div>
 
             <!-- RESET PASSWORD form -->
-            <form:form class="flex-center register-form register-border register-shadow" action="${resetPassUrl}" modelAttribute="resetPasswordForm" method="post" enctype="application/x-www-form-urlencoded">
+            <form:form class="flex-center form form-border form-shadow" action="${resetPassUrl}" modelAttribute="resetPasswordForm" method="post" enctype="application/x-www-form-urlencoded">
 
-                <div class="flex-column register-form-data">
-                    <div class="register-field-container">
+                <div class="flex-column form-form-data">
+                    <div class="form-field-container">
                         <form:errors path="newPassword" cssClass="form-error" element="p"/>
-                        <i class="material-icons register-icons">lock</i>
-                        <label><form:input class="register-border register-field-size register-field-padding" path="newPassword" placeholder='${password_hint}' type="password"/></label>
+                        <label>
+                            <i class="material-icons form-icons">lock</i>
+                            <form:input class="form-border form-field-size form-field-layout" path="newPassword" placeholder='${password_hint}' type="password"/>
+                        </label>
                     </div>
 
-                    <div class="register-field-container">
+                    <div class="form-field-container">
                         <form:errors path="repeatNewPassword" cssClass="form-error" element="p"/>
-                        <i class="material-icons register-icons">lock</i>
-                        <label><form:input class="register-border register-field-size register-field-padding" path="repeatNewPassword" placeholder='${repeat_password_hint}' type="password"/></label>
+                        <label>
+                            <i class="material-icons form-icons">lock</i>
+                            <input class="form-border form-field-size form-field-layout" name="repeatNewPassword" type="password" placeholder="${repeat_password_hint}">
+                        </label>
                     </div>
+
                     <form:input class="hidden" path="email"/>
-                    <div class="register-field-container">
-                        <input class="register-border register-field-size register-button fw-500" type="submit" value="<spring:message code="recoverPassword.submit"/>"/>
+                    <div class="form-field-container">
+                        <input class="form-border form-field-size form-button form-button-basics fw-500" type="submit" value="<spring:message code="recoverPassword.reset.submit"/>"/>
                     </div>
                 </div>
             </form:form>

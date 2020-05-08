@@ -17,6 +17,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Optional;
 
 import static ar.edu.itba.paw.persistence.TestHelper.*;
@@ -57,7 +58,9 @@ public class UserDaoTest {
             rs.getString("description"),
             rs.getInt("reputation"),
             rs.getString("date_joined"),
-            rs.getBytes("icon")
+            rs.getBytes("icon"),
+            new Locale(rs.getString("lang"), rs.getString("region")),
+            rs.getInt("verified") == 1
     );
 
 
@@ -75,16 +78,15 @@ public class UserDaoTest {
     public void testCreateUser() {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
 
-        final long userId = userDao.createUser(USERNAME, PASSWORD, EMAIL, "", 0, DATE.format(Calendar.getInstance().getTime().getTime()));
+        final long userId = userDao.createUser(USERNAME, PASSWORD, EMAIL, "", 0, DATE.format(Calendar.getInstance().getTime().getTime()),new Locale("en"));
 
-        assertNotNull(userId);
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
     }
 
     @Test
     public void testFindUserById(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        User expectedUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"");
+        User expectedUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
 
         Optional<User> maybeUser = userDao.findUserById(expectedUser.getId());
 
@@ -98,8 +100,8 @@ public class UserDaoTest {
     @Test
     public void testFindUserByUsername(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        User expectedUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"");
-        insertUserIntoDb(jdbcInsertUser,USERNAME2,PASSWORD2,EMAIL2,"");
+        User expectedUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+        insertUserIntoDb(jdbcInsertUser,USERNAME2,PASSWORD2,EMAIL2,"",LOCALE_EN);
 
         Optional<User> maybeUser = userDao.findUserByUsername(USERNAME);
 
@@ -113,8 +115,8 @@ public class UserDaoTest {
     @Test
     public void testFindUserByEmail(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        User expectedUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"");
-        insertUserIntoDb(jdbcInsertUser,USERNAME2,PASSWORD2,EMAIL2,"");
+        User expectedUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+        insertUserIntoDb(jdbcInsertUser,USERNAME2,PASSWORD2,EMAIL2,"",LOCALE_EN);
 
         Optional<User> maybeUser = userDao.findUserByEmail(EMAIL);
 
@@ -128,7 +130,7 @@ public class UserDaoTest {
     @Test
     public void testFindUpdateDescription(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"");
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
         String newDescription = "New Description";
 
         userDao.updateDescription(user.getUsername(),newDescription);
@@ -143,7 +145,7 @@ public class UserDaoTest {
     @Test
     public void testChangePassowrd(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"");
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
         String newPassword = "newpassword";
 
         userDao.changePassword(user.getEmail(),newPassword);
@@ -157,7 +159,7 @@ public class UserDaoTest {
     @Test
     public void testChangeDescription(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"");
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
         String newDescription = "new description";
 
         userDao.changeDescription(user.getId(),newDescription);

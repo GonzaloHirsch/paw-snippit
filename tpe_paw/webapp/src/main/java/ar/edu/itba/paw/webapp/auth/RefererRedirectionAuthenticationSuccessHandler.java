@@ -19,6 +19,7 @@ public class RefererRedirectionAuthenticationSuccessHandler
         this.setUseReferer(true);
     }
 
+    /* Will give me the url when the user was redirected to the login  */
     private String getRedirectUrl(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if(session != null) {
@@ -27,7 +28,6 @@ public class RefererRedirectionAuthenticationSuccessHandler
                 return savedRequest.getRedirectUrl();
             }
         }
-        /* return a sane default in case data isn't there */
         return request.getContextPath() + "/";
     }
 
@@ -44,7 +44,7 @@ public class RefererRedirectionAuthenticationSuccessHandler
                     session.removeAttribute("url_prior_login");
 
                     /* Don't want to redirect to any of these urls */
-                    if (!(redirectUrl.contains("login") || redirectUrl.contains("signUp") || redirectUrl.contains("goodbye"))) {
+                    if (!(redirectUrl.contains("login") || redirectUrl.contains("signUp") || redirectUrl.contains("goodbye") || redirectUrl.contains("reset-password") || redirectUrl.contains("recover-password"))) {
                         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
                         return;
                     }

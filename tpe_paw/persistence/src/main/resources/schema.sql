@@ -53,6 +53,38 @@ DO '
     END;
 ' language plpgsql;
 
+DO '
+    BEGIN
+        BEGIN
+            ALTER TABLE users ADD COLUMN verified INT DEFAULT 0;
+        EXCEPTION
+            WHEN duplicate_column THEN RAISE NOTICE ''column verified already exists in users.'';
+        END;
+    END;
+' language plpgsql;
+
+
+DO '
+    BEGIN
+        BEGIN
+            ALTER TABLE users ADD COLUMN lang VARCHAR(5) DEFAULT ''en'';
+        EXCEPTION
+            WHEN duplicate_column THEN RAISE NOTICE ''column lang already exists in users.'';
+        END;
+    END;
+' language plpgsql;
+
+DO '
+    BEGIN
+        BEGIN
+            ALTER TABLE users ADD COLUMN region VARCHAR(5) DEFAULT ''US'';
+        EXCEPTION
+            WHEN duplicate_column THEN RAISE NOTICE ''column region already exists in users.'';
+        END;
+    END;
+' language plpgsql;
+
+
 
 CREATE TABLE IF NOT EXISTS votes_for
 (
@@ -105,6 +137,9 @@ SELECT aux.sn_id   AS id,
        aux.user_id AS user_id,
        aux.u_name  AS username,
        aux.rep     AS reputation,
+       aux.lang    AS lang,
+       aux.reg     AS region,
+       aux.ver     AS verified,
        aux.lang_id AS language_id,
        l.name      AS language,
        aux.icon    AS icon,
@@ -121,6 +156,9 @@ FROM (
                 u.username      AS u_name,
                 u.reputation    AS rep,
                 u.icon          AS icon,
+                u.lang          AS lang,
+                u.region        AS reg,
+                u.verified      AS ver,
                 sn.votes        AS votes,
                 sn.flag         AS flag
          FROM (SELECT sni.id                    AS id,

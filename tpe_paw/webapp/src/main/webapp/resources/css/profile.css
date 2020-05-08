@@ -33,6 +33,7 @@
 }
 
 .profile-photo {
+    border: black solid 2px;
     height: 200px;
     width: 200px;
     object-fit: fill;

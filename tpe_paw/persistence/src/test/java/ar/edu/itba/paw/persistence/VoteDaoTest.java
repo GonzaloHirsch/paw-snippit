@@ -68,7 +68,7 @@ public class VoteDaoTest {
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        defaultUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR);
+        defaultUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR,LOCALE_EN);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
         long languageId = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);

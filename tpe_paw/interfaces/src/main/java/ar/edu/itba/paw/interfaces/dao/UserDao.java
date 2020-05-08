@@ -4,11 +4,12 @@ import ar.edu.itba.paw.models.User;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 
 public interface UserDao {
 
-    long createUser(String username, String password, String email, String description, int reputation, String dateJoined);
+    long createUser(String username, String password, String email, String description, int reputation, String dateJoined, Locale locale);
 
     Optional<User> findUserByUsername(String username);
 
@@ -27,4 +28,14 @@ public interface UserDao {
     void changeReputation(long userId, int value);
 
     Collection<User> getAllUsers();
+
+    void updateLocale(final long userId, final Locale locale);
+
+    String getLocaleLanguage(final long userId);
+
+    String getLocaleRegion(final long userId);
+
+    boolean userEmailIsVerified(final long userId);
+
+    void verifyUserEmail(final long userId);
 }

@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.persistence.TestHelper.*;
 import static junit.framework.TestCase.assertEquals;
@@ -75,8 +76,8 @@ public class SnippetDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, SNIPPETS_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
-        defaultUser = insertUserIntoDb(jdbcInsertUser, USERNAME, PASSWORD, EMAIL, DESCR);
-        altUser = insertUserIntoDb(jdbcInsertUser,USERNAME2,PASSWORD2,EMAIL2,DESCR);
+        altUser = insertUserIntoDb(jdbcInsertUser,USERNAME2,PASSWORD2,EMAIL2,DESCR,LOCALE_EN);
+        defaultUser = insertUserIntoDb(jdbcInsertUser, USERNAME, PASSWORD, EMAIL, DESCR,LOCALE_EN);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, LANGUAGES_TABLE);
         defaultLanguageId = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);
@@ -153,7 +154,12 @@ public class SnippetDaoTest {
 
         Collection<Snippet> maybeColl = snippetDao.getAllSnippets(1,PAGE_SIZE);
 
-        assertEquals(2,JdbcTestUtils.countRowsInTable(jdbcTemplate,SNIPPETS_TABLE));
+        assertNotNull(maybeColl);
+        assertEquals(2,maybeColl.size());
+        List<Long> idList = maybeColl.stream().mapToLong(Snippet::getId).boxed().collect(Collectors.toList());
+        assertTrue(idList.contains(snippetId));
+        assertTrue(idList.contains(snippetId2));
+
     }
 
     @Test
@@ -215,8 +221,8 @@ public class SnippetDaoTest {
 
     @Test
     public void testFindAllSnippetsByOwner(){
-        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);;
-        long decoyId = insertSnippetIntoDb(jdbcInsertSnippet,altUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+        insertSnippetIntoDb(jdbcInsertSnippet,altUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
 
         Collection<Snippet> maybeCollection = snippetDao.findAllSnippetsByOwner(defaultUser.getId(),1,PAGE_SIZE);
 
@@ -228,7 +234,7 @@ public class SnippetDaoTest {
 
     @Test
     public void testFindSnippetsWithLanguage(){
-        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);;
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
 
         Collection<Snippet> maybeCollection = snippetDao.findSnippetsWithLanguage(defaultLanguageId,1,PAGE_SIZE);
 
@@ -260,7 +266,7 @@ public class SnippetDaoTest {
     @Test
     public void testDeleteSnippetById(){
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
-        long decoyId = insertSnippetIntoDb(jdbcInsertSnippet,altUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+        insertSnippetIntoDb(jdbcInsertSnippet,altUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
 
         boolean result = snippetDao.deleteSnippetById(snippetId);
 
@@ -278,7 +284,7 @@ public class SnippetDaoTest {
         weekBefore.add(Calendar.WEEK_OF_YEAR, -1);
         Timestamp weekBeforeTs = new Timestamp(weekBefore.getTime().getTime());
 
-        int result = snippetDao.getNewSnippetsForTagsCount(DATE.format(weekBeforeTs),Arrays.asList(defaultTag),defaultUser.getId());
+        int result = snippetDao.getNewSnippetsForTagsCount(DATE.format(weekBeforeTs), Collections.singletonList(defaultTag),defaultUser.getId());
 
         assertEquals(1,result);
     }
@@ -335,7 +341,7 @@ public class SnippetDaoTest {
     @Test
     public void testGetAllFollowingSnippetsCount(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(), TITLE, DESCR, CODE, defaultLanguageId,0);
+        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(), TITLE, DESCR, CODE, defaultLanguageId,0);
 
         int count = snippetDao.getAllFavoriteSnippetsCount(defaultUser.getId());
 

@@ -134,7 +134,7 @@ public class SnippetDaoImpl implements SnippetDao {
     public boolean deleteSnippetById(long id) {
         boolean success = true;
         try {
-            jdbcTemplate.update("DELETE FROM snippets WHERE id = ?", new Object[]{id});
+            jdbcTemplate.update("DELETE FROM snippets WHERE id = ?", id);
         } catch (Exception e) {
             success = false;
         }

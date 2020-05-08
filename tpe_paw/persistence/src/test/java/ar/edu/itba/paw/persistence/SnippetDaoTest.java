@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.persistence.TestHelper.*;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -117,9 +118,9 @@ public class SnippetDaoTest {
 
         //Evaluacion
         assertTrue(maybeSnippet.isPresent());
+        assertEquals(snippetId,maybeSnippet.get().getId());
         assertEquals(defaultUser.getUsername(), maybeSnippet.get().getOwner().getUsername());
-        assertEquals(TITLE, maybeSnippet.get().getTitle());
-        assertEquals(DESCR, maybeSnippet.get().getDescription());
+
     }
 
     @Test
@@ -163,8 +164,17 @@ public class SnippetDaoTest {
     }
 
     @Test
+    public void testGetAllSnippetsEmpty(){
+        Collection<Snippet> maybeColl = snippetDao.getAllSnippets(1,PAGE_SIZE);
+
+        assertNotNull(maybeColl);
+        assertTrue(maybeColl.isEmpty());
+
+    }
+
+    @Test
     public void testGetAllFavoriteSnippets(){
-        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);;
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
         insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
         insertFavoriteIntoDb(jdbcInsertFavorite,snippetId,defaultUser.getId());
 
@@ -175,10 +185,19 @@ public class SnippetDaoTest {
         Snippet s = (Snippet) maybeCollection.toArray()[0];
         assertEquals(snippetId,s.getId());
     }
+    @Test
+    public void testGetAllFavoriteSnippetsEmpty(){
+        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+
+        Collection<Snippet> maybeCollection = snippetDao.getAllFavoriteSnippets(defaultUser.getId(),1,PAGE_SIZE);
+
+        assertNotNull(maybeCollection);
+        assertTrue(maybeCollection.isEmpty());
+    }
 
     @Test
     public void testGetAllFollowingSnippets(){
-        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);;
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
         insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
         insertFollowingIntoDb(jdbcInsertFollowing,defaultTag.getId(),defaultUser.getId());
         insertSnippetTagIntoDb(jdbcInsertSnippetTags,snippetId,defaultTag.getId());
@@ -192,9 +211,19 @@ public class SnippetDaoTest {
     }
 
     @Test
+    public void testGetAllFollowingSnippetsEmpty(){
+        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+
+        Collection<Snippet> maybeCollection = snippetDao.getAllFollowingSnippets(defaultUser.getId(),1,PAGE_SIZE);
+
+        assertNotNull(maybeCollection);
+        assertEquals(0,maybeCollection.size());
+    }
+
+    @Test
     public void testGetAllUpvotedSnippets(){
-        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);;
-        long decoyId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
         insertVotesForIntoDb(jdbcInsertVote,snippetId,defaultUser.getId(),1);
 
 
@@ -207,9 +236,18 @@ public class SnippetDaoTest {
     }
 
     @Test
+    public void testGetAllUpvotedSnippetsEmpty(){
+        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+
+        Collection<Snippet> maybeCollection = snippetDao.getAllUpVotedSnippets(defaultUser.getId(),1,PAGE_SIZE);
+
+        assertNotNull(maybeCollection);
+        assertEquals(0,maybeCollection.size());
+    }
+
+    @Test
     public void testGetAllFlaggedSnippets(){
-        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,1);;
-        long decoyId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,1);
 
         Collection<Snippet> maybeCollection = snippetDao.getAllFlaggedSnippets(1,PAGE_SIZE);
 
@@ -217,6 +255,17 @@ public class SnippetDaoTest {
         assertEquals(1,maybeCollection.size());
         Snippet s = (Snippet) maybeCollection.toArray()[0];
         assertEquals(snippetId,s.getId());
+    }
+
+    @Test
+    public void testGetAllFlaggedSnippetsEmpty(){
+        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+
+        Collection<Snippet> maybeCollection = snippetDao.getAllFlaggedSnippets(1,PAGE_SIZE);
+
+        assertNotNull(maybeCollection);
+        assertEquals(0,maybeCollection.size());
+
     }
 
     @Test
@@ -233,6 +282,17 @@ public class SnippetDaoTest {
     }
 
     @Test
+    public void testFindAllSnippetsByOwnerEmpty(){
+      insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+
+        Collection<Snippet> maybeCollection = snippetDao.findAllSnippetsByOwner(altUser.getId()+3,1,PAGE_SIZE);
+
+        assertNotNull(maybeCollection);
+        assertEquals(0,maybeCollection.size());
+
+    }
+
+    @Test
     public void testFindSnippetsWithLanguage(){
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
 
@@ -245,22 +305,38 @@ public class SnippetDaoTest {
     }
 
     @Test
+    public void testFindSnippetsWithLanguageEmpty(){
+        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+
+        Collection<Snippet> maybeCollection = snippetDao.findSnippetsWithLanguage(defaultLanguageId+33,1,PAGE_SIZE);
+
+        assertNotNull(maybeCollection);
+        assertEquals(0,maybeCollection.size());
+    }
+
+    @Test
     public void testFindById() {
-        // Precondiciones
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE, defaultLanguageId,0);
         Collection<Tag> tagList = Collections.singletonList(defaultTag);
         Mockito.when(mockTagDao.findTagsForSnippet(snippetId)).thenReturn(tagList);
 
-        // Ejercitacion
         Optional<Snippet> maybeSnippet = snippetDao.findSnippetById(snippetId);
 
-        //Evaluacion
         assertTrue(maybeSnippet.isPresent());
         assertEquals(defaultUser.getUsername(), maybeSnippet.get().getOwner().getUsername());
         assertEquals(TITLE, maybeSnippet.get().getTitle());
         assertEquals(DESCR, maybeSnippet.get().getDescription());
         assertTrue(maybeSnippet.get().getTags().contains(defaultTag));
+    }
+
+    @Test
+    public void testFindByIdEmpty() {
+        Mockito.when(mockTagDao.findTagsForSnippet(10)).thenReturn(null);
+
+        Optional<Snippet> maybeSnippet = snippetDao.findSnippetById(10);
+
+        assertFalse(maybeSnippet.isPresent());
     }
 
     @Test
@@ -271,6 +347,16 @@ public class SnippetDaoTest {
         boolean result = snippetDao.deleteSnippetById(snippetId);
 
         assertTrue(result);
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate,SNIPPETS_TABLE));
+
+    }
+
+    @Test
+    public void testDeleteSnippetByIdEmpty(){
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+
+        snippetDao.deleteSnippetById(snippetId+10);
+
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate,SNIPPETS_TABLE));
 
     }
@@ -291,7 +377,6 @@ public class SnippetDaoTest {
 
     @Test
     public void testFindSnippetForTag() {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, SNIPPETS_TABLE);
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(), TITLE, DESCR, CODE, defaultLanguageId,0);
         insertSnippetTagIntoDb(jdbcInsertSnippetTags,snippetId,defaultTag.getId());
 
@@ -299,6 +384,16 @@ public class SnippetDaoTest {
 
         assertTrue(snippet.isPresent());
         assertEquals(snippetId,snippet.get().getId());
+    }
+
+    @Test
+    public void testFindSnippetForTagEmpty() {
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(), TITLE, DESCR, CODE, defaultLanguageId,0);
+        insertSnippetTagIntoDb(jdbcInsertSnippetTags,snippetId,defaultTag.getId());
+
+        Optional<Snippet> snippet = snippetDao.findSnippetsForTag(defaultTag.getId()+10).stream().findFirst();
+
+        assertFalse(snippet.isPresent());
     }
 
     @Test
@@ -313,6 +408,11 @@ public class SnippetDaoTest {
     }
 
     @Test
+    public void testFlagSnippetEmpty(){
+        snippetDao.flagSnippet(15);
+    }
+
+    @Test
     public void testUnflagSnippet(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate, SNIPPETS_TABLE);
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(), TITLE, DESCR, CODE, defaultLanguageId,1);
@@ -323,7 +423,10 @@ public class SnippetDaoTest {
         assertEquals(0,flagged);
     }
 
-
+    @Test
+    public void testUnflagSnippetEmpty(){
+        snippetDao.unflagSnippet(15);
+    }
 
     @Test
     public void testGetAllSnippetsCount(){

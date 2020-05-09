@@ -100,11 +100,9 @@ public class SnippetDaoTest {
 
     @Test
     public void testFindSnippetByCriteria(){
-        // Precondiciones
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE, defaultLanguageId,0);
 
-        // Ejercitacion
         Optional<Snippet> maybeSnippet = snippetDao.findSnippetByCriteria(
                 SnippetDao.QueryTypes.SEARCH,
                 SnippetDao.Types.TITLE,
@@ -116,15 +114,29 @@ public class SnippetDaoTest {
                 1,
                 6).stream().findFirst();
 
-        //Evaluacion
         assertTrue(maybeSnippet.isPresent());
         assertEquals(snippetId,maybeSnippet.get().getId());
         assertEquals(defaultUser.getUsername(), maybeSnippet.get().getOwner().getUsername());
-
     }
 
     @Test
-    public void findSnippetByDeepCriteriaTest(){
+    public void testFindSnippetByCriteriaEmpty(){
+        Optional<Snippet> maybeSnippet = snippetDao.findSnippetByCriteria(
+                SnippetDao.QueryTypes.SEARCH,
+                SnippetDao.Types.TITLE,
+                TITLE,
+                SnippetDao.Locations.HOME,
+                SnippetDao.Orders.ASC,
+                null,
+                null,
+                1,
+                6).stream().findFirst();
+
+        assertFalse(maybeSnippet.isPresent());
+    }
+
+    @Test
+    public void testFindSnippetByDeepCriteria(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
 
@@ -145,6 +157,27 @@ public class SnippetDaoTest {
 
         assertTrue(maybeSnippet.isPresent());
         assertEquals(TITLE,maybeSnippet.get().getTitle());
+
+    }
+
+    @Test
+    public void testFindSnippetByDeepCriteriaTest(){
+        Optional<Snippet> maybeSnippet = snippetDao.findSnippetByDeepCriteria(null,
+                null,
+                0,
+                10,
+                0,
+                10,
+                defaultLanguageId,
+                null,
+                TITLE,
+                defaultUser.getUsername(),
+                "title",
+                "asc",
+                true,
+                1, 6).stream().findFirst();
+
+        assertFalse(maybeSnippet.isPresent());
 
     }
 
@@ -439,8 +472,6 @@ public class SnippetDaoTest {
         assertEquals(2,snippetCount);
     }
 
-
-
     @Test
     public void testGetAllFollowingSnippetsCount(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
@@ -450,25 +481,5 @@ public class SnippetDaoTest {
 
         assertEquals(0,count);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

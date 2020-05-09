@@ -45,7 +45,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public long createUser(String username,String password, String email, String description, int reputation, String dateJoined, Locale locale) {
-        final Map<String, Object> args = new HashMap<>();
+        final Map<String, Object> args = new HashMap<>()    ;
         args.put("username",username);
         args.put("password",password);
         args.put("email",email);

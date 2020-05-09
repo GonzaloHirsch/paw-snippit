@@ -51,7 +51,6 @@ public class FavoriteDaoImpl implements FavoriteDao {
             args.put("user_id", userId);
             args.put("snippet_id", snippetId);
             // Executing the insert
-            //TODO: RETURN VALUE AND USE IT TO SHOW ERROR
             this.jdbcInsert.execute(args);
         }
     }

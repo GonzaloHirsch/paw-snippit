@@ -13,7 +13,6 @@ public class WebappCrypto {
 
     private static final int DURATION = 300;
 
-    //TODO StackOverflow
     private static byte[] hexStringToBytes(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];

@@ -122,7 +122,6 @@
                                         ${snippet.owner.username}
                                     </div>
                                     <div class="flex-row">
-                                        <!-- TODO agregar for de estrellita -->
                                         <div class="snippet-text">${snippet.owner.reputation}</div>
                                     </div>
                                 </div>

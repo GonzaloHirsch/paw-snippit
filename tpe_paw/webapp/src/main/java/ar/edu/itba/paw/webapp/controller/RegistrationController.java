@@ -200,7 +200,6 @@ public class RegistrationController {
         if (!pass) {
             return new ModelAndView("user/recoveryLinkInvalid");
         }
-        // TODO pass email instead of id in recovery link?
         //in order to avoid calling db twice for user email
         resetPasswordForm.setEmail(user.getEmail());
         return new ModelAndView("user/resetPassword");

@@ -122,17 +122,25 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Transactional
     public void updateLocale(long userId, Locale locale) {
-        this.jdbcTemplate.update("UPDATE users SET lang = ? AND region = ? WHERE id = ?", locale.getLanguage(), locale.getCountry(), userId);
+        this.jdbcTemplate.update("UPDATE users SET lang = ?, region = ? WHERE id = ?", locale.getLanguage(), locale.getCountry(), userId);
     }
 
     @Override
     public String getLocaleLanguage(long userId) {
-        return this.jdbcTemplate.queryForObject("SELECT lang FROM users WHERE id = ?", new Object[]{userId}, String.class);
+        try {
+            return this.jdbcTemplate.queryForObject("SELECT lang FROM users WHERE id = ?", new Object[]{userId}, String.class);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     @Override
     public String getLocaleRegion(long userId) {
-        return this.jdbcTemplate.queryForObject("SELECT region FROM users WHERE id = ?", new Object[]{userId}, String.class);
+        try {
+            return this.jdbcTemplate.queryForObject("SELECT region FROM users WHERE id = ?", new Object[]{userId}, String.class);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     @Override

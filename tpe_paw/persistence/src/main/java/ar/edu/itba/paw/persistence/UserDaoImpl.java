@@ -108,7 +108,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void updateLocale(long userId, Locale locale) {
-        this.jdbcTemplate.update("UPDATE users SET lang = ? AND region = ? WHERE id = ?", locale.getLanguage(), locale.getCountry(), userId);
+        this.jdbcTemplate.update("UPDATE users SET lang = ?, region = ? WHERE id = ?", locale.getLanguage(), locale.getCountry(), userId);
     }
 
     @Override

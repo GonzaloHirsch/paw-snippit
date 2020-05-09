@@ -261,23 +261,43 @@ public class UserDaoTest {
     }
 
     @Test
-    public void testUpdateLocale(){
+    public void testUpdateLocaleRegion(){
       User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
 
       userDao.updateLocale(user.getId(),LOCALE_ES);
 
-      String locale = jdbcTemplate.queryForObject("SELECT region FROM users WHERE id = ?",new Object[]{user.getId()},String.class);
-      assertEquals(LOCALE_ES.toString(),locale);
+      String region = jdbcTemplate.queryForObject("SELECT region FROM users WHERE id = ?",new Object[]{user.getId()},String.class);
+      assertEquals(LOCALE_ES.getCountry(),region);
     }
 
     @Test
-    public void testUpdateLocaleEmpty(){
+    public void testUpdateLocaleLanguage(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        userDao.updateLocale(user.getId(),LOCALE_ES);
+
+        String lang = jdbcTemplate.queryForObject("SELECT lang FROM users WHERE id = ?",new Object[]{user.getId()},String.class);
+        assertEquals(LOCALE_ES.getLanguage(),lang);
+    }
+
+    @Test
+    public void testUpdateLocaleRegionEmpty(){
         User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
 
         userDao.updateLocale(user.getId()+10,LOCALE_ES);
 
-        String locale = jdbcTemplate.queryForObject("SELECT region FROM users WHERE id = ?",new Object[]{user.getId()},String.class);
-        assertEquals(LOCALE_EN.toString(),locale);
+        String region = jdbcTemplate.queryForObject("SELECT region FROM users WHERE id = ?",new Object[]{user.getId()},String.class);
+        assertEquals(LOCALE_EN.getCountry(), region);
+    }
+
+    @Test
+    public void testUpdateLocaleLanguageEmpty(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        userDao.updateLocale(user.getId()+10,LOCALE_ES);
+
+        String lang = jdbcTemplate.queryForObject("SELECT lang FROM users WHERE id = ?",new Object[]{user.getId()},String.class);
+        assertEquals(LOCALE_EN.getLanguage(), lang);
     }
 
     @Test

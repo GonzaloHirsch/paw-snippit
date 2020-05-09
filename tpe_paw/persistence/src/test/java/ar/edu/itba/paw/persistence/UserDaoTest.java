@@ -17,6 +17,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -70,7 +71,7 @@ public class UserDaoTest {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
 
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "users");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
     }
 
 
@@ -98,6 +99,16 @@ public class UserDaoTest {
     }
 
     @Test
+    public void testFindUserByIdEmpty(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
+        User expectedUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        Optional<User> maybeUser = userDao.findUserById(expectedUser.getId()+10);
+
+        assertFalse(maybeUser.isPresent());
+    }
+
+    @Test
     public void testFindUserByUsername(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
         User expectedUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
@@ -110,6 +121,15 @@ public class UserDaoTest {
         assertEquals(expectedUser.getUsername(), maybeUser.get().getUsername());
         assertEquals(expectedUser.getPassword(), maybeUser.get().getPassword());
         assertEquals(expectedUser.getEmail(), maybeUser.get().getEmail());
+    }
+
+    @Test
+    public void testFindUserByUsernameEmpty(){
+        insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        Optional<User> maybeUser = userDao.findUserByUsername("NOT AN USERNAME");
+
+        assertFalse(maybeUser.isPresent());
     }
 
     @Test
@@ -128,6 +148,15 @@ public class UserDaoTest {
     }
 
     @Test
+    public void testFindUserByEmailEmpty(){
+        insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        Optional<User> maybeUser = userDao.findUserByEmail("NOT AN EMAIL");
+
+        assertFalse(maybeUser.isPresent());
+    }
+
+    @Test
     public void testFindUpdateDescription(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
         User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
@@ -135,27 +164,38 @@ public class UserDaoTest {
 
         userDao.updateDescription(user.getUsername(),newDescription);
 
-        // Manually obtaining the snippet. The idea is not to use other methods of the dao, because its unit testing
         Optional<User> maybeUser = jdbcTemplate.query("SELECT * FROM users WHERE id = ?", ROW_MAPPER, user.getId()).stream().findFirst();
         assertTrue(maybeUser.isPresent());
         assertEquals(newDescription, maybeUser.get().getDescription());
         assertEquals(user.getId(),maybeUser.get().getId());
-
     }
 
     @Test
-    public void testChangePassowrd(){
+    public void testFindUpdateDescriptionEmpty(){
+        String newDescription = "New Description";
+
+        userDao.updateDescription("NOT AN USERNAME",newDescription);
+    }
+
+    @Test
+    public void testChangePassword(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
         User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
         String newPassword = "newpassword";
 
         userDao.changePassword(user.getEmail(),newPassword);
 
-        // Manually obtaining the snippet. The idea is not to use other methods of the dao, because its unit testing
         Optional<User> maybeUser = jdbcTemplate.query("SELECT * FROM users WHERE id = ?", ROW_MAPPER, user.getId()).stream().findFirst();
         assertTrue(maybeUser.isPresent());
         assertEquals(newPassword, maybeUser.get().getPassword());
         assertEquals(user.getId(),maybeUser.get().getId());
+    }
+
+    @Test
+    public void testChangePasswordEmpty(){
+        String newPassword = "newpassword";
+
+        userDao.changePassword("NOT AN EMAIL",newPassword);
     }
 
     @Test
@@ -172,5 +212,163 @@ public class UserDaoTest {
         assertEquals(newDescription, maybeUser.get().getDescription());
         assertEquals(user.getId(),maybeUser.get().getId());
     }
+
+    @Test
+    public void testChangeDescriptionEmpty(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+        String newDescription = "new description";
+
+        userDao.changeDescription(user.getId()+10,newDescription);
+    }
+
+    @Test
+    public void testChangeReputation(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        userDao.changeReputation(user.getId(),10);
+
+        int rep = jdbcTemplate.queryForObject("SELECT reputation FROM users WHERE id = ?",new Object[]{user.getId()},Integer.class);
+        assertEquals(10,rep);
+    }
+
+    @Test
+    public void testChangeReputationEmpty(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        userDao.changeReputation(user.getId()+10,10);
+
+        int rep = jdbcTemplate.queryForObject("SELECT reputation FROM users WHERE id = ?",new Object[]{user.getId()},Integer.class);
+        assertEquals(0,rep);
+    }
+
+    @Test
+    public void getAllUsersTests(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        Collection<User> maybeCollection = userDao.getAllUsers();
+
+        assertNotNull(maybeCollection);
+        assertEquals(1,maybeCollection.size());
+        assertEquals(user.getId(),maybeCollection.stream().findFirst().get().getId());
+    }
+
+    @Test
+    public void getAllUsersTestsEmpty(){
+        Collection<User> maybeCollection = userDao.getAllUsers();
+
+        assertNotNull(maybeCollection);
+        assertEquals(0,maybeCollection.size());
+    }
+
+    @Test
+    public void testUpdateLocaleRegion(){
+      User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+      userDao.updateLocale(user.getId(),LOCALE_ES);
+
+      String region = jdbcTemplate.queryForObject("SELECT region FROM users WHERE id = ?",new Object[]{user.getId()},String.class);
+      assertEquals(LOCALE_ES.getCountry(),region);
+    }
+
+    @Test
+    public void testUpdateLocaleLanguage(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        userDao.updateLocale(user.getId(),LOCALE_ES);
+
+        String lang = jdbcTemplate.queryForObject("SELECT lang FROM users WHERE id = ?",new Object[]{user.getId()},String.class);
+        assertEquals(LOCALE_ES.getLanguage(),lang);
+    }
+
+    @Test
+    public void testUpdateLocaleRegionEmpty(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        userDao.updateLocale(user.getId()+10,LOCALE_ES);
+
+        String region = jdbcTemplate.queryForObject("SELECT region FROM users WHERE id = ?",new Object[]{user.getId()},String.class);
+        assertEquals(LOCALE_EN.getCountry(), region);
+    }
+
+    @Test
+    public void testUpdateLocaleLanguageEmpty(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        userDao.updateLocale(user.getId()+10,LOCALE_ES);
+
+        String lang = jdbcTemplate.queryForObject("SELECT lang FROM users WHERE id = ?",new Object[]{user.getId()},String.class);
+        assertEquals(LOCALE_EN.getLanguage(), lang);
+    }
+
+    @Test
+    public void testGetLocaleLanguage(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        String loc = userDao.getLocaleLanguage(user.getId());
+
+        assertEquals(LOCALE_EN.getLanguage(),loc);
+    }
+
+    @Test
+    public void testGetLocaleLanguageEmpty(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        String loc = userDao.getLocaleLanguage(user.getId()+10);
+    }
+
+    @Test
+    public void testGetLocaleRegion(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        String loc = userDao.getLocaleRegion(user.getId());
+
+        assertEquals(LOCALE_EN.getCountry(),loc);
+    }
+
+    @Test
+    public void testGetLocaleRegionEmpty(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        String loc = userDao.getLocaleRegion(user.getId()+10);
+    }
+
+    @Test
+    public void testUserEmailIsVerified(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        boolean result = userDao.userEmailIsVerified(user.getId());
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void testUserEmailIsVerifiedEmpty(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        boolean result = userDao.userEmailIsVerified(user.getId()+10);
+    }
+
+    @Test
+    public void testVerifyUserEmail(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        userDao.verifyUserEmail(user.getId());
+
+        int verified = jdbcTemplate.queryForObject("SELECT verified FROM users WHERE id=?",new Object[]{user.getId()},Integer.class);
+        assertEquals(1,verified);
+    }
+
+    @Test
+    public void testVerifyUserEmailEmpty(){
+        User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
+
+        userDao.verifyUserEmail(user.getId()+10);
+
+        int verified = jdbcTemplate.queryForObject("SELECT verified FROM users WHERE id=?",new Object[]{user.getId()},Integer.class);
+        assertEquals(0,verified);
+    }
+
+
+
 
 }

@@ -56,7 +56,7 @@ public class FavoriteDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
         long languageId = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        defaultSnippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,languageId);
+        defaultSnippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,languageId,0);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class FavoriteDaoTest {
     }
 
     @Test
-    public void testGetFavorites(){
+    public void testGetFavorite(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
         insertFavoriteIntoDb(jdbcInsertFavorite,defaultSnippetId,defaultUser.getId());
 
@@ -94,6 +94,36 @@ public class FavoriteDaoTest {
     }
 
     @Test
+    public void testGetFavoriteEmpty(){
+        Optional<Favorite> maybeFav = favoriteDao.getFavorite(defaultUser.getId(),defaultSnippetId);
+
+        assertFalse(maybeFav.isPresent());
+    }
+
+    @Test
+    public void testGetUserFavorites(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
+        insertFavoriteIntoDb(jdbcInsertFavorite,defaultSnippetId,defaultUser.getId());
+
+        Collection<Favorite> maybeCollection = favoriteDao.getUserFavorites(defaultUser.getId());
+
+        assertNotNull(maybeCollection);
+        assertEquals(defaultSnippetId,maybeCollection.stream().findFirst().get().getSnippet());
+        assertEquals(defaultUser.getId(),maybeCollection.stream().findFirst().get().getUser());
+    }
+
+    @Test
+    public void testGetUserFavoritesEmpty(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
+        insertFavoriteIntoDb(jdbcInsertFavorite,defaultSnippetId,defaultUser.getId());
+
+        Collection<Favorite> maybeCollection = favoriteDao.getUserFavorites(defaultUser.getId()+10);
+
+        assertNotNull(maybeCollection);
+        assertEquals(0,maybeCollection.size());
+    }
+
+    @Test
     public void removeFromFavorites(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
         insertFavoriteIntoDb(jdbcInsertFavorite,defaultSnippetId,defaultUser.getId());
@@ -101,6 +131,15 @@ public class FavoriteDaoTest {
         favoriteDao.removeFromFavorites(defaultUser.getId(),defaultSnippetId);
 
         assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,FAVORITES_TABLE));
+    }
 
+    @Test
+    public void removeFromFavoritesEmpty(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
+        insertFavoriteIntoDb(jdbcInsertFavorite,defaultSnippetId,defaultUser.getId());
+
+        favoriteDao.removeFromFavorites(defaultUser.getId()+10,defaultSnippetId+10);
+
+        assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,FAVORITES_TABLE));
     }
 }

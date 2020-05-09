@@ -47,7 +47,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Transactional
     public long createUser(String username,String password, String email, String description, int reputation, String dateJoined, Locale locale) {
-        final Map<String, Object> args = new HashMap<>();
+        final Map<String, Object> args = new HashMap<>()    ;
         args.put("username",username);
         args.put("password",password);
         args.put("email",email);
@@ -122,7 +122,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Transactional
     public void updateLocale(long userId, Locale locale) {
-        this.jdbcTemplate.update("UPDATE users SET lang = ? AND region = ? WHERE id = ?", locale.getLanguage(), locale.getCountry(), userId);
+        this.jdbcTemplate.update("UPDATE users SET lang = ?, region = ? WHERE id = ?", locale.getLanguage(), locale.getCountry(), userId);
     }
 
     @Override

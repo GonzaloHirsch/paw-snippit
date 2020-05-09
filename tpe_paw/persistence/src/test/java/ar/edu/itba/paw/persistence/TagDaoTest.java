@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.persistence.TestHelper.SNIPPETS_TABLE;
 import static ar.edu.itba.paw.persistence.TestHelper.*;
@@ -50,10 +51,7 @@ public class TagDaoTest {
     private SimpleJdbcInsert jdbcInsertTag;
     private SimpleJdbcInsert jdbcInsertTagSnippet;
 
-
     private long defaultSnippetId;
-
-    private final static RowMapper<Tag> ROW_MAPPER = (rs, rowNum) -> new Tag(rs.getInt("id"), rs.getString("name"));
 
     @Before
     public void setUp() {
@@ -64,6 +62,9 @@ public class TagDaoTest {
         SimpleJdbcInsert jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
         jdbcInsertTagSnippet = new SimpleJdbcInsert(ds).withTableName(SNIPPET_TAGS_TABLE);
 
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
+
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
         User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR,LOCALE_EN);
 
@@ -71,7 +72,7 @@ public class TagDaoTest {
         long languageId = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-        defaultSnippetId = insertSnippetIntoDb(jdbcInsertSnippet,user.getId(),TITLE,DESCR,CODE, languageId);
+        defaultSnippetId = insertSnippetIntoDb(jdbcInsertSnippet,user.getId(),TITLE,DESCR,CODE, languageId,0);
     }
 
 
@@ -97,6 +98,15 @@ public class TagDaoTest {
     }
 
     @Test
+    public void testAddTagSEmpty(){
+        List<String> stringList = new ArrayList<>();
+
+        tagDao.addTags(stringList);
+
+        assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,TAGS_TABLE));
+    }
+
+    @Test
     public void testFindById(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
         long tagId = insertTagIntoDb(jdbcInsertTag,TAG);
@@ -106,6 +116,16 @@ public class TagDaoTest {
         assertTrue(maybeTag.isPresent());
         assertEquals(tagId,maybeTag.get().getId());
         assertEquals(TAG,maybeTag.get().getName());
+    }
+
+    @Test
+    public void testFindByIdEmpty(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
+        long tagId = insertTagIntoDb(jdbcInsertTag,TAG);
+
+        Optional<Tag> maybeTag = tagDao.findById(tagId+10);
+
+        assertFalse(maybeTag.isPresent());
     }
 
     @Test
@@ -121,6 +141,16 @@ public class TagDaoTest {
     }
 
     @Test
+    public void testFindByNameEmpty(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
+        insertTagIntoDb(jdbcInsertTag,TAG);
+
+        Optional<Tag> maybeTag = tagDao.findByName(TAG2);
+
+        assertFalse(maybeTag.isPresent());
+    }
+
+    @Test
     public void testGetAllTags(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
         long tagId1 = insertTagIntoDb(jdbcInsertTag,TAG);
@@ -128,13 +158,19 @@ public class TagDaoTest {
 
         Collection<Tag> maybeTags = tagDao.getAllTags();
 
+        assertNotNull(maybeTags);
         assertEquals(2,maybeTags.size());
-        List<String> maybeList = new ArrayList<>();
-        for(Tag t:maybeTags){
-            maybeList.add(t.getName());
-        }
-        assertTrue(maybeList.contains(TAG));
-        assertTrue(maybeList.contains(TAG2));
+        List<Long> maybeList = maybeTags.stream().mapToLong(Tag::getId).boxed().collect(Collectors.toList());
+        assertTrue(maybeList.contains(tagId1));
+        assertTrue(maybeList.contains(tagId2));
+    }
+
+    @Test
+    public void testGetAllTagsEmpty(){
+        Collection<Tag> maybeTags = tagDao.getAllTags();
+
+        assertNotNull(maybeTags);
+        assertEquals(0,maybeTags.size());
     }
 
     @Test
@@ -148,11 +184,102 @@ public class TagDaoTest {
         Collection<Tag> maybeTags = tagDao.findTagsForSnippet(defaultSnippetId);
 
         assertEquals(2,maybeTags.size());
-        List<String> tagNames = new ArrayList<>();
-        for(Tag t:maybeTags){
-            tagNames.add(t.getName());
-        }
-        assertTrue(tagNames.contains(TAG));
+        List<Long> maybeList = maybeTags.stream().mapToLong(Tag::getId).boxed().collect(Collectors.toList());
+        assertTrue(maybeList.contains(tagId1));
+        assertTrue(maybeList.contains(tagId2));
     }
+
+    @Test
+    public void testFindTagsForSnippetEmpty(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
+        insertTagIntoDb(jdbcInsertTag,TAG);
+        insertTagIntoDb(jdbcInsertTag,TAG2);
+
+        Collection<Tag> maybeTags = tagDao.findTagsForSnippet(defaultSnippetId);
+
+        assertEquals(0,maybeTags.size());
+    }
+
+    @Test
+    public void testRemoveTag(){
+        long tagId = insertTagIntoDb(jdbcInsertTag,TAG);
+
+        tagDao.removeTag(tagId);
+
+        assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,TAGS_TABLE));
+    }
+
+    @Test
+    public void testRemoveTagEmpty(){
+        long tagId = insertTagIntoDb(jdbcInsertTag,TAG);
+
+        tagDao.removeTag(tagId+10);
+
+        assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,TAGS_TABLE));
+    }
+
+    @Test
+    public void testGetAllTagsCountByName(){
+        long tagId1 = insertTagIntoDb(jdbcInsertTag,TAG);
+        long tagId2 = insertTagIntoDb(jdbcInsertTag,TAG2);
+
+        int res = tagDao.getAllTagsCountByName("tag");
+
+        assertEquals(2,res);
+    }
+
+    @Test
+    public void testGetAllTagsCountByNameEmpty(){
+        long tagId1 = insertTagIntoDb(jdbcInsertTag,TAG);
+        long tagId2 = insertTagIntoDb(jdbcInsertTag,TAG2);
+
+        int res = tagDao.getAllTagsCountByName("zzzz");
+
+        assertEquals(0,res);
+    }
+
+    @Test
+    public void testGetAllTagsCount(){
+        insertTagIntoDb(jdbcInsertTag,TAG);
+
+        int res = tagDao.getAllTagsCount();
+
+        assertEquals(1,res);
+    }
+
+    @Test
+    public void testGetAllTagsCountEmpty(){
+        int res = tagDao.getAllTagsCount();
+
+        assertEquals(0,res);
+    }
+
+    @Test
+    public void testFindTagsByName(){
+        long tagId1 = insertTagIntoDb(jdbcInsertTag,TAG);
+        long tagId2 = insertTagIntoDb(jdbcInsertTag,TAG2);
+
+        Collection<Tag> maybeCollection = tagDao.findTagsByName("tag",1,PAGE_SIZE);
+
+        assertNotNull(maybeCollection);
+        assertEquals(2,maybeCollection.size());
+        List<Long> idCol = maybeCollection.stream().mapToLong(Tag::getId).boxed().collect(Collectors.toList());
+        assertTrue(idCol.contains(tagId1));
+        assertTrue(idCol.contains(tagId2));
+    }
+
+    @Test
+    public void testFindTagsByNameEmpty(){
+        long tagId1 = insertTagIntoDb(jdbcInsertTag,TAG);
+        long tagId2 = insertTagIntoDb(jdbcInsertTag,TAG2);
+
+        Collection<Tag> maybeCollection = tagDao.findTagsByName("zzzz",1,PAGE_SIZE);
+
+        assertNotNull(maybeCollection);
+        assertEquals(0,maybeCollection.size());
+
+    }
+
+
 
 }

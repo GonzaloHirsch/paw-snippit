@@ -28,6 +28,7 @@
         <org.hsqldb.version>2.3.1</org.hsqldb.version>
         <velocity.version>1.7</velocity.version>
         <commons.codec.verion>1.14</commons.codec.verion>
+        <junit.version>4.11</junit.version>
     </properties>
 
     <dependencyManagement>
@@ -188,6 +189,13 @@
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons.codec.verion}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

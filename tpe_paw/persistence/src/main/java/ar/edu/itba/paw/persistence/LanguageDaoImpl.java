@@ -83,16 +83,18 @@ public class LanguageDaoImpl implements LanguageDao {
     public void addLanguages(List<String> languages) {
         List<MapSqlParameterSource> entries = new ArrayList<>();
 
-        for (String l : languages) {
-            if (l != null && l.compareTo("") != 0) {
-                MapSqlParameterSource entry = new MapSqlParameterSource()
-                        .addValue("name", l.toLowerCase());
-                entries.add(entry);
+        if(languages.size()>0) {
+            for (String l : languages) {
+                if (l != null && l.compareTo("") != 0) {
+                    MapSqlParameterSource entry = new MapSqlParameterSource()
+                            .addValue("name", l.toLowerCase());
+                    entries.add(entry);
+                }
             }
-        }
 
-        MapSqlParameterSource[] array = entries.toArray(new MapSqlParameterSource[entries.size()]);
-        jdbcInsert.executeBatch(array);
+            MapSqlParameterSource[] array = entries.toArray(new MapSqlParameterSource[entries.size()]);
+            jdbcInsert.executeBatch(array);
+        }
     }
 
     // TODO Transactional

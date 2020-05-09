@@ -90,7 +90,7 @@ public class VoteDaoTest {
 
     }
 
-    //To test when te vote is already in the DB.
+    //To test when the vote is already in the DB.
     @Test
     public void testAddVote2() {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
@@ -104,7 +104,6 @@ public class VoteDaoTest {
         assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,VOTES_FOR_TABLE));
 
     }
-
 
     @Test
     public void testGetVote(){
@@ -145,6 +144,18 @@ public class VoteDaoTest {
     }
 
     @Test
+    public void testGetUserVotesEmpty(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
+        insertVotesForIntoDb(jdbcInsertVotesFor,defaultSnippetId,defaultUser.getId(),1);
+        Mockito.when(mockSnippetDao.findSnippetById(defaultSnippetId)).thenReturn(Optional.of(new Snippet(defaultSnippetId,defaultUser,CODE,TITLE, DESCR,null,null,null,0,false)));
+        Mockito.when(mockUserDao.findUserById(defaultUser.getId())).thenReturn(Optional.of(defaultUser));
+
+        Collection<Vote> maybeVotes = voteDao.getUserVotes(defaultUser.getId()+10);
+
+        assertEquals(0, maybeVotes.size());
+    }
+
+    @Test
     public void testWithdrawVote(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
         insertVotesForIntoDb(jdbcInsertVotesFor,defaultSnippetId,defaultUser.getId(),1);
@@ -152,6 +163,16 @@ public class VoteDaoTest {
         voteDao.withdrawVote(defaultUser.getId(),defaultSnippetId);
 
         assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,VOTES_FOR_TABLE));
+    }
+
+    @Test
+    public void testWithdrawVoteEmpty(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
+        insertVotesForIntoDb(jdbcInsertVotesFor,defaultSnippetId,defaultUser.getId(),1);
+
+        voteDao.withdrawVote(defaultUser.getId(),defaultSnippetId+10);
+
+        assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,VOTES_FOR_TABLE));
     }
 
     @Test

@@ -85,4 +85,13 @@ public class RoleDaoTest {
         assertTrue(maybeRoles.contains(ADMIN_ROLE));
         assertTrue(maybeRoles.contains(USER_ROLE));
     }
+    @Test
+    public void testGetUserRolesEmpty(){
+        Collection<String> maybeRoles = roleDao.getUserRoles(defaultUser.getId()+10);
+
+        assertEquals(0,maybeRoles.size());
+    }
+
+
+
 }

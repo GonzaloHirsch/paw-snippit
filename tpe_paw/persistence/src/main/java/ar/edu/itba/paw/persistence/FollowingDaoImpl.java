@@ -18,8 +18,8 @@ import java.util.Map;
 @Repository
 public class FollowingDaoImpl implements FollowingDao {
 
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsert;
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     private final static RowMapper<Tag> ROW_MAPPER = new RowMapper<Tag>(){
 
@@ -51,7 +51,7 @@ public class FollowingDaoImpl implements FollowingDao {
 
     @Override
     public void unfollowTag(long userId, long tagId) {
-        jdbcTemplate.update("DELETE FROM follows WHERE user_id = ? AND tag_id = ?", new Object[]{userId, tagId});
+        jdbcTemplate.update("DELETE FROM follows WHERE user_id = ? AND tag_id = ?", userId, tagId);
     }
 
     @Override

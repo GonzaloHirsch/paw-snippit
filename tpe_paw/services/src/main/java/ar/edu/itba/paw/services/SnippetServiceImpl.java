@@ -160,7 +160,6 @@ public class SnippetServiceImpl implements SnippetService {
         return snippetId;
     }
 
-
     @Override
     public void updateFlagged(long snippetId, long userId, boolean isFlagged) {
         if (isFlagged) {

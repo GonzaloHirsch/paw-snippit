@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -72,6 +73,7 @@ public class LanguageDaoImpl implements LanguageDao {
     }
 
     @Override
+    @Transactional
     public Language addLanguage(String lang) {
         final Map<String, Object> args = new HashMap<>();
         args.put("name", lang);
@@ -80,6 +82,7 @@ public class LanguageDaoImpl implements LanguageDao {
     }
 
     @Override
+    @Transactional
     public void addLanguages(List<String> languages) {
         List<MapSqlParameterSource> entries = new ArrayList<>();
 
@@ -95,8 +98,8 @@ public class LanguageDaoImpl implements LanguageDao {
         jdbcInsert.executeBatch(array);
     }
 
-    // TODO Transactional
     @Override
+    @Transactional
     public void removeLanguage(final long langId) {
         if (!this.languageInUse(langId)) {
             jdbcTemplate.update("DELETE FROM languages WHERE id = ?", new Object[]{langId});

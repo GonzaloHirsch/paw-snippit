@@ -82,6 +82,7 @@ public class VoteDaoImpl implements VoteDao {
         }
     }
 
+    @Transactional
     @Override
     public void withdrawVote(long userId, long snippetId) {
         Object[] args = new Object[]{userId, snippetId};

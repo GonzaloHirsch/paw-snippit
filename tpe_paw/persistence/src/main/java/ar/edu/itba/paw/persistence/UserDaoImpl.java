@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -44,6 +45,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    @Transactional
     public long createUser(String username,String password, String email, String description, int reputation, String dateJoined, Locale locale) {
         final Map<String, Object> args = new HashMap<>();
         args.put("username",username);
@@ -78,26 +80,31 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    @Transactional
     public void updateDescription(String username, String newDescription){
         this.jdbcTemplate.update("UPDATE users SET description = ? WHERE username = ?", newDescription, username);
     }
 
     @Override
+    @Transactional
     public void changePassword(String email, String password){
         this.jdbcTemplate.update("UPDATE users SET password = ? WHERE email = ?", password, email);
     }
 
     @Override
+    @Transactional
     public void changeProfilePhoto(long userId, byte[] photo) {
         this.jdbcTemplate.update("UPDATE users SET icon = ? WHERE id = ?", photo, userId);
     }
 
     @Override
+    @Transactional
     public void changeDescription(final long userId, final String description) {
         this.jdbcTemplate.update("UPDATE users SET description = ? WHERE id = ?", description, userId);
     }
 
     @Override
+    @Transactional
     public void changeReputation(long userId, int value) {
         this.jdbcTemplate.update("UPDATE users SET reputation = reputation + ? WHERE id = ?", value, userId);
     }
@@ -113,6 +120,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    @Transactional
     public void updateLocale(long userId, Locale locale) {
         this.jdbcTemplate.update("UPDATE users SET lang = ? AND region = ? WHERE id = ?", locale.getLanguage(), locale.getCountry(), userId);
     }
@@ -133,6 +141,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    @Transactional
     public void verifyUserEmail(long userId) {
         this.jdbcTemplate.update("UPDATE users SET verified = 1 WHERE id = ?", userId);
     }

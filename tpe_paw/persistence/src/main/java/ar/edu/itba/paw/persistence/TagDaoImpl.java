@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -47,6 +48,7 @@ public class TagDaoImpl implements TagDao {
                 .stream().findFirst();
     }
 
+    @Transactional
     @Override
     public Tag addTag(String name) {
         final Map<String, Object> args = new HashMap<>();
@@ -60,6 +62,7 @@ public class TagDaoImpl implements TagDao {
         return jdbcTemplate.query("SELECT * FROM tags WHERE id IN (SELECT tag_id FROM snippet_tags WHERE snippet_id = ?)", ROW_MAPPER, snippetId);
     }
 
+    @Transactional
     @Override
     public void addSnippetTag(long snippetId, long tagId) {
         final Map<String, Object> snippetTagDataMap = new HashMap<String, Object>() {{
@@ -69,6 +72,7 @@ public class TagDaoImpl implements TagDao {
         jdbcInsertSnippetTag.execute(snippetTagDataMap);
     }
 
+    @Transactional
     @Override
     public void addTags(List<String> tags) {
         List<MapSqlParameterSource> entries = new ArrayList<>();
@@ -84,6 +88,7 @@ public class TagDaoImpl implements TagDao {
         jdbcInsert.executeBatch(array);
     }
 
+    @Transactional
     @Override
     public void removeTag(long tagId) {
         jdbcTemplate.update("DELETE FROM tags WHERE id = ?", new Object[]{tagId});

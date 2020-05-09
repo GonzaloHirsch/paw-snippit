@@ -44,8 +44,8 @@
 .sidenav a {
     margin-top: 3px;
     padding: 8px;
-    text-decoration: none;
-    color: white;
+    text-decoration: none !important;
+    color: white !important;
     display: block;
     font-size: 20px;
     transition: 0.5s;

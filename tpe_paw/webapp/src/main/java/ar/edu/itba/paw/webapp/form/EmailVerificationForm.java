@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 public class EmailVerificationForm {
 
     @Pattern(regexp = "^[0-9]{6}$", message = "{Pattern.verification.code}")
-    @NotBlank
+    @NotBlank(message = "{NotBlank.verification.code}")
     private String code;
 
     public String getCode() {

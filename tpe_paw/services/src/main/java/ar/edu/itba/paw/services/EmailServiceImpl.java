@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.services.helpers.crypto.HashGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
@@ -77,7 +78,8 @@ public class EmailServiceImpl implements EmailService {
     public void sendRecoveryEmail(String baseUrl, String userEmail) {
         User searchedUser = this.userService.findUserByEmail(userEmail).get(); // User SHOULD be found
         String otp = this.cryptoService.generateTOTP(userEmail, searchedUser.getPassword());
-        String link = baseUrl + "/reset-password?id=" + searchedUser.getId() + "&token=" + otp;
+        String token = this.cryptoService.generateRecoverToken(otp);
+        String link = baseUrl + "/reset-password?id=" + searchedUser.getId() + "&token=" + token;
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("recoveryURL", link);
         data.put("username", searchedUser.getUsername());

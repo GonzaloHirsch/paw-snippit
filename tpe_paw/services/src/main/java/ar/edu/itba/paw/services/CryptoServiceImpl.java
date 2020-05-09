@@ -30,4 +30,24 @@ public class CryptoServiceImpl implements CryptoService {
         // Generating totp
         return WebappCrypto.generateOtp(key);
     }
+
+    @Override
+    public String generateRecoverToken(String code) {
+        return HashGenerator.getInstance().generateRecoveryToken(code);
+    }
+
+    @Override
+    public boolean checkValidRecoverToken(User user, String token) {
+        // Generating secret key for TOTP
+        String key = HashGenerator.getInstance().generateSecretKey(user.getEmail(), user.getPassword());
+        // Generating valid TOTPS
+        String[] otps = WebappCrypto.generateOtps(key);
+        String base64Token;
+        boolean pass = false;
+        for (int i = 0; i < 3; i++) {
+            base64Token = HashGenerator.getInstance().generateRecoveryToken(otps[i]);
+            pass = pass || base64Token.compareTo(token) == 0;
+        }
+        return pass;
+    }
 }

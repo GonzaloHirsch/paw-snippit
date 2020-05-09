@@ -6,4 +6,6 @@ public interface CryptoService {
 
     boolean checkValidTOTP(User user, String code);
     String generateTOTP(String userEmail, String password);
+    String generateRecoverToken(String code);
+    boolean checkValidRecoverToken(User user, String token);
 }

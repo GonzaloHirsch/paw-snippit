@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -101,7 +102,10 @@ public class  UserController {
                 this.userService.changeProfilePhoto(id, profilePhotoForm.getFile().getBytes());
                 LOGGER.debug("User {} changed their profile picture", id);
             } catch (IOException e) {
-                // TODO: ERROR
+                LOGGER.error("Exception changing profile photo for user {}", id);
+                FieldError photoError = new FieldError("profilePhotoForm","file" , messageSource.getMessage("profile.photo.error", null, LocaleContextHolder.getLocale()));
+                errors.addError(photoError);
+                return userProfile(id, profilePhotoForm, descriptionForm, 1, false);
             }
         }
         return new ModelAndView("redirect:/user/" + id);

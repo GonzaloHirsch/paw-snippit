@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.dao.LanguageDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.Language;
+import ar.edu.itba.paw.models.Tag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,23 +21,13 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
 import static junit.framework.TestCase.*;
 import static ar.edu.itba.paw.persistence.TestHelper.*;
-
-/*
- Tested Methods:
-    Language addLanguage(String lang);
-    void addLanguages(List<String> languages);
-    Collection<Language> getAll();
-    Optional<Language> findById(long id);
-    Optional<Language> findByName(String name);
- Not Tested Methods:
-
- */
-
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -56,9 +47,9 @@ public class LanguageDaoTest {
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsertLanguage = new SimpleJdbcInsert(ds).withTableName(LANGUAGES_TABLE).usingGeneratedKeyColumns("id");
-    }
 
-    
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
+    }
 
     @Test
     public void testAddLanguage(){
@@ -89,6 +80,16 @@ public class LanguageDaoTest {
         assertTrue(maybeStringList.contains(LANGUAGE2.toLowerCase()));
         assertTrue(maybeStringList.contains(LANGUAGE3.toLowerCase()));
     }
+
+    @Test
+    public void testAddLanguageSEmpty(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
+        List<String> stringList = new ArrayList<>();
+
+        languageDao.addLanguages(stringList);
+
+        assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,LANGUAGES_TABLE));
+    }
     
     @Test 
     public void testGetAll(){ 
@@ -100,12 +101,17 @@ public class LanguageDaoTest {
         
         assertFalse(maybeLanguages.isEmpty());
         assertEquals(2,maybeLanguages.size());
-        List<Long> maybeIdList = new ArrayList<Long>();
-        for(Language l:maybeLanguages){
-            maybeIdList.add(l.getId());
-        }
+        List<Long> maybeIdList = maybeLanguages.stream().mapToLong(Language::getId).boxed().collect(Collectors.toList());
         assertTrue(maybeIdList.contains(lanId1));
         assertTrue(maybeIdList.contains(lanId2));
+    }
+
+    @Test
+    public void testGetAllEmpty(){
+        Collection<Language> maybeLanguages = languageDao.getAllLanguages();
+
+        assertTrue(maybeLanguages.isEmpty());
+
     }
 
     @Test
@@ -121,6 +127,13 @@ public class LanguageDaoTest {
     }
 
     @Test
+    public void testFindByIdEmpty(){
+        Optional<Language> maybeLanguage = languageDao.findById(10);
+
+        assertFalse(maybeLanguage.isPresent());
+    }
+
+    @Test
     public void testFindByName(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
         long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);
@@ -131,6 +144,74 @@ public class LanguageDaoTest {
         assertEquals(lanId1,maybeLanguage.get().getId());
         assertEquals(LANGUAGE,maybeLanguage.get().getName());
     }
+
+    @Test
+    public void testFindByNameEmpty(){
+        Optional<Language> maybeLanguage = languageDao.findByName(LANGUAGE);
+
+        assertFalse(maybeLanguage.isPresent());
+    }
+
+    @Test
+    public void testFindAllLanguagesByName(){
+        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
+        long lanId2 = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE2);
+
+        Collection<Language> maybeCollection = languageDao.findAllLanguagesByName("Language",1,PAGE_SIZE);
+
+        assertNotNull(maybeCollection);
+        List<Long> maybeIdList = maybeCollection.stream().mapToLong(Language::getId).boxed().collect(Collectors.toList());
+        assertTrue(maybeIdList.contains(lanId1));
+        assertTrue(maybeIdList.contains(lanId2));
+    }
+
+    @Test
+    public void testFindAllLanguagesByNameEmpty(){
+        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
+        long lanId2 = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE2);
+
+        Collection<Language> maybeCollection = languageDao.findAllLanguagesByName("zzzz",1,PAGE_SIZE);
+
+        assertNotNull(maybeCollection);
+        assertEquals(0,maybeCollection.size());
+    }
+
+    @Test
+    public void testRemoveLanguage(){
+        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
+
+        languageDao.removeLanguage(lanId1);
+
+        assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,LANGUAGES_TABLE));
+    }
+    @Test
+    public void testRemoveLanguageEmpty(){
+        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
+
+        languageDao.removeLanguage(lanId1+10);
+
+        assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,LANGUAGES_TABLE));
+    }
+
+    @Test
+    public void testLanguageInUse(){
+        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
+
+        boolean result = languageDao.languageInUse(lanId1);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void testLanguageInUseEmpty(){
+        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
+
+        boolean result = languageDao.languageInUse(lanId1+10);
+
+        assertFalse(result);
+    }
+
+
 
 
 

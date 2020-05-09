@@ -34,6 +34,13 @@ public class RoleDaoImpl implements RoleDao {
         this.jdbcInsert = new SimpleJdbcInsert(ds).withTableName("user_roles");
     }
 
+    private void addToUserRoles(final long userId, final long roleId) {
+        Map<String, Object> args = new HashMap<>();
+        args.put("user_id", userId);
+        args.put("role_id", roleId);
+        jdbcInsert.execute(args);
+    }
+
     @Override
     public Collection<Role> getAllRoles() {
         return jdbcTemplate.query("SELECT * FROM roles", ROW_MAPPER);
@@ -70,13 +77,5 @@ public class RoleDaoImpl implements RoleDao {
     public String getUserRoleName() {
         return USER_ROLE;
     }
-
-    private void addToUserRoles(final long userId, final long roleId) {
-        Map<String, Object> args = new HashMap<>();
-        args.put("user_id", userId);
-        args.put("role_id", roleId);
-        jdbcInsert.execute(args);
-    }
-
 
 }

@@ -29,8 +29,8 @@ public class TestHelper {
     public static final String PASSWORD2 = "Password2";
     public static final String USERNAME2 = "Username2";
     public static final String EMAIL2 = "email2@email.com";
-    public static final Locale LOCALE_EN = new Locale("en");
-    public static final Locale LOCALE_ES = new Locale("es");
+    public static final Locale LOCALE_EN = new Locale("en","EN");
+    public static final Locale LOCALE_ES = new Locale("es","ES");
 
     public static final String TITLE = "Snippet Title";
     public static final String TITLE2 = "Snippet Title 2";
@@ -47,7 +47,9 @@ public class TestHelper {
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String USER_ROLE = "USER";
 
-    public static long insertSnippetIntoDb(SimpleJdbcInsert jdbcInsert, long userId, String title, String description, String code, long languageId){
+    public static final int PAGE_SIZE = 6;
+
+    public static long insertSnippetIntoDb(SimpleJdbcInsert jdbcInsert, long userId, String title, String description, String code, long languageId,int flagged){
         final Map<String, Object> snippetDataMap = new HashMap<String,Object>(){{
             put("user_id", userId);
             put("title", title);
@@ -55,6 +57,7 @@ public class TestHelper {
             put("code",code);
             put("date_created", DATE.format(Calendar.getInstance().getTime().getTime()));
             put("language_id", languageId);
+            put("flagged",flagged);
         }};
         return jdbcInsert.executeAndReturnKey(snippetDataMap).longValue();
     }
@@ -66,8 +69,8 @@ public class TestHelper {
             put("email", email);
             put("reputation", 0);
             put("date_joined", DATE.format(Calendar.getInstance().getTime().getTime()));
-            put("lang", "en");
-            put("region", "US");
+            put("lang", locale.getLanguage());
+            put("region", locale.getCountry());
             put("verified", 0);
         }};
         long userId = jdbcInsertUser.executeAndReturnKey(map).longValue();

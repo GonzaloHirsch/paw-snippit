@@ -81,7 +81,7 @@ public class FollowingDaoTest {
     }
 
     @Test
-    public void testGetFollowedTagsForUser2(){
+    public void testGetFollowedTagsForUserEmpty(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,FOLLOWS_TABLE);
 
         Collection<Tag> maybeTags = followingDao.getFollowedTagsForUser(6);
@@ -99,9 +99,35 @@ public class FollowingDaoTest {
         followingDao.unfollowTag(defaultUser.getId(),defaultTagId);
 
         assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,FOLLOWS_TABLE));
-
     }
 
+    @Test
+    public void testUnfollowTagEmpty(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,FOLLOWS_TABLE);
+        insertFollowingIntoDb(jdbcInsertFollowing,defaultTagId,defaultUser.getId());
+
+        followingDao.unfollowTag(defaultUser.getId()+10,defaultTagId+10);
+
+        assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,FOLLOWS_TABLE));
+    }
+
+    @Test
+    public void testUserFollowsTag(){
+        insertFollowingIntoDb(jdbcInsertFollowing,defaultTagId,defaultUser.getId());
+
+        boolean result = followingDao.userFollowsTag(defaultUser.getId(),defaultTagId);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void testUserFollowsTagEmpty(){
+        insertFollowingIntoDb(jdbcInsertFollowing,defaultTagId,defaultUser.getId());
+
+        boolean result = followingDao.userFollowsTag(defaultUser.getId()+10,defaultTagId+10);
+
+        assertFalse(result);
+    }
 
 
 

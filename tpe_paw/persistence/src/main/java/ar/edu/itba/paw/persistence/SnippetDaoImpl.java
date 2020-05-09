@@ -250,7 +250,7 @@ public class SnippetDaoImpl implements SnippetDao {
 
     private SnippetDeepSearchQuery createDeepQuery(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, Integer page, Integer pageSize, boolean isCount){
         SnippetDeepSearchQuery.Builder queryBuilder = new SnippetDeepSearchQuery.Builder(isCount);
-        if (dateMin == null && dateMax == null && repMin == null && repMax == null && voteMin == null && voteMax == null && languageId != null && tagId != null && title != null && username != null && order != null && sort != null && includeFlagged != null){
+        if (dateMin == null && dateMax == null && repMin == null && repMax == null && voteMin == null && voteMax == null && languageId == null && tagId == null && title == null && username == null && order == null && sort == null && includeFlagged == null){
             if (page != null){
                 return queryBuilder.setOrder("title", "asc").setPaging(page, pageSize).build();
             } else {

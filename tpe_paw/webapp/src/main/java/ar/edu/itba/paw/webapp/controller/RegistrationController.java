@@ -137,7 +137,7 @@ public class RegistrationController {
             throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{id}, LocaleContextHolder.getLocale()));
         }
         User user = userOpt.get();
-        boolean pass = cryptoService.checkValidRecoveryToken(user, token);
+        boolean pass = this.cryptoService.checkValidTOTP(user, token);
         /* If link is no longer valid */
         if (!pass) {
             return new ModelAndView("user/recoveryLinkInvalid");

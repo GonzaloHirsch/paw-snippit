@@ -75,15 +75,29 @@ public class EmailServiceImpl implements EmailService {
     @Async
     @Override
     public void sendRecoveryEmail(String baseUrl, String userEmail) {
-        User searchedUser = userService.findUserByEmail(userEmail).get(); // User SHOULD be found
-        String base64Token = cryptoService.generateTOTP(userEmail, searchedUser.getPassword());
-        String link = baseUrl + "/reset-password?id=" + searchedUser.getId() + "&token=" + base64Token;
+        User searchedUser = this.userService.findUserByEmail(userEmail).get(); // User SHOULD be found
+        String otp = this.cryptoService.generateTOTP(userEmail, searchedUser.getPassword());
+        String link = baseUrl + "/reset-password?id=" + searchedUser.getId() + "&token=" + otp;
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("recoveryURL", link);
         data.put("username", searchedUser.getUsername());
         data.put("userEmail", searchedUser.getEmail());
         String body = this.templateService.merge("/templates/passwordRecovery.vm", data, searchedUser.getLocale());
         String subject = messageSource.getMessage("email.recovery.subject", null, searchedUser.getLocale());
+        this.sendEmail(userEmail, subject, body, searchedUser.getLocale());
+    }
+
+    @Async
+    @Override
+    public void sendVerificationEmail(String userEmail){
+        User searchedUser = this.userService.findUserByEmail(userEmail).get(); // User SHOULD be found
+        String otp = this.cryptoService.generateTOTP(userEmail, searchedUser.getPassword());
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("code", otp);
+        data.put("username", searchedUser.getUsername());
+        data.put("userEmail", searchedUser.getEmail());
+        String body = this.templateService.merge("/templates/emailVerification.vm", data, searchedUser.getLocale());
+        String subject = messageSource.getMessage("email.verification.subject", null, searchedUser.getLocale());
         this.sendEmail(userEmail, subject, body, searchedUser.getLocale());
     }
 

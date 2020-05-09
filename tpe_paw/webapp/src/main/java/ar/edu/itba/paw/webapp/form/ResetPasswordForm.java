@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.webapp.validations.FieldMatch;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @FieldMatch(first = "newPassword", second = "repeatNewPassword", message = "{FieldMatch.resetPasswordForm.passwords}")
@@ -10,6 +11,7 @@ public class ResetPasswordForm {
 
     @Size(min=8)
     @NotBlank
+    @Pattern(regexp = "^[\\S]+$", message = "{form.error.password}")
     private String newPassword;
 
     private String repeatNewPassword;

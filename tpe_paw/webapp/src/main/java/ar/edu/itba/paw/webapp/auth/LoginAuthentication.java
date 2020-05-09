@@ -75,7 +75,6 @@ public class LoginAuthentication {
             LOGGER.warn("Logged user {} not found in the database", username);
             return null;
         }
-        LOGGER.debug("Logged user is {}", username);
         return user.get();
     }
 

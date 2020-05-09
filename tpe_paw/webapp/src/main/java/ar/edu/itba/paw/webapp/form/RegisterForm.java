@@ -25,6 +25,7 @@ public class RegisterForm {
 
     @Size(min=8)
     @NotBlank
+    @Pattern(regexp = "^[\\S]+$", message = "{form.error.password}")
     private String password;
 
     private String repeatPassword;

@@ -69,7 +69,7 @@
                     <div class="snippetC-elem-container">
                         <form:label class="fw-400 snippetC-subtitles" path="description"><spring:message code="snippetCreateForm.description"/> </form:label>
                         <form:textarea class="full-width snippetC-description-input snippetC-border" rows="2" type="text" path="description" placeholder='${desc_hint}'/>
-                        <form:errors class="form-error" path="description" element="p"/>
+                        <form:errors class="form-error error-extra-margins" path="description" element="p"/>
                     </div>
 
                     <hr class="snippetC-divider"/>

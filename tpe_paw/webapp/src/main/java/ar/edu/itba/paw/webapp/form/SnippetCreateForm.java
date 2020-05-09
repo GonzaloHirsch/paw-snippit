@@ -3,17 +3,21 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.webapp.validations.FieldExists;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 
 public class SnippetCreateForm {
     @Size(min=5, max=50)
+    @Pattern(regexp = "^[^\\s]+(\\s+[^\\s]+)*$", message = "{form.error.spaces}")
     private String title;
 
     @Size(max=500)
+    @Pattern(regexp = "^[^\\s]+(\\s+[^\\s]+)*$", message = "{form.error.spaces}")
     private String description;
 
     @Size(min=5, max=30000)
+    @Pattern(regexp = "^[^\\s]+(\\s+[^\\s]+)*$", message = "{form.error.spaces}")
     private String code;
 
     @Min(value=1)

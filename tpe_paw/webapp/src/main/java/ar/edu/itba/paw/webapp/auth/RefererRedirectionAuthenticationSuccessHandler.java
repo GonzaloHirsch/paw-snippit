@@ -47,7 +47,7 @@ public class RefererRedirectionAuthenticationSuccessHandler
                     session.removeAttribute("url_prior_login");
 
                     /* Don't want to redirect to any of these urls */
-                    if (!(redirectUrl.contains("login") || redirectUrl.contains("signUp") || redirectUrl.contains("goodbye") || redirectUrl.contains("reset-password") || redirectUrl.contains("recover-password"))) {
+                    if (!(redirectUrl.contains("login") || redirectUrl.contains("signup") || redirectUrl.contains("goodbye") || redirectUrl.contains("reset-password") || redirectUrl.contains("recover-password"))) {
                         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
                         return;
                     }

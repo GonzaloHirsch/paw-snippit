@@ -49,11 +49,11 @@ public class PawUserDetailsService implements UserDetailsService {
         
         if(roles.contains(this.roleService.getAdminRoleName())) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-            LOGGER.debug("Granting authority ROLE_ADMIN to user ?", username);
+            LOGGER.debug("Granting authority ROLE_ADMIN to user {}", username);
         }
         else if (roles.contains(this.roleService.getUserRoleName())) {
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-            LOGGER.debug("Granting authority ROLE_USER to user ?", username);
+            LOGGER.debug("Granting authority ROLE_USER to user {}", username);
         }
 
         final String password;

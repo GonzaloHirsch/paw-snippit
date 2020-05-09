@@ -53,24 +53,20 @@ public class EmailServiceImpl implements EmailService {
             helper.setFrom(messageSource.getMessage("app.name", null, locale));
             emailSender.send(message);
         } catch (MailException e) {
-            // TODO: LOG EMAIL ERROR
+            throw new RuntimeException("[MAIL EXCEPTION] ");
         } catch (MessagingException e) {
-            // TODO: LOG ERROR
+            throw new RuntimeException("[MESSAGING EXCEPTION] ");
         }
     }
 
     @Async
     @Override
     public void sendRegistrationEmail(String to, String username, Locale locale) {
-        try {
-            Map<String, Object> data = new HashMap<String, Object>();
-            data.put("username", username);
-            String body = this.templateService.merge("/templates/register.vm", data, locale);
-            String subject = messageSource.getMessage("email.register.subject", new Object[]{username}, locale);
-            this.sendEmail(to, subject, body, locale);
-        } catch (Exception e) {
-            // TODO: DO SMTH
-        }
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("username", username);
+        String body = this.templateService.merge("/templates/register.vm", data, locale);
+        String subject = messageSource.getMessage("email.register.subject", new Object[]{username}, locale);
+        this.sendEmail(to, subject, body, locale);
     }
 
     @Async
@@ -161,8 +157,7 @@ public class EmailServiceImpl implements EmailService {
             String subject = messageSource.getMessage("email.wd.subject", null, locale);
             this.sendEmail(to, subject, body, locale);
         } catch (Exception e) {
-            // TODO: DO SMTH
-            String a = e.getMessage();
+
         }
     }
 
@@ -175,8 +170,7 @@ public class EmailServiceImpl implements EmailService {
             String subject = messageSource.getMessage("email.wdni.subject", null, locale);
             this.sendEmail(to, subject, body, locale);
         } catch (Exception e) {
-            // TODO: DO SMTH
-            String a = e.getMessage();
+
         }
     }
 
@@ -189,8 +183,7 @@ public class EmailServiceImpl implements EmailService {
             String subject = messageSource.getMessage("email.wdsf.subject", null, locale);
             this.sendEmail(to, subject, body, locale);
         } catch (Exception e) {
-            // TODO: DO SMTH
-            String a = e.getMessage();
+
         }
     }
 

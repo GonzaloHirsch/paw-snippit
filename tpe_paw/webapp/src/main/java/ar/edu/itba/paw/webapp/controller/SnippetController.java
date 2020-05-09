@@ -188,7 +188,12 @@ public class SnippetController {
             // Getting the url of the server
             final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
             // Sending flagged email
-            this.emailService.sendFlaggedEmail(baseUrl + "/snippet/" + id, snippetOpt.get().getTitle(), completeOwnerOpt.get().getEmail(), completeOwnerOpt.get().getUsername(), adminFlagForm.isFlagged(), completeOwnerOpt.get().getLocale());
+
+            try {
+                this.emailService.sendFlaggedEmail(baseUrl + "/snippet/" + id, snippetOpt.get().getTitle(), completeOwnerOpt.get().getEmail(), completeOwnerOpt.get().getUsername(), adminFlagForm.isFlagged(), completeOwnerOpt.get().getLocale());
+            } catch (Exception e) {
+                LOGGER.warn(e.getMessage() + "Failed to send flagged email to user {} about their snippet {}", snippetOpt.get().getOwner().getUsername(), snippetOpt.get().getId());
+            }
         }
         return mav;
     }

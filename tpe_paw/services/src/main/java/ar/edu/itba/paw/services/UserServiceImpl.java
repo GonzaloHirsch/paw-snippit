@@ -1,15 +1,12 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.dao.RoleDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
-import ar.edu.itba.paw.interfaces.service.EmailService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -26,8 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public long register(String username, String password, String email, String dateJoined, Locale locale) {
-        long userId = createUser(username, password, email, "", 0, dateJoined, locale);
-        return userId;
+        return createUser(username, password, email, "", 0, dateJoined, locale);
     }
 
     @Override

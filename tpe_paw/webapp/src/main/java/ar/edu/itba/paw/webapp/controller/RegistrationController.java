@@ -100,8 +100,8 @@ public class RegistrationController {
         );
         try {
             this.emailService.sendRegistrationEmail(registerForm.getEmail(), registerForm.getUsername(), LocaleContextHolder.getLocale());
-        } catch (MailException e) {
-            LOGGER.warn("Failed to send registration email to user {}", registerForm.getUsername());
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage() + "Failed to send registration email to user {}", registerForm.getUsername());
         }
 
         this.roleService.assignUserRole(userId);
@@ -115,9 +115,13 @@ public class RegistrationController {
         ModelAndView mav = new ModelAndView("user/verifyEmail");
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null){
-            this.throwIfNoUser(id);
+            this.throwNoUser(id);
         }
-        this.emailService.sendVerificationEmail(currentUser.getEmail());
+        try {
+            this.emailService.sendVerificationEmail(currentUser.getEmail());
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage() + "Failed to send verification email to user {}", currentUser.getUsername());
+        }
         mav.addObject("searchForm", searchForm);
         this.addUserAttributes(currentUser, mav);
         return mav;
@@ -131,7 +135,7 @@ public class RegistrationController {
         // Getting the current user
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null || currentUser.getId() != id){
-            this.throwIfNoUser(id);
+            this.throwNoUser(id);
         }
         boolean isCodeValid = this.cryptoService.checkValidTOTP(currentUser, verificationForm.getCode());
         if (!isCodeValid){
@@ -149,9 +153,13 @@ public class RegistrationController {
         // Getting the current user
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null || currentUser.getId() != id){
-            this.throwIfNoUser(id);
+            this.throwNoUser(id);
         }
-        this.emailService.sendVerificationEmail(currentUser.getEmail());
+        try {
+            this.emailService.sendVerificationEmail(currentUser.getEmail());
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage() + "Failed to send verification email to user {}", currentUser.getUsername());
+        }
         mav.addObject("searchForm", searchForm);
         this.addUserAttributes(currentUser, mav);
         return mav;
@@ -169,7 +177,11 @@ public class RegistrationController {
             return recoverPassword(recoveryForm, errors);
         }
         final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        emailService.sendRecoveryEmail(baseUrl, recoveryForm.getEmail());
+        try {
+            emailService.sendRecoveryEmail(baseUrl, recoveryForm.getEmail());
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage() + "Failed to send recovery email to user {}", recoveryForm.getEmail());
+        }
         return new ModelAndView("user/emailSent");
     }
 
@@ -220,7 +232,7 @@ public class RegistrationController {
         mav.addObject("searchContext", "");
     }
 
-    private void throwIfNoUser(long id) {
+    private void throwNoUser(long id) {
         LOGGER.warn("User with id {} doesn't exist", id);
         throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{id}, LocaleContextHolder.getLocale()));
     }

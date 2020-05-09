@@ -9,7 +9,6 @@ public class DescriptionForm {
 
     @Size(max=300, message = "{Size.profileForm.description}")
     @Pattern(regexp = "^[^\\s]+(\\s+[^\\s]+)*$", message = "{form.error.spaces}")
-    @NotBlank
     private String description;
 
     public void setDescription(String description){ this.description = description; }

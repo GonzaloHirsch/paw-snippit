@@ -29,6 +29,8 @@ public interface UserDao {
 
     Collection<User> getAllUsers();
 
+    Collection<User> getAllVerifiedUsers();
+
     void updateLocale(final long userId, final Locale locale);
 
     String getLocaleLanguage(final long userId);

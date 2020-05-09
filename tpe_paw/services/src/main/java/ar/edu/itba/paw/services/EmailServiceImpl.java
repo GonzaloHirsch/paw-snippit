@@ -126,8 +126,8 @@ public class EmailServiceImpl implements EmailService {
         Calendar weekBefore = Calendar.getInstance();
         weekBefore.add(Calendar.WEEK_OF_YEAR, -1);
         Timestamp weekBeforeTs = new Timestamp(weekBefore.getTime().getTime());
-        // Getting all users
-        Collection<User> users = this.userService.getAllUsers();
+        // Getting all verified users
+        Collection<User> users = this.userService.getAllVerifiedUsers();
         Collection<Tag> followedTags;
         int snippetsForWeek;
         Locale locale;

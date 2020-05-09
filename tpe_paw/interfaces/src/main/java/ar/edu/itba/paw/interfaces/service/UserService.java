@@ -34,6 +34,8 @@ public interface UserService {
 
     Collection<User> getAllUsers();
 
+    Collection<User> getAllVerifiedUsers();
+
     void changeReputation(final long userId, final int amount);
 
     void updateLocale(final long userId, final Locale locale);

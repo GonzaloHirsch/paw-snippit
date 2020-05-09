@@ -122,4 +122,8 @@ public class UserServiceImpl implements UserService {
         return this.userDao.getAllUsers();
     }
 
+    @Override
+    public Collection<User> getAllVerifiedUsers() {
+        return this.userDao.getAllVerifiedUsers();
+    }
 }

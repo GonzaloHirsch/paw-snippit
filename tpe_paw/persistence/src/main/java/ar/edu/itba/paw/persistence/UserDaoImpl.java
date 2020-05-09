@@ -145,7 +145,11 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public boolean userEmailIsVerified(long userId) {
-        return this.jdbcTemplate.queryForObject("SELECT verified FROM users WHERE id = ?", new Object[]{userId}, Integer.class) == 1;
+        try {
+            return this.jdbcTemplate.queryForObject("SELECT verified FROM users WHERE id = ?", new Object[]{userId}, Integer.class) == 1;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override

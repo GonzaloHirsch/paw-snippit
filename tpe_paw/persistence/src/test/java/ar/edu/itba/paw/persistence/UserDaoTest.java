@@ -346,6 +346,7 @@ public class UserDaoTest {
         User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
 
         boolean result = userDao.userEmailIsVerified(user.getId()+10);
+        assertFalse(result);
     }
 
     @Test

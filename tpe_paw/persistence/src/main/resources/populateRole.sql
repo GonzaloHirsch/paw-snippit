@@ -12,6 +12,8 @@ insert into user_roles(user_id,role_id) values((select id from users where usern
 insert into user_roles(user_id,role_id) values((select id from users where username='JaneRoe'),(select id from roles where role='USER'));
 insert into user_roles(user_id,role_id) values((select id from users where username='admin'),(select id from roles where role='ADMIN'));
 
+UPDATE users SET email = 'snippit.website@gmail.com' WHERE username='admin';
+
 -- LANGUAGES
 insert into languages(name) values('A#');
 insert into languages(name) values('A+');

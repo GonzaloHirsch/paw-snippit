@@ -1,18 +1,13 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.service.CryptoService;
-import ar.edu.itba.paw.interfaces.service.EmailService;
-import ar.edu.itba.paw.interfaces.service.RoleService;
-import ar.edu.itba.paw.interfaces.service.UserService;
+import ar.edu.itba.paw.interfaces.service.*;
+import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.auth.SignUpAuthentication;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.RecoveryForm;
-import ar.edu.itba.paw.webapp.form.RegisterForm;
-import ar.edu.itba.paw.webapp.form.ResetPasswordForm;
-import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,7 +30,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Optional;
 
 @Controller
@@ -48,6 +46,7 @@ public class RegistrationController {
     @Autowired private RoleService roleService;
     @Autowired private CryptoService cryptoService;
     @Autowired private MessageSource messageSource;
+    @Autowired private TagService tagService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
     private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -111,6 +110,53 @@ public class RegistrationController {
         return new ModelAndView("redirect:" + redirectUrl);
     }
 
+    @RequestMapping(value = "/verify-email")
+    public ModelAndView verifyEmail(final @RequestParam(value="id") long id, @ModelAttribute("verificationForm") final EmailVerificationForm verificationForm, @ModelAttribute("searchForm") final SearchForm searchForm) {
+        ModelAndView mav = new ModelAndView("user/verifyEmail");
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null){
+            this.throwIfNoUser(id);
+        }
+        this.emailService.sendVerificationEmail(currentUser.getEmail());
+        mav.addObject("searchForm", searchForm);
+        this.addUserAttributes(currentUser, mav);
+        return mav;
+    }
+
+    @RequestMapping(value = "/verify-email", method = RequestMethod.POST)
+    public ModelAndView completeVerifyEmail(final @RequestParam(value="id") long id, @Valid @ModelAttribute("verificationForm") final EmailVerificationForm verificationForm, BindingResult errors, @ModelAttribute("searchForm") final SearchForm searchForm) {
+        if (errors.hasErrors()){
+            return this.verifyEmail(id, verificationForm, searchForm);
+        }
+        // Getting the current user
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null || currentUser.getId() != id){
+            this.throwIfNoUser(id);
+        }
+        boolean isCodeValid = this.cryptoService.checkValidTOTP(currentUser, verificationForm.getCode());
+        if (!isCodeValid){
+            FieldError noData = new FieldError("verificationForm","code" , messageSource.getMessage("account.verification.code.invalid",null, LocaleContextHolder.getLocale()));
+            errors.addError(noData);
+            return this.verifyEmail(id, verificationForm, searchForm);
+        }
+        this.userService.verifyUserEmail(currentUser.getId());
+        return new ModelAndView("redirect:/user/" + id);
+    }
+
+    @RequestMapping(value = "/resend-email-verification", method = RequestMethod.POST)
+    public ModelAndView resendVerificationEmail(final @RequestParam(value="id") long id, @ModelAttribute("verificationForm") final EmailVerificationForm verificationForm, @ModelAttribute("searchForm") final SearchForm searchForm) {
+        ModelAndView mav = new ModelAndView("user/verifyEmail");
+        // Getting the current user
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null || currentUser.getId() != id){
+            this.throwIfNoUser(id);
+        }
+        this.emailService.sendVerificationEmail(currentUser.getEmail());
+        mav.addObject("searchForm", searchForm);
+        this.addUserAttributes(currentUser, mav);
+        return mav;
+    }
+
     @RequestMapping(value = "/recover-password")
     public ModelAndView recoverPassword(@ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
         this.throwIfUserIsLoggedIn();
@@ -163,6 +209,20 @@ public class RegistrationController {
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         model.addAttribute("searchForm", searchForm);
+    }
+
+    private void addUserAttributes(User currentUser, ModelAndView mav){
+        Collection<Tag> userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
+        Collection<String> userRoles = this.roleService.getUserRoles(currentUser.getId());
+        mav.addObject("currentUser", currentUser);
+        mav.addObject("userTags", userTags);
+        mav.addObject("userRoles", userRoles);
+        mav.addObject("searchContext", "");
+    }
+
+    private void throwIfNoUser(long id) {
+        LOGGER.warn("User with id {} doesn't exist", id);
+        throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{id}, LocaleContextHolder.getLocale()));
     }
 
     private void throwIfUserIsLoggedIn() {

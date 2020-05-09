@@ -142,7 +142,7 @@ public class  UserController {
 
     private void logAndThrow(long id) {
         LOGGER.warn("User with id {} doesn't exist", id);
-        throw new UserNotFoundException(messageSource.getMessage("error.user.notFound", new Object[]{id}, LocaleContextHolder.getLocale()));
+        throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{id}, LocaleContextHolder.getLocale()));
     }
 
     @ModelAttribute

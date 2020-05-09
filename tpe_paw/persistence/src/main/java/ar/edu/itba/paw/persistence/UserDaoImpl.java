@@ -102,8 +102,14 @@ public class UserDaoImpl implements UserDao {
         this.jdbcTemplate.update("UPDATE users SET reputation = reputation + ? WHERE id = ?", value, userId);
     }
 
+    @Override
     public Collection<User> getAllUsers() {
         return this.jdbcTemplate.query("SELECT * FROM users", ROW_MAPPER);
+    }
+
+    @Override
+    public Collection<User> getAllVerifiedUsers() {
+        return this.jdbcTemplate.query("SELECT * FROM users WHERE verified = 1", ROW_MAPPER);
     }
 
     @Override

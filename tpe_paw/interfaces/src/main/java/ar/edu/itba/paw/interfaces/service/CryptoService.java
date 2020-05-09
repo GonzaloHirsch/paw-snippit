@@ -4,6 +4,6 @@ import ar.edu.itba.paw.models.User;
 
 public interface CryptoService {
 
-    boolean checkValidRecoveryToken(User user, String token);
+    boolean checkValidTOTP(User user, String code);
     String generateTOTP(String userEmail, String password);
 }

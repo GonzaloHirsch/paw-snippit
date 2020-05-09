@@ -18,10 +18,14 @@ public class HashGenerator {
     private HashGenerator() {
     }
 
-    public String generateRecoveryHash(String userEmail, String pass, String otpString) {
+    public String generateSecretKey(String email, String pass){
+        return this.process((email + pass).getBytes(StandardCharsets.UTF_8));
+    }
+
+    private String process(byte[] data){
         try {
             MessageDigest sha256Digest = MessageDigest.getInstance("SHA-256");
-            byte[] userPassHash = sha256Digest.digest((userEmail + ":" + pass + ":" + otpString).getBytes(StandardCharsets.UTF_8));
+            byte[] userPassHash = sha256Digest.digest(data);
             return new String(Base64.getUrlEncoder().encode(userPassHash));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

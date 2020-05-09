@@ -314,6 +314,7 @@ public class UserDaoTest {
         User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
 
         String loc = userDao.getLocaleLanguage(user.getId()+10);
+        assertEquals(loc, "");
     }
 
     @Test
@@ -330,6 +331,7 @@ public class UserDaoTest {
         User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
 
         String loc = userDao.getLocaleRegion(user.getId()+10);
+        assertEquals(loc, "");
     }
 
     @Test

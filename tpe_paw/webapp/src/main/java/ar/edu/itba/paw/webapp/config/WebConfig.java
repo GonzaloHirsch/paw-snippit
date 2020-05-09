@@ -70,12 +70,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
         ds.setDriverClass(org.postgresql.Driver.class);
-//        ds.setUrl("jdbc:postgresql://localhost/paw-2020a-2");
-//        ds.setUsername("paw-2020a-2");
-//        ds.setPassword("em8TT4uvx");
-        ds.setUrl("jdbc:postgresql://localhost/paw");
-        ds.setUsername("postgres");
-        ds.setPassword("postgres");
+        ds.setUrl("jdbc:postgresql://localhost/paw-2020a-2");
+        ds.setUsername("paw-2020a-2");
+        ds.setPassword("em8TT4uvx");
+//        ds.setUrl("jdbc:postgresql://localhost/paw");
+//        ds.setUsername("postgres");
+//        ds.setPassword("postgres");
         return ds;
     }
 
@@ -92,7 +92,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(schemaSql);
 //        populator.addScript(populatorSql);
-        //populator.addScript(populatorRoleSql);
+        populator.addScript(populatorRoleSql);
         return populator;
     }
 
@@ -165,10 +165,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         Properties props = new Properties();
         props.put("resource.loader", "class");
         props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-//        props.put("resource.loader.path", "/WEB-INF/templates/");
-//        Map<String, String> velocityProps = new HashMap<>();
-//        velocityProps.put("velocimacro.library", "/WEB-INF/templates/macros/macro.vm");
-//        props.put("velocity.properties", velocityProps);
         velocityEngineFactory.setVelocityProperties(props);
         return velocityEngineFactory.createVelocityEngine();
     }

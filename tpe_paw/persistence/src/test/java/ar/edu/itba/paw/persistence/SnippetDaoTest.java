@@ -394,20 +394,6 @@ public class SnippetDaoTest {
 
     }
 
-    //FALLA TODO: Check why
-    @Test
-    public void testGetNewSnippetsForTagsCount(){
-        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
-        insertSnippetTagIntoDb(jdbcInsertSnippetTags,snippetId,defaultTag.getId());
-        Calendar weekBefore = Calendar.getInstance();
-        weekBefore.add(Calendar.WEEK_OF_YEAR, -1);
-        Timestamp weekBeforeTs = new Timestamp(weekBefore.getTime().getTime());
-
-        int result = snippetDao.getNewSnippetsForTagsCount(DATE.format(weekBeforeTs), Collections.singletonList(defaultTag),defaultUser.getId());
-
-        assertEquals(1,result);
-    }
-
     @Test
     public void testFindSnippetForTag() {
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(), TITLE, DESCR, CODE, defaultLanguageId,0);

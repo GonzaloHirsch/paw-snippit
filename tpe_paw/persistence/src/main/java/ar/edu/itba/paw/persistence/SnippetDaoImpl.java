@@ -162,7 +162,7 @@ public class SnippetDaoImpl implements SnippetDao {
         for (Long id : tagIds){
             params[i++] = id;
         }
-        return this.jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT s.id) FROM complete_snippets AS s LEFT OUTER JOIN snippet_tags AS st ON s.id = st.snippet_id WHERE s.user_id != ? AND s.date_created::date >= ?::date AND (" + sb.toString() + ")", params, Integer.class);
+        return this.jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT s.id) FROM complete_snippets AS s LEFT OUTER JOIN snippet_tags AS st ON s.id = st.snippet_id WHERE s.user_id != ? AND s.date_created::date >= ?::date AND ( " + sb.toString() + " )", params, Integer.class);
     }
 
     @Transactional

@@ -22,7 +22,7 @@
 <spring:message code="advanced.date.hint" var="advanced_date_hint" />
 <spring:message code="advanced.includeFlagged" var="advanced_include_flagged" />
 <div class="flex-column explore-container">
-    <form:form class="form-container" action="/explore/search" method="get" modelAttribute="exploreForm">
+    <form:form class="form-container" action="search" method="get" modelAttribute="exploreForm">
 
         <form:label cssClass="flex-stretch fw-500" path="field"><spring:message code="advanced.ordersort"/></form:label>
         <div class="flex-row">

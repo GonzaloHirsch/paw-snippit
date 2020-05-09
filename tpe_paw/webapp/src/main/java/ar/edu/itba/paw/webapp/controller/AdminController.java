@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.LanguageService;
+import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.TagService;
+import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.AdminAddForm;
@@ -22,20 +24,18 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 
 @Controller
 public class AdminController {
 
-    @Autowired
-    private LoginAuthentication loginAuthentication;
-    @Autowired
-    private LanguageService languageService;
-    @Autowired
-    private TagService tagService;
-    @Autowired
-    private ValidatorHelper validator;
+    @Autowired private LoginAuthentication loginAuthentication;
+    @Autowired private LanguageService languageService;
+    @Autowired private TagService tagService;
+    @Autowired private ValidatorHelper validator;
+    @Autowired private RoleService roleService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
 
@@ -79,7 +79,11 @@ public class AdminController {
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
+        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
+        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
         model.addAttribute("currentUser", currentUser);
+        model.addAttribute("userTags", userTags);
         model.addAttribute("searchForm", searchForm);
+        model.addAttribute("userRoles", userRoles);
     }
 }

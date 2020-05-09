@@ -50,7 +50,6 @@ public class UserServiceImpl implements UserService {
         userDao.updateDescription(username, newDescription);
     }
 
-    // TODO, should this ask for the current password?
     @Override
     public void changePassword(String email, String password) {
         this.userDao.changePassword(email, password);

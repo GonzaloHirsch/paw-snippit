@@ -138,6 +138,9 @@
                     #msg("email.register.description.actions.more")
                 </li>
             </ul>
+            <p class="center black-text info full-width">
+                #msg("email.register.nextstep")
+            </p>
         </div>
     </div>
 </div>

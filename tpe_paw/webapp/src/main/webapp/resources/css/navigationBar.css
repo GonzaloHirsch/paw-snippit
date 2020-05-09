@@ -136,10 +136,21 @@
     text-decoration: none;
     /*font-size: 17px;*/
 }
+
 .navtop .app-name{
     width:150px;
     letter-spacing: 2px;
     font-size: 26px !important;
+    text-decoration: none;
+}
+
+@media all and (max-width: 860px){
+    .navtop .app-name{
+        display: none;
+    }
+    .navtop-welcome-text {
+        display: none;
+    }
 }
 
 .navtop-icons{
@@ -186,6 +197,7 @@
     flex-grow: 1;
     max-width: 800px;
     padding: 5px;
+    min-width: 300px;
 }
 
 .navtop .search-container button:hover {
@@ -219,6 +231,7 @@
     font-size: 17px;
     height:40px;
     padding: 6px;
+    min-width: 100px;
 }
 
 .navtop .search-icon {

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -36,6 +37,7 @@ public class SnippetController {
     @Autowired private TagService tagService;
     @Autowired private UserService userService;
     @Autowired private MessageSource messageSource;
+    @Autowired private EmailService emailService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetController.class);
 
@@ -170,21 +172,25 @@ public class SnippetController {
         if (currentUser == null || !roleService.isAdmin(currentUser.getId())) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.flag", null, LocaleContextHolder.getLocale()));
         } else {
-            this.snippetService.updateFlagged(id, this.getOwnerIdOfSnippet(id), adminFlagForm.isFlagged());
+            // Getting the snippet
+            Optional<Snippet> snippetOpt = this.snippetService.findSnippetById(id);
+            if (!snippetOpt.isPresent()){
+                this.logAndThrow(id);
+            }
+            // Getting the complete owner
+            Optional<User> completeOwnerOpt = this.userService.findUserById(snippetOpt.get().getOwner().getId());
+            if (!completeOwnerOpt.isPresent()){
+                throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.delete", null, LocaleContextHolder.getLocale()));
+            }
+            // Updating the flagged status
+            this.snippetService.updateFlagged(id, completeOwnerOpt.get().getId(), adminFlagForm.isFlagged());
             LOGGER.debug("Marked snippet {} as flagged by admin", id);
+            // Getting the url of the server
+            final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+            // Sending flagged email
+            this.emailService.sendFlaggedEmail(baseUrl + "/snippet/" + id, snippetOpt.get().getTitle(), completeOwnerOpt.get().getEmail(), completeOwnerOpt.get().getUsername(), adminFlagForm.isFlagged(), completeOwnerOpt.get().getLocale());
         }
         return mav;
-    }
-
-    private long getOwnerIdOfSnippet(final long snippetId) {
-        Optional<Snippet> snip = this.snippetService.findSnippetById(snippetId);
-        if (snip.isPresent()) {
-            return snip.get().getOwner().getId();
-        } else {
-            this.logAndThrow(snippetId);
-        }
-        /* This statement is unreachable */
-        return 0;
     }
 
     private void logAndThrow(final long snippetId) {

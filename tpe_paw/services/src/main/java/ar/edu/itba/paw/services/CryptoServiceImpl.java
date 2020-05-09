@@ -10,20 +10,44 @@ import org.springframework.stereotype.Service;
 public class CryptoServiceImpl implements CryptoService {
 
     @Override
-    public boolean checkValidRecoveryToken(User user, String token) {
-        String[] otps = WebappCrypto.generateOtps(WebappCrypto.TEST_KEY);
+    public boolean checkValidTOTP(User user, String code) {
+        // Generating secret key for TOTP
+        String key = HashGenerator.getInstance().generateSecretKey(user.getEmail(), user.getPassword());
+        // Generating valid TOTPS
+        String[] otps = WebappCrypto.generateOtps(key);
         String base64Token;
         boolean pass = false;
         for (int i = 0; i < 3; i++) {
-            base64Token = HashGenerator.getInstance().generateRecoveryHash(user.getEmail(), user.getPassword(), otps[i]);
-            pass = pass || token.compareTo(base64Token) == 0;
+            pass = pass || code.equals(otps[i]);
         }
         return pass;
     }
 
     @Override
     public String generateTOTP(String userEmail, String password) {
-        String otp = WebappCrypto.generateOtp(WebappCrypto.TEST_KEY);
-        return HashGenerator.getInstance().generateRecoveryHash(userEmail, password, otp);
+        // Generating secret key for TOTP
+        String key = HashGenerator.getInstance().generateSecretKey(userEmail, password);
+        // Generating totp
+        return WebappCrypto.generateOtp(key);
+    }
+
+    @Override
+    public String generateRecoverToken(String code) {
+        return HashGenerator.getInstance().generateRecoveryToken(code);
+    }
+
+    @Override
+    public boolean checkValidRecoverToken(User user, String token) {
+        // Generating secret key for TOTP
+        String key = HashGenerator.getInstance().generateSecretKey(user.getEmail(), user.getPassword());
+        // Generating valid TOTPS
+        String[] otps = WebappCrypto.generateOtps(key);
+        String base64Token;
+        boolean pass = false;
+        for (int i = 0; i < 3; i++) {
+            base64Token = HashGenerator.getInstance().generateRecoveryToken(otps[i]);
+            pass = pass || base64Token.compareTo(token) == 0;
+        }
+        return pass;
     }
 }

@@ -29,6 +29,12 @@
     transition: 0.3s;
 }
 
+.verify-email-icon {
+    color: #5E35B1;
+    font-size: 70px !important;
+    margin: 5px 15px 5px 0px;
+}
+
 .card-flagged-warning-icon {
     color: red;
     font-size: 30px !important;

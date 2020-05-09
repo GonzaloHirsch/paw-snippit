@@ -1,17 +1,23 @@
 package ar.edu.itba.paw.interfaces.service;
 
-public interface EmailService {
-    void sendEmail(String to, String subject, String body);
+import java.util.Locale;
 
-    void sendRegistrationEmail(String to, String username);
+public interface EmailService {
+    void sendEmail(String to, String subject, String body, Locale locale);
+
+    void sendRegistrationEmail(String to, String username, Locale locale);
 
     void sendRecoveryEmail(String baseUrl, String userEmail);
 
     void scheduledWeeklyDigest();
 
-    void sendDigestEmail(String to, String username, int count);
+    void sendVerificationEmail(String userEmail);
 
-    void sendDigestNoFollowEmail(String to, String username);
+    void sendDigestEmail(String to, String username, int count, Locale locale);
 
-    void sendDigestFollowOtherEmail(String to, String username);
+    void sendDigestNoFollowEmail(String to, String username, Locale locale);
+
+    void sendDigestFollowOtherEmail(String to, String username, Locale locale);
+
+    void sendFlaggedEmail(String snippetUrl, String snippetTitle, String userEmail, String username, boolean isFlagged, Locale locale);
 }

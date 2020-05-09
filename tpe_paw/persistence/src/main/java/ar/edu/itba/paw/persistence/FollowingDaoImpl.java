@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -42,6 +43,7 @@ public class FollowingDaoImpl implements FollowingDao {
     }
 
     @Override
+    @Transactional
     public void followTag(long userId, long tagId) {
         Map<String, Object> args = new HashMap<>();
         args.put("user_id", userId);
@@ -50,6 +52,7 @@ public class FollowingDaoImpl implements FollowingDao {
     }
 
     @Override
+    @Transactional
     public void unfollowTag(long userId, long tagId) {
         jdbcTemplate.update("DELETE FROM follows WHERE user_id = ? AND tag_id = ?", userId, tagId);
     }

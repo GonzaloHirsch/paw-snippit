@@ -11,7 +11,6 @@ import java.time.Instant;
 
 public class WebappCrypto {
 
-    public static final String TEST_KEY = "thakeyyy";
     private static final int DURATION = 300;
 
     //TODO StackOverflow

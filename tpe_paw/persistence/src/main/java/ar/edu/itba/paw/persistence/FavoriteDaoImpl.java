@@ -57,6 +57,7 @@ public class FavoriteDaoImpl implements FavoriteDao {
     }
 
     @Override
+    @Transactional
     public void removeFromFavorites(long userId, long snippetId) {
         Object[] args = new Object[] {userId, snippetId};
         this.jdbcTemplate.update("DELETE FROM favorites WHERE user_id = ? AND snippet_id = ?", args);

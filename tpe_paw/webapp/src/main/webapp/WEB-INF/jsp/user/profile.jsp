@@ -11,6 +11,7 @@
     <link href="<c:url value='/resources/css/profile.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/icons.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippetCreate.css'/>" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
@@ -23,7 +24,23 @@
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
-        <div class="flex-column detail-user">
+        <div class="flex-column flex-center detail-user">
+            <c:if test="${!currentUser.verified && currentUser.id == user.id}">
+                <div class="flex-row flex-center verify-email-container border-radius">
+                    <i class="verify-email-icon material-icons">announcement</i>
+                    <div class="flex-column verify-message-container">
+                        <c:url var="verifyEmailUrl" value="/verify-email">
+                            <c:param name="id" value="${currentUser.id}"/>
+                        </c:url>
+                        <h3><spring:message code="verify.email.title"/></h3>
+                        <p><spring:message code="verify.email.description"/></p>
+                        <p>
+                            <spring:message code="verify.email.instruction"/>
+                            <a href="${verifyEmailUrl}"><spring:message code="verify.email.redirection"/></a>
+                        </p>
+                    </div>
+                </div>
+            </c:if>
             <div class="flex-row">
                 <div class="flex-column">
                     <c:if test="${currentUser.id == user.id}">

@@ -118,17 +118,20 @@
             <span class="fw-500">#msg("email.app.title")</span>
         </div>
         <div class="mid-container-info">
-            <h1 class="left ml-2-5 black-text greeting">
-                #msg("email.recovery")
+            <h1 class="left black-text greeting">
+                #msgArgs("email.verification.greeting", [${username}])
             </h1>
-            <p class="left ml-2-5 black-text info full-width">
-                #msgArgs("email.recovery.mainText", [${username}, ${recoveryURL}])
+            <p class="left black-text info full-width">
+                #msg("email.verification.description")
+            </p>
+            <p class="left black-text info full-width">
+                ${code}
             </p>
         </div>
     </div>
 </div>
 <div class="bottom-container fw-100 center disclaimer">
-    #msgArgs("email.recovery.disclaimer", [${userEmail}])
+    #msgArgs("email.verification.disclaimer", [${userEmail}])
 </div>
 <div class="bottom-container fw-100 center disclaimer">
     #msg("email.end")

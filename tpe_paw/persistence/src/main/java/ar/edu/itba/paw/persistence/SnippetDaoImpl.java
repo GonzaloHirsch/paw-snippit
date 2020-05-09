@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -130,6 +131,7 @@ public class SnippetDaoImpl implements SnippetDao {
         return snippet;
     }
 
+    @Transactional
     @Override
     public boolean deleteSnippetById(long id) {
         boolean success = true;
@@ -163,6 +165,7 @@ public class SnippetDaoImpl implements SnippetDao {
         return this.jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT s.id) FROM complete_snippets AS s LEFT OUTER JOIN snippet_tags AS st ON s.id = st.snippet_id WHERE s.user_id != ? AND s.date_created::date >= ?::date AND (" + sb.toString() + ")", params, Integer.class);
     }
 
+    @Transactional
     @Override
     public Long createSnippet(long ownerId, String title, String description,String code, String dateCreated, Long languageId){
         final Map<String, Object> snippetDataMap = new HashMap<String,Object>(){{

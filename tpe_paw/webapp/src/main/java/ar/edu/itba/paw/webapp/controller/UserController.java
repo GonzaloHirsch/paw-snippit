@@ -60,6 +60,10 @@ public class  UserController {
            ) {
         final ModelAndView mav = new ModelAndView("user/profile");
 
+        Optional<User> user = this.userService.findUserById(id);
+        if (!user.isPresent() || this.roleService.isAdmin(user.get().getId())) {
+            this.logAndThrow(id);
+        }
         /* Set the current user and its following tags */
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
@@ -69,10 +73,6 @@ public class  UserController {
         mav.addObject("userTags", userTags);
         mav.addObject("userRoles", userRoles);
 
-        Optional<User> user = this.userService.findUserById(id);
-        if (!user.isPresent()) {
-            this.logAndThrow(id);
-        }
         descriptionForm.setDescription(user.get().getDescription());
         if (currentUser == null || (currentUser.getId() != user.get().getId() && editing)) {
             // ERROR

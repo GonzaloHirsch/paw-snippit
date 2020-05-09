@@ -24,7 +24,7 @@
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
-        <div class="flex-column flex-center detail-user">
+        <div class="flex-column detail-user">
             <c:if test="${!currentUser.verified && currentUser.id == user.id}">
                 <div class="flex-row flex-center verify-email-container border-radius">
                     <i class="verify-email-icon material-icons">announcement</i>

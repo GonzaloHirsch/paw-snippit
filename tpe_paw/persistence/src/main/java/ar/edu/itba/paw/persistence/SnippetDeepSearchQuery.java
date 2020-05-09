@@ -48,7 +48,7 @@ public class SnippetDeepSearchQuery {
 
         public Builder(boolean isCount) {
             if (isCount){
-                this.query.append("SELECT COUNT(DISTINCT s.id) FROM (SELECT DISTINCT cs.id, cs.user_id, cs.username, cs.reputation, cs.lang, cs.region, cs.verified, cs.code, cs.title, cs.description, cs.language, cs.date_created, cs.icon, cs.votes, cs.language_id, st.tag_id, cs.flagged FROM complete_snippets AS cs LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = cs.id ORDER BY cs.id ASC) AS s");
+                this.query.append("SELECT COUNT(DISTINCT s.id) FROM complete_snippets AS s LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = s.id ");
             } else {
                 this.query.append("SELECT DISTINCT s.id, s.user_id, s.username, s.reputation, s.lang, s.region, s.verified, s.code, s.title, s.description, s.language, s.date_created, s.icon, s.votes, s.language_id, s.flagged FROM complete_snippets AS s LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = s.id ");
             }

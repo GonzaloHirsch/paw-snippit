@@ -123,7 +123,7 @@ public class RegistrationController {
             return recoverPassword(recoveryForm, errors);
         }
         final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        emailService.sendRecoveryEmail(baseUrl, recoveryForm.getEmail(), LocaleContextHolder.getLocale());
+        emailService.sendRecoveryEmail(baseUrl, recoveryForm.getEmail());
         return new ModelAndView("user/emailSent");
     }
 

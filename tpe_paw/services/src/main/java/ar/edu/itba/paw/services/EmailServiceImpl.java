@@ -37,8 +37,6 @@ public class EmailServiceImpl implements EmailService {
     private TemplateService templateService;
     @Autowired
     private CryptoService cryptoService;
-    @Autowired
-    private ServletContext context;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     @Async
@@ -71,13 +69,12 @@ public class EmailServiceImpl implements EmailService {
             this.sendEmail(to, subject, body, locale);
         } catch (Exception e) {
             // TODO: DO SMTH
-            String a = e.getMessage();
         }
     }
 
     @Async
     @Override
-    public void sendRecoveryEmail(String baseUrl, String userEmail, Locale locale) {
+    public void sendRecoveryEmail(String baseUrl, String userEmail) {
         User searchedUser = userService.findUserByEmail(userEmail).get(); // User SHOULD be found
         String base64Token = cryptoService.generateTOTP(userEmail, searchedUser.getPassword());
         String link = baseUrl + "/reset-password?id=" + searchedUser.getId() + "&token=" + base64Token;
@@ -85,11 +82,29 @@ public class EmailServiceImpl implements EmailService {
         data.put("recoveryURL", link);
         data.put("username", searchedUser.getUsername());
         data.put("userEmail", searchedUser.getEmail());
-        String body = this.templateService.merge("/templates/passwordRecovery.vm", data, locale);
-        String subject = messageSource.getMessage("email.recovery.subject", null, locale);
+        String body = this.templateService.merge("/templates/passwordRecovery.vm", data, searchedUser.getLocale());
+        String subject = messageSource.getMessage("email.recovery.subject", null, searchedUser.getLocale());
+        this.sendEmail(userEmail, subject, body, searchedUser.getLocale());
+    }
+
+    @Async
+    @Override
+    public void sendFlaggedEmail(String snippetUrl, String snippetTitle, String userEmail, String username, boolean isFlagged, Locale locale){
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("snippetUrl", snippetUrl);
+        data.put("username", username);
+        data.put("title", snippetTitle);
+        String body;
+        if (isFlagged){
+            body = this.templateService.merge("/templates/flaggedSnippet.vm", data, locale);
+        } else {
+            body = this.templateService.merge("/templates/notFlaggedSnippet.vm", data, locale);
+        }
+        String subject = messageSource.getMessage("email.flagged.subject", null, locale);
         this.sendEmail(userEmail, subject, body, locale);
     }
 
+    @Async
     @Scheduled(cron = "0 0 12 * * Mon")
     @Override
     public void scheduledWeeklyDigest() {

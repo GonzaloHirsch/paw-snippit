@@ -7,7 +7,7 @@ public interface EmailService {
 
     void sendRegistrationEmail(String to, String username, Locale locale);
 
-    void sendRecoveryEmail(String baseUrl, String userEmail, Locale locale);
+    void sendRecoveryEmail(String baseUrl, String userEmail);
 
     void scheduledWeeklyDigest();
 
@@ -16,4 +16,6 @@ public interface EmailService {
     void sendDigestNoFollowEmail(String to, String username, Locale locale);
 
     void sendDigestFollowOtherEmail(String to, String username, Locale locale);
+
+    void sendFlaggedEmail(String snippetUrl, String snippetTitle, String userEmail, String username, boolean isFlagged, Locale locale);
 }

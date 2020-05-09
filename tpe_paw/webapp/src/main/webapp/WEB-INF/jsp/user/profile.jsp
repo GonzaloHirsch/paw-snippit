@@ -23,7 +23,20 @@
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
-        <div class="flex-column detail-user">
+        <div class="flex-column flex-center detail-user">
+            <c:if test="${!currentUser.verified}">
+                <div class="flex-row flex-center verify-email-container border-radius">
+                    <i class="verify-email-icon material-icons">announcement</i>
+                    <div class="flex-column verify-message-container">
+                        <h3><spring:message code="verify.email.title"/></h3>
+                        <p><spring:message code="verify.email.description"/></p>
+                        <p>
+                            <spring:message code="verify.email.instruction"/>
+                            <a href="<c:url value="/verify-email"/>"><spring:message code="verify.email.redirection"/></a>
+                        </p>
+                    </div>
+                </div>
+            </c:if>
             <div class="flex-row">
                 <div class="flex-column">
                     <c:if test="${currentUser.id == user.id}">

@@ -196,7 +196,7 @@ public class SearchController {
 
     private Collection<Snippet> findByCriteria(String type, String query, SnippetDao.Locations location, String sort, Long userId, Long resourceId, int page) {
         if (query.length() > MAX_SEARCH_QUERY_SIZE)
-            throw new URITooLongException(messageSource.getMessage("error.414", null, LocaleContextHolder.getLocale()));
+            throw new URITooLongException(messageSource.getMessage("error.414.search", null, LocaleContextHolder.getLocale()));
         if (!this.typesMap.containsKey(type) || !this.ordersMap.containsKey(sort)) {
             return new ArrayList<>();
         } else {

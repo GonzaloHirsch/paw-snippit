@@ -13,7 +13,7 @@ public class SnippetCreateForm {
     private String title;
 
     @Size(max=500)
-    @Pattern(regexp = "^[^\\s]+(\\s+[^\\s]+)*$", message = "{form.error.Fspaces}")
+    @Pattern(regexp = "^[^\\s]+(\\s+[^\\s]+)*$", message = "{form.error.spaces}")
     private String description;
 
     @Size(min=5, max=30000)

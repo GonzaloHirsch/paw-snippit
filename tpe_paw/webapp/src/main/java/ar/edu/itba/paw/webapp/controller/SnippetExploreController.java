@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.ExploreForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +35,7 @@ public class SnippetExploreController {
     @Autowired private LanguageService languageService;
     @Autowired private RoleService roleService;
     @Autowired private UserService userService;
+    @Autowired private MessageSource messageSource;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 

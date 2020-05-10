@@ -6,10 +6,7 @@ import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
-import ar.edu.itba.paw.webapp.exception.LanguageNotFoundException;
-import ar.edu.itba.paw.webapp.exception.TagNotFoundException;
-import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
+import ar.edu.itba.paw.webapp.exception.*;
 import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.models.User;
 import org.slf4j.Logger;
@@ -31,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.*;
 
+import static ar.edu.itba.paw.webapp.constants.Constants.MAX_SEARCH_QUERY_SIZE;
 import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
 
 @Controller
@@ -197,6 +195,8 @@ public class SearchController {
     }
 
     private Collection<Snippet> findByCriteria(String type, String query, SnippetDao.Locations location, String sort, Long userId, Long resourceId, int page) {
+        if (query.length() > MAX_SEARCH_QUERY_SIZE)
+            throw new URITooLongException(messageSource.getMessage("error.414", null, LocaleContextHolder.getLocale()));
         if (!this.typesMap.containsKey(type) || !this.ordersMap.containsKey(sort)) {
             return new ArrayList<>();
         } else {

@@ -45,7 +45,7 @@
 
         <div class="flex-column snippet-code-container border-radius">
             <div class="card-snippet-block">
-                <pre><code class="${snippet.language}">${fn:escapeXml(snippet.code)}</code></pre>
+                <pre><code>${fn:escapeXml(snippet.code)}</code></pre>
                 <p class="card-snippet-fade-out card-snippet-fade-out-code"></p>
             </div>
         </div>

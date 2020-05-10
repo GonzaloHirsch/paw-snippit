@@ -8,12 +8,6 @@
     <link href="<c:url value='/resources/css/snippetCard.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/icons.css'/>" rel="stylesheet"/>
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.0/styles/lightfair.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script charset="UTF-8"
-            src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.0/languages/go.min.js"></script>
 </head>
 <body>
 <c:set var="snippetList" value="${requestScope.snippetList}"/>
@@ -33,6 +27,5 @@
 </c:if>
 <c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>
 <script src="<c:url value='/resources/js/snippetsFeed.js'/>"></script>
-<script>hljs.initHighlightingOnLoad();</script>
 </body>
 </html>

@@ -36,6 +36,7 @@ public class SnippetFeedController {
     @Autowired private LoginAuthentication loginAuthentication;
     @Autowired private TagService tagService;
     @Autowired private RoleService roleService;
+    @Autowired private UserService userService;
     @Autowired private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetFeedController.class);
@@ -127,8 +128,14 @@ public class SnippetFeedController {
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
-        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
+        Collection<Tag> userTags = new ArrayList<>();
+        Collection<String> userRoles = new ArrayList<>();
+
+        if (currentUser != null) {
+            userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
+            userRoles = this.roleService.getUserRoles(currentUser.getId());
+            this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
+        }
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("userTags", userTags);
         model.addAttribute("searchForm", searchForm);

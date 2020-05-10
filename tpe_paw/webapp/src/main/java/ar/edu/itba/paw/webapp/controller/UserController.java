@@ -64,11 +64,17 @@ public class  UserController {
         if (!user.isPresent() || this.roleService.isAdmin(user.get().getId())) {
             this.logAndThrow(id);
         }
+
         /* Set the current user and its following tags */
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
-        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
+        Collection<Tag> userTags = new ArrayList<>();
+        Collection<String> userRoles = new ArrayList<>();
 
+        if (currentUser != null) {
+            userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
+            userRoles = this.roleService.getUserRoles(currentUser.getId());
+            this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
+        }
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);
         mav.addObject("userRoles", userRoles);

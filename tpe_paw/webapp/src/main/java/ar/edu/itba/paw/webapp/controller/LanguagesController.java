@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -34,18 +33,13 @@ import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
 
 @Controller
 public class LanguagesController {
-    @Autowired
-    private LanguageService languageService;
-    @Autowired
-    private SnippetService snippetService;
-    @Autowired
-    private LoginAuthentication loginAuthentication;
-    @Autowired
-    private TagService tagService;
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private MessageSource messageSource;
+    @Autowired private LanguageService languageService;
+    @Autowired private SnippetService snippetService;
+    @Autowired private LoginAuthentication loginAuthentication;
+    @Autowired private TagService tagService;
+    @Autowired private RoleService roleService;
+    @Autowired private UserService userService;
+    @Autowired private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LanguagesController.class);
 
@@ -117,12 +111,17 @@ public class LanguagesController {
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
-        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
+        Collection<Tag> userTags = new ArrayList<>();
+        Collection<String> userRoles = new ArrayList<>();
+
+        if (currentUser != null) {
+            userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
+            userRoles = this.roleService.getUserRoles(currentUser.getId());
+            this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
+        }
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("userTags", userTags);
         model.addAttribute("searchForm", searchForm);
         model.addAttribute("userRoles", userRoles);
     }
-
 }

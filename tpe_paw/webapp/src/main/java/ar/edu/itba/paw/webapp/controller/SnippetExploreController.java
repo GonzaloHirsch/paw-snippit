@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.service.LanguageService;
-import ar.edu.itba.paw.interfaces.service.RoleService;
-import ar.edu.itba.paw.interfaces.service.SnippetService;
-import ar.edu.itba.paw.interfaces.service.TagService;
+import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
@@ -11,6 +8,7 @@ import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.ExploreForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,16 +28,12 @@ import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
 @Controller
 public class SnippetExploreController {
 
-    @Autowired
-    private SnippetService snippetService;
-    @Autowired
-    private LoginAuthentication loginAuthentication;
-    @Autowired
-    private TagService tagService;
-    @Autowired
-    private LanguageService languageService;
-    @Autowired
-    private RoleService roleService;
+    @Autowired private SnippetService snippetService;
+    @Autowired private LoginAuthentication loginAuthentication;
+    @Autowired private TagService tagService;
+    @Autowired private LanguageService languageService;
+    @Autowired private RoleService roleService;
+    @Autowired private UserService userService;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -88,12 +82,19 @@ public class SnippetExploreController {
     @ModelAttribute
     public void addAttributes(Model model) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
-        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
+        Collection<Tag> userTags = new ArrayList<>();
+        Collection<String> userRoles = new ArrayList<>();
+
+        if (currentUser != null) {
+            userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
+            userRoles = this.roleService.getUserRoles(currentUser.getId());
+            this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
+        }
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("userTags", userTags);
         model.addAttribute("userRoles", userRoles);
     }
+
 
     private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
         mav.addObject("pages", snippetCount / SNIPPET_PAGE_SIZE + (snippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));

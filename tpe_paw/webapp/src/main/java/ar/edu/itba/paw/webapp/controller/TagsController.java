@@ -29,7 +29,6 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.constants.Constants.TAG_PAGE_SIZE;
 
@@ -40,6 +39,7 @@ public class TagsController {
     @Autowired private SnippetService snippetService;
     @Autowired private LoginAuthentication loginAuthentication;
     @Autowired private RoleService roleService;
+    @Autowired private UserService userService;
     @Autowired private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TagsController.class);
@@ -131,8 +131,14 @@ public class TagsController {
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
-        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
+        Collection<Tag> userTags = new ArrayList<>();
+        Collection<String> userRoles = new ArrayList<>();
+
+        if (currentUser != null) {
+            userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
+            userRoles = this.roleService.getUserRoles(currentUser.getId());
+            this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
+        }
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("userTags", userTags);
         model.addAttribute("searchForm", searchForm);

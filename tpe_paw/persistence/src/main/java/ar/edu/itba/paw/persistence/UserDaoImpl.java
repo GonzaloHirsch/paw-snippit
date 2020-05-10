@@ -7,11 +7,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Repository
@@ -23,6 +23,9 @@ public class UserDaoImpl implements UserDao {
 
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(rs.getTimestamp("date_joined").getTime());
+
             return new User(
                     rs.getLong("id"),
                     rs.getString("username"),
@@ -30,7 +33,7 @@ public class UserDaoImpl implements UserDao {
                     rs.getString("email"),
                     rs.getString("description"),
                     rs.getInt("reputation"),
-                    rs.getString("date_joined"),
+                    new SimpleDateFormat("yyyy-MM-dd hh:mm").format(calendar.getTime()),
                     rs.getBytes("icon"),
                     new Locale(rs.getString("lang"), rs.getString("region")),
                     rs.getInt("verified") == 1

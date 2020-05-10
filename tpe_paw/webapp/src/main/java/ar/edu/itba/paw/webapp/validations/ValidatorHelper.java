@@ -15,12 +15,9 @@ import java.util.*;
 
 @Component
 public class ValidatorHelper {
-    @Autowired
-    TagService tagService;
-    @Autowired
-    LanguageService languageService;
-    @Autowired
-    MessageSource messageSource;
+    @Autowired TagService tagService;
+    @Autowired LanguageService languageService;
+    @Autowired MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidatorHelper.class);
 
@@ -39,14 +36,18 @@ public class ValidatorHelper {
 
     private void validateAddedTags (List<String> tags, BindingResult errors, Locale locale){
         StringBuilder error = new StringBuilder();
+        int maxLength = 25;
         int errorAmount = 0;
         boolean trailingSpaces = false;
+        boolean tooLong = false;
 
         if (tags != null) {
             for (String tag : tags) {
                 if (!tag.isEmpty()) {
                     if (tag.charAt(0) == ' ' || tag.charAt(tag.length() - 1) == ' ') {
                         trailingSpaces = true;
+                    } else if (tag.length() > maxLength) {
+                            tooLong = true;
                     } else {
                         if (tagService.tagExists(tag)) {
                             error.append(tag).append(", ");
@@ -63,8 +64,12 @@ public class ValidatorHelper {
                 LOGGER.debug("Tags that already exists = {}", error.toString());
             }
             if (trailingSpaces) {
-                FieldError trailingSpacesError = new FieldError("addAdminForm", "tags", messageSource.getMessage("admin.add.spaces.error", new Object[]{error.toString()}, locale));
+                FieldError trailingSpacesError = new FieldError("addAdminForm", "tags", messageSource.getMessage("admin.add.spaces.error", null, locale));
                 errors.addError(trailingSpacesError);
+            }
+            if (tooLong) {
+                FieldError tooLongError = new FieldError("addAdminForm", "tags", messageSource.getMessage("admin.add.tag.length.error", new Object[]{maxLength}, locale));
+                errors.addError(tooLongError);
             }
 
             this.checkForDuplicated(tags, "tags", errors, locale);
@@ -73,15 +78,20 @@ public class ValidatorHelper {
 
     private void validateAddedLanguages (List<String> languages, BindingResult errors, Locale locale){
         StringBuilder error = new StringBuilder();
+        int maxLength = 20;
         int errorAmount = 0;
         boolean trailingSpaces = false;
+        boolean tooLong = false;
 
         if (languages != null) {
             for (String lang : languages) {
                 if (!lang.isEmpty()) {
                     if (lang.charAt(0) == ' ' || lang.charAt(lang.length() - 1) == ' ') {
                         trailingSpaces = true;
-                    } else {
+                    } else if (lang.length() > maxLength) {
+                        tooLong = true;
+                    }
+                    else {
                         if (languageService.languageExists(lang)) {
                             error.append(lang).append(", ");
                             errorAmount++;
@@ -96,8 +106,12 @@ public class ValidatorHelper {
                 errors.addError(langExists);
             }
             if (trailingSpaces) {
-                FieldError trailingSpacesError = new FieldError("addAdminForm", "languages", messageSource.getMessage("admin.add.spaces.error", new Object[]{error.toString()}, locale));
+                FieldError trailingSpacesError = new FieldError("addAdminForm", "languages", messageSource.getMessage("admin.add.spaces.error", null, locale));
                 errors.addError(trailingSpacesError);
+            }
+            if (tooLong) {
+                FieldError tooLongError = new FieldError("addAdminForm", "languages", messageSource.getMessage("admin.add.lang.length.error", new Object[]{maxLength}, locale));
+                errors.addError(tooLongError);
             }
             this.checkForDuplicated(languages, "languages", errors, locale);
         }

@@ -16,7 +16,6 @@ function addAdminRow(divId, placeholder) {
             </label>
           `;
         document.getElementById('langCount').value = ++langCount;
-        limitFields(langCount, 'langButton');
 
     } else {
         let tagCount = getCounter('tagCount');
@@ -29,7 +28,6 @@ function addAdminRow(divId, placeholder) {
             </label>
           `;
         document.getElementById('tagCount').value = ++tagCount;
-        limitFields(tagCount, 'tagButton');
     }
 
     document.getElementById(divId).appendChild(div);
@@ -39,21 +37,9 @@ function removeRow(input, divId, counterId, buttonId) {
     document.getElementById(divId).removeChild(input.parentNode.parentElement);
     let counter = getCounter(counterId);
     document.getElementById(counterId).value = --counter;
-    limitFields(counter, buttonId);
 }
 
 function getCounter(counterId) {
     let counter = parseInt(document.getElementById(counterId).value, 10);
     return isNaN(counter) ? 0 : counter;
-}
-
-function limitFields(currentAmount, buttonId) {
-    let limit = 5;
-    let button = document.getElementById(buttonId);
-
-    if (currentAmount >= limit) {
-        button.classList.add("hidden");
-    } else {
-        button.classList.remove("hidden");
-    }
 }

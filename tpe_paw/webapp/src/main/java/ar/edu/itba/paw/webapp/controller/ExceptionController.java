@@ -13,11 +13,13 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.BadSqlGrammarException;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @ControllerAdvice
 public class ExceptionController {
@@ -80,6 +82,13 @@ public class ExceptionController {
     public ModelAndView cannotRemoveLanguage(RemovingLanguageInUseException ex) {
         String errorName = messageSource.getMessage("error.409.name", null, LocaleContextHolder.getLocale());
         return this.createErrorModel(errorName, ex.getMessage(), 409);
+    }
+
+    @ResponseStatus(code = HttpStatus.URI_TOO_LONG)
+    @ExceptionHandler(URITooLongException.class)
+    public ModelAndView uriTooLong(URITooLongException ex) {
+        String errorName = messageSource.getMessage("error.414.name", null, LocaleContextHolder.getLocale());
+        return this.createErrorModel(errorName, ex.getMessage(), 414);
     }
 
     private ModelAndView createErrorModel(String errorName, String errorMessage, int errorCode) {

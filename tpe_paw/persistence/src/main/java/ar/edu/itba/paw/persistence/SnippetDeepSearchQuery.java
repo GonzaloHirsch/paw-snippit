@@ -65,7 +65,7 @@ public class SnippetDeepSearchQuery {
         }
 
         public Builder addUsername(String username){
-            if (username != null){
+            if (username != null && !username.isEmpty()){
                 this.query.append(" LOWER(s.username) LIKE LOWER(?) ");
                 this.params.add("%"+username+"%");
             }
@@ -73,7 +73,7 @@ public class SnippetDeepSearchQuery {
         }
 
         public Builder addTitle(String title){
-            if (title != null){
+            if (title != null && !title.isEmpty()){
                 this.query.append(" LOWER(s.title) LIKE LOWER(?) ");
                 this.params.add("%"+title+"%");
             }

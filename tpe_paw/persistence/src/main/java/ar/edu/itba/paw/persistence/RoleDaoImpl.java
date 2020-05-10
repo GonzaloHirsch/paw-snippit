@@ -52,7 +52,6 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
-    @Transactional
     public void assignUserRole(long userId) {
        long roleId = jdbcTemplate.queryForObject("SELECT id FROM roles WHERE role = ?", new Object[]{USER_ROLE}, Long.class);
 
@@ -61,7 +60,6 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
-    @Transactional
     public void assignAdminRole(long userId) {
         long roleId = jdbcTemplate.queryForObject("SELECT id FROM roles WHERE role = ?", new Object[]{ADMIN_ROLE}, Long.class);
 

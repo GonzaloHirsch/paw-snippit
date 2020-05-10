@@ -43,7 +43,6 @@ public class FavoriteDaoImpl implements FavoriteDao {
     }
 
     @Override
-    @Transactional
     public void addToFavorites(long userId, long snippetId) {
         // Creating the map for the object
         if (!getFavorite(userId, snippetId).isPresent()) {

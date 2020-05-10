@@ -11,6 +11,7 @@ import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Collection;
@@ -151,6 +152,7 @@ public class SnippetServiceImpl implements SnippetService {
         return this.snippetDao.getAllFlaggedSnippets(page, pageSize);
     }
 
+    @Transactional
     @Override
     public Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<String> tags) {
         Long snippetId =  snippetDao.createSnippet(owner.getId(),title,description,code,dateCreated,language);
@@ -160,6 +162,7 @@ public class SnippetServiceImpl implements SnippetService {
         return snippetId;
     }
 
+    @Transactional
     @Override
     public void updateFlagged(long snippetId, long userId, boolean isFlagged) {
         if (isFlagged) {

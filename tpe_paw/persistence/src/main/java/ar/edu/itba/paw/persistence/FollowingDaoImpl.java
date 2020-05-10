@@ -43,7 +43,6 @@ public class FollowingDaoImpl implements FollowingDao {
     }
 
     @Override
-    @Transactional
     public void followTag(long userId, long tagId) {
         Map<String, Object> args = new HashMap<>();
         args.put("user_id", userId);
@@ -52,7 +51,6 @@ public class FollowingDaoImpl implements FollowingDao {
     }
 
     @Override
-    @Transactional
     public void unfollowTag(long userId, long tagId) {
         jdbcTemplate.update("DELETE FROM follows WHERE user_id = ? AND tag_id = ?", userId, tagId);
     }

@@ -69,7 +69,6 @@ public class VoteDaoImpl implements VoteDao {
     }
 
     @Override
-    @Transactional
     public void addVote(long userId, long snippetId, int voteType) {
         if (getVote(userId, snippetId).isPresent())
             jdbcTemplate.update("UPDATE votes_for SET TYPE = ? WHERE user_id = ? AND snippet_id = ?", voteType, userId, snippetId);
@@ -82,7 +81,6 @@ public class VoteDaoImpl implements VoteDao {
         }
     }
 
-    @Transactional
     @Override
     public void withdrawVote(long userId, long snippetId) {
         Object[] args = new Object[]{userId, snippetId};

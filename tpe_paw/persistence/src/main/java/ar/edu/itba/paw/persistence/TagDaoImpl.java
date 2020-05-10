@@ -48,7 +48,6 @@ public class TagDaoImpl implements TagDao {
                 .stream().findFirst();
     }
 
-    @Transactional
     @Override
     public Tag addTag(String name) {
         final Map<String, Object> args = new HashMap<>();
@@ -62,7 +61,6 @@ public class TagDaoImpl implements TagDao {
         return jdbcTemplate.query("SELECT * FROM tags WHERE id IN (SELECT tag_id FROM snippet_tags WHERE snippet_id = ?)", ROW_MAPPER, snippetId);
     }
 
-    @Transactional
     @Override
     public void addSnippetTag(long snippetId, long tagId) {
         final Map<String, Object> snippetTagDataMap = new HashMap<String, Object>() {{
@@ -72,7 +70,6 @@ public class TagDaoImpl implements TagDao {
         jdbcInsertSnippetTag.execute(snippetTagDataMap);
     }
 
-    @Transactional
     @Override
     public void addTags(List<String> tags) {
         List<MapSqlParameterSource> entries = new ArrayList<>();
@@ -89,7 +86,6 @@ public class TagDaoImpl implements TagDao {
         }
     }
 
-    @Transactional
     @Override
     public void removeTag(long tagId) {
         jdbcTemplate.update("DELETE FROM tags WHERE id = ?", new Object[]{tagId});

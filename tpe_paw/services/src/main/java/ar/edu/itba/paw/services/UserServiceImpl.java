@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Locale;
@@ -82,6 +83,7 @@ public class UserServiceImpl implements UserService {
         this.userDao.changeReputation(userId, amount);
     }
 
+    @Transactional
     @Override
     public void updateLocale(long userId, Locale locale) {
         String language = this.userDao.getLocaleLanguage(userId);

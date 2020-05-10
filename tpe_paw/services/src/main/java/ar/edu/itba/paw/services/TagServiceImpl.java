@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,6 +66,7 @@ public class TagServiceImpl implements TagService {
         followingDao.unfollowTag(userId, tagId);
     }
 
+    @Transactional
     @Override
     public Collection<Tag> addTagsToSnippet(Long snippetId, Collection<String> tagNameList){
         ArrayList<Tag> tagList = new ArrayList<>();

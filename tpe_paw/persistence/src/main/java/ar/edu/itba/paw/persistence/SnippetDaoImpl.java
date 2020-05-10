@@ -294,7 +294,7 @@ public class SnippetDaoImpl implements SnippetDao {
                 }
                 queryBuilder = queryBuilder.addTag(tagId);
             }
-            if (title != null){
+            if (title != null && !title.isEmpty()){
                 if (!isFirst){
                     queryBuilder = queryBuilder.and();
                 } else {
@@ -302,7 +302,7 @@ public class SnippetDaoImpl implements SnippetDao {
                 }
                 queryBuilder = queryBuilder.addTitle(title);
             }
-            if (username != null){
+            if (username != null && !username.isEmpty()){
                 if (!isFirst){
                     queryBuilder = queryBuilder.and();
                 } else {

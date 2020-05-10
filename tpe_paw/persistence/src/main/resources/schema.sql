@@ -2,7 +2,7 @@
 -- drop table if exists favorites cascade;
 -- drop table if exists follows cascade;
 -- drop table if exists snippet_tags cascade;
-drop view if exists complete_snippets;
+-- drop view if exists complete_snippets;
 -- drop table if exists tags cascade;
 -- drop table if exists snippets cascade;
 -- drop table if exists languages cascade;

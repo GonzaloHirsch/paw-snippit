@@ -30,7 +30,7 @@
                 <form:label cssClass="flex-stretch sub-label" path="field"><spring:message code="advanced.orderby"/></form:label>
                 <form:select class="selectpicker flex-grow" path="field">
                     <form:option value="date">
-                        <spring:message code="advanced.orderby"/>
+                        <spring:message code="advanced.orderby.none"/>
                     </form:option>
                     <form:option value="reputation">
                         <spring:message code="advanced.orderby.reputation"/>
@@ -47,7 +47,7 @@
                 <form:label cssClass="flex-stretch sub-label" path="title"><spring:message code="advanced.sortby"/></form:label>
                 <form:select class="selectpicker flex-grow" path="sort">
                     <form:option value="asc">
-                        <spring:message code="sort.sortby"/>
+                        <spring:message code="advanced.sortby.none"/>
                     </form:option>
                     <form:option value="asc">
                         <spring:message code="sort.asc"/>

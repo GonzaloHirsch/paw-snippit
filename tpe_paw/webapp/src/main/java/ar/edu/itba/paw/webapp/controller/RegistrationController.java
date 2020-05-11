@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,10 +28,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Optional;
 
 @Controller
@@ -49,7 +50,8 @@ public class RegistrationController {
     @Autowired private TagService tagService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
-    private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK)
+            .withZone(ZoneId.systemDefault());
 
     @RequestMapping(value = "/login")
     public ModelAndView login(HttpServletRequest request) {
@@ -95,7 +97,7 @@ public class RegistrationController {
                 registerForm.getUsername(),
                 this.passwordEncoder.encode(registerForm.getPassword()),
                 registerForm.getEmail(),
-                DATE.format(Calendar.getInstance().getTime().getTime()),
+                DATE.format(Instant.now()),
                 LocaleContextHolder.getLocale()
         );
         try {

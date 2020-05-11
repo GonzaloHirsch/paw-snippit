@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,7 +11,9 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.*;
 
 @Repository
@@ -19,13 +21,12 @@ public class UserDaoImpl implements UserDao {
     private JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
+    public static final DateTimeFormatter DATE = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(Locale.UK)
+            .withZone(ZoneId.systemDefault());
     private final static RowMapper<User> ROW_MAPPER = new RowMapper<User>() {
 
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(rs.getTimestamp("date_joined").getTime());
-
             return new User(
                     rs.getLong("id"),
                     rs.getString("username"),
@@ -33,7 +34,7 @@ public class UserDaoImpl implements UserDao {
                     rs.getString("email"),
                     rs.getString("description"),
                     rs.getInt("reputation"),
-                    new SimpleDateFormat("yyyy-MM-dd hh:mm").format(calendar.getTime()),
+                    DATE.format(rs.getTimestamp("date_joined").toInstant()),
                     rs.getBytes("icon"),
                     new Locale(rs.getString("lang"), rs.getString("region")),
                     rs.getInt("verified") == 1

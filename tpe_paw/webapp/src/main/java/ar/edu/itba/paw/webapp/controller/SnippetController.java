@@ -43,7 +43,6 @@ public class SnippetController {
 
     private static boolean wasLoggedIn = false;
 
-
     @RequestMapping("/snippet/{id}")
     public ModelAndView snippetDetail(
             @ModelAttribute("snippetId") @PathVariable("id") long id,

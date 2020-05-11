@@ -13,6 +13,9 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <!-- Bootstrap Date-Picker Plugin -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 </head>
 <body>
 <spring:message code="advanced.title.hint" var="advanced_title_hint" />
@@ -90,7 +93,7 @@
                 </form:select>
             </div>
             <div class="flex-column flex-grow">
-                <form:label cssClass="flex-stretch fw-500" path="language"><spring:message code="advanced.tag"/></form:label>
+                <form:label cssClass="flex-stretch fw-500" path="tag"><spring:message code="advanced.tag"/></form:label>
 
                 <form:select class="selectpicker flex-grow" data-live-search="true" path="tag">
                     <form:option value="-1"><spring:message code="advanced.tag.hint"/></form:option>
@@ -117,9 +120,10 @@
         <form:label cssClass="flex-stretch fw-500" path="minDate"><spring:message code="advanced.uploadDate"/></form:label>
         <div class="flex-row">
             <div class="flex-column flex-grow">
+
                 <form:label cssClass="flex-stretch sub-label" path="minDate"><spring:message
                         code="advanced.uploadDate.from"/></form:label>
-                <form:input path="minDate" type="date" class="flex-grow fw-100 advanced-input date-input"
+                <form:input path="minDate" data-provide="datepicker" class="datepicker flex-grow fw-100 advanced-input date-input" data-date-format="mm/dd/yyyy"
                             placeholder="${advanced_date_hint}"/>
             </div>
             <div class="flex-column flex-grow">

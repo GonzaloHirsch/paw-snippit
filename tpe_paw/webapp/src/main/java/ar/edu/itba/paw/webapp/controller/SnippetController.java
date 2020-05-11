@@ -41,8 +41,6 @@ public class SnippetController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetController.class);
 
-    private static boolean wasLoggedIn = false;
-
     @RequestMapping("/snippet/{id}")
     public ModelAndView snippetDetail(
             @ModelAttribute("snippetId") @PathVariable("id") long id,
@@ -66,7 +64,6 @@ public class SnippetController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
-            wasLoggedIn = true;
             mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
 
             // Vote
@@ -87,7 +84,6 @@ public class SnippetController {
                 mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
             }
         } else {
-            wasLoggedIn = false;
             mav.addObject("userRoles", new ArrayList<>());
         }
 
@@ -137,10 +133,8 @@ public class SnippetController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.vote", null, LocaleContextHolder.getLocale()));
-        } else if (wasLoggedIn) {
-            this.voteService.performVote(currentUser.getId(), id, voteForm.getType(), voteForm.getOldType());
         } else {
-            this.voteService.performVote(currentUser.getId(), id, voteForm.getType(), 0);
+            this.voteService.performVote(currentUser.getId(), id, voteForm.getType(), voteForm.getOldType());
         }
         return mav;
     }

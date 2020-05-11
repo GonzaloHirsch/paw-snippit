@@ -184,7 +184,7 @@
         <c:if test="${searchContext != 'error/' && searchContext != 'explore/'}">
             <div class="flex-row flex-wrap flex-center flex-grow">
             <form:form modelAttribute="searchForm" method="get" action="${searchUrl}"
-                       class="flex-row flex-center flex-wrap search-container">
+                       class="flex-row flex-center search-container">
                 <div class="flex-row flex-grow fw-100">
                 <form:input path="query" type="text" id="search-bar" class="search-input flex-grow fw-100"
                             placeholder="${search_hint}"/>
@@ -192,7 +192,7 @@
                 </div>
                 <div class="flex-center">
                 <div class="dropdown-type">
-                <form:select path="type" name="Type">
+                <form:select class="flex-center" path="type" name="Type">
                     <form:option value="all">
                         <spring:message code="search.searchby"/>
                     </form:option>

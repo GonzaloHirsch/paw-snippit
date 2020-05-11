@@ -124,7 +124,7 @@
                     </div>
                     <div class="flex-row profile-info-item">
                         <div class="flex-center stat-bundle">
-                            <div class="fw-700 stat">${snippets.size()}</div>
+                            <div class="fw-700 stat">${snippetsCount}</div>
                             <div class="fw-100 stat"><spring:message code="profile.stats.snippets"/></div>
                         </div>
                         <div class="flex-center stat-bundle">

@@ -92,6 +92,7 @@ public class  UserController {
         mav.addObject("isEdit", false);
         mav.addObject("user", user.get());
         mav.addObject("snippets", snippets);
+        mav.addObject("snippetsCount", totalSnippetCount);
         mav.addObject("searchContext", "user/"+id+"/");
         return mav;
     }

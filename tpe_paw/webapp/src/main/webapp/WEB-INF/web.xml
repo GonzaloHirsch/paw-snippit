@@ -20,6 +20,11 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
   </error-page>
 
   <error-page>
+    <error-code>413</error-code>
+    <location>/error</location>
+  </error-page>
+
+  <error-page>
     <error-code>405</error-code>
     <location>/error</location>
   </error-page>

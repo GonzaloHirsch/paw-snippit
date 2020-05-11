@@ -32,6 +32,7 @@ public class ErrorController {
 
     private Set<Integer> supportedErrorPages = new HashSet<Integer>(){{
         add(404);
+        add(413);
         add(414);
         add(500);
     }};

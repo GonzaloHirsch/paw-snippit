@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.auth.SignUpAuthentication;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
+import ar.edu.itba.paw.webapp.validations.ValidatorHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,7 @@ public class RegistrationController {
     @Autowired private CryptoService cryptoService;
     @Autowired private MessageSource messageSource;
     @Autowired private TagService tagService;
+    @Autowired private ValidatorHelper validatorHelper;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
     public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK)
@@ -135,12 +137,11 @@ public class RegistrationController {
             this.throwNoUser(id);
             return mav; // Unreachable since the function above will throw an exception
         }
-        boolean isCodeValid = this.cryptoService.checkValidTOTP(currentUser, verificationForm.getCode());
-        if (!isCodeValid){
-            FieldError noData = new FieldError("verificationForm","code" , messageSource.getMessage("account.verification.code.invalid",null, LocaleContextHolder.getLocale()));
-            errors.addError(noData);
+
+        if (!validatorHelper.checkValidTOTP(currentUser, verificationForm.getCode(), errors, LocaleContextHolder.getLocale())) {
             return this.verifyEmail(id, verificationForm, searchForm);
         }
+
         this.userService.verifyUserEmail(currentUser.getId());
         return mav;
     }

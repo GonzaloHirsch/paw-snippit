@@ -1,8 +1,9 @@
 package ar.edu.itba.paw.webapp.validations;
 
+import ar.edu.itba.paw.interfaces.service.CryptoService;
 import ar.edu.itba.paw.interfaces.service.LanguageService;
 import ar.edu.itba.paw.interfaces.service.TagService;
-import ar.edu.itba.paw.models.Tag;
+import ar.edu.itba.paw.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ public class ValidatorHelper {
     @Autowired TagService tagService;
     @Autowired LanguageService languageService;
     @Autowired MessageSource messageSource;
+    @Autowired CryptoService cryptoService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidatorHelper.class);
 
@@ -140,7 +142,15 @@ public class ValidatorHelper {
             errors.addError(tagExists);
             LOGGER.debug("Tags that no longer exists = {}", error.toString());
         }
-
     }
 
+    public boolean checkValidTOTP(User user, String code, BindingResult errors, Locale locale) {
+        boolean isCodeValid = this.cryptoService.checkValidTOTP(user, code);
+        if (!isCodeValid) {
+            FieldError noData = new FieldError("verificationForm", "code", messageSource.getMessage("account.verification.code.invalid", null, locale));
+            errors.addError(noData);
+            return false;
+        }
+        return true;
+    }
 }

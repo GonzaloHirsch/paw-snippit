@@ -17,12 +17,14 @@
     </div>
 </c:if>
 <c:if test="${snippetList.size() > 0}">
-    <div class="feed-snippets-grid">
-
-        <c:forEach var="snippet" items="${snippetList}">
-            <c:set var="snippet" value="${snippet}" scope="request"/>
-            <c:import url="/WEB-INF/jsp/snippet/snippetCard.jsp"/>
-        </c:forEach>
+<%--    <div class="feed-snippets-grid">--%>
+    <div class="masonry-wrapper">
+        <div class="masonry">
+            <c:forEach var="snippet" items="${snippetList}">
+                <c:set var="snippet" value="${snippet}" scope="request"/>
+                <c:import url="/WEB-INF/jsp/snippet/snippetCard.jsp"/>
+            </c:forEach>
+        </div>
     </div>
 </c:if>
 <c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>

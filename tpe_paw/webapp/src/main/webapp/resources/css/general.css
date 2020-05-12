@@ -118,6 +118,10 @@ body {
     border-radius: 8px;
 }
 
+.small-border-radius {
+    border-radius: 4px;
+}
+
 /* Common Event Styles */
 
 .clickable-entity {

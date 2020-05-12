@@ -16,6 +16,8 @@
 }
 
 /*
+
+
  * repeat --> create multiple similar columns
  * auto-fill --> create as many columns will fit in the available grid width
  * minmax(Xpx,1fr) --> the columns should have minimum width of X px and a flexible maximum width which is the same for each column

@@ -7,6 +7,9 @@
 </head>
 <body>
 <c:set var="snippet" value="${requestScope.snippet}"/>
+<c:set var="desc" value="${fn:escapeXml(snippet.description)}"/>
+<c:set var="code" value="${fn:escapeXml(snippet.code)}"/>
+
 <a href="<c:url value='/snippet/${snippet.id}'/>" class="flex-column card-snippet-container">
     <div class="flex-column card-snippet-content border-radius">
 
@@ -38,14 +41,16 @@
         </div>
         <c:if test="${!StringUtils.isEmpty(snippet.description)}">
             <div class="card-snippet-block card-snippet-descr-block">
-                <div class="snippet-text justify-text">${fn:escapeXml(snippet.description)}</div>
+<%--                <div class="snippet-text justify-text">${fn:escapeXml(snippet.description)}</div>--%>
+                <div class="snippet-text justify-text">${desc}</div>
                 <p class="card-snippet-fade-out card-snippet-fade-out-descr"></p>
             </div>
         </c:if>
 
         <div class="flex-column snippet-code-container border-radius">
             <div class="card-snippet-block">
-                <pre><code>${fn:escapeXml(snippet.code)}</code></pre>
+<%--                <pre><code>${fn:escapeXml(snippet.code)}</code></pre>--%>
+                <pre><code class="code-element">${code}</code></pre>
                 <p class="card-snippet-fade-out card-snippet-fade-out-code"></p>
             </div>
         </div>

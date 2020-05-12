@@ -24,7 +24,7 @@ public interface SnippetService {
     int getReputationImportanceBalance(final Snippet snippet);
     boolean isFlaggedByAdmin(final Snippet snippet);
     boolean deleteSnippet(final Snippet snippet, final long userId);
-    void updateFlagged(long snippetId, long userId, boolean isFlagged);
+    void updateFlagged(final Snippet snippet, final User owner, boolean isFlagged, final String baseUrl);
     int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId);
     Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page, int pageSize);
     int getAllSnippetsCount();

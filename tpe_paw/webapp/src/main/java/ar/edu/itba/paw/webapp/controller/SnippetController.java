@@ -118,7 +118,7 @@ public class SnippetController {
                 throw new ElementDeletionException(messageSource.getMessage("error.409.deletion.snippet", null, LocaleContextHolder.getLocale()));
             }
         }
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/user/" + currentUser.getId());
     }
 
     @RequestMapping(value="/snippet/{id}/vote", method=RequestMethod.POST)

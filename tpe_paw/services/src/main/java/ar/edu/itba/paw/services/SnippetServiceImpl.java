@@ -1,11 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
-import ar.edu.itba.paw.interfaces.dao.TagDao;
-import ar.edu.itba.paw.interfaces.service.SnippetService;
-import ar.edu.itba.paw.interfaces.service.TagService;
-import ar.edu.itba.paw.interfaces.service.UserService;
-import ar.edu.itba.paw.interfaces.service.VoteService;
+import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
@@ -13,21 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Optional;
 
 @Service
 public class SnippetServiceImpl implements SnippetService {
 
-    @Autowired
-    private SnippetDao snippetDao;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private TagService tagService;
-    @Autowired
-    private VoteService voteService;
+    @Autowired private SnippetDao snippetDao;
+    @Autowired private UserService userService;
+    @Autowired private TagService tagService;
+    @Autowired private VoteService voteService;
+    @Autowired private EmailService emailService;
 
     @Override
     public Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, Long resourceId, int page, int pageSize) {
@@ -67,8 +59,13 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
-    public boolean deleteSnippetById(long id) {
-        return snippetDao.deleteSnippetById(id);
+    public boolean deleteSnippet(Snippet snippet, long userId) {
+        int voteBalance = this.getReputationImportanceBalance(snippet);
+        boolean success = snippetDao.deleteSnippetById(snippet.getId());
+        if (success) {
+            this.userService.changeReputation(userId, voteBalance);
+        }
+        return success;
     }
 
     @Override
@@ -164,13 +161,16 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Transactional
     @Override
-    public void updateFlagged(long snippetId, long userId, boolean isFlagged) {
+    public void updateFlagged(final Snippet snippet, final User owner, boolean isFlagged, final String baseUrl) {
         if (isFlagged) {
-            this.snippetDao.flagSnippet(snippetId);
-            this.userService.changeReputation(userId, FLAGGED_SNIPPET_REP_VALUE * (-1));
+            this.snippetDao.flagSnippet(snippet.getId());
+            this.userService.changeReputation(owner.getId(), FLAGGED_SNIPPET_REP_VALUE * (-1));
         } else {
-            this.snippetDao.unflagSnippet(snippetId);
-            this.userService.changeReputation(userId, FLAGGED_SNIPPET_REP_VALUE);
+            this.snippetDao.unflagSnippet(snippet.getId());
+            this.userService.changeReputation(owner.getId(), FLAGGED_SNIPPET_REP_VALUE);
         }
+        // Getting the url of the server
+        this.emailService.sendFlaggedEmail(baseUrl + "/snippet/" + snippet.getId(), snippet.getTitle(), owner.getEmail(), owner.getUsername(), isFlagged, owner.getLocale());
+
     }
 }

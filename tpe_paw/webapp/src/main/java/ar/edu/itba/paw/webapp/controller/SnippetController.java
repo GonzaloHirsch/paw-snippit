@@ -113,15 +113,12 @@ public class SnippetController {
         if (currentUser == null || currentUser.getUsername().compareTo(snippet.get().getOwner().getUsername()) != 0) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.delete", null, LocaleContextHolder.getLocale()));
         } else {
-            /* Want to reverse the voteBalance on the users reputation */
-            int voteBalance = this.snippetService.getReputationImportanceBalance(snippet.get());
-            if (!this.snippetService.deleteSnippetById(id)) {
+            if (!this.snippetService.deleteSnippet(snippet.get(), currentUser.getId())) {
                 /* Operation was unsuccessful */
                 throw new ElementDeletionException(messageSource.getMessage("error.409.deletion.snippet", null, LocaleContextHolder.getLocale()));
             }
-            this.userService.changeReputation(currentUser.getId(), voteBalance);
         }
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/user/" + currentUser.getId());
     }
 
     @RequestMapping(value="/snippet/{id}/vote", method=RequestMethod.POST)
@@ -175,18 +172,19 @@ public class SnippetController {
             if (!completeOwnerOpt.isPresent()){
                 throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.delete", null, LocaleContextHolder.getLocale()));
             }
-            // Updating the flagged status
-            this.snippetService.updateFlagged(id, completeOwnerOpt.get().getId(), adminFlagForm.isFlagged());
-            LOGGER.debug("Marked snippet {} as flagged by admin", id);
+
             // Getting the url of the server
             final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-            // Sending flagged email
 
             try {
-                this.emailService.sendFlaggedEmail(baseUrl + "/snippet/" + id, snippetOpt.get().getTitle(), completeOwnerOpt.get().getEmail(), completeOwnerOpt.get().getUsername(), adminFlagForm.isFlagged(), completeOwnerOpt.get().getLocale());
+                // Updating the flagged variable of snippet
+                this.snippetService.updateFlagged(snippetOpt.get(), completeOwnerOpt.get(), adminFlagForm.isFlagged(), baseUrl);
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage() + "Failed to send flagged email to user {} about their snippet {}", snippetOpt.get().getOwner().getUsername(), snippetOpt.get().getId());
             }
+
+            LOGGER.debug("Marked snippet {} as flagged by admin", id);
+
         }
         return mav;
     }

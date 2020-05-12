@@ -20,9 +20,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 
 import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
 
@@ -37,7 +41,8 @@ public class SnippetExploreController {
     @Autowired private UserService userService;
     @Autowired private MessageSource messageSource;
 
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK)
+            .withZone(ZoneId.systemDefault());
 
     @RequestMapping("/explore")
     public ModelAndView explore(@ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("exploreForm") final ExploreForm exploreForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
@@ -57,10 +62,10 @@ public class SnippetExploreController {
         String minDate = null;
         String maxDate = null;
         if (exploreForm.getMinDate() != null){
-            minDate = sdf.format(new Timestamp(exploreForm.getMinDate().getTime()));
+            minDate = DATE.format(exploreForm.getMinDate().toInstant());
         }
         if (exploreForm.getMaxDate() != null){
-            maxDate = sdf.format(new Timestamp(exploreForm.getMaxDate().getTime()));
+            maxDate = DATE.format(exploreForm.getMaxDate().toInstant());
         }
         Collection<Snippet> snippets = this.snippetService.findSnippetByDeepCriteria(
                 minDate, maxDate,

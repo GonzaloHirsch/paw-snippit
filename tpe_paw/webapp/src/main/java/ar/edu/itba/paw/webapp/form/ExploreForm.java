@@ -7,7 +7,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
@@ -15,10 +14,10 @@ import java.util.Date;
 @IntegerOrder(min = "minRep", max = "maxRep", message = "{IntegerOrder.exploreForm.order}")
 @IntegerOrder(min = "minVotes", max = "maxVotes", message = "{IntegerOrder.exploreForm.order}")
 public class ExploreForm {
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @BeforeToday(message = "{BeforeToday.exploreForm.date}")
     private Date minDate;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @BeforeToday(message = "{BeforeToday.exploreForm.date}")
     private Date maxDate;
     @Max(value = Integer.MAX_VALUE, message = "{Integer.maxValue}")

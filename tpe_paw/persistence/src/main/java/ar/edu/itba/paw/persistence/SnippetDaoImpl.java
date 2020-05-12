@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.dao.LanguageDao;
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.dao.TagDao;
-import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
@@ -12,12 +10,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,6 +28,9 @@ public class SnippetDaoImpl implements SnippetDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+
+    public static final DateTimeFormatter DATE = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(Locale.UK)
+            .withZone(ZoneId.systemDefault());
 
     private final RowMapper<Snippet> ROW_MAPPER = new RowMapper<Snippet>() {
         @Override
@@ -48,16 +50,13 @@ public class SnippetDaoImpl implements SnippetDao {
 
             String language = rs.getString("language");
 
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(rs.getTimestamp("date_created").getTime());
-
             return new Snippet(
                     rs.getLong("id"),
                     userOwner,
                     rs.getString("code"),
                     rs.getString("title"),
                     rs.getString("description"),
-                    new SimpleDateFormat("yyyy-MM-dd hh:mm").format(calendar.getTime()),
+                    DATE.format(rs.getTimestamp("date_created").toInstant()),
                     language != null ? language : "",
                     null,
                     rs.getInt("votes"),
@@ -123,7 +122,7 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-        public Optional<Snippet> findSnippetById(long id) {
+    public Optional<Snippet> findSnippetById(long id) {
         Optional<Snippet> snippet = this.jdbcTemplate.query("SELECT * FROM complete_snippets AS s WHERE s.id = ?", ROW_MAPPER, id).stream().findFirst();
         if (snippet.isPresent() && snippet.get().getTags() == null) {
             snippet.get().setTags(this.tagDao.findTagsForSnippet(snippet.get().getId()));
@@ -147,9 +146,9 @@ public class SnippetDaoImpl implements SnippetDao {
         List<Long> tagIds = tags.stream().mapToLong(Tag::getId).boxed().collect(Collectors.toList());
         StringBuilder sb = new StringBuilder();
         int count = 0;
-        for (Long id : tagIds){
+        for (Long id : tagIds) {
             sb.append("st.tag_id = ?");
-            if (count < tagIds.size() - 1){
+            if (count < tagIds.size() - 1) {
                 sb.append(" OR ");
             }
             count++;
@@ -158,21 +157,21 @@ public class SnippetDaoImpl implements SnippetDao {
         params[0] = userId;
         params[1] = dateMin;
         int i = 2;
-        for (Long id : tagIds){
+        for (Long id : tagIds) {
             params[i++] = id;
         }
         return this.jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT s.id) FROM complete_snippets AS s LEFT OUTER JOIN snippet_tags AS st ON s.id = st.snippet_id WHERE s.user_id != ? AND s.date_created::date >= ?::date AND ( " + sb.toString() + " )", params, Integer.class);
     }
 
     @Override
-    public Long createSnippet(long ownerId, String title, String description,String code, String dateCreated, Long languageId){
-        final Map<String, Object> snippetDataMap = new HashMap<String,Object>(){{
+    public Long createSnippet(long ownerId, String title, String description, String code, String dateCreated, Long languageId) {
+        final Map<String, Object> snippetDataMap = new HashMap<String, Object>() {{
             put("user_id", ownerId);
-            put("title",title);
-            put("description",description);
-            put("code",code);
-            put("date_created",dateCreated);
-            put("language_id",languageId);
+            put("title", title);
+            put("description", description);
+            put("code", code);
+            put("date_created", dateCreated);
+            put("language_id", languageId);
             put("flagged", 0);
         }};
 
@@ -235,7 +234,7 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public int getSnippetByCriteriaCount(QueryTypes queryType, Types type, String term, Locations location, Long userId,Long resourceId) {
+    public int getSnippetByCriteriaCount(QueryTypes queryType, Types type, String term, Locations location, Long userId, Long resourceId) {
         SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(queryType, location, userId, type, term, resourceId)
                 .build();
         return this.jdbcTemplate.queryForObject(searchQuery.getQuery(), searchQuery.getParams(), Integer.class);
@@ -243,14 +242,14 @@ public class SnippetDaoImpl implements SnippetDao {
 
     @Override
     public int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged) {
-        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, includeFlagged, null, null,true);
+        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, includeFlagged, null, null, true);
         return this.jdbcTemplate.queryForObject(searchQuery.getQuery(), searchQuery.getParams(), Integer.class);
     }
 
-    private SnippetDeepSearchQuery createDeepQuery(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, Integer page, Integer pageSize, boolean isCount){
+    private SnippetDeepSearchQuery createDeepQuery(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, Integer page, Integer pageSize, boolean isCount) {
         SnippetDeepSearchQuery.Builder queryBuilder = new SnippetDeepSearchQuery.Builder(isCount);
-        if (dateMin == null && dateMax == null && repMin == null && repMax == null && voteMin == null && voteMax == null && languageId == null && tagId == null && title == null && username == null && order == null && sort == null && includeFlagged == null){
-            if (page != null){
+        if (dateMin == null && dateMax == null && repMin == null && repMax == null && voteMin == null && voteMax == null && languageId == null && tagId == null && title == null && username == null && order == null && sort == null && includeFlagged == null) {
+            if (page != null) {
                 return queryBuilder.setOrder("title", "asc").setPaging(page, pageSize).build();
             } else {
                 return queryBuilder.build();
@@ -258,67 +257,67 @@ public class SnippetDaoImpl implements SnippetDao {
         } else {
             boolean isFirst = true;
             queryBuilder = queryBuilder.where();
-            if (dateMin != null || dateMax != null){
+            if (dateMin != null || dateMax != null) {
                 queryBuilder = queryBuilder.addDateRange(dateMin, dateMax);
                 isFirst = false;
             }
-            if (repMin != null || repMax != null){
-                if (!isFirst){
+            if (repMin != null || repMax != null) {
+                if (!isFirst) {
                     queryBuilder = queryBuilder.and();
                 } else {
                     isFirst = false;
                 }
                 queryBuilder = queryBuilder.addReputationRange(repMin, repMax);
             }
-            if (voteMin != null || voteMax != null){
-                if (!isFirst){
+            if (voteMin != null || voteMax != null) {
+                if (!isFirst) {
                     queryBuilder = queryBuilder.and();
                 } else {
                     isFirst = false;
                 }
                 queryBuilder = queryBuilder.addVotesRange(voteMin, voteMax);
             }
-            if (languageId != null){
-                if (!isFirst){
+            if (languageId != null) {
+                if (!isFirst) {
                     queryBuilder = queryBuilder.and();
                 } else {
                     isFirst = false;
                 }
                 queryBuilder = queryBuilder.addLanguage(languageId);
             }
-            if (tagId != null){
-                if (!isFirst){
+            if (tagId != null) {
+                if (!isFirst) {
                     queryBuilder = queryBuilder.and();
                 } else {
                     isFirst = false;
                 }
                 queryBuilder = queryBuilder.addTag(tagId);
             }
-            if (title != null && !title.isEmpty()){
-                if (!isFirst){
+            if (title != null && !title.isEmpty()) {
+                if (!isFirst) {
                     queryBuilder = queryBuilder.and();
                 } else {
                     isFirst = false;
                 }
                 queryBuilder = queryBuilder.addTitle(title);
             }
-            if (username != null && !username.isEmpty()){
-                if (!isFirst){
+            if (username != null && !username.isEmpty()) {
+                if (!isFirst) {
                     queryBuilder = queryBuilder.and();
                 } else {
                     isFirst = false;
                 }
                 queryBuilder = queryBuilder.addUsername(username);
             }
-            if (includeFlagged != null && !includeFlagged){
-                if (!isFirst){
+            if (includeFlagged != null && !includeFlagged) {
+                if (!isFirst) {
                     queryBuilder = queryBuilder.and();
                 } else {
                     isFirst = false;
                 }
                 queryBuilder = queryBuilder.addIncludeFlagged(includeFlagged);
             }
-            if (page == null){
+            if (page == null) {
                 return queryBuilder.build();
             } else {
                 return queryBuilder.setOrder(order, sort).setPaging(page, pageSize).build();

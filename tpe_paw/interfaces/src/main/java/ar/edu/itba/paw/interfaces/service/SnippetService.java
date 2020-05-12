@@ -5,7 +5,6 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -24,8 +23,8 @@ public interface SnippetService {
     Collection<Snippet> findSnippetsWithLanguage(long langId, int page, int pageSize);
     int getReputationImportanceBalance(final Snippet snippet);
     boolean isFlaggedByAdmin(final Snippet snippet);
-    boolean deleteSnippetById(final long id);
-    void updateFlagged(long snippetId, long userId, boolean isFlagged);
+    boolean deleteSnippet(final Snippet snippet, final long userId);
+    void updateFlagged(final Snippet snippet, final User owner, boolean isFlagged, final String baseUrl);
     int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId);
     Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page, int pageSize);
     int getAllSnippetsCount();

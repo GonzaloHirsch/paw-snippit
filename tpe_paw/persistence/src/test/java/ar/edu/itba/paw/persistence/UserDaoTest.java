@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
-import java.util.Calendar;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
@@ -79,7 +79,7 @@ public class UserDaoTest {
     public void testCreateUser() {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
 
-        final long userId = userDao.createUser(USERNAME, PASSWORD, EMAIL, "", 0, DATE.format(Calendar.getInstance().getTime().getTime()),new Locale("en"));
+        final long userId = userDao.createUser(USERNAME, PASSWORD, EMAIL, "", 0, DATE.format(Instant.now()),new Locale("en"));
 
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
     }

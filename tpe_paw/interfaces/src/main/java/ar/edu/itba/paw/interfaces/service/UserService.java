@@ -3,7 +3,6 @@ package ar.edu.itba.paw.interfaces.service;
 import ar.edu.itba.paw.models.User;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
 

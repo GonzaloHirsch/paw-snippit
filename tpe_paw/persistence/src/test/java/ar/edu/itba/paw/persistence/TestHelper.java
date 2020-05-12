@@ -3,15 +3,18 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.models.User;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 public class TestHelper {
 
-    public static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    public static final DateTimeFormatter DATE = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(Locale.UK)
+            .withZone(ZoneId.systemDefault());
     public static final String SNIPPETS_TABLE = "snippets";
     public static final String USERS_TABLE = "users";
     public static final String LANGUAGES_TABLE = "languages";
@@ -55,7 +58,7 @@ public class TestHelper {
             put("title", title);
             put("description",description);
             put("code",code);
-            put("date_created", DATE.format(Calendar.getInstance().getTime().getTime()));
+            put("date_created", DATE.format(Instant.now()));
             put("language_id", languageId);
             put("flagged",flagged);
         }};
@@ -68,13 +71,13 @@ public class TestHelper {
             put("password", password);
             put("email", email);
             put("reputation", 0);
-            put("date_joined", DATE.format(Calendar.getInstance().getTime().getTime()));
+            put("date_joined", DATE.format(Instant.now()));
             put("lang", locale.getLanguage());
             put("region", locale.getCountry());
             put("verified", 0);
         }};
         long userId = jdbcInsertUser.executeAndReturnKey(map).longValue();
-        return new User(userId, username, password, email, description, 0, DATE.format(Calendar.getInstance().getTime().getTime()), null,locale , false);
+        return new User(userId, username, password, email, description, 0, DATE.format(Instant.now()), null,locale , false);
 
     }
 

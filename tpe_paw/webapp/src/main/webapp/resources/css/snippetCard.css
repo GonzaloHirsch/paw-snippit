@@ -57,13 +57,13 @@
 }
 
 .card-snippet-fade-out-code {
-    background-image: linear-gradient(top, rgba(255,255,255,0.001) 0%, #DCDCDC);
-    background-image: -webkit-linear-gradient(top, rgba(255,255,255,0.001) 0%, #DCDCDC);
-    background-image: -moz-linear-gradient(top, rgba(255,255,255,0.001) 0%, #DCDCDC);
+    background-image: linear-gradient(top, #DCDCDC 0%, #DCDCDC);
+    background-image: -webkit-linear-gradient(top, #DCDCDC 0%, #DCDCDC);
+    background-image: -moz-linear-gradient(top, #DCDCDC 0%, #DCDCDC);
 }
 
 .card-snippet-fade-out-descr {
-    background-image: linear-gradient(top, rgba(255,255,255,0.001) 0%, #FFFFFF);
-    background-image: -webkit-linear-gradient(top, rgba(255,255,255,0.001) 0%, #FFFFFF);
-    background-image: -moz-linear-gradient(top, rgba(255,255,255,0.001) 0%, #FFFFFF);
+    background-image: linear-gradient(top, #FFFFFF 0%, #FFFFFF);
+    background-image: -webkit-linear-gradient(top, #FFFFFF 0%, #FFFFFF);
+    background-image: -moz-linear-gradient(top, #FFFFFF 0%, #FFFFFF);
 }

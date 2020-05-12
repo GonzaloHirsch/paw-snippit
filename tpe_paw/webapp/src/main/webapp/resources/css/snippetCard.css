@@ -55,3 +55,15 @@
     text-decoration: none;
     color: initial;
 }
+
+.card-snippet-fade-out-code {
+    background-image: linear-gradient(to bottom, transparent, #DCDCDC);
+    background-image: -webkit-linear-gradient(to bottom, transparent, #DCDCDC);
+    background-image: -moz-linear-gradient(to bottom, transparent, #DCDCDC);
+}
+
+.card-snippet-fade-out-descr {
+    background-image: linear-gradient(to bottom, transparent, #FFFFFF);
+    background-image: -webkit-linear-gradient(to bottom, transparent, #FFFFFF);
+    background-image: -moz-linear-gradient(to bottom, transparent, #FFFFFF);
+}

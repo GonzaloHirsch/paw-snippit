@@ -40,14 +40,14 @@
         <c:if test="${!StringUtils.isEmpty(snippet.description)}">
             <div class="card-snippet-block card-snippet-descr-block">
                 <div class="snippet-text justify-text">${fn:escapeXml(snippet.description)}</div>
-                <p class="card-snippet-fade-out card-snippet-fade-out-descr"></p>
+                <p class="card-snippet-fade-out card-snippet-fade-out-descr hidden"></p>
             </div>
         </c:if>
 
         <div class="flex-column snippet-code-container border-radius">
             <div class="card-snippet-block">
                 <pre><code>${fn:escapeXml(snippet.code)}</code></pre>
-                <p class="card-snippet-fade-out card-snippet-fade-out-code"></p>
+                <p class="card-snippet-fade-out card-snippet-fade-out-code hidden"></p>
             </div>
         </div>
 

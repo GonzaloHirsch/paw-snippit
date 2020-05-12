@@ -124,13 +124,13 @@
 
                 <form:label cssClass="flex-stretch sub-label" path="minDate"><spring:message
                         code="advanced.uploadDate.from"/></form:label>
-                <form:input path="minDate" data-provide="datepicker" class="datepicker flex-grow fw-100 advanced-input date-input" data-date-format="dd/mm/yyyy"
+                <form:input path="minDate" autocomplete="off" data-provide="datepicker" class="datepicker flex-grow fw-100 advanced-input date-input" data-date-format="dd/mm/yyyy"
                             placeholder="${advanced_date_hint}"/>
             </div>
             <div class="flex-column flex-grow">
                 <form:label cssClass="flex-stretch sub-label" path="maxDate"><spring:message
                         code="advanced.uploadDate.to"/></form:label>
-                <form:input path="maxDate" data-provide="datepicker" class="datepicker flex-grow fw-100 advanced-input date-input" data-date-format="dd/mm/yyyy"
+                <form:input path="maxDate" autocomplete="off" data-provide="datepicker" class="datepicker flex-grow fw-100 advanced-input date-input" data-date-format="dd/mm/yyyy"
                             placeholder="${advanced_date_hint}"/>
             </div>
         </div>

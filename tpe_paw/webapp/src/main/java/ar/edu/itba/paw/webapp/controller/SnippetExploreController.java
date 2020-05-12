@@ -41,7 +41,7 @@ public class SnippetExploreController {
     @Autowired private UserService userService;
     @Autowired private MessageSource messageSource;
 
-    public static final DateTimeFormatter DATE = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(Locale.UK)
+    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK)
             .withZone(ZoneId.systemDefault());
 
     @RequestMapping("/explore")

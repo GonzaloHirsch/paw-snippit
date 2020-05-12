@@ -28,3 +28,6 @@ function addFadeOutCards(){
 
 /* Once the page has loaded, resize all the cards */
 window.onload = addFadeOutCards();
+
+window.addEventListener('resize', addFadeOutCards);
+

@@ -9,20 +9,6 @@ function resizeCard(card){
 
     addFadeOutTo(codeBlock, '.card-snippet-fade-out-code', '#DCDCDC');
     addFadeOutTo(descrBlock, '.card-snippet-fade-out-descr', '#FFFFFF');
-
-    /*
-     * CARD CONTAINER --> Making the card height match the content
-     */
-    feedGrid = document.getElementsByClassName("feed-snippets-grid")[0];
-
-    rowHeight = parseInt(window.getComputedStyle(feedGrid).getPropertyValue('grid-auto-rows'));
-    rowGap = parseInt(window.getComputedStyle(feedGrid).getPropertyValue('grid-row-gap'));
-
-    /* Use the height of the content div to calculate the new height */
-    rowSpan = Math.ceil((card.querySelector('.card-snippet-content').getBoundingClientRect().height + rowGap) / (rowHeight + rowGap));
-
-    /* Add the new row span to the card style */
-    card.style.gridRowEnd = 'span ' + rowSpan;
 }
 
 function addFadeOutTo(block, cssClass, color) {
@@ -34,7 +20,7 @@ function addFadeOutTo(block, cssClass, color) {
 
 /* Get all the different cards and for each one, resize it to the correct height */
 function resizeAllCards(){
-    cardContainer = document.getElementsByClassName('card-snippet-container');
+    cardContainer = document.getElementsByClassName('card-item');
     for(i = 0; i < cardContainer.length; i++){
         resizeCard(cardContainer[i]);
     }
@@ -42,6 +28,3 @@ function resizeAllCards(){
 
 /* Once the page has loaded, resize all the cards */
 window.onload = resizeAllCards();
-
-/* Resize the cards again when the browser is resized */
-window.addEventListener('resize', resizeAllCards);

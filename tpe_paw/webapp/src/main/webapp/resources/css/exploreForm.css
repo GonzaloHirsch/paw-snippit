@@ -68,3 +68,25 @@
 .sub-label{
     font-size: 13px;
 }
+
+
+.masonry-wrapper {
+    padding: 1.5em;
+    width: 100%;
+}
+.masonry {
+    columns: 1;
+    column-gap: 20px;
+}
+
+@media only screen and (min-width: 1223px)  {
+    .masonry {
+        columns: 2 !important;
+    }
+}
+
+@media only screen and (max-width: 1223px)  {
+    .masonry {
+        columns: 1 !important;
+    }
+}

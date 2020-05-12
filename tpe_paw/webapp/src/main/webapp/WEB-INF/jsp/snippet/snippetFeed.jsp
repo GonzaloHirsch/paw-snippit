@@ -17,7 +17,6 @@
     </div>
 </c:if>
 <c:if test="${snippetList.size() > 0}">
-<%--    <div class="feed-snippets-grid">--%>
     <div class="masonry-wrapper">
         <div class="masonry">
             <c:forEach var="snippet" items="${snippetList}">

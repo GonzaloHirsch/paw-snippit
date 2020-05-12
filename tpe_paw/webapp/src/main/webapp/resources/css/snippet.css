@@ -7,7 +7,7 @@
     margin: 0px 5px 0px 5px;
     max-width: 700px;
     outline: dimgray;
-    padding: 3px 20px 5px 20px;
+    padding: 15px 20px;
     position: relative;
 }
 
@@ -58,7 +58,9 @@ pre {
     white-space: pre-wrap;
     white-space: -moz-pre-wrap;
     white-space: -o-pre-wrap;
-    word-wrap: break-word;}
+    word-wrap: break-word;
+    margin: 0px !important;
+}
 
 code {
     font-family: "Roboto Mono", 'New Courier', monospace;

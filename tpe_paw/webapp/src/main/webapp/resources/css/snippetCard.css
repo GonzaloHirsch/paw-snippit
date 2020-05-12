@@ -2,20 +2,6 @@
  * CSS for the snippet's card --> snippetCard.jsp
  */
 
-/*.card-snippet-container {*/
-/*    background: white;*/
-/*    border-radius: 5px;*/
-/*    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);*/
-/*    color: inherit;*/
-/*    text-decoration: none;*/
-/*    transition: 0.3s;*/
-/*}*/
-
-/*.card-snippet-container:hover {*/
-/*    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);*/
-/*    text-decoration: none;*/
-/*    color: initial;*/
-/*}*/
 
 .card-snippet-content {
     padding: 20px;
@@ -49,7 +35,7 @@
     font-size: 13px;
 }
 
-.masonry-item {
+.card-item {
     display: inline-block;
     vertical-align: top;
     margin-bottom: 20px;
@@ -62,7 +48,7 @@
     width: 100%
 }
 
-.masonry-item:hover {
+.card-item:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     text-decoration: none;
     color: initial;

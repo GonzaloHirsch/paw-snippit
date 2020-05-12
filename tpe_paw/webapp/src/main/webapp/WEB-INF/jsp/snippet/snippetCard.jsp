@@ -8,7 +8,7 @@
 <body>
 <c:set var="snippet" value="${requestScope.snippet}"/>
 <%--<a href="<c:url value='/snippet/${snippet.id}'/>" class="flex-column card-snippet-container">--%>
-    <a href="<c:url value='/snippet/${snippet.id}'/>" class="flex-column masonry-item border-radius">
+    <a href="<c:url value='/snippet/${snippet.id}'/>" class="flex-column card-item border-radius">
     <div class="flex-column card-snippet-content border-radius">
 
         <!-- Top card section containing icon, username, date and language -->

@@ -1,6 +1,6 @@
 
 /* Resizes the height of a single card */
-function resizeCard(card){
+function addFadeOutCard(card){
     /*
      * CODE/DESCRIPTION CONTAINER --> If the code is too long, will want it to fade out in the card
      */
@@ -19,12 +19,12 @@ function addFadeOutTo(block, cssClass, color) {
 }
 
 /* Get all the different cards and for each one, resize it to the correct height */
-function resizeAllCards(){
+function addFadeOutCards(){
     cardContainer = document.getElementsByClassName('card-item');
     for(i = 0; i < cardContainer.length; i++){
-        resizeCard(cardContainer[i]);
+        addFadeOutCard(cardContainer[i]);
     }
 }
 
 /* Once the page has loaded, resize all the cards */
-window.onload = resizeAllCards();
+window.onload = addFadeOutCards();

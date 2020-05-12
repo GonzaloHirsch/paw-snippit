@@ -26,7 +26,8 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    margin: 0; padding: 40px 0;
+    margin: 0;
+    padding: 40px 0;
 }
 
 .card-snippet-date {
@@ -58,12 +59,12 @@
 
 .card-snippet-fade-out-code {
     background-image: linear-gradient(to bottom, rgba(255,255,255,0.001) 0%, #DCDCDC);
-    background-image: -webkit-linear-gradient(top, rgba(255,255,255,0.001) 0%, #DCDCDC);
+    background-image: -webkit-linear-gradient(top, rgba(220, 220, 220,0.001) 0%, #DCDCDC);
     background-image: -moz-linear-gradient(top, rgba(255,255,255,0.001) 0%, #DCDCDC);
 }
 
 .card-snippet-fade-out-descr {
     background-image: linear-gradient(to bottom, rgba(255,255,255,0.001) 0%, #FFFFFF);
-    background-image: -webkit-linear-gradient(top, rgba(220, 220, 220,0.001) 0%, #FFFFFF);
+    background-image: -webkit-linear-gradient(top, rgba(255,255,255,0.001) 0%, #FFFFFF);
     background-image: -moz-linear-gradient(top, rgba(255,255,255,0.001) 0%, #FFFFFF);
 }

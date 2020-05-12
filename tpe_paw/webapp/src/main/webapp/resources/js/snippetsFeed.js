@@ -15,6 +15,8 @@ function addFadeOutTo(block, cssClass, color) {
     maxBlockHeight = 200;
     if (block.getBoundingClientRect().height >= (maxBlockHeight - 2)) {
         block.querySelector(cssClass).style.backgroundImage = 'linear-gradient(to bottom, transparent, ' + color +')';
+        block.querySelector(cssClass).style.backgroundImage = '-webkit-linear-gradient(to bottom, transparent, ' + color +')';
+        block.querySelector(cssClass).style.backgroundImage = '-moz-linear-gradient(to bottom, transparent, ' + color +')';
     }
 }
 

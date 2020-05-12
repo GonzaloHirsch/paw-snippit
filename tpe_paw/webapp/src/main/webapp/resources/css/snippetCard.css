@@ -2,7 +2,6 @@
  * CSS for the snippet's card --> snippetCard.jsp
  */
 
-
 .card-snippet-content {
     padding: 20px;
 }
@@ -40,8 +39,9 @@
     vertical-align: top;
     margin-bottom: 20px;
     background: white;
-    border-radius: 5px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    -moz-box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     color: inherit;
     text-decoration: none;
     transition: 0.3s;
@@ -50,11 +50,8 @@
 
 .card-item:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    -webkit-box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+    -moz-box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     text-decoration: none;
     color: initial;
-}
-
-
-.masonry-content {
-    overflow: hidden;
 }

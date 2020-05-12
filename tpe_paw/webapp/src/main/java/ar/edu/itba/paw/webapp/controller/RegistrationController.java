@@ -93,20 +93,12 @@ public class RegistrationController {
             return signUpForm(request, registerForm);
         }
 
-        long userId = this.userService.register(
-                registerForm.getUsername(),
-                this.passwordEncoder.encode(registerForm.getPassword()),
-                registerForm.getEmail(),
-                DATE.format(Instant.now()),
-                LocaleContextHolder.getLocale()
-        );
         try {
-            this.emailService.sendRegistrationEmail(registerForm.getEmail(), registerForm.getUsername(), LocaleContextHolder.getLocale());
+            this.userService.register(registerForm.getUsername(), this.passwordEncoder.encode(registerForm.getPassword()), registerForm.getEmail(), DATE.format(Instant.now()), LocaleContextHolder.getLocale());
         } catch (Exception e) {
             LOGGER.warn(e.getMessage() + "Failed to send registration email to user {}", registerForm.getUsername());
         }
 
-        this.roleService.assignUserRole(userId);
         this.signUpAuthentication.authWithAuthManager(request, registerForm.getUsername(), registerForm.getPassword());
         String redirectUrl = this.signUpAuthentication.redirectionAuthenticationSuccess(request);
         return new ModelAndView("redirect:" + redirectUrl);
@@ -118,9 +110,10 @@ public class RegistrationController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null){
             this.throwNoUser(id);
+            return null; // Unreachable since the function above will throw an exception
         }
         try {
-            this.emailService.sendVerificationEmail(currentUser.getEmail());
+            this.emailService.sendVerificationEmail(currentUser);
         } catch (Exception e) {
             LOGGER.warn(e.getMessage() + "Failed to send verification email to user {}", currentUser.getUsername());
         }
@@ -131,6 +124,8 @@ public class RegistrationController {
 
     @RequestMapping(value = "/verify-email", method = RequestMethod.POST)
     public ModelAndView completeVerifyEmail(final @RequestParam(value="id") long id, @Valid @ModelAttribute("verificationForm") final EmailVerificationForm verificationForm, BindingResult errors, @ModelAttribute("searchForm") final SearchForm searchForm) {
+        ModelAndView mav = new ModelAndView("redirect:/user/" + id);
+
         if (errors.hasErrors()){
             return this.verifyEmail(id, verificationForm, searchForm);
         }
@@ -138,6 +133,7 @@ public class RegistrationController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null || currentUser.getId() != id){
             this.throwNoUser(id);
+            return mav; // Unreachable since the function above will throw an exception
         }
         boolean isCodeValid = this.cryptoService.checkValidTOTP(currentUser, verificationForm.getCode());
         if (!isCodeValid){
@@ -146,7 +142,7 @@ public class RegistrationController {
             return this.verifyEmail(id, verificationForm, searchForm);
         }
         this.userService.verifyUserEmail(currentUser.getId());
-        return new ModelAndView("redirect:/user/" + id);
+        return mav;
     }
 
     @RequestMapping(value = "/resend-email-verification", method = RequestMethod.POST)
@@ -156,9 +152,10 @@ public class RegistrationController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null || currentUser.getId() != id){
             this.throwNoUser(id);
+            return mav;
         }
         try {
-            this.emailService.sendVerificationEmail(currentUser.getEmail());
+            this.emailService.sendVerificationEmail(currentUser);
         } catch (Exception e) {
             LOGGER.warn(e.getMessage() + "Failed to send verification email to user {}", currentUser.getUsername());
         }
@@ -178,9 +175,13 @@ public class RegistrationController {
         if (errors.hasErrors()){
             return recoverPassword(recoveryForm, errors);
         }
+        User user = this.userService.findUserByEmail(recoveryForm.getEmail()).orElse(null);
+        if (user == null) {
+            throw new RuntimeException(); //TODO
+        }
         final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
         try {
-            emailService.sendRecoveryEmail(baseUrl, recoveryForm.getEmail());
+            this.emailService.sendRecoveryEmail(user, baseUrl);
         } catch (Exception e) {
             LOGGER.warn(e.getMessage() + "Failed to send recovery email to user {}", recoveryForm.getEmail());
         }

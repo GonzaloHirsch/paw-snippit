@@ -1,9 +1,12 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.dao.UserDao;
+import ar.edu.itba.paw.interfaces.service.EmailService;
+import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,8 +17,9 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserDao userDao;
+    @Autowired private UserDao userDao;
+    @Autowired private RoleService roleService;
+    @Autowired private EmailService emailService;
 
     @Override
     public long createUser(String username, String password, String email, String description, int reputation, String dateJoined, Locale locale) {
@@ -24,7 +28,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public long register(String username, String password, String email, String dateJoined, Locale locale) {
-        return createUser(username, password, email, "", 0, dateJoined, locale);
+        long userId = createUser(username, password, email, "", 0, dateJoined, locale);
+        this.roleService.assignUserRole(userId);
+        this.emailService.sendRegistrationEmail(email, username, LocaleContextHolder.getLocale());
+        return userId;
     }
 
     @Override

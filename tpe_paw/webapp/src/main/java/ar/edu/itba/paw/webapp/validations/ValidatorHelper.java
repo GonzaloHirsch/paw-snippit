@@ -22,10 +22,7 @@ public class ValidatorHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidatorHelper.class);
 
     public void validateAdminAdd (List<String> languages, List<String> tags, BindingResult errors, Locale locale) {
-        if (((languages == null) && (tags == null))
-                || ((tags == null) && languages.isEmpty())
-                || ((languages == null) && tags.isEmpty())
-                || (tags != null && languages != null && tags.isEmpty() && languages.isEmpty())) {
+        if (tags.isEmpty() && languages.isEmpty()) {
             FieldError noData = new FieldError("addAdminForm","languages" ,messageSource.getMessage("admin.add.no.data",null, locale));
             errors.addError(noData);
             return;
@@ -41,39 +38,36 @@ public class ValidatorHelper {
         boolean trailingSpaces = false;
         boolean tooLong = false;
 
-        if (tags != null) {
-            for (String tag : tags) {
-                if (!tag.isEmpty()) {
-                    if (tag.charAt(0) == ' ' || tag.charAt(tag.length() - 1) == ' ') {
-                        trailingSpaces = true;
-                    } else if (tag.length() > maxLength) {
-                            tooLong = true;
-                    } else {
-                        if (tagService.tagExists(tag)) {
-                            error.append(tag).append(", ");
-                            errorAmount++;
-                        }
+        for (String tag : tags) {
+            if (!tag.isEmpty()) {
+                if (tag.charAt(0) == ' ' || tag.charAt(tag.length() - 1) == ' ') {
+                    trailingSpaces = true;
+                } else if (tag.length() > maxLength) {
+                    tooLong = true;
+                } else {
+                    if (tagService.tagExists(tag)) {
+                        error.append(tag).append(", ");
+                        errorAmount++;
                     }
                 }
             }
-
-            if (errorAmount > 0) {
-                error.setLength(error.length() - 2);
-                FieldError tagExists = new FieldError("addAdminForm", "tags", messageSource.getMessage("admin.add.tags.exists", new Object[]{error.toString()}, locale));
-                errors.addError(tagExists);
-                LOGGER.debug("Tags that already exists = {}", error.toString());
-            }
-            if (trailingSpaces) {
-                FieldError trailingSpacesError = new FieldError("addAdminForm", "tags", messageSource.getMessage("admin.add.spaces.error", null, locale));
-                errors.addError(trailingSpacesError);
-            }
-            if (tooLong) {
-                FieldError tooLongError = new FieldError("addAdminForm", "tags", messageSource.getMessage("admin.add.tag.length.error", new Object[]{maxLength}, locale));
-                errors.addError(tooLongError);
-            }
-
-            this.checkForDuplicated(tags, "tags", errors, locale);
         }
+
+        if (errorAmount > 0) {
+            error.setLength(error.length() - 2);
+            FieldError tagExists = new FieldError("addAdminForm", "tags", messageSource.getMessage("admin.add.tags.exists", new Object[]{error.toString()}, locale));
+            errors.addError(tagExists);
+            LOGGER.debug("Tags that already exists = {}", error.toString());
+        }
+        if (trailingSpaces) {
+            FieldError trailingSpacesError = new FieldError("addAdminForm", "tags", messageSource.getMessage("admin.add.spaces.error", null, locale));
+            errors.addError(trailingSpacesError);
+        }
+        if (tooLong) {
+            FieldError tooLongError = new FieldError("addAdminForm", "tags", messageSource.getMessage("admin.add.tag.length.error", new Object[]{maxLength}, locale));
+            errors.addError(tooLongError);
+        }
+        this.checkForDuplicated(tags, "tags", errors, locale);
     }
 
     private void validateAddedLanguages (List<String> languages, BindingResult errors, Locale locale){
@@ -83,38 +77,36 @@ public class ValidatorHelper {
         boolean trailingSpaces = false;
         boolean tooLong = false;
 
-        if (languages != null) {
-            for (String lang : languages) {
-                if (!lang.isEmpty()) {
-                    if (lang.charAt(0) == ' ' || lang.charAt(lang.length() - 1) == ' ') {
-                        trailingSpaces = true;
-                    } else if (lang.length() > maxLength) {
-                        tooLong = true;
-                    }
-                    else {
-                        if (languageService.languageExists(lang)) {
-                            error.append(lang).append(", ");
-                            errorAmount++;
-                        }
+        for (String lang : languages) {
+            if (!lang.isEmpty()) {
+                if (lang.charAt(0) == ' ' || lang.charAt(lang.length() - 1) == ' ') {
+                    trailingSpaces = true;
+                } else if (lang.length() > maxLength) {
+                    tooLong = true;
+                }
+                else {
+                    if (languageService.languageExists(lang)) {
+                        error.append(lang).append(", ");
+                        errorAmount++;
                     }
                 }
             }
-
-            if (errorAmount > 0) {
-                error.setLength(error.length() - 2);
-                FieldError langExists = new FieldError("addAdminForm", "languages", messageSource.getMessage("admin.add.lang.exists", new Object[]{error.toString()}, locale));
-                errors.addError(langExists);
-            }
-            if (trailingSpaces) {
-                FieldError trailingSpacesError = new FieldError("addAdminForm", "languages", messageSource.getMessage("admin.add.spaces.error", null, locale));
-                errors.addError(trailingSpacesError);
-            }
-            if (tooLong) {
-                FieldError tooLongError = new FieldError("addAdminForm", "languages", messageSource.getMessage("admin.add.lang.length.error", new Object[]{maxLength}, locale));
-                errors.addError(tooLongError);
-            }
-            this.checkForDuplicated(languages, "languages", errors, locale);
         }
+
+        if (errorAmount > 0) {
+            error.setLength(error.length() - 2);
+            FieldError langExists = new FieldError("addAdminForm", "languages", messageSource.getMessage("admin.add.lang.exists", new Object[]{error.toString()}, locale));
+            errors.addError(langExists);
+        }
+        if (trailingSpaces) {
+            FieldError trailingSpacesError = new FieldError("addAdminForm", "languages", messageSource.getMessage("admin.add.spaces.error", null, locale));
+            errors.addError(trailingSpacesError);
+        }
+        if (tooLong) {
+            FieldError tooLongError = new FieldError("addAdminForm", "languages", messageSource.getMessage("admin.add.lang.length.error", new Object[]{maxLength}, locale));
+            errors.addError(tooLongError);
+        }
+        this.checkForDuplicated(languages, "languages", errors, locale);
     }
 
     private void checkForDuplicated(List<String> list, String field, BindingResult errors, Locale locale) {

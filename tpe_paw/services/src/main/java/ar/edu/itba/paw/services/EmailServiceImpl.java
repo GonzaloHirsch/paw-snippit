@@ -31,17 +31,9 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private MessageSource messageSource;
     @Autowired
-    private UserService userService;
-    @Autowired
-    private SnippetService snippetService;
-    @Autowired
-    private TagService tagService;
-    @Autowired
     private TemplateService templateService;
     @Autowired
     private CryptoService cryptoService;
-    public static final DateTimeFormatter DATE = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(Locale.UK)
-            .withZone(ZoneId.systemDefault());
 
     @Async
     @Override
@@ -74,9 +66,8 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendRecoveryEmail(String baseUrl, String userEmail) {
-        User searchedUser = this.userService.findUserByEmail(userEmail).get(); // User SHOULD be found
-        String otp = this.cryptoService.generateTOTP(userEmail, searchedUser.getPassword());
+    public void sendRecoveryEmail(User searchedUser, String baseUrl) {
+        String otp = this.cryptoService.generateTOTP(searchedUser.getEmail(), searchedUser.getPassword());
         String token = this.cryptoService.generateRecoverToken(otp);
         String link = baseUrl + "/reset-password?id=" + searchedUser.getId() + "&token=" + token;
         Map<String, Object> data = new HashMap<String, Object>();
@@ -85,21 +76,20 @@ public class EmailServiceImpl implements EmailService {
         data.put("userEmail", searchedUser.getEmail());
         String body = this.templateService.merge("/templates/passwordRecovery.vm", data, searchedUser.getLocale());
         String subject = messageSource.getMessage("email.recovery.subject", null, searchedUser.getLocale());
-        this.sendEmail(userEmail, subject, body, searchedUser.getLocale());
+        this.sendEmail(searchedUser.getEmail(), subject, body, searchedUser.getLocale());
     }
 
     @Async
     @Override
-    public void sendVerificationEmail(String userEmail){
-        User searchedUser = this.userService.findUserByEmail(userEmail).get(); // User SHOULD be found
-        String otp = this.cryptoService.generateTOTP(userEmail, searchedUser.getPassword());
+    public void sendVerificationEmail(User user){
+        String otp = this.cryptoService.generateTOTP(user.getEmail(), user.getPassword());
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("code", otp);
-        data.put("username", searchedUser.getUsername());
-        data.put("userEmail", searchedUser.getEmail());
-        String body = this.templateService.merge("/templates/emailVerification.vm", data, searchedUser.getLocale());
-        String subject = messageSource.getMessage("email.verification.subject", null, searchedUser.getLocale());
-        this.sendEmail(userEmail, subject, body, searchedUser.getLocale());
+        data.put("username", user.getUsername());
+        data.put("userEmail", user.getEmail());
+        String body = this.templateService.merge("/templates/emailVerification.vm", data, user.getLocale());
+        String subject = messageSource.getMessage("email.verification.subject", null, user.getLocale());
+        this.sendEmail(user.getEmail(), subject, body, user.getLocale());
     }
 
     @Async
@@ -117,75 +107,6 @@ public class EmailServiceImpl implements EmailService {
         }
         String subject = messageSource.getMessage("email.flagged.subject", null, locale);
         this.sendEmail(userEmail, subject, body, locale);
-    }
-
-    @Async
-    @Scheduled(cron = "0 0 12 * * Mon")
-    @Override
-    public void scheduledWeeklyDigest() {
-        // Getting timestamp for week before
-        Instant weekBefore = Instant.now().plus(-7, ChronoUnit.DAYS);
-        // Getting all verified users
-        Collection<User> users = this.userService.getAllVerifiedUsers();
-        Collection<Tag> followedTags;
-        int snippetsForWeek;
-        Locale locale;
-        for (User user : users) {
-            locale = user.getLocale();
-            // Getting all followed tags
-            followedTags = this.tagService.getFollowedTagsForUser(user.getId());
-            if (followedTags.size() > 0) {
-                // Getting how many new snippets were found
-                snippetsForWeek = this.snippetService.getNewSnippetsForTagsCount(DATE.format(weekBefore), followedTags, user.getId());
-                if (snippetsForWeek > 0) {
-                    this.sendDigestEmail(user.getEmail(), user.getUsername(), snippetsForWeek, locale);
-                } else {
-                    this.sendDigestFollowOtherEmail(user.getEmail(), user.getUsername(), locale);
-                }
-            } else {
-                this.sendDigestNoFollowEmail(user.getEmail(), user.getUsername(), locale);
-            }
-        }
-    }
-
-    @Override
-    public void sendDigestEmail(String to, String username, int count, Locale locale) {
-        try {
-            Map<String, Object> data = new HashMap<String, Object>();
-            data.put("itemCount", count);
-            data.put("username", username);
-            String body = this.templateService.merge("/templates/weeklyDigest.vm", data, locale);
-            String subject = messageSource.getMessage("email.wd.subject", null, locale);
-            this.sendEmail(to, subject, body, locale);
-        } catch (Exception e) {
-
-        }
-    }
-
-    @Override
-    public void sendDigestNoFollowEmail(String to, String username, Locale locale) {
-        try {
-            Map<String, Object> data = new HashMap<String, Object>();
-            data.put("username", username);
-            String body = this.templateService.merge("/templates/weeklyDigestNoItems.vm", data, locale);
-            String subject = messageSource.getMessage("email.wdni.subject", null, locale);
-            this.sendEmail(to, subject, body, locale);
-        } catch (Exception e) {
-
-        }
-    }
-
-    @Override
-    public void sendDigestFollowOtherEmail(String to, String username, Locale locale) {
-        try {
-            Map<String, Object> data = new HashMap<String, Object>();
-            data.put("username", username);
-            String body = this.templateService.merge("/templates/weeklyDigestSuggestFollowing.vm", data, locale);
-            String subject = messageSource.getMessage("email.wdsf.subject", null, locale);
-            this.sendEmail(to, subject, body, locale);
-        } catch (Exception e) {
-
-        }
     }
 
 

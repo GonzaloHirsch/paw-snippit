@@ -113,13 +113,10 @@ public class SnippetController {
         if (currentUser == null || currentUser.getUsername().compareTo(snippet.get().getOwner().getUsername()) != 0) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.delete", null, LocaleContextHolder.getLocale()));
         } else {
-            /* Want to reverse the voteBalance on the users reputation */
-            int voteBalance = this.snippetService.getReputationImportanceBalance(snippet.get());
-            if (!this.snippetService.deleteSnippetById(id)) {
+            if (!this.snippetService.deleteSnippet(snippet.get(), currentUser.getId())) {
                 /* Operation was unsuccessful */
                 throw new ElementDeletionException(messageSource.getMessage("error.409.deletion.snippet", null, LocaleContextHolder.getLocale()));
             }
-            this.userService.changeReputation(currentUser.getId(), voteBalance);
         }
         return new ModelAndView("redirect:/");
     }

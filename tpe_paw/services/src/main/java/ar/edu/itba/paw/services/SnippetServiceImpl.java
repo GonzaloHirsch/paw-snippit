@@ -65,8 +65,13 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
-    public boolean deleteSnippetById(long id) {
-        return snippetDao.deleteSnippetById(id);
+    public boolean deleteSnippet(Snippet snippet, long userId) {
+        boolean success = snippetDao.deleteSnippetById(snippet.getId());
+        if (success) {
+            int voteBalance = this.getReputationImportanceBalance(snippet);
+            this.userService.changeReputation(userId, voteBalance);
+        }
+        return success;
     }
 
     @Override

@@ -68,3 +68,23 @@
 .sub-label{
     font-size: 13px;
 }
+
+
+.masonry-wrapper {
+    padding: 1.5em;
+    width: 100%;
+}
+
+.masonry {
+    -webkit-column-count: 1 !important; /* Chrome, Safari, Opera */
+    -moz-column-count: 1 !important; /* Firefox */
+    column-count: 1 !important;
+}
+
+@media only screen and (min-width: 1223px)  {
+    .masonry {
+        -webkit-column-count: 2 !important; /* Chrome, Safari, Opera */
+        -moz-column-count: 2 !important; /* Firefox */
+        column-count: 2 !important;
+    }
+}

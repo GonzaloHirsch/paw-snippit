@@ -72,7 +72,7 @@ public class SnippetSearchQuery {
          */
         private final Map<SnippetDao.Types, String> orderTypesMap = new HashMap<SnippetDao.Types, String>(){{
             put(SnippetDao.Types.ALL, " s.title ");
-            put(SnippetDao.Types.TAG, " t.name ");
+            put(SnippetDao.Types.TAG, " s.title ");
             put(SnippetDao.Types.TITLE, " s.title ");
             put(SnippetDao.Types.CONTENT, " s.code ");
             put(SnippetDao.Types.USER, " s.username ");

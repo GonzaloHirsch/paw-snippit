@@ -7,18 +7,32 @@ function resizeCard(card){
     let codeBlock = card.querySelector('.card-snippet-content').querySelector('.snippet-code-container').querySelector('.card-snippet-block');
     let descrBlock = card.querySelector('.card-snippet-content').querySelector('.card-snippet-block');
 
-    addFadeOutTo(codeBlock, '.card-snippet-fade-out-code', '#DCDCDC');
-    addFadeOutTo(descrBlock, '.card-snippet-fade-out-descr', '#FFFFFF');
 
     let heightToUse = card.querySelector('.card-snippet-content').getBoundingClientRect().height;
+
+    if (heightToUse < 100){
+        addFadeOutTo(codeBlock, codeBlock.querySelector(".code-element").getBoundingClientRect().height, '.card-snippet-fade-out-code', '#DCDCDC');
+        addFadeOutTo(descrBlock, descrBlock.querySelector(".snippet-text").getBoundingClientRect().height, '.card-snippet-fade-out-descr', '#FFFFFF');
+    } else {
+        addFadeOutTo(codeBlock, codeBlock.getBoundingClientRect().height, '.card-snippet-fade-out-code', '#DCDCDC');
+        addFadeOutTo(descrBlock, descrBlock.getBoundingClientRect().height, '.card-snippet-fade-out-descr', '#FFFFFF');
+    }
+
     console.log(heightToUse);
 
     if (heightToUse < 100){
         let codeHeight = codeBlock.querySelector(".code-element").getBoundingClientRect().height;
         let descHeight = descrBlock.querySelector(".snippet-text").getBoundingClientRect().height;
         let titleHeight = card.querySelector('.card-snippet-content').querySelector('.snippet-title-container').querySelector(".snippet-title").getBoundingClientRect().height;
-        heightToUse = codeHeight > 300 ? 300 : codeHeight;
-        heightToUse = heightToUse + (descHeight > 350 ? 350 : descHeight + 50);
+        console.log("items");
+        console.log(codeBlock);
+        console.log(codeHeight);
+        console.log(descrBlock);
+        console.log(descHeight);
+        console.log(card);
+        console.log(titleHeight);
+        heightToUse = codeHeight > 200 ? 200 : codeHeight + 25;
+        heightToUse = heightToUse + (descHeight > 200 ? 200 : descHeight + 125);
         heightToUse = heightToUse + titleHeight + 100;
     }
 
@@ -39,10 +53,17 @@ function resizeCard(card){
     card.style.gridRowEnd = 'span ' + rowSpan;
 }
 
-function addFadeOutTo(block, cssClass, color) {
+function addFadeOutTo(block, clientH, cssClass, color) {
     let maxBlockHeight = 200;
-    if (block.getBoundingClientRect().height >= (maxBlockHeight - 2)) {
-        block.querySelector(cssClass).classList.remove('hidden');
+    let clientRecH = block.getBoundingClientRect().height;
+    if (clientRecH < 40){
+        if (clientH >= (maxBlockHeight - 2)) {
+            block.querySelector(cssClass).classList.remove('hidden');
+        }
+    } else {
+        if (clientRecH >= (maxBlockHeight - 2)) {
+            block.querySelector(cssClass).classList.remove('hidden');
+        }
     }
 }
 

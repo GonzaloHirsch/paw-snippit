@@ -102,7 +102,7 @@ public class LanguagesController {
             this.languageService.removeLanguage(langId);
             LOGGER.debug("Admin removed language with id {}", langId);
         } else {
-            LOGGER.warn("No user logged in or logged in user not admin but language {} is trying to be deleted", langId);
+            LOGGER.error("No user logged in or logged in user not admin but language {} is trying to be deleted", langId);
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.admin.delete", null, LocaleContextHolder.getLocale()));
         }
         return new ModelAndView("redirect:/languages");

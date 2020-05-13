@@ -65,7 +65,7 @@ public class AdminController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
 
         if (currentUser == null || currentUser.getUsername().compareTo("admin") != 0) {
-            LOGGER.warn("In admin add form and the user is not admin");
+            LOGGER.error("In admin add form and the user is not admin");
         }
 
         if (!languages.isEmpty()) languageService.addLanguages(languages);

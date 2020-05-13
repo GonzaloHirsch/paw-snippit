@@ -6,6 +6,8 @@ import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -30,7 +32,9 @@ public class ErrorController {
     @Autowired
     private RoleService roleService;
 
-    private Set<Integer> supportedErrorPages = new HashSet<Integer>(){{
+    private static final Logger LOGGER = LoggerFactory.getLogger(ErrorController.class);
+
+    private final Set<Integer> supportedErrorPages = new HashSet<Integer>(){{
         add(404);
         add(413);
         add(414);
@@ -68,6 +72,6 @@ public class ErrorController {
         model.addAttribute("userTags", userTags);
         model.addAttribute("userRoles", userRoles);
         model.addAttribute("searchContext", "error/");
-
+        LOGGER.error("Unknown error for user {}", currentUser != null ? currentUser.getId() : "-");
     }
 }

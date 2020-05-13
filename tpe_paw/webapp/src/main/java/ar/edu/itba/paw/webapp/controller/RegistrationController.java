@@ -98,7 +98,7 @@ public class RegistrationController {
         try {
             this.userService.register(registerForm.getUsername(), this.passwordEncoder.encode(registerForm.getPassword()), registerForm.getEmail(), DATE.format(Instant.now()), LocaleContextHolder.getLocale());
         } catch (Exception e) {
-            LOGGER.warn(e.getMessage() + "Failed to send registration email to user {}", registerForm.getUsername());
+            LOGGER.error(e.getMessage() + "Failed to send registration email to user {}", registerForm.getUsername());
         }
 
         this.signUpAuthentication.authWithAuthManager(request, registerForm.getUsername(), registerForm.getPassword());
@@ -117,7 +117,7 @@ public class RegistrationController {
         try {
             this.emailService.sendVerificationEmail(currentUser);
         } catch (Exception e) {
-            LOGGER.warn(e.getMessage() + "Failed to send verification email to user {}", currentUser.getUsername());
+            LOGGER.error(e.getMessage() + "Failed to send verification email to user {}", currentUser.getUsername());
         }
         mav.addObject("searchForm", searchForm);
         this.addUserAttributes(currentUser, mav);
@@ -127,7 +127,6 @@ public class RegistrationController {
     @RequestMapping(value = "/verify-email", method = RequestMethod.POST)
     public ModelAndView completeVerifyEmail(final @RequestParam(value="id") long id, @Valid @ModelAttribute("verificationForm") final EmailVerificationForm verificationForm, BindingResult errors, @ModelAttribute("searchForm") final SearchForm searchForm) {
         ModelAndView mav = new ModelAndView("redirect:/user/" + id);
-
         if (errors.hasErrors()){
             return this.verifyEmail(id, verificationForm, searchForm);
         }
@@ -137,7 +136,7 @@ public class RegistrationController {
             this.throwNoUser(id);
             return mav; // Unreachable since the function above will throw an exception
         }
-
+        // Checking the code sent by the user is valid
         if (!validatorHelper.checkValidTOTP(currentUser, verificationForm.getCode(), errors, LocaleContextHolder.getLocale())) {
             return this.verifyEmail(id, verificationForm, searchForm);
         }
@@ -158,7 +157,7 @@ public class RegistrationController {
         try {
             this.emailService.sendVerificationEmail(currentUser);
         } catch (Exception e) {
-            LOGGER.warn(e.getMessage() + "Failed to send verification email to user {}", currentUser.getUsername());
+            LOGGER.error(e.getMessage() + "Failed to send verification email to user {}", currentUser.getUsername());
         }
         mav.addObject("searchForm", searchForm);
         this.addUserAttributes(currentUser, mav);
@@ -178,13 +177,14 @@ public class RegistrationController {
         }
         User user = this.userService.findUserByEmail(recoveryForm.getEmail()).orElse(null);
         if (user == null) {
-            throw new RuntimeException(); //TODO
+            throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{recoveryForm.getEmail()}, LocaleContextHolder.getLocale()));
         }
+        // Getting the URL for the server
         final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
         try {
             this.emailService.sendRecoveryEmail(user, baseUrl);
         } catch (Exception e) {
-            LOGGER.warn(e.getMessage() + "Failed to send recovery email to user {}", recoveryForm.getEmail());
+            LOGGER.error(e.getMessage() + "Failed to send recovery email to user {}", recoveryForm.getEmail());
         }
         return new ModelAndView("user/emailSent");
     }
@@ -237,7 +237,7 @@ public class RegistrationController {
     }
 
     private void throwNoUser(long id) {
-        LOGGER.warn("User with id {} doesn't exist", id);
+        LOGGER.error("User with id {} doesn't exist", id);
         throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{id}, LocaleContextHolder.getLocale()));
     }
 

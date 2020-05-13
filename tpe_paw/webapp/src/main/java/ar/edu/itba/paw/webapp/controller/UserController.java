@@ -80,9 +80,6 @@ public class  UserController {
         mav.addObject("userRoles", userRoles);
 
         descriptionForm.setDescription(user.get().getDescription());
-        if (currentUser == null || (currentUser.getId() != user.get().getId() && editing)) {
-            // ERROR
-        }
         Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.get().getId());
         mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.get().getId()));

@@ -143,7 +143,7 @@ public class SearchController {
         // Retrieve the language
         Optional<Language> language = this.languageService.findById(langId);
         if (!language.isPresent()) {
-            LOGGER.warn("No language found with id {}", langId);
+            LOGGER.error("No language found with id {}", langId);
             throw new LanguageNotFoundException(messageSource.getMessage("error.404.language", new Object[]{langId}, LocaleContextHolder.getLocale()));
         }
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.LANGUAGES, searchForm.getSort(), null, langId, page);
@@ -160,7 +160,7 @@ public class SearchController {
         // Retrieve the tag
         Optional<Tag> tag = this.tagService.findTagById(tagId);
         if (!tag.isPresent()) {
-            LOGGER.warn("No tag found with id {}", tagId);
+            LOGGER.error("No tag found with id {}", tagId);
             throw new TagNotFoundException(this.messageSource.getMessage("error.404.tag", new Object[]{tagId}, LocaleContextHolder.getLocale()));
         }
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.TAGS, searchForm.getSort(), null, tagId, page);
@@ -180,9 +180,7 @@ public class SearchController {
             this.logAndThrow("/user/"+id+"/search");
         }
         descriptionForm.setDescription(user.get().getDescription());
-        if (currentUser == null || (currentUser.getId() != user.get().getId() && editing)) {
-            // ERROR
-        }
+        // Getting the snippets for the search
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, id, null);
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, USER + id + "/");

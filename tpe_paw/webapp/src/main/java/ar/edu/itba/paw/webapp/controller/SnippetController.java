@@ -180,7 +180,7 @@ public class SnippetController {
                 // Updating the flagged variable of snippet
                 this.snippetService.updateFlagged(snippetOpt.get(), completeOwnerOpt.get(), adminFlagForm.isFlagged(), baseUrl);
             } catch (Exception e) {
-                LOGGER.warn(e.getMessage() + "Failed to send flagged email to user {} about their snippet {}", snippetOpt.get().getOwner().getUsername(), snippetOpt.get().getId());
+                LOGGER.error(e.getMessage() + "Failed to send flagged email to user {} about their snippet {}", snippetOpt.get().getOwner().getUsername(), snippetOpt.get().getId());
             }
 
             LOGGER.debug("Marked snippet {} as flagged by admin", id);

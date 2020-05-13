@@ -79,12 +79,12 @@ public class SnippetCreateController {
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if(currentUser == null) {
-            LOGGER.warn("Creating a snippet when no user is logged in");
+            LOGGER.error("Creating a snippet when no user is logged in");
             throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.snippet.create", null, LocaleContextHolder.getLocale()));
         }
         Long snippetId = this.snippetService.createSnippet(currentUser,snippetCreateForm.getTitle(),snippetCreateForm.getDescription(), snippetCreateForm.getCode(), dateCreated, snippetCreateForm.getLanguage(),snippetCreateForm.getTags());
         if(snippetId == null){
-            LOGGER.warn("Snippet creation was unsuccessful. Return id was null.");
+            LOGGER.error("Snippet creation was unsuccessful. Return id was null.");
             throw new FormErrorException(this.messageSource.getMessage("error.404.form", null, LocaleContextHolder.getLocale()));
         }
 

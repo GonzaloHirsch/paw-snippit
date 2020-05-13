@@ -13,8 +13,7 @@ import java.util.Map;
 
 public class TestHelper {
 
-    public static final DateTimeFormatter DATE = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(Locale.UK)
-            .withZone(ZoneId.systemDefault());
+    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK).withZone(ZoneId.systemDefault());
     public static final String SNIPPETS_TABLE = "snippets";
     public static final String USERS_TABLE = "users";
     public static final String LANGUAGES_TABLE = "languages";

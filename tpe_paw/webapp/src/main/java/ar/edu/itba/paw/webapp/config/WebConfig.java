@@ -90,7 +90,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public DatabasePopulator databasePopulator(){
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(schemaSql);
+//        populator.addScript(schemaSql);
 //        populator.addScript(populatorSql);
 //        populator.addScript(populatorRoleSql);
         return populator;

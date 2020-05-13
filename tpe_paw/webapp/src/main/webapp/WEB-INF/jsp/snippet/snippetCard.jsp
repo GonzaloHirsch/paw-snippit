@@ -11,8 +11,8 @@
 <c:set var="desc" value="${fn:escapeXml(snippet.description)}"/>
 <c:set var="code" value="${fn:escapeXml(snippet.code)}"/>
 
-<a href="<c:url value='/snippet/${snippet.id}'/>" class="flex-column card-item border-radius">
-<%--<a href="<c:url value='/snippet/${snippet.id}'/>" class="flex-column card-snippet-container">--%>
+<%--<a href="<c:url value='/snippet/${snippet.id}'/>" class="flex-column card-item border-radius">--%>
+<a href="<c:url value='/snippet/${snippet.id}'/>" class="flex-column card-snippet-container">
     <div class="flex-column card-snippet-content border-radius">
 
         <!-- Top card section containing icon, username, date and language -->

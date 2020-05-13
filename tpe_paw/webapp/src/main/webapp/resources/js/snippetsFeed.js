@@ -1,6 +1,6 @@
 
 /* Resizes the height of a single card */
-function addFadeOutCard(card){
+function resizeCard(card){
     /*
      * CODE/DESCRIPTION CONTAINER --> If the code is too long, will want it to fade out in the card
      */
@@ -9,6 +9,34 @@ function addFadeOutCard(card){
 
     addFadeOutTo(codeBlock, '.card-snippet-fade-out-code', '#DCDCDC');
     addFadeOutTo(descrBlock, '.card-snippet-fade-out-descr', '#FFFFFF');
+
+    let heightToUse = card.querySelector('.card-snippet-content').getBoundingClientRect().height;
+    console.log(heightToUse);
+
+    if (heightToUse < 100){
+        let codeHeight = codeBlock.querySelector(".code-element").getBoundingClientRect().height;
+        let descHeight = descrBlock.querySelector(".snippet-text").getBoundingClientRect().height;
+        let titleHeight = card.querySelector('.card-snippet-content').querySelector('.snippet-title-container').querySelector(".snippet-title").getBoundingClientRect().height;
+        heightToUse = codeHeight > 300 ? 300 : codeHeight;
+        heightToUse = heightToUse + (descHeight > 350 ? 350 : descHeight + 50);
+        heightToUse = heightToUse + titleHeight + 100;
+    }
+
+    console.log(heightToUse);
+
+    /*
+     * CARD CONTAINER --> Making the card height match the content
+     */
+    let feedGrid = document.getElementsByClassName("feed-snippets-grid")[0];
+
+    let rowHeight = parseInt(window.getComputedStyle(feedGrid).getPropertyValue('grid-auto-rows'));
+    let rowGap = parseInt(window.getComputedStyle(feedGrid).getPropertyValue('grid-row-gap'));
+
+    /* Use the height of the content div to calculate the new height */
+    let rowSpan = Math.ceil((heightToUse + rowGap) / (rowHeight + rowGap));
+
+    /* Add the new row span to the card style */
+    card.style.gridRowEnd = 'span ' + rowSpan;
 }
 
 function addFadeOutTo(block, cssClass, color) {
@@ -19,27 +47,22 @@ function addFadeOutTo(block, cssClass, color) {
 }
 
 /* Get all the different cards and for each one, resize it to the correct height */
-function addFadeOutCards(){
-    cardContainer = document.getElementsByClassName('card-item');
-    for(i = 0; i < cardContainer.length; i++){
-        addFadeOutCard(cardContainer[i]);
+function resizeAllCards(){
+    let cardContainer = document.getElementsByClassName('card-snippet-container');
+    for(let i = 0; i < cardContainer.length; i++){
+        resizeCard(cardContainer[i]);
     }
 }
 
 /* Once the page has loaded, resize all the cards */
-window.onload = addFadeOutCards();
+window.onload = resizeAllCards();
 
-// window.addEventListener('resize', addFadeOutCards);
+/* Resize the cards again when the browser is resized */
+window.addEventListener('resize', resizeAllCards);
 
 
-        // function resizeAllCards() {
-        //     let cardContainer = document.getElementsByClassName('card-snippet-container');
-        //     for (let i = 0; i < cardContainer.length; i++) {
-        //         resizeCard(cardContainer[i]);
-        //     }
-        // }
-
-// function resizeCard(card) {
+// /* Resizes the height of a single card */
+// function addFadeOutCard(card){
 //     /*
 //      * CODE/DESCRIPTION CONTAINER --> If the code is too long, will want it to fade out in the card
 //      */
@@ -48,32 +71,24 @@ window.onload = addFadeOutCards();
 //
 //     addFadeOutTo(codeBlock, '.card-snippet-fade-out-code', '#DCDCDC');
 //     addFadeOutTo(descrBlock, '.card-snippet-fade-out-descr', '#FFFFFF');
-//
-//     let heightToUse = card.querySelector('.card-snippet-content').getBoundingClientRect().height;
-//     console.log(heightToUse);
-//
-//     if (heightToUse < 100) {
-//         let codeHeight = codeBlock.querySelector(".code-element").getBoundingClientRect().height;
-//         let descHeight = descrBlock.querySelector(".snippet-text").getBoundingClientRect().height;
-//         let titleHeight = card.querySelector('.card-snippet-content').querySelector('.snippet-title-container').querySelector(".snippet-title").getBoundingClientRect().height;
-//         heightToUse = codeHeight > 300 ? 300 : codeHeight;
-//         heightToUse = heightToUse + (descHeight > 350 ? 350 : descHeight + 50);
-//         heightToUse = heightToUse + titleHeight + 100;
-//     }
-//
-//     console.log(heightToUse);
-//
-//     /*
-//      * CARD CONTAINER --> Making the card height match the content
-//      */
-//     let feedGrid = document.getElementsByClassName("feed-snippets-grid")[0];
-//
-//     let rowHeight = parseInt(window.getComputedStyle(feedGrid).getPropertyValue('grid-auto-rows'));
-//     let rowGap = parseInt(window.getComputedStyle(feedGrid).getPropertyValue('grid-row-gap'));
-//
-//     /* Use the height of the content div to calculate the new height */
-//     let rowSpan = Math.ceil((heightToUse + rowGap) / (rowHeight + rowGap));
-//
-//     /* Add the new row span to the card style */
-//     card.style.gridRowEnd = 'span ' + rowSpan;
 // }
+//
+// function addFadeOutTo(block, cssClass, color) {
+//     let maxBlockHeight = 200;
+//     if (block.getBoundingClientRect().height >= (maxBlockHeight - 2)) {
+//         block.querySelector(cssClass).classList.remove('hidden');
+//     }
+// }
+//
+// /* Get all the different cards and for each one, resize it to the correct height */
+// function addFadeOutCards(){
+//     cardContainer = document.getElementsByClassName('card-item');
+//     for(i = 0; i < cardContainer.length; i++){
+//         addFadeOutCard(cardContainer[i]);
+//     }
+// }
+//
+// /* Once the page has loaded, resize all the cards */
+// window.onload = addFadeOutCards();
+//
+

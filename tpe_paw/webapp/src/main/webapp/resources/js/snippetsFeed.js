@@ -4,12 +4,13 @@ function resizeCard(card){
     /*
      * CODE/DESCRIPTION CONTAINER --> If the code is too long, will want it to fade out in the card
      */
+    // Code and description html blocks
     let codeBlock = card.querySelector('.card-snippet-content').querySelector('.snippet-code-container').querySelector('.card-snippet-block');
     let descrBlock = card.querySelector('.card-snippet-content').querySelector('.card-snippet-block');
-
-
+    // Height of the card
     let heightToUse = card.querySelector('.card-snippet-content').getBoundingClientRect().height;
-
+    // Accounting for Safari not working properly and breaking all grids
+    // Height is approximated, giving usually an overestimated size, but no text is cut
     if (heightToUse < 100){
         addFadeOutTo(codeBlock, codeBlock.querySelector(".code-element").getBoundingClientRect().height, '.card-snippet-fade-out-code', '#DCDCDC');
         addFadeOutTo(descrBlock, descrBlock.querySelector(".snippet-text").getBoundingClientRect().height, '.card-snippet-fade-out-descr', '#FFFFFF');
@@ -17,26 +18,15 @@ function resizeCard(card){
         addFadeOutTo(codeBlock, codeBlock.getBoundingClientRect().height, '.card-snippet-fade-out-code', '#DCDCDC');
         addFadeOutTo(descrBlock, descrBlock.getBoundingClientRect().height, '.card-snippet-fade-out-descr', '#FFFFFF');
     }
-
-    console.log(heightToUse);
-
+    // Accounting for Safari not working
     if (heightToUse < 100){
         let codeHeight = codeBlock.querySelector(".code-element").getBoundingClientRect().height;
         let descHeight = descrBlock.querySelector(".snippet-text").getBoundingClientRect().height;
         let titleHeight = card.querySelector('.card-snippet-content').querySelector('.snippet-title-container').querySelector(".snippet-title").getBoundingClientRect().height;
-        console.log("items");
-        console.log(codeBlock);
-        console.log(codeHeight);
-        console.log(descrBlock);
-        console.log(descHeight);
-        console.log(card);
-        console.log(titleHeight);
         heightToUse = codeHeight > 200 ? 200 : codeHeight + 25;
         heightToUse = heightToUse + (descHeight > 200 ? 200 : descHeight + 125);
         heightToUse = heightToUse + titleHeight + 100;
     }
-
-    console.log(heightToUse);
 
     /*
      * CARD CONTAINER --> Making the card height match the content
@@ -56,6 +46,7 @@ function resizeCard(card){
 function addFadeOutTo(block, clientH, cssClass, color) {
     let maxBlockHeight = 200;
     let clientRecH = block.getBoundingClientRect().height;
+    // Accounts for Safari not working by checking the size of the obtained rectangle
     if (clientRecH < 40){
         if (clientH >= (maxBlockHeight - 2)) {
             block.querySelector(cssClass).classList.remove('hidden');

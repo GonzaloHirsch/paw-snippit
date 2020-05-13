@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
 import static ar.edu.itba.paw.webapp.constants.Constants.TAG_PAGE_SIZE;
 
 @Controller
@@ -91,11 +92,11 @@ public class TagsController {
         }
 
         int totalSnippetCount = this.snippetService.getAllSnippetsByTagCount(tag.get().getId());
-        mav.addObject("pages", totalSnippetCount/TAG_PAGE_SIZE + (totalSnippetCount % TAG_PAGE_SIZE == 0 ? 0 : 1));
+        mav.addObject("pages", totalSnippetCount/SNIPPET_PAGE_SIZE + (totalSnippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("tag", tag.get());
         mav.addObject("searchContext","tags/"+tagId+"/");
-        mav.addObject("snippetList", snippetService.findSnippetsForTag(tagId));
+        mav.addObject("snippetList", snippetService.findSnippetsForTag(tagId, page, SNIPPET_PAGE_SIZE));
         return mav;
     }
 

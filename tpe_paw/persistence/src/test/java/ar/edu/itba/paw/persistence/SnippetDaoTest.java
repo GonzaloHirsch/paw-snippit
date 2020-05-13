@@ -398,7 +398,7 @@ public class SnippetDaoTest {
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(), TITLE, DESCR, CODE, defaultLanguageId,0);
         insertSnippetTagIntoDb(jdbcInsertSnippetTags,snippetId,defaultTag.getId());
 
-        Optional<Snippet> snippet = snippetDao.findSnippetsForTag(defaultTag.getId()).stream().findFirst();
+        Optional<Snippet> snippet = snippetDao.findSnippetsForTag(defaultTag.getId(), 1, 10).stream().findFirst();
 
         assertTrue(snippet.isPresent());
         assertEquals(snippetId,snippet.get().getId());
@@ -409,7 +409,7 @@ public class SnippetDaoTest {
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(), TITLE, DESCR, CODE, defaultLanguageId,0);
         insertSnippetTagIntoDb(jdbcInsertSnippetTags,snippetId,defaultTag.getId());
 
-        Optional<Snippet> snippet = snippetDao.findSnippetsForTag(defaultTag.getId()+10).stream().findFirst();
+        Optional<Snippet> snippet = snippetDao.findSnippetsForTag(defaultTag.getId()+10, 1, 10).stream().findFirst();
 
         assertFalse(snippet.isPresent());
     }

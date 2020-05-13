@@ -27,8 +27,8 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
-    public Collection<Snippet> findSnippetsForTag(long tagId) {
-        return this.snippetDao.findSnippetsForTag(tagId);
+    public Collection<Snippet> findSnippetsForTag(long tagId, int page, int pageSize) {
+        return this.snippetDao.findSnippetsForTag(tagId, page, pageSize);
     }
 
     @Override

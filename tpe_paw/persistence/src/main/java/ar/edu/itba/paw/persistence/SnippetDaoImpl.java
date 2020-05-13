@@ -180,7 +180,7 @@ public class SnippetDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> findSnippetsForTag(long tagId, int page, int pageSize) {
-        return this.jdbcTemplate.query("SELECT DISTINCT * FROM complete_snippets AS cs JOIN snippet_tags AS st ON cs.id = st.snippet_id WHERE st.tag_id = ? ORDER BY cs.id LIMIT ? OFFSET ?", ROW_MAPPER, tagId, pageSize, pageSize * (page - 1));
+        return this.jdbcTemplate.query("SELECT DISTINCT cs.id, cs.user_id, cs.username, cs.reputation, cs.lang, cs.region, cs.verified, cs.code, cs.title, cs.description, cs.language, cs.date_created, cs.icon, cs.flagged, cs.votes  FROM complete_snippets AS cs JOIN snippet_tags AS st ON cs.id = st.snippet_id WHERE st.tag_id = ? ORDER BY cs.id LIMIT ? OFFSET ?", ROW_MAPPER, tagId, pageSize, pageSize * (page - 1));
     }
 
     @Override

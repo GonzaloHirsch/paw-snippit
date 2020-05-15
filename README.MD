@@ -18,6 +18,9 @@ Pass: password
 ### Integrantes del Grupo
 
 Florencia Petrikovich - 58637
+
 Gonzalo Hirsch - 59089
+
 Ignacio Ribas - 59442
+
 Augusto Henestrosa - 59189

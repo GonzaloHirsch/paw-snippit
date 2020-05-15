@@ -7,8 +7,10 @@
 <html>
 <head>
     <title><spring:message code="snippetCreateForm.header"/></title>
-    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon.ico'/>"/>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon/favicon.ico'/>"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippetCreate.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippetDetail.css'/>" rel="stylesheet"/>
@@ -41,32 +43,33 @@
             <form:form class="snippetC-form" modelAttribute="snippetCreateForm" action="${postPath}" method="post">
 
                 <div class="flex-column">
-                    <div class="flex-row">
-                        <div class="snippetC-title-container">
-                            <form:label class="fw-400 snippetC-subtitles" path="title"><spring:message code="snippetCreateForm.title"/> </form:label>
-                            <form:input class="snippetC-title-input snippetC-border fw-400" type="text" path="title" placeholder='${title_hint}'/>
+                    <div class="flex-column snippetC-top-container">
+                        <div class="flex-row">
+                            <div class="snippetC-title-container">
+                                <form:label class="fw-400 snippetC-subtitles" path="title"><spring:message code="snippetCreateForm.title"/> </form:label>
+                                <form:input class="snippetC-title-input snippetC-border fw-400" type="text" path="title" placeholder='${title_hint}'/>
+                            </div>
+                            <div class="snippetC-language-container">
+                                <form:label class="fw-400 snippetC-subtitles" path="title"><spring:message code="snippetCreateForm.language"/> </form:label>
+                                <form:select class="selectpicker snippetC-language"  data-live-search="true" path="language">
+                                    <form:option value="-1"><spring:message code="snippetCreateForm.languageHint"/></form:option>
+                                    <c:forEach items="${languageList}" var="lan" varStatus="status">
+                                        <form:option value="${lan.id}">${lan.name.toUpperCase()}</form:option>
+                                    </c:forEach>
+                                </form:select>
+                            </div>
                         </div>
-                        <div class="snippetC-language-container">
-                            <form:label class="fw-400 snippetC-subtitles" path="title"><spring:message code="snippetCreateForm.language"/> </form:label>
-                            <form:select class="selectpicker snippetC-language"  data-live-search="true" path="language">
-                                <form:option value="-1"><spring:message code="snippetCreateForm.languageHint"/></form:option>
-                                <c:forEach items="${languageList}" var="lan" varStatus="status">
-                                    <form:option value="${lan.id}">${lan.name.toUpperCase()}</form:option>
-                                </c:forEach>
-                            </form:select>
+                        <div class="flex-column">
+                            <form:errors class="form-error" path="title"  element="p"/>
+                            <form:errors class="form-error" path="language" element="p"/>
                         </div>
                     </div>
-                    <div>
-                        <form:errors class="form-error" path="title"  element="p"/>
-                        <form:errors class="form-error" path="language" element="p"/>
-                    </div>
-
                     <hr class="snippetC-divider"/>
 
                     <div class="snippetC-elem-container">
                         <form:label class="fw-400 snippetC-subtitles" path="description"><spring:message code="snippetCreateForm.description"/> </form:label>
                         <form:textarea class="full-width snippetC-description-input snippetC-border" rows="2" type="text" path="description" placeholder='${desc_hint}'/>
-                        <form:errors path="description" element="p"/>
+                        <form:errors class="form-error error-extra-margins" path="description" element="p"/>
                     </div>
 
                     <hr class="snippetC-divider"/>
@@ -74,7 +77,7 @@
                     <div class="snippetC-elem-container">
                         <form:label class="fw-400 snippetC-subtitles" path="code"><spring:message code="snippetCreateForm.code"/> </form:label>
                         <form:textarea class="full-width snippetC-code-input snippetC-border"  rows="5" type="text" path="code" placeholder='${code_hint}'/>
-                        <form:errors class="form-error" path="code" element="p"/>
+                        <form:errors class="form-error error-extra-margins" path="code" element="p"/>
                     </div>
 
                     <hr class="snippetC-divider"/>
@@ -84,9 +87,9 @@
                         <div class="flex-column snippetC-tags-container">
                             <form:label class="fw-400 snippetC-subtitles" path="tags"><spring:message code="snippetCreateForm.tags"/></form:label>
                             <form:select class="selectpicker snippetC-tags" multiple="true" data-live-search="true" path="tags" title='${tag_hint}' name="tagselect" >
-                                <form:options items="${tagList}" itemValue="id" itemLabel="name"/>
+                                <form:options items="${tagList}" itemValue="name" itemLabel="name"/>
                             </form:select>
-                            <form:errors class="form-error" path="tags" element="p"/>
+                            <form:errors class="form-error error-extra-margins" path="tags" element="p"/>
                         </div>
                         <div class="snippetC-submit-container">
                             <input class="snippetC-button snippetC-border" type="submit" value='<spring:message code="snippetCreateForm.save"/>'/>
@@ -106,7 +109,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-
-
 </body>
 </html>

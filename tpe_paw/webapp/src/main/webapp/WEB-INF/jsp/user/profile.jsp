@@ -5,13 +5,17 @@
 
 <html>
 <head>
-    <title><spring:message code="menu.profile"/></title>
-    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon.ico'/>"/>
+    <title><spring:message code="menu.profile.title"/></title>
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon/favicon.ico'/>"/>
     <link href="<c:url value='/resources/css/snippetDetail.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/profile.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/icons.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/snippetCreate.css'/>" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="<c:url value='/resources/js/form.js'/>"></script>
     <script src="<c:url value='/resources/js/profile.js'/>"></script>
@@ -21,6 +25,24 @@
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
         <div class="flex-column detail-user">
+            <div class="flex-center flex-grow">
+                <c:if test="${!currentUser.verified && currentUser.id == user.id}">
+                    <div class="flex-row flex-center verify-email-container border-radius">
+                        <i class="verify-email-icon material-icons">announcement</i>
+                        <div class="flex-column verify-message-container">
+                            <c:url var="verifyEmailUrl" value="/verify-email">
+                                <c:param name="id" value="${currentUser.id}"/>
+                            </c:url>
+                            <h3><spring:message code="verify.email.title"/></h3>
+                            <p><spring:message code="verify.email.description"/></p>
+                            <p>
+                                <spring:message code="verify.email.instruction"/>
+                                <a href="${verifyEmailUrl}"><spring:message code="verify.email.redirection"/></a>
+                            </p>
+                        </div>
+                    </div>
+                </c:if>
+            </div>
             <div class="flex-row">
                 <div class="flex-column">
                     <c:if test="${currentUser.id == user.id}">
@@ -77,24 +99,24 @@
                         <div class="profile-username">
                             ${user.username}
                         </div>
-                        <%--                        <c:if test="${currentUser.id == user.id}">--%>
-                        <%--                            <c:if test="${!editing}">--%>
-                        <%--                                <a class="flex-center purple-text edit-button"--%>
-                        <%--                                href="<c:url value="/user/${user.id}?editing=true"/>">--%>
-                        <%--                                <spring:message code="profile.edit"/>--%>
-                        <%--                                </a>--%>
-                        <%--                            </c:if>--%>
-                        <%--                            <c:if test="${editing}">--%>
-                        <%--                                <a class="flex-center purple-text edit-button"--%>
-                        <%--                                   href="<c:url value="/user/${user.id}/edit"/>">--%>
-                        <%--                                    <spring:message code="profile.edit.save"/>--%>
-                        <%--                                </a>--%>
-                        <%--                                <a class="flex-center purple-text edit-button"--%>
-                        <%--                                   href="<c:url value="/user/${user.id}?editing=false"/>">--%>
-                        <%--                                    <spring:message code="profile.edit.discard"/>--%>
-                        <%--                                </a>--%>
-                        <%--                            </c:if>--%>
-                        <%--                        </c:if>--%>
+                        <c:if test="${currentUser.id == user.id}">
+                            <c:if test="${!editing}">
+                                <a class="flex-center purple-text edit-button"
+                                href="<c:url value="/user/${user.id}?editing=true"/>">
+                                <spring:message code="profile.edit"/>
+                                </a>
+                            </c:if>
+                            <c:if test="${editing}">
+                                <div onclick="submitDescriptionForm(this)" class="flex-center purple-text edit-button clickable-entity">
+<%--                                   href="<c:url value="/user/${user.id}/edit"/>">--%>
+                                    <spring:message code="profile.edit.save"/>
+                                </div>
+                                <a class="flex-center purple-text edit-button"
+                                   href="<c:url value="/user/${user.id}?editing=false"/>">
+                                    <spring:message code="profile.edit.discard"/>
+                                </a>
+                            </c:if>
+                        </c:if>
                     </div>
                     <div class="fw-100">
                         <spring:message code="profile.joined"/>
@@ -102,7 +124,7 @@
                     </div>
                     <div class="flex-row profile-info-item">
                         <div class="flex-center stat-bundle">
-                            <div class="fw-700 stat">${snippets.size()}</div>
+                            <div class="fw-700 stat">${snippetsCount}</div>
                             <div class="fw-100 stat"><spring:message code="profile.stats.snippets"/></div>
                         </div>
                         <div class="flex-center stat-bundle">
@@ -114,18 +136,20 @@
                             <div class="fw-100 stat"><spring:message code="profile.stats.following"/></div>
                         </div>
                     </div>
-                    <%--                    <c:if test="${currentUser.id == user.id && editing}">--%>
-                    <%--                        <div class="profile-description profile-info-item">--%>
-                    <%--                            <form:label class="fw-400 snippetC-subtitles" path="description"><spring:message code="snippetCreateForm.description"/> </form:label>--%>
-                    <%--                            <form:textarea class="full-width snippetC-description-input snippetC-border" rows="2" type="text" path="description" placeholder='${desc_hint}'/>--%>
-                    <%--                            <form:errors path="description" element="p"/>--%>
-                    <%--                        </div>--%>
-                    <%--                    </c:if>--%>
-                    <%--                    <c:if test="${currentUser.id != user.id}">--%>
-                    <div class="profile-description profile-info-item">
-                        ${user.description}
-                    </div>
-                    <%--                    </c:if>--%>
+                    <form:form id="description-form" method="POST" cssClass="profile-info-item" action="${user.id}/edit" modelAttribute="descriptionForm">
+                        <c:if test="${!editing}">
+                            <div class="profile-description profile-info-item">
+                                    ${user.description}
+                            </div>
+                        </c:if>
+                        <c:if test="${currentUser.id == user.id && editing}">
+                            <form:label class="fw-400 snippetC-subtitles" path="description"><spring:message code="snippetCreateForm.description"/> </form:label>
+                            <div class="profile-description flex-row flex-grow">
+                                <form:textarea class="flex-grow snippetC-description-input snippetC-border" rows="2" type="text" path="description" placeholder='${desc_hint}'/>
+                            </div>
+                        </c:if>
+                        <form:errors path="description" cssClass="form-error" element="p"/>
+                    </form:form>
                 </div>
             </div>
         </div>

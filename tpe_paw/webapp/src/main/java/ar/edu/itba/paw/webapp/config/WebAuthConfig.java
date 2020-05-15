@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.webapp.auth.RefererRedirectionAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -44,22 +45,27 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .invalidSessionUrl("/")
             .and().authorizeRequests()
                 .antMatchers("/goodbye", "/login", "/login_error", "/signup").anonymous()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/favorites/", "/following/").hasRole("USER")
-                .antMatchers("/snippet/create", "/snippet/**/vote", "/snippet/**/fav"). hasRole("USER")
-                .antMatchers("/user/**/save-image"). hasRole("USER")
-                .antMatchers("/tags/**/follow", "/tags/**/unfollow").hasRole("USER")
+                .antMatchers("/recover-password", "/reset-password").anonymous()
+                .antMatchers("/verify-email", "/resend-email-verification").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/admin/add").hasRole("ADMIN")
+                .antMatchers("/flagged/**", "/snippet/**/flag").hasRole("ADMIN")
+                .antMatchers("/favorites/**", "/following/**", "/upvoted/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/snippet/**/vote", "/snippet/**/fav").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/user/**/save-image", "/snippet/create", "/snippet/**/delete"). hasRole("USER")
+                .antMatchers("/tags/**/follow").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/tags/**/delete, /languages/**/delete").hasRole("ADMIN")
                 .antMatchers("/**").permitAll()
-                .and().formLogin()
+            .and().formLogin()
                 .loginPage("/login")
                 .failureUrl("/login_error")
                 .usernameParameter("username")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/", false)
+                .successHandler(new RefererRedirectionAuthenticationSuccessHandler())
+                //.defaultSuccessUrl("/", false)
             .and().rememberMe()
                 .rememberMeParameter("rememberme")
                 .userDetailsService(userDetails)
-                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(365))
+                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
                 .key("${key}")
             .and().logout()
                 .logoutUrl("/logout")
@@ -74,7 +80,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(final WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/resources/css/**", "/resources/js/**", "/resources/img/**", "/favicon.ico", "/403");
+                .antMatchers("/src/main/resources/css/**", "/src/main/resources/js/**", "/src/main/resources/img/**", "/favicon.ico", "/403");
     }
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)

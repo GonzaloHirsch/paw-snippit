@@ -43,7 +43,6 @@ public class FavoriteDaoImpl implements FavoriteDao {
     }
 
     @Override
-    @Transactional
     public void addToFavorites(long userId, long snippetId) {
         // Creating the map for the object
         if (!getFavorite(userId, snippetId).isPresent()) {
@@ -51,12 +50,12 @@ public class FavoriteDaoImpl implements FavoriteDao {
             args.put("user_id", userId);
             args.put("snippet_id", snippetId);
             // Executing the insert
-            //TODO: RETURN VALUE AND USE IT TO SHOW ERROR
             this.jdbcInsert.execute(args);
         }
     }
 
     @Override
+    @Transactional
     public void removeFromFavorites(long userId, long snippetId) {
         Object[] args = new Object[] {userId, snippetId};
         this.jdbcTemplate.update("DELETE FROM favorites WHERE user_id = ? AND snippet_id = ?", args);

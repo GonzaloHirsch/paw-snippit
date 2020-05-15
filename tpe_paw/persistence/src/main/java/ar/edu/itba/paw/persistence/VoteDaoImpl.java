@@ -6,6 +6,8 @@ import ar.edu.itba.paw.interfaces.dao.VoteDao;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Vote;
+import org.postgresql.util.PSQLException;
+import org.postgresql.util.ServerErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,14 +36,13 @@ public class VoteDaoImpl implements VoteDao {
     private SnippetDao snippetDao;
 
     private final RowMapper<Vote> ROW_MAPPER = new RowMapper<Vote>() {
-
-
+        
         @Override public Vote mapRow(ResultSet rs, int rowNum) throws SQLException {
             Optional<User> user = userDao.findUserById(rs.getLong("user_id"));
             Optional<Snippet> snippet = snippetDao.findSnippetById(rs.getLong("snippet_id"));
-            if (!user.isPresent() || !snippet.isPresent())
-                //TODO extract string resource
-                throw new SQLException("No User or Snippet Found");
+            if (!user.isPresent() || !snippet.isPresent()) {
+                throw new RuntimeException("Missing user or snippet when voting");
+            }
             return new Vote(
                     user.get(),
                     snippet.get(),
@@ -68,7 +69,6 @@ public class VoteDaoImpl implements VoteDao {
     }
 
     @Override
-    @Transactional
     public void addVote(long userId, long snippetId, int voteType) {
         if (getVote(userId, snippetId).isPresent())
             jdbcTemplate.update("UPDATE votes_for SET TYPE = ? WHERE user_id = ? AND snippet_id = ?", voteType, userId, snippetId);

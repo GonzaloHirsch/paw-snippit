@@ -4,10 +4,10 @@
 
 .snippet-code-container {
     background: #DCDCDC;
-    margin: 0px 5px 0px 5px;
-    max-width: 700px;
+    margin: 0px 0px 5px 0px;
+    width: 100%;
     outline: dimgray;
-    padding: 5px 20px 5px 20px;
+    padding: 15px 20px;
     position: relative;
 }
 
@@ -19,9 +19,13 @@
     padding: 10px;
 }
 
+.snippet-title-container {
+    margin: 8px 0px 0px 0px;
+}
+
 .snippet-title {
     font-size: 33px;
-    margin: 8px 5px 0px;
+    margin: 0px 5px;
 }
 
 .snippet-text {
@@ -30,7 +34,6 @@
 
 .snippet-upload-spacing {
     justify-content: space-between;
-    margin-right: 10px;
 }
 
 .snippet-upload-info {
@@ -47,17 +50,20 @@
 .snippet-icon {
     font-size: 60px !important;
     color: lightgray;
+    cursor: pointer;
 }
 
 pre {
     white-space: pre-wrap;
     white-space: -moz-pre-wrap;
     white-space: -o-pre-wrap;
-    word-wrap: break-word;}
+    word-wrap: break-word;
+    margin: 0px !important;
+}
 
 code {
     font-family: "Roboto Mono", 'New Courier', monospace;
-    font-size: 13px;
+    font-size: 13px !important;
 }
 
 img {

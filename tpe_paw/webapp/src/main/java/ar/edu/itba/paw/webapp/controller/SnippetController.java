@@ -6,46 +6,49 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Vote;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.form.FavoriteForm;
-import ar.edu.itba.paw.webapp.form.SearchForm;
-import ar.edu.itba.paw.webapp.form.VoteForm;
+import ar.edu.itba.paw.webapp.exception.ElementDeletionException;
+import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
+import ar.edu.itba.paw.webapp.exception.SnippetNotFoundException;
+import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Controller
 public class SnippetController {
 
-    @Autowired
-    private SnippetService snippetService;
-    @Autowired
-    private VoteService voteService;
-    @Autowired
-    private FavoriteService favService;
-    @Autowired
-    private LoginAuthentication loginAuthentication;
-    @Autowired
-    private TagService tagService;
+    @Autowired private RoleService roleService;
+    @Autowired private SnippetService snippetService;
+    @Autowired private VoteService voteService;
+    @Autowired private FavoriteService favService;
+    @Autowired private LoginAuthentication loginAuthentication;
+    @Autowired private TagService tagService;
+    @Autowired private UserService userService;
+    @Autowired private MessageSource messageSource;
+    @Autowired private EmailService emailService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetController.class);
-
-    private static boolean wasLoggedIn = false;
-
 
     @RequestMapping("/snippet/{id}")
     public ModelAndView snippetDetail(
             @ModelAttribute("snippetId") @PathVariable("id") long id,
             @ModelAttribute("searchForm") final SearchForm searchForm,
+            @ModelAttribute("adminFlagForm") final FlagSnippetForm adminFlagForm,
+            @ModelAttribute("deleteForm") final DeleteForm deleteForm,
             @ModelAttribute("favForm") final FavoriteForm favForm,
-           @ModelAttribute("voteForm") final VoteForm voteForm
+            @ModelAttribute("voteForm") final VoteForm voteForm
     ) {
         final ModelAndView mav = new ModelAndView("snippet/snippetDetail");
         // Snippet
@@ -55,14 +58,12 @@ public class SnippetController {
         });
 
         if (!retrievedSnippet.isPresent()) {
-            LOGGER.warn("Pressed on snippet card with id {}, but it is not present", id);
-            // TODO --> throw new ... REDIRECT TO 500 ERROR CODE!!
+            logAndThrow(id);
         }
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
-            wasLoggedIn = true;
             mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
 
             // Vote
@@ -77,8 +78,13 @@ public class SnippetController {
             // Fav
             Optional<Favorite> fav = this.favService.getFavorite(currentUser.getId(), retrievedSnippet.get().getId());
             favForm.setFavorite(fav.isPresent());
+
+            if (roleService.isAdmin(currentUser.getId())) {
+                adminFlagForm.setFlagged(retrievedSnippet.get().isFlagged());
+                mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
+            }
         } else {
-            wasLoggedIn = false;
+            mav.addObject("userRoles", new ArrayList<>());
         }
 
         // Vote Count
@@ -93,6 +99,28 @@ public class SnippetController {
         return mav;
     }
 
+    @RequestMapping(value="/snippet/{id}/delete", method=RequestMethod.POST)
+    public ModelAndView deleteSnippet(
+            @ModelAttribute("snippetId") @PathVariable("id") long id,
+            @ModelAttribute("deleteForm") final DeleteForm deleteForm
+    ) {
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        Optional<Snippet> snippet = this.snippetService.findSnippetById(id);
+
+        if (!snippet.isPresent()) {
+            logAndThrow(id);
+        }
+        if (currentUser == null || currentUser.getUsername().compareTo(snippet.get().getOwner().getUsername()) != 0) {
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.delete", null, LocaleContextHolder.getLocale()));
+        } else {
+            if (!this.snippetService.deleteSnippet(snippet.get(), currentUser.getId())) {
+                /* Operation was unsuccessful */
+                throw new ElementDeletionException(messageSource.getMessage("error.409.deletion.snippet", null, LocaleContextHolder.getLocale()));
+            }
+        }
+        return new ModelAndView("redirect:/user/" + currentUser.getId());
+    }
+
     @RequestMapping(value="/snippet/{id}/vote", method=RequestMethod.POST)
     public ModelAndView voteFor(
             @ModelAttribute("snippetId") @PathVariable("id") long id,
@@ -101,11 +129,9 @@ public class SnippetController {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
-            LOGGER.warn("Inside the vote form of snippet {} without a logged in user", id);
-        } else if (wasLoggedIn) {
-            this.voteService.performVote(currentUser.getId(), id, voteForm.getType(), voteForm.getOldType());
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.vote", null, LocaleContextHolder.getLocale()));
         } else {
-            this.voteService.performVote(currentUser.getId(), id, voteForm.getType(), 0);
+            this.voteService.performVote(currentUser.getId(), id, voteForm.getType(), voteForm.getOldType());
         }
         return mav;
     }
@@ -118,10 +144,53 @@ public class SnippetController {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
-            LOGGER.warn("Inside the favorite form of snippet {} without a logged in user", id);
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.fav", null, LocaleContextHolder.getLocale()));
         } else {
             this.favService.updateFavorites(currentUser.getId(), id, favForm.getFavorite());
+            LOGGER.debug("User {} updated favorite on snippet {}", currentUser.getUsername(), id);
         }
         return mav;
+    }
+
+    @RequestMapping(value="/snippet/{id}/flag", method=RequestMethod.POST)
+    public ModelAndView flagSnippet(
+            @ModelAttribute("snippetId") @PathVariable("id") long id,
+            @ModelAttribute("adminFlagForm") final FlagSnippetForm adminFlagForm
+    ) {
+        final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null || !roleService.isAdmin(currentUser.getId())) {
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.flag", null, LocaleContextHolder.getLocale()));
+        } else {
+            // Getting the snippet
+            Optional<Snippet> snippetOpt = this.snippetService.findSnippetById(id);
+            if (!snippetOpt.isPresent()){
+                this.logAndThrow(id);
+            }
+            // Getting the complete owner
+            Optional<User> completeOwnerOpt = this.userService.findUserById(snippetOpt.get().getOwner().getId());
+            if (!completeOwnerOpt.isPresent()){
+                throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.delete", null, LocaleContextHolder.getLocale()));
+            }
+
+            // Getting the url of the server
+            final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+
+            try {
+                // Updating the flagged variable of snippet
+                this.snippetService.updateFlagged(snippetOpt.get(), completeOwnerOpt.get(), adminFlagForm.isFlagged(), baseUrl);
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage() + "Failed to send flagged email to user {} about their snippet {}", snippetOpt.get().getOwner().getUsername(), snippetOpt.get().getId());
+            }
+
+            LOGGER.debug("Marked snippet {} as flagged by admin", id);
+
+        }
+        return mav;
+    }
+
+    private void logAndThrow(final long snippetId) {
+        LOGGER.warn("No snippet found for id {}", snippetId);
+        throw new SnippetNotFoundException(messageSource.getMessage("error.404.snippet", new Object[]{snippetId}, LocaleContextHolder.getLocale()));
     }
 }

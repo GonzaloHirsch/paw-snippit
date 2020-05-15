@@ -1,23 +1,29 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.validations.FieldExists;
+
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 
 public class SnippetCreateForm {
     @Size(min=5, max=50)
+    @Pattern(regexp = "^[^\\s]+(\\s+[^\\s]+)*$", message = "{form.error.spaces}")
     private String title;
 
     @Size(max=500)
     private String description;
 
     @Size(min=5, max=30000)
+    @Pattern(regexp = "^[^\\s]+(\\s+[^\\s]+)*$", message = "{form.error.spaces}")
     private String code;
 
     @Min(value=1)
+    @FieldExists(fieldName = "Language")
     private Long language;
 
-    private Collection<Long> tags;
+    private Collection<String> tags;
 
 
     public void setCode(String code) {
@@ -36,7 +42,7 @@ public class SnippetCreateForm {
         this.language = language;
     }
 
-    public void setTags(Collection<Long> tags) {
+    public void setTags(Collection<String> tags) {
         this.tags = tags;
     }
 
@@ -58,7 +64,7 @@ public class SnippetCreateForm {
         return language;
     }
 
-    public Collection<Long> getTags() {
+    public Collection<String> getTags() {
         return tags;
     }
 }

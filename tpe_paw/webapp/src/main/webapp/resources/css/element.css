@@ -1,0 +1,50 @@
+/*
+ * CSS for the snippet tags and languages --> element.jsp
+ */
+
+.tag-text {
+    font-size: 13px;
+    color: black;
+}
+
+.tag-container-detail {
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    color: inherit;
+    text-decoration: none;
+    transition: 0.3s;
+    padding: 8px;
+}
+
+.tag-container-detail:hover{
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.element-container-detail  .tag-title{
+    font-size: 12px;
+}
+
+.element-container-main{
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    color: inherit;
+    text-decoration: none;
+    transition: 0.3s;
+    padding: 15px;
+}
+
+.element-container-main:hover{
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.tag-container-main .tag-title{
+    font-size: 20px;
+}
+
+.no-elements {
+    font-size: 30px;
+    padding: 50px;
+}
+

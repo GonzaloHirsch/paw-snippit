@@ -50,7 +50,7 @@
 }
 
 .detail-snippet-language-margin {
-    margin: 0px 5px 0px 30px;
+    margin: 0px 0px 0px 30px;
 }
 
 .hidden-code {
@@ -67,7 +67,6 @@
     top: 0;
     right: 0;
     border: solid #5e35b1 2px;
-    border-radius: 5px;
     font-size: 30px !important;
     cursor: pointer;
     transition: background-color 0.5s;

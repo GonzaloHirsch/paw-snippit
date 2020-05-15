@@ -12,7 +12,7 @@
 }
 
 body {
-    background-color: #eeedf2;
+    background-color: #eeedf2 !important;
     margin: 0;
     line-height: inherit !important;
 }
@@ -36,18 +36,23 @@ body {
     color: white !important;
 }
 
+.black-text {
+    color: black !important;
+}
+
 .purple-text {
     color: #5E35B1 !important;
 }
 
 .title-container {
     font-size: 50px;
-    margin: 20px 0px;
+    margin: 20px 0px 10px 0px;
 }
 
 .no-text-decoration {
     color: inherit;
     text-decoration: none;
+    text-decoration-color: black;
 }
 
 /* Flex Properties CSS */
@@ -70,6 +75,16 @@ body {
 
 .flex-space-between {
     justify-content: space-between;
+}
+
+.flex-left {
+    display: flex;
+    align-items: flex-start;
+}
+
+.flex-right {
+    display: flex;
+    align-items: end;
 }
 
 .flex-wrap {
@@ -96,11 +111,21 @@ body {
 }
 
 .form-container {
-    margin-block-end: 0em;
+    margin-block-end: 0em !important;
 }
 
 .border-radius {
     border-radius: 8px;
+}
+
+.small-border-radius {
+    border-radius: 4px;
+}
+
+/* Common Event Styles */
+
+.clickable-entity {
+    cursor: pointer;
 }
 
 /* Extra */
@@ -111,7 +136,6 @@ body {
     height: 0px;
     width: 0px;
 }
-
 
 .full-width {
     width: 100%;
@@ -126,4 +150,14 @@ body {
 .divider {
     margin-left: 100px;
     margin-right: 100px;
+}
+
+.page-title {
+    font-size: 50px;
+}
+
+.title-section {
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 15px;
 }

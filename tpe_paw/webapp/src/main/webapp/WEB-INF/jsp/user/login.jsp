@@ -5,11 +5,13 @@
 <html>
 <head>
     <title><spring:message code="login.title"/></title>
-    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon.ico'/>"/>
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon/favicon.ico'/>"/>
     <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
-    <link href="<c:url value='/resources/css/registration.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/form.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/checkbox.css'/>" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <body>
 
@@ -20,40 +22,40 @@
         <!-- LOGIN START -->
         <c:url value="/login" var="loginUrl" />
         <c:set var="error" value="${requestScope.error}" scope="request"/>
-        <div class="flex-column flex-center register-block register-border">
+        <div class="flex-column flex-center form-block form-border">
 
             <!-- WELCOME message -->
-            <div class="flex-row flex-center register-text-container white-text register-welcome-text fw-300">
-                <i class="material-icons app-icon register-app-icon-margin">code</i>
+            <div class="flex-row flex-center form-text-container white-text form-welcome-text fw-300">
+                <i class="material-icons app-icon form-app-icon-margin">code</i>
                 <spring:message code="login.welcome"/>
-                <span class="fw-500 register-title-margin"> <spring:message code="app.name"/></span>
+                <span class="fw-500 form-title-margin"> <spring:message code="app.name"/></span>
             </div>
 
             <!-- LOGIN form -->
-            <form class="flex-center register-form register-border register-shadow" action="${loginUrl}" method="post" enctype="application/x-www-form-urlencoded">
+            <form class="flex-center form form-border form-shadow" action="${loginUrl}" method="post" enctype="application/x-www-form-urlencoded">
 
-                <div class="flex-column register-form-data">
+                <div class="flex-column form-data">
                     <c:if test="${error}">
-                        <div class="flex-center register-text-error form-error">
+                        <div class="flex-center form-text-error form-error">
                             <spring:message code="loginForm.invalid"/>
                         </div>
                     </c:if>
 
-                    <div class="register-field-container">
+                    <div class="form-field-container">
                         <label>
-                            <i class="material-icons register-icons">person</i>
-                            <input class="register-border register-field-size register-field-padding" name="username" placeholder="<spring:message code='registerForm.username'/>">
+                            <i class="material-icons form-icons">person</i>
+                            <input class="form-border form-field-size form-field-layout" name="username" placeholder="<spring:message code='registerForm.username'/>">
                         </label>
                     </div>
 
-                    <div class="register-field-container">
+                    <div class="form-field-container">
                         <label>
-                            <i class="material-icons register-icons">lock</i>
-                            <input class="register-border register-field-size register-field-padding" name="password" type="password" placeholder="<spring:message code='registerForm.password'/>">
+                            <i class="material-icons form-icons">lock</i>
+                            <input class="form-border form-field-size form-field-layout" name="password" type="password" placeholder="<spring:message code='registerForm.password'/>">
                         </label>
                     </div>
 
-                    <div class="register-field-container">
+                    <div class="form-field-container">
                         <label class="flex-row checkbox-container ">
                             <input name="rememberme" type="checkbox"/>
                             <span class="checkbox-checkmark"></span>
@@ -61,17 +63,24 @@
                         </label>
                     </div>
 
-                    <div class="register-field-container">
-                        <input class="register-border register-field-size register-button fw-500" type="submit" value="<spring:message code="loginForm.submit"/>"/>
+                    <div class="form-field-container">
+                        <input class="form-border form-field-size form-button form-button-basics fw-500" type="submit" value="<spring:message code="loginForm.submit"/>"/>
                     </div>
                 </div>
             </form>
 
             <!-- REDIRECT to sign up text -->
-            <div class="flex-center register-text-container white-text">
+            <div class="flex-center form-text-container white-text">
                 <spring:message code="login.noAccount"/>
-                <a class="white-text register-text-space" href="<c:url value='/signup'/>">
+                <a class="white-text form-text-space" href="<c:url value='/signup'/>">
                     <spring:message code="login.signupRedirect"/>
+                </a>
+            </div>
+            <!-- REDIRECT to recover password -->
+            <div class="flex-center form-text-container white-text">
+                <spring:message code="login.forgotPassword"/>
+                <a class="white-text form-text-space" href="<c:url value='/recover-password'/>">
+                    <spring:message code="login.recoverPassword"/>
                 </a>
             </div>
         </div>

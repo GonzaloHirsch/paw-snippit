@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -18,8 +19,8 @@ import java.util.Map;
 @Repository
 public class FollowingDaoImpl implements FollowingDao {
 
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsert;
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     private final static RowMapper<Tag> ROW_MAPPER = new RowMapper<Tag>(){
 
@@ -51,6 +52,13 @@ public class FollowingDaoImpl implements FollowingDao {
 
     @Override
     public void unfollowTag(long userId, long tagId) {
-        jdbcTemplate.update("DELETE FROM follows WHERE user_id = ? AND tag_id = ?", new Object[]{userId, tagId});
+        jdbcTemplate.update("DELETE FROM follows WHERE user_id = ? AND tag_id = ?", userId, tagId);
+    }
+
+    @Override
+    public boolean userFollowsTag(long userId, long tagId) {
+        return jdbcTemplate.query("SELECT * FROM tags AS t1 WHERE EXISTS" +
+                "(SELECT * FROM follows AS f WHERE f.user_id = ? AND f.tag_id = ?)", ROW_MAPPER, userId, tagId)
+                .stream().findFirst().isPresent();
     }
 }

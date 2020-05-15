@@ -6,10 +6,12 @@
 <html>
 <head>
     <title><spring:message code="register.title"/></title>
-    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon.ico'/>"/>
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon/favicon.ico'/>"/>
     <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
-    <link href="<c:url value='/resources/css/registration.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/form.css'/>" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
@@ -25,52 +27,52 @@
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content flex-center">
 
-        <div class="flex-column flex-center register-block register-border">
-            <div class="flex-row flex-center register-text-container white-text register-welcome-text fw-300">
-                <i class="material-icons app-icon register-app-icon-margin">code</i>
+        <div class="flex-column flex-center form-block form-border">
+            <div class="flex-row flex-center form-text-container white-text form-welcome-text fw-300">
+                <i class="material-icons app-icon form-app-icon-margin">code</i>
                 <spring:message code="register.welcome"/>
-                <span class="fw-500 register-title-margin"> <spring:message code="app.name"/></span>
+                <span class="fw-500 form-title-margin"> <spring:message code="app.name"/></span>
             </div>
 
-            <form:form class="flex-center register-form register-border register-shadow " modelAttribute="registerForm" method="post" action="${signUpUrl}">
-                <div class="flex-column register-form-data">
-                    <div class="register-field-container">
+            <form:form class="flex-center form form-border form-shadow " modelAttribute="registerForm" method="post" action="${signUpUrl}">
+                <div class="flex-column form-data">
+                    <div class="form-field-container">
                         <form:errors path="username" cssClass="form-error" element="p" />
                         <label>
-                            <i class="material-icons register-icons">person</i>
-                            <form:input class="register-border register-field-size register-field-padding" path="username" placeholder='${username_hint}'/>
+                            <i class="material-icons form-icons">person</i>
+                            <form:input class="form-border form-field-size form-field-layout" path="username" placeholder='${username_hint}'/>
                         </label>
                     </div>
 
-                    <div class="register-field-container">
+                    <div class="form-field-container">
                         <form:errors path="email" cssClass="form-error" element="p "/>
                         <label>
-                            <i class="material-icons register-icons">email</i>
-                            <form:input class="register-border register-field-size register-field-padding" path="email" placeholder='${email_hint}'/>
+                            <i class="material-icons form-icons">email</i>
+                            <form:input class="form-border form-field-size form-field-layout" path="email" placeholder='${email_hint}'/>
                         </label>
                     </div>
 
-                    <div class="register-field-container">
+                    <div class="form-field-container">
                         <form:errors path="password" cssClass="form-error" element="p "/>
-                        <i class="material-icons register-icons">lock</i>
-                        <label><form:input class="register-border register-field-size register-field-padding" path="password" placeholder='${password_hint}' type="password"/></label>
+                        <i class="material-icons form-icons">lock</i>
+                        <label><form:input class="form-border form-field-size form-field-layout" path="password" placeholder='${password_hint}' type="password"/></label>
                     </div>
 
-                    <div class="register-field-container">
+                    <div class="form-field-container">
                         <form:errors path="repeatPassword" cssClass="form-error" element="p "/>
-                        <i class="material-icons register-icons">lock</i>
-                        <label><form:input class="register-border register-field-size register-field-padding" path="repeatPassword" placeholder='${repeat_password_hint}' type="password"/></label>
+                        <i class="material-icons form-icons">lock</i>
+                        <label><form:input class="form-border form-field-size form-field-layout" path="repeatPassword" placeholder='${repeat_password_hint}' type="password"/></label>
                     </div>
 
-                    <div class="register-field-container">
-                        <input class="register-border register-field-size register-button fw-500" type="submit" value="<spring:message code="registerForm.submit"/>"/>
+                    <div class="form-field-container">
+                        <input class="form-border form-field-size form-button form-button-basics fw-500" type="submit" value="<spring:message code="registerForm.submit"/>"/>
                     </div>
                 </div>
             </form:form>
 
-            <div class="flex-center register-text-container white-text">
+            <div class="flex-center form-text-container white-text">
                 <spring:message code="register.hasAccount"/>
-                <a class="white-text register-text-space" href="<c:url value='/login'/>">
+                <a class="white-text form-text-space" href="<c:url value='/login'/>">
                     <spring:message code="register.loginRedirect"/>
                 </a>
             </div>

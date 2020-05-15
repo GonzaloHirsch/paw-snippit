@@ -1,6 +1,8 @@
 
 package ar.edu.itba.paw.webapp.config;
 
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.exception.VelocityException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +18,10 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.ui.velocity.VelocityEngineFactory;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.LocaleResolver;
@@ -31,21 +35,27 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 @EnableAsync
 @EnableWebMvc
-@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services",  "ar.edu.itba.paw.persistence"})
+@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.validations", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence"})
 @Configuration
+@EnableScheduling
 @EnableTransactionManagement
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-    @Value("classpath:sql/schema.sql")
+    @Value("classpath:schema.sql")
     private Resource schemaSql;
-    @Value("classpath:sql/populate.sql")
+    @Value("classpath:populate.sql")
     private Resource populatorSql;
+    @Value("classpath:populateRole.sql")
+    private Resource populatorRoleSql;
 
     @Bean
     public ViewResolver viewResolver() {
@@ -60,19 +70,19 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
         ds.setDriverClass(org.postgresql.Driver.class);
-//        ds.setUrl("jdbc:postgresql://localhost/paw-2020a-2");
-//        ds.setUsername("paw-2020a-2");
-//        ds.setPassword("em8TT4uvx");
-        ds.setUrl("jdbc:postgresql://localhost/paw");
-        ds.setUsername("postgres");
-        ds.setPassword("postgres");
+        ds.setUrl("jdbc:postgresql://localhost/paw-2020a-2");
+        ds.setUsername("paw-2020a-2");
+        ds.setPassword("em8TT4uvx");
+//        ds.setUrl("jdbc:postgresql://localhost/paw");
+//        ds.setUsername("postgres");
+//        ds.setPassword("postgres");
         return ds;
     }
 
     @Bean
-    public DataSourceInitializer dataSourceInitializer(){
+    public DataSourceInitializer dataSourceInitializer(final DataSource ds){
         DataSourceInitializer dsi = new DataSourceInitializer();
-        dsi.setDataSource(dataSource());
+        dsi.setDataSource(ds);
         dsi.setDatabasePopulator(databasePopulator());
         return dsi;
     }
@@ -80,8 +90,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public DatabasePopulator databasePopulator(){
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(schemaSql);
+//        populator.addScript(schemaSql);
 //        populator.addScript(populatorSql);
+//        populator.addScript(populatorRoleSql);
         return populator;
     }
 
@@ -93,11 +104,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public MessageSource messageSource() {
         final ReloadableResourceBundleMessageSource ms = new ReloadableResourceBundleMessageSource();
-
         ms.setCacheSeconds((int) TimeUnit.MINUTES.toSeconds(5));
-        ms.setBasename("classpath:i18n/messages");
+        ms.setBasenames("classpath:i18n/messages", "classpath:i18n/email_messages");
         ms.setDefaultEncoding(StandardCharsets.UTF_8.name());
-
         return ms;
     }
 
@@ -148,5 +157,15 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
 //        multipartResolver.setMaxUploadSize(1 * 1048576);
         return multipartResolver;
+    }
+
+    @Bean
+    public VelocityEngine getVelocityEngine() throws VelocityException, IOException {
+        VelocityEngineFactory velocityEngineFactory = new VelocityEngineFactory();
+        Properties props = new Properties();
+        props.put("resource.loader", "class");
+        props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        velocityEngineFactory.setVelocityProperties(props);
+        return velocityEngineFactory.createVelocityEngine();
     }
 }

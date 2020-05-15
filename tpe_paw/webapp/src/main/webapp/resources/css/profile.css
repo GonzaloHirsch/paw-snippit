@@ -21,6 +21,11 @@
     display: inline-block;
     font-size: 20px;
     word-break: break-word;
+    padding: 0;
+}
+
+.profile-container-margin {
+    margin: 9px 0px 0px 0px;
 }
 
 .profile-date {
@@ -32,6 +37,7 @@
 }
 
 .profile-photo {
+    border: black solid 2px;
     height: 200px;
     width: 200px;
     object-fit: fill;
@@ -139,4 +145,29 @@
 
 .edit-button:hover {
     background-color: rgba(196, 196, 196, 0.65);
+}
+
+
+.verify-email-container {
+    border: solid #5E35B1 2px;
+    margin:30px 10px 2px 10px;
+    padding: 12px;
+    width: 720px;
+}
+
+.verify-email-container h3 {
+    color: #404040;
+    margin: 0px;
+}
+
+.verify-email-container p {
+    color: #404040;
+    font-size: 15px;
+    margin: 0px;
+}
+
+.verify-message-container {
+    height: 80px;
+    justify-content: center;
+    padding: 0px 5px;
 }

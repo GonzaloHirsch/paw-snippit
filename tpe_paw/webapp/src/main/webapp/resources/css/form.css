@@ -1,0 +1,160 @@
+
+.form {
+    background-color: white;
+    margin: 20px;
+    min-width: 500px;
+    padding: 40px
+}
+
+.form-block {
+    background-color: #5E35B1;
+    padding: 40px;
+    width: 700px;
+    margin: 20px 0 20px 0;
+}
+
+.form-data {
+    padding: 10px;
+}
+
+.form-field-container {
+    margin: 5px;
+}
+
+.form-field-size {
+    font-size: 17px;
+    height: 50px;
+    width: 450px;
+}
+
+.form-field-layout {
+    border-style: ridge;
+    padding: 15px 15px 15px 48px !important;
+}
+
+.form-text-container{
+    margin: 10px;
+}
+
+.form-text-error{
+    margin: -15px 0px 10px 0px;
+}
+
+.form-text-space {
+    margin: 0px 0px 0px 5px;
+}
+
+.form-welcome-text {
+    font-size: 30px;
+}
+
+.form-title-margin {
+    margin: 0px 6px 0px 8px;
+}
+
+.form-app-icon-margin {
+    margin: 0px 12px 0px 0px;
+}
+
+.form-icons {
+    font-size: 28px !important;
+    color: slateblue;
+    position: absolute;
+    margin: 11px 0px 11px 12px;
+}
+
+.form-delete-icon {
+    font-size: 34px !important;
+    color: gray;
+    cursor: pointer;
+    margin: 8px 8px 8px 28px;
+    position: absolute;
+}
+
+.form-button {
+    background-color: slateblue;
+    color: white;
+    font-size: 17px;
+    margin: 8px 0px 0px 0px;
+}
+
+.form-large-button {
+    font-size: 20px;
+    height: 55px;
+    width: 600px;
+}
+.form-buttons-margin {
+    margin: 7px 0px;
+}
+
+.form-border {
+    border-radius: 12px;
+}
+
+.form-border-style {
+    border-style: ridge;
+}
+
+.form-shadow {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.form-remove-button {
+    color: #ddd;
+    font-size: 30px;
+    height: 50px;
+    margin: 0px 0px 0px 20px;
+    width: 50px;
+}
+
+.form-button-basics {
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+.form-add-field-container {
+    height: 50px;
+    margin: 10px 0px;
+}
+
+.form-add-icons {
+    color: #5e35b1;
+    font-size: 40px !important;
+    margin: 5px 10px 5px 0px;
+}
+
+.form-add-description {
+    background-color: white;
+    color: #404040;
+    font-size: 20px;
+}
+
+.form-added-field-padding {
+    padding: 20px !important;
+}
+
+.form-admin-add-width {
+    width: 530px;
+}
+
+.form hr {
+    border-style: inset;
+    border-width: 1px;
+    color: #404040;
+    margin: 15px 0;
+    width: 500px;
+}
+
+.form-info-text {
+    font-size: 20px;
+    padding-bottom: 10px;
+    text-align: center;
+    width: 450px;
+}
+
+.form-field-padding {
+    padding: 15px 15px 15px 48px !important;
+}
+

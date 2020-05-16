@@ -83,6 +83,7 @@
 
                     <!-- DELETE -->
                     <c:if test="${currentUser.id == snippet.owner.id}">
+                        <c:set var="snippet" value="${snippet}" scope="request"/>
                         <div class="flex-column flex-center detail-snippet-block border-radius">
                             <c:import url="/WEB-INF/jsp/snippet/snippetDeleteForm.jsp"/>
                         </div>

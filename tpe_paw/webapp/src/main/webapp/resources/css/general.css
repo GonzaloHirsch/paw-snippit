@@ -161,3 +161,17 @@ body {
     margin-right: 30px;
     margin-top: 15px;
 }
+
+.modal-close-button {
+    margin: 0px 7px 0px 0px;
+}
+
+.modal-confirm-button {
+    background: #5E35B1 !important;
+    border-color: #5E35B1 !important;
+}
+
+.modal-confirm-button:hover {
+    background: #472787 !important;
+    background-color: #472787 !important;
+}

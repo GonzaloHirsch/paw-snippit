@@ -16,14 +16,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
           rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="<c:url value='/resources/js/form.js'/>"></script>
 </head>
 <body>
-    <div class="wrapper">
-        <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
-        <div class="main-content">
-            <div class="flex-row flex-center element-snippets-top-container">
-                <div class="fw-100 title-container">
+<div class="wrapper">
+    <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
+    <div class="main-content">
+        <div class="flex-row flex-center element-snippets-top-container">
+            <div class="flex-row flex-center title-container">
+
+                <div class="fw-100">
                     <spring:message code="tagSnippets.title" arguments="${tag.name.toUpperCase()}"/>
                 </div>
                 <c:if test="${currentUser != null}">
@@ -32,19 +35,50 @@
 
                     <c:if test="${userRoles.contains('ADMIN')}">
                         <form:form action="${tag.id}/delete" class="form-container" method="post" modelAttribute="deleteForm">
-                            <form:checkbox class="hidden" path="delete" value="true" id="tag-delete-button" onclick="updateForm(this)"/>
-                            <label for="tag-delete-button" class="flex-center">
-                                <div class="flex-center no-text-decoration">
-                                    <i class="delete-element-icon material-icons border-radius">delete</i>
+                            <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#tag-snippet">
+                                <i class="delete-element-icon material-icons border-radius">delete</i>
+                            </div>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="tag-snippet" tabindex="-1" role="dialog" aria-labelledby="tagDeletionModal" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title font" id="tagDeletionModal"><spring:message code="modal.delete.title"/></h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body modal-body-text fw-100">
+                                            <spring:message code="modal.delete.tag.text" arguments="${tag.name}"/>
+                                        </div>
+                                        <div class="modal-footer flex-end">
+                                            <div class="flex-center">
+                                                <div type="button" class="btn btn-secondary modal-close-button" data-dismiss="modal"><spring:message code="modal.cancel"/></div>
+                                                <form:checkbox class="hidden" path="delete" value="true" id="tag-delete-button" onclick="updateForm(this)"/>
+                                                <label for="tag-delete-button" class="btn btn-primary modal-confirm-button  no-margin">
+                                                    <div typeof="button">
+                                                        <spring:message code="modal.delete.confirm"/>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </label>
+                            </div>
                         </form:form>
                     </c:if>
                 </c:if>
             </div>
-            <c:set var="snippetList" value="${snippetList}" scope="request"/>
-            <c:import url="/WEB-INF/jsp/snippet/snippetFeed.jsp"/>
         </div>
+        <c:set var="snippetList" value="${snippetList}" scope="request"/>
+        <c:import url="/WEB-INF/jsp/snippet/snippetFeed.jsp"/>
     </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>
+

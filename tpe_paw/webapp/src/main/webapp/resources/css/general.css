@@ -11,6 +11,10 @@
     box-sizing: border-box;
 }
 
+font {
+    font-family: Roboto, "sans-serif" !important;
+}
+
 body {
     background-color: #eeedf2 !important;
     margin: 0;
@@ -174,4 +178,8 @@ body {
 .modal-confirm-button:hover {
     background: #472787 !important;
     background-color: #472787 !important;
+}
+
+.modal-body-text {
+    font-size: 20px !important;
 }

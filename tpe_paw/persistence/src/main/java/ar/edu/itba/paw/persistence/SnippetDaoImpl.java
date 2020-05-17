@@ -21,6 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
+@Deprecated
 public class SnippetDaoImpl implements SnippetDao {
 
     @Autowired

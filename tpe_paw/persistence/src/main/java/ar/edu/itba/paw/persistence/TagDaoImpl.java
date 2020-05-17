@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Repository
+@Deprecated
 public class TagDaoImpl implements TagDao {
 
     private JdbcTemplate jdbcTemplate;

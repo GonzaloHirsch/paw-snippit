@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Repository
+@Deprecated
 public class LanguageDaoImpl implements LanguageDao {
 
     private JdbcTemplate jdbcTemplate;

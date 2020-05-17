@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
+@Deprecated
 public class VoteDaoImpl implements VoteDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;

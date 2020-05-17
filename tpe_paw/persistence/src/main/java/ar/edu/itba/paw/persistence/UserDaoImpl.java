@@ -16,7 +16,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
 
-@Repository
+//@Repository
+@Deprecated
 public class UserDaoImpl implements UserDao {
     private JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -65,7 +66,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserById(long id) {
+    public Optional<User> findUserById(Long id) {
         return this.jdbcTemplate.query("SELECT * FROM users WHERE id = ?", ROW_MAPPER, id)
                 .stream().findFirst();
     }

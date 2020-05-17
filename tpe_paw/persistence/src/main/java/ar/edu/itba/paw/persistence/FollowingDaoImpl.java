@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Repository
+@Deprecated
 public class FollowingDaoImpl implements FollowingDao {
 
     private final JdbcTemplate jdbcTemplate;

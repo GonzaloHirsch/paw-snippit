@@ -39,7 +39,7 @@ public class User {
     private boolean verified;
 
     @Column(length = 5)
-    private String lang = "EN"; //Set EN as default value
+    private String lang = "EN"; // Set EN as default value
 
     @Column(length = 5)
     private String region = "US";
@@ -47,11 +47,15 @@ public class User {
     @ManyToMany
     @JoinTable(
         name= "user_roles",
-        joinColumns = @JoinColumn(name = "users_id"), //TODO: CHECK IF IS users OR user
-        inverseJoinColumns = @JoinColumn(name = "roles_id"))
-    public List<Role> roles;
+        joinColumns = @JoinColumn(name = "user_id"), //TODO: CHECK IF IS users OR user
+        inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles;
+
+    @OneToMany(mappedBy = "user")
+    private List<Vote> votes;
 
 
+    //TODO: Delete
     @Deprecated
     private Locale locale;
 

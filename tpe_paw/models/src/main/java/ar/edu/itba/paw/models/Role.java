@@ -17,7 +17,7 @@ public class Role {
     private String name;
 
     @ManyToMany(mappedBy = "roles")
-    List<User> users;
+    private List<User> users;
 
     //For hibernate
     public Role(){}

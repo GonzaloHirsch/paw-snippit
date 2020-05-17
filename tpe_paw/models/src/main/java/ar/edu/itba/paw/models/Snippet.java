@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.OneToMany;
 import java.util.Collection;
+import java.util.List;
 
 public class Snippet {
     private long id;
@@ -13,6 +15,9 @@ public class Snippet {
     private Collection<Tag> tags;
     private int votes;
     private boolean flagged;
+
+    @OneToMany(mappedBy = "snippet")
+    private List<Vote> votes;
 
     public Snippet(long id, User owner, String code, String title, String description, String dateCreated, String language, Collection<Tag> tags, int votes, boolean flagged) {
         this.id = id;

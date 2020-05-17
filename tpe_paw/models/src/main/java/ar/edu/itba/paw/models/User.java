@@ -45,17 +45,17 @@ public class User {
     @Column(length = 5)
     private String region = "US";   // Setting "US" as the default location value
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name= "user_roles",
         joinColumns = @JoinColumn(name = "user_id"),        //TODO: CHECK IF IS users OR user
         inverseJoinColumns = @JoinColumn(name = "role_id")) //TODO: SAME with role
-    private List<Role> roles;
+    private Collection<Role> roles;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Collection<Vote> votes;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name= "favorites",
             joinColumns = @JoinColumn(name = "user_id"),             //TODO: CHECK IF IS users OR user
@@ -76,9 +76,9 @@ public class User {
     @Deprecated
     private Locale locale;
 
-
-    // For Hibernate
-    protected User() {}
+    protected User() {
+        // Hibernate constructor
+    }
 
     @Deprecated
     public User(long id, String username, String password, String email, String dateJoined, byte[] icon, Locale locale, boolean verified) {

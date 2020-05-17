@@ -9,12 +9,12 @@ public class Vote {
     @EmbeddedId
     VoteId id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("user_id")
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("snippet_id")
     @JoinColumn(name = "snippet_id")
     private Snippet snippet;

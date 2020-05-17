@@ -17,15 +17,16 @@ public class Role {
     @Column(length = 20, name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles")
     @JoinTable(
             name= "user_roles",
             joinColumns = @JoinColumn(name = "role_id"),        //TODO: CHECK IF IS users OR user
             inverseJoinColumns = @JoinColumn(name = "user_id")) //TODO: SAME with role
     private Collection<User> usersWithRole;
 
-    //For hibernate
-    public Role(){}
+    public Role(){
+        // Hibernate constructor
+    }
 
     @Deprecated
     public Role(long id, String name) {

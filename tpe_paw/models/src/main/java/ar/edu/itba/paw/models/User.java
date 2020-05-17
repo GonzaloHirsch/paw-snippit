@@ -1,12 +1,14 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Locale;
 
 @Entity
 @Table(name = "users")
 public class User {
 
+    //TODO: Check correct sequence generator
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
     @SequenceGenerator(allocationSize = 1, sequenceName = "users_id_seq", name="users_id_seq")
@@ -41,6 +43,13 @@ public class User {
 
     @Column(length = 5)
     private String region = "US";
+
+    @ManyToMany
+    @JoinTable(
+        name= "user_roles",
+        joinColumns = @JoinColumn(name = "users_id"), //TODO: CHECK IF IS users OR user
+        inverseJoinColumns = @JoinColumn(name = "roles_id"))
+    public List<Role> roles;
 
 
     @Deprecated

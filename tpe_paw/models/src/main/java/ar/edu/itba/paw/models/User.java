@@ -1,6 +1,10 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -8,6 +12,8 @@ import java.util.Locale;
 @Entity
 @Table(name = "users")
 public class User {
+
+    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK).withZone(ZoneId.systemDefault());
 
     //TODO: Check correct sequence generator
     @Id
@@ -30,8 +36,8 @@ public class User {
     @Column
     private int reputation;
 
-    @Column
-    private String dateJoined;
+    @Column(name = "date_joined")
+    private Timestamp dateJoined;
 
     @Column
     private byte[] icon;
@@ -72,39 +78,19 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY)
     private Collection<Snippet> createdSnippets;
 
-    //TODO: Delete
-    @Deprecated
-    private Locale locale;
-
     protected User() {
         // Hibernate constructor
     }
 
-    @Deprecated
-    public User(long id, String username, String password, String email, String dateJoined, byte[] icon, Locale locale, boolean verified) {
-        this.id = id;
+    public User(String username, String password, String email, Timestamp dateJoined, Locale locale, boolean verified) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.description = "";
         this.reputation = 0;
         this.dateJoined = dateJoined;
-        this.icon = icon;
-        this.locale = locale;
-        this.verified = verified;
-    }
-
-    @Deprecated
-    public User(long id, String username, String password, String email, String description, int reputation, String dateJoined, byte[] icon, Locale locale, boolean verified) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.description = description;
-        this.reputation = reputation;
-        this.dateJoined = dateJoined;
-        this.icon = icon;
-        this.locale = locale;
+        this.lang = locale.getLanguage();
+        this.region = locale.getCountry();
         this.verified = verified;
     }
 
@@ -130,8 +116,20 @@ public class User {
         return reputation;
     }
 
-    public String getDateJoined() {
+    /*public String getDateJoined() {
         return dateJoined;
+    }*/
+
+    /**
+     * Returns the string representation of the creation date
+     * @return
+     */
+    public String getCreationDate(){
+        return DATE.format(this.dateJoined.toInstant());
+    }
+
+    public Locale getLocale(){
+        return new Locale(this.lang, this.region);
     }
 
     public byte[] getIcon() { return this.icon; }

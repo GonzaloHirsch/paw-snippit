@@ -3,7 +3,7 @@
  */
 
 .detail-snippet-container {
-    padding: 15px;
+    max-width: 1050px;
 }
 
 .detail-snippet-divider {
@@ -11,12 +11,12 @@
 }
 
 .detail-snippet-center {
-    padding: 20px;
+    padding: 10px 20px 5px 20px;
     width: 750px;
 }
 
 .detail-snippet-block {
-    /*background: #a49eb0;*/
+    background: white;
     border: #5e35b1 2px solid;
     margin: 15px 8px;
     min-height: 94px;
@@ -49,8 +49,24 @@
     font-size: 12px;
 }
 
+.detail-snippet-title {
+    font-size: 38px !important;
+}
+
+.detail-snippet-descr {
+    font-size: 17.5px !important;
+}
+
 .detail-snippet-language-margin {
     margin: 0px 0px 0px 30px;
+}
+
+.detail-form-container {
+    background-color: #eeedf2;
+}
+
+.detail-extra-margin {
+    margin: 10px 0px;
 }
 
 .hidden-code {

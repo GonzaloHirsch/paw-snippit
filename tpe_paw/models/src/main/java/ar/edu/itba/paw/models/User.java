@@ -47,12 +47,21 @@ public class User {
     @ManyToMany
     @JoinTable(
         name= "user_roles",
-        joinColumns = @JoinColumn(name = "user_id"), //TODO: CHECK IF IS users OR user
-        inverseJoinColumns = @JoinColumn(name = "role_id"))
+        joinColumns = @JoinColumn(name = "user_id"),        //TODO: CHECK IF IS users OR user
+        inverseJoinColumns = @JoinColumn(name = "role_id")) //TODO: SAME with role
     private List<Role> roles;
 
     @OneToMany(mappedBy = "user")
     private List<Vote> votes;
+
+    @ManyToMany
+    @JoinTable(
+            name= "favorites",
+            joinColumns = @JoinColumn(name = "user_id"),             //TODO: CHECK IF IS users OR user
+            inverseJoinColumns = @JoinColumn(name = "snippet_id"))   //TODO: SAME with snippet
+    private List<Snippet> favorites;
+
+
 
 
     //TODO: Delete

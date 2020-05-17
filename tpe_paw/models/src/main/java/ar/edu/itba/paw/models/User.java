@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -39,10 +40,10 @@ public class User {
     private boolean verified;
 
     @Column(length = 5)
-    private String lang = "EN"; // Set EN as default value
+    private String lang = "en";     // Setting "en" as the default language value
 
     @Column(length = 5)
-    private String region = "US";
+    private String region = "US";   // Setting "US" as the default location value
 
     @ManyToMany
     @JoinTable(
@@ -52,17 +53,24 @@ public class User {
     private List<Role> roles;
 
     @OneToMany(mappedBy = "user")
-    private List<Vote> votes;
+    private Collection<Vote> votes;
 
     @ManyToMany
     @JoinTable(
             name= "favorites",
             joinColumns = @JoinColumn(name = "user_id"),             //TODO: CHECK IF IS users OR user
             inverseJoinColumns = @JoinColumn(name = "snippet_id"))   //TODO: SAME with snippet
-    private List<Snippet> favorites;
+    private Collection<Snippet> favorites;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "follows",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Collection<Tag> followedTags;
 
-
+    @OneToMany(fetch = FetchType.LAZY)
+    private Collection<Snippet> createdSnippets;
 
     //TODO: Delete
     @Deprecated
@@ -70,7 +78,7 @@ public class User {
 
 
     // For Hibernate
-    public User() {}
+    protected User() {}
 
     @Deprecated
     public User(long id, String username, String password, String email, String dateJoined, byte[] icon, Locale locale, boolean verified) {
@@ -100,7 +108,7 @@ public class User {
         this.verified = verified;
     }
 
-    public long getId() { return id; }
+    public Long getId() { return id; }
 
     public String getUsername() {
         return username;

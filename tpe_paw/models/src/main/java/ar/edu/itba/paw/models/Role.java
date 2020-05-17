@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -13,11 +14,15 @@ public class Role {
     @SequenceGenerator(allocationSize = 1, sequenceName = "roles_id_seq", name="roles_id_seq")
     private Long id;
 
-    @Column(length = 20)
+    @Column(length = 20, name = "name")
     private String name;
 
     @ManyToMany(mappedBy = "roles")
-    private List<User> users;
+    @JoinTable(
+            name= "user_roles",
+            joinColumns = @JoinColumn(name = "role_id"),        //TODO: CHECK IF IS users OR user
+            inverseJoinColumns = @JoinColumn(name = "user_id")) //TODO: SAME with role
+    private Collection<User> usersWithRole;
 
     //For hibernate
     public Role(){}

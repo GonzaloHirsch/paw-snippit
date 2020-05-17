@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models;
 
-import org.hibernate.annotations.Check;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
@@ -16,9 +14,9 @@ public class VoteId implements Serializable {
     @Column(name = "snippet_id")
     private Long snippetId;
 
-
-    // For Hibernate
-    public VoteId(){}
+    public VoteId(){
+        // Hibernate constructor
+    }
 
     @Override
     public boolean equals(Object o) {

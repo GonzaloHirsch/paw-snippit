@@ -11,20 +11,24 @@ public class Vote {
 
     @ManyToOne
     @MapsId("user_id")
-    @JoinColumn("user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
     @MapsId("snippet_id")
-    @JoinColumn("snippet_id")
+    @JoinColumn(name = "snippet_id")
     private Snippet snippet;
 
-    //TODO: add constraint(-1,1)
-    @Column
+    @Column(name = "type", columnDefinition = "INT CHECK (type IN (-1, 1))")
     private int type;
 
-    // For Hibernate
-    public Vote(){}
+    public Vote(){
+        // Hibernate constructor
+    }
+
+    public int getType() {
+        return type;
+    }
 
     /*
     public Vote(User user, Snippet snippet, int type) {

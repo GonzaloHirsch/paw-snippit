@@ -66,8 +66,8 @@ public class ErrorController {
     @ModelAttribute
     public void addAttributes(Model model, HttpServletRequest request) {
         User currentUser = this.loginAuthentication.getLoggedInUser(request);
-        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
-        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
+        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : Collections.emptyList();
+        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : Collections.emptyList();
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("userTags", userTags);
         model.addAttribute("userRoles", userRoles);

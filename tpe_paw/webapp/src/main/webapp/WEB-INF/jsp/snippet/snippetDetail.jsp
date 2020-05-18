@@ -72,7 +72,7 @@
                                     <c:set var="context" value="tags" scope="request"/>
                                     <c:set var="cssClass" value="tag-container-detail" scope="request"/>
                                     <c:import url="/WEB-INF/jsp/tagAndLanguages/element.jsp"/>
-                                </c:forEach>
+                                </c:forEach>new
                             </div>
                         </c:if>
                     </div>

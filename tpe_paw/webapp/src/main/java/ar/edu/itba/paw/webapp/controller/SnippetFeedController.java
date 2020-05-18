@@ -26,6 +26,7 @@ import javax.servlet.ServletContext;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
 
@@ -128,8 +129,8 @@ public class SnippetFeedController {
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = new ArrayList<>();
-        Collection<String> userRoles = new ArrayList<>();
+        Collection<Tag> userTags = Collections.emptyList();
+        Collection<String> userRoles = Collections.emptyList();
 
         if (currentUser != null) {
             userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());

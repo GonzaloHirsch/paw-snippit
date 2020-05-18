@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 
 @Controller
@@ -84,7 +85,7 @@ public class SnippetController {
                 mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
             }
         } else {
-            mav.addObject("userRoles", new ArrayList<>());
+            mav.addObject("userRoles", Collections.emptyList());
         }
 
         // Vote Count

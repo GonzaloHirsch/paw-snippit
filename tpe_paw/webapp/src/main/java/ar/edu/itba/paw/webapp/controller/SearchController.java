@@ -196,7 +196,7 @@ public class SearchController {
         if (query.length() > MAX_SEARCH_QUERY_SIZE)
             throw new URITooLongException(messageSource.getMessage("error.414.search", null, LocaleContextHolder.getLocale()));
         if (!this.typesMap.containsKey(type) || !this.ordersMap.containsKey(sort)) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         } else {
             return this.snippetService.findSnippetByCriteria(
                     this.typesMap.get(type),
@@ -234,8 +234,8 @@ public class SearchController {
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = new ArrayList<>();
-        Collection<String> userRoles = new ArrayList<>();
+        Collection<Tag> userTags = Collections.emptyList();
+        Collection<String> userRoles = Collections.emptyList();
 
         if (currentUser != null) {
             userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());

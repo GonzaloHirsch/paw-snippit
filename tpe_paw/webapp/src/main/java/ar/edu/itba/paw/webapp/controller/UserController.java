@@ -27,6 +27,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -67,8 +68,8 @@ public class  UserController {
 
         /* Set the current user and its following tags */
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = new ArrayList<>();
-        Collection<String> userRoles = new ArrayList<>();
+        Collection<Tag> userTags = Collections.emptyList();
+        Collection<String> userRoles = Collections.emptyList();
 
         if (currentUser != null) {
             userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());

@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 @ControllerAdvice
 public class ExceptionController {
@@ -105,8 +106,8 @@ public class ExceptionController {
         ModelAndView mav = new ModelAndView(DEFAULT_ERROR_VIEW);
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
-        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
+        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : Collections.emptyList();
+        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : Collections.emptyList();
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);
         mav.addObject("searchContext", ERROR_CONTEXT);

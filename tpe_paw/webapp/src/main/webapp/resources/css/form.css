@@ -76,6 +76,11 @@
     color: white;
     font-size: 17px;
     margin: 8px 0px 0px 0px;
+    transition: 0.3s;
+}
+
+.form-button:hover {
+    background-color: #5e35b1;
 }
 
 .form-large-button {

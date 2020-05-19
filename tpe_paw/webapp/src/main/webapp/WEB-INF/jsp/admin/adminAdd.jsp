@@ -98,7 +98,7 @@
             </div>
 
             <div class="form-field-container">
-                <input class="form-border form-large-button form-button form-button-basics fw-500 purple-button" type="submit" value="<spring:message code="form.submit"/>" />
+                <input class="form-border form-large-button form-button form-button-basics fw-500" type="submit" value="<spring:message code="form.submit"/>" />
             </div>
         </form:form>
     </div>

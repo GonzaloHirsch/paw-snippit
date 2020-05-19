@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippetCreate.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/form.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippetDetail.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/snippet.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
@@ -92,7 +93,7 @@
                             <form:errors class="form-error error-extra-margins" path="tags" element="p"/>
                         </div>
                         <div class="snippetC-submit-container">
-                            <input class="snippetC-button snippetC-border" type="submit" value='<spring:message code="snippetCreateForm.save"/>'/>
+                            <input class="snippetC-button form-button-basics form-button form-border" type="submit" value='<spring:message code="snippetCreateForm.save"/>'/>
                         </div>
                     </div>
 

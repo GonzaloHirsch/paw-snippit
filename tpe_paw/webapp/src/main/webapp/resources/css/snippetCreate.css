@@ -73,6 +73,10 @@
     color: #5E35B1 !important;
 }
 
+.snippetC-submit-container {
+    width: 150px;
+}
+
 .snippetC-border{
     border-radius: 4px;
     border-width:thin;
@@ -80,13 +84,7 @@
 }
 
 .snippetC-button {
-    background-color: #5E35B1;
     padding: 10px 10px 10px 10px;
     width:100%;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 17px;
-    text-align: center;
     margin: 8px 0px 0px 0px;
 }

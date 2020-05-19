@@ -75,7 +75,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Collection<Tag> followedTags;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
     private Collection<Snippet> createdSnippets;
 
     protected User() {
@@ -91,6 +91,34 @@ public class User {
         this.dateJoined = dateJoined;
         this.lang = locale.getLanguage();
         this.region = locale.getCountry();
+        this.verified = verified;
+    }
+
+    @Deprecated
+    public User(long id, String username, String password, String email, String dateJoined, byte[] icon, Locale locale, boolean verified) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.description = "";
+        this.reputation = 0;
+//        this.dateJoined = dateJoined;
+        this.icon = icon;
+//        this.locale = locale;
+        this.verified = verified;
+    }
+
+    @Deprecated
+    public User(long id, String username, String password, String email, String description, int reputation, String dateJoined, byte[] icon, Locale locale, boolean verified) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.description = description;
+        this.reputation = reputation;
+//        this.dateJoined = dateJoined;
+        this.icon = icon;
+//        this.locale = locale;
         this.verified = verified;
     }
 

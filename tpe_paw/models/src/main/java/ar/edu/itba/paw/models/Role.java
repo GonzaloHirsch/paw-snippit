@@ -17,7 +17,7 @@ public class Role {
     @Column(length = 20, name = "name")
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles")
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name= "user_roles",
             joinColumns = @JoinColumn(name = "role_id"),        //TODO: CHECK IF IS users OR user

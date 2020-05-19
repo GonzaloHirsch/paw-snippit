@@ -15,7 +15,7 @@ public class Language {
     @Column(name = "name", length = 30, unique = true)
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "language")
     private Collection<Snippet> snippetsUsing;
 
     protected Language(){

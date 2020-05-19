@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -50,7 +51,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public long createUser(String username,String password, String email, String description, int reputation, String dateJoined, Locale locale) {
+    public long createUser(String username, String password, String email, String description, int reputation, Timestamp dateJoined, Locale locale) {
         final Map<String, Object> args = new HashMap<>()    ;
         args.put("username",username);
         args.put("password",password);

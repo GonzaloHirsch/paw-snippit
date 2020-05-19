@@ -178,7 +178,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         factoryBean.setJpaVendorAdapter(vendorAdapter);
         final Properties properties = new Properties();
         // We use UPDATE to have the best effort to update the database in order to match the model
-        properties.setProperty("hibernate.hbm2ddl.auto", " update");
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
         // Si ponen esto en prod, hay tabla!!!
         // TODO: BORRAR ESTO

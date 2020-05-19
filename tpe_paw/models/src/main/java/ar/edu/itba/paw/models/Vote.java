@@ -30,7 +30,7 @@ public class Vote {
         return type;
     }
 
-    /*
+    @Deprecated
     public Vote(User user, Snippet snippet, int type) {
         this.user = user;
         this.snippet = snippet;
@@ -44,9 +44,8 @@ public class Vote {
     public Snippet getSnippet() {
         return snippet;
     }
-
-    public int getType() {
-        return type;
-    }
-    */
+//
+//    public int getType() {
+//        return type;
+//    }
 }

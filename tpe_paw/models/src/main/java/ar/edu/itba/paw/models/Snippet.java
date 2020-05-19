@@ -20,7 +20,8 @@ public class Snippet {
     @SequenceGenerator(allocationSize = 1, sequenceName = "snippets_id_seq", name="snippets_id_seq")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user_id", optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User owner;
 
     @Column(length = 6000, name = "code", nullable = false)
@@ -55,7 +56,8 @@ public class Snippet {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Collection<Tag> tags;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "language_id", optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "language_id", referencedColumnName = "id")
     private Language language;
 
     protected Snippet(){
@@ -70,6 +72,20 @@ public class Snippet {
         this.dateCreated = dateCreated;
         this.language = language;
         this.tags = tags;
+        this.flagged = flagged;
+    }
+
+    @Deprecated
+    public Snippet(long id, User owner, String code, String title, String description, String dateCreated, String language, Collection<Tag> tags, int votes, boolean flagged) {
+        this.id = id;
+        this.owner = owner;
+        this.code = code;
+        this.title = title;
+        this.description = description;
+//        this.dateCreated = dateCreated;
+//        this.language = language;
+        this.tags = tags;
+//        this.votes = votes;
         this.flagged = flagged;
     }
 

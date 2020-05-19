@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
@@ -18,7 +19,7 @@ public class UserJpaDaoImpl implements UserDao {
     private EntityManager em;
 
     @Override
-    public long createUser(String username, String password, String email, String description, int reputation, String dateJoined, Locale locale) {
+    public long createUser(String username, String password, String email, String description, int reputation, Timestamp dateJoined, Locale locale) {
         final User user = new User(username, password, email, dateJoined, locale, false);
         this.em.persist(user);
         return user.getId();
@@ -38,7 +39,9 @@ public class UserJpaDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findUserByEmail(String email) {
-        return Optional.ofNullable(this.em.find(User.class, email));
+        final TypedQuery<User> query = this.em.createQuery("from User as u where u.email = :email", User.class);
+        query.setParameter("email", email);
+        return query.getResultList().stream().findFirst();
     }
 
     @Override

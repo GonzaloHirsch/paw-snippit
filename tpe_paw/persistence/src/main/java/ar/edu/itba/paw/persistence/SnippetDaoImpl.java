@@ -20,7 +20,7 @@ import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Repository
+//@Repository
 @Deprecated
 public class SnippetDaoImpl implements SnippetDao {
 

@@ -79,7 +79,7 @@ public class UserDaoTest {
     public void testCreateUser() {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
 
-        final long userId = userDao.createUser(USERNAME, PASSWORD, EMAIL, "", 0, DATE.format(Instant.now()),new Locale("en"));
+//        final long userId = userDao.createUser(USERNAME, PASSWORD, EMAIL, "", 0, DATE.format(Instant.now()),new Locale("en"));
 
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
     }

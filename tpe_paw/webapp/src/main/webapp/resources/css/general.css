@@ -170,16 +170,22 @@ body {
     margin: 0px 7px 0px 0px;
 }
 
-.modal-confirm-button {
-    background: #5E35B1 !important;
-    border-color: #5E35B1 !important;
+.purple-button {
+    background: slateblue !important;
+    border-color: slateblue !important;
+    transition: 0.3s;
 }
 
-.modal-confirm-button:hover {
-    background: #472787 !important;
-    background-color: #472787 !important;
+.purple-button:hover {
+    background: #5E35B1 !important;
+    background-color: #5E35B1 !important;
 }
 
 .modal-body-text {
     font-size: 20px !important;
+}
+
+.vertical-hr {
+    border-left: 1px solid black;
+    margin: 0px 20px;
 }

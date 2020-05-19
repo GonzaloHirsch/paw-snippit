@@ -56,10 +56,8 @@
                                             <div class="flex-center">
                                                 <div type="button" class="btn btn-secondary modal-close-button" data-dismiss="modal"><spring:message code="modal.cancel"/></div>
                                                 <form:checkbox class="hidden" path="delete" value="true" id="tag-delete-button" onclick="updateForm(this)"/>
-                                                <label for="tag-delete-button" class="btn btn-primary modal-confirm-button  no-margin">
-                                                    <div typeof="button">
-                                                        <spring:message code="modal.delete.confirm"/>
-                                                    </div>
+                                                <label for="tag-delete-button" class="btn btn-primary purple-button  no-margin">
+                                                    <spring:message code="modal.delete.confirm"/>
                                                 </label>
                                             </div>
                                         </div>

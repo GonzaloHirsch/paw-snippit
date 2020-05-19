@@ -9,7 +9,7 @@ function addAdminRow(divId, placeholder) {
         let langCount = getCounter('langCount');
 
         div.innerHTML = `
-            <input type="text" class="form-border form-field-size form-added-field-padding form-border-style" name="languages[${langCount}]" placeholder="${placeholder}">
+            <input type="text" class="form-border form-field-size form-added-field form-border-style" name="languages[${langCount}]" placeholder="${placeholder}">
             <label>
                 <i class="material-icons form-delete-icon">delete</i>
                 <input type="button" class="form-remove-button form-border form-button-basics" onclick="removeRow(this, 'form-dynamic-lang', 'langCount', 'langButton')" />
@@ -21,7 +21,7 @@ function addAdminRow(divId, placeholder) {
         let tagCount = getCounter('tagCount');
 
         div.innerHTML = `
-            <input type="text" class="form-border form-field-size form-added-field-padding form-border-style" name="tags[${tagCount}]" placeholder="${placeholder}">
+            <input type="text" class="form-border form-field-size form-added-field form-border-style" name="tags[${tagCount}]" placeholder="${placeholder}">
             <label>
                 <i class="material-icons form-delete-icon">delete</i>
                 <input type="button" class="form-remove-button form-border form-button-basics" onclick="removeRow(this, 'form-dynamic-tag', 'tagCount', 'tagButton')" />

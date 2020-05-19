@@ -81,7 +81,7 @@
 .form-large-button {
     font-size: 20px;
     height: 55px;
-    width: 600px;
+    width: 690px;
 }
 .form-buttons-margin {
     margin: 7px 0px;
@@ -116,7 +116,7 @@
 
 .form-add-field-container {
     height: 50px;
-    margin: 10px 0px;
+    margin: 3px 0px 10px 0px;
 }
 
 .form-add-icons {
@@ -131,13 +131,6 @@
     font-size: 20px;
 }
 
-.form-added-field-padding {
-    padding: 20px !important;
-}
-
-.form-admin-add-width {
-    width: 530px;
-}
 
 .form hr {
     border-style: inset;
@@ -158,3 +151,20 @@
     padding: 15px 15px 15px 48px !important;
 }
 
+/* Admin Add */
+
+.form-added-field {
+    padding: 20px !important;
+    max-width: 250px !important;
+}
+
+.form-admin-add-width {
+    width: 330px;
+}
+
+.form-add-column-title {
+    color: #404040;
+    font-size: 25px;
+    text-align: center;
+    margin: 0px 0px 10px 0px;
+}

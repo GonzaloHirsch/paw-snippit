@@ -163,19 +163,20 @@
 }
 
 .navtop .navtop-button {
-    background-color: white;
-    border: none;
-    cursor: pointer;
+    background-color: #ddd;
     height: 40px;
     font-size: 15px;
     margin: 5px 3px;
     min-width: 71px;
-    text-align: center;
-    text-decoration: none;
+    transition: 0.3s;
 }
 
-/*
-.navtop .app-name:hover{*/
+.navtop .navtop-button:hover {
+    background-color: white;
+}
+
+    /*
+    .navtop .app-name:hover{*/
 /*    background: #ccc;*/
 /*}
 */

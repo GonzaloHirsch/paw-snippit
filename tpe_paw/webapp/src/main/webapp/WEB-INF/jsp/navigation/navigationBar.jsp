@@ -236,10 +236,10 @@
         <div class="flex-row flex-center navtop-register-buttons">
         <c:choose>
             <c:when test="${currentUser == null}">
-                <a class="flex-center purple-text navtop-button small-border-radius" href="<c:url value="/login"/>">
+                <a class="flex-center purple-text navtop-button form-button-basics small-border-radius" href="<c:url value="/login"/>">
                 <spring:message code="login.button"/>
                 </a>
-                <a class="flex-center purple-text navtop-button small-border-radius" href="<c:url value="/signup"/>">
+                <a class="flex-center purple-text navtop-button form-button-basics small-border-radius" href="<c:url value="/signup"/>">
                 <spring:message code="register.button"/>
                 </a>
             </c:when>

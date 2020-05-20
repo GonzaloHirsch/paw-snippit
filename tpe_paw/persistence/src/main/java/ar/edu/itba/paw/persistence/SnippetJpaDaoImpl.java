@@ -110,9 +110,8 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public int getAllSnippetsCount() {
-        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets", Long.class);
-        List<Long> filteredIds = (List<Long>) nativeQuery.getResultList();
-        return filteredIds.size();
+        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets");
+        return nativeQuery.getResultList().size();
     }
 
     @Override

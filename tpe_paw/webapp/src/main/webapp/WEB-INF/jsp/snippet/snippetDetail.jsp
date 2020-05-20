@@ -40,7 +40,7 @@
                     <div class="snippet-text snippet-title">
                         ${fn:escapeXml(snippet.title)}
                     </div>
-                    <div class="snippet-language-tag detail-snippet-language-margin border-radius">${snippet.language.toUpperCase()}</div>
+                    <div class="snippet-language-tag detail-snippet-language-margin border-radius">${snippet.language.name.toUpperCase()}</div>
                 </div>
 
                 <c:if test="${!StringUtils.isEmpty(snippet.description)}">

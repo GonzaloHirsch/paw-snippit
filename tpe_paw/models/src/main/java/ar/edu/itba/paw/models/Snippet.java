@@ -89,26 +89,6 @@ public class Snippet {
         this.flagged = flagged;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
     /**
      * Returns the string representation of the creation date
      * @return
@@ -125,14 +105,6 @@ public class Snippet {
         return this.language.getName();
     }
 
-    public Collection<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(Collection<Tag> tags) {
-        this.tags = tags;
-    }
-
     /**
      * Calculates the vote count for the snippet
      * @return
@@ -145,7 +117,87 @@ public class Snippet {
         return flagged;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Timestamp getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Timestamp dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
     public void setFlagged(boolean flagged) {
         this.flagged = flagged;
+    }
+
+    public Collection<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(Collection<Vote> votes) {
+        this.votes = votes;
+    }
+
+    public Collection<User> getUserFavorites() {
+        return userFavorites;
+    }
+
+    public void setUserFavorites(Collection<User> userFavorites) {
+        this.userFavorites = userFavorites;
+    }
+
+    public Collection<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Collection<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
     }
 }

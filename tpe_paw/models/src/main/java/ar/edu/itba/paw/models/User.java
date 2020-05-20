@@ -21,34 +21,34 @@ public class User {
     @SequenceGenerator(allocationSize = 1, sequenceName = "users_id_seq", name="users_id_seq")
     private Long id;
 
-    @Column(length = 30)
+    @Column(length = 30, name="username")
     private String username;
 
-    @Column(length=60)
+    @Column(length=60, name="password")
     private String password;
 
-    @Column(length = 60)
+    @Column(length = 60, name="email")
     private String email;
 
-    @Column(length = 300)
+    @Column(length = 300, name="description")
     private String description;
 
-    @Column
+    @Column(name="reputation")
     private int reputation;
 
     @Column(name = "date_joined")
     private Timestamp dateJoined;
 
-    @Column
+    @Column(name="icon")
     private byte[] icon;
 
-    @Column
+    @Column(name="verified")
     private boolean verified;
 
-    @Column(length = 5)
+    @Column(length = 5, name="lang")
     private String lang = "en";     // Setting "en" as the default language value
 
-    @Column(length = 5)
+    @Column(length = 5, name="region")
     private String region = "US";   // Setting "US" as the default location value
 
     @ManyToMany(fetch = FetchType.LAZY)

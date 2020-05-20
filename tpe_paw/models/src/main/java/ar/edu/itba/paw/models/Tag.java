@@ -15,19 +15,11 @@ public class Tag {
     @Column(name = "name", length = 30, unique = true)
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "snippet_tags",
-            joinColumns = @JoinColumn(name = "tag_id"),
-            inverseJoinColumns = @JoinColumn(name = "snippet_id"))
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
     private Collection<Snippet> taggedSnippets;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "follows",
-            joinColumns = @JoinColumn(name = "tag_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Collection<Tag> followingUsers;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followedTags")
+    private Collection<User> followingUsers;
 
     public Tag(String name) {
         this.name = name;

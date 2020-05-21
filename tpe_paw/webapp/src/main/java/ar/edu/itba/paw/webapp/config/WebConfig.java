@@ -190,7 +190,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         properties.setProperty("format_sql", "true");
 
         factoryBean.setJpaProperties(properties);
-        
+
         return factoryBean;
     }
 

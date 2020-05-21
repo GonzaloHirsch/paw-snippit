@@ -16,7 +16,7 @@ public class Tag {
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
-    private Collection<Snippet> taggedSnippets;
+    private Collection<Snippet> snippetsUsing;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followedTags")
     private Collection<User> followingUsers;
@@ -44,5 +44,5 @@ public class Tag {
 
     public String getName() { return this.name; }
 
-    public Collection<Snippet> getTaggedSnippets(){ return this.taggedSnippets; }
+    public Collection<Snippet> getSnippetsUsing(){ return this.snippetsUsing; }
 }

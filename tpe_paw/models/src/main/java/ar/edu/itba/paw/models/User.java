@@ -185,4 +185,30 @@ public class User {
     public void setVerified(boolean verified) {
         this.verified = verified;
     }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setReputation(int reputation) {
+        this.reputation = reputation;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setIcon(byte[] icon) {
+        this.icon = icon;
+    }
+
+    public boolean getVerified(){
+        return this.verified;
+    }
+
+
 }

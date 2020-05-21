@@ -11,7 +11,6 @@
 <c:set var="style" value="${requestScope.cssClass}"/>
 <spring:message code="tooltip.element.empty" var="emptyTooltip"/>
 
-
     <div class="flex-grow ${style}">
         <div class="flex-row flex-center expand">
             <a href="<c:url value='/${context}/${element.id}'/>" class="no-text-decoration flex-center fw-300 element-title flex-grow">

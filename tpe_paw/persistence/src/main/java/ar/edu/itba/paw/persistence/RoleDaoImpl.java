@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Repository
+@Deprecated
 public class RoleDaoImpl implements RoleDao {
 
     private JdbcTemplate jdbcTemplate;

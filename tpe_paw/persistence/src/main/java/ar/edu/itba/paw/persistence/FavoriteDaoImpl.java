@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
+@Deprecated
 public class FavoriteDaoImpl implements FavoriteDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;

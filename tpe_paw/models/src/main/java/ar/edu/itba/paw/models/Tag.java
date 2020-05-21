@@ -1,23 +1,48 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
+import java.util.Collection;
+
+@Entity
+@Table(name = "tags")
 public class Tag {
 
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tags_id_seq")
+    @SequenceGenerator(allocationSize = 1, sequenceName = "tags_id_seq", name="tags_id_seq")
+    private Long id;
+
+    @Column(name = "name", length = 30, unique = true)
     private String name;
 
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
+    private Collection<Snippet> snippetsUsing;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followedTags")
+    private Collection<User> followingUsers;
+
+    public Tag(String name) {
+        this.name = name;
+    }
+
+    @Deprecated
     public Tag(long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return name;
+    protected Tag(){
+        // Hibernate constructor
     }
 
-    public long getId() { return id; }
+    @Override
+    public String toString() {
+        return this.name;
+    }
 
-    public String getName() { return name; }
+    public Long getId() { return this.id; }
 
-    
+    public String getName() { return this.name; }
+
+    public Collection<Snippet> getSnippetsUsing(){ return this.snippetsUsing; }
 }

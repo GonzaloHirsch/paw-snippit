@@ -29,6 +29,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -96,7 +97,7 @@ public class RegistrationController {
         }
 
         try {
-            this.userService.register(registerForm.getUsername(), this.passwordEncoder.encode(registerForm.getPassword()), registerForm.getEmail(), DATE.format(Instant.now()), LocaleContextHolder.getLocale());
+            this.userService.register(registerForm.getUsername(), this.passwordEncoder.encode(registerForm.getPassword()), registerForm.getEmail(), Timestamp.from(Instant.now()), LocaleContextHolder.getLocale());
         } catch (Exception e) {
             LOGGER.error(e.getMessage() + "Failed to send registration email to user {}", registerForm.getUsername());
         }

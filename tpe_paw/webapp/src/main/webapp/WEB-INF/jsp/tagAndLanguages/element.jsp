@@ -9,9 +9,10 @@
 <c:set var="context" value="${requestScope.context}"/>
     <c:set var="style" value="${requestScope.cssClass}"/>
     <a href="<c:url value='/${context}/${element.id}'/>" class="${style} ${'flex-center'}">
-        <div class="fw-300 tag-title">
-            ${element.name.toUpperCase()}
-<%--            <c:out value="HELLO = ${element.n}"/>--%>
+        <div class="flex-row">
+            <div class="fw-300 tag-title">
+                ${element.name.toUpperCase()}
+            </div>
             <c:if test="${element.snippetsUsing.size() == 0}">
                 <div>HELLO</div>
             </c:if>

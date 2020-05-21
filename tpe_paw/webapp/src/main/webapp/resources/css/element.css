@@ -22,8 +22,11 @@
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.element-container-detail  .tag-title{
-    font-size: 12px;
+.element-title {
+    font-size: 16px;
+    height: 100%;
+    text-align: center;
+    padding: 15px 10px;
 }
 
 .element-container-main{
@@ -31,17 +34,12 @@
     border-radius: 5px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     color: inherit;
-    text-decoration: none;
     transition: 0.3s;
-    padding: 15px 5px;
+    width: 100%;
 }
 
 .element-container-main:hover{
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-}
-
-.tag-container-main .tag-title{
-    font-size: 20px;
 }
 
 .no-elements {

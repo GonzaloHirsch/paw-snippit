@@ -8,15 +8,15 @@
 <c:set var="element" value="${requestScope.element}"/>
 <c:set var="context" value="${requestScope.context}"/>
     <c:set var="style" value="${requestScope.cssClass}"/>
-    <a href="<c:url value='/${context}/${element.id}'/>" class="${style} ${'flex-center'}">
-        <div class="flex-row">
-            <div class="fw-300 tag-title">
+    <div class="flex-grow ${style}">
+        <div class="flex-row flex-center expand">
+            <a href="<c:url value='/${context}/${element.id}'/>" class="no-text-decoration flex-center fw-300 element-title flex-grow">
                 ${element.name.toUpperCase()}
-            </div>
+            </a>
             <c:if test="${element.snippetsUsing.size() == 0}">
-                <div>HELLO</div>
+                <i class="material-icons element-icon">block</i>
             </c:if>
         </div>
-    </a>
+    </div>
 </body>
 </html>

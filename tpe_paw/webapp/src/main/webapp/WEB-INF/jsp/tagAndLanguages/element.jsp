@@ -14,7 +14,7 @@
                 ${element.name.toUpperCase()}
             </a>
             <c:if test="${element.snippetsUsing.size() == 0}">
-                <i class="material-icons element-icon">block</i>
+                <div class="material-icons element-icon transition" data-toggle="tooltip" data-placement="left" title="No Snippets">block</div>
             </c:if>
         </div>
     </div>

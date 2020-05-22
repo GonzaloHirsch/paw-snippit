@@ -219,15 +219,8 @@ public class User {
         return this.roles;
     }
 
-    public void setIcon(byte[] icon) {
-        this.icon = icon;
-    }
-
     public boolean getVerified(){
         return this.verified;
     }
 
-    public Collection<Role> getRoles() {
-        return roles;
-    }
 }

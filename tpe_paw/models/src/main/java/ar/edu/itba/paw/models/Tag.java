@@ -45,4 +45,17 @@ public class Tag {
     public String getName() { return this.name; }
 
     public Collection<Snippet> getSnippetsUsing(){ return this.snippetsUsing; }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Tag)) {
+            return false;
+        }
+        Tag tag = (Tag) o;
+        return this.getId().equals(tag.getId());
+    }
 }

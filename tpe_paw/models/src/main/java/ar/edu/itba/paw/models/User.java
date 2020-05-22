@@ -144,15 +144,12 @@ public class User {
         return reputation;
     }
 
-    /*public String getDateJoined() {
-        return dateJoined;
-    }*/
 
     /**
      * Returns the string representation of the creation date
      * @return
      */
-    public String getCreationDate(){
+    public String getDateJoined(){
         return DATE.format(this.dateJoined.toInstant());
     }
 
@@ -184,5 +181,21 @@ public class User {
 
     public void setVerified(boolean verified) {
         this.verified = verified;
+    }
+
+    public Collection<Snippet> getCreatedSnippets() {
+        return this.createdSnippets;
+    }
+
+    public Collection<Tag> getFollowedTags() {
+        return this.followedTags;
+    }
+
+    public Collection<Snippet> getFavorites() {
+        return this.favorites;
+    }
+
+    public Collection<Role> getRoles() {
+        return this.roles;
     }
 }

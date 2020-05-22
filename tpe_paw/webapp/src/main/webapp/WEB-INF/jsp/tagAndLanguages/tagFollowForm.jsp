@@ -15,7 +15,7 @@
         <form:checkbox class="hidden" id="follow-button" path="follows" value="true" onclick="updateForm(this)"/>
         <label class="no-margin" for="follow-button">
             <c:choose>
-                <c:when test="${followForm.follows}">
+                <c:when test="${followForm.follow}">
                     <div class="tag-snippets-button border-radius flex-center no-text-decoration">
                         <spring:message code="tags.unfollow"/>
                     </div>

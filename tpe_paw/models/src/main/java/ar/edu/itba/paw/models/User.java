@@ -132,18 +132,33 @@ public class User {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public int getReputation() {
         return reputation;
     }
 
+    public void setReputation(int reputation) {
+        this.reputation = reputation;
+    }
 
     /**
      * Returns the string representation of the creation date
@@ -159,20 +174,33 @@ public class User {
 
     public byte[] getIcon() { return this.icon; }
 
-    public String getLang() {
-        return lang;
+    public void setIcon(byte[] icon) {
+        this.icon = icon;
     }
 
-    public String getRegion() {
-        return region;
+    public String getLang() {
+        return lang;
     }
 
     public void setLang(String lang) {
         this.lang = lang;
     }
 
+    public String getRegion() {
+        return region;
+    }
+
     public void setRegion(String region) {
         this.region = region;
+    }
+
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 
     public Collection<Snippet> getCreatedSnippets() {
@@ -191,31 +219,4 @@ public class User {
         return this.roles;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setReputation(int reputation) {
-        this.reputation = reputation;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setIcon(byte[] icon) {
-        this.icon = icon;
-    }
-
-    public boolean isVerified() {
-        return verified;
-    }
-
-    public void setVerified(boolean verified) {
-        this.verified = verified;
-    }
 }

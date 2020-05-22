@@ -175,14 +175,6 @@ public class User {
         this.region = region;
     }
 
-    public boolean isVerified() {
-        return verified;
-    }
-
-    public void setVerified(boolean verified) {
-        this.verified = verified;
-    }
-
     public Collection<Snippet> getCreatedSnippets() {
         return this.createdSnippets;
     }
@@ -197,5 +189,33 @@ public class User {
 
     public Collection<Role> getRoles() {
         return this.roles;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setReputation(int reputation) {
+        this.reputation = reputation;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setIcon(byte[] icon) {
+        this.icon = icon;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 }

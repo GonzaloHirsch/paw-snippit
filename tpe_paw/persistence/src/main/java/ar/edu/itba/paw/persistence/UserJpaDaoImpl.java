@@ -32,75 +32,123 @@ public class UserJpaDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findUserByUsername(String username) {
-        final TypedQuery<User> query = this.em.createQuery("from User as u where u.username = :username", User.class);
-        query.setParameter("username", username);
+        final TypedQuery<User> query = this.em.createQuery("from User as u where u.username = :username", User.class)
+                .setParameter("username", username);
         return query.getResultList().stream().findFirst();
     }
 
     @Override
     public Optional<User> findUserByEmail(String email) {
-        final TypedQuery<User> query = this.em.createQuery("from User as u where u.email = :email", User.class);
-        query.setParameter("email", email);
+        final TypedQuery<User> query = this.em.createQuery("from User as u where u.email = :email", User.class)
+                .setParameter("email", email);
         return query.getResultList().stream().findFirst();
     }
 
     @Override
     public void updateDescription(String username, String newDescription) {
-
+        Optional<User> maybeUser = this.findUserByUsername(username);
+        if(maybeUser.isPresent()){
+            User user = maybeUser.get();
+            user.setDescription(newDescription);
+        }
     }
 
     @Override
     public void changePassword(String email, String password) {
-
+        Optional<User> maybeUser = this.findUserByEmail(email);
+        if(maybeUser.isPresent()){
+            User user = maybeUser.get();
+            user.setEmail(email);
+        }
     }
 
     @Override
     public void changeProfilePhoto(long userId, byte[] photo) {
-
+        Optional<User> maybeUser = this.findUserById(userId);
+        if(maybeUser.isPresent()){
+            User user = maybeUser.get();
+            user.setIcon(photo);
+        }
     }
 
     @Override
     public void changeDescription(long userId, String description) {
-
+        Optional<User> maybeUser = this.findUserById(userId);
+        if(maybeUser.isPresent()){
+            User user = maybeUser.get();
+            user.setDescription(description);
+        }
     }
 
     @Override
     public void changeReputation(long userId, int value) {
-
+        Optional<User> maybeUser = this.findUserById(userId);
+        if(maybeUser.isPresent()){
+            User user = maybeUser.get();
+            user.setReputation(value);
+        }
     }
 
     @Override
     public Collection<User> getAllUsers() {
-        return null;
+        return this.em.createQuery("from User", User.class).getResultList();
     }
 
+    //TODO: Check for inconsistency with boolean value of verified
     @Override
     public Collection<User> getAllVerifiedUsers() {
-        return null;
+        final TypedQuery<User> query = this.em.createQuery("from User as u where u.verfied = true", User.class);
+        return query.getResultList();
     }
 
     @Override
     public void updateLocale(long userId, Locale locale) {
-
+        Optional<User> maybeUser = this.findUserById(userId);
+        if(maybeUser.isPresent()){
+            User user = maybeUser.get();
+            user.setRegion(locale.getCountry());
+            user.setRegion(locale.getLanguage());
+        }
     }
 
     @Override
     public String getLocaleLanguage(long userId) {
-        return null;
+        Optional<User> maybeUser = this.findUserById(userId);
+        if(maybeUser.isPresent()){
+            User user = maybeUser.get();
+            return user.getLang();
+        }
+        return "";
     }
 
     @Override
     public String getLocaleRegion(long userId) {
-        return null;
+        Optional<User> maybeUser = this.findUserById(userId);
+        if(maybeUser.isPresent()){
+            User user = maybeUser.get();
+            return user.getRegion();
+        }
+        return "";
     }
 
+    //TODO: Check for inconsistency with boolean value of verified
     @Override
     public boolean userEmailIsVerified(long userId) {
+        Optional<User> maybeUser = this.findUserById(userId);
+        if(maybeUser.isPresent()){
+            User user = maybeUser.get();
+            return user.isVerified();
+        }
         return false;
     }
 
+    //TODO: Check for inconsistency with boolean value of verified
     @Override
     public void verifyUserEmail(long userId) {
-
+        Optional<User> maybeUser = this.findUserById(userId);
+        if(maybeUser.isPresent()){
+            User user = maybeUser.get();
+            user.setVerified(true);
+        }
     }
 }

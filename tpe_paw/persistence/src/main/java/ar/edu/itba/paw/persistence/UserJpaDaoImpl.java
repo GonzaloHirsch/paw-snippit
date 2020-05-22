@@ -144,7 +144,7 @@ public class UserJpaDaoImpl implements UserDao {
         Optional<User> maybeUser = this.findUserById(userId);
         if(maybeUser.isPresent()){
             User user = maybeUser.get();
-            return user.getVerified();
+            return user.isVerified();
         }
         return false;
     }

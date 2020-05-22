@@ -39,4 +39,17 @@ public class Language {
     public Collection<Snippet> getSnippetsUsing() {
         return snippetsUsing;
     }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Language)) {
+            return false;
+        }
+        Language tag = (Language) o;
+        return this.getId().equals(tag.getId());
+    }
 }

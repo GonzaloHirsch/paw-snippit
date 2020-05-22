@@ -22,7 +22,7 @@
                     </c:forEach>
                     <c:param name="page" value="${1}"/>
                 </c:url>
-                <a class="navigation-page" href="${prevUrl}"><span class="material-icons">
+                <a class="navigation-page transition" href="${prevUrl}"><span class="material-icons">
                 first_page </span></a>
             </c:if>
             <c:if test="${page != 1}">
@@ -34,7 +34,7 @@
                     </c:forEach>
                     <c:param name="page" value="${page - 1}"/>
                 </c:url>
-                <a class="navigation-page" href="${prevUrl}"><span class="material-icons">
+                <a class="navigation-page transition" href="${prevUrl}"><span class="material-icons">
                 chevron_left </span></a>
             </c:if>
             <c:forEach begin="${page - 1 > 0 ? page - 1 : 1}" end="${pages > page + 1 ? page + 1 : pages}"

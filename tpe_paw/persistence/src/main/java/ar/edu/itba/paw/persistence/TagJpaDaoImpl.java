@@ -41,6 +41,7 @@ public class TagJpaDaoImpl implements TagDao {
         return tag;
     }
 
+    // TODO REMOVE
     @Override
     public Collection<Tag> findTagsForSnippet(long snippetId) {
         return null;

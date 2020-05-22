@@ -132,27 +132,39 @@ public class User {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public int getReputation() {
         return reputation;
     }
 
-    /*public String getDateJoined() {
-        return dateJoined;
-    }*/
+    public void setReputation(int reputation) {
+        this.reputation = reputation;
+    }
 
     /**
      * Returns the string representation of the creation date
      * @return
      */
-    public String getCreationDate(){
+    public String getDateJoined(){
         return DATE.format(this.dateJoined.toInstant());
     }
 
@@ -162,21 +174,26 @@ public class User {
 
     public byte[] getIcon() { return this.icon; }
 
-    public String getLang() {
-        return lang;
+    public void setIcon(byte[] icon) {
+        this.icon = icon;
     }
 
-    public String getRegion() {
-        return region;
+    public String getLang() {
+        return lang;
     }
 
     public void setLang(String lang) {
         this.lang = lang;
     }
 
+    public String getRegion() {
+        return region;
+    }
+
     public void setRegion(String region) {
         this.region = region;
     }
+
 
     public boolean isVerified() {
         return verified;
@@ -186,20 +203,20 @@ public class User {
         this.verified = verified;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public Collection<Snippet> getCreatedSnippets() {
+        return this.createdSnippets;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public Collection<Tag> getFollowedTags() {
+        return this.followedTags;
     }
 
-    public void setReputation(int reputation) {
-        this.reputation = reputation;
+    public Collection<Snippet> getFavorites() {
+        return this.favorites;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public Collection<Role> getRoles() {
+        return this.roles;
     }
 
     public void setIcon(byte[] icon) {

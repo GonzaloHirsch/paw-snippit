@@ -51,6 +51,8 @@ public class UserJpaDaoImpl implements UserDao {
             User user = maybeUser.get();
             user.setDescription(newDescription);
         }
+        em.getTransaction().commit();
+
     }
 
     @Override
@@ -60,6 +62,7 @@ public class UserJpaDaoImpl implements UserDao {
             User user = maybeUser.get();
             user.setEmail(email);
         }
+        em.getTransaction().commit();
     }
 
     @Override
@@ -69,6 +72,7 @@ public class UserJpaDaoImpl implements UserDao {
             User user = maybeUser.get();
             user.setIcon(photo);
         }
+        em.getTransaction().commit();
     }
 
     @Override
@@ -78,6 +82,7 @@ public class UserJpaDaoImpl implements UserDao {
             User user = maybeUser.get();
             user.setDescription(description);
         }
+        em.getTransaction().commit();
     }
 
     @Override
@@ -87,6 +92,7 @@ public class UserJpaDaoImpl implements UserDao {
             User user = maybeUser.get();
             user.setReputation(value);
         }
+        em.getTransaction().commit();
     }
 
     @Override
@@ -109,6 +115,7 @@ public class UserJpaDaoImpl implements UserDao {
             user.setRegion(locale.getCountry());
             user.setRegion(locale.getLanguage());
         }
+        em.getTransaction().commit();
     }
 
     @Override
@@ -150,5 +157,6 @@ public class UserJpaDaoImpl implements UserDao {
             User user = maybeUser.get();
             user.setVerified(true);
         }
+        em.getTransaction().commit();
     }
 }

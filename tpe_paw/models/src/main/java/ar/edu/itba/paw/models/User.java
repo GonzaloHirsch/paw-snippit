@@ -210,5 +210,7 @@ public class User {
         return this.verified;
     }
 
-
+    public Collection<Role> getRoles() {
+        return roles;
+    }
 }

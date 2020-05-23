@@ -1,13 +1,16 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Role;
+import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import ar.edu.itba.paw.interfaces.dao.RoleDao;
 
@@ -38,14 +41,13 @@ public class RoleJpaDaoImpl implements RoleDao {
     //TODO: See if its better to move to UserJpaDaoImpl
     @Override
     public Collection<String> getUserRoles(long userId) {
-        Optional<User> maybeUser = Optional.ofNullable(this.em.find(User.class, userId));
-        Collection<String> roleList = new ArrayList<>(Collections.emptyList());
-        if(maybeUser.isPresent()){
-            for(Role r: maybeUser.get().getRoles()){
-                roleList.add(r.getName());
-            }
-        }
-        return roleList;
+        Query nativeQuery = this.em.createNativeQuery("SELECT ur.role_id FROM user_roles AS ur WHERE ur.user_id = :id");
+        nativeQuery.setParameter("id", userId);
+        List<Long> roleIds = ((List<Integer>) nativeQuery.getResultList())
+                .stream().map(i -> i.longValue()).collect(Collectors.toList());
+        final TypedQuery<Role> query = this.em.createQuery("from Role where id IN :roleIds", Role.class);
+        query.setParameter("roleIds", roleIds);
+        return query.getResultList().stream().map(Role::getName).collect(Collectors.toList());
     }
 
     @Override

@@ -14,14 +14,10 @@ public class Role {
     @SequenceGenerator(allocationSize = 1, sequenceName = "roles_id_seq", name="roles_id_seq")
     private Long id;
 
-    @Column(length = 20, name = "name")
+    @Column(length = 20, name = "role")
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name= "user_roles",
-            joinColumns = @JoinColumn(name = "role_id"),        //TODO: CHECK IF IS users OR user
-            inverseJoinColumns = @JoinColumn(name = "user_id")) //TODO: SAME with role
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles")
     private Collection<User> usersWithRole;
 
     public Role(){

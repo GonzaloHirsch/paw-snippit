@@ -60,7 +60,7 @@ public class UserJpaDaoImpl implements UserDao {
         Optional<User> maybeUser = this.findUserByEmail(email);
         if(maybeUser.isPresent()){
             User user = maybeUser.get();
-            user.setEmail(email);
+            user.setPassword(password);
         }
         em.getTransaction().commit();
     }

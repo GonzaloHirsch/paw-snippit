@@ -58,12 +58,27 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> getAllFollowingSnippets(long userId, int page, int pageSize) {
-        return null;
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = sn.id LEFT OUTER JOIN follows AS fol ON fol.tag_id = st.tag_id WHERE fol.user_id = :id");
+        nativeQuery.setParameter("id", userId);
+        nativeQuery.setFirstResult((page - 1) * pageSize);
+        nativeQuery.setMaxResults(pageSize);
+        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
+                .stream().map(i -> i.longValue()).collect(Collectors.toList());
+        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
+        query.setParameter("filteredIds", filteredIds);
+        return query.getResultList();
     }
 
     @Override
     public Collection<Snippet> getAllUpVotedSnippets(long userId, int page, int pageSize) {
-        return null;
+        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets");
+        nativeQuery.setFirstResult((page - 1) * pageSize);
+        nativeQuery.setMaxResults(pageSize);
+        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
+                .stream().map(i -> i.longValue()).collect(Collectors.toList());
+        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
+        query.setParameter("filteredIds", filteredIds);
+        return query.getResultList();
     }
 
     @Override
@@ -131,7 +146,9 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public int getAllFollowingSnippetsCount(long userId) {
-        return 0;
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = sn.id LEFT OUTER JOIN follows AS fol ON fol.tag_id = st.tag_id WHERE fol.user_id = :id");
+        nativeQuery.setParameter("id", userId);
+        return nativeQuery.getResultList().size();
     }
 
     @Override

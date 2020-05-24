@@ -34,51 +34,27 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     @Override
     public Collection<Snippet> getAllSnippets(int page, int pageSize) {
         Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets");
-        nativeQuery.setFirstResult((page - 1) * pageSize);
-        nativeQuery.setMaxResults(pageSize);
-        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
-                .stream().map(i -> i.longValue()).collect(Collectors.toList());
-        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
-        query.setParameter("filteredIds", filteredIds);
-        return query.getResultList();
+        return getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override
     public Collection<Snippet> getAllFavoriteSnippets(long userId, int page, int pageSize) {
         Query nativeQuery = this.em.createNativeQuery("SELECT fav.snippet_id FROM favorites AS fav WHERE fav.user_id = :id");
         nativeQuery.setParameter("id", userId);
-        nativeQuery.setFirstResult((page - 1) * pageSize);
-        nativeQuery.setMaxResults(pageSize);
-        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
-                .stream().map(i -> i.longValue()).collect(Collectors.toList());
-        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
-        query.setParameter("filteredIds", filteredIds);
-        return query.getResultList();
+        return getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override
     public Collection<Snippet> getAllFollowingSnippets(long userId, int page, int pageSize) {
         Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = sn.id LEFT OUTER JOIN follows AS fol ON fol.tag_id = st.tag_id WHERE fol.user_id = :id");
         nativeQuery.setParameter("id", userId);
-        nativeQuery.setFirstResult((page - 1) * pageSize);
-        nativeQuery.setMaxResults(pageSize);
-        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
-                .stream().map(i -> i.longValue()).collect(Collectors.toList());
-        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
-        query.setParameter("filteredIds", filteredIds);
-        return query.getResultList();
+        return getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override
     public Collection<Snippet> getAllUpVotedSnippets(long userId, int page, int pageSize) {
         Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets");
-        nativeQuery.setFirstResult((page - 1) * pageSize);
-        nativeQuery.setMaxResults(pageSize);
-        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
-                .stream().map(i -> i.longValue()).collect(Collectors.toList());
-        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
-        query.setParameter("filteredIds", filteredIds);
-        return query.getResultList();
+        return getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override
@@ -88,12 +64,16 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> findAllSnippetsByOwner(long userId, int page, int pageSize) {
-        return null;
+        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets WHERE user_id = :userId");
+        nativeQuery.setParameter("userId", userId);
+        return getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override
     public Collection<Snippet> findSnippetsWithLanguage(long langId, int page, int pageSize) {
-        return null;
+        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets WHERE language_id = :langId");
+        nativeQuery.setParameter("langId", langId);
+        return getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override
@@ -184,5 +164,15 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     @Override
     public int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged) {
         return 0;
+    }
+
+    private Collection<Snippet> getSnippetsByPage(int page, int pageSize, Query nativeQuery) {
+        nativeQuery.setFirstResult((page - 1) * pageSize);
+        nativeQuery.setMaxResults(pageSize);
+        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
+                .stream().map(i -> i.longValue()).collect(Collectors.toList());
+        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
+        query.setParameter("filteredIds", filteredIds);
+        return query.getResultList();
     }
 }

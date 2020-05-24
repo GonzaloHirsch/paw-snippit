@@ -55,64 +55,34 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     public Collection<Snippet> getAllUpVotedSnippets(long userId, int page, int pageSize) {
         Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT vf.snippet_id FROM votes_for AS vf WHERE vf.user_id = :id AND vf.type = 1 ORDER BY vf.snippet_id");
         nativeQuery.setParameter("id", userId);
-        nativeQuery.setFirstResult((page - 1) * pageSize);
-        nativeQuery.setMaxResults(pageSize);
-        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
-                .stream().map(i -> i.longValue()).collect(Collectors.toList());
-        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
-        query.setParameter("filteredIds", filteredIds);
-        return query.getResultList();
+        return this.getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override
     public Collection<Snippet> getAllFlaggedSnippets(int page, int pageSize) {
         Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.flagged = true ORDER BY sn.id");
-        nativeQuery.setFirstResult((page - 1) * pageSize);
-        nativeQuery.setMaxResults(pageSize);
-        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
-                .stream().map(i -> i.longValue()).collect(Collectors.toList());
-        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
-        query.setParameter("filteredIds", filteredIds);
-        return query.getResultList();
+        return this.getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override
     public Collection<Snippet> findAllSnippetsByOwner(long userId, int page, int pageSize) {
         Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.user_id = :id ORDER BY sn.id");
         nativeQuery.setParameter("id", userId);
-        nativeQuery.setFirstResult((page - 1) * pageSize);
-        nativeQuery.setMaxResults(pageSize);
-        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
-                .stream().map(i -> i.longValue()).collect(Collectors.toList());
-        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
-        query.setParameter("filteredIds", filteredIds);
-        return query.getResultList();
+        return this.getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override
     public Collection<Snippet> findSnippetsForTag(long tagId, int page, int pageSize) {
         Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON sn.id = st.snippet_id WHERE st.tag_id = :id ORDER BY sn.id");
         nativeQuery.setParameter("id", tagId);
-        nativeQuery.setFirstResult((page - 1) * pageSize);
-        nativeQuery.setMaxResults(pageSize);
-        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
-                .stream().map(i -> i.longValue()).collect(Collectors.toList());
-        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
-        query.setParameter("filteredIds", filteredIds);
-        return query.getResultList();
+        return this.getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override
     public Collection<Snippet> findSnippetsWithLanguage(long langId, int page, int pageSize) {
         Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.language_id = :id ORDER BY sn.id");
         nativeQuery.setParameter("id", langId);
-        nativeQuery.setFirstResult((page - 1) * pageSize);
-        nativeQuery.setMaxResults(pageSize);
-        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
-                .stream().map(i -> i.longValue()).collect(Collectors.toList());
-        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
-        query.setParameter("filteredIds", filteredIds);
-        return query.getResultList();
+        return this.getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override

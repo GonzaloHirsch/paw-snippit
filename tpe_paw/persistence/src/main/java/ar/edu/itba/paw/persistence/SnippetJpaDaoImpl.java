@@ -94,7 +94,9 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public boolean deleteSnippetById(long id) {
-        return false;
+        final Query query = this.em.createQuery("from Snippet where id = :id")
+                .setParameter("id", id);
+        return query.executeUpdate() > 0;
     }
 
     @Override

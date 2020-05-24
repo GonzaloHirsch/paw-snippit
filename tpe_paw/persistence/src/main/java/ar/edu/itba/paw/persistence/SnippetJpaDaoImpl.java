@@ -106,7 +106,6 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     public boolean deleteSnippetById(long id) {
         Optional<Snippet> maybeSnippet = this.findSnippetById(id);
         maybeSnippet.ifPresent(snippet -> this.em.remove(snippet));
-        em.flush();
         return maybeSnippet.isPresent();
     }
 

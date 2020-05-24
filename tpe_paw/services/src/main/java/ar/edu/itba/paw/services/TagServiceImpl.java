@@ -56,11 +56,13 @@ public class TagServiceImpl implements TagService {
         return tagDao.findById(tagId);
     }
 
+    @Transactional
     @Override
     public void followTag(long userId, long tagId) {
         followingDao.followTag(userId, tagId);
     }
 
+    @Transactional
     @Override
     public void unfollowTag(long userId, long tagId) {
         followingDao.unfollowTag(userId, tagId);
@@ -84,6 +86,7 @@ public class TagServiceImpl implements TagService {
         return tagList;
     }
 
+    @Transactional
     @Override
     public void addTags(List<String> tags) {
         tagDao.addTags(tags);
@@ -99,11 +102,13 @@ public class TagServiceImpl implements TagService {
         return tagDao.findById(tagId).isPresent();
     }
 
+    @Transactional
     @Override
     public void removeTag(final long tagId) {
         this.tagDao.removeTag(tagId);
     }
 
+    @Transactional
     @Override
     public void updateFollowing(long userId, long tagId, boolean followed) {
         if (followed) {

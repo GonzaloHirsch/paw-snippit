@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -37,5 +38,5 @@ public interface SnippetService {
     int getAllSnippetsByLanguageCount(final long langId);
     int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId, Long resourceId);
     int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, Boolean includeFlagged);
-    Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<String> tags);
+    Long createSnippet(User owner, String title, String description, String code, Timestamp dateCreated, Long language, Collection<String> tags);
 }

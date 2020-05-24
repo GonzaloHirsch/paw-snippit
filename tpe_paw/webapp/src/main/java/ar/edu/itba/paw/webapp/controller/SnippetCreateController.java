@@ -28,7 +28,6 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.Locale;
 
 @Controller
@@ -75,8 +74,8 @@ public class SnippetCreateController {
         if (errors.hasErrors()) {
             return snippetCreateDetail(snippetCreateForm);
         }
-        String dateCreated = DATE.format(Instant.now());
-
+//        String dateCreated = DATE.format(Instant.now());
+        Timestamp dateCreated = Timestamp.from(Instant.now());
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if(currentUser == null) {
             LOGGER.error("Creating a snippet when no user is logged in");

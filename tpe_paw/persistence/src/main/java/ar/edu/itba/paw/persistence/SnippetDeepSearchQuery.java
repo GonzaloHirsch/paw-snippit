@@ -64,7 +64,7 @@ public class SnippetDeepSearchQuery {
         }};
 
         public Builder() {
-            this.query.append("SELECT DISTINCT s.id, us.reputation, s.title, s.date_created, s.votes FROM snippets AS s INNER JOIN users AS us ON us.id = s.user_id LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = s.id ");
+            this.query.append("SELECT DISTINCT s.id, us.reputation, s.title, s.date_created, s.votes FROM complete_snippets AS s INNER JOIN users AS us ON us.id = s.user_id LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = s.id ");
         }
 
         public Builder where(){

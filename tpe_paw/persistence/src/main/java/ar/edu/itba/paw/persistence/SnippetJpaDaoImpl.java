@@ -181,6 +181,13 @@ public class SnippetJpaDaoImpl implements SnippetDao {
         return 0;
     }
 
+    /**
+     * Extracts a page of Snippet results given a query for filtered ids
+     * @param page Number of page
+     * @param pageSize Size of the page
+     * @param nativeQuery Query searching for filtered IDs
+     * @return Collection<Snippet> with the results of the query
+     */
     private Collection<Snippet> getSnippetsByPage(int page, int pageSize, Query nativeQuery) {
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);

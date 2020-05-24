@@ -54,4 +54,7 @@ public class Vote {
         return snippet;
     }
 
+    public void setType(int type) {
+        this.type = type;
+    }
 }

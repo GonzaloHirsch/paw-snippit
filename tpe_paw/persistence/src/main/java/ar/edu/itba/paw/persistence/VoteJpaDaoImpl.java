@@ -43,16 +43,24 @@ public class VoteJpaDaoImpl implements VoteDao {
 
     @Override
     public void addVote(long userId, long snippetId, int voteType) {
-        User user = this.em.find(User.class, userId);
-        Snippet snippet = this.em.find(Snippet.class, snippetId);
 
-        if(user != null && snippet !=null){
-            Vote vote = new Vote(user, snippet, voteType);
-            snippet.getVotes().add(vote);
-            user.getVotes().add(vote);
+        Optional<Vote> maybeVote = this.getVote(userId,snippetId);
+        if(maybeVote.isPresent()){
+            Vote vote = maybeVote.get();
+            vote.setType(voteType);
             this.em.persist(vote);
         }
+        else{
+            User user = this.em.find(User.class, userId);
+            Snippet snippet = this.em.find(Snippet.class, snippetId);
 
+            if(user != null && snippet !=null){
+                Vote vote = new Vote(user, snippet, voteType);
+                snippet.getVotes().add(vote);
+                user.getVotes().add(vote);
+                this.em.persist(vote);
+            }
+        }
     }
 
     @Override

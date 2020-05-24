@@ -70,7 +70,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> getAllFlaggedSnippets(int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.flagged = true ORDER BY sn.id ASC");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.flagged = 1 ORDER BY sn.id ASC");
         return this.getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
@@ -177,7 +177,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public int getAllFlaggedSnippetsCount() {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.flagged = true");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.flagged = 1");
         return nativeQuery.getResultList().size();
     }
 

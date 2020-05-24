@@ -91,7 +91,6 @@ public class SnippetDaoTest {
     // TODO check transactional
     @Transactional
     public void testCreate() {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, ROLES_USER_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
 
         final long snippetId = snippetDao.createSnippet(defaultUser.getId(), TITLE, DESCR, CODE, Timestamp.from(Instant.now()), defaultLanguageId, Collections.emptySet());
@@ -115,7 +114,7 @@ public class SnippetDaoTest {
                 6).stream().findFirst();
 
         assertTrue(maybeSnippet.isPresent());
-//        assertEquals(snippetId, maybeSnippet.get().getId());
+        assertEquals(snippetId, (long)maybeSnippet.get().getId());
         assertEquals(defaultUser.getUsername(), maybeSnippet.get().getOwner().getUsername());
     }
 
@@ -133,52 +132,52 @@ public class SnippetDaoTest {
 
         assertFalse(maybeSnippet.isPresent());
     }
-//
-//    @Test
-//    public void testFindSnippetByDeepCriteria(){
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-//        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
-//
-//        Optional<Snippet> maybeSnippet = snippetDao.findSnippetByDeepCriteria(null,
-//                null,
-//                0,
-//                10,
-//                0,
-//                10,
-//                defaultLanguageId,
-//                null,
-//                TITLE,
-//                defaultUser.getUsername(),
-//                "title",
-//                "asc",
-//                true,
-//                1, 6).stream().findFirst();
-//
-//        assertTrue(maybeSnippet.isPresent());
-//        assertEquals(TITLE,maybeSnippet.get().getTitle());
-//
-//    }
-//
-//    @Test
-//    public void testFindSnippetByDeepCriteriaTest(){
-//        Optional<Snippet> maybeSnippet = snippetDao.findSnippetByDeepCriteria(null,
-//                null,
-//                0,
-//                10,
-//                0,
-//                10,
-//                defaultLanguageId,
-//                null,
-//                TITLE,
-//                defaultUser.getUsername(),
-//                "title",
-//                "asc",
-//                true,
-//                1, 6).stream().findFirst();
-//
-//        assertFalse(maybeSnippet.isPresent());
-//
-//    }
+
+    @Test
+    public void testFindSnippetByDeepCriteria(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
+        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+
+        Optional<Snippet> maybeSnippet = snippetDao.findSnippetByDeepCriteria(null,
+                null,
+                0,
+                10,
+                0,
+                10,
+                defaultLanguageId,
+                null,
+                TITLE,
+                defaultUser.getUsername(),
+                SnippetDao.Orders.ASC,
+                SnippetDao.Types.ALL,
+                true,
+                1, 6).stream().findFirst();
+
+        assertTrue(maybeSnippet.isPresent());
+        assertEquals(TITLE,maybeSnippet.get().getTitle());
+
+    }
+
+    @Test
+    public void testFindSnippetByDeepCriteriaTest(){
+        Optional<Snippet> maybeSnippet = snippetDao.findSnippetByDeepCriteria(null,
+                null,
+                0,
+                10,
+                0,
+                10,
+                defaultLanguageId,
+                null,
+                TITLE,
+                defaultUser.getUsername(),
+                SnippetDao.Orders.ASC,
+                SnippetDao.Types.ALL,
+                true,
+                1, 6).stream().findFirst();
+
+        assertFalse(maybeSnippet.isPresent());
+
+    }
 
     @Test
     public void testGetAllSnippets(){
@@ -215,7 +214,7 @@ public class SnippetDaoTest {
         assertNotNull(maybeCollection);
         assertEquals(1,maybeCollection.size());
         Snippet s = (Snippet) maybeCollection.toArray()[0];
-//        assertEquals(snippetId,s.getId());
+        assertEquals(snippetId,(long)s.getId());
     }
     @Test
     public void testGetAllFavoriteSnippetsEmpty(){
@@ -239,7 +238,7 @@ public class SnippetDaoTest {
         assertNotNull(maybeCollection);
         assertEquals(1,maybeCollection.size());
         Snippet s = (Snippet) maybeCollection.toArray()[0];
-//        assertEquals(snippetId,s.getId());
+        assertEquals(snippetId,(long)s.getId());
     }
 
     @Test
@@ -264,7 +263,7 @@ public class SnippetDaoTest {
         assertNotNull(maybeCollection);
         assertEquals(1,maybeCollection.size());
         Snippet s = (Snippet) maybeCollection.toArray()[0];
-//        assertEquals(snippetId,s.getId());
+        assertEquals((long) snippetId,(long) s.getId());
     }
 
     @Test
@@ -286,7 +285,7 @@ public class SnippetDaoTest {
         assertNotNull(maybeCollection);
         assertEquals(1,maybeCollection.size());
         Snippet s = (Snippet) maybeCollection.toArray()[0];
-//        assertEquals(snippetId,s.getId());
+        assertEquals(snippetId,(long)s.getId());
     }
 
     @Test
@@ -310,7 +309,7 @@ public class SnippetDaoTest {
         assertNotNull(maybeCollection);
         assertEquals(1,maybeCollection.size());
         Snippet s = (Snippet) maybeCollection.toArray()[0];
-//        assertEquals(snippetId,s.getId());
+        assertEquals(snippetId,(long)s.getId());
     }
 
     @Test
@@ -333,7 +332,7 @@ public class SnippetDaoTest {
         assertNotNull(maybeCollection);
         assertEquals(1,maybeCollection.size());
         Snippet s = (Snippet) maybeCollection.toArray()[0];
-//        assertEquals(snippetId,s.getId());
+        assertEquals(snippetId,(long)s.getId());
     }
 
     @Test
@@ -401,7 +400,7 @@ public class SnippetDaoTest {
         Optional<Snippet> snippet = snippetDao.findSnippetsForTag(defaultTag.getId(), 1, 10).stream().findFirst();
 
         assertTrue(snippet.isPresent());
-//        assertEquals(snippetId,snippet.get().getId());
+        assertEquals(snippetId,(long)snippet.get().getId());
     }
 
     @Test

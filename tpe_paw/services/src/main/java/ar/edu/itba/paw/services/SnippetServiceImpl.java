@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -151,11 +152,11 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Transactional
     @Override
-    public Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<String> tags) {
-        Long snippetId =  snippetDao.createSnippet(owner.getId(),title,description,code,dateCreated,language);
-        if(snippetId != null) {
-            this.tagService.addTagsToSnippet(snippetId, tags);
-        }
+    public Long createSnippet(User owner, String title, String description, String code, Timestamp dateCreated, Long language, Collection<String> tags) {
+        Long snippetId =  snippetDao.createSnippet(owner.getId(),title,description,code,dateCreated,language, tags);
+//        if(snippetId != null) {
+//            this.tagService.addTagsToSnippet(snippetId, tags);
+//        }
         return snippetId;
     }
 

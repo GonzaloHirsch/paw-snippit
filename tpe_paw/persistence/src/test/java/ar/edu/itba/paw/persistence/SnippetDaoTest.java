@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -89,7 +90,7 @@ public class SnippetDaoTest {
     public void testCreate() {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
 
-        final long snippetId = snippetDao.createSnippet(defaultUser.getId(), TITLE, DESCR, CODE, DATE.format(Instant.now()), defaultLanguageId);
+        final long snippetId = snippetDao.createSnippet(defaultUser.getId(), TITLE, DESCR, CODE, Timestamp.from(Instant.now()), defaultLanguageId, Collections.emptySet());
 
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, SNIPPETS_TABLE));
     }

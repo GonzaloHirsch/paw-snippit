@@ -1,15 +1,19 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
+import ar.edu.itba.paw.interfaces.dao.TagDao;
+import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
+import ar.edu.itba.paw.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,6 +22,8 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @PersistenceContext
     private EntityManager em;
+    @Autowired
+    private TagDao tagJpaDaoImpl;
 
     @Override
     public Collection<Snippet> findSnippetByCriteria(Types type, String term, Locations location, Orders order, Long userId, Long resourceId, int page, int pageSize) {
@@ -111,8 +117,14 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Long createSnippet(long ownerId, String title, String description, String code, String dateCreated, Long languageId) {
-        return null;
+    public Long createSnippet(long ownerId, String title, String description, String code, Timestamp dateCreated, Long languageId, Collection<String> tags) {
+        User owner = em.find(User.class, ownerId);
+        Language lang = em.find(Language.class, languageId);
+        Collection<Tag> tagEntities = tagJpaDaoImpl.findSpecificTagsByName(tags);
+        Snippet createdSnippet = new Snippet(owner, code, title, description, dateCreated, lang, tagEntities, false);
+        em.persist(createdSnippet);
+        em.flush();
+        return createdSnippet.getId();
     }
 
     @Override

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.dao;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -43,7 +44,7 @@ public interface SnippetDao {
     Optional<Snippet> findSnippetById(final long id);
     boolean deleteSnippetById(final long id);
     int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId);
-    Long createSnippet(long ownerId, String title, String description,String code, String dateCreated, Long languageId);
+    Long createSnippet(long ownerId, String title, String description, String code, Timestamp dateCreated, Long languageId, Collection<String> tags);
     Collection<Snippet> findSnippetsForTag(long tagId, int page, int pageSize);
     void flagSnippet(long snippetId);
     void unflagSnippet(long snippetId);

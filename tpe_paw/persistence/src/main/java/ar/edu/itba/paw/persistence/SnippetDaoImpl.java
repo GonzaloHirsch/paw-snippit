@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -161,6 +161,11 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
+    public Long createSnippet(long ownerId, String title, String description, String code, Timestamp dateCreated, Long languageId, Collection<String> tags) {
+        return null;
+    }
+
+    @Deprecated
     public Long createSnippet(long ownerId, String title, String description, String code, String dateCreated, Long languageId) {
         final Map<String, Object> snippetDataMap = new HashMap<String, Object>() {{
             put("user_id", ownerId);

@@ -16,6 +16,9 @@ public interface TagDao {
     Collection<Tag> getAllTags();
     int getAllTagsCountByName(String name);
     int getAllTagsCount();
+
+    Collection<Tag> findSpecificTagsByName(Collection<String> tags);
+
     Collection<Tag> findTagsByName(String name, int page, int pageSize);
     void addSnippetTag(final long snippetId, final long tagId);
     void addTags(final List<String> tags);

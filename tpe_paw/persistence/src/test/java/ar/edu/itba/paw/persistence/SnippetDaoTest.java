@@ -21,10 +21,8 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 import java.time.Instant;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.persistence.TestHelper.*;
@@ -103,7 +101,6 @@ public class SnippetDaoTest {
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE, defaultLanguageId,0);
 
         Optional<Snippet> maybeSnippet = snippetDao.findSnippetByCriteria(
-                SnippetDao.QueryTypes.SEARCH,
                 SnippetDao.Types.TITLE,
                 TITLE,
                 SnippetDao.Locations.HOME,
@@ -121,7 +118,6 @@ public class SnippetDaoTest {
     @Test
     public void testFindSnippetByCriteriaEmpty(){
         Optional<Snippet> maybeSnippet = snippetDao.findSnippetByCriteria(
-                SnippetDao.QueryTypes.SEARCH,
                 SnippetDao.Types.TITLE,
                 TITLE,
                 SnippetDao.Locations.HOME,
@@ -455,6 +451,18 @@ public class SnippetDaoTest {
         int snippetCount = snippetDao.getAllSnippetsCount();
 
         assertEquals(2,snippetCount);
+    }
+
+    @Test
+    public void testGetNewSnippetForTagsCount(){
+        JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
+        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
+        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE2,DESCR,CODE,defaultLanguageId,0);
+
+        Instant d = Instant.now().minus(7, ChronoUnit.DAYS);
+        int snippetCount = snippetDao.getNewSnippetsForTagsCount(DATE.format(d), new ArrayList<Tag>(), 1);
+
+        assertEquals(0,snippetCount);
     }
 
     @Test

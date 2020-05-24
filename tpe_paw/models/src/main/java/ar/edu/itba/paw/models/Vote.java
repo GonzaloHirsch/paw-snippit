@@ -26,15 +26,14 @@ public class Vote {
         // Hibernate constructor
     }
 
-    public int getType() {
-        return type;
-    }
-
-    @Deprecated
     public Vote(User user, Snippet snippet, int type) {
         this.user = user;
         this.snippet = snippet;
         this.type = type;
+    }
+
+    public int getType() {
+        return type;
     }
 
     public User getUser() {
@@ -44,8 +43,5 @@ public class Vote {
     public Snippet getSnippet() {
         return snippet;
     }
-//
-//    public int getType() {
-//        return type;
-//    }
+
 }

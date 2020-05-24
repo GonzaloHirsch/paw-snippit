@@ -223,4 +223,7 @@ public class User {
         return this.verified;
     }
 
+    public Collection<Vote> getVotes() {
+        return votes;
+    }
 }

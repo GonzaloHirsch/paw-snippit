@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.dao.TagDao;
+import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
+import ar.edu.itba.paw.models.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
@@ -49,17 +51,36 @@ public class TagJpaDaoImpl implements TagDao {
 
     @Override
     public void addSnippetTag(long snippetId, long tagId) {
+        Snippet snippet = this.em.find(Snippet.class, snippetId);
+        Tag tag = this.em.find(Tag.class, tagId);
 
+        snippet.getTags().add(tag);
+        tag.getSnippetsUsing().add(snippet);
+
+        this.em.persist(snippet);
+        this.em.persist(tag);
     }
 
     @Override
     public void addTags(List<String> tags) {
-
+        for(String name : tags){
+            addTag(name);
+        }
     }
 
     @Override
     public void removeTag(long tagId) {
-
+        Optional<Tag> maybeTag = findById(tagId);
+        if(maybeTag.isPresent()){
+            Tag tag = maybeTag.get();
+            for(Snippet s : tag.getSnippetsUsing()){
+                s.getTags().remove(tag);
+            }
+            for(User u : tag.getFollowingUsers()){
+                u.getFollowedTags().remove(tag);
+            }
+            this.em.remove(tag);
+        }
     }
 
 

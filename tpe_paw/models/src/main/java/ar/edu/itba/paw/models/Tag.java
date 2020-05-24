@@ -15,10 +15,10 @@ public class Tag {
     @Column(name = "name", length = 30, unique = true)
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags", cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags", cascade = CascadeType.PERSIST)
     private Collection<Snippet> snippetsUsing;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followedTags")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followedTags", cascade = CascadeType.PERSIST)
     private Collection<User> followingUsers;
 
     public Tag(String name) {
@@ -45,6 +45,10 @@ public class Tag {
     public String getName() { return this.name; }
 
     public Collection<Snippet> getSnippetsUsing(){ return this.snippetsUsing; }
+
+    public Collection<User> getFollowingUsers() {
+        return followingUsers;
+    }
 
     @Override
     public boolean equals(Object o) {

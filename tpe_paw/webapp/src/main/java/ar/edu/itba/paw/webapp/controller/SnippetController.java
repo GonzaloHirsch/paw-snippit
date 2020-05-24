@@ -77,8 +77,7 @@ public class SnippetController {
             voteForm.setOldType(voteType);
 
             // Fav
-            Optional<Favorite> fav = this.favService.getFavorite(currentUser.getId(), retrievedSnippet.get().getId());
-            favForm.setFavorite(fav.isPresent());
+            favForm.setFavorite(currentUser.getFavorites().contains(retrievedSnippet.get()));
 
             if (roleService.isAdmin(currentUser.getId())) {
                 adminFlagForm.setFlagged(retrievedSnippet.get().isFlagged());

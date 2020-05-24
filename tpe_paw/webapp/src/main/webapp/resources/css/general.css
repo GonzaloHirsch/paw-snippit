@@ -59,6 +59,10 @@ body {
     text-decoration-color: black !important;
 }
 
+.text-center {
+    text-align: center;
+}
+
 /* Flex Properties CSS */
 
 .flex-column {

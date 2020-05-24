@@ -42,7 +42,7 @@
                         <div class="snippet-text snippet-title detail-snippet-title">
                             ${fn:escapeXml(snippet.title)}
                         </div>
-                        <div class="snippet-language-tag detail-snippet-language-margin border-radius">${snippet.language.toUpperCase()}</div>
+                        <div class="snippet-language-tag detail-snippet-language-margin border-radius">${snippet.language.name.toUpperCase()}</div>
                     </div>
 
                     <c:if test="${!StringUtils.isEmpty(snippet.description)}">
@@ -71,7 +71,7 @@
                                     <c:set var="element" value="${tag}" scope="request"/>
                                     <c:set var="context" value="tags" scope="request"/>
                                     <c:set var="cssClass" value="tag-container-detail" scope="request"/>
-                                    <c:import url="/WEB-INF/jsp/tagAndLanguages/element.jsp"/>
+                                    <c:import url="/WEB-INF/jsp/tagAndLanguages/snippetTag.jsp"/>
                                 </c:forEach>
                             </div>
                         </c:if>

@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-import org.hsqldb.jdbc.JDBCDriver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -27,21 +26,42 @@ public class TestConfig {
     @Value("classpath:schema.sql")
     private Resource schemaSql;
 
+//    @Bean
+//    public DataSource dataSource() {
+//        final SimpleDriverDataSource ds = new SimpleDriverDataSource();
+//        ds.setDriverClass(JDBCDriver.class);
+//        ds.setUrl("jdbc:hsqldb:mem:paw");
+//        ds.setUsername("ha");
+//        ds.setPassword("");
+//        return ds;
+//    }
+//
+//    @Bean
+//    public DataSourceInitializer dataSourceInitializer(){
+//        DataSourceInitializer dsi = new DataSourceInitializer();
+//        dsi.setDataSource(dataSource());
+//        dsi.setDatabasePopulator(databasePopulator());
+//        return dsi;
+//    }
+
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
-        ds.setDriverClass(JDBCDriver.class);
-        ds.setUrl("jdbc:hsqldb:mem:paw");
-        ds.setUsername("ha");
-        ds.setPassword("");
+        ds.setDriverClass(org.postgresql.Driver.class);
+//        ds.setUrl("jdbc:postgresql://localhost/paw-2020a-2");
+//        ds.setUsername("paw-2020a-2");
+//        ds.setPassword("em8TT4uvx");
+        ds.setUrl("jdbc:postgresql://localhost/paw");
+        ds.setUsername("postgres");
+        ds.setPassword("postgres");
         return ds;
     }
 
     @Bean
-    public DataSourceInitializer dataSourceInitializer(){
+    public DataSourceInitializer dataSourceInitializer(final DataSource ds){
         DataSourceInitializer dsi = new DataSourceInitializer();
-        dsi.setDataSource(dataSource());
-        dsi.setDatabasePopulator(databasePopulator());
+        dsi.setDataSource(ds);
+//        dsi.setDatabasePopulator(databasePopulator());
         return dsi;
     }
 

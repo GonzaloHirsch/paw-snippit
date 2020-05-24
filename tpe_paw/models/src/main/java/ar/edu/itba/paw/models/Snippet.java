@@ -2,11 +2,9 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 
 @Entity
@@ -64,7 +62,7 @@ public class Snippet {
         // Hibernate constructor
     }
 
-    public Snippet(User owner, String code, String title, String description, Timestamp dateCreated, Language language, Collection<Tag> tags, boolean flagged) {
+    public Snippet(User owner, String code, String title, String description, Timestamp dateCreated, Language language, Collection<Tag> tags, Boolean flagged) {
         this.owner = owner;
         this.code = code;
         this.title = title;

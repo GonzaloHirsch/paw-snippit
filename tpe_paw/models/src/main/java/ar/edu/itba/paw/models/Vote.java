@@ -19,12 +19,12 @@ public class Vote {
     @EmbeddedId
     VoteId id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @MapsId("user_id")
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @MapsId("snippet_id")
     @JoinColumn(name = "snippet_id")
     private Snippet snippet;

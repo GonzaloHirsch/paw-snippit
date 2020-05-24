@@ -79,9 +79,9 @@ public class SnippetController {
             // Fav
             favForm.setFavorite(currentUser.getFavorites().contains(retrievedSnippet.get()));
 
-            if (roleService.isAdmin(currentUser.getId())) {
+            if (roleService.isAdmin(currentUser)) {
                 adminFlagForm.setFlagged(retrievedSnippet.get().isFlagged());
-                mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
+                mav.addObject("userRoles", this.roleService.getUserRoles(currentUser));
             }
         } else {
             mav.addObject("userRoles", Collections.emptyList());
@@ -159,7 +159,7 @@ public class SnippetController {
     ) {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null || !roleService.isAdmin(currentUser.getId())) {
+        if (currentUser == null || !roleService.isAdmin(currentUser)) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.flag", null, LocaleContextHolder.getLocale()));
         } else {
             // Getting the snippet

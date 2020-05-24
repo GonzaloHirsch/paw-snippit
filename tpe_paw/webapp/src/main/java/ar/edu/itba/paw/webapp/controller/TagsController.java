@@ -145,7 +145,7 @@ public class TagsController {
     @RequestMapping(value = "/tags/{tagId}/delete",  method= RequestMethod.POST)
     public ModelAndView deleteTag(@PathVariable("tagId") long tagId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if ( currentUser != null && roleService.isAdmin(currentUser.getId())){
+        if ( currentUser != null && roleService.isAdmin(currentUser)){
             this.tagService.removeTag(tagId);
             LOGGER.debug("Admin deleted tag with id {}", tagId);
         } else {
@@ -163,7 +163,7 @@ public class TagsController {
 
         if (currentUser != null) {
             userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-            userRoles = this.roleService.getUserRoles(currentUser.getId());
+            userRoles = this.roleService.getUserRoles(currentUser);
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         }
         model.addAttribute("currentUser", currentUser);

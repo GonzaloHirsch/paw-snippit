@@ -40,9 +40,8 @@ public class RoleJpaDaoImpl implements RoleDao {
 
     //TODO: See if its better to move to UserJpaDaoImpl
     @Override
-    public Collection<String> getUserRoles(long userId) {
-        Optional<User> user = Optional.ofNullable(this.em.find(User.class, userId));
-        return user.map(value -> value.getRoles().stream().map(Role::getName).collect(Collectors.toList())).orElse(Collections.emptyList());
+    public Collection<String> getUserRoles(User user) {
+        return user.getRoles().stream().map(Role::getName).collect(Collectors.toList());
     }
 
     @Override

@@ -15,6 +15,7 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleDao roleDao;
 
+    @Override
     public String getAdminRoleName() {
         return this.roleDao.getAdminRoleName();
     }
@@ -35,12 +36,12 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Collection<String> getUserRoles(long userId) {
-        return this.roleDao.getUserRoles(userId);
+    public Collection<String> getUserRoles(User user) {
+        return this.roleDao.getUserRoles(user);
     }
 
     @Override
-    public boolean isAdmin(long userId) {
-        return this.getUserRoles(userId).contains(this.getAdminRoleName());
+    public boolean isAdmin(User user) {
+        return this.getUserRoles(user).contains(this.getAdminRoleName());
     }
 }

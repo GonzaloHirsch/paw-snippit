@@ -18,6 +18,11 @@ public class VoteId implements Serializable {
         // Hibernate constructor
     }
 
+    public VoteId(Long userId, Long snippetId){
+        this.userId = userId;
+        this.snippetId = snippetId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

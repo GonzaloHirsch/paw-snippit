@@ -46,6 +46,23 @@ public class SnippetDeepSearchQuery {
          */
         private final Map<String, Object> params = new HashMap<>();
 
+        /**
+         * Map used to translate the given enum for order types into their query equivalent
+         */
+        private final Map<SnippetDao.Orders, String> ordersMap = new HashMap<SnippetDao.Orders, String>(){{
+            put(SnippetDao.Orders.ASC, "ASC");
+            put(SnippetDao.Orders.DESC, "DESC");
+        }};
+        /**
+         * Map used to translate the types over which the order is done into their SQL equivalents
+         */
+        private final Map<SnippetDao.Types, String> orderTypesMap = new HashMap<SnippetDao.Types, String>(){{
+            put(SnippetDao.Types.REPUTATION, " us.reputation ");
+            put(SnippetDao.Types.DATE, " s.date_created ");
+            put(SnippetDao.Types.TITLE, " s.title ");
+            put(SnippetDao.Types.VOTES, " s.votes ");
+        }};
+
         public Builder() {
             this.query.append("SELECT DISTINCT s.id, us.reputation, s.title, s.date_created, s.votes FROM snippets AS s INNER JOIN users AS us ON us.id = s.user_id LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = s.id ");
         }
@@ -144,31 +161,19 @@ public class SnippetDeepSearchQuery {
             return this;
         }
 
-        public Builder setOrder(String order, String sort){
-            this.query.append(" ORDER BY ");
-            switch(order.toLowerCase()){
-                case "reputation":
-                    this.query.append(" us.reputation ");
-                    break;
-                case "votes":
-                    this.query.append(" s.votes ");
-                    break;
-                case "date":
-                    this.query.append(" s.date_created ");
-                    break;
-                case "title":
-                default:
-                    this.query.append(" s.title ");
-                    break;
-            }
-            switch(sort.toLowerCase()){
-                case "desc":
-                    this.query.append(" DESC ");
-                    break;
-                case "asc":
-                default:
-                    this.query.append(" ASC ");
-                    break;
+        public Builder setOrder(SnippetDao.Types type, SnippetDao.Orders order){
+            if (!order.equals(SnippetDao.Orders.NO)){
+                this.query.append(" ORDER BY ");
+                if (this.orderTypesMap.containsKey(type)){
+                    this.query.append(this.orderTypesMap.get(type));
+                } else {
+                    this.query.append(this.orderTypesMap.get(SnippetDao.Types.TITLE));
+                }
+                if (this.ordersMap.containsKey(order)){
+                    this.query.append(this.ordersMap.get(order));
+                } else {
+                    this.query.append(this.ordersMap.get(SnippetDao.Orders.ASC));
+                }
             }
             return this;
         }

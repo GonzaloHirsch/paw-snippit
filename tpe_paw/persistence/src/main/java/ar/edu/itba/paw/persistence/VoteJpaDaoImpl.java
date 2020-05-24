@@ -51,7 +51,6 @@ public class VoteJpaDaoImpl implements VoteDao {
             snippet.getVotes().add(vote);
             user.getVotes().add(vote);
             this.em.persist(vote);
-            this.em.getTransaction().commit();
         }
 
     }
@@ -64,7 +63,6 @@ public class VoteJpaDaoImpl implements VoteDao {
             vote.getUser().getVotes().remove(vote);
             vote.getSnippet().getVotes().remove(vote);
             this.em.remove(vote);
-            this.em.getTransaction().commit();
         }
     }
 

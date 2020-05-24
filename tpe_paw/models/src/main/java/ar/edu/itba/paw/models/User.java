@@ -58,7 +58,7 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "role_id")) //TODO: SAME with role
     private Collection<Role> roles;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Collection<Vote> votes;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)

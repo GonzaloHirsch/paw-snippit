@@ -6,15 +6,25 @@ import javax.persistence.*;
 @Table(name = "votes_for")
 public class Vote {
 
+    /**
+     * Method to set the Embedded Id of the vote object
+     */
+    @PrePersist
+    private void prePersiste() {
+        if (this.id == null) {
+            this.id = new VoteId(this.user.getId(), this.snippet.getId());
+        }
+    }
+
     @EmbeddedId
     VoteId id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @MapsId("user_id")
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @MapsId("snippet_id")
     @JoinColumn(name = "snippet_id")
     private Snippet snippet;

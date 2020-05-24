@@ -23,7 +23,10 @@ public interface SnippetDao {
         CONTENT,
         TITLE,
         USER,
-        LANGUAGE
+        LANGUAGE,
+        REPUTATION,
+        VOTES,
+        DATE
     }
     enum Orders {
         NO,
@@ -32,7 +35,7 @@ public interface SnippetDao {
     }
 
     Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, Long resourceId, int page, int pageSize);
-    Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page, int pageSize);
+    Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, SnippetDao.Orders order, SnippetDao.Types type, Boolean includeFlagged, int page, int pageSize);
     Collection<Snippet> getAllSnippets(int page, int pageSize);
     Collection<Snippet> getAllFavoriteSnippets(final long userId, int page, int pageSize);
     Collection<Snippet> getAllFollowingSnippets(final long userId, int page, int pageSize);
@@ -56,5 +59,5 @@ public interface SnippetDao {
     int getAllSnippetsByTagCount(final long tagId);
     int getAllSnippetsByLanguageCount(final long langId);
     int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId, Long resourceId);
-    int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged);
+    int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, Boolean includeFlagged);
 }

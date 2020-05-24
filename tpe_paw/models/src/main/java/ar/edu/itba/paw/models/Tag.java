@@ -15,7 +15,7 @@ public class Tag {
     @Column(name = "name", length = 30, unique = true)
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags", cascade = CascadeType.ALL)
     private Collection<Snippet> snippetsUsing;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followedTags")

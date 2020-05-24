@@ -39,13 +39,13 @@ public class Snippet {
     @Column(name = "flagged")
     private boolean flagged;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "snippet")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "snippet")
     private Collection<Vote> votes;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites", cascade = CascadeType.PERSIST)
     private Collection<User> userFavorites;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "snippet_tags",
             joinColumns = @JoinColumn(name = "snippet_id"),

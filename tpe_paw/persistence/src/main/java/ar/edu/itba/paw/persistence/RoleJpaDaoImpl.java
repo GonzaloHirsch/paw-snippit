@@ -29,8 +29,8 @@ public class RoleJpaDaoImpl implements RoleDao {
         if(maybeUser.isPresent() && maybeRole.isPresent()) {
             User user = maybeUser.get();
             user.getRoles().add(maybeRole.get());
+            this.em.persist(user);
         }
-        em.getTransaction().commit();
     }
 
     @Override

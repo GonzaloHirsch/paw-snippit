@@ -34,8 +34,11 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page, int pageSize) {
-        return null;
+    public Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, SnippetDao.Orders order, SnippetDao.Types type, Boolean includeFlagged, int page, int pageSize) {
+        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, type, includeFlagged);
+        Query nativeQuery = this.em.createNativeQuery(searchQuery.getQuery());
+        this.setSearchQueryParameters(searchQuery.getParams(), nativeQuery);
+        return this.getDeepSearchSnippetsByPage(page, pageSize, nativeQuery, order, type);
     }
 
     @Override
@@ -209,8 +212,82 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     }
 
     @Override
-    public int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged) {
-        return 0;
+    public int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, Boolean includeFlagged) {
+        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, null, null, includeFlagged);
+        Query nativeQuery = this.em.createNativeQuery(searchQuery.getQuery());
+        this.setSearchQueryParameters(searchQuery.getParams(), nativeQuery);
+        return nativeQuery.getResultList().size();
+    }
+
+    private SnippetDeepSearchQuery createDeepQuery(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, SnippetDao.Orders order, SnippetDao.Types type, Boolean includeFlagged) {
+        SnippetDeepSearchQuery.Builder queryBuilder = new SnippetDeepSearchQuery.Builder();
+        if (dateMin == null && dateMax == null && repMin == null && repMax == null && voteMin == null && voteMax == null && languageId == null && tagId == null && title == null && username == null && includeFlagged == null) {
+            return queryBuilder.setOrder(Types.TITLE, Orders.ASC).build();
+        } else {
+            boolean isFirst = true;
+            queryBuilder = queryBuilder.where();
+            if (dateMin != null || dateMax != null) {
+                queryBuilder = queryBuilder.addDateRange(dateMin, dateMax);
+                isFirst = false;
+            }
+            if (repMin != null || repMax != null) {
+                if (!isFirst) {
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addReputationRange(repMin, repMax);
+            }
+            if (voteMin != null || voteMax != null) {
+                if (!isFirst) {
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addVotesRange(voteMin, voteMax);
+            }
+            if (languageId != null) {
+                if (!isFirst) {
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addLanguage(languageId);
+            }
+            if (tagId != null) {
+                if (!isFirst) {
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addTag(tagId);
+            }
+            if (title != null && !title.isEmpty()) {
+                if (!isFirst) {
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addTitle(title);
+            }
+            if (username != null && !username.isEmpty()) {
+                if (!isFirst) {
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addUsername(username);
+            }
+            if (includeFlagged != null && !includeFlagged) {
+                if (!isFirst) {
+                    queryBuilder = queryBuilder.and();
+                } else {
+                    isFirst = false;
+                }
+                queryBuilder = queryBuilder.addIncludeFlagged(includeFlagged);
+            }
+            return queryBuilder.setOrder(type, order).build();
+        }
     }
 
     /**
@@ -248,14 +325,73 @@ public class SnippetJpaDaoImpl implements SnippetDao {
         List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())
                 .stream().map(i -> ((Integer)i[0]).longValue()).collect(Collectors.toList());
         if (filteredIds.size() > 0) {
-            final TypedQuery<Snippet> query = this.getSortedQuery(order, type);
+            final TypedQuery<Snippet> query = this.getSortedSearchQuery(order, type);
             query.setParameter("filteredIds", filteredIds);
             return query.getResultList();
         }
         return Collections.emptyList();
     }
 
-    private TypedQuery<Snippet> getSortedQuery(Orders order, Types type){
+    private Collection<Snippet> getDeepSearchSnippetsByPage(int page, int pageSize, Query nativeQuery, Orders order, Types type) {
+        nativeQuery.setFirstResult((page - 1) * pageSize);
+        nativeQuery.setMaxResults(pageSize);
+        List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())
+                .stream().map(i -> ((Integer)i[0]).longValue()).collect(Collectors.toList());
+        if (filteredIds.size() > 0) {
+            final TypedQuery<Snippet> query = this.getSortedDeepSearchQuery(order, type);
+            query.setParameter("filteredIds", filteredIds);
+            return query.getResultList();
+        }
+        return Collections.emptyList();
+    }
+
+    /**
+     * Generates a sorted query for the Snippet object
+     * @param order Type of order to be used
+     * @param type The field to order by
+     * @return TypedQuery<Snippet> with the sorted query
+     */
+    private TypedQuery<Snippet> getSortedDeepSearchQuery(Orders order, Types type){
+        if (!order.equals(Orders.NO)){
+            StringBuilder query = new StringBuilder();
+            query.append("from Snippet WHERE id IN :filteredIds");
+            switch (type){
+                case ALL:
+                case TAG:
+                case TITLE:
+                    query.append(" ORDER BY title ");
+                    break;
+                case USER:
+                    query.append(" ORDER BY owner.username ");
+                    break;
+                case CONTENT:
+                    query.append(" ORDER BY code ");
+                    break;
+                case LANGUAGE:
+                    query.append(" ORDER BY language.name ");
+                    break;
+            }
+            switch (order){
+                case ASC:
+                    query.append("ASC");
+                    break;
+                case DESC:
+                    query.append("DESC");
+                    break;
+            }
+            return this.em.createQuery(query.toString(), Snippet.class);
+        } else {
+            return this.em.createQuery("from Snippet WHERE id IN :filteredIds", Snippet.class);
+        }
+    }
+
+    /**
+     * Generates a sorted query for the Snippet object
+     * @param order Type of order to be used
+     * @param type The field to order by
+     * @return TypedQuery<Snippet> with the sorted query
+     */
+    private TypedQuery<Snippet> getSortedSearchQuery(Orders order, Types type){
         if (!order.equals(Orders.NO)){
             StringBuilder query = new StringBuilder();
             query.append("from Snippet WHERE id IN :filteredIds");

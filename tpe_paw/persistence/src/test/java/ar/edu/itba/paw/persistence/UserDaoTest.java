@@ -162,7 +162,7 @@ public class UserDaoTest {
         User user = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,"",LOCALE_EN);
         String newDescription = "New Description";
 
-        userDao.updateDescription(user.getUsername(),newDescription);
+        userDao.changeDescription(user.getId(),newDescription);
 
         Optional<User> maybeUser = jdbcTemplate.query("SELECT * FROM users WHERE id = ?", ROW_MAPPER, user.getId()).stream().findFirst();
         assertTrue(maybeUser.isPresent());
@@ -174,7 +174,7 @@ public class UserDaoTest {
     public void testFindUpdateDescriptionEmpty(){
         String newDescription = "New Description";
 
-        userDao.updateDescription("NOT AN USERNAME",newDescription);
+        userDao.changeDescription(334548,newDescription);
     }
 
     @Test

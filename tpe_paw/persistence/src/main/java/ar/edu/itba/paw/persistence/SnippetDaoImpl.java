@@ -113,9 +113,8 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page, int pageSize) {
-        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, includeFlagged, page, pageSize, false);
-        return this.jdbcTemplate.query(searchQuery.getQuery(), searchQuery.getParams(), ROW_MAPPER);
+    public Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, Orders order, Types type, Boolean includeFlagged, int page, int pageSize) {
+        return null;
     }
 
     @Override
@@ -241,87 +240,7 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged) {
-        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, includeFlagged, null, null, true);
-        return this.jdbcTemplate.queryForObject(searchQuery.getQuery(), searchQuery.getParams(), Integer.class);
-    }
-
-    private SnippetDeepSearchQuery createDeepQuery(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, Integer page, Integer pageSize, boolean isCount) {
-        SnippetDeepSearchQuery.Builder queryBuilder = new SnippetDeepSearchQuery.Builder(isCount);
-        if (dateMin == null && dateMax == null && repMin == null && repMax == null && voteMin == null && voteMax == null && languageId == null && tagId == null && title == null && username == null && order == null && sort == null && includeFlagged == null) {
-            if (page != null) {
-                return queryBuilder.setOrder("title", "asc").setPaging(page, pageSize).build();
-            } else {
-                return queryBuilder.build();
-            }
-        } else {
-            boolean isFirst = true;
-            queryBuilder = queryBuilder.where();
-            if (dateMin != null || dateMax != null) {
-                queryBuilder = queryBuilder.addDateRange(dateMin, dateMax);
-                isFirst = false;
-            }
-            if (repMin != null || repMax != null) {
-                if (!isFirst) {
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addReputationRange(repMin, repMax);
-            }
-            if (voteMin != null || voteMax != null) {
-                if (!isFirst) {
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addVotesRange(voteMin, voteMax);
-            }
-            if (languageId != null) {
-                if (!isFirst) {
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addLanguage(languageId);
-            }
-            if (tagId != null) {
-                if (!isFirst) {
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addTag(tagId);
-            }
-            if (title != null && !title.isEmpty()) {
-                if (!isFirst) {
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addTitle(title);
-            }
-            if (username != null && !username.isEmpty()) {
-                if (!isFirst) {
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addUsername(username);
-            }
-            if (includeFlagged != null && !includeFlagged) {
-                if (!isFirst) {
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addIncludeFlagged(includeFlagged);
-            }
-            if (page == null) {
-                return queryBuilder.build();
-            } else {
-                return queryBuilder.setOrder(order, sort).setPaging(page, pageSize).build();
-            }
-        }
+    public int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, Boolean includeFlagged) {
+        return 0;
     }
 }

@@ -37,17 +37,13 @@ public class Snippet {
     @Column(name = "flagged")
     private int flagged;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "snippet")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "snippet")
     private Collection<Vote> votes;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "favorites",
-            joinColumns = @JoinColumn(name = "snippet_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites", cascade = CascadeType.PERSIST)
     private Collection<User> userFavorites;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "snippet_tags",
             joinColumns = @JoinColumn(name = "snippet_id"),
@@ -197,5 +193,18 @@ public class Snippet {
 
     public void setLanguage(Language language) {
         this.language = language;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Snippet)) {
+            return false;
+        }
+        Snippet snippet = (Snippet) o;
+        return this.getId().equals(snippet.getId());
     }
 }

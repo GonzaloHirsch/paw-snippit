@@ -58,10 +58,10 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "role_id")) //TODO: SAME with role
     private Collection<Role> roles;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Collection<Vote> votes;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name= "favorites",
             joinColumns = @JoinColumn(name = "user_id"),             //TODO: CHECK IF IS users OR user
@@ -223,4 +223,30 @@ public class User {
         return this.verified;
     }
 
+    public void addFavorite(Snippet snippet) {
+        this.getFavorites().add(snippet);
+        snippet.getUserFavorites().add(this);
+    }
+
+    public void removeFavorite(Snippet snippet) {
+        this.getFavorites().remove(snippet);
+        snippet.getUserFavorites().remove(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
+        User user = (User) o;
+        return this.getId().equals(user.getId());
+    }
+
+    public Collection<Vote> getVotes() {
+        return votes;
+    }
 }

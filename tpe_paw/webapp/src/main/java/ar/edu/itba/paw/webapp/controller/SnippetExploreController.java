@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
@@ -24,10 +25,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Locale;
+import java.util.*;
 
 import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
 
@@ -41,6 +39,20 @@ public class SnippetExploreController {
     @Autowired private RoleService roleService;
     @Autowired private UserService userService;
     @Autowired private MessageSource messageSource;
+
+    private Map<String, SnippetDao.Types> typesMap = new HashMap<String, SnippetDao.Types>() {{
+        put(null, SnippetDao.Types.TITLE);
+        put("reputation", SnippetDao.Types.REPUTATION);
+        put("votes", SnippetDao.Types.VOTES);
+        put("date", SnippetDao.Types.DATE);
+        put("title", SnippetDao.Types.TITLE);
+    }};
+
+    private Map<String, SnippetDao.Orders> ordersMap = new HashMap<String, SnippetDao.Orders>() {{
+        put("asc", SnippetDao.Orders.ASC);
+        put("desc", SnippetDao.Orders.DESC);
+        put("no", SnippetDao.Orders.NO);
+    }};
 
     public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK)
             .withZone(ZoneId.systemDefault());
@@ -74,14 +86,13 @@ public class SnippetExploreController {
                 exploreForm.getMinVotes(), exploreForm.getMaxVotes(),
                 exploreForm.getLanguage() == -1 ? null : exploreForm.getLanguage(), exploreForm.getTag() == -1 ? null : exploreForm.getTag(),
                 exploreForm.getTitle(), exploreForm.getUsername(),
-                exploreForm.getField(), exploreForm.getSort(), exploreForm.getIncludeFlagged(), page, SNIPPET_PAGE_SIZE);
+                this.ordersMap.get(exploreForm.getSort()), this.typesMap.get(exploreForm.getField()), exploreForm.getIncludeFlagged(), page, SNIPPET_PAGE_SIZE);
         int snippetCount =  this.snippetService.getSnippetByDeepCriteriaCount(
                 minDate, maxDate,
                 exploreForm.getMinRep(), exploreForm.getMaxRep(),
                 exploreForm.getMinVotes(), exploreForm.getMaxVotes(),
                 exploreForm.getLanguage() == -1 ? null : exploreForm.getLanguage(), exploreForm.getTag() == -1 ? null : exploreForm.getTag(),
                 exploreForm.getTitle(), exploreForm.getUsername(),
-                exploreForm.getField(), exploreForm.getSort(),
                 exploreForm.getIncludeFlagged());
         this.addModelAttributesHelper(mav, snippetCount, page, snippets, "explore/");
         return mav;

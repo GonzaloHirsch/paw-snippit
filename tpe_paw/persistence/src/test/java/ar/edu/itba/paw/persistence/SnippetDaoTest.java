@@ -18,8 +18,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -86,11 +88,13 @@ public class SnippetDaoTest {
 
 
     @Test
+    // TODO check transactional
+    @Transactional
     public void testCreate() {
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, ROLES_USER_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
 
-        final long snippetId = snippetDao.createSnippet(defaultUser.getId(), TITLE, DESCR, CODE, DATE.format(Instant.now()), defaultLanguageId);
-
+        final long snippetId = snippetDao.createSnippet(defaultUser.getId(), TITLE, DESCR, CODE, Timestamp.from(Instant.now()), defaultLanguageId, Collections.emptySet());
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, SNIPPETS_TABLE));
     }
 

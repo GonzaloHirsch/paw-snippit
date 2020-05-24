@@ -35,7 +35,7 @@ public class Snippet {
     private Timestamp dateCreated;
 
     @Column(name = "flagged")
-    private boolean flagged;
+    private int flagged;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "snippet")
     private Collection<Vote> votes;
@@ -70,7 +70,7 @@ public class Snippet {
         this.dateCreated = dateCreated;
         this.language = language;
         this.tags = tags;
-        this.flagged = flagged;
+        this.flagged = flagged ? 1 : 0;
     }
 
     @Deprecated
@@ -84,7 +84,7 @@ public class Snippet {
 //        this.language = language;
         this.tags = tags;
 //        this.votes = votes;
-        this.flagged = flagged;
+        this.flagged = flagged ? 1 : 0;
     }
 
     /**
@@ -112,7 +112,7 @@ public class Snippet {
     }
 
     public boolean isFlagged() {
-        return flagged;
+        return flagged == 1;
     }
 
     public Long getId() {
@@ -164,7 +164,7 @@ public class Snippet {
     }
 
     public void setFlagged(boolean flagged) {
-        this.flagged = flagged;
+        this.flagged = flagged ? 1 : 0;
     }
 
     public Collection<Vote> getVotes() {

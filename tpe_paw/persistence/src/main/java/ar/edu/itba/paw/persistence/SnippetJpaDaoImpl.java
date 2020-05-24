@@ -39,46 +39,87 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> getAllFavoriteSnippets(long userId, int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT fav.snippet_id FROM favorites AS fav WHERE fav.user_id = :id");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT fav.snippet_id FROM favorites AS fav WHERE fav.user_id = :id");
         nativeQuery.setParameter("id", userId);
         return getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override
     public Collection<Snippet> getAllFollowingSnippets(long userId, int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = sn.id LEFT OUTER JOIN follows AS fol ON fol.tag_id = st.tag_id WHERE fol.user_id = :id");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = sn.id LEFT OUTER JOIN follows AS fol ON fol.tag_id = st.tag_id WHERE fol.user_id = :id ORDER BY sn.id");
         nativeQuery.setParameter("id", userId);
         return getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override
     public Collection<Snippet> getAllUpVotedSnippets(long userId, int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets");
-        return getSnippetsByPage(page, pageSize, nativeQuery);
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT vf.snippet_id FROM votes_for AS vf WHERE vf.user_id = :id AND vf.type = 1 ORDER BY vf.snippet_id");
+        nativeQuery.setParameter("id", userId);
+        nativeQuery.setFirstResult((page - 1) * pageSize);
+        nativeQuery.setMaxResults(pageSize);
+        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
+                .stream().map(i -> i.longValue()).collect(Collectors.toList());
+        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
+        query.setParameter("filteredIds", filteredIds);
+        return query.getResultList();
     }
 
     @Override
     public Collection<Snippet> getAllFlaggedSnippets(int page, int pageSize) {
-        return null;
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.flagged = true ORDER BY sn.id");
+        nativeQuery.setFirstResult((page - 1) * pageSize);
+        nativeQuery.setMaxResults(pageSize);
+        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
+                .stream().map(i -> i.longValue()).collect(Collectors.toList());
+        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
+        query.setParameter("filteredIds", filteredIds);
+        return query.getResultList();
     }
 
     @Override
     public Collection<Snippet> findAllSnippetsByOwner(long userId, int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets WHERE user_id = :userId");
-        nativeQuery.setParameter("userId", userId);
-        return getSnippetsByPage(page, pageSize, nativeQuery);
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.user_id = :id ORDER BY sn.id");
+        nativeQuery.setParameter("id", userId);
+        nativeQuery.setFirstResult((page - 1) * pageSize);
+        nativeQuery.setMaxResults(pageSize);
+        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
+                .stream().map(i -> i.longValue()).collect(Collectors.toList());
+        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
+        query.setParameter("filteredIds", filteredIds);
+        return query.getResultList();
+    }
+
+    @Override
+    public Collection<Snippet> findSnippetsForTag(long tagId, int page, int pageSize) {
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON sn.id = st.snippet_id WHERE st.tag_id = :id ORDER BY sn.id");
+        nativeQuery.setParameter("id", tagId);
+        nativeQuery.setFirstResult((page - 1) * pageSize);
+        nativeQuery.setMaxResults(pageSize);
+        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
+                .stream().map(i -> i.longValue()).collect(Collectors.toList());
+        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
+        query.setParameter("filteredIds", filteredIds);
+        return query.getResultList();
     }
 
     @Override
     public Collection<Snippet> findSnippetsWithLanguage(long langId, int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets WHERE language_id = :langId");
-        nativeQuery.setParameter("langId", langId);
-        return getSnippetsByPage(page, pageSize, nativeQuery);
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.language_id = :id ORDER BY sn.id");
+        nativeQuery.setParameter("id", langId);
+        nativeQuery.setFirstResult((page - 1) * pageSize);
+        nativeQuery.setMaxResults(pageSize);
+        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
+                .stream().map(i -> i.longValue()).collect(Collectors.toList());
+        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds", Snippet.class);
+        query.setParameter("filteredIds", filteredIds);
+        return query.getResultList();
     }
 
     @Override
     public Optional<Snippet> findSnippetById(long id) {
-        return Optional.empty();
+        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id = :id", Snippet.class);
+        query.setParameter("id", id);
+        return query.getResultList().stream().findFirst();
     }
 
     @Override
@@ -93,11 +134,6 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public Long createSnippet(long ownerId, String title, String description, String code, String dateCreated, Long languageId) {
-        return null;
-    }
-
-    @Override
-    public Collection<Snippet> findSnippetsForTag(long tagId, int page, int pageSize) {
         return null;
     }
 
@@ -119,7 +155,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public int getAllFavoriteSnippetsCount(long userId) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT fav.snippet_id FROM favorites AS fav WHERE fav.user_id = :id");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT fav.snippet_id FROM favorites AS fav WHERE fav.user_id = :id");
         nativeQuery.setParameter("id", userId);
         return nativeQuery.getResultList().size();
     }
@@ -133,27 +169,36 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public int getAllUpvotedSnippetsCount(long userId) {
-        return 0;
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT vf.snippet_id FROM votes_for AS vf WHERE vf.user_id = :id AND vf.type = 1");
+        nativeQuery.setParameter("id", userId);
+        return nativeQuery.getResultList().size();
     }
 
     @Override
     public int getAllFlaggedSnippetsCount() {
-        return 0;
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.flagged = true");
+        return nativeQuery.getResultList().size();
     }
 
     @Override
     public int getAllSnippetsByOwnerCount(long userId) {
-        return 0;
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.user_id = :id");
+        nativeQuery.setParameter("id", userId);
+        return nativeQuery.getResultList().size();
     }
 
     @Override
     public int getAllSnippetsByTagCount(long tagId) {
-        return 0;
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON sn.id = st.snippet_id WHERE st.tag_id = :id ORDER BY sn.id");
+        nativeQuery.setParameter("id", tagId);
+        return nativeQuery.getResultList().size();
     }
 
     @Override
     public int getAllSnippetsByLanguageCount(long langId) {
-        return 0;
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.language_id = :id");
+        nativeQuery.setParameter("id", langId);
+        return nativeQuery.getResultList().size();
     }
 
     @Override

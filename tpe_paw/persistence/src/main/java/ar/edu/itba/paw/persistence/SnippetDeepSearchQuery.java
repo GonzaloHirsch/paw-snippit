@@ -12,13 +12,13 @@ public class SnippetDeepSearchQuery {
     /**
      * Parameters to be used in the query, in order
      */
-    private Object[] params;
+    private Map<String, Object> params;
 
     public String getQuery() {
         return this.query;
     }
 
-    public Object[] getParams() {
+    public Map<String, Object> getParams() {
         return this.params;
     }
 
@@ -28,9 +28,9 @@ public class SnippetDeepSearchQuery {
      * @param query  Query to be used in the database
      * @param params List with the parameters in order
      */
-    private SnippetDeepSearchQuery(String query, List<Object> params) {
+    private SnippetDeepSearchQuery(String query, Map<String, Object> params) {
         this.query = query;
-        this.params = params.toArray();
+        this.params = params;
     }
 
     /**
@@ -44,14 +44,10 @@ public class SnippetDeepSearchQuery {
         /**
          * List of parameters to be used in the query
          */
-        private final List<Object> params = new ArrayList<>();
+        private final Map<String, Object> params = new HashMap<>();
 
-        public Builder(boolean isCount) {
-            if (isCount){
-                this.query.append("SELECT COUNT(DISTINCT s.id) FROM complete_snippets AS s LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = s.id ");
-            } else {
-                this.query.append("SELECT DISTINCT s.id, s.user_id, s.username, s.reputation, s.lang, s.region, s.verified, s.code, s.title, s.description, s.language, s.date_created, s.icon, s.votes, s.language_id, s.flagged FROM complete_snippets AS s LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = s.id ");
-            }
+        public Builder() {
+            this.query.append("SELECT DISTINCT s.id, us.reputation, s.title, s.date_created, s.votes FROM snippets AS s INNER JOIN users AS us ON us.id = s.user_id LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = s.id ");
         }
 
         public Builder where(){
@@ -66,77 +62,77 @@ public class SnippetDeepSearchQuery {
 
         public Builder addUsername(String username){
             if (username != null && !username.isEmpty()){
-                this.query.append(" LOWER(s.username) LIKE LOWER(?) ");
-                this.params.add("%"+username+"%");
+                this.query.append(" LOWER(us.username) LIKE LOWER(:username) ");
+                this.params.put("username", "%"+username+"%");
             }
             return this;
         }
 
         public Builder addTitle(String title){
             if (title != null && !title.isEmpty()){
-                this.query.append(" LOWER(s.title) LIKE LOWER(?) ");
-                this.params.add("%"+title+"%");
+                this.query.append(" LOWER(s.title) LIKE LOWER(:title) ");
+                this.params.put("title", "%"+title+"%");
             }
             return this;
         }
 
         public Builder addTag(Long tagId){
             if (tagId != null){
-                this.query.append(" st.tag_id = ? ");
-                this.params.add(tagId);
+                this.query.append(" st.tag_id = :tid ");
+                this.params.put("tid", tagId);
             }
             return this;
         }
 
         public Builder addDateRange(String min, String max){
             if (min != null && max != null){
-                this.query.append(" s.date_created::date >= ?::date AND s.date_created::date <= ?::date ");
-                this.params.add(min);
-                this.params.add(max);
+                this.query.append(" s.date_created::date >= :mindate::date AND s.date_created::date <= :maxdate::date ");
+                this.params.put("mindate", min);
+                this.params.put("maxdate", max);
             } else if (min != null){
-                this.query.append(" s.date_created::date >= ?::date ");
-                this.params.add(min);
+                this.query.append(" s.date_created::date >= :mindate::date ");
+                this.params.put("mindate", min);
             } else if (max != null){
-                this.query.append(" s.date_created::date <= ?::date ");
-                this.params.add(max);
+                this.query.append(" s.date_created::date <= :maxdate::date ");
+                this.params.put("maxdate", max);
             }
             return this;
         }
 
         public Builder addReputationRange(Integer min, Integer max){
             if (min != null && max != null){
-                this.query.append(" s.reputation >= ? AND s.reputation <= ? ");
-                this.params.add(min);
-                this.params.add(max);
+                this.query.append(" us.reputation >= :repmin AND us.reputation <= :repmax ");
+                this.params.put("repmin", min);
+                this.params.put("repmax", max);
             } else if (min != null){
-                this.query.append(" s.reputation >= ? ");
-                this.params.add(min);
+                this.query.append(" us.reputation >= :repmin ");
+                this.params.put("repmin", min);
             } else if (max != null){
-                this.query.append(" s.reputation <= ? ");
-                this.params.add(max);
+                this.query.append(" us.reputation <= :repmax ");
+                this.params.put("repmax", max);
             }
             return this;
         }
 
         public Builder addVotesRange(Integer min, Integer max){
             if (min != null && max != null){
-                this.query.append(" s.votes >= ? AND s.votes <= ? ");
-                this.params.add(min);
-                this.params.add(max);
+                this.query.append(" s.votes >= :votemin AND s.votes <= :votemax ");
+                this.params.put("votemin", min);
+                this.params.put("votemax", max);
             } else if (min != null){
-                this.query.append(" s.votes >= ? ");
-                this.params.add(min);
+                this.query.append(" s.votes >= :votemin ");
+                this.params.put("votemin", min);
             } else if (max != null){
-                this.query.append(" s.votes <= ? ");
-                this.params.add(max);
+                this.query.append(" s.votes <= :votemax ");
+                this.params.put("votemax", max);
             }
             return this;
         }
 
         public Builder addLanguage(Long languageId){
             if (languageId != null){
-                this.query.append(" s.language_id = ? ");
-                this.params.add(languageId);
+                this.query.append(" s.language_id = :lid ");
+                this.params.put("lid", languageId);
             }
             return this;
         }
@@ -152,7 +148,7 @@ public class SnippetDeepSearchQuery {
             this.query.append(" ORDER BY ");
             switch(order.toLowerCase()){
                 case "reputation":
-                    this.query.append(" s.reputation ");
+                    this.query.append(" us.reputation ");
                     break;
                 case "votes":
                     this.query.append(" s.votes ");
@@ -174,13 +170,6 @@ public class SnippetDeepSearchQuery {
                     this.query.append(" ASC ");
                     break;
             }
-            return this;
-        }
-
-        public Builder setPaging(int page, int pageSize){
-            this.query.append(" LIMIT ? OFFSET ?");
-            params.add(pageSize);
-            params.add(pageSize * (page - 1));
             return this;
         }
 

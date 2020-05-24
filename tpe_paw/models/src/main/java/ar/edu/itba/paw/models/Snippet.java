@@ -39,10 +39,10 @@ public class Snippet {
     @Column(name = "flagged")
     private boolean flagged;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "snippet")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "snippet")
     private Collection<Vote> votes;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites", cascade = CascadeType.PERSIST)
     private Collection<User> userFavorites;
 
     @ManyToMany(fetch = FetchType.LAZY)

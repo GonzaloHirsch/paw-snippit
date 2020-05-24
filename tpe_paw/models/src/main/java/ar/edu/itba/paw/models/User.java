@@ -61,7 +61,7 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Collection<Vote> votes;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name= "favorites",
             joinColumns = @JoinColumn(name = "user_id"),             //TODO: CHECK IF IS users OR user

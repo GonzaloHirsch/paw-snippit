@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,6 +17,8 @@ import javax.servlet.http.HttpSession;
 public class SignUpAuthentication {
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    private static final String REDIRECT_ATTRIBUTE = "url_prior_login";
 
     public void authWithAuthManager(HttpServletRequest request, String username, String password) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
@@ -32,10 +35,10 @@ public class SignUpAuthentication {
     public String redirectionAuthenticationSuccess(HttpServletRequest request) {
         HttpSession session = request.getSession();
         if (session != null) {
-            String redirectUrl = (String) session.getAttribute("url_prior_login");
+            String redirectUrl = (String) session.getAttribute(REDIRECT_ATTRIBUTE);
             if (redirectUrl != null) {
                 /* Remove the attribute from the session --> clean up */
-                session.removeAttribute("url_prior_login");
+                session.removeAttribute(REDIRECT_ATTRIBUTE);
                 /* Don't want to redirect to any of these urls */
                 if (!(redirectUrl.contains("login") || redirectUrl.contains("signup") || redirectUrl.contains("goodbye") || redirectUrl.contains("reset-password") || redirectUrl.contains("recover-password"))) {
                     return redirectUrl;

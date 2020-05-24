@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
@@ -37,6 +38,7 @@ public class PawUserDetailsService implements UserDetailsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PawUserDetailsService.class);
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         final User user = userService.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username + " not found!"));

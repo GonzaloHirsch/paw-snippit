@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.User;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,7 +20,8 @@ public class UserJpaDaoImpl implements UserDao {
     private EntityManager em;
 
     @Override
-    public long createUser(String username, String password, String email, String description, int reputation, Timestamp dateJoined, Locale locale) {
+    @Transactional
+    public long createUser(String username, String password, String email, int reputation, Timestamp dateJoined, Locale locale) {
         final User user = new User(username, password, email, dateJoined, locale, false);
         this.em.persist(user);
         return user.getId();

@@ -43,7 +43,7 @@ public class User {
     private byte[] icon;
 
     @Column(name="verified")
-    private boolean verified;
+    private int verified;
 
     @Column(length = 5, name="lang")
     private String lang = "en";     // Setting "en" as the default language value
@@ -91,7 +91,7 @@ public class User {
         this.dateJoined = dateJoined;
         this.lang = locale.getLanguage();
         this.region = locale.getCountry();
-        this.verified = verified;
+        this.verified = verified ? 1 : 0;
     }
 
     @Deprecated
@@ -105,7 +105,7 @@ public class User {
 //        this.dateJoined = dateJoined;
         this.icon = icon;
 //        this.locale = locale;
-        this.verified = verified;
+        this.verified = verified ? 1 : 0;
     }
 
     @Deprecated
@@ -119,7 +119,7 @@ public class User {
 //        this.dateJoined = dateJoined;
         this.icon = icon;
 //        this.locale = locale;
-        this.verified = verified;
+        this.verified = verified ? 1 : 0;
     }
 
     public Long getId() { return id; }
@@ -196,11 +196,11 @@ public class User {
 
 
     public boolean isVerified() {
-        return verified;
+        return verified == 1;
     }
 
     public void setVerified(boolean verified) {
-        this.verified = verified;
+        this.verified = verified ? 1 : 0;
     }
 
     public Collection<Snippet> getCreatedSnippets() {
@@ -219,10 +219,6 @@ public class User {
         return this.roles;
     }
 
-    public boolean getVerified(){
-        return this.verified;
-    }
-
     public void addFavorite(Snippet snippet) {
         this.getFavorites().add(snippet);
         snippet.getUserFavorites().add(this);
@@ -231,6 +227,11 @@ public class User {
     public void removeFavorite(Snippet snippet) {
         this.getFavorites().remove(snippet);
         snippet.getUserFavorites().remove(this);
+    }
+
+    public void addRole(Role role) {
+        this.getRoles().add(role);
+        role.getUsersWithRole().add(this);
     }
 
     @Override

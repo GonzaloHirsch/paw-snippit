@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import ar.edu.itba.paw.interfaces.dao.RoleDao;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class RoleJpaDaoImpl implements RoleDao {
@@ -24,12 +25,11 @@ public class RoleJpaDaoImpl implements RoleDao {
     private final static String ADMIN_ROLE = "ADMIN";
 
     private void addToUserRoles(final long userId, final long roleId) {
-        Optional<User> maybeUser = Optional.ofNullable(this.em.find(User.class, userId));
-        Optional<Role> maybeRole = Optional.ofNullable(this.em.find(Role.class,roleId));
-        if(maybeUser.isPresent() && maybeRole.isPresent()) {
-            User user = maybeUser.get();
-            user.getRoles().add(maybeRole.get());
-            this.em.persist(user);
+        Optional<User> user = Optional.ofNullable(this.em.find(User.class, userId));
+        Optional<Role> role = Optional.ofNullable(this.em.find(Role.class,roleId));
+        if(user.isPresent() && role.isPresent()) {
+            user.get().addRole(role.get());
+            this.em.persist(user.get());
         }
     }
 
@@ -41,16 +41,12 @@ public class RoleJpaDaoImpl implements RoleDao {
     //TODO: See if its better to move to UserJpaDaoImpl
     @Override
     public Collection<String> getUserRoles(long userId) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT ur.role_id FROM user_roles AS ur WHERE ur.user_id = :id");
-        nativeQuery.setParameter("id", userId);
-        List<Long> roleIds = ((List<Integer>) nativeQuery.getResultList())
-                .stream().map(i -> i.longValue()).collect(Collectors.toList());
-        final TypedQuery<Role> query = this.em.createQuery("from Role where id IN :roleIds", Role.class);
-        query.setParameter("roleIds", roleIds);
-        return query.getResultList().stream().map(Role::getName).collect(Collectors.toList());
+        Optional<User> user = Optional.ofNullable(this.em.find(User.class, userId));
+        return user.map(value -> value.getRoles().stream().map(Role::getName).collect(Collectors.toList())).orElse(Collections.emptyList());
     }
 
     @Override
+    @Transactional
     public void assignUserRole(long userId) {
         final TypedQuery<Role> query = this.em.createQuery("from Role as r where r.name = :name", Role.class)
                 .setParameter("name", USER_ROLE);
@@ -59,6 +55,7 @@ public class RoleJpaDaoImpl implements RoleDao {
     }
 
     @Override
+    @Transactional
     public void assignAdminRole(long userId) {
         final TypedQuery<Role> query = this.em.createQuery("from Role as r where r.name = :name", Role.class)
                 .setParameter("name", ADMIN_ROLE);

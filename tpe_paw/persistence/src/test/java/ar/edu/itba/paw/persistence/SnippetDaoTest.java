@@ -74,7 +74,7 @@ public class SnippetDaoTest {
         jdbcInsertVote = new SimpleJdbcInsert(ds).withTableName(VOTES_FOR_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, SNIPPETS_TABLE);
-
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, ROLES_USER_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
         altUser = insertUserIntoDb(jdbcInsertUser,USERNAME2,PASSWORD2,EMAIL2,DESCR,LOCALE_EN);
         defaultUser = insertUserIntoDb(jdbcInsertUser, USERNAME, PASSWORD, EMAIL, DESCR,LOCALE_EN);

@@ -346,6 +346,7 @@ public class SnippetDaoTest {
     }
 
     @Test
+    @Transactional
     public void testFindById() {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE, defaultLanguageId,0);
@@ -371,6 +372,7 @@ public class SnippetDaoTest {
     }
 
     @Test
+    @Transactional
     public void testDeleteSnippetById(){
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
         insertSnippetIntoDb(jdbcInsertSnippet,altUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
@@ -379,7 +381,6 @@ public class SnippetDaoTest {
 
         assertTrue(result);
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate,SNIPPETS_TABLE));
-
     }
 
     @Test

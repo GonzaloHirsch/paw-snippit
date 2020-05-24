@@ -50,8 +50,8 @@ public class UserJpaDaoImpl implements UserDao {
         if(maybeUser.isPresent()){
             User user = maybeUser.get();
             user.setPassword(password);
+            this.em.persist(user);
         }
-        em.getTransaction().commit();
     }
 
     @Override
@@ -60,8 +60,9 @@ public class UserJpaDaoImpl implements UserDao {
         if(maybeUser.isPresent()){
             User user = maybeUser.get();
             user.setIcon(photo);
+            this.em.persist(user);
         }
-        em.getTransaction().commit();
+
     }
 
     @Override
@@ -70,8 +71,8 @@ public class UserJpaDaoImpl implements UserDao {
         if(maybeUser.isPresent()){
             User user = maybeUser.get();
             user.setDescription(description);
+            this.em.persist(user);
         }
-        em.getTransaction().commit();
     }
 
     @Override
@@ -80,8 +81,8 @@ public class UserJpaDaoImpl implements UserDao {
         if(maybeUser.isPresent()){
             User user = maybeUser.get();
             user.setReputation(value);
+            this.em.persist(user);
         }
-        em.getTransaction().commit();
     }
 
     @Override
@@ -103,8 +104,8 @@ public class UserJpaDaoImpl implements UserDao {
             User user = maybeUser.get();
             user.setRegion(locale.getCountry());
             user.setRegion(locale.getLanguage());
+            this.em.persist(user);
         }
-        em.getTransaction().commit();
     }
 
     @Override
@@ -145,7 +146,7 @@ public class UserJpaDaoImpl implements UserDao {
         if(maybeUser.isPresent()){
             User user = maybeUser.get();
             user.setVerified(true);
+            this.em.persist(user);
         }
-        em.getTransaction().commit();
     }
 }

@@ -223,6 +223,29 @@ public class User {
         return this.verified;
     }
 
+    public void addFavorite(Snippet snippet) {
+        this.getFavorites().add(snippet);
+        snippet.getUserFavorites().add(this);
+    }
+
+    public void removeFavorite(Snippet snippet) {
+        this.getFavorites().remove(snippet);
+        snippet.getUserFavorites().remove(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
+        User user = (User) o;
+        return this.getId().equals(user.getId());
+    }
+
     public Collection<Vote> getVotes() {
         return votes;
     }

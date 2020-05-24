@@ -23,7 +23,7 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Override
     public Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, Long resourceId, int page, int pageSize) {
-        return this.snippetDao.findSnippetByCriteria(SnippetDao.QueryTypes.SEARCH, type, term, location, order, userId, resourceId, page, pageSize);
+        return this.snippetDao.findSnippetByCriteria(type, term, location, order, userId, resourceId, page, pageSize);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Override
     public int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId, Long resourceId) {
-        return this.snippetDao.getSnippetByCriteriaCount(SnippetDao.QueryTypes.COUNT, type, term, location, userId, resourceId);
+        return this.snippetDao.getSnippetByCriteriaCount(type, term, location, userId, resourceId);
     }
 
     @Override

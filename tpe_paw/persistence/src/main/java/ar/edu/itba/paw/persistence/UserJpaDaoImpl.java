@@ -45,17 +45,6 @@ public class UserJpaDaoImpl implements UserDao {
     }
 
     @Override
-    public void updateDescription(String username, String newDescription) {
-        Optional<User> maybeUser = this.findUserByUsername(username);
-        if(maybeUser.isPresent()){
-            User user = maybeUser.get();
-            user.setDescription(newDescription);
-        }
-        em.getTransaction().commit();
-
-    }
-
-    @Override
     public void changePassword(String email, String password) {
         Optional<User> maybeUser = this.findUserByEmail(email);
         if(maybeUser.isPresent()){

@@ -18,8 +18,6 @@ public interface UserService {
 
     Optional<User> findUserByEmail(String email);
 
-    void updateDescription(String username, String newDescription);
-
     void changePassword(String email, String password);
 
     boolean isEmailUnique(String email);

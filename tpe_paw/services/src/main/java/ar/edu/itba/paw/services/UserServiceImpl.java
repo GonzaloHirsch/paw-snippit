@@ -51,11 +51,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateDescription(String username, String newDescription) {
-        userDao.updateDescription(username, newDescription);
-    }
-
-    @Override
     public void changePassword(String email, String password) {
         this.userDao.changePassword(email, password);
     }

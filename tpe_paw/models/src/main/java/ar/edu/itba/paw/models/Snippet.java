@@ -42,11 +42,7 @@ public class Snippet {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "snippet")
     private Collection<Vote> votes;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "favorites",
-            joinColumns = @JoinColumn(name = "snippet_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites")
     private Collection<User> userFavorites;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -199,5 +195,18 @@ public class Snippet {
 
     public void setLanguage(Language language) {
         this.language = language;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Snippet)) {
+            return false;
+        }
+        Snippet snippet = (Snippet) o;
+        return this.getId().equals(snippet.getId());
     }
 }

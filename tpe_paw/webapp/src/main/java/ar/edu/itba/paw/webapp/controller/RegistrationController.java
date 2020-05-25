@@ -62,7 +62,9 @@ public class RegistrationController {
         this.throwIfUserIsLoggedIn();
 
         String referrer = request.getHeader("Referer");
-        request.getSession().setAttribute(REDIRECT_ATTRIBUTE, referrer);
+        if (!referrer.contains("signup")) {
+            request.getSession().setAttribute(REDIRECT_ATTRIBUTE, referrer);
+        }
 
         final ModelAndView mav = new ModelAndView("user/login");
         mav.addObject("error", false);

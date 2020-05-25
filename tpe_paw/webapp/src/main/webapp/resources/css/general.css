@@ -54,7 +54,7 @@ body {
 }
 
 .no-text-decoration {
-    color: inherit !important;
+    /*color: inherit !important;*/
     text-decoration: none !important;
     text-decoration-color: black !important;
 }

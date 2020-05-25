@@ -20,6 +20,17 @@
     <script src="<c:url value='/resources/js/form.js'/>"></script>
 </head>
 <body>
+<c:set var="tagId" value="${tag.id}" scope="request"/>
+<c:set var="deleteFromSearch" value="tags/${tagId}/search/"/>
+<c:choose>
+    <c:when test="${requestScope.searchContext == deleteFromSearch}">
+        <c:set var="deleteUrl" value="delete"/>
+    </c:when>
+    <c:otherwise>
+        <c:set var="deleteUrl" value="${tagId}/delete"/>
+    </c:otherwise>
+</c:choose>
+
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
@@ -34,7 +45,7 @@
                     <c:import url="/WEB-INF/jsp/tagAndLanguages/tagFollowForm.jsp"/>
 
                     <c:if test="${userRoles.contains('ADMIN')}">
-                        <form:form action="${tag.id}/delete" class="form-container" method="post" modelAttribute="deleteForm">
+                        <form:form action="${deleteUrl}" class="form-container" method="post" modelAttribute="deleteForm">
                             <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#tag-snippet">
                                 <i class="delete-element-icon material-icons border-radius">delete</i>
                             </div>

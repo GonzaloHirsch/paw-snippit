@@ -148,7 +148,7 @@ public class SearchController {
         }
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.LANGUAGES, searchForm.getSort(), null, langId, page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.LANGUAGES, null, langId);
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, LANGUAGES + langId + "/");
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, LANGUAGES + langId + "/search/");
         mav.addObject("language", language.get());
         return mav;
     }
@@ -168,10 +168,10 @@ public class SearchController {
         if (currentUser != null) {
             followForm.setFollows(this.tagService.userFollowsTag(currentUser.getId(), tagId));
         }
-        
+
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.TAGS, searchForm.getSort(), null, tagId, page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.TAGS, null, tagId);
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, TAGS + tagId + "/");
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, TAGS + tagId + "/search/");
         mav.addObject("tag", tag.get());
         return mav;
     }

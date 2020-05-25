@@ -181,19 +181,22 @@ public class SearchController {
         final ModelAndView mav = new ModelAndView("user/profile");
         /* Set the current user and its following tags */
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Optional<User> user = this.userService.findUserById(id);
-        if (!user.isPresent()) {
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (!maybeUser.isPresent()) {
             this.logAndThrow("/user/"+id+"/search");
         }
-        descriptionForm.setDescription(user.get().getDescription());
+        User user = maybeUser.get();
+        descriptionForm.setDescription(user.getDescription());
         // Getting the snippets for the search
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, id, null);
+        int userTotalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, USER + id + "/");
-        mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.get().getId()));
+        mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.getId()));
+        mav.addObject("snippetsCount", user.getCreatedSnippets().size());
         mav.addObject("editing", editing);
         mav.addObject("isEdit", false);
-        mav.addObject("user", user.get());
+        mav.addObject("user", user);
         mav.addObject("snippets", snippets);
         return mav;
     }

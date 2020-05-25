@@ -20,7 +20,7 @@ public class Snippet {
     @SequenceGenerator(allocationSize = 1, sequenceName = "snippets_id_seq", name="snippets_id_seq")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User owner;
 
@@ -52,7 +52,7 @@ public class Snippet {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Collection<Tag> tags;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "language_id", referencedColumnName = "id")
     private Language language;
 

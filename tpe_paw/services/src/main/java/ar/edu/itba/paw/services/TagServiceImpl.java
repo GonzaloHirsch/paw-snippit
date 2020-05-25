@@ -56,13 +56,11 @@ public class TagServiceImpl implements TagService {
         return tagDao.findById(tagId);
     }
 
-    @Transactional
     @Override
     public void followTag(long userId, long tagId) {
         followingDao.followTag(userId, tagId);
     }
 
-    @Transactional
     @Override
     public void unfollowTag(long userId, long tagId) {
         followingDao.unfollowTag(userId, tagId);

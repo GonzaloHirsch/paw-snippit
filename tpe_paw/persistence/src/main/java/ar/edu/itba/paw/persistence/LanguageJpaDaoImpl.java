@@ -75,9 +75,8 @@ public class LanguageJpaDaoImpl implements LanguageDao {
 
     @Override
     public int getAllLanguagesCount() {
-        return this.em.createQuery("FROM Language", Language.class).getResultList().size();    // TODO --> NO SE PUEDE HACER ASI?
-        //Query nativeQuery = this.em.createNativeQuery("SELECT id FROM languages");
-        //return nativeQuery.getResultList().size();
+        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM languages");
+        return nativeQuery.getResultList().size();
     }
 
     @Override
@@ -89,20 +88,23 @@ public class LanguageJpaDaoImpl implements LanguageDao {
 
     @Override
     public void addLanguages(List<String> languages) {
-
+        for (String name : languages) {
+            Language language = new Language(name);
+            em.persist(language);
+        }
     }
 
     @Override
     public void removeLanguage(final long langId) {
-//        if (!this.languageInUse(langId)) {
-//            jdbcTemplate.update("DELETE FROM languages WHERE id = ?", new Object[]{langId});
-//        }
+        Optional<Language> lang = this.findById(langId);
+        if (lang.isPresent() && lang.get().getSnippetsUsing().isEmpty()) {
+            this.em.remove(lang.get());
+        }
     }
 
     @Override
     public boolean languageInUse(final long langId) {
-        final TypedQuery<Language> query = this.em.createQuery("FROM Language WHERE id = :langId", Language.class);
-        query.setParameter("landId", langId);
-        return query.getResultList().size() > 0;
+        Optional<Language> lang = this.findById(langId);
+        return lang.filter(language -> !language.getSnippetsUsing().isEmpty()).isPresent();
     }
 }

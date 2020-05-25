@@ -48,6 +48,7 @@ public class LanguageServiceImpl implements LanguageService {
     }
 
     @Override
+    @Transactional
     public void addLanguages(List<String> languages) {
         languageDao.addLanguages(languages);
     }

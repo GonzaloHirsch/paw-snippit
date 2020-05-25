@@ -48,25 +48,13 @@ public class SnippetServiceImpl implements SnippetService {
         return this.snippetDao.findSnippetsWithLanguage(langId, page, pageSize);
     }
 
-    @Override
-    public int getReputationImportanceBalance(Snippet snippet) {
-        int voteBalance = (-1) * this.voteService.getVoteBalance(snippet.getId()).orElse(0);
-        voteBalance += this.isFlaggedByAdmin(snippet) ? FLAGGED_SNIPPET_REP_VALUE : 0;
-        return voteBalance;
-    }
-
-    @Override
-    public boolean isFlaggedByAdmin(final Snippet snippet) {
-        return snippet.isFlagged();
-    }
-
     @Transactional
     @Override
     public boolean deleteSnippet(Snippet snippet, long userId) {
-        int voteBalance = this.getReputationImportanceBalance(snippet);
+        int newReputation = snippet.getOwner().getReputation() + (snippet.isFlagged() ? FLAGGED_SNIPPET_REP_VALUE : 0);
         boolean success = snippetDao.deleteSnippetById(snippet.getId());
         if (success) {
-            this.userService.changeReputation(userId, voteBalance);
+            this.userService.changeReputation(userId, newReputation);
         }
         return success;
     }

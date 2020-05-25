@@ -16,25 +16,24 @@ public class FavoriteJpaDaoImpl implements FavoriteDao {
     @PersistenceContext
     private EntityManager em;
 
-    @Transactional
     @Override
     public void addToFavorites(long userId, long snippetId) {
         Optional<User> user = Optional.ofNullable(this.em.find(User.class, userId));
         Optional<Snippet> snippet = Optional.ofNullable(this.em.find(Snippet.class, snippetId));
 
-        if (user.isPresent() && snippet.isPresent()) {
-            user.get().addFavorite(snippet.get()); //TODO check if okay
+        if (user.isPresent() && snippet.isPresent() && !user.get().getFavorites().contains(snippet.get())) {
+            user.get().addFavorite(snippet.get());
             this.em.persist(user.get());
         }
     }
-    @Transactional
+
     @Override
     public void removeFromFavorites(long userId, long snippetId) {
         Optional<User> user = Optional.ofNullable(this.em.find(User.class, userId));
         Optional<Snippet> snippet = Optional.ofNullable(this.em.find(Snippet.class, snippetId));
 
         if (user.isPresent() && snippet.isPresent()) {
-            user.get().removeFavorite(snippet.get()); //TODO check if okay
+            user.get().removeFavorite(snippet.get());
             this.em.persist(user.get());
         }
     }

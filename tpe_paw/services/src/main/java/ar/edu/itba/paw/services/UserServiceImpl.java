@@ -115,6 +115,7 @@ public class UserServiceImpl implements UserService {
         return this.userDao.userEmailIsVerified(userId);
     }
 
+    @Transactional
     @Override
     public void verifyUserEmail(long userId) {
         this.userDao.verifyUserEmail(userId);

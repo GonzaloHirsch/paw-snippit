@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService {
     @Autowired private EmailService emailService;
 
     @Override
+    @Transactional
     public long createUser(String username, String password, String email, int reputation, Timestamp dateJoined, Locale locale) {
         return this.userDao.createUser(username, password, email, reputation, dateJoined, locale);
     }

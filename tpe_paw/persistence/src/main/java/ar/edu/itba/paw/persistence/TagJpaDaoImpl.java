@@ -12,6 +12,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -86,19 +87,22 @@ public class TagJpaDaoImpl implements TagDao {
 
     @Override
     public Collection<Tag> getAllTags(int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM tags");
+        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM tags ORDER BY name ASC");
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
         List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
                 .stream().map(i -> i.longValue()).collect(Collectors.toList());
-        final TypedQuery<Tag> query = this.em.createQuery("from Tag where id IN :filteredIds", Tag.class);
-        query.setParameter("filteredIds", filteredIds);
-        return query.getResultList();
+        if (!filteredIds.isEmpty()){
+            final TypedQuery<Tag> query = this.em.createQuery("from Tag where id IN :filteredIds ORDER BY name ASC", Tag.class);
+            query.setParameter("filteredIds", filteredIds);
+            return query.getResultList();
+        }
+        return Collections.emptyList();
     }
 
     @Override
     public Collection<Tag> getAllTags() {
-        return this.em.createQuery("from Tag", Tag.class).getResultList(); //TODO CHECK
+        return this.em.createQuery("from Tag", Tag.class).getResultList();
     }
 
     @Override
@@ -121,6 +125,17 @@ public class TagJpaDaoImpl implements TagDao {
 
     @Override
     public Collection<Tag> findTagsByName(String name, int page, int pageSize) {
-        return null;
+        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM tags WHERE LOWER(name) LIKE LOWER(:term) ORDER BY name ASC");
+        nativeQuery.setParameter("term", "%"+name+"%");
+        nativeQuery.setFirstResult((page - 1) * pageSize);
+        nativeQuery.setMaxResults(pageSize);
+        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
+                .stream().map(i -> i.longValue()).collect(Collectors.toList());
+        if (!filteredIds.isEmpty()){
+            final TypedQuery<Tag> query = this.em.createQuery("from Tag where id IN :filteredIds ORDER BY name ASC", Tag.class);
+            query.setParameter("filteredIds", filteredIds);
+            return query.getResultList();
+        }
+        return Collections.emptyList();
     }
 }

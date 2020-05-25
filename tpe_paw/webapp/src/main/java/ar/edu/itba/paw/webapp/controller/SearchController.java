@@ -163,6 +163,12 @@ public class SearchController {
             LOGGER.error("No tag found with id {}", tagId);
             throw new TagNotFoundException(this.messageSource.getMessage("error.404.tag", new Object[]{tagId}, LocaleContextHolder.getLocale()));
         }
+        //Retrieve the possible logged in user
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser != null) {
+            followForm.setFollows(this.tagService.userFollowsTag(currentUser.getId(), tagId));
+        }
+        
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.TAGS, searchForm.getSort(), null, tagId, page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.TAGS, null, tagId);
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, TAGS + tagId + "/");

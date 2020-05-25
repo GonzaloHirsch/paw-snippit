@@ -234,6 +234,16 @@ public class User {
         role.getUsersWithRole().add(this);
     }
 
+    public void followTag(Tag tag) {
+        this.getFollowedTags().add(tag);
+        tag.getFollowingUsers().add(this);
+    }
+
+    public void unfollow(Tag tag) {
+        this.getFollowedTags().remove(tag);
+        tag.getFollowingUsers().remove(this);
+    }
+
     @Override
     public boolean equals(Object o) {
 

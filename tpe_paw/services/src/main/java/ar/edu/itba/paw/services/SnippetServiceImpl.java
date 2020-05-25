@@ -34,7 +34,7 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
-    public int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId) {
+    public int getNewSnippetsForTagsCount(Instant dateMin, Collection<Tag> tags, long userId) {
         return this.snippetDao.getNewSnippetsForTagsCount(dateMin, tags, userId);
     }
 

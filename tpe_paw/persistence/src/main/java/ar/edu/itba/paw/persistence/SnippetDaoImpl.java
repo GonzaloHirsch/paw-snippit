@@ -139,7 +139,7 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId) {
+    public int getNewSnippetsForTagsCount(Instant dateMin, Collection<Tag> tags, long userId) {
         List<Long> tagIds = tags.stream().mapToLong(Tag::getId).boxed().collect(Collectors.toList());
         StringBuilder sb = new StringBuilder();
         int count = 0;

@@ -464,7 +464,7 @@ public class SnippetDaoTest {
         insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE2,DESCR,CODE,defaultLanguageId,0);
 
         Instant d = Instant.now().minus(7, ChronoUnit.DAYS);
-        int snippetCount = snippetDao.getNewSnippetsForTagsCount(DATE.format(d), new ArrayList<Tag>(), 1);
+        int snippetCount = snippetDao.getNewSnippetsForTagsCount(d, new ArrayList<Tag>(), 1);
 
         assertEquals(0,snippetCount);
     }

@@ -42,7 +42,9 @@
                         <div class="snippet-text snippet-title detail-snippet-title">
                             ${fn:escapeXml(snippet.title)}
                         </div>
-                        <a href="<c:url value="/languages/${snippet.language.id}"/>" class="snippet-language-tag detail-snippet-language-margin border-radius transition no-text-decoration">${snippet.language.name.toUpperCase()}</a>
+                        <a href="<c:url value="/languages/${snippet.language.id}"/>" class="snippet-language-tag detail-snippet-language-margin border-radius transition">
+                            ${snippet.language.name.toUpperCase()}
+                        </a>
                     </div>
 
                     <c:if test="${!StringUtils.isEmpty(snippet.description)}">
@@ -82,7 +84,7 @@
                         <c:set var="userRoles" value="${userRoles}" scope="request"/>
                         <!-- FLAG -->
                         <c:if test="${userRoles.contains('ADMIN')}">
-                            <div class="flex-center detail-snippet-block border-radius">
+                            <div class="flex-center detail-snippet-block border-radius form-shadow">
                                 <c:import url="/WEB-INF/jsp/admin/adminFlagForm.jsp"/>
                             </div>
                         </c:if>

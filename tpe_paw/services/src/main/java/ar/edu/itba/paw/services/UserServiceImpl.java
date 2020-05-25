@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
         this.userDao.changeDescription(userId, description);
     }
 
-
+    @Transactional
     @Override
     public void changeReputation(long userId, int amount) {
         this.userDao.changeReputation(userId, amount);

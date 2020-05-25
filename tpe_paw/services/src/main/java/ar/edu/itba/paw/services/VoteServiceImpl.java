@@ -36,11 +36,13 @@ public class VoteServiceImpl implements VoteService {
         }
     }
 
+    @Transactional
     @Override
     public void withdrawVote(final long userId, final long snippetId) {
         this.voteDao.withdrawVote(userId, snippetId);
     }
 
+    @Transactional
     @Override
     public void addVote(final long userId, final long snippetId, final int voteType) {
         this.voteDao.addVote(userId, snippetId, voteType);

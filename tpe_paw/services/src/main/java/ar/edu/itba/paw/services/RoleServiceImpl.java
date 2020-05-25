@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
@@ -25,11 +26,13 @@ public class RoleServiceImpl implements RoleService {
         return this.roleDao.getUserRoleName();
     }
 
+    @Transactional
     @Override
     public void assignUserRole(long userId) {
         this.roleDao.assignUserRole(userId);
     }
 
+    @Transactional
     @Override
     public void assignAdminRole(long userId) {
         this.roleDao.assignAdminRole(userId);

@@ -51,11 +51,11 @@ public class User {
     @Column(length = 5, name="region")
     private String region = "US";   // Setting "US" as the default location value
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
         name= "user_roles",
-        joinColumns = @JoinColumn(name = "user_id"),        //TODO: CHECK IF IS users OR user
-        inverseJoinColumns = @JoinColumn(name = "role_id")) //TODO: SAME with role
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
@@ -64,18 +64,18 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name= "favorites",
-            joinColumns = @JoinColumn(name = "user_id"),             //TODO: CHECK IF IS users OR user
-            inverseJoinColumns = @JoinColumn(name = "snippet_id"))   //TODO: SAME with snippet
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "snippet_id"))
     private Collection<Snippet> favorites;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "follows",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Collection<Tag> followedTags;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner", cascade = CascadeType.PERSIST)
     private Collection<Snippet> createdSnippets;
 
     protected User() {

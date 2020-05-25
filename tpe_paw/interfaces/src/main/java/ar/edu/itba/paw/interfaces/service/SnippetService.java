@@ -23,8 +23,6 @@ public interface SnippetService {
     Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, Long resourceId, int page, int pageSize);
     Collection<Snippet> findSnippetsForTag(long tagId, int page, int pageSize);
     Collection<Snippet> findSnippetsWithLanguage(long langId, int page, int pageSize);
-    int getReputationImportanceBalance(final Snippet snippet);
-    boolean isFlaggedByAdmin(final Snippet snippet);
     boolean deleteSnippet(final Snippet snippet, final long userId);
     void updateFlagged(final Snippet snippet, final User owner, boolean isFlagged, final String baseUrl);
     int getNewSnippetsForTagsCount(Instant dateMin, Collection<Tag> tags, long userId);

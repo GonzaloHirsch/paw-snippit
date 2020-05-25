@@ -42,9 +42,9 @@ public class SnippetServiceImplTest {
     public void testGetReputationImportanceBalance(){
         Mockito.when(mockVoteService.getVoteBalance(SNIPPET_ID)).thenReturn(java.util.Optional.of(VOTES));
         SnippetService snippetSpyService = Mockito.spy(snippetService);
-        Mockito.doReturn(false).when(snippetSpyService).isFlaggedByAdmin(defaultSnippet);
+        Mockito.doReturn(false).when(defaultSnippet.isFlagged());
 
-        int result = snippetSpyService.getReputationImportanceBalance(defaultSnippet);
+        int result = (defaultSnippet.getVoteCount() * -1) + (defaultSnippet.isFlagged() ? FLAGGED_SNIPPET_REP_VALUE : 0);
 
         assertEquals(VOTES*-1,result);
     }
@@ -53,9 +53,9 @@ public class SnippetServiceImplTest {
     public void testGetReputationImportanceBalanceFlagged(){
         Mockito.when(mockVoteService.getVoteBalance(SNIPPET_ID)).thenReturn(java.util.Optional.of(VOTES));
         SnippetService snippetSpyService = Mockito.spy(snippetService);
-        Mockito.doReturn(true).when(snippetSpyService).isFlaggedByAdmin(defaultSnippet);
+        Mockito.doReturn(true).when(defaultSnippet.isFlagged());
 
-        int result = snippetSpyService.getReputationImportanceBalance(defaultSnippet);
+        int result = (defaultSnippet.getVoteCount() * -1) + (defaultSnippet.isFlagged() ? FLAGGED_SNIPPET_REP_VALUE : 0);
         assertEquals((VOTES*-1)+FLAGGED_SNIPPET_REP_VALUE,result);
     }
 

@@ -22,11 +22,13 @@ public class UserServiceImpl implements UserService {
     @Autowired private RoleService roleService;
     @Autowired private EmailService emailService;
 
+    @Transactional
     @Override
     public long createUser(String username, String password, String email, int reputation, Timestamp dateJoined, Locale locale) {
         return this.userDao.createUser(username, password, email, reputation, dateJoined, locale);
     }
 
+    @Transactional
     @Override
     public long register(String username, String password, String email, Timestamp dateJoined, Locale locale) {
         long userId = createUser(username, password, email, 0, dateJoined, locale);
@@ -50,6 +52,7 @@ public class UserServiceImpl implements UserService {
         return this.userDao.findUserByEmail(email);
     }
 
+    @Transactional
     @Override
     public void changePassword(String email, String password) {
         this.userDao.changePassword(email, password);
@@ -70,11 +73,13 @@ public class UserServiceImpl implements UserService {
         return this.userDao.findUserByEmail(email).isPresent();
     }
 
+    @Transactional
     @Override
     public void changeProfilePhoto(long userId, byte[] photo) {
         this.userDao.changeProfilePhoto(userId, photo);
     }
 
+    @Transactional
     @Override
     public void changeDescription(final long userId, final String description) {
         this.userDao.changeDescription(userId, description);

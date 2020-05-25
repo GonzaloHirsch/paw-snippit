@@ -31,7 +31,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
         SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(location, userId, type, term, resourceId).setOrder(order, type).build();
         Query nativeQuery = this.em.createNativeQuery(searchQuery.getQuery());
         this.setSearchQueryParameters(searchQuery.getParams(), nativeQuery);
-        return this.getSearchSnippetsByPage(page, pageSize, nativeQuery, order, type);
+        return this.getSearchSnippetsByPage(page, pageSize, nativeQuery, order, type, false);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
         SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, type, includeFlagged);
         Query nativeQuery = this.em.createNativeQuery(searchQuery.getQuery());
         this.setSearchQueryParameters(searchQuery.getParams(), nativeQuery);
-        return this.getDeepSearchSnippetsByPage(page, pageSize, nativeQuery, order, type);
+        return this.getSearchSnippetsByPage(page, pageSize, nativeQuery, order, type, true);
     }
 
     @Override
@@ -229,11 +229,11 @@ public class SnippetJpaDaoImpl implements SnippetDao {
             if (dateMin != null || dateMax != null) {
                 Calendar min = null;
                 Calendar max = null;
-                if (dateMin != null){
+                if (dateMin != null) {
                     ZonedDateTime zdt = ZonedDateTime.ofInstant(dateMin, ZoneId.systemDefault());
                     min = GregorianCalendar.from(zdt);
                 }
-                if (dateMax != null){
+                if (dateMax != null) {
                     ZonedDateTime zdt = ZonedDateTime.ofInstant(dateMax, ZoneId.systemDefault());
                     max = GregorianCalendar.from(zdt);
                 }
@@ -286,33 +286,22 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     }
 
     /**
-     * Extracts a page of Snippet results given a native query that sorts results
-     *
-     * @param page        Number of page
-     * @param pageSize    Size of the page
-     * @param nativeQuery Query searching for filtered IDs
-     * @return Collection<Snippet> with the results of the query
+     * Extracts a page of Snippet deep search results given a native query that sorts results
+     * @param page Number of the page
+     * @param pageSize Size of the page
+     * @param nativeQuery NativeQuery to be used to filter IDs
+     * @param order Sort type of the order
+     * @param type Order type of the order
+     * @param isDeepSearch Boolean representing if the query is a deep query
+     * @return Collection<Snippet> with the results
      */
-    private Collection<Snippet> getSearchSnippetsByPage(int page, int pageSize, Query nativeQuery, Orders order, Types type) {
+    private Collection<Snippet> getSearchSnippetsByPage(int page, int pageSize, Query nativeQuery, Orders order, Types type, boolean isDeepSearch) {
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
         List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())
-                .stream().map(i -> ((Integer)i[0]).longValue()).collect(Collectors.toList());
+                .stream().map(i -> ((Integer) i[0]).longValue()).collect(Collectors.toList());
         if (filteredIds.size() > 0) {
-            final TypedQuery<Snippet> query = this.getSortedSearchQuery(order, type);
-            query.setParameter("filteredIds", filteredIds);
-            return query.getResultList();
-        }
-        return Collections.emptyList();
-    }
-
-    private Collection<Snippet> getDeepSearchSnippetsByPage(int page, int pageSize, Query nativeQuery, Orders order, Types type) {
-        nativeQuery.setFirstResult((page - 1) * pageSize);
-        nativeQuery.setMaxResults(pageSize);
-        List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())
-                .stream().map(i -> ((Integer)i[0]).longValue()).collect(Collectors.toList());
-        if (filteredIds.size() > 0) {
-            final TypedQuery<Snippet> query = this.getSortedDeepSearchQuery(order, type);
+            final TypedQuery<Snippet> query = isDeepSearch ? this.getSortedDeepSearchQuery(order, type) : this.getSortedDeepSearchQuery(order, type);
             query.setParameter("filteredIds", filteredIds);
             return query.getResultList();
         }
@@ -321,15 +310,16 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     /**
      * Generates a sorted query for the Snippet object
+     *
      * @param order Type of order to be used
-     * @param type The field to order by
+     * @param type  The field to order by
      * @return TypedQuery<Snippet> with the sorted query
      */
-    private TypedQuery<Snippet> getSortedDeepSearchQuery(Orders order, Types type){
-        if (!order.equals(Orders.NO)){
+    private TypedQuery<Snippet> getSortedDeepSearchQuery(Orders order, Types type) {
+        if (!order.equals(Orders.NO)) {
             StringBuilder query = new StringBuilder();
             query.append("from Snippet WHERE id IN :filteredIds");
-            switch (type){
+            switch (type) {
                 case VOTES:
                     query.append(" ORDER BY SUM(votes.type) ");
                     break;
@@ -349,7 +339,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
                     query.append(" ORDER BY title ");
                     break;
             }
-            switch (order){
+            switch (order) {
                 case ASC:
                     query.append("ASC");
                     break;
@@ -366,15 +356,16 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     /**
      * Generates a sorted query for the Snippet object
+     *
      * @param order Type of order to be used
-     * @param type The field to order by
+     * @param type  The field to order by
      * @return TypedQuery<Snippet> with the sorted query
      */
-    private TypedQuery<Snippet> getSortedSearchQuery(Orders order, Types type){
-        if (!order.equals(Orders.NO)){
+    private TypedQuery<Snippet> getSortedSearchQuery(Orders order, Types type) {
+        if (!order.equals(Orders.NO)) {
             StringBuilder query = new StringBuilder();
             query.append("from Snippet WHERE id IN :filteredIds");
-            switch (type){
+            switch (type) {
                 case ALL:
                 case TAG:
                 case TITLE:
@@ -390,7 +381,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
                     query.append(" ORDER BY language.name ");
                     break;
             }
-            switch (order){
+            switch (order) {
                 case ASC:
                     query.append("ASC");
                     break;
@@ -414,8 +405,8 @@ public class SnippetJpaDaoImpl implements SnippetDao {
         params.forEach((key, value) -> {
             // Checking if instance of Calendar because Hibernate needs to be told it's a calendar type in a different way
             // If not checking Calendar instance, fails with SQL error
-            if (value instanceof Calendar){
-                nativeQuery.setParameter(key, (Calendar)value, TemporalType.TIMESTAMP);
+            if (value instanceof Calendar) {
+                nativeQuery.setParameter(key, (Calendar) value, TemporalType.TIMESTAMP);
             } else {
                 nativeQuery.setParameter(key, value);
             }

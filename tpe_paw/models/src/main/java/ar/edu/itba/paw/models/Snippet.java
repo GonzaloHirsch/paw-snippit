@@ -197,6 +197,10 @@ public class Snippet {
         this.language = language;
     }
 
+    public int getVoteBalance(){
+        return this.votes.stream().mapToInt(x -> x.getType()).sum();
+    }
+
     @Override
     public boolean equals(Object o) {
 

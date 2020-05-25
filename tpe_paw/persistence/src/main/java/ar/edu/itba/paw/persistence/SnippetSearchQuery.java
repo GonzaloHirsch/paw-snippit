@@ -49,16 +49,16 @@ public class SnippetSearchQuery {
         /**
          * Map used to map the locations or sources of snippets to be searched among to the corresponding queries they translate to
          */
-        private final String ALL_FIELDS = "DISTINCT sn.id, sn.title, sn.code, sn.user_id, us.username, lang.name AS language";
+        private final String ALL_FIELDS = "DISTINCT sn.id, sn.title, sn.code, sn.user_id, sn.username, sn.language";
         private Map<SnippetDao.Locations, String> locationsMap = new HashMap<SnippetDao.Locations, String>(){{
-            put(SnippetDao.Locations.HOME, "(SELECT " + ALL_FIELDS + " FROM snippets AS sn INNER JOIN users AS us ON us.id = sn.user_id INNER JOIN languages AS lang ON lang.id = sn.language_id)");
-            put(SnippetDao.Locations.USER, "(SELECT " + ALL_FIELDS + " FROM snippets AS sn INNER JOIN users AS us ON us.id = sn.user_id INNER JOIN languages AS lang ON lang.id = sn.language_id WHERE sn.user_id = :userId)");
-            put(SnippetDao.Locations.LANGUAGES, "(SELECT " + ALL_FIELDS + " FROM snippets AS sn INNER JOIN users AS us ON us.id = sn.user_id INNER JOIN languages AS lang ON lang.id = sn.language_id WHERE sn.language_id = :resourceId)");
-            put(SnippetDao.Locations.TAGS, "(SELECT " + ALL_FIELDS + " FROM snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id INNER JOIN users AS us ON us.id = sn.user_id INNER JOIN languages AS lang ON lang.id = sn.language_id WHERE st.tag_id = :resourceId)");
-            put(SnippetDao.Locations.FAVORITES, "(SELECT " + ALL_FIELDS + " FROM snippets AS sn INNER JOIN favorites AS fav ON fav.snippet_id = sn.id INNER JOIN users AS us ON us.id = sn.user_id INNER JOIN languages AS lang ON lang.id = sn.language_id WHERE fav.user_id = :userId)");
-            put(SnippetDao.Locations.FOLLOWING, "(SELECT " + ALL_FIELDS + " FROM snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id INNER JOIN follows AS fol ON st.tag_id = fol.tag_id INNER JOIN users AS us ON us.id = sn.user_id INNER JOIN languages AS lang ON lang.id = sn.language_id WHERE fol.user_id = :userId)");
-            put(SnippetDao.Locations.UPVOTED, "(SELECT " + ALL_FIELDS + " FROM snippets AS sn INNER JOIN votes_for AS vf ON vf.snippet_id = sn.id INNER JOIN users AS us ON us.id = sn.user_id INNER JOIN languages AS lang ON lang.id = sn.language_id WHERE vf.user_id = :userId AND vf.type = 1)");
-            put(SnippetDao.Locations.FLAGGED, "(SELECT " + ALL_FIELDS + " FROM snippets AS sn INNER JOIN users AS us ON us.id = sn.user_id INNER JOIN languages AS lang ON lang.id = sn.language_id WHERE sn.flagged = 1)");
+            put(SnippetDao.Locations.HOME, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn)");
+            put(SnippetDao.Locations.USER, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn WHERE sn.user_id = :userId)");
+            put(SnippetDao.Locations.LANGUAGES, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn WHERE sn.language_id = :resourceId)");
+            put(SnippetDao.Locations.TAGS, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id WHERE st.tag_id = :resourceId)");
+            put(SnippetDao.Locations.FAVORITES, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn INNER JOIN favorites AS fav ON fav.snippet_id = sn.id WHERE fav.user_id = :userId)");
+            put(SnippetDao.Locations.FOLLOWING, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id INNER JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = :userId)");
+            put(SnippetDao.Locations.UPVOTED, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn INNER JOIN votes_for AS vf ON vf.snippet_id = sn.id WHERE vf.user_id = :userId AND vf.type = 1)");
+            put(SnippetDao.Locations.FLAGGED, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn WHERE sn.flagged = 1)");
         }};
         /**
          * Map used to translate the given enum for order types into their query equivalent

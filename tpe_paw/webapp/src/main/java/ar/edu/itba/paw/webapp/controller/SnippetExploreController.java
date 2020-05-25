@@ -72,13 +72,13 @@ public class SnippetExploreController {
             return explore(searchForm, exploreForm, page);
         }
         final ModelAndView mav = new ModelAndView("snippet/snippetExplore");
-        String minDate = null;
-        String maxDate = null;
+        Instant minDate = null;
+        Instant maxDate = null;
         if (exploreForm.getMinDate() != null){
-            minDate = DATE.format(exploreForm.getMinDate().toInstant());
+            minDate = exploreForm.getMinDate().toInstant();
         }
         if (exploreForm.getMaxDate() != null){
-            maxDate = DATE.format(exploreForm.getMaxDate().toInstant());
+            maxDate = exploreForm.getMaxDate().toInstant();
         }
         Collection<Snippet> snippets = this.snippetService.findSnippetByDeepCriteria(
                 minDate, maxDate,

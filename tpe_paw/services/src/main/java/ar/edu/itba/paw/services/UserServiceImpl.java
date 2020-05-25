@@ -23,13 +23,13 @@ public class UserServiceImpl implements UserService {
     @Autowired private EmailService emailService;
 
     @Override
-    public long createUser(String username, String password, String email, String description, int reputation, Timestamp dateJoined, Locale locale) {
-        return this.userDao.createUser(username, password, email, description, reputation, dateJoined, locale);
+    public long createUser(String username, String password, String email, int reputation, Timestamp dateJoined, Locale locale) {
+        return this.userDao.createUser(username, password, email, reputation, dateJoined, locale);
     }
 
     @Override
     public long register(String username, String password, String email, Timestamp dateJoined, Locale locale) {
-        long userId = createUser(username, password, email, "", 0, dateJoined, locale);
+        long userId = createUser(username, password, email, 0, dateJoined, locale);
         this.roleService.assignUserRole(userId);
         this.emailService.sendRegistrationEmail(email, username, LocaleContextHolder.getLocale());
         return userId;

@@ -8,7 +8,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 public interface UserService {
-    long createUser(String username, String password, String email, String description, int reputation, Timestamp dateJoined, Locale locale);
+    long createUser(String username, String password, String email, int reputation, Timestamp dateJoined, Locale locale);
 
     long register(String username, String password, String email, Timestamp dateJoined, Locale locale);
 

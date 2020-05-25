@@ -53,6 +53,7 @@ public class RegistrationController {
     @Autowired private ValidatorHelper validatorHelper;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
+    private static final String REDIRECT_ATTRIBUTE = "url_prior_login";
     public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK)
             .withZone(ZoneId.systemDefault());
 
@@ -61,7 +62,7 @@ public class RegistrationController {
         this.throwIfUserIsLoggedIn();
 
         String referrer = request.getHeader("Referer");
-        request.getSession().setAttribute("url_prior_login", referrer);
+        request.getSession().setAttribute(REDIRECT_ATTRIBUTE, referrer);
 
         final ModelAndView mav = new ModelAndView("user/login");
         mav.addObject("error", false);
@@ -85,7 +86,9 @@ public class RegistrationController {
         this.throwIfUserIsLoggedIn();
 
         String referrer = request.getHeader("Referer");
-        request.getSession().setAttribute("url_prior_login", referrer);
+        if (!referrer.contains("login")) {
+            request.getSession().setAttribute(REDIRECT_ATTRIBUTE, referrer);
+        }
 
         return new ModelAndView("user/signUpForm");
     }

@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface UserDao {
 
-    long createUser(String username, String password, String email, String description, int reputation, Timestamp dateJoined, Locale locale);
+    long createUser(String username, String password, String email, int reputation, Timestamp dateJoined, Locale locale);
 
     Optional<User> findUserByUsername(String username);
 

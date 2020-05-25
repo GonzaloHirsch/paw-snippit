@@ -30,15 +30,11 @@ public class Role {
         this.name = name;
     }
 
-    public long getId() { return id; }
+    public long getId() { return this.id; }
 
     public Collection<User> getUsersWithRole() {
-        return usersWithRole;
+        return this.usersWithRole;
     }
 
-    public String getName() { return name;
-
-
-
-    }
+    public String getName() { return this.name;  }
 }

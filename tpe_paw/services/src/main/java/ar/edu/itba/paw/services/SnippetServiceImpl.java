@@ -59,6 +59,7 @@ public class SnippetServiceImpl implements SnippetService {
         return snippet.isFlagged();
     }
 
+    @Transactional
     @Override
     public boolean deleteSnippet(Snippet snippet, long userId) {
         int voteBalance = this.getReputationImportanceBalance(snippet);

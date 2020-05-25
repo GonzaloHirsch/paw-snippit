@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.service.LanguageService;
 import ar.edu.itba.paw.models.Language;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -61,11 +62,13 @@ public class LanguageServiceImpl implements LanguageService {
         return languageDao.findById(id).isPresent();
     }
 
+    @Transactional
     @Override
     public void removeLanguage(final long langId) {
         this.languageDao.removeLanguage(langId);
     }
 
+    @Transactional
     @Override
     public boolean languageInUse(final long langId) {
         return this.languageDao.languageInUse(langId);

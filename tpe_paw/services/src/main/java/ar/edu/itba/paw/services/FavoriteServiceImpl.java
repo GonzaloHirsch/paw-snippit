@@ -13,11 +13,13 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Autowired
     FavoriteDao favDao;
 
+    @Transactional
     @Override
     public void addToFavorites(long userId, long snippetId) {
         favDao.addToFavorites(userId, snippetId);
     }
 
+    @Transactional
     @Override
     public void removeFromFavorites(long userId, long snippetId) {
         favDao.removeFromFavorites(userId, snippetId);

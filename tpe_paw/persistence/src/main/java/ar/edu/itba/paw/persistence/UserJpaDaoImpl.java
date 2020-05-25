@@ -79,6 +79,7 @@ public class UserJpaDaoImpl implements UserDao {
 
     @Override
     public void changeReputation(long userId, int value) {
+        // blabal
         Optional<User> maybeUser = this.findUserById(userId);
         if(maybeUser.isPresent()){
             User user = maybeUser.get();

@@ -111,11 +111,14 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     }
 
     @Override
-    public int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId) {
+    public int getNewSnippetsForTagsCount(Instant dateMin, Collection<Tag> tags, long userId) {
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(dateMin, ZoneId.systemDefault());
+        Calendar min = GregorianCalendar.from(zdt);
+        // Extracting the tag ids form the list
         Collection<Long> tagIds = tags.stream().mapToLong(Tag::getId).boxed().collect(Collectors.toList());
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = sn.id WHERE st.tag_id IN :ids AND sn.date_created::date >= :cdate::date AND sn.user_id != :id");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = sn.id WHERE st.tag_id IN :ids AND sn.date_created\\:\\:date >= :cdate\\:\\::date AND sn.user_id != :id");
         nativeQuery.setParameter("ids", tagIds);
-        nativeQuery.setParameter("cdate", dateMin);
+        nativeQuery.setParameter("cdate", min, TemporalType.TIMESTAMP);
         nativeQuery.setParameter("id", userId);
         return nativeQuery.getResultList().size();
     }

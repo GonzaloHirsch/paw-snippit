@@ -27,7 +27,7 @@ public interface SnippetService {
     boolean isFlaggedByAdmin(final Snippet snippet);
     boolean deleteSnippet(final Snippet snippet, final long userId);
     void updateFlagged(final Snippet snippet, final User owner, boolean isFlagged, final String baseUrl);
-    int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId);
+    int getNewSnippetsForTagsCount(Instant dateMin, Collection<Tag> tags, long userId);
     Collection<Snippet> findSnippetByDeepCriteria(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, SnippetDao.Orders order, SnippetDao.Types type, Boolean includeFlagged, int page, int pageSize);
     int getAllSnippetsCount();
     int getAllFavoriteSnippetsCount(final long userId);

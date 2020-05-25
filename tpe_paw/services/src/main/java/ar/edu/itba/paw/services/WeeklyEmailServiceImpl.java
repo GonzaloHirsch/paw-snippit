@@ -30,9 +30,6 @@ public class WeeklyEmailServiceImpl implements WeeklyEmailService{
     @Autowired private SnippetService snippetService;
     @Autowired private TemplateService templateService;
 
-    private static final DateTimeFormatter DATE = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(Locale.UK)
-            .withZone(ZoneId.systemDefault());
-
     @Async
     @Scheduled(cron = "0 0 12 * * Mon")
     @Override
@@ -50,7 +47,7 @@ public class WeeklyEmailServiceImpl implements WeeklyEmailService{
             followedTags = this.tagService.getFollowedTagsForUser(user.getId());
             if (followedTags.size() > 0) {
                 // Getting how many new snippets were found
-                snippetsForWeek = this.snippetService.getNewSnippetsForTagsCount(DATE.format(weekBefore), followedTags, user.getId());
+                snippetsForWeek = this.snippetService.getNewSnippetsForTagsCount(weekBefore, followedTags, user.getId());
                 if (snippetsForWeek > 0) {
                     this.sendDigestEmail(user.getEmail(), user.getUsername(), snippetsForWeek, locale);
                 } else {

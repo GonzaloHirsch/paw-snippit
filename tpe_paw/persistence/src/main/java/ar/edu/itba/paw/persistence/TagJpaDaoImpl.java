@@ -64,7 +64,7 @@ public class TagJpaDaoImpl implements TagDao {
     @Override
     public void addTags(List<String> tags) {
         for(String name : tags){
-            addTag(name);
+            this.addTag(name);
         }
     }
 

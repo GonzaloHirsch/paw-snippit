@@ -89,8 +89,7 @@ public class LanguageJpaDaoImpl implements LanguageDao {
     @Override
     public void addLanguages(List<String> languages) {
         for (String name : languages) {
-            Language language = new Language(name);
-            em.persist(language);
+            this.addLanguage(name);
         }
     }
 

@@ -167,9 +167,10 @@ public class SnippetController {
             if (!snippetOpt.isPresent()){
                 this.logAndThrow(id);
             }
+            Snippet snippet = snippetOpt.get();
             // Getting the complete owner
-            Optional<User> completeOwnerOpt = this.userService.findUserById(snippetOpt.get().getOwner().getId());
-            if (!completeOwnerOpt.isPresent()){
+//            Optional<User> completeOwnerOpt = this.userService.findUserById(snippetOpt.get().getOwner().getId());
+            if (snippet.getOwner() == null){
                 throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.delete", null, LocaleContextHolder.getLocale()));
             }
 
@@ -178,7 +179,7 @@ public class SnippetController {
 
             try {
                 // Updating the flagged variable of snippet
-                this.snippetService.updateFlagged(snippetOpt.get(), completeOwnerOpt.get(), adminFlagForm.isFlagged(), baseUrl);
+                this.snippetService.updateFlagged(snippet, snippet.getOwner(), adminFlagForm.isFlagged(), baseUrl);
             } catch (Exception e) {
                 LOGGER.error(e.getMessage() + "Failed to send flagged email to user {} about their snippet {}", snippetOpt.get().getOwner().getUsername(), snippetOpt.get().getId());
             }

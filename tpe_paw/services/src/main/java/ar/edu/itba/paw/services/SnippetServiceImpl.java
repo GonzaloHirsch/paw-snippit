@@ -167,10 +167,10 @@ public class SnippetServiceImpl implements SnippetService {
     public void updateFlagged(final Snippet snippet, final User owner, boolean isFlagged, final String baseUrl) {
         if (isFlagged) {
             this.snippetDao.flagSnippet(snippet.getId());
-            this.userService.changeReputation(owner.getId(), FLAGGED_SNIPPET_REP_VALUE * (-1));
+            this.userService.changeReputation(owner.getId(), owner.getReputation() + (FLAGGED_SNIPPET_REP_VALUE * (-1)));
         } else {
             this.snippetDao.unflagSnippet(snippet.getId());
-            this.userService.changeReputation(owner.getId(), FLAGGED_SNIPPET_REP_VALUE);
+            this.userService.changeReputation(owner.getId(), owner.getReputation() + FLAGGED_SNIPPET_REP_VALUE);
         }
         // Getting the url of the server
         this.emailService.sendFlaggedEmail(baseUrl + "/snippet/" + snippet.getId(), snippet.getTitle(), owner.getEmail(), owner.getUsername(), isFlagged, owner.getLocale());

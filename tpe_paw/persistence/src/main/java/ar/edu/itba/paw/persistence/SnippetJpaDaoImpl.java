@@ -28,7 +28,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> findSnippetByCriteria(Types type, String term, Locations location, Orders order, Long userId, Long resourceId, int page, int pageSize) {
-        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(location, userId, type, term, resourceId).setOrder(order, type).build();
+        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(location, userId, term.equals("") ? Types.ALL : type, term, resourceId).setOrder(order, type).build();
         Query nativeQuery = this.em.createNativeQuery(searchQuery.getQuery());
         this.setSearchQueryParameters(searchQuery.getParams(), nativeQuery);
         return this.getSearchSnippetsByPage(page, pageSize, nativeQuery, order, type, false);
@@ -210,7 +210,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public int getSnippetByCriteriaCount(Types type, String term, Locations location, Long userId, Long resourceId) {
-        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(location, userId, type, term, resourceId)
+        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(location, userId, term.equals("") ? Types.ALL : type, term, resourceId)
                 .build();
         Query nativeQuery = this.em.createNativeQuery(searchQuery.getQuery());
         this.setSearchQueryParameters(searchQuery.getParams(), nativeQuery);

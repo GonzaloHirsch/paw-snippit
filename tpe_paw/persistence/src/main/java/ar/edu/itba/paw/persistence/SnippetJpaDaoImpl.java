@@ -322,16 +322,15 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     private TypedQuery<Snippet> getSortedDeepSearchQuery(Orders order, Types type) {
         if (!order.equals(Orders.NO)) {
             StringBuilder query = new StringBuilder();
-            query.append("from Snippet WHERE id IN :filteredIds");
             switch (type) {
                 case VOTES:
-                    query.append(" ORDER BY SUM(votes.type) ");
+                    query.append("SELECT s FROM Snippet s LEFT OUTER JOIN s.votes v WHERE s.id IN :filteredIds GROUP BY s.id ORDER BY SUM(v.type) ");
                     break;
                 case DATE:
-                    query.append(" ORDER BY dateCreated ");
+                    query.append("from Snippet WHERE id IN :filteredIds ORDER BY dateCreated ");
                     break;
                 case REPUTATION:
-                    query.append(" ORDER BY owner.reputation ");
+                    query.append("from Snippet WHERE id IN :filteredIds ORDER BY owner.reputation ");
                     break;
                 case ALL:
                 case TAG:
@@ -340,7 +339,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
                 case CONTENT:
                 case USER:
                 default:
-                    query.append(" ORDER BY title ");
+                    query.append("from Snippet WHERE id IN :filteredIds ORDER BY title ");
                     break;
             }
             switch (order) {

@@ -9,18 +9,10 @@
 </head>
 
 <body>
-<c:set var="tagId" value="${requestScope.tagId}"/>
-<c:set var="followFromSearch" value="tags/${tagId}/search/"/>
-<c:choose>
-    <c:when test="${requestScope.searchContext == followFromSearch}">
-        <c:set var="followUrl" value="follow"/>
-    </c:when>
-    <c:otherwise>
-        <c:set var="followUrl" value="${tagId}/follow"/>
-    </c:otherwise>
-</c:choose>
 <div class="flex-column">
-    <form:form class="form-container flex-center" action="${followUrl}" method="post" modelAttribute="followForm">
+    <c:set var="tagtId" value="${requestScope.tagId}"/>
+    <c:url var="tagFollowUrl" value="/tags/${tagId}/follow"/>
+    <form:form class="form-container flex-center" action="${tagFollowUrl}" method="post" modelAttribute="followForm">
         <form:checkbox class="hidden" id="follow-button" path="follows" value="true" onclick="updateForm(this)"/>
         <label class="no-margin" for="follow-button">
             <c:choose>

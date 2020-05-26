@@ -21,16 +21,7 @@
 </head>
 <body>
 <c:set var="tagId" value="${tag.id}" scope="request"/>
-<c:set var="deleteFromSearch" value="tags/${tagId}/search/"/>
-<c:choose>
-    <c:when test="${requestScope.searchContext == deleteFromSearch}">
-        <c:set var="deleteUrl" value="delete"/>
-    </c:when>
-    <c:otherwise>
-        <c:set var="deleteUrl" value="${tagId}/delete"/>
-    </c:otherwise>
-</c:choose>
-
+<c:url var="tagDeleteUrl" value="/tags/${tagId}/delete"/>
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
@@ -41,11 +32,10 @@
                     <spring:message code="tagSnippets.title" arguments="${tag.name.toUpperCase()}"/>
                 </div>
                 <c:if test="${currentUser != null}">
-                    <c:set var="tagId" value="${tag.id}" scope="request"/>
                     <c:import url="/WEB-INF/jsp/tagAndLanguages/tagFollowForm.jsp"/>
 
                     <c:if test="${userRoles.contains('ADMIN')}">
-                        <form:form action="${deleteUrl}" class="form-container" method="post" modelAttribute="deleteForm">
+                        <form:form action="${tagDeleteUrl}" class="form-container" method="post" modelAttribute="deleteForm">
                             <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#tag-snippet">
                                 <i class="delete-element-icon material-icons border-radius">delete</i>
                             </div>

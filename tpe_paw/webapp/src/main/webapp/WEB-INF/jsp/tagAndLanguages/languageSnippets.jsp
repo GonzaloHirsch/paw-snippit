@@ -21,17 +21,7 @@
 </head>
 <body>
 <c:set var="snippetList" value="${snippetList}" scope="request"/>
-<c:set var="langId" value="${language.id}" scope="request"/>
-<c:set var="deleteFromSearch" value="languages/${langId}/search/"/>
-<c:choose>
-    <c:when test="${requestScope.searchContext == deleteFromSearch}">
-        <c:set var="deleteUrl" value="delete"/>
-    </c:when>
-    <c:otherwise>
-        <c:set var="deleteUrl" value="${langId}/delete"/>
-    </c:otherwise>
-</c:choose>
-
+<c:url var="langDeleteUrl" value="/languages/${language.id}/delete"/>
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
@@ -42,7 +32,7 @@
                     <spring:message code="languageSnippets.title" arguments="${language.name.toUpperCase()}"/>
                 </div>
                 <c:if test="${currentUser != null && userRoles.contains('ADMIN') && snippetList.size() == 0}">
-                    <form:form action="${deleteUrl}" class="form-container" method="post" modelAttribute="deleteForm">
+                    <form:form action="${langDeleteUrl}" class="form-container" method="post" modelAttribute="deleteForm">
                         <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#delete-lang">
                             <i class="delete-element-icon material-icons border-radius">delete</i>
                         </div>

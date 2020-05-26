@@ -11,27 +11,37 @@
     <script src="<c:url value='/resources/js/form.js'/>"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" integrity="sha256-jO7D3fIsAq+jB8Xt3NI5vBf3k4tvtHwzp8ISLQG4UWU=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css" integrity="sha256-FAOaXTpl90/K8cXmSdsskbQN3nKYulhCpPbcFzGTWKI=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.standalone.min.css" integrity="sha256-BqW0zYSKgIYEpELUf5irBCGGR7wQd5VZ/N6OaBEsz5U=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha256-siyOpF/pBWUPgIcQi17TLBkjvNgNQArcmwJB8YvkAgg=" crossorigin="anonymous" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css"
+          integrity="sha256-jO7D3fIsAq+jB8Xt3NI5vBf3k4tvtHwzp8ISLQG4UWU=" crossorigin="anonymous"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css"
+          integrity="sha256-FAOaXTpl90/K8cXmSdsskbQN3nKYulhCpPbcFzGTWKI=" crossorigin="anonymous"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.standalone.min.css"
+          integrity="sha256-BqW0zYSKgIYEpELUf5irBCGGR7wQd5VZ/N6OaBEsz5U=" crossorigin="anonymous"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+          integrity="sha256-siyOpF/pBWUPgIcQi17TLBkjvNgNQArcmwJB8YvkAgg=" crossorigin="anonymous"/>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 </head>
 <body>
-<spring:message code="advanced.title.hint" var="advanced_title_hint" />
-<spring:message code="advanced.username.hint" var="advanced_username_hint" />
-<spring:message code="advanced.reputation.hint" var="advanced_reputation_hint" />
-<spring:message code="advanced.votes.hint" var="advanced_votes_hint" />
-<spring:message code="advanced.date.hint" var="advanced_date_hint" />
-<spring:message code="advanced.includeFlagged" var="advanced_include_flagged" />
+<spring:message code="advanced.title.hint" var="advanced_title_hint"/>
+<spring:message code="advanced.username.hint" var="advanced_username_hint"/>
+<spring:message code="advanced.reputation.hint" var="advanced_reputation_hint"/>
+<spring:message code="advanced.votes.hint" var="advanced_votes_hint"/>
+<spring:message code="advanced.date.hint" var="advanced_date_hint"/>
+<spring:message code="advanced.includeFlagged" var="advanced_include_flagged"/>
+<c:url var="exploreSearchUrl" value="/explore/search"/>
 <div class="flex-column explore-container">
-    <form:form class="form-container" action="search" method="get" modelAttribute="exploreForm">
+    <form:form class="form-container" action="${exploreSearchUrl}" method="get" modelAttribute="exploreForm">
 
         <form:label cssClass="flex-stretch fw-500" path="field"><spring:message code="advanced.ordersort"/></form:label>
         <div class="flex-row">
             <div class="flex-column flex-grow">
-                <form:label cssClass="flex-stretch sub-label" path="field"><spring:message code="advanced.orderby"/></form:label>
+                <form:label cssClass="flex-stretch sub-label" path="field"><spring:message
+                        code="advanced.orderby"/></form:label>
                 <form:select class="selectpicker flex-grow" path="field">
                     <form:option value="date">
                         <spring:message code="advanced.orderby.none"/>
@@ -48,7 +58,8 @@
                 </form:select>
             </div>
             <div class="flex-column flex-grow">
-                <form:label cssClass="flex-stretch sub-label" path="title"><spring:message code="advanced.sortby"/></form:label>
+                <form:label cssClass="flex-stretch sub-label" path="title"><spring:message
+                        code="advanced.sortby"/></form:label>
                 <form:select class="selectpicker flex-grow" path="sort">
                     <form:option value="asc">
                         <spring:message code="advanced.sortby.none"/>
@@ -65,9 +76,11 @@
 
         <hr/>
 
-        <form:label cssClass="flex-stretch fw-500" path="includeFlagged"><spring:message code="advanced.flagged"/></form:label>
+        <form:label cssClass="flex-stretch fw-500" path="includeFlagged"><spring:message
+                code="advanced.flagged"/></form:label>
         <div class="flex-row">
-            <form:checkbox path="includeFlagged" value="true" label="${advanced_include_flagged}" class="fw-100 advanced-input check-input"/>
+            <form:checkbox path="includeFlagged" value="true" label="${advanced_include_flagged}"
+                           class="fw-100 advanced-input check-input"/>
         </div>
         <form:errors class="form-error" path="includeFlagged" element="p"/>
 
@@ -84,7 +97,8 @@
 
         <div class="flex-row">
             <div class="flex-column flex-grow">
-                <form:label cssClass="flex-stretch fw-500" path="language"><spring:message code="advanced.language"/></form:label>
+                <form:label cssClass="flex-stretch fw-500" path="language"><spring:message
+                        code="advanced.language"/></form:label>
 
                 <form:select class="selectpicker flex-grow" data-live-search="true" path="language">
                     <form:option value="-1"><spring:message code="advanced.language.hint"/></form:option>
@@ -109,7 +123,8 @@
 
         <hr/>
 
-        <form:label cssClass="flex-stretch fw-500" path="username"><spring:message code="advanced.username"/></form:label>
+        <form:label cssClass="flex-stretch fw-500" path="username"><spring:message
+                code="advanced.username"/></form:label>
         <div class="flex-row">
             <form:input path="username" type="text" class="flex-grow fw-100 advanced-input text-input"
                         placeholder="${advanced_username_hint}"/>
@@ -118,19 +133,22 @@
 
         <hr/>
 
-        <form:label cssClass="flex-stretch fw-500" path="minDate"><spring:message code="advanced.uploadDate"/></form:label>
+        <form:label cssClass="flex-stretch fw-500" path="minDate"><spring:message
+                code="advanced.uploadDate"/></form:label>
         <div class="flex-row">
             <div class="flex-column flex-grow">
 
                 <form:label cssClass="flex-stretch sub-label" path="minDate"><spring:message
                         code="advanced.uploadDate.from"/></form:label>
-                <form:input path="minDate" autocomplete="off" data-provide="datepicker" class="datepicker flex-grow fw-100 advanced-input date-input" data-date-format="dd/mm/yyyy"
+                <form:input path="minDate" autocomplete="off" data-provide="datepicker"
+                            class="datepicker flex-grow fw-100 advanced-input date-input" data-date-format="dd/mm/yyyy"
                             placeholder="${advanced_date_hint}"/>
             </div>
             <div class="flex-column flex-grow">
                 <form:label cssClass="flex-stretch sub-label" path="maxDate"><spring:message
                         code="advanced.uploadDate.to"/></form:label>
-                <form:input path="maxDate" autocomplete="off" data-provide="datepicker" class="datepicker flex-grow fw-100 advanced-input date-input" data-date-format="dd/mm/yyyy"
+                <form:input path="maxDate" autocomplete="off" data-provide="datepicker"
+                            class="datepicker flex-grow fw-100 advanced-input date-input" data-date-format="dd/mm/yyyy"
                             placeholder="${advanced_date_hint}"/>
             </div>
         </div>
@@ -139,7 +157,8 @@
 
         <hr/>
 
-        <form:label cssClass="flex-stretch fw-500" path="minRep"><spring:message code="advanced.reputation"/></form:label>
+        <form:label cssClass="flex-stretch fw-500" path="minRep"><spring:message
+                code="advanced.reputation"/></form:label>
         <div class="flex-row">
             <div class="flex-column flex-grow">
                 <form:label cssClass="flex-stretch sub-label" path="minRep"><spring:message
@@ -177,7 +196,8 @@
         <form:errors path="minVotes" cssClass="form-error" element="p"/>
         <form:errors path="maxVotes" cssClass="form-error" element="p"/>
         <div class="flex-row">
-            <button class="flex-grow border-radius advanced-submit-button" type="submit"><spring:message code="search"/></button>
+            <button class="flex-grow border-radius advanced-submit-button" type="submit"><spring:message
+                    code="search"/></button>
         </div>
     </form:form>
 </div>
@@ -186,7 +206,8 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
+        integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>

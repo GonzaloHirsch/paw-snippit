@@ -78,6 +78,15 @@ public class TagsController {
         mav.addObject("searchContext","tags/");
         mav.addObject("tags", allTags);
         mav.addObject("itemSearchContext", "tags/");
+
+        User currentUser = loginAuthentication.getLoggedInUser();
+        if (currentUser != null) {
+            for (Tag tag : allTags) {
+                FollowForm followForm = new FollowForm();
+                followForm.setFollows(currentUser.getFollowedTags().contains(tag));
+                mav.addObject("followIconForm" + tag.getId().toString(), followForm);
+            }
+        }
         return mav;
     }
 

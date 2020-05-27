@@ -19,8 +19,8 @@ import static ar.edu.itba.paw.persistence.TestHelper.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(classes = TestConfig.class)
 public class RoleDaoTest {
     @Autowired
     private DataSource ds;
@@ -33,7 +33,7 @@ public class RoleDaoTest {
     private long adminRoleId;
     private long userRoleId;
     private User defaultUser;
-
+/*
     @Before
     public void setup(){
         jdbcTemplate = new JdbcTemplate(ds);
@@ -49,7 +49,7 @@ public class RoleDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,ROLES_TABLE);
         adminRoleId = insertRoleIntoDb(jdbcInsertRole,ADMIN_ROLE);
         userRoleId = insertRoleIntoDb(jdbcInsertRole,USER_ROLE);
-    }
+    }*/
 
     /*@Transactional
     @Test

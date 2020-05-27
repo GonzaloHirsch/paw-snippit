@@ -143,11 +143,7 @@ public class SnippetServiceImpl implements SnippetService {
     @Transactional
     @Override
     public Long createSnippet(User owner, String title, String description, String code, Timestamp dateCreated, Long language, Collection<String> tags) {
-        Long snippetId =  snippetDao.createSnippet(owner.getId(),title,description,code,dateCreated,language, tags);
-//        if(snippetId != null) {
-//            this.tagService.addTagsToSnippet(snippetId, tags);
-//        }
-        return snippetId;
+        return snippetDao.createSnippet(owner.getId(), title.trim(), description.trim(), code, dateCreated, language, tags);
     }
 
     @Transactional

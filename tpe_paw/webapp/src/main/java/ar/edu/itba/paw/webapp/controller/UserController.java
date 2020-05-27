@@ -143,7 +143,10 @@ public class  UserController {
         }
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Optional<User> user = this.userService.findUserById(id);
-        if (currentUser != null && currentUser.getId() == user.get().getId()) {
+        if (!user.isPresent()){
+            this.logAndThrow(id);
+        }
+        if (currentUser != null && currentUser.getId().equals(user.get().getId())) {
             this.userService.changeDescription(id, descriptionForm.getDescription());
         }
         return new ModelAndView("redirect:/user/" + id);

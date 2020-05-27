@@ -11,7 +11,7 @@ public class ResetPasswordForm {
 
     @Size(min=8)
     @NotBlank
-    @Pattern(regexp = "^[\\S]+$", message = "{form.error.password}")
+    @Pattern(regexp = "^\\S*$", message = "{form.error.password}")
     private String newPassword;
 
     private String repeatNewPassword;

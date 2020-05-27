@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void changeDescription(final long userId, final String description) {
-        this.userDao.changeDescription(userId, description);
+        this.userDao.changeDescription(userId, description.trim());
     }
 
     @Transactional

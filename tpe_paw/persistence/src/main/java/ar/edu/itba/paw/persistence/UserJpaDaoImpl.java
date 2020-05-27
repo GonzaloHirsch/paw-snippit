@@ -106,7 +106,7 @@ public class UserJpaDaoImpl implements UserDao {
         if(maybeUser.isPresent()){
             User user = maybeUser.get();
             user.setRegion(locale.getCountry());
-            user.setRegion(locale.getLanguage());
+            user.setLang(locale.getLanguage());
             this.em.persist(user);
         }
     }

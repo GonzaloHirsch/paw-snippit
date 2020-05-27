@@ -257,9 +257,9 @@
                     </c:otherwise>
                 </c:choose>
 
-                <div class="white-text flex-center navtop-welcome-text">
-                <spring:message code="app.userWelcome" arguments="${currentUser.username}"/>
-                </div>
+                <a href="<c:url value="${'/user/'}${currentUser.id}"/>" class="white-text flex-center navtop-welcome-text">
+                   <spring:message code="app.userWelcome" arguments="${currentUser.username}"/>
+                </a>
             </c:otherwise>
         </c:choose>
         </div>

@@ -26,7 +26,7 @@
                 </c:if>
                 <div class="flex-column snippet-upload-info card-snippet-icon">
                     <div class="snippet-text">${snippet.owner.username}</div>
-                    <div class="snippet-text card-snippet-date">${snippet.dateCreated}</div>
+                    <div class="snippet-text card-snippet-date">${snippet.getCreationDate()}</div>
                 </div>
             </div>
             <div class="flex-row flex-center">

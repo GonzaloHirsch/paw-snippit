@@ -122,7 +122,7 @@
                     </div>
                     <div class="fw-100">
                         <spring:message code="profile.joined"/>
-                        ${user.dateJoined}
+                        ${user.getDateJoined()}
                     </div>
                     <div class="flex-row profile-info-item">
                         <div class="flex-center stat-bundle">

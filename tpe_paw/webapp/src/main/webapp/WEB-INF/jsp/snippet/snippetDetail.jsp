@@ -110,7 +110,7 @@
                         <!-- USER DETAILS -->
                         <a class="user-url" href="<c:url value='/user/${snippet.owner.id}'/>">
                             <div class="flex-column flex-center detail-snippet-block border-radius form-shadow">
-                                <div class="snippet-text detail-snippet-date">Uploaded ${snippet.dateCreated}</div>
+                                <div class="snippet-text detail-snippet-date">Uploaded ${snippet.getCreationDate()}</div>
                                 <div class="flex-row snippet-user-info detail-snippet-user-info">
                                     <c:if test="${snippet.owner.icon != null}">
                                         <img src="<c:url value="/user/${snippet.owner.id}/image"/>" alt="User Icon"/>

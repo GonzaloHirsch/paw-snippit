@@ -59,7 +59,7 @@ public class FavoriteDaoTest {
         defaultSnippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,languageId,0);
     }
 
-    @Test
+  /*  @Test
     public void testAddToFavorites(){
         JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
         FavoriteDao favoriteSpyDao = Mockito.spy(favoriteDao);
@@ -68,7 +68,7 @@ public class FavoriteDaoTest {
         favoriteSpyDao.addToFavorites(defaultUser.getId(),defaultSnippetId);
 
         assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,FAVORITES_TABLE));
-    }
+    }*/
 
     @Test
     public void testAddToFavorites2(){

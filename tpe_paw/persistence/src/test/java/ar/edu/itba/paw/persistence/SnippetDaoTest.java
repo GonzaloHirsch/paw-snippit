@@ -210,7 +210,7 @@ public class SnippetDaoTest {
 
     }
 
- /*   @Test
+    @Test
     public void testGetAllFavoriteSnippets(){
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
         insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
@@ -223,8 +223,8 @@ public class SnippetDaoTest {
         Snippet s = (Snippet) maybeCollection.toArray()[0];
         assertEquals(snippetId,(long)s.getId());
     }
-    */
- /*   @Test
+
+   @Test
     public void testGetAllFavoriteSnippetsEmpty(){
         insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
 
@@ -232,7 +232,7 @@ public class SnippetDaoTest {
 
         assertNotNull(maybeCollection);
         assertTrue(maybeCollection.isEmpty());
-    }*/
+    }
 
     @Test
     public void testGetAllFollowingSnippets(){

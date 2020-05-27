@@ -65,7 +65,8 @@ public class TagJpaDaoImpl implements TagDao {
     @Override
     public void addTags(List<String> tags) {
         for(String name : tags){
-            this.addTag(name);
+            if (name != null)
+                this.addTag(name);
         }
     }
 
@@ -107,7 +108,9 @@ public class TagJpaDaoImpl implements TagDao {
 
     @Override
     public int getAllTagsCountByName(String name) {
-        return 0;
+        Query nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM tags WHERE name = :tagName")
+                .setParameter("tagName", name);
+        return ((Number) nativeQuery.getSingleResult()).intValue();
     }
 
     @Override

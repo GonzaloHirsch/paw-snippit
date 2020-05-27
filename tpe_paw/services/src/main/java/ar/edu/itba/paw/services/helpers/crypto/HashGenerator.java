@@ -37,7 +37,7 @@ public class HashGenerator {
             byte[] userPassHash = sha256Digest.digest(data);
             return new String(Base64.getUrlEncoder().encode(userPassHash));
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            // Error, return null
         }
         return null;
     }

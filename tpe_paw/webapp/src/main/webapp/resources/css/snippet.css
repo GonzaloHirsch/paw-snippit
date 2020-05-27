@@ -17,6 +17,7 @@
     height: 45px;
     justify-content: center;
     padding: 10px;
+    text-decoration: none !important;
 }
 
 .snippet-title-container {

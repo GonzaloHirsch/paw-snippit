@@ -107,7 +107,7 @@ public class ExceptionController {
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : Collections.emptyList();
-        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : Collections.emptyList();
+        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser) : Collections.emptyList();
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);
         mav.addObject("searchContext", ERROR_CONTEXT);

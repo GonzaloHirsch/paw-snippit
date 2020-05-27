@@ -163,6 +163,12 @@ public class SearchController {
             LOGGER.error("No tag found with id {}", tagId);
             throw new TagNotFoundException(this.messageSource.getMessage("error.404.tag", new Object[]{tagId}, LocaleContextHolder.getLocale()));
         }
+        //Retrieve the possible logged in user
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser != null) {
+            followForm.setFollows(this.tagService.userFollowsTag(currentUser.getId(), tagId));
+        }
+
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.TAGS, searchForm.getSort(), null, tagId, page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.TAGS, null, tagId);
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, TAGS + tagId + "/");
@@ -175,19 +181,22 @@ public class SearchController {
         final ModelAndView mav = new ModelAndView("user/profile");
         /* Set the current user and its following tags */
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Optional<User> user = this.userService.findUserById(id);
-        if (!user.isPresent()) {
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (!maybeUser.isPresent()) {
             this.logAndThrow("/user/"+id+"/search");
         }
-        descriptionForm.setDescription(user.get().getDescription());
+        User user = maybeUser.get();
+        descriptionForm.setDescription(user.getDescription());
         // Getting the snippets for the search
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, id, null);
+        int userTotalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, USER + id + "/");
-        mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.get().getId()));
+        mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.getId()));
+        mav.addObject("snippetsCount", user.getCreatedSnippets().size());
         mav.addObject("editing", editing);
         mav.addObject("isEdit", false);
-        mav.addObject("user", user.get());
+        mav.addObject("user", user);
         mav.addObject("snippets", snippets);
         return mav;
     }
@@ -239,7 +248,7 @@ public class SearchController {
 
         if (currentUser != null) {
             userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-            userRoles = this.roleService.getUserRoles(currentUser.getId());
+            userRoles = this.roleService.getUserRoles(currentUser);
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         }
         model.addAttribute("currentUser", currentUser);

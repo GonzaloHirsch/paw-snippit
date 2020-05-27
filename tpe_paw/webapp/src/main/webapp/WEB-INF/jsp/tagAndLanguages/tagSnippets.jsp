@@ -20,6 +20,8 @@
     <script src="<c:url value='/resources/js/form.js'/>"></script>
 </head>
 <body>
+<c:set var="tagId" value="${tag.id}" scope="request"/>
+<c:url var="tagDeleteUrl" value="/tags/${tagId}/delete"/>
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
@@ -30,11 +32,10 @@
                     <spring:message code="tagSnippets.title" arguments="${tag.name.toUpperCase()}"/>
                 </div>
                 <c:if test="${currentUser != null}">
-                    <c:set var="tagId" value="${tag.id}" scope="request"/>
                     <c:import url="/WEB-INF/jsp/tagAndLanguages/tagFollowForm.jsp"/>
 
                     <c:if test="${userRoles.contains('ADMIN')}">
-                        <form:form action="${tag.id}/delete" class="form-container" method="post" modelAttribute="deleteForm">
+                        <form:form action="${tagDeleteUrl}" class="form-container" method="post" modelAttribute="deleteForm">
                             <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#tag-snippet">
                                 <i class="delete-element-icon material-icons border-radius">delete</i>
                             </div>

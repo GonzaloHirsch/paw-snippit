@@ -29,6 +29,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -52,6 +53,7 @@ public class RegistrationController {
     @Autowired private ValidatorHelper validatorHelper;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
+    private static final String REDIRECT_ATTRIBUTE = "url_prior_login";
     public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK)
             .withZone(ZoneId.systemDefault());
 
@@ -60,7 +62,9 @@ public class RegistrationController {
         this.throwIfUserIsLoggedIn();
 
         String referrer = request.getHeader("Referer");
-        request.getSession().setAttribute("url_prior_login", referrer);
+        if (!referrer.contains("signup")) {
+            request.getSession().setAttribute(REDIRECT_ATTRIBUTE, referrer);
+        }
 
         final ModelAndView mav = new ModelAndView("user/login");
         mav.addObject("error", false);
@@ -84,7 +88,9 @@ public class RegistrationController {
         this.throwIfUserIsLoggedIn();
 
         String referrer = request.getHeader("Referer");
-        request.getSession().setAttribute("url_prior_login", referrer);
+        if (!referrer.contains("login")) {
+            request.getSession().setAttribute(REDIRECT_ATTRIBUTE, referrer);
+        }
 
         return new ModelAndView("user/signUpForm");
     }
@@ -96,7 +102,7 @@ public class RegistrationController {
         }
 
         try {
-            this.userService.register(registerForm.getUsername(), this.passwordEncoder.encode(registerForm.getPassword()), registerForm.getEmail(), DATE.format(Instant.now()), LocaleContextHolder.getLocale());
+            this.userService.register(registerForm.getUsername(), this.passwordEncoder.encode(registerForm.getPassword()), registerForm.getEmail(), Timestamp.from(Instant.now()), LocaleContextHolder.getLocale());
         } catch (Exception e) {
             LOGGER.error(e.getMessage() + "Failed to send registration email to user {}", registerForm.getUsername());
         }
@@ -228,7 +234,7 @@ public class RegistrationController {
 
     private void addUserAttributes(User currentUser, ModelAndView mav){
         Collection<Tag> userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-        Collection<String> userRoles = this.roleService.getUserRoles(currentUser.getId());
+        Collection<String> userRoles = this.roleService.getUserRoles(currentUser);
         this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);

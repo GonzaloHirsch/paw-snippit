@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
+@Deprecated
 public class FavoriteDaoImpl implements FavoriteDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -32,26 +32,17 @@ public class FavoriteDaoImpl implements FavoriteDao {
         this.jdbcInsert = new SimpleJdbcInsert(this.jdbcTemplate).withTableName("favorites");
     }
 
-    @Override
-    public Collection<Favorite> getUserFavorites(long userId) {
-        return this.jdbcTemplate.query("SELECT * FROM favorites WHERE user_id = ?", ROW_MAPPER, userId);
-    }
-
-    @Override
-    public Optional<Favorite> getFavorite(long userId, long snippetId) {
-        return this.jdbcTemplate.query("SELECT * FROM favorites WHERE user_id = ? AND snippet_id = ?", ROW_MAPPER, userId, snippetId).stream().findFirst();
-    }
 
     @Override
     public void addToFavorites(long userId, long snippetId) {
         // Creating the map for the object
-        if (!getFavorite(userId, snippetId).isPresent()) {
-            final Map<String, Object> args = new HashMap<>();
-            args.put("user_id", userId);
-            args.put("snippet_id", snippetId);
-            // Executing the insert
-            this.jdbcInsert.execute(args);
-        }
+//        if (!getFavorite(userId, snippetId).isPresent()) {
+//            final Map<String, Object> args = new HashMap<>();
+//            args.put("user_id", userId);
+//            args.put("snippet_id", snippetId);
+//            // Executing the insert
+//            this.jdbcInsert.execute(args);
+//        }
     }
 
     @Override

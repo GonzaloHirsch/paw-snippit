@@ -11,7 +11,8 @@
 <body>
 <div class="flex-column">
     <c:set var="tagtId" value="${requestScope.tagId}"/>
-    <form:form class="form-container flex-center" action="${tagId}/follow" method="post" modelAttribute="followForm">
+    <c:url var="tagFollowUrl" value="/tags/${tagId}/follow"/>
+    <form:form class="form-container flex-center" action="${tagFollowUrl}" method="post" modelAttribute="followForm">
         <form:checkbox class="hidden" id="follow-button" path="follows" value="true" onclick="updateForm(this)"/>
         <label class="no-margin" for="follow-button">
             <c:choose>

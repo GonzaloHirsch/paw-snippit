@@ -16,7 +16,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-@Repository
+//@Repository
+@Deprecated
 public class FollowingDaoImpl implements FollowingDao {
 
     private final JdbcTemplate jdbcTemplate;

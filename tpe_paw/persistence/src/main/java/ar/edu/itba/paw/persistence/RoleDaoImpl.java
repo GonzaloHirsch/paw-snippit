@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.dao.RoleDao;
 import ar.edu.itba.paw.models.Role;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,7 +17,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-@Repository
+//@Repository
+@Deprecated
 public class RoleDaoImpl implements RoleDao {
 
     private JdbcTemplate jdbcTemplate;
@@ -47,8 +49,8 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
-    public Collection<String> getUserRoles(long userId) {
-        return jdbcTemplate.queryForList("SELECT r.role FROM user_roles AS ur LEFT OUTER JOIN roles AS r ON ur.role_id = r.id WHERE ur.user_id = ?", new Object[]{userId}, String.class);
+    public Collection<String> getUserRoles(User user) {
+        return jdbcTemplate.queryForList("SELECT r.role FROM user_roles AS ur LEFT OUTER JOIN roles AS r ON ur.role_id = r.id WHERE ur.user_id = ?", new Object[]{user.getId()}, String.class);
     }
 
     @Override

@@ -56,4 +56,5 @@
     border: none;
     cursor: pointer;
     border-radius: 0px 5px 5px 0px;
+    transition: 0.3s;
 }

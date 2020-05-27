@@ -7,15 +7,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-@Repository
+//@Repository
+@Deprecated
 public class TagDaoImpl implements TagDao {
 
     private JdbcTemplate jdbcTemplate;
@@ -110,6 +109,11 @@ public class TagDaoImpl implements TagDao {
     @Override
     public int getAllTagsCount() {
         return this.jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT id) FROM tags", Integer.class);
+    }
+
+    @Override
+    public Collection<Tag> findSpecificTagsByName(Collection<String> tags) {
+        return null;
     }
 
     @Override

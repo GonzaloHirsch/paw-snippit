@@ -93,7 +93,7 @@ public class LanguagesController {
     @RequestMapping("/languages/{langId}/delete")
     public ModelAndView deleteLanguage (@PathVariable("langId") long langId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
         User currentUser = loginAuthentication.getLoggedInUser();
-        if ( currentUser != null && roleService.isAdmin(currentUser.getId())){
+        if ( currentUser != null && roleService.isAdmin(currentUser)){
             /* Language was assigned to a snippet and can no longer be deleted */
             if (this.languageService.languageInUse(langId)) {
                 Optional<Language> language = this.languageService.findById(langId);
@@ -117,7 +117,7 @@ public class LanguagesController {
 
         if (currentUser != null) {
             userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-            userRoles = this.roleService.getUserRoles(currentUser.getId());
+            userRoles = this.roleService.getUserRoles(currentUser);
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         }
         model.addAttribute("currentUser", currentUser);

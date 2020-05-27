@@ -11,12 +11,14 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
 
-@Repository
+//@Repository
+@Deprecated
 public class UserDaoImpl implements UserDao {
     private JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -49,12 +51,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public long createUser(String username,String password, String email, String description, int reputation, String dateJoined, Locale locale) {
+    public long createUser(String username, String password, String email, int reputation, Timestamp dateJoined, Locale locale) {
         final Map<String, Object> args = new HashMap<>()    ;
         args.put("username",username);
         args.put("password",password);
         args.put("email",email);
-        args.put("description", description);
+        args.put("description", "");
         args.put("reputation",reputation);
         args.put("date_joined",dateJoined);
         args.put("lang", locale.getLanguage());
@@ -65,7 +67,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserById(long id) {
+    public Optional<User> findUserById(Long id) {
         return this.jdbcTemplate.query("SELECT * FROM users WHERE id = ?", ROW_MAPPER, id)
                 .stream().findFirst();
     }
@@ -80,11 +82,6 @@ public class UserDaoImpl implements UserDao {
     public Optional<User> findUserByEmail(String email) {
         return this.jdbcTemplate.query("SELECT * FROM users WHERE email = ?", ROW_MAPPER, email)
                 .stream().findFirst();
-    }
-
-    @Override
-    public void updateDescription(String username, String newDescription){
-        this.jdbcTemplate.update("UPDATE users SET description = ? WHERE username = ?", newDescription, username);
     }
 
     @Override

@@ -42,7 +42,9 @@
                         <div class="snippet-text snippet-title detail-snippet-title">
                             ${fn:escapeXml(snippet.title)}
                         </div>
-                        <div class="snippet-language-tag detail-snippet-language-margin border-radius">${snippet.language.toUpperCase()}</div>
+                        <a href="<c:url value="/languages/${snippet.language.id}"/>" class="snippet-language-tag detail-snippet-language-margin border-radius transition">
+                            ${snippet.language.name.toUpperCase()}
+                        </a>
                     </div>
 
                     <c:if test="${!StringUtils.isEmpty(snippet.description)}">
@@ -71,7 +73,7 @@
                                     <c:set var="element" value="${tag}" scope="request"/>
                                     <c:set var="context" value="tags" scope="request"/>
                                     <c:set var="cssClass" value="tag-container-detail" scope="request"/>
-                                    <c:import url="/WEB-INF/jsp/tagAndLanguages/element.jsp"/>
+                                    <c:import url="/WEB-INF/jsp/tagAndLanguages/snippetTag.jsp"/>
                                 </c:forEach>
                             </div>
                         </c:if>
@@ -82,7 +84,7 @@
                         <c:set var="userRoles" value="${userRoles}" scope="request"/>
                         <!-- FLAG -->
                         <c:if test="${userRoles.contains('ADMIN')}">
-                            <div class="flex-center detail-snippet-block border-radius">
+                            <div class="flex-center detail-snippet-block border-radius form-shadow">
                                 <c:import url="/WEB-INF/jsp/admin/adminFlagForm.jsp"/>
                             </div>
                         </c:if>
@@ -90,7 +92,7 @@
                         <!-- DELETE -->
                         <c:if test="${currentUser.id == snippet.owner.id}">
                             <c:set var="snippet" value="${snippet}" scope="request"/>
-                            <div class="flex-column flex-center detail-snippet-block border-radius">
+                            <div class="flex-column flex-center detail-snippet-block border-radius form-shadow">
                                 <c:import url="/WEB-INF/jsp/snippet/snippetDeleteForm.jsp"/>
                             </div>
                         </c:if>
@@ -108,7 +110,7 @@
                         <!-- USER DETAILS -->
                         <a class="user-url" href="<c:url value='/user/${snippet.owner.id}'/>">
                             <div class="flex-column flex-center detail-snippet-block border-radius form-shadow">
-                                <div class="snippet-text detail-snippet-date">Uploaded ${snippet.dateCreated}</div>
+                                <div class="snippet-text detail-snippet-date">Uploaded ${snippet.getCreationDate()}</div>
                                 <div class="flex-row snippet-user-info detail-snippet-user-info">
                                     <c:if test="${snippet.owner.icon != null}">
                                         <img src="<c:url value="/user/${snippet.owner.id}/image"/>" alt="User Icon"/>

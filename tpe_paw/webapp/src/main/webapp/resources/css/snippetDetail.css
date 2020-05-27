@@ -69,6 +69,12 @@
     margin: 10px 0px;
 }
 
+.detail-snippet-language-margin:hover {
+    background-color: #5e35b1;
+    color: white;
+    font-weight: 400;
+}
+
 .hidden-code {
     position: fixed;
     bottom: 0;

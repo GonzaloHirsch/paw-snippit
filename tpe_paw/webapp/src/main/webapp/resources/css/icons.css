@@ -56,3 +56,13 @@
     border: black solid;
     color: black;
 }
+
+.element-icon {
+    color: #DCDCDC;
+    font-size: 20px !important;
+    padding: 0px 10px 0px 0px;
+}
+
+.element-icon:hover {
+    color: gray;
+}

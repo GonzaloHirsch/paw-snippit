@@ -2,22 +2,21 @@ package ar.edu.itba.paw.interfaces.service;
 
 import ar.edu.itba.paw.models.User;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
 
 public interface UserService {
-    long createUser(String username, String password, String email, String description, int reputation, String dateJoined, Locale locale);
+    long createUser(String username, String password, String email, int reputation, Timestamp dateJoined, Locale locale);
 
-    long register(String username, String password, String email, String dateJoined, Locale locale);
+    long register(String username, String password, String email, Timestamp dateJoined, Locale locale);
 
     Optional<User> findUserByUsername(String username);
 
     Optional<User> findUserById(final long id);
 
     Optional<User> findUserByEmail(String email);
-
-    void updateDescription(String username, String newDescription);
 
     void changePassword(String email, String password);
 

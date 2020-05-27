@@ -9,18 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Repository
+//@Repository
+@Deprecated
 public class SnippetDaoImpl implements SnippetDao {
 
     @Autowired
@@ -107,18 +109,13 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, Types type, String term, Locations location, Orders order, Long userId, Long resourceId, int page, int pageSize) {
-        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(queryType, location, userId, type, term, resourceId)
-                .setOrder(order, type)
-                .setPaging(page, pageSize)
-                .build();
-        return this.jdbcTemplate.query(searchQuery.getQuery(), searchQuery.getParams(), ROW_MAPPER);
+    public Collection<Snippet> findSnippetByCriteria(Types type, String term, Locations location, Orders order, Long userId, Long resourceId, int page, int pageSize) {
+        return null;
     }
 
     @Override
-    public Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page, int pageSize) {
-        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, includeFlagged, page, pageSize, false);
-        return this.jdbcTemplate.query(searchQuery.getQuery(), searchQuery.getParams(), ROW_MAPPER);
+    public Collection<Snippet> findSnippetByDeepCriteria(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, Orders order, Types type, Boolean includeFlagged, int page, int pageSize) {
+        return null;
     }
 
     @Override
@@ -142,7 +139,7 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId) {
+    public int getNewSnippetsForTagsCount(Instant dateMin, Collection<Tag> tags, long userId) {
         List<Long> tagIds = tags.stream().mapToLong(Tag::getId).boxed().collect(Collectors.toList());
         StringBuilder sb = new StringBuilder();
         int count = 0;
@@ -164,6 +161,11 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
+    public Long createSnippet(long ownerId, String title, String description, String code, Timestamp dateCreated, Long languageId, Collection<String> tags) {
+        return null;
+    }
+
+    @Deprecated
     public Long createSnippet(long ownerId, String title, String description, String code, String dateCreated, Long languageId) {
         final Map<String, Object> snippetDataMap = new HashMap<String, Object>() {{
             put("user_id", ownerId);
@@ -234,94 +236,12 @@ public class SnippetDaoImpl implements SnippetDao {
     }
 
     @Override
-    public int getSnippetByCriteriaCount(QueryTypes queryType, Types type, String term, Locations location, Long userId, Long resourceId) {
-        SnippetSearchQuery searchQuery = new SnippetSearchQuery.Builder(queryType, location, userId, type, term, resourceId)
-                .build();
-        return this.jdbcTemplate.queryForObject(searchQuery.getQuery(), searchQuery.getParams(), Integer.class);
+    public int getSnippetByCriteriaCount(Types type, String term, Locations location, Long userId, Long resourceId) {
+        return 0;
     }
 
     @Override
-    public int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged) {
-        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, includeFlagged, null, null, true);
-        return this.jdbcTemplate.queryForObject(searchQuery.getQuery(), searchQuery.getParams(), Integer.class);
-    }
-
-    private SnippetDeepSearchQuery createDeepQuery(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, Integer page, Integer pageSize, boolean isCount) {
-        SnippetDeepSearchQuery.Builder queryBuilder = new SnippetDeepSearchQuery.Builder(isCount);
-        if (dateMin == null && dateMax == null && repMin == null && repMax == null && voteMin == null && voteMax == null && languageId == null && tagId == null && title == null && username == null && order == null && sort == null && includeFlagged == null) {
-            if (page != null) {
-                return queryBuilder.setOrder("title", "asc").setPaging(page, pageSize).build();
-            } else {
-                return queryBuilder.build();
-            }
-        } else {
-            boolean isFirst = true;
-            queryBuilder = queryBuilder.where();
-            if (dateMin != null || dateMax != null) {
-                queryBuilder = queryBuilder.addDateRange(dateMin, dateMax);
-                isFirst = false;
-            }
-            if (repMin != null || repMax != null) {
-                if (!isFirst) {
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addReputationRange(repMin, repMax);
-            }
-            if (voteMin != null || voteMax != null) {
-                if (!isFirst) {
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addVotesRange(voteMin, voteMax);
-            }
-            if (languageId != null) {
-                if (!isFirst) {
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addLanguage(languageId);
-            }
-            if (tagId != null) {
-                if (!isFirst) {
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addTag(tagId);
-            }
-            if (title != null && !title.isEmpty()) {
-                if (!isFirst) {
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addTitle(title);
-            }
-            if (username != null && !username.isEmpty()) {
-                if (!isFirst) {
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addUsername(username);
-            }
-            if (includeFlagged != null && !includeFlagged) {
-                if (!isFirst) {
-                    queryBuilder = queryBuilder.and();
-                } else {
-                    isFirst = false;
-                }
-                queryBuilder = queryBuilder.addIncludeFlagged(includeFlagged);
-            }
-            if (page == null) {
-                return queryBuilder.build();
-            } else {
-                return queryBuilder.setOrder(order, sort).setPaging(page, pageSize).build();
-            }
-        }
+    public int getSnippetByDeepCriteriaCount(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, Boolean includeFlagged) {
+        return 0;
     }
 }

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.service.VoteService;
 import ar.edu.itba.paw.models.Vote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -25,6 +26,7 @@ public class VoteServiceImpl implements VoteService {
         return this.voteDao.getVote(userId, snippetId);
     }
 
+    @Transactional
     @Override
     public void performVote(final long userId, final long snippetId, final int voteType, final int oldVoteType) {
         if (oldVoteType == voteType){
@@ -34,11 +36,13 @@ public class VoteServiceImpl implements VoteService {
         }
     }
 
+    @Transactional
     @Override
     public void withdrawVote(final long userId, final long snippetId) {
         this.voteDao.withdrawVote(userId, snippetId);
     }
 
+    @Transactional
     @Override
     public void addVote(final long userId, final long snippetId, final int voteType) {
         this.voteDao.addVote(userId, snippetId, voteType);

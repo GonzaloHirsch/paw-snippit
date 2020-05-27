@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+@Deprecated
 public class Favorite {
     private long userId;
     private long snippetId;

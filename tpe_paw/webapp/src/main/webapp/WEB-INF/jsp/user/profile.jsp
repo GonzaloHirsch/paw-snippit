@@ -21,6 +21,8 @@
     <script src="<c:url value='/resources/js/profile.js'/>"></script>
 </head>
 <body>
+<c:url var="savePhotoUrl" value="/user/${user.id}"/>
+<c:url var="discardPhotoUrl" value="/user/${user.id}"/>
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
@@ -61,7 +63,7 @@
 
                         </div>
 
-                        <form:form method="POST" action="${user.id}" enctype="multipart/form-data" modelAttribute="profilePhotoForm">
+                        <form:form method="POST" action="${savePhotoUrl}" enctype="multipart/form-data" modelAttribute="profilePhotoForm">
                             <form:errors path="file" cssClass="flex-center form-error" element="p" />
                             <div class="flex-row flex-center">
                             <span id="image-confirm" class="image-confirm-button hidden-button"
@@ -69,7 +71,7 @@
                                 <spring:message code="profile.edit.save"/>
                             </span>
                                 <a id="image-discard" class="image-discard-button hidden-button"
-                                   href="<c:url value="/user/${user.id}"/>">
+                                   href="<c:url value="${discardPhotoUrl}"/>">
                                     <spring:message code="profile.edit.discard"/>
                                 </a>
                             </div>
@@ -120,7 +122,7 @@
                     </div>
                     <div class="fw-100">
                         <spring:message code="profile.joined"/>
-                        ${user.dateJoined}
+                        ${user.getDateJoined()}
                     </div>
                     <div class="flex-row profile-info-item">
                         <div class="flex-center stat-bundle">

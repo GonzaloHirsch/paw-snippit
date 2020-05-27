@@ -26,14 +26,14 @@
                 </c:if>
                 <div class="flex-column snippet-upload-info card-snippet-icon">
                     <div class="snippet-text">${snippet.owner.username}</div>
-                    <div class="snippet-text card-snippet-date">${snippet.dateCreated}</div>
+                    <div class="snippet-text card-snippet-date">${snippet.getCreationDate()}</div>
                 </div>
             </div>
             <div class="flex-row flex-center">
                 <c:if test="${snippet.flagged}">
                     <div class="card-flagged-warning-icon material-icons">warning</div>
                 </c:if>
-                <div class="snippet-language-tag border-radius">${snippet.language.toUpperCase()}</div>
+                <div class="snippet-language-tag border-radius">${snippet.language.name.toUpperCase()}</div>
             </div>
         </div>
 

@@ -3,6 +3,8 @@ package ar.edu.itba.paw.interfaces.dao;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -23,20 +25,19 @@ public interface SnippetDao {
         CONTENT,
         TITLE,
         USER,
-        LANGUAGE
+        LANGUAGE,
+        REPUTATION,
+        VOTES,
+        DATE
     }
     enum Orders {
         NO,
         ASC,
         DESC
     }
-    enum QueryTypes {
-        SEARCH,
-        COUNT
-    }
 
-    Collection<Snippet> findSnippetByCriteria(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, Long resourceId, int page, int pageSize);
-    Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page, int pageSize);
+    Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, Long resourceId, int page, int pageSize);
+    Collection<Snippet> findSnippetByDeepCriteria(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, SnippetDao.Orders order, SnippetDao.Types type, Boolean includeFlagged, int page, int pageSize);
     Collection<Snippet> getAllSnippets(int page, int pageSize);
     Collection<Snippet> getAllFavoriteSnippets(final long userId, int page, int pageSize);
     Collection<Snippet> getAllFollowingSnippets(final long userId, int page, int pageSize);
@@ -46,8 +47,8 @@ public interface SnippetDao {
     Collection<Snippet> findSnippetsWithLanguage(final long langId, int page, int pageSize);
     Optional<Snippet> findSnippetById(final long id);
     boolean deleteSnippetById(final long id);
-    int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId);
-    Long createSnippet(long ownerId, String title, String description,String code, String dateCreated, Long languageId);
+    int getNewSnippetsForTagsCount(Instant dateMin, Collection<Tag> tags, long userId);
+    Long createSnippet(long ownerId, String title, String description, String code, Timestamp dateCreated, Long languageId, Collection<String> tags);
     Collection<Snippet> findSnippetsForTag(long tagId, int page, int pageSize);
     void flagSnippet(long snippetId);
     void unflagSnippet(long snippetId);
@@ -59,6 +60,6 @@ public interface SnippetDao {
     int getAllSnippetsByOwnerCount(final long userId);
     int getAllSnippetsByTagCount(final long tagId);
     int getAllSnippetsByLanguageCount(final long langId);
-    int getSnippetByCriteriaCount(QueryTypes queryType, SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId, Long resourceId);
-    int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged);
+    int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId, Long resourceId);
+    int getSnippetByDeepCriteriaCount(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, Boolean includeFlagged);
 }

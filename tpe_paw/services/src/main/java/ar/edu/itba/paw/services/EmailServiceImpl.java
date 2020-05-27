@@ -27,9 +27,7 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private CryptoService cryptoService;
 
-    @Async
-    @Override
-    public void sendEmail(String to, String subject, String body, Locale locale) {
+    private void sendEmail(String to, String subject, String body, Locale locale) {
         try {
             MimeMessage message = this.emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -101,5 +99,34 @@ public class EmailServiceImpl implements EmailService {
         this.sendEmail(userEmail, subject, body, locale);
     }
 
+    @Async
+    @Override
+    public void sendDigestEmail(String to, String username, int count, Locale locale) {
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("itemCount", count);
+        data.put("username", username);
+        String body = this.templateService.merge("/templates/weeklyDigest.vm", data, locale);
+        String subject = messageSource.getMessage("email.wd.subject", null, locale);
+        this.sendEmail(to, subject, body, locale);
+    }
 
+    @Async
+    @Override
+    public void sendDigestNoFollowEmail(String to, String username, Locale locale) {
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("username", username);
+        String body = this.templateService.merge("/templates/weeklyDigestNoItems.vm", data, locale);
+        String subject = messageSource.getMessage("email.wdni.subject", null, locale);
+        this.sendEmail(to, subject, body, locale);
+    }
+
+    @Async
+    @Override
+    public void sendDigestFollowOtherEmail(String to, String username, Locale locale) {
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("username", username);
+        String body = this.templateService.merge("/templates/weeklyDigestSuggestFollowing.vm", data, locale);
+        String subject = messageSource.getMessage("email.wdsf.subject", null, locale);
+        this.sendEmail(to, subject, body, locale);
+    }
 }

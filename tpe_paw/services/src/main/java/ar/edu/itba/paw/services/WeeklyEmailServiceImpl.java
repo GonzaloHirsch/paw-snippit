@@ -25,10 +25,8 @@ public class WeeklyEmailServiceImpl implements WeeklyEmailService{
 
     @Autowired private UserService userService;
     @Autowired private EmailService emailService;
-    @Autowired private MessageSource messageSource;
     @Autowired private TagService tagService;
     @Autowired private SnippetService snippetService;
-    @Autowired private TemplateService templateService;
 
     @Async
     @Scheduled(cron = "0 0 12 * * Mon")
@@ -49,54 +47,13 @@ public class WeeklyEmailServiceImpl implements WeeklyEmailService{
                 // Getting how many new snippets were found
                 snippetsForWeek = this.snippetService.getNewSnippetsForTagsCount(weekBefore, followedTags, user.getId());
                 if (snippetsForWeek > 0) {
-                    this.sendDigestEmail(user.getEmail(), user.getUsername(), snippetsForWeek, locale);
+                    this.emailService.sendDigestEmail(user.getEmail(), user.getUsername(), snippetsForWeek, locale);
                 } else {
-                    this.sendDigestFollowOtherEmail(user.getEmail(), user.getUsername(), locale);
+                    this.emailService.sendDigestFollowOtherEmail(user.getEmail(), user.getUsername(), locale);
                 }
             } else {
-                this.sendDigestNoFollowEmail(user.getEmail(), user.getUsername(), locale);
+                this.emailService.sendDigestNoFollowEmail(user.getEmail(), user.getUsername(), locale);
             }
         }
     }
-
-    @Override
-    public void sendDigestEmail(String to, String username, int count, Locale locale) {
-        try {
-            Map<String, Object> data = new HashMap<String, Object>();
-            data.put("itemCount", count);
-            data.put("username", username);
-            String body = this.templateService.merge("/templates/weeklyDigest.vm", data, locale);
-            String subject = messageSource.getMessage("email.wd.subject", null, locale);
-            this.emailService.sendEmail(to, subject, body, locale);
-        } catch (Exception e) {
-
-        }
-    }
-
-    @Override
-    public void sendDigestNoFollowEmail(String to, String username, Locale locale) {
-        try {
-            Map<String, Object> data = new HashMap<String, Object>();
-            data.put("username", username);
-            String body = this.templateService.merge("/templates/weeklyDigestNoItems.vm", data, locale);
-            String subject = messageSource.getMessage("email.wdni.subject", null, locale);
-            this.emailService.sendEmail(to, subject, body, locale);
-        } catch (Exception e) {
-
-        }
-    }
-
-    @Override
-    public void sendDigestFollowOtherEmail(String to, String username, Locale locale) {
-        try {
-            Map<String, Object> data = new HashMap<String, Object>();
-            data.put("username", username);
-            String body = this.templateService.merge("/templates/weeklyDigestSuggestFollowing.vm", data, locale);
-            String subject = messageSource.getMessage("email.wdsf.subject", null, locale);
-            this.emailService.sendEmail(to, subject, body, locale);
-        } catch (Exception e) {
-
-        }
-    }
-
 }

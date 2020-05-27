@@ -99,7 +99,7 @@
         }
     </style>
 </head>
-<body style="background-color: transparent;width: 100%;margin: 0;line-height: inherit !important;">
+<body style="background-color: transparent;width: 100%;">
 <div class="full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;width: 100%;">
     <div class="fw-100 mid-container" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;background-color: #eeedf2;border-bottom-left-radius: 30px;border-bottom-right-radius: 30px;padding-bottom: 20px;width: 100%;font-weight: 100;">
         <div class="center white-text fw-300 title-container full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-weight: 300;padding: 20px 0 20px 0;border-bottom-left-radius: 30px;border-bottom-right-radius: 30px;background: #5E35B1;align-items: center;justify-content: center;text-align: center;width: 100%;color: white !important;font-size: 60px !important;">

@@ -4,12 +4,12 @@
     <title>Flagged Snippet</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        * {
+        body * {
             font-family: Roboto, "sans-serif";
             box-sizing: border-box;
         }
         body {
-            background-color: #eeedf2;
+            background-color: transparent;
             width: 100%;
         }
         ul {
@@ -19,11 +19,6 @@
         li {
             margin: 5px;
             list-style-type: none;
-        }
-        body {
-            background-color: #5E35B1;
-            margin: 0;
-            line-height: inherit !important;
         }
         .mid-container {
             background-color: #eeedf2;
@@ -85,32 +80,31 @@
         }
     </style>
 </head>
-<body>
-<div class="full-width">
-    <div class="fw-100 mid-container">
-        <div class="center white-text fw-300 title-container full-width">
-            <span class="fw-500">#msg("email.app.title")</span>
+<body style="background-color: transparent;width: 100%;margin: 0;line-height: inherit !important;">
+<div class="full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;width: 100%;">
+    <div class="fw-100 mid-container" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;background-color: #eeedf2;border-bottom-left-radius: 30px;border-bottom-right-radius: 30px;width: 100%;font-weight: 100;">
+        <div class="center white-text fw-300 title-container full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-weight: 300;padding: 20px 0 20px 0;border-bottom-left-radius: 30px;border-bottom-right-radius: 30px;background: #5E35B1;align-items: center;justify-content: center;text-align: center;width: 100%;color: white !important;font-size: 60px !important;">
+            <span class="fw-500" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-weight: 500;">#msg("email.app.title")</span>
         </div>
-        <div class="mid-container-info">
-            <h1 class="center black-text greeting full-width">
+        <div class="mid-container-info" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;padding: 20px;">
+            <h1 class="center black-text greeting full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;margin-top: 15px;font-size: 30px;align-items: center;justify-content: center;text-align: center;width: 100%;color: black !important;">
                 #msgArgs("email.flagged.greeting", [${username}])
             </h1>
-            <p class="center black-text info full-width">
+            <p class="center black-text info full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-size: 20px;align-items: center;justify-content: center;text-align: center;width: 100%;color: black !important;">
                 #msgArgs("email.notflagged.description", [${title}])
             </p>
-            <div class="center full-width">
-                <a class="center black-text info full-width" href="${snippetUrl}">
+            <div class="center full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;align-items: center;justify-content: center;text-align: center;width: 100%;">
+                <a class="center black-text info full-width" href="${snippetUrl}" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-size: 20px;align-items: center;justify-content: center;text-align: center;width: 100%;color: black !important;">
                     #msg("email.flagged.goto")
                 </a>
             </div>
         </div>
     </div>
 </div>
-<div class="bottom-container fw-100 center disclaimer">
+<div class="bottom-container fw-100 center disclaimer" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;color: grey;font-size: 12px;font-weight: 100;max-height: 100px;padding: 10px;width: 100%;align-items: center;justify-content: center;text-align: center;">
     #msg("email.notflagged.disclaimer")
 </div>
-<div class="bottom-container fw-100 center disclaimer">
+<div class="bottom-container fw-100 center disclaimer" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;color: grey;font-size: 12px;font-weight: 100;max-height: 100px;padding: 10px;width: 100%;align-items: center;justify-content: center;text-align: center;">
     #msg("email.end")
 </div>
 </body>
-</html>

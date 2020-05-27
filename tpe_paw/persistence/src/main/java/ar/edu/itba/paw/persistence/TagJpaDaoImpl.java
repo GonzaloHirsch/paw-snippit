@@ -108,8 +108,8 @@ public class TagJpaDaoImpl implements TagDao {
 
     @Override
     public int getAllTagsCountByName(String name) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM tags WHERE name = :tagName")
-                .setParameter("tagName", name);
+        Query nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM tags WHERE LOWER(name) LIKE LOWER(:term)")
+                .setParameter("term", "%"+name+"%");
         return ((Number) nativeQuery.getSingleResult()).intValue();
     }
 

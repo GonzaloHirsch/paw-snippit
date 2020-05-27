@@ -50,7 +50,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> getAllFavoriteSnippets(long userId, int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT fav.snippet_id FROM favorites AS fav WHERE fav.user_id = :id ORDER BY fav.id DESC");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT fav.snippet_id FROM favorites AS fav WHERE fav.user_id = :id ORDER BY fav.snippet_id DESC");
         nativeQuery.setParameter("id", userId);
         return getSnippetsByPage(page, pageSize, nativeQuery);
     }

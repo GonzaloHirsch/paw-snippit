@@ -40,7 +40,7 @@
     border: black solid 2px;
     height: 200px;
     width: 200px;
-    object-fit: fill;
+    object-fit: cover;
     margin: 25px;
     transition: 0.3s;
 }

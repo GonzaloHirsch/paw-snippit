@@ -69,7 +69,7 @@ code {
 
 img {
     border-radius: 50%;
-    object-fit: fill;
+    object-fit: cover;
     height: 45px;
     width: 45px;
 }

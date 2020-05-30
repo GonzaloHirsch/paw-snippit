@@ -16,6 +16,9 @@ import java.util.Locale;
 public class RefererRedirectionAuthenticationSuccessHandler
         extends SavedRequestAwareAuthenticationSuccessHandler {
 
+    private static final String REDIRECT_ATTRIBUTE = "url_prior_login";
+    private static final String SAVED_REQUEST_ATTRIBUTE = "SPRING_SECURITY_SAVED_REQUEST";
+
     public RefererRedirectionAuthenticationSuccessHandler() {
         this.setDefaultTargetUrl("/");
         this.setAlwaysUseDefaultTargetUrl(true);
@@ -26,7 +29,7 @@ public class RefererRedirectionAuthenticationSuccessHandler
     private String getRedirectUrl(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if(session != null) {
-            SavedRequest savedRequest = (SavedRequest)session.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
+            SavedRequest savedRequest = (SavedRequest)session.getAttribute(SAVED_REQUEST_ATTRIBUTE);
             if(savedRequest != null) {
                 return savedRequest.getRedirectUrl();
             }
@@ -41,10 +44,10 @@ public class RefererRedirectionAuthenticationSuccessHandler
             String redirectUrl = this.getRedirectUrl(request);
             if (redirectUrl.compareTo(request.getContextPath() + "/") == 0) {
 
-                redirectUrl = (String) session.getAttribute("url_prior_login");
+                redirectUrl = (String) session.getAttribute(REDIRECT_ATTRIBUTE);
                 if (redirectUrl != null) {
                     /* Remove the attribute from the session */
-                    session.removeAttribute("url_prior_login");
+                    session.removeAttribute(REDIRECT_ATTRIBUTE);
 
                     /* Don't want to redirect to any of these urls */
                     if (!(redirectUrl.contains("login") || redirectUrl.contains("signup") || redirectUrl.contains("goodbye") || redirectUrl.contains("reset-password") || redirectUrl.contains("recover-password"))) {

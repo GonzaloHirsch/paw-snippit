@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,15 @@ public class SignUpAuthentication {
     private AuthenticationManager authenticationManager;
 
     private static final String REDIRECT_ATTRIBUTE = "url_prior_login";
+    private static final String REFERER = "Referer";
+    private static final String SAVED_REQUEST_ATTRIBUTE = "SPRING_SECURITY_SAVED_REQUEST";
+
+    public void setRegisterRedirect(HttpServletRequest request) {
+        String referrer = request.getHeader(REFERER);
+        if (!referrer.contains("login")) {
+            request.getSession().setAttribute(REDIRECT_ATTRIBUTE, referrer);
+        }
+    }
 
     public void authWithAuthManager(HttpServletRequest request, String username, String password) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
@@ -32,10 +42,25 @@ public class SignUpAuthentication {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
+    private String getSavedRequestRedirectUrl(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if(session != null) {
+            SavedRequest savedRequest = (SavedRequest)session.getAttribute(SAVED_REQUEST_ATTRIBUTE);
+            if(savedRequest != null) {
+                return savedRequest.getRedirectUrl();
+            }
+        }
+        return request.getContextPath() + "/";
+    }
+
     public String redirectionAuthenticationSuccess(HttpServletRequest request) {
         HttpSession session = request.getSession();
         if (session != null) {
-            String redirectUrl = (String) session.getAttribute(REDIRECT_ATTRIBUTE);
+            String redirectUrl = this.getSavedRequestRedirectUrl(request);
+            if (redirectUrl.compareTo(request.getContextPath() + "/") != 0) {
+                return redirectUrl;
+            }
+            redirectUrl = (String) session.getAttribute(REDIRECT_ATTRIBUTE);
             if (redirectUrl != null) {
                 /* Remove the attribute from the session --> clean up */
                 session.removeAttribute(REDIRECT_ATTRIBUTE);

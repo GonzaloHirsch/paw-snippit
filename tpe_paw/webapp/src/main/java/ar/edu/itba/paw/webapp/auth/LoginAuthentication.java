@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,16 @@ public class LoginAuthentication {
     private UserService userService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginAuthentication.class);
+    private static final String REDIRECT_ATTRIBUTE = "url_prior_login";
+    private static final String SAVED_REQUEST_ATTRIBUTE = "SPRING_SECURITY_SAVED_REQUEST";
+    private static final String REFERER = "Referer";
+
+    public void setLoginRedirect(HttpServletRequest request) {
+        String referrer = request.getHeader(REFERER);
+        if (!referrer.contains("signup")) {
+            request.getSession().setAttribute(REDIRECT_ATTRIBUTE, referrer);
+        }
+    }
 
     private String getLoggedInUsername() {
         final SecurityContext securityContext = SecurityContextHolder.getContext();

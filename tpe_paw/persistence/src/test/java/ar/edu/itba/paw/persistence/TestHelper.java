@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class TestHelper {
+public final class TestHelper {
 
     public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK).withZone(ZoneId.systemDefault());
     public static final String SNIPPETS_TABLE = "snippets";
@@ -51,98 +51,92 @@ public class TestHelper {
 
     public static final int PAGE_SIZE = 6;
 
+    private TestHelper() {}
+
     public static long insertSnippetIntoDb(SimpleJdbcInsert jdbcInsert, long userId, String title, String description, String code, long languageId,int flagged){
-        final Map<String, Object> snippetDataMap = new HashMap<String,Object>(){{
-            put("user_id", userId);
-            put("title", title);
-            put("description",description);
-            put("code",code);
-            put("date_created", DATE.format(Instant.now()));
-            put("language_id", languageId);
-            put("flagged",flagged);
-        }};
+        final Map<String, Object> snippetDataMap = new HashMap<String,Object>();
+        snippetDataMap.put("user_id", userId);
+        snippetDataMap.put("title", title);
+        snippetDataMap.put("description",description);
+        snippetDataMap.put("code",code);
+        snippetDataMap.put("date_created", DATE.format(Instant.now()));
+        snippetDataMap.put("language_id", languageId);
+        snippetDataMap.put("flagged",flagged);
+
         return jdbcInsert.executeAndReturnKey(snippetDataMap).longValue();
     }
 
     public static User insertUserIntoDb(SimpleJdbcInsert jdbcInsertUser, String username, String password, String email,String description, Locale locale){
-        Map<String, Object> map = new HashMap<String, Object>() {{
-            put("username", username);
-            put("password", password);
-            put("email", email);
-            put("reputation", 0);
-            put("date_joined", DATE.format(Instant.now()));
-            put("lang", locale.getLanguage());
-            put("region", locale.getCountry());
-            put("verified", 0);
-        }};
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("username", username);
+        map.put("password", password);
+        map.put("email", email);
+        map.put("reputation", 0);
+        map.put("date_joined", DATE.format(Instant.now()));
+        map.put("lang", locale.getLanguage());
+        map.put("region", locale.getCountry());
+        map.put("verified", 0);
+
         long userId = jdbcInsertUser.executeAndReturnKey(map).longValue();
         return new User(userId, username, password, email, description, 0, DATE.format(Instant.now()), null,locale , false);
 
     }
 
     public static long insertLanguageIntoDb(SimpleJdbcInsert jdbcInsertLanguage, String name){
-        final Map<String, Object> map = new HashMap<String,Object>(){{
-            put("name", name);
-        }};
+        final Map<String, Object> map = new HashMap<String,Object>();
+        map.put("name", name);
+
         return jdbcInsertLanguage.executeAndReturnKey(map).longValue();
     }
 
     public static long insertTagIntoDb(SimpleJdbcInsert jdbcInsertTag, String name){
-        final Map<String, Object> map = new HashMap<String,Object>(){{
-            put("name", name);
-        }};
+        final Map<String, Object> map = new HashMap<String,Object>();
+        map.put("name", name);
         return jdbcInsertTag.executeAndReturnKey(map).longValue();
     }
 
     public static void insertSnippetTagIntoDb(SimpleJdbcInsert jdbcInsert, long snippet, long tag){
-        final Map<String, Object> map = new HashMap<String,Object>(){{
-            put("snippet_id", snippet);
-            put("tag_id",tag);
-        }};
+        final Map<String, Object> map = new HashMap<String,Object>();
+        map.put("snippet_id", snippet);
+        map.put("tag_id",tag);
 
         jdbcInsert.execute(map);
     }
 
     public static void insertVotesForIntoDb(SimpleJdbcInsert jdbcInsert, long snippetId, long userId,int type){
-        final Map<String, Object> map = new HashMap<String,Object>(){{
-            put("snippet_id", snippetId);
-            put("user_id",userId);
-            put("type", type);
-        }};
+        final Map<String, Object> map = new HashMap<String,Object>();
+        map.put("snippet_id", snippetId);
+        map.put("user_id",userId);
+        map.put("type", type);
 
         jdbcInsert.execute(map);
     }
 
     public static void insertFavoriteIntoDb(SimpleJdbcInsert jdbcInsert, long snippetId, long userId){
-        final Map<String, Object> map = new HashMap<String,Object>(){{
-            put("snippet_id", snippetId);
-            put("user_id",userId);
-        }};
-
+        final Map<String, Object> map = new HashMap<String,Object>();
+        map.put("snippet_id", snippetId);
+        map.put("user_id",userId);
         jdbcInsert.execute(map);
     }
     public static void insertFollowingIntoDb(SimpleJdbcInsert jdbcInsert, long tagId, long userId){
-        final Map<String, Object> map = new HashMap<String,Object>(){{
-            put("tag_id", tagId);
-            put("user_id",userId);
-        }};
+        final Map<String, Object> map = new HashMap<String,Object>();
+        map.put("tag_id", tagId);
+        map.put("user_id",userId);
 
         jdbcInsert.execute(map);
     }
 
     public static long insertRoleIntoDb(SimpleJdbcInsert jdbcInsert, String role){
-        final Map<String, Object> map = new HashMap<String,Object>(){{
-            put("role", role);
-        }};
+        final Map<String, Object> map = new HashMap<String,Object>();
+        map.put("role", role);
 
         return jdbcInsert.executeAndReturnKey(map).longValue();
     }
 
     public static void insertUserRoleIntoDb(SimpleJdbcInsert jdbcInsert, long roleid, long userid){
-        final Map<String, Object> map = new HashMap<String,Object>(){{
-            put("role_id", roleid);
-            put("user_id",userid);
-        }};
+        final Map<String, Object> map = new HashMap<String,Object>();
+        map.put("role_id", roleid);
+        map.put("user_id",userid);
 
         jdbcInsert.execute(map);
     }

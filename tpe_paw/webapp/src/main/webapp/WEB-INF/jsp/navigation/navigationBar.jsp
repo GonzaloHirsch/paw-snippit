@@ -6,6 +6,7 @@
 
         <html>
         <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <link href="<c:url value='/resources/css/navigationBar.css'/>" rel="stylesheet"/>
         <script src="<c:url value='/resources/js/navigationBar.js'/>"></script>
         <script src="<c:url value='/resources/js/searchForm.js'/>"></script>

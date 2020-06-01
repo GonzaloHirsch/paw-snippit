@@ -4,6 +4,7 @@
 
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title><spring:message code="app.name"/> | <spring:message code="menu.explore"/></title>
     <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon/favicon.ico'/>"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>

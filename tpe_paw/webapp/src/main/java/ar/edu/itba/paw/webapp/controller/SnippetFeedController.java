@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
+import ar.edu.itba.paw.webapp.form.FollowForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +77,7 @@ public class SnippetFeedController {
 
     @RequestMapping("/following")
     public ModelAndView getFollowingSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
-        final ModelAndView mav = new ModelAndView("index");
+        final ModelAndView mav = new ModelAndView("snippet/snippetFollowing");
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) this.logAndThrow(FOLLOWING);
@@ -85,6 +86,13 @@ public class SnippetFeedController {
         int totalSnippetCount = this.snippetService.getAllFollowingSnippetsCount(currentUser.getId());
 
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FOLLOWING);
+
+        for (Tag tag : currentUser.getFollowedTags()) {
+            FollowForm followForm = new FollowForm();
+            followForm.setFollows(currentUser.getFollowedTags().contains(tag));
+            mav.addObject("unfollowForm" + tag.getId().toString(), followForm);
+        }
+        mav.addObject("followingTags", currentUser.getFollowedTags());
 
         return mav;
     }

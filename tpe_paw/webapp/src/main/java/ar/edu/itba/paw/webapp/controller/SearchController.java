@@ -100,12 +100,19 @@ public class SearchController {
 
     @RequestMapping("/following/search")
     public ModelAndView searchInFollowing(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
-        final ModelAndView mav = new ModelAndView("index");
+        final ModelAndView mav = new ModelAndView("snippet/snippetFollowing");
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) this.logAndThrow(FOLLOWING);
 
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, searchForm.getSort(), currentUser.getId(), null, page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, currentUser.getId(), null);
+
+        for (Tag tag : currentUser.getFollowedTags()) {
+            FollowForm followForm = new FollowForm();
+            followForm.setFollows(currentUser.getFollowedTags().contains(tag));
+            mav.addObject("unfollowForm" + tag.getId().toString(), followForm);
+        }
+        mav.addObject("followingTags", currentUser.getFollowedTags());
 
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FOLLOWING);
         return mav;

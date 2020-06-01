@@ -3,6 +3,7 @@
 
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <c:choose>
         <c:when test="${searchContext == ''}">
             <spring:message code="menu.home" var="title"/>

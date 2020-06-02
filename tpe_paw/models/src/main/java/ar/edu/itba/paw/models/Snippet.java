@@ -39,6 +39,9 @@ public class Snippet {
     @Column(name = "flagged")
     private int flagged;
 
+    @Column(name = "deleted")
+    private boolean deleted;
+
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "snippet")
     private Collection<Vote> votes;
 
@@ -60,7 +63,7 @@ public class Snippet {
         // Hibernate constructor
     }
 
-    public Snippet(User owner, String code, String title, String description, Timestamp dateCreated, Language language, Collection<Tag> tags, boolean flagged) {
+    public Snippet(User owner, String code, String title, String description, Timestamp dateCreated, Language language, Collection<Tag> tags, boolean flagged, boolean deleted) {
         this.owner = owner;
         this.code = code;
         this.title = title;
@@ -69,6 +72,7 @@ public class Snippet {
         this.language = language;
         this.tags = tags;
         this.flagged = flagged ? 1 : 0;
+        this.deleted = deleted;
     }
 
     @Deprecated
@@ -197,6 +201,14 @@ public class Snippet {
         this.language = language;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -209,4 +221,5 @@ public class Snippet {
         Snippet snippet = (Snippet) o;
         return this.getId().equals(snippet.getId());
     }
+
 }

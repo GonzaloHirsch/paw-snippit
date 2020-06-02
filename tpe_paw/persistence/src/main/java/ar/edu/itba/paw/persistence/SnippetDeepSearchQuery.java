@@ -234,6 +234,14 @@ public class SnippetDeepSearchQuery {
             return this;
         }
 
+        public Builder addIncludeDeleted(boolean includeDeleted){
+            if (!includeDeleted){
+                this.checkIfFirst();
+                this.query.append("s.deleted = FALSE");
+            }
+            return this;
+        }
+
         /**
          * Adds an order to the query
          * @param type Type of order, field by which the order is done

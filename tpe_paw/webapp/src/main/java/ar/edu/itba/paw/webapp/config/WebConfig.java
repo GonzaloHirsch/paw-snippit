@@ -61,6 +61,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     private Resource populatorSql;
     @Value("classpath:populateRole.sql")
     private Resource populatorRoleSql;
+    @Value("classpath:snippetChanges.sql")
+    private Resource snippetChangesSql;
 
     @Bean
     public ViewResolver viewResolver() {
@@ -88,18 +90,18 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public DataSourceInitializer dataSourceInitializer(final DataSource ds){
         DataSourceInitializer dsi = new DataSourceInitializer();
         dsi.setDataSource(ds);
-//        dsi.setDatabasePopulator(databasePopulator());
+        dsi.setDatabasePopulator(databasePopulator());
         return dsi;
     }
 
-//    @Bean
-//    public DatabasePopulator databasePopulator(){
-//        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+    @Bean
+    public DatabasePopulator databasePopulator(){
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
 //        populator.addScript(schemaSql);
-////        populator.addScript(populatorSql);
-////        populator.addScript(populatorRoleSql);
-//        return populator;
-//    }
+        populator.addScript(snippetChangesSql);
+//        populator.addScript(populatorRoleSql);
+        return populator;
+    }
 
     @Bean
     public MessageSource messageSource() {

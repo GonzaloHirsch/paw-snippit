@@ -35,8 +35,8 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> findSnippetByDeepCriteria(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, SnippetDao.Orders order, SnippetDao.Types type, Boolean includeFlagged, int page, int pageSize) {
-        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, type, includeFlagged);
+    public Collection<Snippet> findSnippetByDeepCriteria(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, SnippetDao.Orders order, SnippetDao.Types type, Boolean includeFlagged, Boolean includeDeleted, int page, int pageSize) {
+        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, type, includeFlagged, includeDeleted);
         Query nativeQuery = this.em.createNativeQuery(searchQuery.getQuery());
         this.setSearchQueryParameters(searchQuery.getParams(), nativeQuery);
         return this.getSearchSnippetsByPage(page, pageSize, nativeQuery, order, type, true);
@@ -44,7 +44,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> getAllSnippets(int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets ORDER BY id DESC");
+        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets WHERE deleted = FALSE ORDER BY id DESC");
         return getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
@@ -57,7 +57,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> getAllFollowingSnippets(long userId, int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = sn.id LEFT OUTER JOIN follows AS fol ON fol.tag_id = st.tag_id WHERE fol.user_id = :id ORDER BY sn.id DESC");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = sn.id LEFT OUTER JOIN follows AS fol ON fol.tag_id = st.tag_id WHERE fol.user_id = :id AND sn.deleted = FALSE ORDER BY sn.id DESC");
         nativeQuery.setParameter("id", userId);
         return getSnippetsByPage(page, pageSize, nativeQuery);
     }
@@ -77,28 +77,28 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> findAllSnippetsByOwner(long userId, int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.user_id = :id ORDER BY sn.id DESC");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.user_id = :id AND sn.deleted = FALSE ORDER BY sn.id DESC");
         nativeQuery.setParameter("id", userId);
         return this.getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override
     public Collection<Snippet> findSnippetsForTag(long tagId, int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON sn.id = st.snippet_id WHERE st.tag_id = :id ORDER BY sn.id DESC");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON sn.id = st.snippet_id WHERE st.tag_id = :id AND sn.deleted = FALSE ORDER BY sn.id DESC");
         nativeQuery.setParameter("id", tagId);
         return this.getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override
     public Collection<Snippet> findSnippetsWithLanguage(long langId, int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.language_id = :id ORDER BY sn.id DESC");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.language_id = :id AND sn.delete = FALSE ORDER BY sn.id DESC");
         nativeQuery.setParameter("id", langId);
         return this.getSnippetsByPage(page, pageSize, nativeQuery);
     }
 
     @Override
     public Optional<Snippet> findSnippetById(long id) {
-        final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id = :id", Snippet.class);
+        final TypedQuery<Snippet> query = this.em.createQuery("FROM Snippet WHERE id = :id", Snippet.class);
         query.setParameter("id", id);
         return query.getResultList().stream().findFirst();
     }
@@ -106,7 +106,10 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     @Override
     public boolean deleteSnippetById(long id) {
         Optional<Snippet> maybeSnippet = this.findSnippetById(id);
-        maybeSnippet.ifPresent(snippet -> this.em.remove(snippet));
+        maybeSnippet.ifPresent(snippet -> {
+            snippet.setDeleted(true);
+            this.em.persist(snippet);
+        });
         return maybeSnippet.isPresent();
     }
 
@@ -117,7 +120,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
         // Extracting the tag ids form the list
         Collection<Long> tagIds = tags.stream().mapToLong(Tag::getId).boxed().collect(Collectors.toList());
         if (tagIds.size() > 0){
-            Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = sn.id WHERE st.tag_id IN :ids AND sn.date_created\\:\\:date >= :cdate\\:\\:date AND sn.user_id != :id");
+            Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = sn.id WHERE sn.deleted = FALSE AND st.tag_id IN :ids AND sn.date_created\\:\\:date >= :cdate\\:\\:date AND sn.user_id != :id");
             nativeQuery.setParameter("ids", tagIds);
             nativeQuery.setParameter("cdate", min, TemporalType.TIMESTAMP);
             nativeQuery.setParameter("id", userId);
@@ -131,7 +134,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
         User owner = em.find(User.class, ownerId);
         Language lang = em.find(Language.class, languageId);
         Collection<Tag> tagEntities = tagJpaDaoImpl.findSpecificTagsByName(tags);
-        Snippet createdSnippet = new Snippet(owner, code, title, description, dateCreated, lang, tagEntities, false);
+        Snippet createdSnippet = new Snippet(owner, code, title, description, dateCreated, lang, tagEntities, false, false);
         em.persist(createdSnippet);
         return createdSnippet.getId();
     }
@@ -156,7 +159,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public int getAllSnippetsCount() {
-        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets");
+        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets WHERE deleted = FALSE");
         return nativeQuery.getResultList().size();
     }
 
@@ -169,7 +172,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public int getAllFollowingSnippetsCount(long userId) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = sn.id LEFT OUTER JOIN follows AS fol ON fol.tag_id = st.tag_id WHERE fol.user_id = :id");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = sn.id LEFT OUTER JOIN follows AS fol ON fol.tag_id = st.tag_id WHERE sn.deleted = FALSE AND fol.user_id = :id");
         nativeQuery.setParameter("id", userId);
         return nativeQuery.getResultList().size();
     }
@@ -189,21 +192,21 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public int getAllSnippetsByOwnerCount(long userId) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.user_id = :id");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.deleted = FALSE AND sn.user_id = :id");
         nativeQuery.setParameter("id", userId);
         return nativeQuery.getResultList().size();
     }
 
     @Override
     public int getAllSnippetsByTagCount(long tagId) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON sn.id = st.snippet_id WHERE st.tag_id = :id ORDER BY sn.id");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON sn.id = st.snippet_id WHERE sn.deleted = FALSE AND st.tag_id = :id ORDER BY sn.id");
         nativeQuery.setParameter("id", tagId);
         return nativeQuery.getResultList().size();
     }
 
     @Override
     public int getAllSnippetsByLanguageCount(long langId) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.language_id = :id");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.deleted = FALSE AND sn.language_id = :id");
         nativeQuery.setParameter("id", langId);
         return nativeQuery.getResultList().size();
     }
@@ -218,14 +221,14 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     }
 
     @Override
-    public int getSnippetByDeepCriteriaCount(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, Boolean includeFlagged) {
-        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, null, null, includeFlagged);
+    public int getSnippetByDeepCriteriaCount(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, Boolean includeFlagged, Boolean includeDeleted) {
+        SnippetDeepSearchQuery searchQuery = this.createDeepQuery(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, null, null, includeFlagged, includeDeleted);
         Query nativeQuery = this.em.createNativeQuery(searchQuery.getQuery());
         this.setSearchQueryParameters(searchQuery.getParams(), nativeQuery);
         return nativeQuery.getResultList().size();
     }
 
-    private SnippetDeepSearchQuery createDeepQuery(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, SnippetDao.Orders order, SnippetDao.Types type, Boolean includeFlagged) {
+    private SnippetDeepSearchQuery createDeepQuery(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, SnippetDao.Orders order, SnippetDao.Types type, Boolean includeFlagged, Boolean includeDeleted) {
         SnippetDeepSearchQuery.Builder queryBuilder = new SnippetDeepSearchQuery.Builder();
         if (dateMin == null && dateMax == null && repMin == null && repMax == null && voteMin == null && voteMax == null && languageId == null && tagId == null && title == null && username == null && includeFlagged == null) {
             return queryBuilder.setOrder(Types.TITLE, Orders.ASC).build();
@@ -263,6 +266,9 @@ public class SnippetJpaDaoImpl implements SnippetDao {
             }
             if (includeFlagged != null) {
                 queryBuilder = queryBuilder.addIncludeFlagged(includeFlagged);
+            }
+            if (includeDeleted != null) {
+                queryBuilder = queryBuilder.addIncludeDeleted(includeDeleted);
             }
             return type != null && order != null ? queryBuilder.setOrder(type, order).build() : queryBuilder.build();
         }

@@ -33,6 +33,7 @@
 <spring:message code="advanced.votes.hint" var="advanced_votes_hint"/>
 <spring:message code="advanced.date.hint" var="advanced_date_hint"/>
 <spring:message code="advanced.includeFlagged" var="advanced_include_flagged"/>
+<spring:message code="advanced.includeDeleted" var="advanced_include_deleted"/>
 <c:url var="exploreSearchUrl" value="/explore/search"/>
 <div class="flex-column explore-container">
     <form:form class="form-container" action="${exploreSearchUrl}" method="get" modelAttribute="exploreForm">
@@ -76,13 +77,16 @@
 
         <hr/>
 
-        <form:label cssClass="flex-stretch fw-500" path="includeFlagged"><spring:message
-                code="advanced.flagged"/></form:label>
         <div class="flex-row">
-            <form:checkbox path="includeFlagged" value="true" label="${advanced_include_flagged}"
-                           class="fw-100 advanced-input check-input"/>
+            <form:checkbox path="includeFlagged" value="true" label="${advanced_include_flagged}" class="fw-100 advanced-input check-input"/>
         </div>
         <form:errors class="form-error" path="includeFlagged" element="p"/>
+
+        <div class="flex-row">
+            <form:checkbox path="includeDeleted" value="true" label="${advanced_include_deleted}"
+                           class="fw-100 advanced-input check-input"/>
+        </div>
+        <form:errors class="form-error" path="includeDeleted" element="p"/>
 
         <hr/>
 

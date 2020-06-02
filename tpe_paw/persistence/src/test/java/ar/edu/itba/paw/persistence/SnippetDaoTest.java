@@ -158,6 +158,7 @@ public class SnippetDaoTest {
                 SnippetDao.Orders.ASC,
                 SnippetDao.Types.ALL,
                 true,
+                false,
                 1, 6).stream().findFirst();
 
         assertTrue(maybeSnippet.isPresent());
@@ -180,6 +181,7 @@ public class SnippetDaoTest {
                 SnippetDao.Orders.ASC,
                 SnippetDao.Types.ALL,
                 true,
+                false,
                 1, 6).stream().findFirst();
 
         assertFalse(maybeSnippet.isPresent());

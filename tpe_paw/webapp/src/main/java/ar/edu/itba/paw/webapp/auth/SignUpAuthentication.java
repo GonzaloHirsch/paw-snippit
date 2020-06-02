@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.webapp.constants.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,11 +21,10 @@ public class SignUpAuthentication {
     private AuthenticationManager authenticationManager;
 
     private static final String REDIRECT_ATTRIBUTE = "url_prior_login";
-    private static final String REFERER = "Referer";
     private static final String SAVED_REQUEST_ATTRIBUTE = "SPRING_SECURITY_SAVED_REQUEST";
 
     public void setRegisterRedirect(HttpServletRequest request) {
-        String referrer = request.getHeader(REFERER);
+        String referrer = request.getHeader(Constants.REFERER);
         if (!referrer.contains("login")) {
             request.getSession().setAttribute(REDIRECT_ATTRIBUTE, referrer);
         }

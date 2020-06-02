@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.TagNotFoundException;
 import ar.edu.itba.paw.webapp.form.DeleteForm;
@@ -25,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -79,6 +81,7 @@ public class TagsController {
         mav.addObject("tags", allTags);
         mav.addObject("itemSearchContext", "tags/");
 
+        Collection<String> userRoles = Collections.emptyList();
         User currentUser = loginAuthentication.getLoggedInUser();
         if (currentUser != null) {
             for (Tag tag : allTags) {
@@ -86,7 +89,9 @@ public class TagsController {
                 followForm.setFollows(currentUser.getFollowedTags().contains(tag));
                 mav.addObject("followIconForm" + tag.getId().toString(), followForm);
             }
+            userRoles = this.roleService.getUserRoles(currentUser);
         }
+        mav.addObject("userRoles", userRoles);
         return mav;
     }
 
@@ -105,9 +110,11 @@ public class TagsController {
             throw new TagNotFoundException(messageSource.getMessage("error.404.tag", new Object[]{tagId}, LocaleContextHolder.getLocale()));
         }
         /* If user is logged in, check if they follow the tag */
+        Collection<String> userRoles = Collections.emptyList();
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser != null){
             followForm.setFollows(this.tagService.userFollowsTag(currentUser.getId(), tagId));
+            userRoles = this.roleService.getUserRoles(currentUser);
         }
 
         int totalSnippetCount = this.snippetService.getAllSnippetsByTagCount(tag.get().getId());
@@ -116,30 +123,16 @@ public class TagsController {
         mav.addObject("tag", tag.get());
         mav.addObject("searchContext","tags/"+tagId+"/");
         mav.addObject("snippetList", snippetService.findSnippetsForTag(tagId, page, SNIPPET_PAGE_SIZE));
+        mav.addObject("userRoles", userRoles);
         return mav;
     }
 
     @RequestMapping(value="/tags/{tagId}/follow", method= RequestMethod.POST)
     public ModelAndView followTagThroughButton(
+            HttpServletRequest request,
             @ModelAttribute("tagId") @PathVariable("tagId") long tagId,
             @ModelAttribute("followForm") final FollowForm followForm
     ) {
-        this.followTag(tagId, followForm);
-        return new ModelAndView("redirect:/tags/" + tagId);
-    }
-
-
-    @RequestMapping(value="/tags/{tagId}/follow/icon", method= RequestMethod.POST)
-    public ModelAndView followTagThroughIcon(
-            @ModelAttribute("tagId") @PathVariable("tagId") long tagId,
-            @ModelAttribute final FollowForm followForm,
-            final @RequestParam(value = "page", required = false, defaultValue = "1") int page
-    ) {
-        this.followTag(tagId, followForm);
-        return new ModelAndView("redirect:/tags/?page=" + page);
-    }
-
-    private void followTag(final long tagId, final FollowForm followForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser != null) {
             this.tagService.updateFollowing(currentUser.getId(), tagId, followForm.isFollows());
@@ -147,10 +140,9 @@ public class TagsController {
             LOGGER.warn("Inside the follow form of tag {} without a logged in user", tagId);
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.follow", null, LocaleContextHolder.getLocale()));
         }
+        return new ModelAndView("redirect:" + request.getHeader(Constants.REFERER));
     }
-
-
-
+    
     @RequestMapping(value = "/tags/{tagId}/delete",  method= RequestMethod.POST)
     public ModelAndView deleteTag(@PathVariable("tagId") long tagId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
@@ -168,16 +160,13 @@ public class TagsController {
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags = Collections.emptyList();
-        Collection<String> userRoles = Collections.emptyList();
 
         if (currentUser != null) {
             userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-            userRoles = this.roleService.getUserRoles(currentUser);
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         }
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("userTags", userTags);
         model.addAttribute("searchForm", searchForm);
-        model.addAttribute("userRoles", userRoles);
     }
 }

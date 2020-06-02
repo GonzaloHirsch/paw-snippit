@@ -16,8 +16,8 @@ DO '
             ALTER TABLE snippets ALTER COLUMN flagged DROP DEFAULT;
             ALTER TABLE snippets ALTER COLUMN flagged TYPE BOOLEAN USING CASE WHEN flagged=0 THEN FALSE ELSE TRUE END;
             ALTER TABLE snippets ALTER COLUMN flagged SET DEFAULT FALSE;
-        EXCEPTION
-            WHEN undefined_function THEN RAISE NOTICE ''column flagged is already a boolean.'';
+        EXCEPTION WHEN OTHERS THEN
+            RAISE NOTICE ''column flagged is already a boolean.'';
         END;
     END
 ' language plpgsql;
@@ -29,8 +29,8 @@ DO '
             ALTER TABLE users ALTER COLUMN verified DROP DEFAULT;
             ALTER TABLE users ALTER COLUMN verified TYPE BOOLEAN USING CASE WHEN verified=0 THEN FALSE ELSE TRUE END;
             ALTER TABLE users ALTER COLUMN verified SET DEFAULT FALSE;
-        EXCEPTION
-            WHEN undefined_function THEN RAISE NOTICE ''column verified is already a boolean.'';
+        EXCEPTION WHEN OTHERS THEN
+            RAISE NOTICE ''column verified is already a boolean.'';
         END;
     END
 ' language plpgsql;
@@ -39,8 +39,8 @@ DO '
     BEGIN
         BEGIN
             ALTER TABLE votes_for RENAME COLUMN type TO is_positive;
-        EXCEPTION
-            WHEN undefined_column THEN RAISE NOTICE ''column type has already been renamed to is_positive'';
+        EXCEPTION WHEN OTHERS THEN
+            RAISE NOTICE ''column type has already been renamed to is_positive'';
         END;
     END
 ' language plpgsql;
@@ -50,7 +50,7 @@ DO '
         BEGIN
             ALTER TABLE votes_for DROP CONSTRAINT votes_for_type_check;
         EXCEPTION WHEN OTHERS THEN
-            RAISE NOTICE ''column is_positive is already a boolean.'';
+            RAISE NOTICE ''constraint votes_for_type_check was already dropped'';
         END;
     END
 ' language plpgsql;

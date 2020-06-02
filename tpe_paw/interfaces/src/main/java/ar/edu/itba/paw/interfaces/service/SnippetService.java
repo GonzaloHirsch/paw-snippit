@@ -23,7 +23,7 @@ public interface SnippetService {
     Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, Long resourceId, int page, int pageSize);
     Collection<Snippet> findSnippetsForTag(long tagId, int page, int pageSize);
     Collection<Snippet> findSnippetsWithLanguage(long langId, int page, int pageSize);
-    boolean deleteSnippet(final Snippet snippet, final long userId);
+    boolean deleteOrRestoreSnippet(final Snippet snippet, final long userId, boolean delete);
     void updateFlagged(final Snippet snippet, final User owner, boolean isFlagged, final String baseUrl);
     int getNewSnippetsForTagsCount(Instant dateMin, Collection<Tag> tags, long userId);
     Collection<Snippet> findSnippetByDeepCriteria(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, SnippetDao.Orders order, SnippetDao.Types type, Boolean includeFlagged, Boolean includeDeleted, int page, int pageSize);

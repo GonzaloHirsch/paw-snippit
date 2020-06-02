@@ -13,9 +13,18 @@
     <c:set var="snippetId" value="${requestScope.snippetId}"/>
     <c:set var="snippet" value="${requestScope.snippet}"/>
     <form:form action="${snippetId}/delete" class="form-container flex-center" method="post" modelAttribute="deleteForm">
-        <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#delete-snippet">
-            <i class="delete-snippet-icon snippet-icon material-icons ">delete</i>
-        </div>
+        <c:choose>
+            <c:when test="${deleteForm.delete}">
+                <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#delete-snippet">
+                    <i class="delete-snippet-icon snippet-icon material-icons ">undo</i>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#delete-snippet">
+                    <i class="delete-snippet-icon snippet-icon material-icons ">delete</i>
+                </div>
+            </c:otherwise>
+        </c:choose>
 
         <!-- Modal -->
         <div class="modal fade" id="delete-snippet" tabindex="-1" role="dialog" aria-labelledby="deletionModal" aria-hidden="true">
@@ -35,10 +44,11 @@
                             <div type="button" class="btn btn-secondary modal-close-button" data-dismiss="modal"><spring:message code="modal.cancel"/></div>
                             <form:checkbox class="hidden" path="delete" value="true" id="snippet-delete-button" onclick="updateForm(this)"/>
                             <label for="snippet-delete-button" class="btn btn-primary purple-button  no-margin">
-                                <div typeof="button">
+<%--                                <div typeof="button">--%>
                                     <spring:message code="modal.delete.confirm"/>
-                                </div>
+<%--                                </div>--%>
                             </label>
+<%--                            <button type="button" class="btn btn-primary purple-button no-margin" onclick="updateForm(this)"><spring:message code="modal.delete.confirm" /></button>--%>
                         </div>
                     </div>
                 </div>

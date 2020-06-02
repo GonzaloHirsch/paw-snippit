@@ -114,6 +114,16 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     }
 
     @Override
+    public boolean restoreSnippetById(long id) {
+        Optional<Snippet> maybeSnippet = this.findSnippetById(id);
+            maybeSnippet.ifPresent(snippet -> {
+                snippet.setDeleted(false);
+                this.em.persist(snippet);
+            });
+        return maybeSnippet.isPresent();
+    }
+
+    @Override
     public int getNewSnippetsForTagsCount(Instant dateMin, Collection<Tag> tags, long userId) {
         ZonedDateTime zdt = ZonedDateTime.ofInstant(dateMin, ZoneId.systemDefault());
         Calendar min = GregorianCalendar.from(zdt);

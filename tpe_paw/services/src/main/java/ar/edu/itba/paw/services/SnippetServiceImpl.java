@@ -50,12 +50,11 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Transactional
     @Override
-    public boolean deleteSnippet(Snippet snippet, long userId) {
-//        int newReputation = snippet.getOwner().getReputation() + (snippet.isFlagged() ? FLAGGED_SNIPPET_REP_VALUE : 0);
-//               if (success) {
-//            this.userService.changeReputation(userId, newReputation);
-//        }
-        return snippetDao.deleteSnippetById(snippet.getId());
+    public boolean deleteOrRestoreSnippet(Snippet snippet, long userId, boolean delete) {
+        if (delete) {
+            return snippetDao.deleteSnippetById(snippet.getId());
+        }
+        return snippetDao.restoreSnippetById(snippet.getId());
     }
 
     @Override

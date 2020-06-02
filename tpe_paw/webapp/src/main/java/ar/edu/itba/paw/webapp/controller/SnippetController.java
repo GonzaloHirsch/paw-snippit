@@ -78,6 +78,9 @@ public class SnippetController {
             // Fav
             favForm.setFavorite(currentUser.getFavorites().contains(retrievedSnippet.get()));
 
+            //Delete
+            deleteForm.setDelete(retrievedSnippet.get().isDeleted());
+
             if (roleService.isAdmin(currentUser)) {
                 adminFlagForm.setFlagged(retrievedSnippet.get().isFlagged());
                 mav.addObject("userRoles", this.roleService.getUserRoles(currentUser));
@@ -112,12 +115,12 @@ public class SnippetController {
         if (currentUser == null || currentUser.getUsername().compareTo(snippet.get().getOwner().getUsername()) != 0) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.delete", null, LocaleContextHolder.getLocale()));
         } else {
-            if (!this.snippetService.deleteSnippet(snippet.get(), currentUser.getId())) {
+            if (!this.snippetService.deleteOrRestoreSnippet(snippet.get(), currentUser.getId(), deleteForm.isDelete())) {
                 /* Operation was unsuccessful */
                 throw new ElementDeletionException(messageSource.getMessage("error.409.deletion.snippet", null, LocaleContextHolder.getLocale()));
             }
         }
-        return new ModelAndView("redirect:/user/" + currentUser.getId());
+        return new ModelAndView("redirect:/snippet/" + id);
     }
 
     @RequestMapping(value="/snippet/{id}/vote", method=RequestMethod.POST)

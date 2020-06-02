@@ -58,7 +58,7 @@ public class VoteDaoTest {
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        voteDao = new VoteDaoImpl(ds);
+//        voteDao = new VoteDaoImpl(ds);
         MockitoAnnotations.initMocks(this); // Replaces @RunWith(MockitJUnitRunner.class)
 
         jdbcInsertVotesFor = new SimpleJdbcInsert(ds).withTableName(VOTES_FOR_TABLE);
@@ -84,7 +84,7 @@ public class VoteDaoTest {
         VoteDao voteSpyDao = Mockito.spy(voteDao);
         Mockito.doReturn(Optional.empty()).when(voteSpyDao).getVote(defaultUser.getId(),defaultSnippetId);
 
-        voteSpyDao.addVote(defaultUser.getId(),defaultSnippetId,1);
+        voteSpyDao.addVote(defaultUser.getId(),defaultSnippetId,true);
 
         assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,VOTES_FOR_TABLE));
 
@@ -97,9 +97,9 @@ public class VoteDaoTest {
         insertVotesForIntoDb(jdbcInsertVotesFor,defaultSnippetId,defaultUser.getId(),-1);
         //To mock a method of the same class.
         VoteDao voteSpyDao = Mockito.spy(voteDao);
-        Mockito.doReturn(Optional.of(new Vote(defaultUser,null,-1))).when(voteSpyDao).getVote(defaultUser.getId(),defaultSnippetId);
+        Mockito.doReturn(Optional.of(new Vote(defaultUser,null,false))).when(voteSpyDao).getVote(defaultUser.getId(),defaultSnippetId);
 
-        voteSpyDao.addVote(defaultUser.getId(),defaultSnippetId,1);
+        voteSpyDao.addVote(defaultUser.getId(),defaultSnippetId,true);
 
         assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,VOTES_FOR_TABLE));
 
@@ -117,7 +117,7 @@ public class VoteDaoTest {
         assertTrue(maybeVote.isPresent());
 //        assertEquals(defaultSnippetId, maybeVote.get().getSnippet().getId());
         assertEquals(defaultUser.getId(),maybeVote.get().getUser().getId());
-        assertEquals(1,maybeVote.get().getType());
+        assertTrue(maybeVote.get().isPositive());
     }
 
     @Test

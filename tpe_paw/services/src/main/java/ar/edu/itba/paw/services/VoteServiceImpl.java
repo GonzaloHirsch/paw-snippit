@@ -32,7 +32,7 @@ public class VoteServiceImpl implements VoteService {
         if (oldVoteType == voteType){
             this.withdrawVote(userId, snippetId);
         } else {
-            this.addVote(userId, snippetId, voteType);
+            this.addVote(userId, snippetId, voteType == 1);
         }
     }
 
@@ -44,8 +44,8 @@ public class VoteServiceImpl implements VoteService {
 
     @Transactional
     @Override
-    public void addVote(final long userId, final long snippetId, final int voteType) {
-        this.voteDao.addVote(userId, snippetId, voteType);
+    public void addVote(final long userId, final long snippetId, boolean isPositive) {
+        this.voteDao.addVote(userId, snippetId, isPositive);
     }
 
     @Override

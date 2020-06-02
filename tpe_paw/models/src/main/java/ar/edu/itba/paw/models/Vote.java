@@ -29,22 +29,19 @@ public class Vote {
     @JoinColumn(name = "snippet_id")
     private Snippet snippet;
 
-    @Column(name = "type", columnDefinition = "INT CHECK (type IN (-1, 1))")
-    private int type;
+    @Column(name = "is_positive")
+    private boolean isPositive;
 
     public Vote(){
         // Hibernate constructor
     }
 
-    public Vote(User user, Snippet snippet, int type) {
+    public Vote(User user, Snippet snippet, boolean isPositive) {
         this.user = user;
         this.snippet = snippet;
-        this.type = type;
+        this.isPositive = isPositive;
     }
 
-    public int getType() {
-        return type;
-    }
 
     public User getUser() {
         return user;
@@ -54,7 +51,15 @@ public class Vote {
         return snippet;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public boolean isPositive() {
+        return isPositive;
+    }
+
+    public void setPositive(boolean positive) {
+        isPositive = positive;
+    }
+
+    public int getVoteWeight() {
+        return isPositive ? 1 : -1;
     }
 }

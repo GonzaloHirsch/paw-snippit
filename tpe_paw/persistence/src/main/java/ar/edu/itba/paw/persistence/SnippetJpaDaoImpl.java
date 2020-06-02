@@ -64,7 +64,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> getAllUpVotedSnippets(long userId, int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT vf.snippet_id FROM votes_for AS vf WHERE vf.user_id = :id AND vf.type = 1 ORDER BY vf.snippet_id DESC");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT vf.snippet_id FROM votes_for AS vf WHERE vf.user_id = :id AND vf.is_positive = TRUE ORDER BY vf.snippet_id DESC");
         nativeQuery.setParameter("id", userId);
         return this.getSnippetsByPage(page, pageSize, nativeQuery);
     }
@@ -91,7 +91,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> findSnippetsWithLanguage(long langId, int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.language_id = :id AND sn.delete = FALSE ORDER BY sn.id DESC");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.language_id = :id AND sn.deleted = FALSE ORDER BY sn.id DESC");
         nativeQuery.setParameter("id", langId);
         return this.getSnippetsByPage(page, pageSize, nativeQuery);
     }
@@ -179,7 +179,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public int getAllUpvotedSnippetsCount(long userId) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT vf.snippet_id FROM votes_for AS vf WHERE vf.user_id = :id AND vf.type = 1");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT vf.snippet_id FROM votes_for AS vf WHERE vf.user_id = :id AND vf.is_positive = TRUE");
         nativeQuery.setParameter("id", userId);
         return nativeQuery.getResultList().size();
     }

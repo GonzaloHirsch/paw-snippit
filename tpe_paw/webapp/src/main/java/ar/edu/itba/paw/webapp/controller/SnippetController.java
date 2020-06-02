@@ -70,7 +70,7 @@ public class SnippetController {
             Optional<Vote> vote = this.voteService.getVote(currentUser.getId(), retrievedSnippet.get().getId());
             int voteType = 0;
             if (vote.isPresent()) {
-                voteType = vote.get().getType();
+                voteType = vote.get().getVoteWeight();
             }
             voteForm.setType(voteType);
             voteForm.setOldType(voteType);

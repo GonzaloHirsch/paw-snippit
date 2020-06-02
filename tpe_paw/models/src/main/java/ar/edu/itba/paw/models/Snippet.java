@@ -110,7 +110,7 @@ public class Snippet {
      * @return
      */
     public int getVoteCount(){
-        return this.votes.stream().mapToInt(Vote::getType).sum();
+        return this.votes.stream().mapToInt(Vote::getVoteWeight).sum();
     }
 
     public boolean isFlagged() {

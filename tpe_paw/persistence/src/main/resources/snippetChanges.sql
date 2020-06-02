@@ -35,6 +35,37 @@ DO '
     END
 ' language plpgsql;
 
+DO '
+    BEGIN
+        BEGIN
+            ALTER TABLE votes_for RENAME COLUMN type TO is_positive;
+        EXCEPTION
+            WHEN undefined_column THEN RAISE NOTICE ''column type has already been renamed to is_positive'';
+        END;
+    END
+' language plpgsql;
+
+DO '
+    BEGIN
+        BEGIN
+            ALTER TABLE votes_for DROP CONSTRAINT votes_for_type_check;
+        EXCEPTION WHEN OTHERS THEN
+            RAISE NOTICE ''column is_positive is already a boolean.'';
+        END;
+    END
+' language plpgsql;
+
+
+DO '
+    BEGIN
+        BEGIN
+            ALTER TABLE votes_for ALTER COLUMN is_positive TYPE BOOLEAN USING CASE WHEN is_positive=1 THEN TRUE ELSE FALSE END;
+        EXCEPTION WHEN OTHERS THEN
+            RAISE NOTICE ''column is_positive is already a boolean.'';
+        END;
+    END
+' language plpgsql;
+
 
 CREATE OR REPLACE VIEW complete_snippets AS
 SELECT aux.sn_id   AS id,
@@ -80,10 +111,67 @@ FROM (
                       sni.user_id               AS user_id,
                       sni.flagged               AS flag,
                       sni.deleted               AS deleted,
-                      SUM(COALESCE(vf.type, 0)) AS votes
+                      SUM(CASE WHEN vf.is_positive THEN 1 ELSE -1 END) AS votes
                FROM snippets AS sni
                         LEFT OUTER JOIN votes_for AS vf ON vf.snippet_id = sni.id
                GROUP BY sni.id) AS sn
                   JOIN users AS u ON sn.user_id = u.id
      ) AS aux
          JOIN languages AS l ON aux.lang_id = l.id;
+
+
+-- Notation of trigger uses single quotes instead of $$ due to parser errors while parsing
+-- The use of TG_OP is needed to avoid the error of not assigned variables NEW or OLD
+CREATE OR REPLACE FUNCTION update_reputation() RETURNS TRIGGER AS
+'
+    DECLARE
+        newReputation int;
+        uid           bigint;
+        snippetId     bigint;
+    BEGIN
+        IF TG_OP = ''INSERT'' OR TG_OP = ''UPDATE'' THEN
+            snippetId = NEW.snippet_id;
+        ELSIF TG_OP = ''DELETE'' THEN
+            snippetId = OLD.snippet_id;
+        END IF;
+        uid = (SELECT user_id
+               FROM snippets AS sn
+               WHERE sn.id = snippetId);
+        newReputation = (SELECT reputation
+                         FROM users AS u
+                         WHERE u.id = uid);
+        IF TG_OP = ''INSERT'' THEN
+            IF NEW IS NOT null THEN
+                newReputation = newReputation + (CASE WHEN NEW.is_positive THEN 1 ELSE -1 END);
+            END IF;
+        ELSIF TG_OP = ''UPDATE'' THEN
+            IF NEW IS NOT null THEN
+                newReputation = newReputation + (CASE WHEN NEW.is_positive THEN 1 ELSE -1 END);
+            END IF;
+            IF OLD IS NOT null THEN
+                newReputation = newReputation - (CASE WHEN OLD.is_positive THEN 1 ELSE -1 END);
+            END IF;
+        ELSIF TG_OP = ''DELETE'' THEN
+            IF OLD IS NOT null THEN
+                newReputation = newReputation - (CASE WHEN OLD.is_positive THEN 1 ELSE -1 END);
+            END IF;
+        END IF;
+        UPDATE users AS u
+        SET reputation = newReputation
+        WHERE u.id = uid;
+        IF TG_OP = ''INSERT'' OR TG_OP = ''UPDATE'' THEN
+            RETURN NEW;
+        ELSIF TG_OP = ''DELETE'' THEN
+            RETURN OLD;
+        END IF;
+    END;
+' language plpgsql;
+
+DROP TRIGGER IF EXISTS update_reputation_trigger ON votes_for;
+
+-- Notation uses PROCEDURE instead of FUNCTION to make it backwards compatible
+CREATE TRIGGER update_reputation_trigger
+    AFTER INSERT OR UPDATE OR DELETE
+    ON votes_for
+    FOR EACH ROW
+EXECUTE PROCEDURE update_reputation();

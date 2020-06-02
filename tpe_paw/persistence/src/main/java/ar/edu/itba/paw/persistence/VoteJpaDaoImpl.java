@@ -42,12 +42,11 @@ public class VoteJpaDaoImpl implements VoteDao {
     }
 
     @Override
-    public void addVote(long userId, long snippetId, int voteType) {
-
+    public void addVote(long userId, long snippetId, boolean isPositive) {
         Optional<Vote> maybeVote = this.getVote(userId,snippetId);
         if(maybeVote.isPresent()){
             Vote vote = maybeVote.get();
-            vote.setType(voteType);
+            vote.setPositive(isPositive);
             this.em.persist(vote);
         }
         else{
@@ -55,7 +54,7 @@ public class VoteJpaDaoImpl implements VoteDao {
             Snippet snippet = this.em.find(Snippet.class, snippetId);
 
             if(user != null && snippet !=null){
-                Vote vote = new Vote(user, snippet, voteType);
+                Vote vote = new Vote(user, snippet, isPositive);
                 snippet.getVotes().add(vote);
                 user.getVotes().add(vote);
                 this.em.persist(vote);
@@ -79,7 +78,7 @@ public class VoteJpaDaoImpl implements VoteDao {
         Snippet snippet = this.em.find(Snippet.class, snippetId);
         if(snippet != null){
             Collection<Vote> votes = snippet.getVotes();
-            Integer result = votes.stream().mapToInt(Vote::getType).sum();
+            Integer result = votes.stream().mapToInt(Vote::getVoteWeight).sum();
             return Optional.of(result);
         }
 

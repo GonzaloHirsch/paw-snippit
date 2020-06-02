@@ -340,7 +340,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
             StringBuilder query = new StringBuilder();
             switch (type) {
                 case VOTES:
-                    query.append("SELECT s FROM Snippet s LEFT OUTER JOIN s.votes v WHERE s.id IN :filteredIds GROUP BY s.id ORDER BY SUM(v.type) ");
+                    query.append("SELECT s FROM Snippet s LEFT OUTER JOIN s.votes v WHERE s.id IN :filteredIds GROUP BY s.id ORDER BY SUM(CASE v.isPositive WHEN TRUE THEN 1 ELSE -1 END) ");
                     break;
                 case DATE:
                     query.append("from Snippet WHERE id IN :filteredIds ORDER BY dateCreated ");

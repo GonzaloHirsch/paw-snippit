@@ -132,7 +132,7 @@ FROM (
                       sni.date_created          AS date_created,
                       sni.user_id               AS user_id,
                       sni.flagged               AS flag,
-                      SUM(COALESCE(vf.type, 0)) AS votes
+                      SUM(CASE WHEN vf.is_positive THEN 1 ELSE -1 END) AS votes
                FROM snippets AS sni
                         LEFT OUTER JOIN votes_for AS vf ON vf.snippet_id = sni.id
                GROUP BY sni.id) AS sn

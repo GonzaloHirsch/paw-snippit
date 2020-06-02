@@ -15,7 +15,7 @@
             ${tag.name.toLowerCase()}
         </a>
         <c:set var="followForm" value="unfollowForm${tag.id}"/>
-        <c:url var="tagFollowIconUrl" value="/tags/${tag.id}/follow/icon"/>
+        <c:url var="tagFollowIconUrl" value="/tags/${tag.id}/follow"/>
 
         <form:form class="form-container flex-center" action="${tagFollowIconUrl}" method="post" modelAttribute="${followForm}">
             <form:checkbox class="hidden" id="tag-${tag.name}" path="follows" value="true" onclick="updateForm(this)"/>

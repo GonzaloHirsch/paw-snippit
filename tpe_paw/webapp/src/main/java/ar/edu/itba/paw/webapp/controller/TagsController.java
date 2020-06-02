@@ -127,7 +127,6 @@ public class TagsController {
         return mav;
     }
 
-    // TODO EL FOLLOW TAG HAY QUE MERGEARLO EN UN SOLO METODO QUE TE REDIRIJE A DONDE ESTABAS
     @RequestMapping(value="/tags/{tagId}/follow", method= RequestMethod.POST)
     public ModelAndView followTagThroughButton(
             HttpServletRequest request,

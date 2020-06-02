@@ -43,7 +43,7 @@ public class User {
     private byte[] icon;
 
     @Column(name="verified")
-    private int verified;
+    private boolean verified;
 
     @Column(length = 5, name="lang")
     private String lang = "en";     // Setting "en" as the default language value
@@ -91,7 +91,7 @@ public class User {
         this.dateJoined = dateJoined;
         this.lang = locale.getLanguage();
         this.region = locale.getCountry();
-        this.verified = verified ? 1 : 0;
+        this.verified = verified;
     }
 
     @Deprecated
@@ -105,7 +105,7 @@ public class User {
 //        this.dateJoined = dateJoined;
         this.icon = icon;
 //        this.locale = locale;
-        this.verified = verified ? 1 : 0;
+        this.verified = verified;
     }
 
     @Deprecated
@@ -119,7 +119,7 @@ public class User {
 //        this.dateJoined = dateJoined;
         this.icon = icon;
 //        this.locale = locale;
-        this.verified = verified ? 1 : 0;
+        this.verified = verified;
     }
 
     public Long getId() { return id; }
@@ -196,11 +196,11 @@ public class User {
 
 
     public boolean isVerified() {
-        return verified == 1;
+        return verified;
     }
 
     public void setVerified(boolean verified) {
-        this.verified = verified ? 1 : 0;
+        this.verified = verified;
     }
 
     public Collection<Snippet> getCreatedSnippets() {

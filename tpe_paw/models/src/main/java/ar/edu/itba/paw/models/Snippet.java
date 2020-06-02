@@ -37,7 +37,7 @@ public class Snippet {
     private Timestamp dateCreated;
 
     @Column(name = "flagged")
-    private int flagged;
+    private boolean flagged;
 
     @Column(name = "deleted")
     private boolean deleted;
@@ -71,7 +71,7 @@ public class Snippet {
         this.dateCreated = dateCreated;
         this.language = language;
         this.tags = tags;
-        this.flagged = flagged ? 1 : 0;
+        this.flagged = flagged;
         this.deleted = deleted;
     }
 
@@ -86,7 +86,7 @@ public class Snippet {
 //        this.language = language;
         this.tags = tags;
 //        this.votes = votes;
-        this.flagged = flagged ? 1 : 0;
+        this.flagged = flagged;
     }
 
     /**
@@ -114,7 +114,7 @@ public class Snippet {
     }
 
     public boolean isFlagged() {
-        return flagged == 1;
+        return flagged;
     }
 
     public Long getId() {
@@ -166,7 +166,7 @@ public class Snippet {
     }
 
     public void setFlagged(boolean flagged) {
-        this.flagged = flagged ? 1 : 0;
+        this.flagged = flagged;
     }
 
     public Collection<Vote> getVotes() {

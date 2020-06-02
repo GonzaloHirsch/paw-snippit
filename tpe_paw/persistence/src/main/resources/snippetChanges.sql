@@ -10,6 +10,31 @@ DO '
     END;
 ' language plpgsql;
 
+DO '
+    BEGIN
+        BEGIN
+            ALTER TABLE snippets ALTER COLUMN flagged DROP DEFAULT;
+            ALTER TABLE snippets ALTER COLUMN flagged TYPE BOOLEAN USING CASE WHEN flagged=0 THEN FALSE ELSE TRUE END;
+            ALTER TABLE snippets ALTER COLUMN flagged SET DEFAULT FALSE;
+        EXCEPTION
+            WHEN undefined_function THEN RAISE NOTICE ''column flagged is already a boolean.'';
+        END;
+    END
+' language plpgsql;
+
+
+DO '
+    BEGIN
+        BEGIN
+            ALTER TABLE users ALTER COLUMN verified DROP DEFAULT;
+            ALTER TABLE users ALTER COLUMN verified TYPE BOOLEAN USING CASE WHEN verified=0 THEN FALSE ELSE TRUE END;
+            ALTER TABLE users ALTER COLUMN verified SET DEFAULT FALSE;
+        EXCEPTION
+            WHEN undefined_function THEN RAISE NOTICE ''column verified is already a boolean.'';
+        END;
+    END
+' language plpgsql;
+
 
 CREATE OR REPLACE VIEW complete_snippets AS
 SELECT aux.sn_id   AS id,

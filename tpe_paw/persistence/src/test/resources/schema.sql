@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS users
     icon        BINARY,
     lang        VARCHAR(5) DEFAULT 'en',
     region      VARCHAR(5) DEFAULT 'US',
-    verified    INT DEFAULT 0
+    verified    BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS languages
@@ -43,7 +43,8 @@ CREATE TABLE IF NOT EXISTS snippets
     description  VARCHAR(500),
     code         VARCHAR(6000),
     date_created TIMESTAMP,
-    flagged      INT DEFAULT 0,
+    flagged      BOOLEAN DEFAULT FALSE,
+    deleted      BOOLEAN DEFAULT FALSE,
     language_id  INT REFERENCES languages (id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 

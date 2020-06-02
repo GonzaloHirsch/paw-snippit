@@ -229,7 +229,7 @@ public class SnippetDeepSearchQuery {
         public Builder addIncludeFlagged(boolean includeFlagged){
             if (!includeFlagged){
                 this.checkIfFirst();
-                this.query.append("s.flagged = 0");
+                this.query.append("s.flagged = FALSE");
             }
             return this;
         }

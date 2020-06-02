@@ -34,6 +34,10 @@
             <div class="flex-center form form-border form-shadow">
 
                 <div class="flex-column detail-snippet-center">
+                    <c:if test="${snippet.deleted}">
+                        <c:import url="/WEB-INF/jsp/snippet/deletedWarning.jsp"/>
+                    </c:if>
+
                     <c:if test="${snippet.flagged}">
                         <c:import url="/WEB-INF/jsp/snippet/flaggedWarning.jsp"/>
                     </c:if>
@@ -90,7 +94,7 @@
                         </c:if>
 
                         <!-- DELETE -->
-                        <c:if test="${currentUser.id == snippet.owner.id}">
+                        <c:if test="${!snippet.deleted && currentUser.id == snippet.owner.id}">
                             <c:set var="snippet" value="${snippet}" scope="request"/>
                             <div class="flex-column flex-center detail-snippet-block border-radius form-shadow">
                                 <c:import url="/WEB-INF/jsp/snippet/snippetDeleteForm.jsp"/>
@@ -103,9 +107,11 @@
                         </div>
                         <c:set var="votes" value="${voteCount}" scope="request"/>
                         <!-- VOTE -->
-                        <div class="flex-column flex-center detail-snippet-block border-radius form-shadow">
-                            <c:import url="/WEB-INF/jsp/snippet/voteForm.jsp"/>
-                        </div>
+                        <c:if test="${!snippet.deleted}">
+                            <div class="flex-column flex-center detail-snippet-block border-radius form-shadow">
+                                <c:import url="/WEB-INF/jsp/snippet/voteForm.jsp"/>
+                            </div>
+                        </c:if>
 
                         <!-- USER DETAILS -->
                         <a class="no-text-decoration" href="<c:url value='/user/${snippet.owner.id}'/>">

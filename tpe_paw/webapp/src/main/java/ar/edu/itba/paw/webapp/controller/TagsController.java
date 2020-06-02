@@ -128,7 +128,7 @@ public class TagsController {
     }
 
     @RequestMapping(value="/tags/{tagId}/follow", method= RequestMethod.POST)
-    public ModelAndView followTagThroughButton(
+    public ModelAndView followTag(
             HttpServletRequest request,
             @ModelAttribute("tagId") @PathVariable("tagId") long tagId,
             @ModelAttribute("followForm") final FollowForm followForm

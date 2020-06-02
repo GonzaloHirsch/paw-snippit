@@ -108,7 +108,7 @@
                         </div>
 
                         <!-- USER DETAILS -->
-                        <a class="user-url" href="<c:url value='/user/${snippet.owner.id}'/>">
+                        <a class="no-text-decoration" href="<c:url value='/user/${snippet.owner.id}'/>">
                             <div class="flex-column flex-center detail-snippet-block border-radius form-shadow">
                                 <div class="snippet-text detail-snippet-date">Uploaded ${snippet.getCreationDate()}</div>
                                 <div class="flex-row snippet-user-info detail-snippet-user-info">

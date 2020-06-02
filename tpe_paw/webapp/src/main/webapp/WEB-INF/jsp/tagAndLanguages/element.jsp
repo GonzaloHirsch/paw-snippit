@@ -23,7 +23,7 @@
             </a>
             <c:if test="${context == 'tags' && currentUser != null}">
                 <c:set var="followForm" value="followIconForm${element.id}"/>
-                <c:url var="tagFollowIconUrl" value="/tags/${element.id}/follow/icon"/>
+                <c:url var="tagFollowIconUrl" value="/tags/${element.id}/follow"/>
 
                 <form:form class="form-container flex-center" action="${tagFollowIconUrl}" method="post" modelAttribute="${followForm}">
                     <form:checkbox class="hidden" id="tag-${element.name}" path="follows" value="true" onclick="updateForm(this)"/>

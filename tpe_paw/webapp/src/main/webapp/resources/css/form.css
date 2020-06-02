@@ -28,7 +28,7 @@
 }
 
 .form-field-layout {
-    border-style: ridge;
+    border: 2px ridge;
     padding: 15px 15px 15px 48px !important;
 }
 

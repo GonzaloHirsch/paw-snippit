@@ -30,11 +30,11 @@
                 </div>
             </div>
             <div class="flex-row flex-center">
-                <c:if test="${snippet.flagged}">
-                    <div class="card-warning-icon material-icons">warning</div>
-                </c:if>
                 <c:if test="${snippet.deleted}">
                     <div class="card-warning-icon material-icons">delete_sweep</div>
+                </c:if>
+                <c:if test="${snippet.flagged}">
+                    <div class="card-warning-icon material-icons">warning</div>
                 </c:if>
                 <div class="snippet-language-tag border-radius">${snippet.language.name.toUpperCase()}</div>
             </div>

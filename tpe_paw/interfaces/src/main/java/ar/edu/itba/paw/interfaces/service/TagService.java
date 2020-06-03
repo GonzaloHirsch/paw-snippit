@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TagService {
-    Collection<Tag> getAllTags(int page, int pageSize);
+    Collection<Tag> getAllTags(boolean showEmpty, int page, int pageSize);
     Collection<Tag> getAllTags();
-    int getAllTagsCountByName(String name);
-    int getAllTagsCount();
-    Collection<Tag> findTagsByName(String name, int page, int pageSize);
+    int getAllTagsCountByName(String name, boolean showEmpty);
+    int getAllTagsCount(boolean showEmpty);
+    Collection<Tag> findTagsByName(String name, boolean showEmpty, int page, int pageSize);
     Collection<Tag> getFollowedTagsForUser(long userId);
     void followTag(long userId, long tagId);
     void unfollowTag(long userId, long tagId);

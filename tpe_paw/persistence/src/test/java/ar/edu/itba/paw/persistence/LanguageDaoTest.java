@@ -157,7 +157,7 @@ public class LanguageDaoTest {
         long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
         long lanId2 = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE2);
 
-        Collection<Language> maybeCollection = languageDao.findAllLanguagesByName("Language",1,PAGE_SIZE);
+        Collection<Language> maybeCollection = languageDao.findAllLanguagesByName("Language", true,1,PAGE_SIZE);
 
         assertNotNull(maybeCollection);
         List<Long> maybeIdList = maybeCollection.stream().mapToLong(Language::getId).boxed().collect(Collectors.toList());
@@ -170,7 +170,7 @@ public class LanguageDaoTest {
         long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
         long lanId2 = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE2);
 
-        Collection<Language> maybeCollection = languageDao.findAllLanguagesByName("zzzz",1,PAGE_SIZE);
+        Collection<Language> maybeCollection = languageDao.findAllLanguagesByName("zzzz", true,1,PAGE_SIZE);
 
         assertNotNull(maybeCollection);
         assertEquals(0,maybeCollection.size());

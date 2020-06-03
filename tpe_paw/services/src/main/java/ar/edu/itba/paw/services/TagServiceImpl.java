@@ -22,8 +22,8 @@ public class TagServiceImpl implements TagService {
     private FollowingDao followingDao;
 
     @Override
-    public Collection<Tag> getAllTags(int page, int pageSize) {
-        return tagDao.getAllTags(page, pageSize);
+    public Collection<Tag> getAllTags(boolean showEmpty, int page, int pageSize) {
+        return tagDao.getAllTags(showEmpty, page, pageSize);
     }
 
     @Override
@@ -32,18 +32,18 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public int getAllTagsCountByName(String name) {
-        return this.tagDao.getAllTagsCountByName(name);
+    public int getAllTagsCountByName(String name, boolean showEmpty) {
+        return this.tagDao.getAllTagsCountByName(name, showEmpty);
     }
 
     @Override
-    public int getAllTagsCount() {
-        return this.tagDao.getAllTagsCount();
+    public int getAllTagsCount(boolean showEmpty) {
+        return this.tagDao.getAllTagsCount(showEmpty);
     }
 
     @Override
-    public Collection<Tag> findTagsByName(String name, int page, int pageSize) {
-        return this.tagDao.findTagsByName(name, page, pageSize);
+    public Collection<Tag> findTagsByName(String name, boolean showEmpty, int page, int pageSize) {
+        return this.tagDao.findTagsByName(name, showEmpty, page, pageSize);
     }
 
     @Override

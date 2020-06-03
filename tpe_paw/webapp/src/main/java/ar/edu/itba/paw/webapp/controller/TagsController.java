@@ -49,14 +49,15 @@ public class TagsController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TagsController.class);
 
     @RequestMapping("/tags")
-    public ModelAndView showAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+    public ModelAndView showAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page, final @RequestParam(value = "showEmpty", required = false, defaultValue = "true") boolean showEmpty) {
         ModelAndView mav = new ModelAndView("tagAndLanguages/tags");
-        Collection<Tag> allTags = tagService.getAllTags(page, TAG_PAGE_SIZE);
-        int tagCount = this.tagService.getAllTagsCount();
+        Collection<Tag> allTags = tagService.getAllTags(showEmpty, page, TAG_PAGE_SIZE);
+        int tagCount = this.tagService.getAllTagsCount(showEmpty);
         mav.addObject("pages", (tagCount/TAG_PAGE_SIZE) + (tagCount % TAG_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("searchContext","tags/");
         mav.addObject("tags", allTags);
+        mav.addObject("showEmpty", showEmpty);
         mav.addObject("itemSearchContext", "tags/");
 
         User currentUser = loginAuthentication.getLoggedInUser();
@@ -71,14 +72,15 @@ public class TagsController {
     }
 
     @RequestMapping("/tags/search")
-    public ModelAndView searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
+    public ModelAndView searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page, final @RequestParam(value = "showEmpty", required = false, defaultValue = "true") boolean showEmpty){
         final ModelAndView mav = new ModelAndView("tagAndLanguages/tags");
-        Collection<Tag> allTags = this.tagService.findTagsByName(searchForm.getName(), page, TAG_PAGE_SIZE);
-        int tagCount = this.tagService.getAllTagsCountByName(searchForm.getName());
+        Collection<Tag> allTags = this.tagService.findTagsByName(searchForm.getName(), showEmpty, page, TAG_PAGE_SIZE);
+        int tagCount = this.tagService.getAllTagsCountByName(searchForm.getName(), showEmpty);
         mav.addObject("pages", (tagCount/TAG_PAGE_SIZE) + (tagCount % TAG_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("searchContext","tags/");
         mav.addObject("tags", allTags);
+        mav.addObject("showEmpty", showEmpty);
         mav.addObject("itemSearchContext", "tags/");
 
         Collection<String> userRoles = Collections.emptyList();

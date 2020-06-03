@@ -227,8 +227,8 @@ public class TagDaoTest {
         long tagId1 = insertTagIntoDb(jdbcInsertTag,TAG);
         long tagId2 = insertTagIntoDb(jdbcInsertTag,TAG2);
 
-        int res1 = tagDao.getAllTagsCountByName(TAG);
-        int res2 = tagDao.getAllTagsCountByName(TAG2);
+        int res1 = tagDao.getAllTagsCountByName(TAG, true);
+        int res2 = tagDao.getAllTagsCountByName(TAG2, true);
 
         assertEquals(1,res1);
         assertEquals(1,res2);
@@ -239,7 +239,7 @@ public class TagDaoTest {
         long tagId1 = insertTagIntoDb(jdbcInsertTag,TAG);
         long tagId2 = insertTagIntoDb(jdbcInsertTag,TAG2);
 
-        int res = tagDao.getAllTagsCountByName("zzzz");
+        int res = tagDao.getAllTagsCountByName("zzzz", true);
 
         assertEquals(0,res);
     }
@@ -248,14 +248,14 @@ public class TagDaoTest {
     public void testGetAllTagsCount(){
         insertTagIntoDb(jdbcInsertTag,TAG);
 
-        int res = tagDao.getAllTagsCount();
+        int res = tagDao.getAllTagsCount(true);
 
         assertEquals(1,res);
     }
 
     @Test
     public void testGetAllTagsCountEmpty(){
-        int res = tagDao.getAllTagsCount();
+        int res = tagDao.getAllTagsCount(true);
 
         assertEquals(0,res);
     }
@@ -265,7 +265,7 @@ public class TagDaoTest {
         long tagId1 = insertTagIntoDb(jdbcInsertTag,TAG);
         long tagId2 = insertTagIntoDb(jdbcInsertTag,TAG2);
 
-        Collection<Tag> maybeCollection = tagDao.findTagsByName("tag",1,PAGE_SIZE);
+        Collection<Tag> maybeCollection = tagDao.findTagsByName("tag", true,1,PAGE_SIZE);
 
         assertNotNull(maybeCollection);
         assertEquals(2,maybeCollection.size());
@@ -279,7 +279,7 @@ public class TagDaoTest {
         long tagId1 = insertTagIntoDb(jdbcInsertTag,TAG);
         long tagId2 = insertTagIntoDb(jdbcInsertTag,TAG2);
 
-        Collection<Tag> maybeCollection = tagDao.findTagsByName("zzzz",1,PAGE_SIZE);
+        Collection<Tag> maybeCollection = tagDao.findTagsByName("zzzz", true,1,PAGE_SIZE);
 
         assertNotNull(maybeCollection);
         assertEquals(0,maybeCollection.size());

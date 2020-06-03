@@ -39,9 +39,17 @@ public class LanguageJpaDaoImpl implements LanguageDao {
     }
 
     @Override
-    public Collection<Language> getAllLanguages(int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM languages ORDER BY name ASC");
-        final List<Long> filteredIds = this.filterIdsForPaging(nativeQuery, page, pageSize);
+    public Collection<Language> getAllLanguages(boolean showEmpty, int page, int pageSize) {
+        Query nativeQuery;
+        if (showEmpty){
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM languages ORDER BY name ASC");
+        } else {
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT s.language_id, l.name FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id ORDER BY l.name ASC");
+        }
+        nativeQuery.setFirstResult((page - 1) * pageSize);
+        nativeQuery.setMaxResults(pageSize);
+        List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())
+                .stream().map(i -> ((Integer) i[0]).longValue()).collect(Collectors.toList());
         if (!filteredIds.isEmpty()){
             final TypedQuery<Language> query = this.em.createQuery("FROM Language WHERE id IN :filteredIds ORDER BY name ASC", Language.class);
             query.setParameter("filteredIds", filteredIds);
@@ -51,10 +59,19 @@ public class LanguageJpaDaoImpl implements LanguageDao {
     }
 
     @Override
-    public Collection<Language> findAllLanguagesByName(String name, int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM languages WHERE LOWER(name) LIKE LOWER(:name) ORDER BY name ASC");
-        nativeQuery.setParameter("name", "%"+name+"%");
-        final List<Long> filteredIds = this.filterIdsForPaging(nativeQuery, page, pageSize);
+    public Collection<Language> findAllLanguagesByName(String name, boolean showEmpty, int page, int pageSize) {
+        Query nativeQuery;
+        if (showEmpty){
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM languages WHERE LOWER(name) LIKE LOWER(:name) ORDER BY name ASC")
+                    .setParameter("name", "%"+name+"%");
+        } else {
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT s.language_id, l.name FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE LOWER(l.name) LIKE LOWER(:name) ORDER BY l.name ASC")
+                    .setParameter("name", "%"+name+"%");
+        }
+        nativeQuery.setFirstResult((page - 1) * pageSize);
+        nativeQuery.setMaxResults(pageSize);
+        List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())
+                .stream().map(i -> ((Integer) i[0]).longValue()).collect(Collectors.toList());
         if (!filteredIds.isEmpty()){
             final TypedQuery<Language> query = this.em.createQuery("FROM Language WHERE id IN :filteredIds ORDER BY name ASC", Language.class);
             query.setParameter("filteredIds", filteredIds);
@@ -71,15 +88,26 @@ public class LanguageJpaDaoImpl implements LanguageDao {
     }
 
     @Override
-    public int getAllLanguagesCountByName(String name) {
-        final Query query = this.em.createNativeQuery("SELECT id FROM languages WHERE LOWER(name) LIKE LOWER(:name)");
-        query.setParameter("name", "%"+name+"%");
-        return query.getResultList().size();
+    public int getAllLanguagesCountByName(String name, boolean showEmpty) {
+        Query nativeQuery;
+        if (showEmpty){
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id FROM languages WHERE LOWER(name) LIKE LOWER(:name)")
+                    .setParameter("name", "%"+name+"%");
+        } else {
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT s.language_id FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE LOWER(l.name) LIKE LOWER(:name)")
+                    .setParameter("name", "%"+name+"%");
+        }
+        return nativeQuery.getResultList().size();
     }
 
     @Override
-    public int getAllLanguagesCount() {
-        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM languages");
+    public int getAllLanguagesCount(boolean showEmpty) {
+        Query nativeQuery;
+        if (showEmpty){
+            nativeQuery = this.em.createNativeQuery("SELECT id FROM languages");
+        } else {
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT language_id FROM snippets");
+        }
         return nativeQuery.getResultList().size();
     }
 

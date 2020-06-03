@@ -87,12 +87,17 @@ public class TagJpaDaoImpl implements TagDao {
 
 
     @Override
-    public Collection<Tag> getAllTags(int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM tags ORDER BY name ASC");
+    public Collection<Tag> getAllTags(boolean showEmpty, int page, int pageSize) {
+        Query nativeQuery;
+        if (showEmpty){
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM tags ORDER BY name ASC");
+        } else {
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT st.tag_id, t.name FROM snippet_tags AS st INNER JOIN tags AS t ON st.tag_id = t.id ORDER BY t.name ASC");
+        }
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
-        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
-                .stream().map(i -> i.longValue()).collect(Collectors.toList());
+        List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())
+                .stream().map(i -> ((Integer) i[0]).longValue()).collect(Collectors.toList());
         if (!filteredIds.isEmpty()){
             final TypedQuery<Tag> query = this.em.createQuery("from Tag where id IN :filteredIds ORDER BY name ASC", Tag.class);
             query.setParameter("filteredIds", filteredIds);
@@ -107,15 +112,26 @@ public class TagJpaDaoImpl implements TagDao {
     }
 
     @Override
-    public int getAllTagsCountByName(String name) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM tags WHERE LOWER(name) LIKE LOWER(:term)")
-                .setParameter("term", "%"+name+"%");
+    public int getAllTagsCountByName(String name, boolean showEmpty) {
+        Query nativeQuery;
+        if (showEmpty){
+            nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM tags WHERE LOWER(name) LIKE LOWER(:term)")
+                    .setParameter("term", "%"+name+"%");
+        } else {
+            nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT st.tag_id) FROM snippet_tags AS st INNER JOIN tags AS t ON st.tag_id = t.id WHERE LOWER(t.name) LIKE LOWER(:term)")
+                    .setParameter("term", "%"+name+"%");
+        }
         return ((Number) nativeQuery.getSingleResult()).intValue();
     }
 
     @Override
-    public int getAllTagsCount() {
-        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM tags");
+    public int getAllTagsCount(boolean showEmpty) {
+        Query nativeQuery;
+        if (showEmpty){
+            nativeQuery = this.em.createNativeQuery("SELECT id FROM tags");
+        } else {
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT tag_id FROM snippet_tags");
+        }
         return nativeQuery.getResultList().size();
     }
 
@@ -127,13 +143,20 @@ public class TagJpaDaoImpl implements TagDao {
     }
 
     @Override
-    public Collection<Tag> findTagsByName(String name, int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM tags WHERE LOWER(name) LIKE LOWER(:term) ORDER BY name ASC");
+    public Collection<Tag> findTagsByName(String name, boolean showEmpty, int page, int pageSize) {
+        Query nativeQuery;
+        if (showEmpty){
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM tags WHERE LOWER(name) LIKE LOWER(:term) ORDER BY name ASC")
+                    .setParameter("term", "%"+name+"%");
+        } else {
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT st.tag_id, t.name FROM snippet_tags AS st INNER JOIN tags AS t ON st.tag_id = t.id WHERE LOWER(t.name) LIKE LOWER(:term) ORDER BY t.name ASC")
+                    .setParameter("term", "%"+name+"%");
+        }
         nativeQuery.setParameter("term", "%"+name+"%");
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
-        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
-                .stream().map(i -> i.longValue()).collect(Collectors.toList());
+        List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())
+                .stream().map(i -> ((Integer) i[0]).longValue()).collect(Collectors.toList());
         if (!filteredIds.isEmpty()){
             final TypedQuery<Tag> query = this.em.createQuery("from Tag where id IN :filteredIds ORDER BY name ASC", Tag.class);
             query.setParameter("filteredIds", filteredIds);

@@ -92,7 +92,7 @@ public class TagDaoImpl implements TagDao {
 
 
     @Override
-    public Collection<Tag> getAllTags(int page, int pageSize) {
+    public Collection<Tag> getAllTags(boolean showEmpty, int page, int pageSize) {
         return jdbcTemplate.query("SELECT * FROM tags ORDER BY id LIMIT ? OFFSET ?", ROW_MAPPER, pageSize, pageSize * (page - 1));
     }
 
@@ -102,12 +102,12 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public int getAllTagsCountByName(String name) {
-        return this.jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT id) FROM tags WHERE LOWER(name) LIKE LOWER(?)", new Object[]{"%" + name + "%"}, Integer.class);
+    public int getAllTagsCountByName(String name, boolean showEmpty) {
+        return 0;
     }
 
     @Override
-    public int getAllTagsCount() {
+    public int getAllTagsCount(boolean showEmpty) {
         return this.jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT id) FROM tags", Integer.class);
     }
 
@@ -117,7 +117,8 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public Collection<Tag> findTagsByName(String name, int page, int pageSize) {
-        return this.jdbcTemplate.query("SELECT * FROM tags AS t WHERE LOWER(t.name) LIKE LOWER(?) ORDER BY t.id LIMIT ? OFFSET ?", ROW_MAPPER, "%" + name + "%", pageSize, pageSize * (page - 1));
+    public Collection<Tag> findTagsByName(String name, boolean showEmpty, int page, int pageSize) {
+        return null;
     }
+
 }

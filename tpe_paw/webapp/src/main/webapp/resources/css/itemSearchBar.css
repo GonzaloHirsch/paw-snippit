@@ -58,3 +58,21 @@
     border-radius: 0px 5px 5px 0px;
     transition: 0.3s;
 }
+
+.side-button{
+    display: flex;
+    border: 2px #5E35B1 solid;
+    align-items: center;
+    height: 40px;
+    text-decoration: none !important;
+    font-size: 17px;
+    border-radius: 5px;
+    padding: 6px;
+    color: #5E35B1;
+}
+
+.side-button:hover {
+    background-color: rgba(163, 163, 163, 0.56);
+    color: initial;
+    text-decoration: none;
+}

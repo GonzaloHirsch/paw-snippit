@@ -28,23 +28,23 @@ public class LanguageServiceImpl implements LanguageService {
     }
 
     @Override
-    public Collection<Language> getAllLanguages(int page, int pageSize) {
-        return this.languageDao.getAllLanguages(page, pageSize);
+    public Collection<Language> getAllLanguages(boolean showEmpty, int page, int pageSize) {
+        return this.languageDao.getAllLanguages(showEmpty, page, pageSize);
     }
 
     @Override
-    public Collection<Language> findAllLanguagesByName(String name, int page, int pageSize) {
-        return this.languageDao.findAllLanguagesByName(name, page, pageSize);
+    public Collection<Language> findAllLanguagesByName(String name, boolean showEmpty, int page, int pageSize) {
+        return this.languageDao.findAllLanguagesByName(name, showEmpty, page, pageSize);
     }
 
     @Override
-    public int getAllLanguagesCountByName(String name) {
-        return this.languageDao.getAllLanguagesCountByName(name);
+    public int getAllLanguagesCountByName(String name, boolean showEmpty) {
+        return this.languageDao.getAllLanguagesCountByName(name, showEmpty);
     }
 
     @Override
-    public int getAllLanguagesCount() {
-        return this.languageDao.getAllLanguagesCount();
+    public int getAllLanguagesCount(boolean showEmpty) {
+        return this.languageDao.getAllLanguagesCount(showEmpty);
     }
 
     @Override

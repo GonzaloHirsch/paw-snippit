@@ -20,8 +20,11 @@ public class FollowingJpaDaoImpl implements FollowingDao {
 
     @Override
     public Collection<Tag> getFollowedTagsForUser(long userId) {
-        Optional<User> user = Optional.ofNullable(this.em.find(User.class, userId));
+        Optional<User> user = em.createQuery("SELECT u from User u JOIN FETCH u.followedTags", User.class).getResultList().stream().findFirst();
         return user.map(User::getFollowedTags).orElse(Collections.emptyList());
+
+//        Optional<User> user = Optional.ofNullable(this.em.find(User.class, userId));
+//        return user.map(User::getFollowedTags).orElse(Collections.emptyList());
     }
 
     @Override

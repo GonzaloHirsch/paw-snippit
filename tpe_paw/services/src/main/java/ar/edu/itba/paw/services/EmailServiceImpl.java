@@ -37,10 +37,8 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(body, true);
             helper.setFrom(messageSource.getMessage("app.name", null, locale));
             emailSender.send(message);
-        } catch (MailException e) {
-            throw new RuntimeException("[MAIL EXCEPTION] ");
-        } catch (MessagingException e) {
-            throw new RuntimeException("[MESSAGING EXCEPTION] ");
+        } catch (MailException | MessagingException e) {
+            throw new RuntimeException("[MAIL EXCEPTION] [Message:  " + e.getMessage() + "]");
         }
     }
 

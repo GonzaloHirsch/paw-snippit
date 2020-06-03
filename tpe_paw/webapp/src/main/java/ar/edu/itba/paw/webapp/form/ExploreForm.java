@@ -43,7 +43,6 @@ public class ExploreForm {
     private String sort;
     private String field;
     private boolean includeFlagged;
-    private boolean includeDeleted;
 
     public boolean getIncludeFlagged() {
         return includeFlagged;
@@ -149,11 +148,4 @@ public class ExploreForm {
         this.maxVotes = maxVotes;
     }
 
-    public boolean isIncludeDeleted() {
-        return includeDeleted;
-    }
-
-    public void setIncludeDeleted(boolean includeDeleted) {
-        this.includeDeleted = includeDeleted;
-    }
 }

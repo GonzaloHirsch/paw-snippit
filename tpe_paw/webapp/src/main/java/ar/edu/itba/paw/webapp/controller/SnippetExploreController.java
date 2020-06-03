@@ -86,15 +86,14 @@ public class SnippetExploreController {
                 exploreForm.getMinVotes(), exploreForm.getMaxVotes(),
                 exploreForm.getLanguage() == -1 ? null : exploreForm.getLanguage(), exploreForm.getTag() == -1 ? null : exploreForm.getTag(),
                 exploreForm.getTitle(), exploreForm.getUsername(),
-                this.ordersMap.get(exploreForm.getSort()), this.typesMap.get(exploreForm.getField()), exploreForm.getIncludeFlagged(), exploreForm.isIncludeDeleted(), page, SNIPPET_PAGE_SIZE);
+                this.ordersMap.get(exploreForm.getSort()), this.typesMap.get(exploreForm.getField()), exploreForm.getIncludeFlagged(), page, SNIPPET_PAGE_SIZE);
         int snippetCount =  this.snippetService.getSnippetByDeepCriteriaCount(
                 minDate, maxDate,
                 exploreForm.getMinRep(), exploreForm.getMaxRep(),
                 exploreForm.getMinVotes(), exploreForm.getMaxVotes(),
                 exploreForm.getLanguage() == -1 ? null : exploreForm.getLanguage(), exploreForm.getTag() == -1 ? null : exploreForm.getTag(),
                 exploreForm.getTitle(), exploreForm.getUsername(),
-                exploreForm.getIncludeFlagged(),
-                exploreForm.isIncludeDeleted());
+                exploreForm.getIncludeFlagged());
         this.addModelAttributesHelper(mav, snippetCount, page, snippets, "explore/");
         return mav;
     }

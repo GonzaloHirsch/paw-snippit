@@ -26,7 +26,7 @@ public interface SnippetService {
     boolean deleteOrRestoreSnippet(final Snippet snippet, final long userId, boolean delete);
     void updateFlagged(final Snippet snippet, final User owner, boolean isFlagged, final String baseUrl);
     int getNewSnippetsForTagsCount(Instant dateMin, Collection<Tag> tags, long userId);
-    Collection<Snippet> findSnippetByDeepCriteria(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, SnippetDao.Orders order, SnippetDao.Types type, Boolean includeFlagged, Boolean includeDeleted, int page, int pageSize);
+    Collection<Snippet> findSnippetByDeepCriteria(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, SnippetDao.Orders order, SnippetDao.Types type, Boolean includeFlagged, int page, int pageSize);
     int getAllSnippetsCount();
     int getAllFavoriteSnippetsCount(final long userId);
     int getAllFollowingSnippetsCount(final long userId);
@@ -36,6 +36,6 @@ public interface SnippetService {
     int getAllSnippetsByTagCount(final long tagId);
     int getAllSnippetsByLanguageCount(final long langId);
     int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId, Long resourceId);
-    int getSnippetByDeepCriteriaCount(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, Boolean includeFlagged, Boolean includeDeleted);
+    int getSnippetByDeepCriteriaCount(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, Boolean includeFlagged);
     Long createSnippet(User owner, String title, String description, String code, Timestamp dateCreated, Long language, Collection<String> tags);
 }

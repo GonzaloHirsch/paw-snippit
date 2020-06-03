@@ -96,7 +96,7 @@ public class UserJpaDaoImpl implements UserDao {
     //TODO: Check for inconsistency with boolean value of verified
     @Override
     public Collection<User> getAllVerifiedUsers() {
-        final TypedQuery<User> query = this.em.createQuery("from User as u where u.verfied = true", User.class);
+        final TypedQuery<User> query = this.em.createQuery("from User as u where u.verified = true", User.class);
         return query.getResultList();
     }
 

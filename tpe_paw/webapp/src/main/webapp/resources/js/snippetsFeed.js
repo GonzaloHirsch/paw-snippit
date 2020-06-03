@@ -7,12 +7,14 @@ function resizeCard(card){
     // Code and description html blocks
     let codeBlock = card.querySelector('.card-snippet-content').querySelector('.snippet-code-container').querySelector('.card-snippet-block');
     let descrBlock = card.querySelector('.card-snippet-content').querySelector('.card-snippet-block');
+
     // Height of the card
     let heightToUse = card.querySelector('.card-snippet-content').getBoundingClientRect().height;
+
     // Accounting for Safari not working properly and breaking all grids
     // Height is approximated, giving usually an overestimated size, but no text is cut
     if (heightToUse < 100){
-        addFadeOutTo(codeBlock, codeBlock.querySelector(".code-element").getBoundingClientRect().height, '.card-snippet-fade-out-code', '#DCDCDC');
+        addFadeOutTo(codeBlock, codeBlock.querySelector(".code-element").querySelector("pre").querySelector("code").getBoundingClientRect().height, '.card-snippet-fade-out-code', '#DCDCDC');
         addFadeOutTo(descrBlock, descrBlock.querySelector(".snippet-text").getBoundingClientRect().height, '.card-snippet-fade-out-descr', '#FFFFFF');
     } else {
         addFadeOutTo(codeBlock, codeBlock.getBoundingClientRect().height, '.card-snippet-fade-out-code', '#DCDCDC');
@@ -47,12 +49,13 @@ function addFadeOutTo(block, clientH, cssClass, color) {
     let maxBlockHeight = 200;
     let clientRecH = block.getBoundingClientRect().height;
     // Accounts for Safari not working by checking the size of the obtained rectangle
+
     if (clientRecH < 40){
         if (clientH >= (maxBlockHeight - 2)) {
             block.querySelector(cssClass).classList.remove('hidden');
         }
     } else {
-        if (clientRecH >= (maxBlockHeight - 2)) {
+        if (clientRecH >= (maxBlockHeight - 10)) {
             block.querySelector(cssClass).classList.remove('hidden');
         }
     }

@@ -53,7 +53,7 @@
 
         <div class="flex-column snippet-code-container border-radius">
             <div class="card-snippet-block">
-                <pre><code class="code-element">${code}</code></pre>
+                <pre><code class="code-element ${snippet.language.name}">${code}</code></pre>
                 <p class="card-snippet-fade-out card-snippet-fade-out-code hidden"></p>
             </div>
         </div>

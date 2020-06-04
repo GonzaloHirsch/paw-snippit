@@ -64,7 +64,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public Collection<Snippet> getAllUpVotedSnippets(long userId, int page, int pageSize) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT vf.snippet_id FROM votes_for AS vf WHERE vf.user_id = :id AND vf.is_positive = TRUE ORDER BY vf.snippet_id DESC");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT vf.snippet_id FROM votes_for AS vf LEFT OUTER JOIN snippets AS sn ON vf.snippet_id = sn.id WHERE vf.user_id = :id AND vf.is_positive = TRUE AND sn.deleted = FALSE ORDER BY vf.snippet_id DESC");
         nativeQuery.setParameter("id", userId);
         return this.getSnippetsByPage(page, pageSize, nativeQuery);
     }
@@ -189,7 +189,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public int getAllUpvotedSnippetsCount(long userId) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT vf.snippet_id FROM votes_for AS vf WHERE vf.user_id = :id AND vf.is_positive = TRUE");
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT vf.snippet_id FROM votes_for AS vf LEFT OUTER JOIN snippets AS sn ON vf.snippet_id = sn.id WHERE vf.user_id = :id AND vf.is_positive = TRUE AND sn.deleted = FALSE ORDER BY vf.snippet_id DESC");
         nativeQuery.setParameter("id", userId);
         return nativeQuery.getResultList().size();
     }
@@ -277,6 +277,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
             if (includeFlagged != null) {
                 queryBuilder = queryBuilder.addIncludeFlagged(includeFlagged);
             }
+            queryBuilder = queryBuilder.removeDeleted();
             return type != null && order != null ? queryBuilder.setOrder(type, order).build() : queryBuilder.build();
         }
     }

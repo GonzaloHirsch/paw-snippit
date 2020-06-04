@@ -7,6 +7,7 @@ public final class Constants {
     public static final int MAX_SEARCH_QUERY_SIZE = 1024;
 
     public static final String REFERER = "Referer";
+    public static final String HOME = "/";
 
     private Constants(){}
 }

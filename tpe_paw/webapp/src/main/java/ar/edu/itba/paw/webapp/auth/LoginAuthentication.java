@@ -33,8 +33,10 @@ public class LoginAuthentication {
 
     public void setLoginRedirect(HttpServletRequest request) {
         String referrer = request.getHeader(Constants.REFERER);
-        if (!referrer.contains("signup")) {
+        if (referrer != null && !referrer.contains("signup")) {
             request.getSession().setAttribute(REDIRECT_ATTRIBUTE, referrer);
+        } else {
+            request.getSession().setAttribute(REDIRECT_ATTRIBUTE, Constants.HOME);
         }
     }
 

@@ -234,6 +234,12 @@ public class SnippetDeepSearchQuery {
             return this;
         }
 
+        public Builder removeDeleted(){
+            this.checkIfFirst();
+            this.query.append("s.flagged = FALSE");
+            return this;
+        }
+
         /**
          * Adds an order to the query
          * @param type Type of order, field by which the order is done

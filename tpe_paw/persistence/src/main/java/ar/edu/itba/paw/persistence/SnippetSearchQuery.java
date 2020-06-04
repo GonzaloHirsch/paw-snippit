@@ -36,7 +36,6 @@ public class SnippetSearchQuery {
      */
     public static class Builder {
         private final String ALL_FIELDS = "DISTINCT sn.id, sn.title, sn.code, sn.user_id, sn.username, sn.language";
-        private final String IGNORE_DELETED = "AND s.deleted = FALSE";
 
         /**
          * Map used to map types of search to the corresponding queries they translate to
@@ -59,7 +58,7 @@ public class SnippetSearchQuery {
             put(SnippetDao.Locations.TAGS, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id WHERE st.tag_id = :resourceId AND sn.deleted = FALSE)");
             put(SnippetDao.Locations.FAVORITES, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn INNER JOIN favorites AS fav ON fav.snippet_id = sn.id WHERE fav.user_id = :userId)");
             put(SnippetDao.Locations.FOLLOWING, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id INNER JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = :userId AND sn.deleted = FALSE)");
-            put(SnippetDao.Locations.UPVOTED, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn INNER JOIN votes_for AS vf ON vf.snippet_id = sn.id WHERE vf.user_id = :userId AND vf.is_positive = TRUE)");
+            put(SnippetDao.Locations.UPVOTED, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn INNER JOIN votes_for AS vf ON vf.snippet_id = sn.id WHERE vf.user_id = :userId AND vf.is_positive = TRUE AND sn.deleted = FALSE)");
             put(SnippetDao.Locations.FLAGGED, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn WHERE sn.flagged = TRUE)");
         }};
         /**

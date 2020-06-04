@@ -142,7 +142,9 @@ public class TagsController {
             LOGGER.warn("Inside the follow form of tag {} without a logged in user", tagId);
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.follow", null, LocaleContextHolder.getLocale()));
         }
-        return new ModelAndView("redirect:" + request.getHeader(Constants.REFERER));
+        String referer = request.getHeader(Constants.REFERER);
+        String redirect = referer != null ? referer : ("/tags/" + tagId);
+        return new ModelAndView("redirect:" + redirect);
     }
     
     @RequestMapping(value = "/tags/{tagId}/delete",  method= RequestMethod.POST)

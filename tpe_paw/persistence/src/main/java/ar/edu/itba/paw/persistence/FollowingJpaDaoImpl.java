@@ -23,6 +23,7 @@ public class FollowingJpaDaoImpl implements FollowingDao {
         Optional<User> user = em.createQuery("SELECT u from User u JOIN FETCH u.followedTags", User.class).getResultList().stream().findFirst();
         return user.map(User::getFollowedTags).orElse(Collections.emptyList());
 
+        //TODO Remove if sure
 //        Optional<User> user = Optional.ofNullable(this.em.find(User.class, userId));
 //        return user.map(User::getFollowedTags).orElse(Collections.emptyList());
     }
@@ -32,7 +33,7 @@ public class FollowingJpaDaoImpl implements FollowingDao {
         Optional<User> user = Optional.ofNullable(this.em.find(User.class, userId));
         Optional<Tag> tag = Optional.ofNullable(this.em.find(Tag.class, tagId));
 
-        if (user.isPresent() && tag.isPresent()) {
+        if (user.isPresent() && tag.isPresent() && !user.get().getFollowedTags().contains(tag.get())) {
             user.get().followTag(tag.get());
             this.em.persist(user.get());
         }
@@ -43,7 +44,7 @@ public class FollowingJpaDaoImpl implements FollowingDao {
         Optional<User> user = Optional.ofNullable(this.em.find(User.class, userId));
         Optional<Tag> tag = Optional.ofNullable(this.em.find(Tag.class, tagId));
 
-        if (user.isPresent() && tag.isPresent()) {
+        if (user.isPresent() && tag.isPresent() && user.get().getFollowedTags().contains(tag.get())) {
             user.get().unfollow(tag.get());
             this.em.persist(user.get());
         }

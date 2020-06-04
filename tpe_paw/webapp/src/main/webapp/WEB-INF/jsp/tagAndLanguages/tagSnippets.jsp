@@ -31,9 +31,8 @@
                 <div class="fw-100">
                     <spring:message code="tagSnippets.title" arguments="${tag.name.toUpperCase()}"/>
                 </div>
+                <c:import url="/WEB-INF/jsp/tagAndLanguages/tagFollowForm.jsp"/>
                 <c:if test="${currentUser != null}">
-                    <c:import url="/WEB-INF/jsp/tagAndLanguages/tagFollowForm.jsp"/>
-
                     <c:if test="${userRoles.contains('ADMIN')}">
                         <form:form action="${tagDeleteUrl}" class="form-container" method="post" modelAttribute="deleteForm">
                             <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#tag-snippet">

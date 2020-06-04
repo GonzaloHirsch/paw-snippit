@@ -10,19 +10,19 @@
     font-size: 14px;
     border-radius: 5px;
     padding: 5px;
-    color: #5E35B1;
+    color: #5E35B1 !important;
 }
 
 .navigation-page-selected {
-    background-color: rgba(163, 163, 163, 0.56);
+    background-color: #CFCFCF;
 }
 
 .navigation-page:hover {
-    background-color: rgba(163, 163, 163, 0.56);
+    background-color: #CFCFCF;
     color: initial;
     text-decoration: none;
 }
 
 .navigation-page-selected:hover {
-    background-color: rgba(163, 163, 163, 0.56);
+    background-color: #CFCFCF;
 }

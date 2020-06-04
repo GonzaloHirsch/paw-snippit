@@ -34,10 +34,10 @@
             </c:url>
             <c:choose>
                 <c:when test="${showEmpty == true}">
-                    <a class="side-button transition" href="${nextUrl}">${hide_hint}</a>
+                    <a class="flex-center side-button no-text-decoration transition" href="${nextUrl}">${hide_hint}</a>
                 </c:when>
                 <c:otherwise>
-                    <a class="side-button transition" href="${nextUrl}">${show_hint}</a>
+                    <a class="flex-center side-button no-text-decoration transition" href="${nextUrl}">${show_hint}</a>
                 </c:otherwise>
             </c:choose>
         </div>

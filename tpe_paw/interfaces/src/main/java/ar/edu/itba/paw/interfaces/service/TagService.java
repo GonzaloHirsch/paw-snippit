@@ -7,20 +7,36 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TagService {
+
     Collection<Tag> getAllTags(boolean showEmpty, int page, int pageSize);
+
     Collection<Tag> getAllTags();
+
     int getAllTagsCountByName(String name, boolean showEmpty);
+
     int getAllTagsCount(boolean showEmpty);
+
     Collection<Tag> findTagsByName(String name, boolean showEmpty, int page, int pageSize);
+
     Collection<Tag> getFollowedTagsForUser(long userId);
+
     void followTag(long userId, long tagId);
+
     void unfollowTag(long userId, long tagId);
+
     Optional<Tag> findTagById(long tagId);
+
     Collection<Tag> addTagsToSnippet(Long snippetId, Collection<String> tagList);
+
     void addTags(List<String> tags);
+
     boolean tagExists(final String tag);
+
     boolean tagExists(final long tag);
+
     void removeTag(final long tagId);
+
     void updateFollowing(long userId, long tagId, boolean followed);
+
     boolean userFollowsTag(long userId, long tagId);
 }

@@ -118,7 +118,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public boolean userFollowsTag(long userId, long tagId) {
-        return followingDao.userFollowsTag(userId, tagId);
+        return this.followingDao.userFollowsTag(userId, tagId);
     }
 
 }

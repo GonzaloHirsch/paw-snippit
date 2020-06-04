@@ -92,7 +92,7 @@ public class TagJpaDaoImpl implements TagDao {
         if (showEmpty){
             nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM tags ORDER BY name ASC");
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT st.tag_id, t.name FROM snippet_tags AS st INNER JOIN tags AS t ON st.tag_id = t.id ORDER BY t.name ASC");
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE ORDER BY t.name ASC");
         }
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
@@ -118,7 +118,7 @@ public class TagJpaDaoImpl implements TagDao {
             nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM tags WHERE LOWER(name) LIKE LOWER(:term)")
                     .setParameter("term", "%"+name+"%");
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT st.tag_id) FROM snippet_tags AS st INNER JOIN tags AS t ON st.tag_id = t.id WHERE LOWER(t.name) LIKE LOWER(:term)")
+            nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term)")
                     .setParameter("term", "%"+name+"%");
         }
         return ((Number) nativeQuery.getSingleResult()).intValue();
@@ -130,7 +130,7 @@ public class TagJpaDaoImpl implements TagDao {
         if (showEmpty){
             nativeQuery = this.em.createNativeQuery("SELECT id FROM tags");
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT tag_id FROM snippet_tags");
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT tag_id FROM snippet_tags AS st INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE");
         }
         return nativeQuery.getResultList().size();
     }
@@ -149,7 +149,7 @@ public class TagJpaDaoImpl implements TagDao {
             nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM tags WHERE LOWER(name) LIKE LOWER(:term) ORDER BY name ASC")
                     .setParameter("term", "%"+name+"%");
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT st.tag_id, t.name FROM snippet_tags AS st INNER JOIN tags AS t ON st.tag_id = t.id WHERE LOWER(t.name) LIKE LOWER(:term) ORDER BY t.name ASC")
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term) ORDER BY t.name ASC")
                     .setParameter("term", "%"+name+"%");
         }
         nativeQuery.setParameter("term", "%"+name+"%");
@@ -164,4 +164,5 @@ public class TagJpaDaoImpl implements TagDao {
         }
         return Collections.emptyList();
     }
+
 }

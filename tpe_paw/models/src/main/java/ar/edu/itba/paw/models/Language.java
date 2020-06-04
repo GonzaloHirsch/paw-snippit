@@ -40,6 +40,10 @@ public class Language {
         return snippetsUsing;
     }
 
+    public boolean snippetsUsingIsEmpty() {
+        return this.getSnippetsUsing().stream().allMatch(Snippet::isDeleted);
+    }
+
     @Override
     public boolean equals(Object o) {
 

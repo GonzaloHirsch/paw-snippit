@@ -13,47 +13,21 @@
     <c:set var="snippetId" value="${requestScope.snippetId}"/>
     <c:set var="snippet" value="${requestScope.snippet}"/>
     <form:form action="${snippetId}/delete" class="form-container flex-center" method="post" modelAttribute="deleteForm">
-        <c:choose>
-            <c:when test="${deleteForm.delete}">
-                <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#delete-snippet">
-                    <i class="delete-snippet-icon snippet-icon material-icons ">undo</i>
-                </div>
-            </c:when>
-            <c:otherwise>
-                <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#delete-snippet">
-                    <i class="delete-snippet-icon snippet-icon material-icons ">delete</i>
-                </div>
-            </c:otherwise>
-        </c:choose>
-
-        <!-- Modal -->
-        <div class="modal fade" id="delete-snippet" tabindex="-1" role="dialog" aria-labelledby="deletionModal" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title font" id="deletionModal"><spring:message code="modal.delete.title"/></h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+        <form:checkbox class="hidden" path="delete" value="true" id="snippet-delete-button" onclick="updateForm(this)"/>
+        <label for="snippet-delete-button" class="no-margin">
+            <c:choose>
+                <c:when test="${deleteForm.delete}">
+                    <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#delete-snippet">
+                        <i class="delete-snippet-icon snippet-icon material-icons ">restore_from_trash</i>
                     </div>
-                    <div class="modal-body modal-body-text fw-100">
-                        <spring:message code="modal.delete.snippet.text" arguments="${snippet.title}"/>
+                </c:when>
+                <c:otherwise>
+                    <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#delete-snippet">
+                        <i class="delete-snippet-icon snippet-icon material-icons ">delete</i>
                     </div>
-                    <div class="modal-footer flex-end">
-                        <div class="flex-center">
-                            <div type="button" class="btn btn-secondary modal-close-button" data-dismiss="modal"><spring:message code="modal.cancel"/></div>
-                            <form:checkbox class="hidden" path="delete" value="true" id="snippet-delete-button" onclick="updateForm(this)"/>
-                            <label for="snippet-delete-button" class="btn btn-primary purple-button  no-margin">
-<%--                                <div typeof="button">--%>
-                                    <spring:message code="modal.delete.confirm"/>
-<%--                                </div>--%>
-                            </label>
-<%--                            <button type="button" class="btn btn-primary purple-button no-margin" onclick="updateForm(this)"><spring:message code="modal.delete.confirm" /></button>--%>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                </c:otherwise>
+            </c:choose>
+        </label>
     </form:form>
 </div>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

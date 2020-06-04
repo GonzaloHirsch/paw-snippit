@@ -9,7 +9,6 @@
         <link href="<c:url value='/resources/css/itemSearchBar.css'/>" rel="stylesheet"/>
     </head>
     <body>
-        <c:set var="showEmpty" value="${requestScope.showEmpty}"/>
         <c:set var="itemSearchContext" value="${requestScope.itemSearchContext}"/>
         <c:url var="itemSearchUrl" value="/${itemSearchContext}search"/>
         <c:set var="search_hint" value="${requestScope.search_hint}"/>
@@ -17,29 +16,28 @@
         <c:set var="show_hint" value="${requestScope.show_hint}"/>
         <div class="flex-row flex-wrap flex-center flex-grow">
             <form:form modelAttribute="itemSearchForm" method="get" action="${itemSearchUrl}"
-                   class="flex-row flex-center flex-wrap item-search-container">
-                <div class="flex-row flex-grow fw-100">
+                   class="flex-row flex-center flex-wrap">
+                <div class="flex-row flex-grow fw-100 item-search-container">
                     <form:input path="name" type="text" id="item-search-bar" class="item-search-input flex-grow fw-100"
                         placeholder="${search_hint}"/>
                     <button type="submit"><span class="material-icons item-search-icon">search</span></button>
                 </div>
+                <form:checkbox class="hidden" id="visibility-button" path="showEmpty" value="true" onclick="updateForm(this)"/>
+                <label class="no-margin visibility-label" for="visibility-button">
+                <c:choose>
+                    <c:when test="${itemSearchForm.showEmpty}">
+                        <div class="flex-center side-button no-text-decoration transition">
+                        ${hide_hint}
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="flex-center side-button no-text-decoration transition">
+                        ${show_hint}
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+                </label>
             </form:form>
-            <c:url var="nextUrl" value="">
-            <c:forEach items="${param}" var="entry">
-                <c:if test="${entry.key != 'showEmpty' && entry.key != 'page'}">
-                    <c:param name="${entry.key}" value="${entry.value}"/>
-                </c:if>
-            </c:forEach>
-            <c:param name="showEmpty" value="${!showEmpty}"/>
-            </c:url>
-            <c:choose>
-                <c:when test="${showEmpty == true}">
-                    <a class="flex-center side-button no-text-decoration transition" href="${nextUrl}">${hide_hint}</a>
-                </c:when>
-                <c:otherwise>
-                    <a class="flex-center side-button no-text-decoration transition" href="${nextUrl}">${show_hint}</a>
-                </c:otherwise>
-            </c:choose>
         </div>
     </body>
 </html>

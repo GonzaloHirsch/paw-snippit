@@ -45,29 +45,27 @@ public class LanguagesController {
     private static final Logger LOGGER = LoggerFactory.getLogger(LanguagesController.class);
 
     @RequestMapping("/languages")
-    public ModelAndView showAllLanguages(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page, final @RequestParam(value = "showEmpty", required = false, defaultValue = "true") boolean showEmpty) {
+    public ModelAndView showAllLanguages(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         ModelAndView mav = new ModelAndView("tagAndLanguages/languages");
-        Collection<Language> allLanguages = this.languageService.getAllLanguages(showEmpty, page, LANGUAGE_PAGE_SIZE);
-        int languageCount = this.languageService.getAllLanguagesCount(showEmpty);
+        Collection<Language> allLanguages = this.languageService.getAllLanguages(searchForm.isShowEmpty(), page, LANGUAGE_PAGE_SIZE);
+        int languageCount = this.languageService.getAllLanguagesCount(searchForm.isShowEmpty());
         mav.addObject("pages", (languageCount/ LANGUAGE_PAGE_SIZE) + (languageCount % LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("searchContext","languages/");
         mav.addObject("languages", allLanguages);
-        mav.addObject("showEmpty", showEmpty);
         mav.addObject("itemSearchContext", "languages/");
         return mav;
     }
 
     @RequestMapping("/languages/search")
-    public ModelAndView searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page, final @RequestParam(value = "showEmpty", required = false, defaultValue = "true") boolean showEmpty){
+    public ModelAndView searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         final ModelAndView mav = new ModelAndView("tagAndLanguages/languages");
-        Collection<Language> allLanguages = this.languageService.findAllLanguagesByName(searchForm.getName(), showEmpty, page, LANGUAGE_PAGE_SIZE);
-        int languageCount = this.languageService.getAllLanguagesCountByName(searchForm.getName(), showEmpty);
+        Collection<Language> allLanguages = this.languageService.findAllLanguagesByName(searchForm.getName(), searchForm.isShowEmpty(), page, LANGUAGE_PAGE_SIZE);
+        int languageCount = this.languageService.getAllLanguagesCountByName(searchForm.getName(), searchForm.isShowEmpty());
         mav.addObject("pages", (languageCount/ LANGUAGE_PAGE_SIZE) + (languageCount % LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("searchContext","languages/");
         mav.addObject("languages", allLanguages);
-        mav.addObject("showEmpty", showEmpty);
         mav.addObject("itemSearchContext", "languages/");
         return mav;
     }

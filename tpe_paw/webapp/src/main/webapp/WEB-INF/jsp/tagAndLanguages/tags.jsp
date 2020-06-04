@@ -18,7 +18,6 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     </head>
     <body>
-    <c:set var="showEmpty" value="${requestScope.showEmpty}"/>
         <div class="wrapper">
         <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
             <div class="main-content">
@@ -34,7 +33,6 @@
                     <c:set var="search_hint" value="${search_hint}" scope="request"/>
                     <c:set var="hide_hint" value="${hide_hint}" scope="request"/>
                     <c:set var="show_hint" value="${show_hint}" scope="request"/>
-                    <c:set var="showEmpty" value="${showEmpty}" scope="request"/>
                     <c:import url="/WEB-INF/jsp/navigation/itemNavigationBar.jsp"/>
                 </div>
                 <c:choose>

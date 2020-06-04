@@ -75,3 +75,7 @@
     color: initial;
     text-decoration: none;
 }
+
+.visibility-label {
+    cursor: pointer;
+}

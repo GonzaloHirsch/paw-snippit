@@ -56,19 +56,27 @@ public class SnippetDeepSearchQuery {
         /**
          * Map used to translate the given enum for order types into their query equivalent
          */
-        private final Map<SnippetDao.Orders, String> ordersMap = new HashMap<SnippetDao.Orders, String>(){{
-            put(SnippetDao.Orders.ASC, "ASC");
-            put(SnippetDao.Orders.DESC, "DESC");
-        }};
+
+        private final static Map<SnippetDao.Orders, String> ordersMap;
+        static {
+            final Map<SnippetDao.Orders, String> orders = new HashMap<>();
+            orders.put(SnippetDao.Orders.ASC, "ASC");
+            orders.put(SnippetDao.Orders.DESC, "DESC");
+            ordersMap = Collections.unmodifiableMap(orders);
+        }
         /**
          * Map used to translate the types over which the order is done into their SQL equivalents
          */
-        private final Map<SnippetDao.Types, String> orderTypesMap = new HashMap<SnippetDao.Types, String>(){{
-            put(SnippetDao.Types.REPUTATION, " s.reputation ");
-            put(SnippetDao.Types.DATE, " s.date_created ");
-            put(SnippetDao.Types.TITLE, " s.title ");
-            put(SnippetDao.Types.VOTES, " s.votes ");
-        }};
+
+        private final static Map<SnippetDao.Types, String> orderTypesMap;
+        static {
+            final Map<SnippetDao.Types, String> orderType = new HashMap<>();
+            orderType.put(SnippetDao.Types.REPUTATION, " s.reputation ");
+            orderType.put(SnippetDao.Types.DATE, " s.date_created ");
+            orderType.put(SnippetDao.Types.TITLE, " s.title ");
+            orderType.put(SnippetDao.Types.VOTES, " s.votes ");
+            orderTypesMap = Collections.unmodifiableMap(orderType);
+        }
 
         public Builder() {
             this.query.append("SELECT DISTINCT s.id, s.reputation, s.title, s.date_created, s.votes FROM complete_snippets AS s LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = s.id");
@@ -250,15 +258,15 @@ public class SnippetDeepSearchQuery {
             if (order != null && type != null){
                 if (!order.equals(SnippetDao.Orders.NO)){
                     this.query.append(" ORDER BY ");
-                    if (this.orderTypesMap.containsKey(type)){
-                        this.query.append(this.orderTypesMap.get(type));
+                    if (orderTypesMap.containsKey(type)){
+                        this.query.append(orderTypesMap.get(type));
                     } else {
-                        this.query.append(this.orderTypesMap.get(SnippetDao.Types.TITLE));
+                        this.query.append(orderTypesMap.get(SnippetDao.Types.TITLE));
                     }
-                    if (this.ordersMap.containsKey(order)){
-                        this.query.append(this.ordersMap.get(order));
+                    if (ordersMap.containsKey(order)){
+                        this.query.append(ordersMap.get(order));
                     } else {
-                        this.query.append(this.ordersMap.get(SnippetDao.Orders.ASC));
+                        this.query.append(ordersMap.get(SnippetDao.Orders.ASC));
                     }
                 }
             }

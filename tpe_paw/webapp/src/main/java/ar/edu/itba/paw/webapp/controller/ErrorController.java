@@ -34,12 +34,15 @@ public class ErrorController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorController.class);
 
-    private final Set<Integer> supportedErrorPages = new HashSet<Integer>(){{
-        add(404);
-        add(413);
-        add(414);
-        add(500);
-    }};
+    private final static Set<Integer> supportedErrorPages;
+    static {
+        final Set<Integer> errorSet = new HashSet<Integer>();
+        errorSet.add(404);
+        errorSet.add(413);
+        errorSet.add(414);
+        errorSet.add(500);
+        supportedErrorPages = Collections.unmodifiableSet(errorSet);
+    }
 
     @RequestMapping("/error")
     public ModelAndView customError(HttpServletRequest request, @ModelAttribute("searchForm") SearchForm searchForm) {
@@ -48,7 +51,7 @@ public class ErrorController {
         String message = messageSource.getMessage("error.unknown",null, LocaleContextHolder.getLocale());
         String errorName = messageSource.getMessage("error.unknown.name",null, LocaleContextHolder.getLocale());
 
-        if (this.supportedErrorPages.contains(errorCode)){
+        if (supportedErrorPages.contains(errorCode)){
             message =  messageSource.getMessage("error." + String.valueOf(errorCode),null, LocaleContextHolder.getLocale());
             errorName = messageSource.getMessage("error." + String.valueOf(errorCode) +".name",null, LocaleContextHolder.getLocale());
         }
@@ -67,7 +70,7 @@ public class ErrorController {
     public void addAttributes(Model model, HttpServletRequest request) {
         User currentUser = this.loginAuthentication.getLoggedInUser(request);
         Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : Collections.emptyList();
-        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser) : Collections.emptyList();
+        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : Collections.emptyList();
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("userTags", userTags);
         model.addAttribute("userRoles", userRoles);

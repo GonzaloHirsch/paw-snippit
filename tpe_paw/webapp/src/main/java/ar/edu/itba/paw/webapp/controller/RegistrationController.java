@@ -227,7 +227,7 @@ public class RegistrationController {
 
     private void addUserAttributes(User currentUser, ModelAndView mav){
         Collection<Tag> userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-        Collection<String> userRoles = this.roleService.getUserRoles(currentUser);
+        Collection<String> userRoles = this.roleService.getUserRoles(currentUser.getId());
         this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);

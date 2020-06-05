@@ -117,7 +117,7 @@ public class SnippetFeedController {
         final ModelAndView mav = new ModelAndView("index");
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null || !roleService.isAdmin(currentUser)) this.logAndThrow(FLAGGED);
+        if (currentUser == null || !roleService.isAdmin(currentUser.getId())) this.logAndThrow(FLAGGED);
 
         Collection<Snippet> snippets = this.snippetService.getAllFlaggedSnippets(page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllFlaggedSnippetsCount();
@@ -142,7 +142,7 @@ public class SnippetFeedController {
 
         if (currentUser != null) {
             userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-            userRoles = this.roleService.getUserRoles(currentUser);
+            userRoles = this.roleService.getUserRoles(currentUser.getId());
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         }
         model.addAttribute("currentUser", currentUser);

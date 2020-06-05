@@ -45,7 +45,7 @@ public class PawUserDetailsService implements UserDetailsService {
 
         final Collection<GrantedAuthority> authorities = new HashSet<>();
 
-        Collection<String> roles = roleService.getUserRoles(user);
+        Collection<String> roles = roleService.getUserRoles(user.getId());
         if (roles.isEmpty()) {
             this.roleService.assignUserRole(user.getId());
             roles.add(this.roleService.getUserRoleName());

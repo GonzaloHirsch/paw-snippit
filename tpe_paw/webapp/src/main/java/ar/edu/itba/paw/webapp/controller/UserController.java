@@ -62,7 +62,7 @@ public class  UserController {
         final ModelAndView mav = new ModelAndView("user/profile");
 
         Optional<User> user = this.userService.findUserById(id);
-        if (!user.isPresent() || this.roleService.isAdmin(user.get())) {
+        if (!user.isPresent() || this.roleService.isAdmin(user.get().getId())) {
             this.logAndThrow(id);
         }
 
@@ -73,7 +73,7 @@ public class  UserController {
 
         if (currentUser != null) {
             userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-            userRoles = this.roleService.getUserRoles(currentUser);
+            userRoles = this.roleService.getUserRoles(currentUser.getId());
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         }
         mav.addObject("currentUser", currentUser);

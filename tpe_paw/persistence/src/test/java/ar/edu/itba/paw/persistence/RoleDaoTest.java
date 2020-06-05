@@ -82,7 +82,7 @@ public class RoleDaoTest {
         insertUserRoleIntoDb(jdbcInsertUserRole,adminRoleId,defaultUser.getId());
         insertUserRoleIntoDb(jdbcInsertUserRole,userRoleId,defaultUser.getId());
 
-        Collection<String> maybeRoles = roleDao.getUserRoles(defaultUser);
+        Collection<String> maybeRoles = roleDao.getUserRoles(defaultUser.getId());
 
         assertEquals(2,maybeRoles.size());
         assertTrue(maybeRoles.contains(ADMIN_ROLE));
@@ -91,7 +91,7 @@ public class RoleDaoTest {
     /*
     @Test
     public void testGetUserRolesEmpty(){
-        Collection<String> maybeRoles = roleDao.getUserRoles(defaultUser);
+        Collection<String> maybeRoles = roleDao.getUserRoles(defaultUser.getId());
 
         assertEquals(0,maybeRoles.size());
     }*/

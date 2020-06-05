@@ -89,7 +89,7 @@ public class TagsController {
                 followForm.setFollows(currentUser.getFollowedTags().contains(tag));
                 mav.addObject("followIconForm" + tag.getId().toString(), followForm);
             }
-            userRoles = this.roleService.getUserRoles(currentUser);
+            userRoles = this.roleService.getUserRoles(currentUser.getId());
         }
         mav.addObject("userRoles", userRoles);
         return mav;
@@ -114,7 +114,7 @@ public class TagsController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser != null){
             followForm.setFollows(this.tagService.userFollowsTag(currentUser.getId(), tagId));
-            userRoles = this.roleService.getUserRoles(currentUser);
+            userRoles = this.roleService.getUserRoles(currentUser.getId());
         }
 
         int totalSnippetCount = this.snippetService.getAllSnippetsByTagCount(tag.get().getId());
@@ -148,7 +148,7 @@ public class TagsController {
     @RequestMapping(value = "/tags/{tagId}/delete",  method= RequestMethod.POST)
     public ModelAndView deleteTag(@PathVariable("tagId") long tagId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if ( currentUser != null && roleService.isAdmin(currentUser)){
+        if ( currentUser != null && roleService.isAdmin(currentUser.getId())){
             this.tagService.removeTag(tagId);
             LOGGER.debug("Admin deleted tag with id {}", tagId);
         } else {

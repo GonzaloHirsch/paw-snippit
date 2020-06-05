@@ -40,8 +40,12 @@ public class RoleJpaDaoImpl implements RoleDao {
 
     //TODO: See if its better to move to UserJpaDaoImpl
     @Override
-    public Collection<String> getUserRoles(User user) {
-        return user.getRoles().stream().map(Role::getName).collect(Collectors.toList());
+    public Collection<String> getUserRoles(long userId) {
+        Optional<User> user = em.createQuery("SELECT u from User u JOIN FETCH u.roles WHERE u.id = :userId", User.class)
+                .setParameter("userId", userId)
+                .getResultList().stream().findFirst();
+
+        return user.map(value -> value.getRoles().stream().map(Role::getName).collect(Collectors.toList())).orElse(Collections.emptyList());
     }
 
     @Override

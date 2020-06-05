@@ -81,9 +81,9 @@ public class SnippetController {
             //Delete
             deleteForm.setDelete(retrievedSnippet.get().isDeleted());
 
-            if (roleService.isAdmin(currentUser)) {
+            if (roleService.isAdmin(currentUser.getId())) {
                 adminFlagForm.setFlagged(retrievedSnippet.get().isFlagged());
-                mav.addObject("userRoles", this.roleService.getUserRoles(currentUser));
+                mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
             }
         } else {
             mav.addObject("userRoles", Collections.emptyList());
@@ -161,7 +161,7 @@ public class SnippetController {
     ) {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null || !roleService.isAdmin(currentUser)) {
+        if (currentUser == null || !roleService.isAdmin(currentUser.getId())) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.flag", null, LocaleContextHolder.getLocale()));
         } else {
             // Getting the snippet

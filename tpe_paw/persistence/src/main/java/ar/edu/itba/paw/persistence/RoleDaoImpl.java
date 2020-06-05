@@ -49,8 +49,8 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
-    public Collection<String> getUserRoles(User user) {
-        return jdbcTemplate.queryForList("SELECT r.role FROM user_roles AS ur LEFT OUTER JOIN roles AS r ON ur.role_id = r.id WHERE ur.user_id = ?", new Object[]{user.getId()}, String.class);
+    public Collection<String> getUserRoles(long userId) {
+        return jdbcTemplate.queryForList("SELECT r.role FROM user_roles AS ur LEFT OUTER JOIN roles AS r ON ur.role_id = r.id WHERE ur.user_id = ?", new Object[]{userId}, String.class);
     }
 
     @Override

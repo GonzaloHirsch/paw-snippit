@@ -13,7 +13,7 @@ public interface RoleService {
 
     void assignUserRole(long userId);
 
-    Collection<String> getUserRoles(User user);
+    Collection<String> getUserRoles(long userId);
 
-    boolean isAdmin(User user);
+    boolean isAdmin(long userId);
 }

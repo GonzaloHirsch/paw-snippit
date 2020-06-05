@@ -255,7 +255,7 @@ public class SearchController {
 
         if (currentUser != null) {
             userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-            userRoles = this.roleService.getUserRoles(currentUser);
+            userRoles = this.roleService.getUserRoles(currentUser.getId());
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         }
         model.addAttribute("currentUser", currentUser);

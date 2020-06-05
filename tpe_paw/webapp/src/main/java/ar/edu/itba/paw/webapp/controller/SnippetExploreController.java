@@ -38,21 +38,26 @@ public class SnippetExploreController {
     @Autowired private LanguageService languageService;
     @Autowired private RoleService roleService;
     @Autowired private UserService userService;
-    @Autowired private MessageSource messageSource;
 
-    private Map<String, SnippetDao.Types> typesMap = new HashMap<String, SnippetDao.Types>() {{
-        put(null, SnippetDao.Types.TITLE);
-        put("reputation", SnippetDao.Types.REPUTATION);
-        put("votes", SnippetDao.Types.VOTES);
-        put("date", SnippetDao.Types.DATE);
-        put("title", SnippetDao.Types.TITLE);
-    }};
+    private final static Map<String, SnippetDao.Types> typesMap;
+    static {
+        final Map<String, SnippetDao.Types> types = new HashMap<>();
+        types.put(null, SnippetDao.Types.TITLE);
+        types.put("reputation", SnippetDao.Types.REPUTATION);
+        types.put("votes", SnippetDao.Types.VOTES);
+        types.put("date", SnippetDao.Types.DATE);
+        types.put("title", SnippetDao.Types.TITLE);
+        typesMap = Collections.unmodifiableMap(types);
+    }
 
-    private Map<String, SnippetDao.Orders> ordersMap = new HashMap<String, SnippetDao.Orders>() {{
-        put("asc", SnippetDao.Orders.ASC);
-        put("desc", SnippetDao.Orders.DESC);
-        put("no", SnippetDao.Orders.NO);
-    }};
+    private final static Map<String, SnippetDao.Orders> ordersMap;
+    static {
+        final Map<String, SnippetDao.Orders> orders = new HashMap<>();
+        orders.put("asc", SnippetDao.Orders.ASC);
+        orders.put("desc", SnippetDao.Orders.DESC);
+        orders.put("no", SnippetDao.Orders.NO);
+        ordersMap = Collections.unmodifiableMap(orders);
+    }
 
     public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK)
             .withZone(ZoneId.systemDefault());
@@ -86,7 +91,7 @@ public class SnippetExploreController {
                 exploreForm.getMinVotes(), exploreForm.getMaxVotes(),
                 exploreForm.getLanguage() == -1 ? null : exploreForm.getLanguage(), exploreForm.getTag() == -1 ? null : exploreForm.getTag(),
                 exploreForm.getTitle(), exploreForm.getUsername(),
-                this.ordersMap.get(exploreForm.getSort()), this.typesMap.get(exploreForm.getField()), exploreForm.getIncludeFlagged(), page, SNIPPET_PAGE_SIZE);
+                ordersMap.get(exploreForm.getSort()), typesMap.get(exploreForm.getField()), exploreForm.getIncludeFlagged(), page, SNIPPET_PAGE_SIZE);
         int snippetCount =  this.snippetService.getSnippetByDeepCriteriaCount(
                 minDate, maxDate,
                 exploreForm.getMinRep(), exploreForm.getMaxRep(),

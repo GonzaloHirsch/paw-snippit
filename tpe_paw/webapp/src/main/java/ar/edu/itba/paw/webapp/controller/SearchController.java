@@ -34,21 +34,27 @@ import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
 @Controller
 public class SearchController {
 
-    private Map<String, SnippetDao.Types> typesMap = new HashMap<String, SnippetDao.Types>() {{
-        put(null, SnippetDao.Types.ALL);
-        put("all", SnippetDao.Types.ALL);
-        put("tag", SnippetDao.Types.TAG);
-        put("title", SnippetDao.Types.TITLE);
-        put("content", SnippetDao.Types.CONTENT);
-        put("username", SnippetDao.Types.USER);
-        put("language", SnippetDao.Types.LANGUAGE);
-    }};
+    private final static Map<String, SnippetDao.Types> typesMap;
+    static {
+        final Map<String, SnippetDao.Types> types = new HashMap<>();
+        types.put(null, SnippetDao.Types.ALL);
+        types.put("all", SnippetDao.Types.ALL);
+        types.put("tag", SnippetDao.Types.TAG);
+        types.put("title", SnippetDao.Types.TITLE);
+        types.put("content", SnippetDao.Types.CONTENT);
+        types.put("username", SnippetDao.Types.USER);
+        types.put("language", SnippetDao.Types.LANGUAGE);
+        typesMap = Collections.unmodifiableMap(types);
+    }
 
-    private Map<String, SnippetDao.Orders> ordersMap = new HashMap<String, SnippetDao.Orders>() {{
-        put("asc", SnippetDao.Orders.ASC);
-        put("desc", SnippetDao.Orders.DESC);
-        put("no", SnippetDao.Orders.NO);
-    }};
+    private final static Map<String, SnippetDao.Orders> ordersMap;
+    static {
+        final Map<String, SnippetDao.Orders> orders = new HashMap<>();
+        orders.put("asc", SnippetDao.Orders.ASC);
+        orders.put("desc", SnippetDao.Orders.DESC);
+        orders.put("no", SnippetDao.Orders.NO);
+        ordersMap = Collections.unmodifiableMap(orders);
+    }
 
     @Autowired
     private SnippetService snippetService;
@@ -211,14 +217,14 @@ public class SearchController {
     private Collection<Snippet> findByCriteria(String type, String query, SnippetDao.Locations location, String sort, Long userId, Long resourceId, int page) {
         if (query.length() > MAX_SEARCH_QUERY_SIZE)
             throw new URITooLongException(messageSource.getMessage("error.414.search", null, LocaleContextHolder.getLocale()));
-        if (!this.typesMap.containsKey(type) || !this.ordersMap.containsKey(sort)) {
+        if (!typesMap.containsKey(type) || !ordersMap.containsKey(sort)) {
             return Collections.emptyList();
         } else {
             return this.snippetService.findSnippetByCriteria(
-                    this.typesMap.get(type),
+                    typesMap.get(type),
                     query == null ? "" : query,
                     location,
-                    this.ordersMap.get(sort),
+                    ordersMap.get(sort),
                     userId,
                     resourceId,
                     page,
@@ -228,7 +234,7 @@ public class SearchController {
 
     private int getSnippetByCriteriaCount(String type, String query, SnippetDao.Locations location, Long userId, Long resourceId) {
         return this.snippetService.getSnippetByCriteriaCount(
-                this.typesMap.get(type),
+                typesMap.get(type),
                 query == null ? "" : query,
                 location,
                 userId,

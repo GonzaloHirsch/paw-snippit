@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.auth.SignUpAuthentication;
+import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
@@ -226,12 +227,13 @@ public class RegistrationController {
     }
 
     private void addUserAttributes(User currentUser, ModelAndView mav){
-        Collection<Tag> userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-        Collection<String> userRoles = this.roleService.getUserRoles(currentUser.getId());
+        Collection<Tag> userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
+        Collection<Tag> allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
         this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);
-        mav.addObject("userRoles", userRoles);
+        mav.addObject("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
+        mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
         mav.addObject("searchContext", "");
     }
 

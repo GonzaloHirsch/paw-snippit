@@ -66,4 +66,5 @@ public class Tag {
         Tag tag = (Tag) o;
         return this.getId().equals(tag.getId());
     }
+
 }

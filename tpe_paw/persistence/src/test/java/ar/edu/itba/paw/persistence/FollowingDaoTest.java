@@ -44,7 +44,7 @@ public class FollowingDaoTest {
     @Before
     public void setUp(){
         jdbcTemplate = new JdbcTemplate(ds);
-        followingDao = new FollowingDaoImpl(ds);
+        followingDao = new FollowingJpaDaoImpl();
 
         jdbcInsertFollowing = new SimpleJdbcInsert(ds).withTableName(FOLLOWS_TABLE);
 

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.*;
 import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
@@ -106,10 +107,18 @@ public class ExceptionController {
         ModelAndView mav = new ModelAndView(DEFAULT_ERROR_VIEW);
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : Collections.emptyList();
-        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : Collections.emptyList();
+        Collection<Tag> userTags =  Collections.emptyList();
+        Collection<String> userRoles = Collections.emptyList();
+        Collection<Tag> allFollowedTags = Collections.emptyList();
+
+        if (currentUser != null) {
+            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
+            userRoles = this.roleService.getUserRoles(currentUser.getId());
+            allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
+        }
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);
+        mav.addObject("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
         mav.addObject("searchContext", ERROR_CONTEXT);
         mav.addObject("err", errorCode);
         mav.addObject("errName", errorName);

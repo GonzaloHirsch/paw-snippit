@@ -14,6 +14,7 @@
         <body>
         <c:set var="currentUser" value="${requestScope.currentUser}"/>
         <c:set var="userTags" value="${requestScope.userTags}"/>
+        <c:url var="userTagsCount" value="${requestScope.userTagsCount}"/>
         <c:set var="searchContext" value="${requestScope.searchContext}"/>
         <c:choose>
             <c:when test="${searchContext == 'tags/'}">
@@ -166,6 +167,14 @@
                 <c:forEach var="tag" items="${userTags}">
                     <a class="fw-100 tag-section" href="<c:url value="${'/tags/'}${tag.id}"/>">${tag.name}</a>
                 </c:forEach>
+                <c:choose>
+                    <c:when test="${userTagsCount == 1}">
+                        <a class="fw-100 tag-section" href="<c:url value="/following"/>"><spring:message code="menu.following.others.1"/></a>
+                    </c:when>
+                    <c:when test="${userTagsCount > 1}">
+                        <a class="fw-100 tag-section" href="<c:url value="/following"/>"><spring:message code="menu.following.others.many" arguments="${userTagsCount}"/></a>
+                    </c:when>
+                </c:choose>
             </c:if>
             <hr/>
             <a class="fw-100 menu-option" href="<c:url value="/logout"/>">

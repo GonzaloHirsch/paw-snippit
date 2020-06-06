@@ -4,8 +4,10 @@ import ar.edu.itba.paw.interfaces.service.LanguageService;
 import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
+import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.FormErrorException;
 import ar.edu.itba.paw.webapp.form.SearchForm;
@@ -28,6 +30,8 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Locale;
 
 @Controller
@@ -55,9 +59,11 @@ public class SnippetCreateController {
         } else if (this.roleService.isAdmin(currentUser.getId())) {
             throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.admin.snippet.create", null, LocaleContextHolder.getLocale()));
         }
-        
+        Collection<Tag> userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
+        Collection<Tag> allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
         mav.addObject("currentUser", currentUser);
-        mav.addObject("userTags", this.tagService.getFollowedTagsForUser(currentUser.getId()));
+        mav.addObject("userTags", userTags);
+        mav.addObject("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
         mav.addObject("tagList", this.tagService.getAllTags());
         mav.addObject("languageList", this.languageService.getAllLanguages());
         mav.addObject("searchContext", "");

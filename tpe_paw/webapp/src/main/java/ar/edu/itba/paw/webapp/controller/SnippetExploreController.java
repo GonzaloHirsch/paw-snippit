@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.form.ExploreForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,20 +106,23 @@ public class SnippetExploreController {
 
     @ModelAttribute
     public void addAttributes(Model model) {
+
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = Collections.emptyList();
+        Collection<Tag> userTags =  Collections.emptyList();
         Collection<String> userRoles = Collections.emptyList();
+        Collection<Tag> allFollowedTags = Collections.emptyList();
 
         if (currentUser != null) {
-            userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
+            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
+            allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
             userRoles = this.roleService.getUserRoles(currentUser.getId());
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         }
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("userTags", userTags);
+        model.addAttribute("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
         model.addAttribute("userRoles", userRoles);
     }
-
 
     private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
         mav.addObject("pages", snippetCount / SNIPPET_PAGE_SIZE + (snippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));

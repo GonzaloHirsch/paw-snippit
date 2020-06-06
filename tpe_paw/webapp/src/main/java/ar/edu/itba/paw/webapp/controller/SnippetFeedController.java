@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.form.FollowForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
@@ -137,16 +138,19 @@ public class SnippetFeedController {
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = Collections.emptyList();
+        Collection<Tag> userTags =  Collections.emptyList();
         Collection<String> userRoles = Collections.emptyList();
+        Collection<Tag> allFollowedTags = Collections.emptyList();
 
         if (currentUser != null) {
-            userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
+            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
             userRoles = this.roleService.getUserRoles(currentUser.getId());
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
+            allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
         }
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("userTags", userTags);
+        model.addAttribute("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size() );
         model.addAttribute("searchForm", searchForm);
         model.addAttribute("userRoles", userRoles);
     }

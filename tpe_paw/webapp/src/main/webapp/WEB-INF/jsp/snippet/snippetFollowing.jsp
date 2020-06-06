@@ -28,15 +28,17 @@
             </div>
         </div>
         <div class="flex-row">
-            <div class="flex-column chip-list-container">
-                <c:set var="followingTags" value="${requestScope.followingTags}"/>
+            <c:if test="${followingTags.size() > 0}">
+                <div class="flex-column chip-list-container">
+                    <c:set var="followingTags" value="${requestScope.followingTags}"/>
 
-                <c:forEach var="tag" items="${followingTags}">
-                    <c:set var="tag" value="${tag}" scope="request"/>
-                    <c:import url="/WEB-INF/jsp/tagAndLanguages/tagChip.jsp"/>
-                </c:forEach>
-            </div>
-            <div class="flex-column explore-feed">
+                    <c:forEach var="tag" items="${followingTags}">
+                        <c:set var="tag" value="${tag}" scope="request"/>
+                        <c:import url="/WEB-INF/jsp/tagAndLanguages/tagChip.jsp"/>
+                    </c:forEach>
+                </div>
+            </c:if>
+            <div class="flex-column flex-grow explore-feed">
                 <c:set var="snippetList" value="${snippetList}" scope="request"/>
                 <c:import url="snippetFeed.jsp"/>
             </div>

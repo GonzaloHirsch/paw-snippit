@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.DescriptionForm;
 import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
@@ -68,16 +69,18 @@ public class  UserController {
 
         /* Set the current user and its following tags */
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = Collections.emptyList();
+        Collection<Tag> userTags =  Collections.emptyList();
         Collection<String> userRoles = Collections.emptyList();
+        Collection<Tag> allFollowedTags = Collections.emptyList();
 
         if (currentUser != null) {
-            userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
+            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
             userRoles = this.roleService.getUserRoles(currentUser.getId());
-            this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
+            allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
         }
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);
+        mav.addObject("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
         mav.addObject("userRoles", userRoles);
 
         descriptionForm.setDescription(user.get().getDescription());

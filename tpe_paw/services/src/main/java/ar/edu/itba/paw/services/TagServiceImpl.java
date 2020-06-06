@@ -23,12 +23,12 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Collection<Tag> getAllTags(boolean showEmpty, int page, int pageSize) {
-        return tagDao.getAllTags(showEmpty, page, pageSize);
+        return this.tagDao.getAllTags(showEmpty, page, pageSize);
     }
 
     @Override
     public Collection<Tag> getAllTags() {
-        return tagDao.getAllTags();
+        return this.tagDao.getAllTags();
     }
 
     @Override
@@ -48,22 +48,27 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Collection<Tag> getFollowedTagsForUser(long userId) {
-        return followingDao.getFollowedTagsForUser(userId);
+        return this.followingDao.getFollowedTagsForUser(userId);
+    }
+
+    @Override
+    public Collection<Tag> getMostPopularFollowedTagsForUser(long userId, int amount) {
+        return this.followingDao.getMostPopularFollowedTagsForUser(userId, amount);
     }
 
     @Override
     public Optional<Tag> findTagById(long tagId) {
-        return tagDao.findById(tagId);
+        return this.tagDao.findById(tagId);
     }
 
     @Override
     public void followTag(long userId, long tagId) {
-        followingDao.followTag(userId, tagId);
+        this.followingDao.followTag(userId, tagId);
     }
 
     @Override
     public void unfollowTag(long userId, long tagId) {
-        followingDao.unfollowTag(userId, tagId);
+        this.followingDao.unfollowTag(userId, tagId);
     }
 
     @Transactional
@@ -87,17 +92,17 @@ public class TagServiceImpl implements TagService {
     @Transactional
     @Override
     public void addTags(List<String> tags) {
-        tagDao.addTags(tags);
+        this.tagDao.addTags(tags);
     }
 
     @Override
     public boolean tagExists(String tag) {
-        return tagDao.findByName(tag).isPresent();
+        return this.tagDao.findByName(tag).isPresent();
     }
 
     @Override
     public boolean tagExists(long tagId) {
-        return tagDao.findById(tagId).isPresent();
+        return this.tagDao.findById(tagId).isPresent();
     }
 
     @Transactional

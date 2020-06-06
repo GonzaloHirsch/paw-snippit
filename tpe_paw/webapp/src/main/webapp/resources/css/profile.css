@@ -1,5 +1,5 @@
 .detail-user {
-    margin: 0px 15px 10px;
+    margin: 0px 15px 5px;
     min-height: 94px;
     min-width: 94px;
 }
@@ -170,4 +170,34 @@
     height: 80px;
     justify-content: center;
     padding: 0px 5px;
+}
+
+.general-info {
+    margin: 20px 0px 0px 0px;
+}
+
+.tabs-container {
+    height: 50px;
+    margin: 0px 100px;
+}
+
+.tabs-item-container {
+    width: 50%;
+    height: 100%;
+    border: 2px #5E35B1 solid;
+    color: #503499;
+}
+.tabs-item-selected {
+    background-color: rgba(196, 196, 196, 0.65);
+}
+.tabs-item-container:hover {
+    background-color: rgba(196, 196, 196, 0.65);
+}
+
+.tabs-first-item {
+    border-radius: 8px 0px 0px 8px;
+}
+
+.tabs-second-item {
+    border-radius: 0px 8px 8px 0px;
 }

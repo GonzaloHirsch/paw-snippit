@@ -312,7 +312,7 @@ public class SnippetDaoTest {
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
         insertSnippetIntoDb(jdbcInsertSnippet,altUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
 
-        Collection<Snippet> maybeCollection = snippetDao.findAllSnippetsByOwner(defaultUser.getId(),1,PAGE_SIZE);
+        Collection<Snippet> maybeCollection = snippetDao.getAllSnippetsByOwner(defaultUser.getId(),1,PAGE_SIZE);
 
         assertNotNull(maybeCollection);
         assertEquals(1,maybeCollection.size());
@@ -324,7 +324,7 @@ public class SnippetDaoTest {
     public void testFindAllSnippetsByOwnerEmpty(){
       insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
 
-        Collection<Snippet> maybeCollection = snippetDao.findAllSnippetsByOwner(altUser.getId()+3,1,PAGE_SIZE);
+        Collection<Snippet> maybeCollection = snippetDao.getAllSnippetsByOwner(altUser.getId()+3,1,PAGE_SIZE);
 
         assertNotNull(maybeCollection);
         assertEquals(0,maybeCollection.size());
@@ -335,7 +335,7 @@ public class SnippetDaoTest {
     public void testFindSnippetsWithLanguage(){
         long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
 
-        Collection<Snippet> maybeCollection = snippetDao.findSnippetsWithLanguage(defaultLanguageId,1,PAGE_SIZE);
+        Collection<Snippet> maybeCollection = snippetDao.getSnippetsWithLanguage(defaultLanguageId,1,PAGE_SIZE);
 
         assertNotNull(maybeCollection);
         assertEquals(1,maybeCollection.size());
@@ -347,7 +347,7 @@ public class SnippetDaoTest {
     public void testFindSnippetsWithLanguageEmpty(){
         insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
 
-        Collection<Snippet> maybeCollection = snippetDao.findSnippetsWithLanguage(defaultLanguageId+33,1,PAGE_SIZE);
+        Collection<Snippet> maybeCollection = snippetDao.getSnippetsWithLanguage(defaultLanguageId+33,1,PAGE_SIZE);
 
         assertNotNull(maybeCollection);
         assertEquals(0,maybeCollection.size());

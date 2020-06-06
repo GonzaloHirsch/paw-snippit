@@ -29,7 +29,7 @@
                     <div class="snippet-text card-snippet-date">${snippet.getCreationDate()}</div>
                 </div>
             </div>
-            <div class="flex-row flex-center">
+            <div class="flex-row flex-align">
                 <c:if test="${snippet.deleted}">
                     <div class="card-warning-icon material-icons">delete_sweep</div>
                 </c:if>

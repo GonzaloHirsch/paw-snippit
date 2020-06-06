@@ -44,8 +44,8 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
-    public Collection<Snippet> findSnippetsWithLanguage(long langId, int page, int pageSize) {
-        return this.snippetDao.findSnippetsWithLanguage(langId, page, pageSize);
+    public Collection<Snippet> getSnippetsWithLanguage(long langId, int page, int pageSize) {
+        return this.snippetDao.getSnippetsWithLanguage(langId, page, pageSize);
     }
 
     @Transactional
@@ -61,8 +61,13 @@ public class SnippetServiceImpl implements SnippetService {
     public Optional<Snippet> findSnippetById(long id) { return this.snippetDao.findSnippetById(id);}
 
     @Override
-    public Collection<Snippet> findAllSnippetsByOwner(final long userId, int page, int pageSize) {
-        return this.snippetDao.findAllSnippetsByOwner(userId, page, pageSize);
+    public Collection<Snippet> getAllSnippetsByOwner(final long userId, int page, int pageSize) {
+        return this.snippetDao.getAllSnippetsByOwner(userId, page, pageSize);
+    }
+
+    @Override
+    public Collection<Snippet> getAllDeletedSnippetsByOwner(long userId, int page, int pageSize) {
+        return this.snippetDao.getAllDeletedSnippetsByOwner(userId, page, pageSize);
     }
 
     @Override
@@ -96,6 +101,11 @@ public class SnippetServiceImpl implements SnippetService {
     @Override
     public int getAllSnippetsByOwnerCount(long userId) {
         return this.snippetDao.getAllSnippetsByOwnerCount(userId);
+    }
+
+    @Override
+    public int getAllDeletedSnippetsByOwnerCount(long userId) {
+        return this.snippetDao.getAllDeletedSnippetsByOwnerCount(userId);
     }
 
     @Override

@@ -43,8 +43,9 @@ public interface SnippetDao {
     Collection<Snippet> getAllFollowingSnippets(final long userId, int page, int pageSize);
     Collection<Snippet> getAllUpVotedSnippets(final long userId, int page, int pageSize);
     Collection<Snippet> getAllFlaggedSnippets(int page, int pageSize);
-    Collection<Snippet> findAllSnippetsByOwner(final long userId, int page, int pageSize);
-    Collection<Snippet> findSnippetsWithLanguage(final long langId, int page, int pageSize);
+    Collection<Snippet> getAllSnippetsByOwner(final long userId, int page, int pageSize);
+    Collection<Snippet> getAllDeletedSnippetsByOwner(final long userId, int page, int pageSize);
+    Collection<Snippet> getSnippetsWithLanguage(final long langId, int page, int pageSize);
     Optional<Snippet> findSnippetById(final long id);
     boolean deleteSnippetById(final long id);
     boolean restoreSnippetById(final long id);
@@ -59,6 +60,7 @@ public interface SnippetDao {
     int getAllUpvotedSnippetsCount(final long userId);
     int getAllFlaggedSnippetsCount();
     int getAllSnippetsByOwnerCount(final long userId);
+    int getAllDeletedSnippetsByOwnerCount(final long userId);
     int getAllSnippetsByTagCount(final long tagId);
     int getAllSnippetsByLanguageCount(final long langId);
     int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId, Long resourceId);

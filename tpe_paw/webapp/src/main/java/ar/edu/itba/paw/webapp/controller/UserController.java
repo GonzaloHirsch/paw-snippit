@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
+import ar.edu.itba.paw.webapp.form.DeleteForm;
 import ar.edu.itba.paw.webapp.form.DescriptionForm;
 import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
@@ -57,6 +58,7 @@ public class  UserController {
             final @PathVariable("id") long id,
             @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
             @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
+            @ModelAttribute("showDeletedForm") final DeleteForm deleteForm,
             final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
            ) {
@@ -83,9 +85,17 @@ public class  UserController {
         mav.addObject("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
         mav.addObject("userRoles", userRoles);
 
+        Collection<Snippet> snippets;
+        int totalSnippetCount;
+
+        if (!deleteForm.isDelete()) {
+            snippets = this.snippetService.getAllSnippetsByOwner(user.get().getId(), page, SNIPPET_PAGE_SIZE);
+            totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.get().getId());
+        } else {
+            snippets = this.snippetService.getAllDeletedSnippetsByOwner(user.get().getId(), page, SNIPPET_PAGE_SIZE);
+            totalSnippetCount = this.snippetService.getAllDeletedSnippetsByOwnerCount(user.get().getId());
+        }
         descriptionForm.setDescription(user.get().getDescription());
-        Collection<Snippet> snippets = this.snippetService.findAllSnippetsByOwner(user.get().getId(), page, SNIPPET_PAGE_SIZE);
-        int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.get().getId());
         mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.get().getId()));
         mav.addObject("pages", totalSnippetCount / SNIPPET_PAGE_SIZE + (totalSnippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
@@ -99,9 +109,15 @@ public class  UserController {
     }
 
     @RequestMapping(value = "/user/{id}", method = {RequestMethod.POST})
-    public ModelAndView endEditPhoto(final @PathVariable("id") long id, @ModelAttribute("profilePhotoForm") @Valid final ProfilePhotoForm profilePhotoForm, final BindingResult errors, @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm) {
+    public ModelAndView endEditPhoto(
+            final @PathVariable("id") long id,
+            @ModelAttribute("profilePhotoForm") @Valid final ProfilePhotoForm profilePhotoForm,
+            final BindingResult errors,
+            @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
+            @ModelAttribute("showDeletedForm") final DeleteForm deleteForm)
+    {
         if (errors.hasErrors()){
-            return userProfile(id, profilePhotoForm, descriptionForm, 1, false);
+            return userProfile(id, profilePhotoForm, descriptionForm, deleteForm, 1, false);
         }
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
@@ -113,7 +129,7 @@ public class  UserController {
                 LOGGER.error("Exception changing profile photo for user {}", id);
                 FieldError photoError = new FieldError("profilePhotoForm","file" , messageSource.getMessage("profile.photo.error", null, LocaleContextHolder.getLocale()));
                 errors.addError(photoError);
-                return userProfile(id, profilePhotoForm, descriptionForm, 1, false);
+                return userProfile(id, profilePhotoForm, descriptionForm, deleteForm, 1, false);
             }
         }
         return new ModelAndView("redirect:/user/" + id);
@@ -138,11 +154,12 @@ public class  UserController {
     public ModelAndView endEditUserProfile(final @PathVariable("id") long id,
                                            @Valid @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
                                            final BindingResult errors,
+                                           @ModelAttribute("showDeletedForm") final DeleteForm deleteForm,
                                            @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
                                            final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                            final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing) {
         if (errors.hasErrors()) {
-            return userProfile(id, profilePhotoForm, descriptionForm, page, editing);
+            return userProfile(id, profilePhotoForm, descriptionForm, deleteForm, page, editing);
         }
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Optional<User> user = this.userService.findUserById(id);

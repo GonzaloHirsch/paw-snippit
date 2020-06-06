@@ -21,8 +21,7 @@
     <script src="<c:url value='/resources/js/profile.js'/>"></script>
 </head>
 <body>
-<c:url var="savePhotoUrl" value="/user/${user.id}"/>
-<c:url var="discardPhotoUrl" value="/user/${user.id}"/>
+<c:url var="userProfile" value="/user/${user.id}"/>
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
@@ -45,8 +44,8 @@
                     </div>
                 </c:if>
             </div>
-            <div class="flex-row">
-                <div class="flex-column">
+            <div class="flex-row general-info">
+                <div class="flex-column flex-center">
                     <c:if test="${currentUser.id == user.id}">
                         <div class="flex-row flex-center profile-photo-wrap">
                             <span class="material-icons profile-photo-edit-icon"
@@ -60,10 +59,9 @@
                                      src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"
                                      onclick="hiddenClick(this)"/>
                             </c:if>
-
                         </div>
 
-                        <form:form method="POST" action="${savePhotoUrl}" enctype="multipart/form-data" modelAttribute="profilePhotoForm">
+                        <form:form method="POST" action="${userProfile}" enctype="multipart/form-data" modelAttribute="profilePhotoForm">
                             <form:errors path="file" cssClass="flex-center form-error" element="p" />
                             <div class="flex-row flex-center">
                             <span id="image-confirm" class="image-confirm-button hidden-button"
@@ -71,7 +69,7 @@
                                 <spring:message code="profile.edit.save"/>
                             </span>
                                 <a id="image-discard" class="image-discard-button hidden-button"
-                                   href="<c:url value="${discardPhotoUrl}"/>">
+                                   href="<c:url value="${userProfile}"/>">
                                     <spring:message code="profile.edit.discard"/>
                                 </a>
                             </div>
@@ -80,7 +78,6 @@
                                        accept="image/jpeg" onchange="preview(this)"/>
                                 <input type="submit" id="image-form-submit">
                             </div>
-
                         </form:form>
                     </c:if>
                     <c:if test="${currentUser.id != user.id}">
@@ -96,7 +93,8 @@
                         </div>
                     </c:if>
                 </div>
-                <div class="flex-column profile-info">
+                <div class="flex-column flex-center profile-info">
+                    <div class="flex-column">
                     <div class="flex-row">
                         <div class="profile-username">
                             ${user.username}
@@ -152,9 +150,29 @@
                         </c:if>
                         <form:errors path="description" cssClass="form-error" element="p"/>
                     </form:form>
+                    </div>
                 </div>
             </div>
         </div>
+        <c:if test="${currentUser != null && currentUser.id == user.id}">
+            <form:form modelAttribute="showDeletedForm" method="get" action="${userProfile}" class="flex-row flex-center flex-wrap tabs-container">
+                <form:checkbox class="hidden" id="show-deleted-button" path="delete" value="true" onclick="updateForm(this)"/>
+                <c:choose>
+                    <c:when test="${!showDeletedForm.delete}">
+                        <div class="tabs-item-container flex-center tabs-first-item transition tabs-item-selected"><spring:message code="profile.tabs.active"/></div>
+                        <label class="no-margin tabs-item-container flex-center tabs-second-item transition" for="show-deleted-button">
+                            <spring:message code="profile.tabs.deleted"/>
+                        </label>
+                    </c:when>
+                    <c:otherwise>
+                        <label class="no-margin tabs-item-container flex-center tabs-first-item transition" for="show-deleted-button">
+                            <spring:message code="profile.tabs.active"/>
+                        </label>
+                        <div class="tabs-item-container tabs-second-item flex-center transition tabs-item-selected"><spring:message code="profile.tabs.deleted"/></div>
+                    </c:otherwise>
+                </c:choose>
+            </form:form>
+        </c:if>
         <hr class="divider"/>
         <div class="feed-background-color">
             <c:if test="${snippets.size() == 0}">

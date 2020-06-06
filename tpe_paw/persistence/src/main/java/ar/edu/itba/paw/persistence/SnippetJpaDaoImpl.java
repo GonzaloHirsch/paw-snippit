@@ -76,11 +76,17 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> findAllSnippetsByOwner(long userId, int page, int pageSize) {
+    public Collection<Snippet> getAllSnippetsByOwner(long userId, int page, int pageSize) {
         Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.user_id = :id AND sn.deleted = FALSE ORDER BY sn.id DESC");
         nativeQuery.setParameter("id", userId);
         return this.getSnippetsByPage(page, pageSize, nativeQuery);
     }
+
+    @Override
+    public Collection<Snippet> getAllDeletedSnippetsByOwner(long userId, int page, int pageSize) {
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.user_id = :id AND sn.deleted = TRUE ORDER BY sn.id DESC");
+        nativeQuery.setParameter("id", userId);
+        return this.getSnippetsByPage(page, pageSize, nativeQuery);    }
 
     @Override
     public Collection<Snippet> findSnippetsForTag(long tagId, int page, int pageSize) {
@@ -90,7 +96,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     }
 
     @Override
-    public Collection<Snippet> findSnippetsWithLanguage(long langId, int page, int pageSize) {
+    public Collection<Snippet> getSnippetsWithLanguage(long langId, int page, int pageSize) {
         Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.language_id = :id AND sn.deleted = FALSE ORDER BY sn.id DESC");
         nativeQuery.setParameter("id", langId);
         return this.getSnippetsByPage(page, pageSize, nativeQuery);
@@ -206,6 +212,12 @@ public class SnippetJpaDaoImpl implements SnippetDao {
         nativeQuery.setParameter("id", userId);
         return nativeQuery.getResultList().size();
     }
+
+    @Override
+    public int getAllDeletedSnippetsByOwnerCount(long userId) {
+        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.deleted = TRUE AND sn.user_id = :id");
+        nativeQuery.setParameter("id", userId);
+        return nativeQuery.getResultList().size();    }
 
     @Override
     public int getAllSnippetsByTagCount(long tagId) {

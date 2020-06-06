@@ -19,10 +19,11 @@ public interface SnippetService {
     Collection<Snippet> getAllUpVotedSnippets(final long userId, int page, int pageSize);
     Collection<Snippet> getAllFlaggedSnippets(int page, int pageSize);
     Optional<Snippet> findSnippetById(long id);
-    Collection<Snippet> findAllSnippetsByOwner(final long userId, int page, int pageSize);
+    Collection<Snippet> getAllSnippetsByOwner(final long userId, int page, int pageSize);
+    Collection<Snippet> getAllDeletedSnippetsByOwner(final long userId, int page, int pageSize);
     Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, Long resourceId, int page, int pageSize);
     Collection<Snippet> findSnippetsForTag(long tagId, int page, int pageSize);
-    Collection<Snippet> findSnippetsWithLanguage(long langId, int page, int pageSize);
+    Collection<Snippet> getSnippetsWithLanguage(long langId, int page, int pageSize);
     boolean deleteOrRestoreSnippet(final Snippet snippet, final long userId, boolean delete);
     void updateFlagged(final Snippet snippet, final User owner, boolean isFlagged, final String baseUrl);
     int getNewSnippetsForTagsCount(Instant dateMin, Collection<Tag> tags, long userId);
@@ -33,6 +34,7 @@ public interface SnippetService {
     int getAllUpvotedSnippetsCount(final long userId);
     int getAllFlaggedSnippetsCount();
     int getAllSnippetsByOwnerCount(final long userId);
+    int getAllDeletedSnippetsByOwnerCount(final long userId);
     int getAllSnippetsByTagCount(final long tagId);
     int getAllSnippetsByLanguageCount(final long langId);
     int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId, Long resourceId);

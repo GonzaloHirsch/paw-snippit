@@ -9,7 +9,7 @@
     <link href="<c:url value='/resources/css/flaggedSnippet.css'/>" rel="stylesheet"/>
 </head>
 <body>
-    <div class="flex-row flex-center warning-container border-radius">
+    <div class="flex-row flex-align warning-container border-radius">
         <i class="warning-icon material-icons">warning</i>
         <div class="flex-column warning-message-container">
             <h3 class="form-error"><spring:message code="flagged.warning"/></h3>

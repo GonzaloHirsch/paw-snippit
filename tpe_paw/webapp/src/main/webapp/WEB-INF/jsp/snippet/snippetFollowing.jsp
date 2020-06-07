@@ -29,13 +29,15 @@
         </div>
         <div class="flex-row">
             <c:if test="${followingTags.size() > 0}">
-                <div class="flex-column chip-list-container">
+                <div class="chip-list-wrapper">
+                    <div class="flex-column chip-list-container">
                     <c:set var="followingTags" value="${requestScope.followingTags}"/>
 
                     <c:forEach var="tag" items="${followingTags}">
                         <c:set var="tag" value="${tag}" scope="request"/>
                         <c:import url="/WEB-INF/jsp/tagAndLanguages/tagChip.jsp"/>
                     </c:forEach>
+                    </div>
                 </div>
             </c:if>
             <div class="flex-column flex-grow explore-feed">

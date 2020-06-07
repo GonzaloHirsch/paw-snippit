@@ -185,7 +185,7 @@
 .tabs-item-container {
     width: 50%;
     height: 100%;
-    border: 2px #5E35B1 solid;
+    border: #5E35B1 solid;
     color: #503499 !important;
     text-decoration: none !important;
 }
@@ -198,8 +198,10 @@
 
 .tabs-first-item {
     border-radius: 8px 0px 0px 8px;
+    border-width: 2px 1px 2px 2px;
 }
 
 .tabs-second-item {
     border-radius: 0px 8px 8px 0px;
+    border-width: 2px 2px 2px 1px;
 }

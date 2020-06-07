@@ -45,6 +45,7 @@ public class  UserController {
     private LoginAuthentication loginAuthentication;
     @Autowired
     private TagService tagService;
+
     @Autowired
     private RoleService roleService;
     @Autowired
@@ -52,7 +53,7 @@ public class  UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    @RequestMapping(value = "/user/{id}/active")
+    @RequestMapping(value = "/user/{id}/active", method = {RequestMethod.GET})
     public ModelAndView activeSnippetUserProfile(
             final @PathVariable("id") long id,
             @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
@@ -71,7 +72,7 @@ public class  UserController {
         return profileMav(id, currentUser, user, "user/"+id+"/active/", descriptionForm, Constants.OWNER_ACTIVE_CONTEXT, snippets, totalSnippetCount, page, editing);
     }
 
-    @RequestMapping(value = "/user/{id}/deleted")
+    @RequestMapping(value = "/user/{id}/deleted", method = {RequestMethod.GET})
     public ModelAndView deletedSnippetUserProfile(
             final @PathVariable("id") long id,
             @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
@@ -90,7 +91,7 @@ public class  UserController {
         return profileMav(id, currentUser, user, "user/"+id+"/deleted/", descriptionForm, Constants.OWNER_DELETED_CONTEXT, snippets, totalSnippetCount, page, editing);
     }
 
-    @RequestMapping(value = "/user/{id}")
+    @RequestMapping(value = "/user/{id}", method = {RequestMethod.GET})
     public ModelAndView userProfile(
             final @PathVariable("id") long id,
             @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
@@ -121,6 +122,14 @@ public class  UserController {
             final BindingResult errors,
             @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm
     ){
+        List<String> possibleContexts = new ArrayList<>();
+        possibleContexts.add(Constants.OWNER_DELETED_CONTEXT);
+        possibleContexts.add(Constants.OWNER_ACTIVE_CONTEXT);
+        possibleContexts.add(Constants.USER_PROFILE_CONTEXT);
+
+        if (!possibleContexts.contains(context)) {
+            throw new InvalidUrlException();
+        }
         if (errors.hasErrors()){
             return userProfile(id, profilePhotoForm, descriptionForm, 1, false);
         }

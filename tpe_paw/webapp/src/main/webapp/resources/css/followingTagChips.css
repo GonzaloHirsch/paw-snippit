@@ -7,6 +7,10 @@
     margin: 20px 0px 20px 30px;
 }
 
+.chip-list-wrapper {
+    max-height: 100%;
+}
+
 .chip-container {
     border: 2px solid rebeccapurple;
     -webkit-border-radius: 20px;

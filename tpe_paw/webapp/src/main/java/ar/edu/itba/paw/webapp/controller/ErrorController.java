@@ -72,7 +72,7 @@ public class ErrorController {
 
     @ModelAttribute
     public void addAttributes(Model model, HttpServletRequest request) {
-        User currentUser = this.loginAuthentication.getLoggedInUser();
+        User currentUser = this.loginAuthentication.getLoggedInUser(request);
         Collection<Tag> userTags =  Collections.emptyList();
         Collection<String> userRoles = Collections.emptyList();
         Collection<Tag> allFollowedTags = Collections.emptyList();

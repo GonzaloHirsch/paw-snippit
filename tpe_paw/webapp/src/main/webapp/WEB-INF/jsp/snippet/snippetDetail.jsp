@@ -51,7 +51,7 @@
                         <div class="snippet-text snippet-title detail-snippet-title">
                             ${fn:escapeXml(snippet.title)}
                         </div>
-                        <a href="<c:url value="/languages/${snippet.language.id}"/>" class="snippet-language-tag detail-snippet-language-margin border-radius transition">
+                        <a href="<c:url value="/languages/${snippet.language.id}"/>" class="flex-center snippet-language-tag detail-snippet-language-margin border-radius transition">
                             ${snippet.language.name.toUpperCase()}
                         </a>
                     </div>

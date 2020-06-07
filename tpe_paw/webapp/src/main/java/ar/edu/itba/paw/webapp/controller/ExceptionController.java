@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,7 +40,7 @@ public class ExceptionController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorController.class);
 
     @ExceptionHandler(value = Exception.class)
-    public ModelAndView defaultErrorHandler(Exception e) throws Exception {
+    public ModelAndView defaultErrorHandler(Exception e, HttpServletRequest request) throws Exception {
         /*
          * If the exception is annotated with @ResponseStatus rethrow it and let
          * the framework handle it
@@ -51,62 +52,62 @@ public class ExceptionController {
         String errorMessage = messageSource.getMessage("error.404", null, LocaleContextHolder.getLocale());
         String errorName = messageSource.getMessage("error.404.name", null, LocaleContextHolder.getLocale());
         LOGGER.error(e.getMessage());
-        return this.createErrorModel(errorName, errorMessage, 404);
+        return this.createErrorModel(request, errorName, errorMessage, 404);
     }
 
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler({PSQLException.class, BadSqlGrammarException.class})
-    public ModelAndView internalServerError(Exception e) {
+    public ModelAndView internalServerError(Exception e, HttpServletRequest request) {
         String errorName = messageSource.getMessage("error.500.name", null, LocaleContextHolder.getLocale());
         String errorMessage = messageSource.getMessage("error.500", null, LocaleContextHolder.getLocale());
         LOGGER.error(e.getMessage());
-        return this.createErrorModel(errorName, errorMessage, 500); }
+        return this.createErrorModel(request, errorName, errorMessage, 500); }
 
 
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     @ExceptionHandler({UserNotFoundException.class, LanguageNotFoundException.class, TagNotFoundException.class, SnippetNotFoundException.class})
-    public ModelAndView elementNotFound(Exception ex) {
+    public ModelAndView elementNotFound(Exception ex, HttpServletRequest request) {
         String errorName = messageSource.getMessage("error.404.name", null, LocaleContextHolder.getLocale());
         LOGGER.error(ex.getMessage());
-        return this.createErrorModel(errorName, ex.getMessage(), 404);
+        return this.createErrorModel(request, errorName, ex.getMessage(), 404);
     }
 
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     @ExceptionHandler(FormErrorException.class)
-    public ModelAndView formError(Exception ex) {
+    public ModelAndView formError(Exception ex, HttpServletRequest request) {
         String errorName = messageSource.getMessage("error.404.name", null, LocaleContextHolder.getLocale());
         LOGGER.error(ex.getMessage());
-        return this.createErrorModel(errorName, ex.getMessage(), 404);
+        return this.createErrorModel(request, errorName, ex.getMessage(), 404);
     }
 
     @ResponseStatus(code = HttpStatus.FORBIDDEN)
     @ExceptionHandler(ForbiddenAccessException.class)
-    public ModelAndView forbiddenAccess(Exception ex) {
+    public ModelAndView forbiddenAccess(Exception ex, HttpServletRequest request) {
         String errorName = messageSource.getMessage("error.403.name", null, LocaleContextHolder.getLocale());
         LOGGER.error(ex.getMessage());
-        return this.createErrorModel(errorName, ex.getMessage(), 403);
+        return this.createErrorModel(request, errorName, ex.getMessage(), 403);
     }
 
     @ResponseStatus(code = HttpStatus.CONFLICT)
     @ExceptionHandler({RemovingLanguageInUseException.class, ElementDeletionException.class})
-    public ModelAndView cannotRemoveLanguage(RemovingLanguageInUseException ex) {
+    public ModelAndView cannotRemoveLanguage(RemovingLanguageInUseException ex, HttpServletRequest request) {
         String errorName = messageSource.getMessage("error.409.name", null, LocaleContextHolder.getLocale());
         LOGGER.error(ex.getMessage());
-        return this.createErrorModel(errorName, ex.getMessage(), 409);
+        return this.createErrorModel(request, errorName, ex.getMessage(), 409);
     }
 
     @ResponseStatus(code = HttpStatus.URI_TOO_LONG)
     @ExceptionHandler(URITooLongException.class)
-    public ModelAndView uriTooLong(URITooLongException ex) {
+    public ModelAndView uriTooLong(URITooLongException ex, HttpServletRequest request) {
         String errorName = messageSource.getMessage("error.414.name", null, LocaleContextHolder.getLocale());
         LOGGER.error(ex.getMessage());
-        return this.createErrorModel(errorName, ex.getMessage(), 414);
+        return this.createErrorModel(request, errorName, ex.getMessage(), 414);
     }
 
-    private ModelAndView createErrorModel(String errorName, String errorMessage, int errorCode) {
+    private ModelAndView createErrorModel(HttpServletRequest request, String errorName, String errorMessage, int errorCode) {
         ModelAndView mav = new ModelAndView(DEFAULT_ERROR_VIEW);
 
-        User currentUser = this.loginAuthentication.getLoggedInUser();
+        User currentUser = this.loginAuthentication.getLoggedInUser(request);
         Collection<Tag> userTags =  Collections.emptyList();
         Collection<String> userRoles = Collections.emptyList();
         Collection<Tag> allFollowedTags = Collections.emptyList();

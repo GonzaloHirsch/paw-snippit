@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.constants.Constants;
+import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.DescriptionForm;
 import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
@@ -51,8 +52,6 @@ public class  UserController {
     private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-    private static final String OWNER_DELETED_SNIPPETS = "deleted";
-    private static final String OWNER_ACTIVE_SNIPPETS = "active";
 
     @RequestMapping(value = "/user/{id}/active")
     public ModelAndView activeSnippetUserProfile(
@@ -62,14 +61,15 @@ public class  UserController {
             final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
     ) {
-
-        Optional<User> user = this.userService.findUserById(id);
-        if (!user.isPresent() || this.roleService.isAdmin(user.get().getId())) {
-            this.logAndThrow(id);
+        User user = this.getUserWithId(id);
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (!user.getId().equals(currentUser.getId())) {
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));
         }
-        Collection<Snippet> snippets = this.snippetService.getAllSnippetsByOwner(user.get().getId(), page, SNIPPET_PAGE_SIZE);
-        int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.get().getId());
-        return profileMav(id, user.get(), descriptionForm, OWNER_ACTIVE_SNIPPETS, snippets, totalSnippetCount, page, editing);
+
+        Collection<Snippet> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE);
+        int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
+        return profileMav(id, currentUser, user, "user/"+id+"/active/", descriptionForm, Constants.OWNER_ACTIVE_SNIPPETS, snippets, totalSnippetCount, page, editing);
     }
 
     @RequestMapping(value = "/user/{id}/deleted")
@@ -80,15 +80,15 @@ public class  UserController {
             final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
     ) {
-
-        Optional<User> user = this.userService.findUserById(id);
-        if (!user.isPresent() || this.roleService.isAdmin(user.get().getId())) {
-            this.logAndThrow(id);
+        User user = this.getUserWithId(id);
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (!user.getId().equals(currentUser.getId())) {
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));
         }
 
-        Collection<Snippet> snippets = this.snippetService.getAllDeletedSnippetsByOwner(user.get().getId(), page, SNIPPET_PAGE_SIZE);
-        int totalSnippetCount = this.snippetService.getAllDeletedSnippetsByOwnerCount(user.get().getId());
-        return profileMav(id, user.get(), descriptionForm, OWNER_DELETED_SNIPPETS, snippets, totalSnippetCount, page, editing);
+        Collection<Snippet> snippets = this.snippetService.getAllDeletedSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE);
+        int totalSnippetCount = this.snippetService.getAllDeletedSnippetsByOwnerCount(user.getId());
+        return profileMav(id, currentUser, user, "user/"+id+"/deleted/", descriptionForm, Constants.OWNER_DELETED_SNIPPETS, snippets, totalSnippetCount, page, editing);
     }
 
     @RequestMapping(value = "/user/{id}")
@@ -99,14 +99,25 @@ public class  UserController {
             final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
     ) {
-        return this.activeSnippetUserProfile(id, profilePhotoForm, descriptionForm, page, editing);
+        User user = this.getUserWithId(id);
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        Collection<Snippet> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE);
+        int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
+        return profileMav(id, currentUser, user, "user/"+id+"/", descriptionForm, "", snippets, totalSnippetCount, page, editing);
     }
 
-    private ModelAndView profileMav(long id, User user, DescriptionForm descriptionForm, String tabContext, Collection<Snippet> snippets, final int totalSnippetCount, final int page, final boolean editing) {
+    private User getUserWithId(final long id) {
+        Optional<User> user = this.userService.findUserById(id);
+        if (!user.isPresent() || this.roleService.isAdmin(user.get().getId())) {
+            this.logAndThrow(id);
+        }
+        return user.get();
+    }
+
+    private ModelAndView profileMav(long id, User currentUser, User user, String searchContext, DescriptionForm descriptionForm, String tabContext, Collection<Snippet> snippets, final int totalSnippetCount, final int page, final boolean editing) {
         final ModelAndView mav = new ModelAndView("user/profile");
 
         /* Set the current user and its following tags */
-        User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags =  Collections.emptyList();
         Collection<String> userRoles = Collections.emptyList();
         Collection<Tag> allFollowedTags = Collections.emptyList();
@@ -130,7 +141,7 @@ public class  UserController {
         mav.addObject("user", user);
         mav.addObject("snippets", snippets);
         mav.addObject("snippetsCount", totalSnippetCount);
-        mav.addObject("searchContext", "user/"+id+"/");
+        mav.addObject("searchContext", searchContext);
         mav.addObject("tabContext", tabContext);
         return mav;
     }

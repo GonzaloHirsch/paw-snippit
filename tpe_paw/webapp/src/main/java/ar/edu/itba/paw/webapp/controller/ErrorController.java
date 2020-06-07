@@ -49,12 +49,15 @@ public class ErrorController {
     public ModelAndView customError(HttpServletRequest request, @ModelAttribute("searchForm") SearchForm searchForm) {
         int errorCode = this.getErrorCode(request);
         ModelAndView mav = new ModelAndView("errors/default");
-        String message = messageSource.getMessage("error.unknown",null, LocaleContextHolder.getLocale());
-        String errorName = messageSource.getMessage("error.unknown.name",null, LocaleContextHolder.getLocale());
+        String message;
+        String errorName;
 
         if (supportedErrorPages.contains(errorCode)){
             message =  messageSource.getMessage("error." + String.valueOf(errorCode),null, LocaleContextHolder.getLocale());
             errorName = messageSource.getMessage("error." + String.valueOf(errorCode) +".name",null, LocaleContextHolder.getLocale());
+        } else {
+            message = messageSource.getMessage("error.unknown",null, LocaleContextHolder.getLocale());
+            errorName = messageSource.getMessage("error.unknown.name",null, LocaleContextHolder.getLocale());
         }
         mav.addObject("err", errorCode);
         mav.addObject("errName", errorName);

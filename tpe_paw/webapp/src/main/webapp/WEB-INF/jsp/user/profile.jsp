@@ -113,7 +113,7 @@
                                     <spring:message code="profile.edit.save"/>
                                 </div>
                                 <a class="flex-center purple-text edit-button"
-                                   href="<c:url value="/user/${user.id}?editing=false"/>">
+                                   href="<c:url value="/user/${user.id}/${tabContext}?editing=false"/>">
                                     <spring:message code="profile.edit.discard"/>
                                 </a>
                             </c:if>
@@ -159,19 +159,19 @@
         <c:if test="${currentUser != null && currentUser.id == user.id}">
             <div class="flex-row flex-center flex-wrap tabs-container">
                 <c:choose>
-                    <c:when test="${tabContext == 'active'}">
+                    <c:when test="${tabContext == 'deleted'}">
+                        <a class="no-margin tabs-item-container flex-center tabs-first-item transition" href="<c:url value="/user/${user.id}/active"/>">
+                            <spring:message code="profile.tabs.active"/>
+                        </a>
+                        <div class="tabs-item-container tabs-second-item flex-center transition tabs-item-selected"><spring:message code="profile.tabs.deleted"/></div>
+                    </c:when>
+                    <c:otherwise>
                         <div class="no-margin tabs-item-container flex-center tabs-first-item transition tabs-item-selected">
                             <spring:message code="profile.tabs.active"/>
                         </div>
                         <a class="tabs-item-container flex-center tabs-second-item transition " href="<c:url value="/user/${user.id}/deleted"/>">
                             <spring:message code="profile.tabs.deleted"/>
                         </a>
-                    </c:when>
-                    <c:otherwise>
-                        <a class="no-margin tabs-item-container flex-center tabs-first-item transition" href="<c:url value="/user/${user.id}/active"/>">
-                            <spring:message code="profile.tabs.active"/>
-                        </a>
-                        <div class="tabs-item-container tabs-second-item flex-center transition tabs-item-selected"><spring:message code="profile.tabs.deleted"/></div>
                     </c:otherwise>
                 </c:choose>
             </div>

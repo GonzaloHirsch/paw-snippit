@@ -244,7 +244,7 @@ public class SnippetDeepSearchQuery {
 
         public Builder removeDeleted(){
             this.checkIfFirst();
-            this.query.append("s.flagged = FALSE");
+            this.query.append("s.deleted = FALSE");
             return this;
         }
 

@@ -205,7 +205,7 @@ public class SearchController {
     @RequestMapping("/user/{id}/{context}/search")
     public ModelAndView searchOwnerProfileSnippets(
             final @PathVariable("id") long id,
-            final @PathVariable("context") String context,
+            @PathVariable("context") String context,
             @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
             @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
             @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
@@ -222,9 +222,15 @@ public class SearchController {
         User user = maybeUser.get();
         descriptionForm.setDescription(user.getDescription());
 
+        //If context is "" but it is my profile, change it to active
+        if (currentUser != null && currentUser.getId().equals(user.getId()) && context.equals(Constants.USER_PROFILE_CONTEXT)){
+            context = Constants.OWNER_ACTIVE_CONTEXT;
+        }
+
         // Getting the snippets for the search
         Collection<Snippet> snippets;
         int totalSnippetCount;
+        StringBuilder searchContext = new StringBuilder("user/").append(id).append("/");
 
         if (context.equals(Constants.USER_PROFILE_CONTEXT) || context.equals(Constants.OWNER_ACTIVE_CONTEXT)) {
             snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
@@ -236,6 +242,9 @@ public class SearchController {
             throw new InvalidUrlException();
         }
 
+        searchContext.append(context);
+        if (!context.equals(Constants.USER_PROFILE_CONTEXT)) { searchContext.append("/"); }
+
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, USER + id + "/");
         mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.getId()));
         mav.addObject("snippetsCount", user.getCreatedSnippets().size());
@@ -244,6 +253,7 @@ public class SearchController {
         mav.addObject("user", user);
         mav.addObject("snippets", snippets);
         mav.addObject("tabContext", context);
+        mav.addObject("searchContext", searchContext);
         return mav;
     }
 
@@ -275,7 +285,7 @@ public class SearchController {
     }
 
     private void logAndThrow(String location) {
-        LOGGER.warn("Searching inside {} with no logged in user", location);
+        LOGGER.warn("User not found when searching profile {}", location);
         throw new ForbiddenAccessException(messageSource.getMessage("error.403", new Object[]{location}, LocaleContextHolder.getLocale()));
     }
 

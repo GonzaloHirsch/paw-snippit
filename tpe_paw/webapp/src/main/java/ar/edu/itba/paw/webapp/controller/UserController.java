@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
+import ar.edu.itba.paw.webapp.exception.InvalidUrlException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.DescriptionForm;
 import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
@@ -28,9 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
@@ -63,7 +62,7 @@ public class  UserController {
     ) {
         User user = this.getUserWithId(id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (!user.getId().equals(currentUser.getId())) {
+        if (currentUser == null || !user.getId().equals(currentUser.getId())) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));
         }
 
@@ -82,7 +81,7 @@ public class  UserController {
     ) {
         User user = this.getUserWithId(id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (!user.getId().equals(currentUser.getId())) {
+        if (currentUser == null || !user.getId().equals(currentUser.getId())) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));
         }
 
@@ -101,49 +100,17 @@ public class  UserController {
     ) {
         User user = this.getUserWithId(id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
+        StringBuilder searchContext = new StringBuilder("user/").append(id).append("/");
+        String tabContext = "";
+
+        //The context is "" but it is my profile --> change it to active
+        if (currentUser != null && currentUser.getId().equals(user.getId())){
+            searchContext.append(Constants.OWNER_ACTIVE_CONTEXT).append("/");
+            tabContext = Constants.OWNER_ACTIVE_CONTEXT;
+        }
         Collection<Snippet> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
-        return profileMav(id, currentUser, user, "user/"+id+"/", descriptionForm, "", snippets, totalSnippetCount, page, editing);
-    }
-
-    private User getUserWithId(final long id) {
-        Optional<User> user = this.userService.findUserById(id);
-        if (!user.isPresent() || this.roleService.isAdmin(user.get().getId())) {
-            this.logAndThrow(id);
-        }
-        return user.get();
-    }
-
-    private ModelAndView profileMav(long id, User currentUser, User user, String searchContext, DescriptionForm descriptionForm, String tabContext, Collection<Snippet> snippets, final int totalSnippetCount, final int page, final boolean editing) {
-        final ModelAndView mav = new ModelAndView("user/profile");
-
-        /* Set the current user and its following tags */
-        Collection<Tag> userTags =  Collections.emptyList();
-        Collection<String> userRoles = Collections.emptyList();
-        Collection<Tag> allFollowedTags = Collections.emptyList();
-
-        if (currentUser != null) {
-            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
-            userRoles = this.roleService.getUserRoles(currentUser.getId());
-            allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-        }
-        mav.addObject("currentUser", currentUser);
-        mav.addObject("userTags", userTags);
-        mav.addObject("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
-        mav.addObject("userRoles", userRoles);
-
-        descriptionForm.setDescription(user.getDescription());
-        mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.getId()));
-        mav.addObject("pages", totalSnippetCount / SNIPPET_PAGE_SIZE + (totalSnippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
-        mav.addObject("page", page);
-        mav.addObject("editing", editing);
-        mav.addObject("isEdit", false);
-        mav.addObject("user", user);
-        mav.addObject("snippets", snippets);
-        mav.addObject("snippetsCount", totalSnippetCount);
-        mav.addObject("searchContext", searchContext);
-        mav.addObject("tabContext", tabContext);
-        return mav;
+        return profileMav(id, currentUser, user, searchContext.toString(), descriptionForm, tabContext, snippets, totalSnippetCount, page, editing);
     }
 
     @RequestMapping(value = "/user/{id}/{context}", method = {RequestMethod.POST})
@@ -198,16 +165,20 @@ public class  UserController {
             final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
     ) {
+        if (!(context.equals(Constants.OWNER_DELETED_CONTEXT) || context.equals(Constants.OWNER_ACTIVE_CONTEXT) || context.equals(Constants.USER_PROFILE_CONTEXT))) {
+            throw new InvalidUrlException();
+        }
         if (errors.hasErrors()) {
-            return userProfile(id, profilePhotoForm, descriptionForm, page, editing);
+            return context.equals(Constants.OWNER_DELETED_CONTEXT) ?
+                    deletedSnippetUserProfile(id, profilePhotoForm, descriptionForm, page, true) :
+                    activeSnippetUserProfile(id, profilePhotoForm, descriptionForm, page, true);
         }
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Optional<User> user = this.userService.findUserById(id);
-        if (!user.isPresent()){
-            this.logAndThrow(id);
-        }
-        if (currentUser != null && currentUser.getId().equals(user.get().getId())) {
+        User user = this.getUserWithId(id);
+        if (currentUser != null && currentUser.getId().equals(user.getId())) {
             this.userService.changeDescription(id, descriptionForm.getDescription());
+        } else {
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));
         }
         return new ModelAndView("redirect:/user/" + id + "/" + context);
     }
@@ -215,6 +186,46 @@ public class  UserController {
     private void logAndThrow(long id) {
         LOGGER.warn("User with id {} doesn't exist", id);
         throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{id}, LocaleContextHolder.getLocale()));
+    }
+
+    private User getUserWithId(final long id) {
+        Optional<User> user = this.userService.findUserById(id);
+        if (!user.isPresent() || this.roleService.isAdmin(user.get().getId())) {
+            this.logAndThrow(id);
+        }
+        return user.get();
+    }
+
+    private ModelAndView profileMav(long id, User currentUser, User user, String searchContext, DescriptionForm descriptionForm, String tabContext, Collection<Snippet> snippets, final int totalSnippetCount, final int page, final boolean editing) {
+        final ModelAndView mav = new ModelAndView("user/profile");
+
+        /* Set the current user and its following tags */
+        Collection<Tag> userTags =  Collections.emptyList();
+        Collection<String> userRoles = Collections.emptyList();
+        Collection<Tag> allFollowedTags = Collections.emptyList();
+
+        if (currentUser != null) {
+            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
+            userRoles = this.roleService.getUserRoles(currentUser.getId());
+            allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
+        }
+        mav.addObject("currentUser", currentUser);
+        mav.addObject("userTags", userTags);
+        mav.addObject("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
+        mav.addObject("userRoles", userRoles);
+
+        descriptionForm.setDescription(user.getDescription());
+        mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.getId()));
+        mav.addObject("pages", totalSnippetCount / SNIPPET_PAGE_SIZE + (totalSnippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
+        mav.addObject("page", page);
+        mav.addObject("editing", editing);
+        mav.addObject("isEdit", false);
+        mav.addObject("user", user);
+        mav.addObject("snippets", snippets);
+        mav.addObject("snippetsCount", totalSnippetCount);
+        mav.addObject("searchContext", searchContext);
+        mav.addObject("tabContext", tabContext);
+        return mav;
     }
 
     @ModelAttribute

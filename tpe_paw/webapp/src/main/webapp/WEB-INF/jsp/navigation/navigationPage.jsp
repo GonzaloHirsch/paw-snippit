@@ -37,7 +37,7 @@
                 <a class="navigation-page transition" href="${prevUrl}"><span class="material-icons">
                 chevron_left </span></a>
             </c:if>
-            <c:forEach begin="${page - 1 > 0 ? page - 1 : 1}" end="${pages > page + 1 ? page + 1 : pages}"
+            <c:forEach begin="${page - 2 > 0 ? page - 2 : 1}" end="${pages > page + 2 ? page + 2 : pages}"
                        varStatus="pageIndex">
                 <c:url var="actUrl" value="">
                     <c:forEach items="${param}" var="entry">
@@ -68,7 +68,7 @@
                 <a class="navigation-page transition" href="${nextUrl}"><span class="material-icons">
                 chevron_right </span></a>
             </c:if>
-            <c:if test="${page < pages - 1}">
+            <c:if test="${page < pages - 2}">
                 <c:url var="nextUrl" value="">
                     <c:forEach items="${param}" var="entry">
                         <c:if test="${entry.key != 'page'}">

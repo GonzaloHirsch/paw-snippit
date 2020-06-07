@@ -191,7 +191,15 @@ public class SearchController {
     }
 
     @RequestMapping("/user/{id}/search")
-    public ModelAndView searchInTags(final @PathVariable("id") long id, @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm, @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm, @Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page, final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing) {
+    public ModelAndView searchInTags(
+            final @PathVariable("id") long id,
+            @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
+            @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
+            @ModelAttribute("showDeletedForm") final DeleteForm deleteForm,
+            @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
+            final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
+    ) {
         final ModelAndView mav = new ModelAndView("user/profile");
         /* Set the current user and its following tags */
         User currentUser = this.loginAuthentication.getLoggedInUser();
@@ -201,10 +209,18 @@ public class SearchController {
         }
         User user = maybeUser.get();
         descriptionForm.setDescription(user.getDescription());
+
         // Getting the snippets for the search
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
-        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, id, null);
-        int userTotalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
+        Collection<Snippet> snippets;
+        int totalSnippetCount;
+
+        if (!deleteForm.isDelete()) {
+            snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
+            totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, id, null);
+        } else {
+            snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.DELETED, searchForm.getSort(), id, null, page);
+            totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.DELETED, id, null);
+        }
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, USER + id + "/");
         mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.getId()));
         mav.addObject("snippetsCount", user.getCreatedSnippets().size());

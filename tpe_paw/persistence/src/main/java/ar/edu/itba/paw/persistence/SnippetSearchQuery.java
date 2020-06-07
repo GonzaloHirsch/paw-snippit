@@ -60,6 +60,7 @@ public class SnippetSearchQuery {
             final Map<SnippetDao.Locations, String> locations = new HashMap<>();
             locations.put(SnippetDao.Locations.HOME, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn WHERE sn.deleted = FALSE)");
             locations.put(SnippetDao.Locations.USER, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn WHERE sn.user_id = :userId AND sn.deleted = FALSE)");
+            locations.put(SnippetDao.Locations.DELETED, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn WHERE sn.user_id = :userId AND sn.deleted = TRUE)");
             locations.put(SnippetDao.Locations.LANGUAGES, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn WHERE sn.language_id = :resourceId AND sn.deleted = FALSE)");
             locations.put(SnippetDao.Locations.TAGS, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id WHERE st.tag_id = :resourceId AND sn.deleted = FALSE)");
             locations.put(SnippetDao.Locations.FAVORITES, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn INNER JOIN favorites AS fav ON fav.snippet_id = sn.id WHERE fav.user_id = :userId)");

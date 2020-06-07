@@ -69,7 +69,7 @@ public class  UserController {
 
         Collection<Snippet> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
-        return profileMav(id, currentUser, user, "user/"+id+"/active/", descriptionForm, Constants.OWNER_ACTIVE_SNIPPETS, snippets, totalSnippetCount, page, editing);
+        return profileMav(id, currentUser, user, "user/"+id+"/active/", descriptionForm, Constants.OWNER_ACTIVE_CONTEXT, snippets, totalSnippetCount, page, editing);
     }
 
     @RequestMapping(value = "/user/{id}/deleted")
@@ -88,7 +88,7 @@ public class  UserController {
 
         Collection<Snippet> snippets = this.snippetService.getAllDeletedSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllDeletedSnippetsByOwnerCount(user.getId());
-        return profileMav(id, currentUser, user, "user/"+id+"/deleted/", descriptionForm, Constants.OWNER_DELETED_SNIPPETS, snippets, totalSnippetCount, page, editing);
+        return profileMav(id, currentUser, user, "user/"+id+"/deleted/", descriptionForm, Constants.OWNER_DELETED_CONTEXT, snippets, totalSnippetCount, page, editing);
     }
 
     @RequestMapping(value = "/user/{id}")

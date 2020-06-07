@@ -10,8 +10,9 @@ public final class Constants {
     public static final String REFERER = "Referer";
     public static final String HOME = "/";
 
-    public static final String OWNER_DELETED_SNIPPETS = "deleted";
-    public static final String OWNER_ACTIVE_SNIPPETS = "active";
+    public static final String OWNER_DELETED_CONTEXT = "deleted";
+    public static final String OWNER_ACTIVE_CONTEXT = "active";
+    public static final String USER_PROFILE_CONTEXT = "";
 
     private Constants(){}
 }

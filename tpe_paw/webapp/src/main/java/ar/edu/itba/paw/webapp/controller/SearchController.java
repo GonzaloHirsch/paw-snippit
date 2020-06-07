@@ -199,7 +199,7 @@ public class SearchController {
             final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
     ) {
-        return this.searchOwnerProfileSnippets(id, "", profilePhotoForm, descriptionForm, searchForm, page, editing);
+        return this.searchOwnerProfileSnippets(id, Constants.USER_PROFILE_CONTEXT, profilePhotoForm, descriptionForm, searchForm, page, editing);
     }
 
     @RequestMapping("/user/{id}/{context}/search")
@@ -226,13 +226,16 @@ public class SearchController {
         Collection<Snippet> snippets;
         int totalSnippetCount;
 
-        if (context.equals(Constants.OWNER_DELETED_SNIPPETS)) {
+        if (context.equals(Constants.USER_PROFILE_CONTEXT) || context.equals(Constants.OWNER_ACTIVE_CONTEXT)) {
+            snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
+            totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, id, null);
+        } else if (context.equals(Constants.OWNER_DELETED_CONTEXT)) {
             snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.DELETED, searchForm.getSort(), id, null, page);
             totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.DELETED, id, null);
         } else {
-            snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
-            totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, id, null);
+            throw new InvalidUrlException();
         }
+
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, USER + id + "/");
         mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.getId()));
         mav.addObject("snippetsCount", user.getCreatedSnippets().size());

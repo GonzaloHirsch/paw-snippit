@@ -7,6 +7,7 @@
 <html>
     <head>
         <link href="<c:url value='/resources/css/itemSearchBar.css'/>" rel="stylesheet"/>
+    <script src="<c:url value='/resources/js/form.js'/>"></script>
     </head>
     <body>
         <c:set var="itemSearchContext" value="${requestScope.itemSearchContext}"/>

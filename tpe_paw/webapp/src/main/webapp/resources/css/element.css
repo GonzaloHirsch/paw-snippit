@@ -29,6 +29,7 @@
     height: 100%;
     padding: 15px 8px 15px 15px;
     color: black;
+    word-break: break-word;
 }
 
 .element-container-main{

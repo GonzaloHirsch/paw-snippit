@@ -88,7 +88,7 @@
                     <c:choose>
                         <c:when test="${searchContext == 'user/'}">
                             <a class="fw-100 menu-option menu-selected flex-center" href="<c:url
-                                value="${'/user/'}${currentUser.id}"/>">
+                                value="${'/user/'}${currentUser.id}${'/active'}"/>">
                             <c:if test="${currentUser.icon != null}">
                                 <img src="<c:url value="/user/${currentUser.id}/image"/>" alt="User Icon"/>
                             </c:if>
@@ -99,7 +99,7 @@
                             </a>
                         </c:when>
                         <c:otherwise>
-                            <a class="fw-100 menu-option" href="<c:url value="${'/user/'}${currentUser.id}"/>">
+                            <a class="fw-100 menu-option" href="<c:url value="${'/user/'}${currentUser.id}${'/active'}"/>">
                             <c:if test="${currentUser.icon != null}">
                                 <img src="<c:url value="/user/${currentUser.id}/image"/>" alt="User Icon"/>
                             </c:if>
@@ -267,7 +267,7 @@
                     </c:otherwise>
                 </c:choose>
 
-                <a href="<c:url value="${'/user/'}${currentUser.id}"/>" class="white-text flex-center navtop-welcome-text">
+                <a href="<c:url value="${'/user/'}${currentUser.id}${'/active'}"/>" class="white-text flex-center navtop-welcome-text">
                    <spring:message code="app.userWelcome" arguments="${currentUser.username}"/>
                 </a>
             </c:otherwise>

@@ -7,7 +7,6 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.DeleteForm;
 import ar.edu.itba.paw.webapp.form.DescriptionForm;
 import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
@@ -25,9 +24,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -52,22 +51,59 @@ public class  UserController {
     private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-    
-    @RequestMapping(value = "/user/{id}")
-    public ModelAndView userProfile(
+    private static final String OWNER_DELETED_SNIPPETS = "deleted";
+    private static final String OWNER_ACTIVE_SNIPPETS = "active";
+
+    @RequestMapping(value = "/user/{id}/active")
+    public ModelAndView activeSnippetUserProfile(
             final @PathVariable("id") long id,
             @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
             @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
-            @ModelAttribute("showDeletedForm") final DeleteForm deleteForm,
             final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
-           ) {
-        final ModelAndView mav = new ModelAndView("user/profile");
+    ) {
 
         Optional<User> user = this.userService.findUserById(id);
         if (!user.isPresent() || this.roleService.isAdmin(user.get().getId())) {
             this.logAndThrow(id);
         }
+        Collection<Snippet> snippets = this.snippetService.getAllSnippetsByOwner(user.get().getId(), page, SNIPPET_PAGE_SIZE);
+        int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.get().getId());
+        return profileMav(id, user.get(), descriptionForm, OWNER_ACTIVE_SNIPPETS, snippets, totalSnippetCount, page, editing);
+    }
+
+    @RequestMapping(value = "/user/{id}/deleted")
+    public ModelAndView deletedSnippetUserProfile(
+            final @PathVariable("id") long id,
+            @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
+            @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
+            final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
+    ) {
+
+        Optional<User> user = this.userService.findUserById(id);
+        if (!user.isPresent() || this.roleService.isAdmin(user.get().getId())) {
+            this.logAndThrow(id);
+        }
+
+        Collection<Snippet> snippets = this.snippetService.getAllDeletedSnippetsByOwner(user.get().getId(), page, SNIPPET_PAGE_SIZE);
+        int totalSnippetCount = this.snippetService.getAllDeletedSnippetsByOwnerCount(user.get().getId());
+        return profileMav(id, user.get(), descriptionForm, OWNER_DELETED_SNIPPETS, snippets, totalSnippetCount, page, editing);
+    }
+
+    @RequestMapping(value = "/user/{id}")
+    public ModelAndView userProfile(
+            final @PathVariable("id") long id,
+            @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
+            @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
+            final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
+    ) {
+        return this.activeSnippetUserProfile(id, profilePhotoForm, descriptionForm, page, editing);
+    }
+
+    private ModelAndView profileMav(long id, User user, DescriptionForm descriptionForm, String tabContext, Collection<Snippet> snippets, final int totalSnippetCount, final int page, final boolean editing) {
+        final ModelAndView mav = new ModelAndView("user/profile");
 
         /* Set the current user and its following tags */
         User currentUser = this.loginAuthentication.getLoggedInUser();
@@ -85,39 +121,30 @@ public class  UserController {
         mav.addObject("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
         mav.addObject("userRoles", userRoles);
 
-        Collection<Snippet> snippets;
-        int totalSnippetCount;
-
-        if (!deleteForm.isDelete()) {
-            snippets = this.snippetService.getAllSnippetsByOwner(user.get().getId(), page, SNIPPET_PAGE_SIZE);
-            totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.get().getId());
-        } else {
-            snippets = this.snippetService.getAllDeletedSnippetsByOwner(user.get().getId(), page, SNIPPET_PAGE_SIZE);
-            totalSnippetCount = this.snippetService.getAllDeletedSnippetsByOwnerCount(user.get().getId());
-        }
-        descriptionForm.setDescription(user.get().getDescription());
-        mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.get().getId()));
+        descriptionForm.setDescription(user.getDescription());
+        mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.getId()));
         mav.addObject("pages", totalSnippetCount / SNIPPET_PAGE_SIZE + (totalSnippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("editing", editing);
         mav.addObject("isEdit", false);
-        mav.addObject("user", user.get());
+        mav.addObject("user", user);
         mav.addObject("snippets", snippets);
         mav.addObject("snippetsCount", totalSnippetCount);
         mav.addObject("searchContext", "user/"+id+"/");
+        mav.addObject("tabContext", tabContext);
         return mav;
     }
 
-    @RequestMapping(value = "/user/{id}", method = {RequestMethod.POST})
+    @RequestMapping(value = "/user/{id}/{context}", method = {RequestMethod.POST})
     public ModelAndView endEditPhoto(
             final @PathVariable("id") long id,
+            final @PathVariable("context") String context,
             @ModelAttribute("profilePhotoForm") @Valid final ProfilePhotoForm profilePhotoForm,
             final BindingResult errors,
-            @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
-            @ModelAttribute("showDeletedForm") final DeleteForm deleteForm)
-    {
+            @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm
+    ){
         if (errors.hasErrors()){
-            return userProfile(id, profilePhotoForm, descriptionForm, deleteForm, 1, false);
+            return userProfile(id, profilePhotoForm, descriptionForm, 1, false);
         }
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
@@ -129,10 +156,10 @@ public class  UserController {
                 LOGGER.error("Exception changing profile photo for user {}", id);
                 FieldError photoError = new FieldError("profilePhotoForm","file" , messageSource.getMessage("profile.photo.error", null, LocaleContextHolder.getLocale()));
                 errors.addError(photoError);
-                return userProfile(id, profilePhotoForm, descriptionForm, deleteForm, 1, false);
+                return userProfile(id, profilePhotoForm, descriptionForm, 1, false);
             }
         }
-        return new ModelAndView("redirect:/user/" + id);
+        return new ModelAndView("redirect:/user/" + id + "/" + context);
     }
 
     @RequestMapping(value = "/user/{id}/image", produces = "image/jpeg")
@@ -150,16 +177,18 @@ public class  UserController {
                 .body(user.map(User::getIcon).orElse(null));
     }
 
-    @RequestMapping(value = "/user/{id}/edit", method = {RequestMethod.POST})
-    public ModelAndView endEditUserProfile(final @PathVariable("id") long id,
-                                           @Valid @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
-                                           final BindingResult errors,
-                                           @ModelAttribute("showDeletedForm") final DeleteForm deleteForm,
-                                           @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
-                                           final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                           final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing) {
+    @RequestMapping(value = "/user/{id}/{context}/edit", method = {RequestMethod.POST})
+    public ModelAndView endEditUserProfile(
+            final @PathVariable("id") long id,
+            final @PathVariable("context") String context,
+            @Valid @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
+            final BindingResult errors,
+            @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
+            final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
+    ) {
         if (errors.hasErrors()) {
-            return userProfile(id, profilePhotoForm, descriptionForm, deleteForm, page, editing);
+            return userProfile(id, profilePhotoForm, descriptionForm, page, editing);
         }
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Optional<User> user = this.userService.findUserById(id);
@@ -169,7 +198,7 @@ public class  UserController {
         if (currentUser != null && currentUser.getId().equals(user.get().getId())) {
             this.userService.changeDescription(id, descriptionForm.getDescription());
         }
-        return new ModelAndView("redirect:/user/" + id);
+        return new ModelAndView("redirect:/user/" + id + "/" + context);
     }
 
     private void logAndThrow(long id) {

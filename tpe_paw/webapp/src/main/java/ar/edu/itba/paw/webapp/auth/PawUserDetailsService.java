@@ -18,9 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -45,7 +43,7 @@ public class PawUserDetailsService implements UserDetailsService {
 
         final Collection<GrantedAuthority> authorities = new HashSet<>();
 
-        Collection<String> roles = roleService.getUserRoles(user.getId());
+        List<String> roles = new ArrayList<>(roleService.getUserRoles(user.getId()));
         if (roles.isEmpty()) {
             this.roleService.assignUserRole(user.getId());
             roles.add(this.roleService.getUserRoleName());

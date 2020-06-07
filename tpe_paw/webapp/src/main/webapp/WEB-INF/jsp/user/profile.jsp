@@ -157,35 +157,18 @@
             </div>
         </div>
         <c:if test="${currentUser != null && currentUser.id == user.id}">
-<%--            <form:form modelAttribute="showDeletedForm" method="get" action="${ownerProfile}" class="flex-row flex-center flex-wrap tabs-container">--%>
-<%--                <form:checkbox class="hidden" id="show-deleted-button" path="delete" value="true" onclick="updateForm(this)"/>--%>
-<%--                <c:choose>--%>
-<%--                    <c:when test="${!showDeletedForm.delete}">--%>
-<%--                        <div class="tabs-item-container flex-center tabs-first-item transition tabs-item-selected"><spring:message code="profile.tabs.active"/></div>--%>
-<%--                        <label class="no-margin tabs-item-container flex-center tabs-second-item transition" for="show-deleted-button">--%>
-<%--                            <spring:message code="profile.tabs.deleted"/>--%>
-<%--                        </label>--%>
-<%--                    </c:when>--%>
-<%--                    <c:otherwise>--%>
-<%--                        <label class="no-margin tabs-item-container flex-center tabs-first-item transition" for="show-deleted-button">--%>
-<%--                            <spring:message code="profile.tabs.active"/>--%>
-<%--                        </label>--%>
-<%--                        <div class="tabs-item-container tabs-second-item flex-center transition tabs-item-selected"><spring:message code="profile.tabs.deleted"/></div>--%>
-<%--                    </c:otherwise>--%>
-<%--                </c:choose>--%>
-<%--            </form:form>--%>
             <div class="flex-row flex-center flex-wrap tabs-container">
                 <c:choose>
                     <c:when test="${tabContext == 'active'}">
                         <div class="no-margin tabs-item-container flex-center tabs-first-item transition tabs-item-selected">
                             <spring:message code="profile.tabs.active"/>
                         </div>
-                        <a class="no-text-decoration tabs-item-container flex-center tabs-second-item transition " href="<c:url value="/user/${user.id}/deleted"/>">
+                        <a class="tabs-item-container flex-center tabs-second-item transition " href="<c:url value="/user/${user.id}/deleted"/>">
                             <spring:message code="profile.tabs.deleted"/>
                         </a>
                     </c:when>
                     <c:otherwise>
-                        <a class="no-text-decoration no-margin tabs-item-container flex-center tabs-first-item transition" href="<c:url value="/user/${user.id}/active"/>">
+                        <a class="no-margin tabs-item-container flex-center tabs-first-item transition" href="<c:url value="/user/${user.id}/active"/>">
                             <spring:message code="profile.tabs.active"/>
                         </a>
                         <div class="tabs-item-container tabs-second-item flex-center transition tabs-item-selected"><spring:message code="profile.tabs.deleted"/></div>

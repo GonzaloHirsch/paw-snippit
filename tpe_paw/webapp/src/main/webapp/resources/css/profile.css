@@ -129,6 +129,7 @@
 .profile-no-snippet {
     font-size: 30px;
     padding: 50px;
+    width: 100%;
 }
 
 .edit-button {
@@ -185,7 +186,8 @@
     width: 50%;
     height: 100%;
     border: 2px #5E35B1 solid;
-    color: #503499;
+    color: #503499 !important;
+    text-decoration: none !important;
 }
 .tabs-item-selected {
     background-color: rgba(196, 196, 196, 0.65);

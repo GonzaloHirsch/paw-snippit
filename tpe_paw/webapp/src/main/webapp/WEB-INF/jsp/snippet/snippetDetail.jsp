@@ -119,7 +119,15 @@
                         </c:if>
 
                         <!-- USER DETAILS -->
-                        <a class="no-text-decoration" href="<c:url value='/user/${snippet.owner.id}'/>">
+                        <c:choose>
+                            <c:when test="${currentUser != null && currentUser.id == snippet.owner.id}">
+                                <c:url var="userProfile" value='/user/${snippet.owner.id}/active'/>
+                            </c:when>
+                            <c:otherwise>
+                                <c:url var="userProfile" value='/user/${snippet.owner.id}'/>
+                            </c:otherwise>
+                        </c:choose>
+                        <a class="no-text-decoration" href="${userProfile}">
                             <div class="flex-column flex-center detail-snippet-block border-radius form-shadow">
                                 <div class="snippet-text detail-snippet-date">Uploaded ${snippet.getCreationDate()}</div>
                                 <div class="flex-row snippet-user-info detail-snippet-user-info">

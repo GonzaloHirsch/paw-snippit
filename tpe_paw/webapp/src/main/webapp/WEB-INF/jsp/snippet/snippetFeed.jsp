@@ -22,7 +22,7 @@
     </div>
 </c:if>
 <c:if test="${snippetList.size() > 0}">
-    <div class="feed-snippets-grid">
+    <div class="feed-snippets-grid expand">
 
         <c:forEach var="snippet" items="${snippetList}">
             <c:set var="snippet" value="${snippet}" scope="request"/>

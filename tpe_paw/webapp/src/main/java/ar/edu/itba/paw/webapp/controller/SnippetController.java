@@ -176,22 +176,15 @@ public class SnippetController {
                 this.logAndThrow(id);
             }
             Snippet snippet = snippetOpt.get();
-            // Getting the complete owner
-//            Optional<User> completeOwnerOpt = this.userService.findUserById(snippetOpt.get().getOwner().getId());
-            if (snippet.getOwner() == null){
-                throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.delete", null, LocaleContextHolder.getLocale()));
-            }
 
             // Getting the url of the server
             final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-
             try {
                 // Updating the flagged variable of snippet
                 this.snippetService.updateFlagged(snippet, snippet.getOwner(), adminFlagForm.isFlagged(), baseUrl);
             } catch (Exception e) {
                 LOGGER.error(e.getMessage() + "Failed to send flagged email to user {} about their snippet {}", snippetOpt.get().getOwner().getUsername(), snippetOpt.get().getId());
             }
-
             LOGGER.debug("Marked snippet {} as flagged by admin", id);
 
         }

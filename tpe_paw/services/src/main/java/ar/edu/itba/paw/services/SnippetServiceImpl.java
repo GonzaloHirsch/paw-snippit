@@ -166,6 +166,5 @@ public class SnippetServiceImpl implements SnippetService {
         }
         // Getting the url of the server
         this.emailService.sendFlaggedEmail(baseUrl + "/snippet/" + snippet.getId(), snippet.getTitle(), owner.getEmail(), owner.getUsername(), isFlagged, owner.getLocale());
-
     }
 }

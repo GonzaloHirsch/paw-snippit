@@ -21,7 +21,7 @@ DO '
     END;
 ' language plpgsql;
 
-UPDATE languages SET deleted = FALSE;
+-- UPDATE languages SET deleted = FALSE;
 
 DO '
     BEGIN

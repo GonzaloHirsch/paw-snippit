@@ -28,7 +28,7 @@ public class LanguageJpaDaoImpl implements LanguageDao {
 
     @Override
     public Optional<Language> findByName(final String name) {
-        final TypedQuery<Language> query = this.em.createQuery("FROM Language AS t WHERE t.name = :name", Language.class);
+        final TypedQuery<Language> query = this.em.createQuery("FROM Language AS l WHERE LOWER(l.name) LIKE LOWER(:name)", Language.class);
         query.setParameter("name", name);
         return query.getResultList().stream().findFirst();
     }

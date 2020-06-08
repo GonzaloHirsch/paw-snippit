@@ -32,7 +32,7 @@ public class TagJpaDaoImpl implements TagDao {
 
     @Override
     public Optional<Tag> findByName(final String name) {
-        final TypedQuery<Tag> query = this.em.createQuery("from Tag as t where t.name = :name", Tag.class);
+        final TypedQuery<Tag> query = this.em.createQuery("from Tag as t where LOWER(t.name) LIKE LOWER(:name)", Tag.class);
         query.setParameter("name", name);
         return query.getResultList().stream().findFirst();
     }

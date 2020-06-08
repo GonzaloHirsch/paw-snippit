@@ -183,12 +183,20 @@ public class User {
         return this.followedTags;
     }
 
-    public Collection<Snippet> getFavorites() {
-        return this.favorites;
+    public void setFollowedTags(Collection<Tag> followedTags) {
+        this.followedTags = followedTags;
     }
 
     public Collection<Role> getRoles() {
         return this.roles;
+    }
+
+    public Collection<Snippet> getFavorites() {
+        return this.favorites;
+    }
+
+    public void setFavorites(Collection<Snippet> favorites) {
+        this.favorites = favorites;
     }
 
     public void addFavorite(Snippet snippet) {
@@ -231,5 +239,9 @@ public class User {
 
     public Collection<Vote> getVotes() {
         return votes;
+    }
+
+    public void setVotes(Collection<Vote> votes) {
+        this.votes = votes;
     }
 }

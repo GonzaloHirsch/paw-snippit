@@ -46,6 +46,16 @@ public final class TestMethods {
         return vote;
     }
 
+    static void setUserFollowingTags(EntityManager em, User user, Collection<Tag> tags) {
+        user.setFollowedTags(tags);
+        em.persist(user);
+    }
+
+    static void setUserFavoriteSnippets(EntityManager em, User user, Collection<Snippet> snippets) {
+        user.setFavorites(snippets);
+        em.persist(user);
+    }
+
 // TODO REMOVE
 
 //    static void insertSnippetTagIntoDb(SimpleJdbcInsert jdbcInsert, long snippet, long tag){

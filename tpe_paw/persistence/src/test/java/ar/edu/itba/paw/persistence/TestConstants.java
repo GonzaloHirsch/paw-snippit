@@ -33,12 +33,10 @@ public final class TestConstants {
     static final String SNIPPET_CODE = "Snippet Code";
     static final boolean SNIPPET_FLAGGED = true;
     static final boolean SNIPPET_DELETED = true;
+    static final long SNIPPET_INVALID_ID = 100;
 
-    static final long LANGUAGE_ID = 1;
     static final String LANGUAGE = "Language 1";
-    static final long LANGUAGE2_ID = 2;
     static final String LANGUAGE2 = "Language 2";
-    static final long LANGUAGE3_ID = 3;
     static final String LANGUAGE3 = "Language 3";
 
     static final String TAG = "tag1";
@@ -47,7 +45,9 @@ public final class TestConstants {
     static final String ADMIN_ROLE = "ADMIN";
     static final String USER_ROLE = "USER";
 
-    static final int PAGE_SIZE = 6;
+    public static final int SNIPPET_PAGE_SIZE = 6;
+    public static final int TAG_PAGE_SIZE = 20;
+    public static final int LANGUAGE_PAGE_SIZE = 15;
 
     private TestConstants() {}
 }

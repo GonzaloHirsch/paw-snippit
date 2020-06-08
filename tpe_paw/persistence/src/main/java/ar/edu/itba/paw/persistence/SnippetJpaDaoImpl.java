@@ -156,21 +156,23 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     }
 
     @Override
-    public void flagSnippet(long snippetId) {
+    public boolean flagSnippet(long snippetId) {
         Optional<Snippet> maybeSnippet = this.findSnippetById(snippetId);
         maybeSnippet.ifPresent(snippet -> {
             snippet.setFlagged(true);
             this.em.persist(snippet);
         });
+        return maybeSnippet.isPresent();
     }
 
     @Override
-    public void unflagSnippet(long snippetId) {
+    public boolean unflagSnippet(long snippetId) {
         Optional<Snippet> maybeSnippet = this.findSnippetById(snippetId);
         maybeSnippet.ifPresent(snippet -> {
             snippet.setFlagged(false);
             this.em.persist(snippet);
         });
+        return maybeSnippet.isPresent();
     }
 
     @Override

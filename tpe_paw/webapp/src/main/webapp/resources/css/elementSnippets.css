@@ -25,3 +25,8 @@
     box-shadow: 0 8px 8px 0 rgba(0,0,0,0.2);
     cursor: pointer;
 }
+
+.element-list-warning-container {
+    margin: 15px 0px -20px;
+    width: 100%;
+}

@@ -8,7 +8,6 @@ import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.LanguageNotFoundException;
-import ar.edu.itba.paw.webapp.exception.RemovingLanguageInUseException;
 import ar.edu.itba.paw.webapp.form.DeleteForm;
 import ar.edu.itba.paw.webapp.form.ItemSearchForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
@@ -94,19 +93,13 @@ public class LanguagesController {
     public ModelAndView deleteLanguage (@PathVariable("langId") long langId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
         User currentUser = loginAuthentication.getLoggedInUser();
         if ( currentUser != null && roleService.isAdmin(currentUser.getId())){
-            /* Language was assigned to a snippet and can no longer be deleted */
-            if (this.languageService.languageInUse(langId)) {
-                Optional<Language> language = this.languageService.findById(langId);
-                Object[] obj = language.map(value -> new Object[]{value.getName().toUpperCase()}).orElseGet(() -> new Object[]{langId});
-                throw new RemovingLanguageInUseException(messageSource.getMessage("error.removing.language", obj, LocaleContextHolder.getLocale()));
-            }
             this.languageService.removeLanguage(langId);
             LOGGER.debug("Admin removed language with id {}", langId);
         } else {
             LOGGER.error("No user logged in or logged in user not admin but language {} is trying to be deleted", langId);
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.admin.delete", null, LocaleContextHolder.getLocale()));
         }
-        return new ModelAndView("redirect:/languages");
+        return new ModelAndView("redirect:/languages/" + langId);
     }
 
     @ModelAttribute

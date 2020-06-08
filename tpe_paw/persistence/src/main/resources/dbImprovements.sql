@@ -10,6 +10,19 @@ DO '
     END;
 ' language plpgsql;
 
+
+DO '
+    BEGIN
+        BEGIN
+            ALTER TABLE languages ADD COLUMN deleted BOOLEAN DEFAULT FALSE;
+        EXCEPTION
+            WHEN duplicate_column THEN RAISE NOTICE ''column deleted already exists in languages.'';
+        END;
+    END;
+' language plpgsql;
+
+UPDATE languages SET deleted = FALSE;
+
 DO '
     BEGIN
         BEGIN

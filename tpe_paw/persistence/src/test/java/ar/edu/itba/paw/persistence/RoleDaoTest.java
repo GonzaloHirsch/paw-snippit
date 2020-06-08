@@ -25,6 +25,7 @@ public class RoleDaoTest {
     @Autowired
     private DataSource ds;
 
+    @Autowired
     private RoleDao roleDao;
 
     private JdbcTemplate jdbcTemplate;
@@ -37,7 +38,6 @@ public class RoleDaoTest {
     @Before
     public void setup(){
         jdbcTemplate = new JdbcTemplate(ds);
-        roleDao = new RoleDaoImpl(ds);
 
         SimpleJdbcInsert jdbcInsertRole = new SimpleJdbcInsert(ds).withTableName(ROLES_TABLE).usingGeneratedKeyColumns("id");
         jdbcInsertUserRole = new SimpleJdbcInsert(ds).withTableName(ROLES_USER_TABLE);

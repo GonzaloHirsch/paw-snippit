@@ -12,8 +12,8 @@
 <div class="flex-row flex-center warning-container border-radius">
     <i class="warning-icon material-icons">delete_sweep</i>
     <div class="flex-column warning-message-container">
-        <h3 class="form-error"><spring:message code="deleted.snippet.warning"/></h3>
-        <p class="form-error"><spring:message code="deleted.snippet.warning.message"/></p>
+        <h3 class="form-error"><spring:message code="deleted.language.warning"/></h3>
+        <p class="form-error"><spring:message code="deleted.language.warning.message"/></p>
     </div>
 </div>
 

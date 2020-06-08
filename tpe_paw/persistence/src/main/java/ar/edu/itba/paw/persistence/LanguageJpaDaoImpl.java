@@ -35,16 +35,16 @@ public class LanguageJpaDaoImpl implements LanguageDao {
 
     @Override
     public Collection<Language> getAllLanguages() {
-        return this.em.createQuery("FROM Language", Language.class).getResultList();
+        return this.em.createQuery("FROM Language WHERE deleted = FALSE", Language.class).getResultList();
     }
 
     @Override
     public Collection<Language> getAllLanguages(boolean showEmpty, int page, int pageSize) {
         Query nativeQuery;
         if (showEmpty){
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM languages ORDER BY name ASC");
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM languages WHERE deleted = FALSE ORDER BY name ASC");
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT s.language_id, l.name FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE ORDER BY l.name ASC");
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT s.language_id, l.name FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND l.deleted = FALSE ORDER BY l.name ASC");
         }
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
@@ -62,10 +62,10 @@ public class LanguageJpaDaoImpl implements LanguageDao {
     public Collection<Language> findAllLanguagesByName(String name, boolean showEmpty, int page, int pageSize) {
         Query nativeQuery;
         if (showEmpty){
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM languages WHERE LOWER(name) LIKE LOWER(:name) ORDER BY name ASC")
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM languages WHERE LOWER(name) LIKE LOWER(:name) AND deleted = FALSE ORDER BY name ASC")
                     .setParameter("name", "%"+name+"%");
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT s.language_id, l.name FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND LOWER(l.name) LIKE LOWER(:name) ORDER BY l.name ASC")
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT s.language_id, l.name FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND LOWER(l.name) LIKE LOWER(:name) AND l.deleted = FALSE ORDER BY l.name ASC")
                     .setParameter("name", "%"+name+"%");
         }
         nativeQuery.setFirstResult((page - 1) * pageSize);
@@ -91,10 +91,10 @@ public class LanguageJpaDaoImpl implements LanguageDao {
     public int getAllLanguagesCountByName(String name, boolean showEmpty) {
         Query nativeQuery;
         if (showEmpty){
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id FROM languages WHERE LOWER(name) LIKE LOWER(:name)")
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id FROM languages WHERE deleted = FALSE AND LOWER(name) LIKE LOWER(:name)")
                     .setParameter("name", "%"+name+"%");
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT s.language_id FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND LOWER(l.name) LIKE LOWER(:name)")
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT s.language_id FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND l.deleted = FALSE AND LOWER(l.name) LIKE LOWER(:name)")
                     .setParameter("name", "%"+name+"%");
         }
         return nativeQuery.getResultList().size();
@@ -104,17 +104,24 @@ public class LanguageJpaDaoImpl implements LanguageDao {
     public int getAllLanguagesCount(boolean showEmpty) {
         Query nativeQuery;
         if (showEmpty){
-            nativeQuery = this.em.createNativeQuery("SELECT id FROM languages");
+            nativeQuery = this.em.createNativeQuery("SELECT id FROM languages WHERE deleted = FALSE");
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT language_id FROM snippets WHERE deleted = FALSE");
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT s.language_id FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND l.deleted = FALSE");
         }
         return nativeQuery.getResultList().size();
     }
 
     @Override
     public Language addLanguage(String name) {
-        final Language language = new Language(name);
-        em.persist(language);
+        Language language;
+        Optional<Language> maybeLang = findByName(name);
+        if (maybeLang.isPresent()) {
+            language = maybeLang.get();
+            language.setDeleted(false);
+        } else {
+            language = new Language(name);
+        }
+        this.em.persist(language);
         return language;
     }
 
@@ -128,14 +135,16 @@ public class LanguageJpaDaoImpl implements LanguageDao {
     @Override
     public void removeLanguage(final long langId) {
         Optional<Language> lang = this.findById(langId);
-        if (lang.isPresent() && lang.get().getSnippetsUsing().isEmpty()) {
-            this.em.remove(lang.get());
+        if (lang.isPresent()) {
+            lang.get().setDeleted(true);
+            this.em.persist(lang.get());
         }
     }
 
+    //TODO REMOVE
     @Override
     public boolean languageInUse(final long langId) {
         Optional<Language> lang = this.findById(langId);
-        return lang.filter(language -> !language.getSnippetsUsing().isEmpty()).isPresent();
+        return lang.filter(language -> !language.snippetsUsingIsEmpty()).isPresent();
     }
 }

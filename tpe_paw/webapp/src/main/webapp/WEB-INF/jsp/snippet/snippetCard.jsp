@@ -36,7 +36,7 @@
                 <c:if test="${snippet.flagged}">
                     <div class="card-warning-icon material-icons">warning</div>
                 </c:if>
-                <div class="snippet-language-tag border-radius">${snippet.language.name.toUpperCase()}</div>
+                <div class="flex-center snippet-language-tag border-radius">${snippet.language.name.toUpperCase()}</div>
             </div>
         </div>
 

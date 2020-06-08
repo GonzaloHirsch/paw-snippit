@@ -55,12 +55,14 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     public boolean languageExists(String language) {
-        return languageDao.findByName(language).isPresent();
+        Optional<Language> lang = this.languageDao.findByName(language);
+        return lang.isPresent() && !lang.get().isDeleted();
     }
 
     @Override
     public boolean languageExists(long id) {
-        return languageDao.findById(id).isPresent();
+        Optional<Language> lang = this.languageDao.findById(id);
+        return lang.isPresent() && !lang.get().isDeleted();
     }
 
     @Transactional

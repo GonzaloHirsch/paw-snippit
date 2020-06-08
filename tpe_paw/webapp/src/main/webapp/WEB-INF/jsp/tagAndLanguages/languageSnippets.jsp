@@ -25,50 +25,57 @@
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
-        <div class="flex-row flex-center element-snippets-top-container">
-            <div class="flex-row flex-center title-container">
-
-                <div class="fw-100">
-                    <spring:message code="languageSnippets.title" arguments="${language.name.toUpperCase()}"/>
+        <div class="flex-column">
+            <c:if test="${language.deleted}">
+                <div class="flex-center element-list-warning-container">
+                    <c:import url="/WEB-INF/jsp/tagAndLanguages/deletedLanguageWarning.jsp"/>
                 </div>
-                <c:if test="${currentUser != null && userRoles.contains('ADMIN') && snippetList.size() == 0}">
-                    <form:form action="${langDeleteUrl}" class="form-container" method="post" modelAttribute="deleteForm">
-                        <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#delete-lang">
-                            <i class="delete-element-icon material-icons border-radius">delete</i>
-                        </div>
+            </c:if>
+            <div class="flex-row flex-center element-snippets-top-container">
+                <div class="flex-row flex-center title-container">
 
-                        <!-- Modal -->
-                        <div class="modal fade" id="delete-lang" tabindex="-1" role="dialog" aria-labelledby="langDeletionModal" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title font" id="langDeletionModal"><spring:message code="modal.delete.title"/></h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body modal-body-text fw-100">
-                                        <spring:message code="modal.delete.language.text" arguments="${language.name}"/>
-                                    </div>
-                                    <div class="modal-footer flex-end">
-                                        <div class="flex-center">
-                                            <div type="button" class="btn btn-secondary modal-close-button" data-dismiss="modal"><spring:message code="modal.cancel"/></div>
-                                            <form:checkbox class="hidden" path="delete" value="true" id="lang-delete-button" onclick="updateForm(this)"/>
-                                            <label for="lang-delete-button" class="btn btn-primary purple-button  no-margin">
-                                                <div typeof="button">
-                                                    <spring:message code="modal.delete.confirm"/>
-                                                </div>
-                                            </label>
+                    <div class="fw-100">
+                        <spring:message code="languageSnippets.title" arguments="${language.name.toUpperCase()}"/>
+                    </div>
+                    <c:if test="${currentUser != null && userRoles.contains('ADMIN') && !language.deleted}">
+                        <form:form action="${langDeleteUrl}" class="form-container" method="post" modelAttribute="deleteForm">
+                            <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#delete-lang">
+                                <i class="delete-element-icon material-icons border-radius">delete</i>
+                            </div>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="delete-lang" tabindex="-1" role="dialog" aria-labelledby="langDeletionModal" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title font" id="langDeletionModal"><spring:message code="modal.delete.title"/></h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body modal-body-text fw-100">
+                                            <spring:message code="modal.delete.language.text" arguments="${language.name}"/>
+                                        </div>
+                                        <div class="modal-footer flex-end">
+                                            <div class="flex-center">
+                                                <div type="button" class="btn btn-secondary modal-close-button" data-dismiss="modal"><spring:message code="modal.cancel"/></div>
+                                                <form:checkbox class="hidden" path="delete" value="true" id="lang-delete-button" onclick="updateForm(this)"/>
+                                                <label for="lang-delete-button" class="btn btn-primary purple-button  no-margin">
+                                                    <div typeof="button">
+                                                        <spring:message code="modal.delete.confirm"/>
+                                                    </div>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </form:form>
-                </c:if>
+                        </form:form>
+                    </c:if>
+                </div>
             </div>
+            <c:import url="/WEB-INF/jsp/snippet/snippetFeed.jsp"/>
         </div>
-        <c:import url="/WEB-INF/jsp/snippet/snippetFeed.jsp"/>
     </div>
 </div>
 

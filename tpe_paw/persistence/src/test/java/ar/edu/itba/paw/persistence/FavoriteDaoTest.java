@@ -31,6 +31,7 @@ public class FavoriteDaoTest {
     @Autowired
     private DataSource ds;
 
+    @Autowired
     private FavoriteDao favoriteDao;
 
     private JdbcTemplate jdbcTemplate;
@@ -42,7 +43,6 @@ public class FavoriteDaoTest {
     @Before
     public void setUp(){
         jdbcTemplate = new JdbcTemplate(ds);
-        favoriteDao = new FavoriteDaoImpl(ds);
 
         jdbcInsertFavorite = new SimpleJdbcInsert(ds).withTableName(FAVORITES_TABLE);
         SimpleJdbcInsert jdbcInsertSnippet= new SimpleJdbcInsert(ds).withTableName(SNIPPETS_TABLE).usingGeneratedKeyColumns("id");

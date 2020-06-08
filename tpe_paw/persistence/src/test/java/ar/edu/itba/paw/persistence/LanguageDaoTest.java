@@ -40,7 +40,7 @@ public class LanguageDaoTest {
     private SimpleJdbcInsert jdbcInsertLanguage;
 
 
-    private final static RowMapper<Language> ROW_MAPPER = (rs, rowNum) -> new Language(rs.getInt("id"), rs.getString("name"));
+//    private final static RowMapper<Language> ROW_MAPPER = (rs, rowNum) -> new Language(rs.getInt("id"), rs.getString("name"));
 
 
     @Before

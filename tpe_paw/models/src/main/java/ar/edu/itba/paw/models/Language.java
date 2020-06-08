@@ -15,6 +15,9 @@ public class Language {
     @Column(name = "name", length = 30, unique = true)
     private String name;
 
+    @Column(name = "deleted")
+    private boolean deleted;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "language", cascade = CascadeType.PERSIST)
     private Collection<Snippet> snippetsUsing;
 
@@ -24,12 +27,14 @@ public class Language {
 
     public Language(String name) {
         this.name = name;
+        this.deleted = false;
     }
 
     @Deprecated
-    public Language(long id, String name) {
+    public Language(long id, String name, boolean deleted) {
         this.id = id;
         this.name = name;
+        this.deleted = deleted;
     }
 
     public Long getId() { return id; }
@@ -42,6 +47,14 @@ public class Language {
 
     public boolean snippetsUsingIsEmpty() {
         return this.getSnippetsUsing().stream().allMatch(Snippet::isDeleted);
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

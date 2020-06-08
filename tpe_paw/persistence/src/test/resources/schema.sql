@@ -25,8 +25,9 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS languages
 (
-    id   INTEGER IDENTITY PRIMARY KEY,
-    name VARCHAR(30) UNIQUE
+    id      INTEGER IDENTITY PRIMARY KEY,
+    name    VARCHAR(30) UNIQUE,
+    deleted BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS tags
@@ -50,9 +51,9 @@ CREATE TABLE IF NOT EXISTS snippets
 
 CREATE TABLE IF NOT EXISTS votes_for
 (
-    user_id    INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL,
-    snippet_id INT REFERENCES snippets (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    type       INT CHECK (type IN (-1, 1)),
+    user_id     INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL,
+    snippet_id  INT REFERENCES snippets (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    is_positive BOOLEAN,
     CONSTRAINT one_snippet_one_vote PRIMARY KEY (user_id, snippet_id)
 );
 
@@ -91,7 +92,7 @@ CREATE TABLE IF NOT EXISTS user_roles
 );
 
 
-CREATE VIEW complete_snippets AS
+CREATE OR REPLACE VIEW complete_snippets AS
 SELECT aux.sn_id   AS id,
        aux.code    AS code,
        aux.title   AS title,
@@ -107,7 +108,8 @@ SELECT aux.sn_id   AS id,
        l.name      AS language,
        aux.icon    AS icon,
        aux.votes   AS votes,
-       aux.flag    AS flagged
+       aux.flag    AS flagged,
+       aux.deleted AS deleted
 FROM (
          SELECT sn.id           AS sn_id,
                 sn.code         AS code,
@@ -123,7 +125,8 @@ FROM (
                 u.region        AS reg,
                 u.verified      AS ver,
                 sn.votes        AS votes,
-                sn.flag         AS flag
+                sn.flag         AS flag,
+                sn.deleted      AS deleted
          FROM (SELECT sni.id                    AS id,
                       sni.code                  AS code,
                       sni.title                 AS title,
@@ -132,6 +135,7 @@ FROM (
                       sni.date_created          AS date_created,
                       sni.user_id               AS user_id,
                       sni.flagged               AS flag,
+                      sni.deleted               AS deleted,
                       SUM(CASE WHEN vf.is_positive THEN 1 ELSE -1 END) AS votes
                FROM snippets AS sni
                         LEFT OUTER JOIN votes_for AS vf ON vf.snippet_id = sni.id

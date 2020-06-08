@@ -23,7 +23,10 @@ import javax.persistence.PersistenceContext;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.assertEquals;
@@ -43,29 +46,7 @@ public class SnippetDaoTest {
     private SnippetDao snippetDao;
 
     @Before
-    public void setUp() {
-
-//        jdbcInsertSnippet = new SimpleJdbcInsert(ds).withTableName(SNIPPETS_TABLE).usingGeneratedKeyColumns("id");
-//        SimpleJdbcInsert jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
-//        SimpleJdbcInsert jdbcInsertLanguage = new SimpleJdbcInsert(ds).withTableName(LANGUAGES_TABLE).usingGeneratedKeyColumns("id");
-//        SimpleJdbcInsert jdbcInsertTag = new SimpleJdbcInsert(ds).withTableName(TAGS_TABLE).usingGeneratedKeyColumns("id");
-//        jdbcInsertSnippetTags = new SimpleJdbcInsert(ds).withTableName(SNIPPET_TAGS_TABLE);
-//        jdbcInsertFavorite = new SimpleJdbcInsert(ds).withTableName(FAVORITES_TABLE);
-//        jdbcInsertFollowing = new SimpleJdbcInsert(ds).withTableName(FOLLOWS_TABLE);
-//        jdbcInsertVote = new SimpleJdbcInsert(ds).withTableName(VOTES_FOR_TABLE);
-//
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate, SNIPPETS_TABLE);
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate, ROLES_USER_TABLE);
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
-//        altUser = insertUserIntoDb(jdbcInsertUser,USERNAME2,PASSWORD2,EMAIL2,DESCR,LOCALE_EN);
-//        defaultUser = insertUserIntoDb(jdbcInsertUser, USERNAME, PASSWORD, EMAIL, DESCR,LOCALE_EN);
-//
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate, LANGUAGES_TABLE);
-//        defaultLanguageId = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);
-//
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
-//        defaultTag = new Tag(insertTagIntoDb(jdbcInsertTag,TAG),TAG);
-    }
+    public void setUp() {}
 
 
     @Test
@@ -83,6 +64,32 @@ public class SnippetDaoTest {
                 Collections.emptyList()
         );
         Assert.assertTrue(snippetId >= 0);
+    }
+
+        @Test
+    @Transactional
+    public void testFindSnippetById() {
+        User owner = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED);
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
+        Snippet snippet = TestMethods.insertSnippet(em,
+                owner,
+                TestConstants.SNIPPET_TITLE,
+                TestConstants.SNIPPET_DESCR,
+                TestConstants.SNIPPET_CODE,
+                Timestamp.from(Instant.now()),
+                language,
+                Collections.singletonList(tag),
+                TestConstants.SNIPPET_FLAGGED,
+                false);
+
+        Optional<Snippet> maybeSnippet = snippetDao.findSnippetById(snippet.getId());
+        assertTrue(maybeSnippet.isPresent());
+        assertEquals(owner.getUsername(), maybeSnippet.get().getOwner().getUsername());
+        assertEquals(TestConstants.SNIPPET_TITLE, maybeSnippet.get().getTitle());
+        assertEquals(TestConstants.SNIPPET_DESCR, maybeSnippet.get().getDescription());
+        assertTrue(maybeSnippet.get().getTags().contains(tag));
+        assertTrue(maybeSnippet.get().isFlagged());
     }
 
 
@@ -335,23 +342,7 @@ public class SnippetDaoTest {
 //        assertEquals(0,maybeCollection.size());
 //    }
 //
-//    @Test
-//    @Transactional
-//    public void testFindById() {
-////        JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-////        Collection<Tag> tagList = Collections.singletonList(defaultTag);
-////        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE, defaultLanguageId,0);
-////        Mockito.when(mockTagDao.findTagsForSnippet(snippetId)).thenReturn(tagList);
-////
-////        Optional<Snippet> maybeSnippet = snippetDao.findSnippetById(snippetId);
-////
-////        assertTrue(maybeSnippet.isPresent());
-////        assertEquals(defaultUser.getUsername(), maybeSnippet.get().getOwner().getUsername());
-////        assertEquals(TITLE, maybeSnippet.get().getTitle());
-////        assertEquals(DESCR, maybeSnippet.get().getDescription());
-//        // TODO fix tag insertion
-////        assertTrue(maybeSnippet.get().getTags().contains(defaultTag));
-//    }
+
 //
 //    @Test
 //    public void testFindByIdEmpty() {

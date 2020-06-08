@@ -15,8 +15,6 @@ public interface TagDao {
 
     Tag addTag(final String name);
 
-    Collection<Tag> findTagsForSnippet(final long snippetId);
-
     Collection<Tag> getAllTags(boolean showEmpty, int page, int pageSize);
 
     Collection<Tag> getAllTags();

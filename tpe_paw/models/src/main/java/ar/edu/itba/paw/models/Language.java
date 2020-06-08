@@ -30,13 +30,6 @@ public class Language {
         this.deleted = false;
     }
 
-    @Deprecated
-    public Language(long id, String name, boolean deleted) {
-        this.id = id;
-        this.name = name;
-        this.deleted = deleted;
-    }
-
     public Long getId() { return id; }
 
     public String getName() { return name; }

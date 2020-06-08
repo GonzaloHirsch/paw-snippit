@@ -24,9 +24,7 @@ public class Role {
         // Hibernate constructor
     }
 
-    @Deprecated
-    public Role(long id, String name) {
-        this.id = id;
+    public Role(String name) {
         this.name = name;
     }
 

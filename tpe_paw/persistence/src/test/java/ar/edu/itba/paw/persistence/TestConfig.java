@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import org.hsqldb.jdbc.JDBCDriver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,23 +20,23 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-@ComponentScan({ "ar.edu.itba.paw.persistence", })
+@ComponentScan({ "ar.edu.itba.paw.persistence"})
 @Configuration
 public class TestConfig {
 
     @Value("classpath:schema.sql")
     private Resource schemaSql;
 
-//    @Bean
-//    public DataSource dataSource() {
-//        final SimpleDriverDataSource ds = new SimpleDriverDataSource();
-//        ds.setDriverClass(JDBCDriver.class);
-//        ds.setUrl("jdbc:hsqldb:mem:paw");
-//        ds.setUsername("ha");
-//        ds.setPassword("");
-//        return ds;
-//    }
-//
+    @Bean
+    public DataSource dataSource() {
+        final SimpleDriverDataSource ds = new SimpleDriverDataSource();
+        ds.setDriverClass(JDBCDriver.class);
+        ds.setUrl("jdbc:hsqldb:mem:paw");
+        ds.setUsername("ha");
+        ds.setPassword("");
+        return ds;
+    }
+
 //    @Bean
 //    public DataSourceInitializer dataSourceInitializer(){
 //        DataSourceInitializer dsi = new DataSourceInitializer();
@@ -44,37 +45,41 @@ public class TestConfig {
 //        return dsi;
 //    }
 
-    @Bean
-    public DataSource dataSource() {
-        final SimpleDriverDataSource ds = new SimpleDriverDataSource();
-        ds.setDriverClass(org.postgresql.Driver.class);
-//        ds.setUrl("jdbc:postgresql://localhost/paw-2020a-2");
-//        ds.setUsername("paw-2020a-2");
-//        ds.setPassword("em8TT4uvx");
-        ds.setUrl("jdbc:postgresql://localhost/paw");
-        ds.setUsername("postgres");
-        ds.setPassword("postgres");
-        return ds;
-    }
+//    @Bean
+//    public DataSource dataSource() {
+//        final SimpleDriverDataSource ds = new SimpleDriverDataSource();
+//        ds.setDriverClass(org.postgresql.Driver.class);
+////        ds.setUrl("jdbc:postgresql://localhost/paw-2020a-2");
+////        ds.setUsername("paw-2020a-2");
+////        ds.setPassword("em8TT4uvx");
+//        ds.setUrl("jdbc:postgresql://localhost/paw");
+//        ds.setUsername("postgres");
+//        ds.setPassword("postgres");
+//        return ds;
+//    }
 
-    @Bean
-    public DataSourceInitializer dataSourceInitializer(final DataSource ds){
-        DataSourceInitializer dsi = new DataSourceInitializer();
-        dsi.setDataSource(ds);
+//    @Bean
+//    public DataSourceInitializer dataSourceInitializer(final DataSource ds){
+//        DataSourceInitializer dsi = new DataSourceInitializer();
+//        dsi.setDataSource(ds);
 //        dsi.setDatabasePopulator(databasePopulator());
-        return dsi;
-    }
+//        return dsi;
+//    }
+//
+//    public DatabasePopulator databasePopulator(){
+//        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+//        populator.addScript(schemaSql);
+//        return populator;
+//    }
 
-    public DatabasePopulator databasePopulator(){
-        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(schemaSql);
-        return populator;
+    @Bean
+    public PlatformTransactionManager transactionManager(final EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
     }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-
         factoryBean.setPackagesToScan("ar.edu.itba.paw.models");
         factoryBean.setDataSource(dataSource());
 
@@ -82,22 +87,11 @@ public class TestConfig {
         factoryBean.setJpaVendorAdapter(vendorAdapter);
 
         final Properties properties = new Properties();
-        // We use UPDATE to have the best effort to update the database in order to match the model
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
-
-        // Si ponen esto en prod, hay tabla!!!
-        // TODO: BORRAR ESTO
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("format_sql", "true");
+        properties.setProperty("hibernate.hbm2ddl.auto", "update"); // Research and consider using "validate"!
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
 
         factoryBean.setJpaProperties(properties);
 
         return factoryBean;
-    }
-
-    @Bean
-    public PlatformTransactionManager transactionManager(final EntityManagerFactory emf){
-        return new JpaTransactionManager(emf);
     }
 }

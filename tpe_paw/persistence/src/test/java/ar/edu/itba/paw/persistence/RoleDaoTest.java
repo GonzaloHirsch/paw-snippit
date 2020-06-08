@@ -15,12 +15,12 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import javax.sql.DataSource;
 import java.util.Collection;
 
-import static ar.edu.itba.paw.persistence.TestHelper.*;
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(classes = TestConfig.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestConfig.class)
 public class RoleDaoTest {
     @Autowired
     private DataSource ds;

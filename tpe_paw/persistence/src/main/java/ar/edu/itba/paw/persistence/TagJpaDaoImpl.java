@@ -131,6 +131,9 @@ public class TagJpaDaoImpl implements TagDao {
 
     @Override
     public Collection<Tag> findSpecificTagsByName(Collection<String> tags) {
+        if (tags.isEmpty()) {
+            return Collections.emptyList();
+        }
         TypedQuery<Tag> query = this.em.createQuery("FROM Tag WHERE name IN :tagNames", Tag.class)
                 .setParameter("tagNames", tags);
         return query.getResultList();

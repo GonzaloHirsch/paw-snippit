@@ -24,7 +24,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     @PersistenceContext
     private EntityManager em;
     @Autowired
-    private TagDao tagJpaDaoImpl;
+    private TagDao tagDao;
 
     @Override
     public Collection<Snippet> findSnippetByCriteria(Types type, String term, Locations location, Orders order, Long userId, Long resourceId, int page, int pageSize) {
@@ -149,7 +149,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     public Long createSnippet(long ownerId, String title, String description, String code, Timestamp dateCreated, Long languageId, Collection<String> tags) {
         User owner = em.find(User.class, ownerId);
         Language lang = em.find(Language.class, languageId);
-        Collection<Tag> tagEntities = tagJpaDaoImpl.findSpecificTagsByName(tags);
+        Collection<Tag> tagEntities = tagDao.findSpecificTagsByName(tags);
         Snippet createdSnippet = new Snippet(owner, code, title, description, dateCreated, lang, tagEntities, false, false);
         em.persist(createdSnippet);
         return createdSnippet.getId();

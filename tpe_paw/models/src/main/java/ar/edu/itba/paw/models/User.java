@@ -94,34 +94,6 @@ public class User {
         this.verified = verified;
     }
 
-    @Deprecated
-    public User(long id, String username, String password, String email, String dateJoined, byte[] icon, Locale locale, boolean verified) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.description = "";
-        this.reputation = 0;
-//        this.dateJoined = dateJoined;
-        this.icon = icon;
-//        this.locale = locale;
-        this.verified = verified;
-    }
-
-    @Deprecated
-    public User(long id, String username, String password, String email, String description, int reputation, String dateJoined, byte[] icon, Locale locale, boolean verified) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.description = description;
-        this.reputation = reputation;
-//        this.dateJoined = dateJoined;
-        this.icon = icon;
-//        this.locale = locale;
-        this.verified = verified;
-    }
-
     public Long getId() { return id; }
 
     public String getUsername() {

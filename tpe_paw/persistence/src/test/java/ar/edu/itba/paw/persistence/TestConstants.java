@@ -41,6 +41,7 @@ public final class TestConstants {
 
     static final String TAG = "tag1";
     static final String TAG2 = "tag2";
+    static final String TAG3 = "tag3";
 
     static final String ADMIN_ROLE = "ADMIN";
     static final String USER_ROLE = "USER";

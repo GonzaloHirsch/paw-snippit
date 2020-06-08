@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -307,8 +308,8 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     private Collection<Snippet> getSnippetsByPage(int page, int pageSize, Query nativeQuery) {
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
-        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
-                .stream().map(i -> i.longValue()).collect(Collectors.toList());
+        @SuppressWarnings("unchecked")
+        List<Long> filteredIds = ((List<? extends Number>) nativeQuery.getResultList()).stream().map(bi -> bi.longValue()).collect(Collectors.toList());
         if (filteredIds.size() > 0) {
             final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds ORDER BY id DESC", Snippet.class);
             query.setParameter("filteredIds", filteredIds);

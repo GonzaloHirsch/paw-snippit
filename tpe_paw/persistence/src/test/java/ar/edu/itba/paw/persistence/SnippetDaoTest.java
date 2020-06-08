@@ -15,11 +15,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.*;
-
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -42,7 +41,7 @@ public class SnippetDaoTest {
         language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
         tag = TestMethods.insertTag(em, TestConstants.TAG);
     }
-    
+
     @Test
     public void testCreate() {
         final long snippetId = snippetDao.createSnippet(
@@ -62,12 +61,12 @@ public class SnippetDaoTest {
         Snippet snippet = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), TestConstants.SNIPPET_FLAGGED, false);
 
         Optional<Snippet> maybeSnippet = snippetDao.findSnippetById(snippet.getId());
-        assertTrue(maybeSnippet.isPresent());
-        assertEquals(owner.getUsername(), maybeSnippet.get().getOwner().getUsername());
-        assertEquals(TestConstants.SNIPPET_TITLE, maybeSnippet.get().getTitle());
-        assertEquals(TestConstants.SNIPPET_DESCR, maybeSnippet.get().getDescription());
-        assertTrue(maybeSnippet.get().getTags().contains(tag));
-        assertTrue(maybeSnippet.get().isFlagged());
+        Assert.assertTrue(maybeSnippet.isPresent());
+        Assert.assertEquals(owner.getUsername(), maybeSnippet.get().getOwner().getUsername());
+        Assert.assertEquals(TestConstants.SNIPPET_TITLE, maybeSnippet.get().getTitle());
+        Assert.assertEquals(TestConstants.SNIPPET_DESCR, maybeSnippet.get().getDescription());
+        Assert.assertTrue(maybeSnippet.get().getTags().contains(tag));
+        Assert.assertTrue(maybeSnippet.get().isFlagged());
     }
 
     @Test
@@ -178,11 +177,11 @@ public class SnippetDaoTest {
 
     @Test
     public void getAllSnippetsCountTest() {
-        assertEquals(0, snippetDao.getAllSnippetsCount());
+        Assert.assertEquals(0, snippetDao.getAllSnippetsCount());
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), true, false);
-        assertEquals(1, snippetDao.getAllSnippetsCount());
+        Assert.assertEquals(1, snippetDao.getAllSnippetsCount());
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), true, false);
-        assertEquals(2, snippetDao.getAllSnippetsCount());
+        Assert.assertEquals(2, snippetDao.getAllSnippetsCount());
     }
 
     @Test
@@ -190,25 +189,25 @@ public class SnippetDaoTest {
         User flaggedSnippetsOwner = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, false);
 
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), false, false);
-        assertEquals(0, snippetDao.getAllFlaggedSnippetsCount());
+        Assert.assertEquals(0, snippetDao.getAllFlaggedSnippetsCount());
         TestMethods.insertSnippet(em, flaggedSnippetsOwner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), true, false);
-        assertEquals(1, snippetDao.getAllFlaggedSnippetsCount());
+        Assert.assertEquals(1, snippetDao.getAllFlaggedSnippetsCount());
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), false, false);
-        assertEquals(1, snippetDao.getAllFlaggedSnippetsCount());
+        Assert.assertEquals(1, snippetDao.getAllFlaggedSnippetsCount());
         TestMethods.insertSnippet(em, flaggedSnippetsOwner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), true, false);
-        assertEquals(2, snippetDao.getAllFlaggedSnippetsCount());
+        Assert.assertEquals(2, snippetDao.getAllFlaggedSnippetsCount());
     }
 
     @Test
     public void getAllDeletedSnippetsByOwnerCountTest() {
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), false, false);
-        assertEquals(0, snippetDao.getAllDeletedSnippetsByOwnerCount(owner.getId()));
+        Assert.assertEquals(0, snippetDao.getAllDeletedSnippetsByOwnerCount(owner.getId()));
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), true, TestConstants.SNIPPET_DELETED);
-        assertEquals(1, snippetDao.getAllDeletedSnippetsByOwnerCount(owner.getId()));
+        Assert.assertEquals(1, snippetDao.getAllDeletedSnippetsByOwnerCount(owner.getId()));
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), false, false);
-        assertEquals(1, snippetDao.getAllDeletedSnippetsByOwnerCount(owner.getId()));
+        Assert.assertEquals(1, snippetDao.getAllDeletedSnippetsByOwnerCount(owner.getId()));
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), true, TestConstants.SNIPPET_DELETED);
-        assertEquals(2, snippetDao.getAllDeletedSnippetsByOwnerCount(owner.getId()));
+        Assert.assertEquals(2, snippetDao.getAllDeletedSnippetsByOwnerCount(owner.getId()));
     }
 
     @Test
@@ -220,18 +219,18 @@ public class SnippetDaoTest {
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), false, false);
         //language -> deleted
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), false, TestConstants.SNIPPET_DELETED);
-        assertEquals(1, snippetDao.getAllSnippetsByLanguageCount(language.getId()));
-        assertEquals(0, snippetDao.getAllSnippetsByLanguageCount(language2.getId()));
-        assertEquals(0, snippetDao.getAllSnippetsByLanguageCount(language3.getId()));
+        Assert.assertEquals(1, snippetDao.getAllSnippetsByLanguageCount(language.getId()));
+        Assert.assertEquals(0, snippetDao.getAllSnippetsByLanguageCount(language2.getId()));
+        Assert.assertEquals(0, snippetDao.getAllSnippetsByLanguageCount(language3.getId()));
 
         //language2 -> deleted
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language2, Collections.emptyList(), false, TestConstants.SNIPPET_DELETED);
         //language3 -> active
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language3, Collections.emptyList(), false, false);
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language3, Collections.emptyList(), false, false);
-        assertEquals(1, snippetDao.getAllSnippetsByLanguageCount(language.getId()));
-        assertEquals(0, snippetDao.getAllSnippetsByLanguageCount(language2.getId()));
-        assertEquals(2, snippetDao.getAllSnippetsByLanguageCount(language3.getId()));
+        Assert.assertEquals(1, snippetDao.getAllSnippetsByLanguageCount(language.getId()));
+        Assert.assertEquals(0, snippetDao.getAllSnippetsByLanguageCount(language2.getId()));
+        Assert.assertEquals(2, snippetDao.getAllSnippetsByLanguageCount(language3.getId()));
     }
 
     @Test
@@ -243,17 +242,17 @@ public class SnippetDaoTest {
         //Snippet contain only tag
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, false);
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, false);
-        assertEquals(2, snippetDao.getAllFollowingSnippetsCount(user.getId()));
+        Assert.assertEquals(2, snippetDao.getAllFollowingSnippetsCount(user.getId()));
 
         TestMethods.setUserFollowingTags(em, user, Arrays.asList(tag, tag2));
         TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag2), false, TestConstants.SNIPPET_DELETED);
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Arrays.asList(tag, tag2), false, false);
         TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag2), false, false);
-        assertEquals(4, snippetDao.getAllFollowingSnippetsCount(user.getId()));
+        Assert.assertEquals(4, snippetDao.getAllFollowingSnippetsCount(user.getId()));
 
         /* Unfollowing tag2 */
         TestMethods.setUserFollowingTags(em, user, Collections.singletonList(tag));
-        assertEquals(3, snippetDao.getAllFollowingSnippetsCount(user.getId()));
+        Assert.assertEquals(3, snippetDao.getAllFollowingSnippetsCount(user.getId()));
     }
 
     @Test
@@ -265,13 +264,13 @@ public class SnippetDaoTest {
         Snippet deletedSnip = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, TestConstants.SNIPPET_DELETED);
         TestMethods.setUserFavoriteSnippets(em, user, Arrays.asList(snip, deletedSnip));
 
-        assertEquals(2, snippetDao.getAllFavoriteSnippetsCount(user.getId()));
+        Assert.assertEquals(2, snippetDao.getAllFavoriteSnippetsCount(user.getId()));
 
         Snippet snip2 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag2), false, TestConstants.SNIPPET_DELETED);
         Snippet deletedSnip2 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Arrays.asList(tag, tag2), false, false);
         TestMethods.setUserFavoriteSnippets(em, user, Arrays.asList(snip2, deletedSnip, deletedSnip2));
 
-        assertEquals(3, snippetDao.getAllFavoriteSnippetsCount(user.getId()));
+        Assert.assertEquals(3, snippetDao.getAllFavoriteSnippetsCount(user.getId()));
     }
 
     @Test
@@ -284,8 +283,8 @@ public class SnippetDaoTest {
         TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, TestConstants.SNIPPET_DELETED);
         TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, TestConstants.SNIPPET_DELETED);
 
-        assertEquals(0, snippetDao.getAllSnippetsByOwnerCount(user.getId()));
-        assertEquals(2, snippetDao.getAllSnippetsByOwnerCount(owner.getId()));
+        Assert.assertEquals(0, snippetDao.getAllSnippetsByOwnerCount(user.getId()));
+        Assert.assertEquals(2, snippetDao.getAllSnippetsByOwnerCount(owner.getId()));
     }
 
     @Test
@@ -296,16 +295,14 @@ public class SnippetDaoTest {
         Snippet goodSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag2), false, false);
         Snippet toBeDeletedSnippet = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Arrays.asList(tag, tag2), false, false);
 
-        Vote userDownVote = TestMethods.insertVote(em, user, badSnippet, false);
-        Vote userUpVote = TestMethods.insertVote(em, user, goodSnippet, true);
-        Vote userUpVote2 = TestMethods.insertVote(em, user, toBeDeletedSnippet, true);
+        TestMethods.insertVote(em, user, badSnippet, false);
+        TestMethods.insertVote(em, user, goodSnippet, true);
+        TestMethods.insertVote(em, user, toBeDeletedSnippet, true);
 
-        assertEquals(2, snippetDao.getAllUpvotedSnippetsCount(user.getId()));
+        Assert.assertEquals(2, snippetDao.getAllUpvotedSnippetsCount(user.getId()));
         toBeDeletedSnippet.setDeleted(true);
-        assertEquals(1, snippetDao.getAllUpvotedSnippetsCount(user.getId()));
+        Assert.assertEquals(1, snippetDao.getAllUpvotedSnippetsCount(user.getId()));
     }
-
-
 
     // TODO CHECK! FALLA!
 //    @Test
@@ -318,6 +315,124 @@ public class SnippetDaoTest {
 //        TestMethods.setUserFollowingTags(em, owner, Collections.singletonList(tag));
 //        assertEquals(2, snippetDao.getNewSnippetsForTagsCount(firstSince, Collections.singletonList(tag), owner.getId()));
 //    }
+
+    @Test
+    public void getAllSnippetsTest() {
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, false);
+
+        Snippet deletedSnippet = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, TestConstants.SNIPPET_DELETED);
+        Snippet activeSnippet1 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, false);
+        Snippet activeSnippet2 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, false);
+        Snippet activeSnippet3 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, false);
+        Snippet activeSnippet4 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), false, false);
+        Snippet activeSnippet5 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), false, false);
+
+        Collection<Snippet> allSnippets = snippetDao.getAllSnippets(1, TestConstants.SNIPPET_PAGE_SIZE);
+        Assert.assertNotNull(allSnippets);
+        Assert.assertEquals(5, allSnippets.size());
+        Assert.assertTrue(allSnippets.contains(activeSnippet1));
+        Assert.assertTrue(allSnippets.contains(activeSnippet5));
+        Assert.assertFalse(allSnippets.contains(deletedSnippet));
+
+        TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), false, false);
+        TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.emptyList(), false, false);
+        Collection<Snippet> secondPageSnippets = snippetDao.getAllSnippets(2, TestConstants.SNIPPET_PAGE_SIZE);
+        Assert.assertNotNull(secondPageSnippets);
+        Assert.assertEquals(1, secondPageSnippets.size());
+    }
+
+    @Test
+    public void getAllSnippetsEmptyTest(){
+        Collection<Snippet> collection = snippetDao.getAllSnippets(1,TestConstants.SNIPPET_PAGE_SIZE);
+
+        Assert.assertNotNull(collection);
+        Assert.assertTrue(collection.isEmpty());
+    }
+
+    @Test
+    public void getAllFavoriteSnippetsTest() {
+        Tag tag2 = TestMethods.insertTag(em, TestConstants.TAG2);
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, false);
+
+        Snippet snip = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, false);
+        Snippet deletedSnip = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, TestConstants.SNIPPET_DELETED);
+        TestMethods.setUserFavoriteSnippets(em, user, Arrays.asList(snip, deletedSnip));
+
+        Collection<Snippet> favSnippets = snippetDao.getAllFavoriteSnippets(user.getId(), 1, TestConstants.SNIPPET_PAGE_SIZE);
+        Assert.assertNotNull(favSnippets);
+        Assert.assertEquals(2, favSnippets.size());
+        Assert.assertTrue(favSnippets.contains(snip));
+        Assert.assertTrue(favSnippets.contains(deletedSnip));
+
+        Snippet snip2 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag2), false, TestConstants.SNIPPET_DELETED);
+        TestMethods.setUserFavoriteSnippets(em, user, Arrays.asList(snip2, deletedSnip));
+        favSnippets = snippetDao.getAllFavoriteSnippets(user.getId(), 1, TestConstants.SNIPPET_PAGE_SIZE);
+        Assert.assertNotNull(favSnippets);
+        Assert.assertEquals(2, favSnippets.size());
+        Assert.assertTrue(favSnippets.contains(snip2));
+        Assert.assertTrue(favSnippets.contains(deletedSnip));
+    }
+
+    @Test
+    public void getAllFavoriteSnippetsEmptyTest() {
+        Collection<Snippet> favSnippets = snippetDao.getAllFavoriteSnippets(owner.getId(), 1, TestConstants.SNIPPET_PAGE_SIZE);
+        Assert.assertNotNull(favSnippets);
+        Assert.assertEquals(0, favSnippets.size());
+    }
+
+    @Test
+    public void getSnippetsWithLanguageTest() {
+        Language language2 = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+
+        /* Language 1 */
+        Snippet snipWithLanguage1 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, false);
+        Snippet deletedSnipWithLanguage1 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, TestConstants.SNIPPET_DELETED);
+
+        Collection<Snippet> snipsWithLanguage1 = snippetDao.getSnippetsWithLanguage(language.getId(), 1, TestConstants.SNIPPET_PAGE_SIZE);
+        Assert.assertNotNull(snipsWithLanguage1);
+        Assert.assertEquals(1, snipsWithLanguage1.size());
+        Assert.assertTrue(snipsWithLanguage1.contains(snipWithLanguage1));
+        Assert.assertFalse(snipsWithLanguage1.contains(deletedSnipWithLanguage1));
+
+        /* Language 2 */
+        Snippet snipWithLanguage2 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language2, Collections.singletonList(tag), false, false);
+        Snippet anotherSnipWithLanguage2 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language2, Collections.singletonList(tag), false, false);
+        Snippet deletedSnipWithLanguage2 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language2, Collections.singletonList(tag), false, TestConstants.SNIPPET_DELETED);
+
+        Collection<Snippet> snipsWithLanguage2 = snippetDao.getSnippetsWithLanguage(language2.getId(), 1, TestConstants.SNIPPET_PAGE_SIZE);
+        Assert.assertNotNull(snipsWithLanguage2);
+        Assert.assertEquals(2, snipsWithLanguage2.size());
+        Assert.assertTrue(snipsWithLanguage2.contains(snipWithLanguage2));
+        Assert.assertTrue(snipsWithLanguage2.contains(anotherSnipWithLanguage2));
+        Assert.assertFalse(snipsWithLanguage2.contains(deletedSnipWithLanguage2));
+    }
+
+    public void getSnippetsWithLanguageEmptyTest() {
+        Collection<Snippet> snipsWithLanguage1 = snippetDao.getSnippetsWithLanguage(language.getId(), 1, TestConstants.SNIPPET_PAGE_SIZE);
+        Assert.assertNotNull(snipsWithLanguage1);
+        Assert.assertEquals(0, snipsWithLanguage1.size());
+    }
+
+    @Test
+    public void getSnippetsWithLanguagePagingTest() {
+        /* 2 out of 9 are deleted snippets */
+        TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, false);
+        TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, TestConstants.SNIPPET_DELETED);
+        TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, false);
+        TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, false);
+        TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, TestConstants.SNIPPET_DELETED);
+        TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, false);
+        TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, false);
+        TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, false);
+        TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), language, Collections.singletonList(tag), false, false);
+
+        Collection<Snippet> snippetsFirstPage = snippetDao.getSnippetsWithLanguage(language.getId(), 1, TestConstants.SNIPPET_PAGE_SIZE);
+        Collection<Snippet> snippetsSecondPage = snippetDao.getSnippetsWithLanguage(language.getId(), 2, TestConstants.SNIPPET_PAGE_SIZE);
+        Assert.assertNotNull(snippetsFirstPage);
+        Assert.assertNotNull(snippetsSecondPage);
+        Assert.assertEquals(TestConstants.SNIPPET_PAGE_SIZE, snippetsFirstPage.size());
+        Assert.assertEquals(7 - TestConstants.SNIPPET_PAGE_SIZE, snippetsSecondPage.size());
+    }
 
 //    @Test
 //    @Transactional
@@ -401,54 +516,7 @@ public class SnippetDaoTest {
 //
 //    }
 //
-//    @Test
-//    public void testGetAllSnippets(){
-//        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
-//        long snippetId2 = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
-//
-//        Collection<Snippet> maybeColl = snippetDao.getAllSnippets(1,PAGE_SIZE);
-//
-//        assertNotNull(maybeColl);
-//        assertEquals(2,maybeColl.size());
-//        List<Long> idList = maybeColl.stream().mapToLong(Snippet::getId).boxed().collect(Collectors.toList());
-//        assertTrue(idList.contains(snippetId));
-//        assertTrue(idList.contains(snippetId2));
-//
-//    }
-//
-//    @Test
-//    public void testGetAllSnippetsEmpty(){
-//        Collection<Snippet> maybeColl = snippetDao.getAllSnippets(1,PAGE_SIZE);
-//
-//        assertNotNull(maybeColl);
-//        assertTrue(maybeColl.isEmpty());
-//
-//    }
-//
-//    @Test
-//    public void testGetAllFavoriteSnippets(){
-//        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
-//        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
-//        insertFavoriteIntoDb(jdbcInsertFavorite,snippetId,defaultUser.getId());
-//
-//        Collection<Snippet> maybeCollection = snippetDao.getAllFavoriteSnippets(defaultUser.getId(),1,PAGE_SIZE);
-//
-//        assertNotNull(maybeCollection);
-//        assertEquals(1,maybeCollection.size());
-//        Snippet s = (Snippet) maybeCollection.toArray()[0];
-//        assertEquals(snippetId,(long)s.getId());
-//    }
-//
-//   @Test
-//    public void testGetAllFavoriteSnippetsEmpty(){
-//        insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);
-//
-//        Collection<Snippet> maybeCollection = snippetDao.getAllFavoriteSnippets(defaultUser.getId(),1,PAGE_SIZE);
-//
-//        assertNotNull(maybeCollection);
-//        assertTrue(maybeCollection.isEmpty());
-//    }
-//
+
 //    @Test
 //    public void testGetAllFollowingSnippets(){
 //        long snippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,defaultLanguageId,0);

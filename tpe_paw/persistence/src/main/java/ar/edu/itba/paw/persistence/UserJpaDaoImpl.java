@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class UserJpaDaoImpl implements UserDao {
 
     @Override
     @Transactional
-    public long createUser(String username, String password, String email, int reputation, Timestamp dateJoined, Locale locale) {
+    public long createUser(String username, String password, String email, int reputation, Instant dateJoined, Locale locale) {
         final User user = new User(username, password, email, dateJoined, locale, false);
         this.em.persist(user);
         return user.getId();

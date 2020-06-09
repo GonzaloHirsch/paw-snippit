@@ -3,13 +3,14 @@ package ar.edu.itba.paw.interfaces.dao;
 import ar.edu.itba.paw.models.User;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
 
 public interface UserDao {
 
-    long createUser(String username, String password, String email, int reputation, Timestamp dateJoined, Locale locale);
+    long createUser(String username, String password, String email, int reputation, Instant dateJoined, Locale locale);
 
     Optional<User> findUserByUsername(String username);
 

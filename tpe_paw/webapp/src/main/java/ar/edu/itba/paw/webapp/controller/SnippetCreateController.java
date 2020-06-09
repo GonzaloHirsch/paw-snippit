@@ -37,13 +37,20 @@ import java.util.Locale;
 @Controller
 public class SnippetCreateController {
 
-    @Autowired private SnippetService snippetService;
-    @Autowired private TagService tagService;
-    @Autowired private LanguageService languageService;
-    @Autowired private LoginAuthentication loginAuthentication;
-    @Autowired private RoleService roleService;
-    @Autowired private MessageSource messageSource;
-    @Autowired private ValidatorHelper validator;
+    @Autowired
+    private SnippetService snippetService;
+    @Autowired
+    private TagService tagService;
+    @Autowired
+    private LanguageService languageService;
+    @Autowired
+    private LoginAuthentication loginAuthentication;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private MessageSource messageSource;
+    @Autowired
+    private ValidatorHelper validator;
 
     public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK)
             .withZone(ZoneId.systemDefault());
@@ -73,7 +80,7 @@ public class SnippetCreateController {
     }
 
     @RequestMapping(value = "/snippet/create", method = RequestMethod.POST)
-    public ModelAndView snippetCreate( @Valid @ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm, final BindingResult errors) {
+    public ModelAndView snippetCreate(@Valid @ModelAttribute("snippetCreateForm") final SnippetCreateForm snippetCreateForm, final BindingResult errors) {
 
         this.validator.validateTagsExists(snippetCreateForm.getTags(), errors, LocaleContextHolder.getLocale());
 
@@ -81,14 +88,14 @@ public class SnippetCreateController {
             return snippetCreateDetail(snippetCreateForm);
         }
 //        String dateCreated = DATE.format(Instant.now());
-        Timestamp dateCreated = Timestamp.from(Instant.now());
+        Instant dateCreated = Instant.now();
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if(currentUser == null) {
+        if (currentUser == null) {
             LOGGER.error("Creating a snippet when no user is logged in");
             throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.snippet.create", null, LocaleContextHolder.getLocale()));
         }
-        Long snippetId = this.snippetService.createSnippet(currentUser,snippetCreateForm.getTitle(),snippetCreateForm.getDescription(), snippetCreateForm.getCode(), dateCreated, snippetCreateForm.getLanguage(),snippetCreateForm.getTags());
-        if(snippetId == null){
+        Long snippetId = this.snippetService.createSnippet(currentUser, snippetCreateForm.getTitle(), snippetCreateForm.getDescription(), snippetCreateForm.getCode(), dateCreated, snippetCreateForm.getLanguage(), snippetCreateForm.getTags());
+        if (snippetId == null) {
             LOGGER.error("Snippet creation was unsuccessful. Return id was null.");
             throw new FormErrorException(this.messageSource.getMessage("error.404.form", null, LocaleContextHolder.getLocale()));
         }

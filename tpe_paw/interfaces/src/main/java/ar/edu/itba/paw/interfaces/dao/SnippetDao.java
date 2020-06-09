@@ -51,7 +51,7 @@ public interface SnippetDao {
     boolean deleteSnippetById(final long id);
     boolean restoreSnippetById(final long id);
     int getNewSnippetsForTagsCount(Instant dateMin, Collection<Tag> tags, long userId);
-    Long createSnippet(long ownerId, String title, String description, String code, Timestamp dateCreated, Long languageId, Collection<String> tags);
+    Long createSnippet(long ownerId, String title, String description, String code, Instant dateCreated, Long languageId, Collection<String> tags);
     Collection<Snippet> findSnippetsForTag(long tagId, int page, int pageSize);
     void flagSnippet(long snippetId);
     void unflagSnippet(long snippetId);

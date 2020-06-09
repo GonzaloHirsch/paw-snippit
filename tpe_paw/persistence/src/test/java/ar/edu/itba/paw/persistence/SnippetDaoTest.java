@@ -98,7 +98,7 @@ public class SnippetDaoTest {
     public void testCreate() {
         JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
 
-        final long snippetId = snippetDao.createSnippet(defaultUser.getId(), TITLE, DESCR, CODE, Timestamp.from(Instant.now()), defaultLanguageId, Collections.emptySet());
+        final long snippetId = snippetDao.createSnippet(defaultUser.getId(), TITLE, DESCR, CODE, Instant.now(), defaultLanguageId, Collections.emptySet());
         em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, SNIPPETS_TABLE));
     }

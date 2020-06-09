@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
@@ -24,12 +25,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public long createUser(String username, String password, String email, int reputation, Timestamp dateJoined, Locale locale) {
+    public long createUser(String username, String password, String email, int reputation, Instant dateJoined, Locale locale) {
         return this.userDao.createUser(username, password, email, reputation, dateJoined, locale);
     }
     
     @Override
-    public long register(String username, String password, String email, Timestamp dateJoined, Locale locale) {
+    public long register(String username, String password, String email, Instant dateJoined, Locale locale) {
         long userId = createUser(username, password, email, 0, dateJoined, locale);
         this.roleService.assignUserRole(userId);
         this.emailService.sendRegistrationEmail(email, username, LocaleContextHolder.getLocale());

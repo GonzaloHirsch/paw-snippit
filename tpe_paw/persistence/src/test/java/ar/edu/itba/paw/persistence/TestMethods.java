@@ -56,6 +56,11 @@ public final class TestMethods {
         em.persist(user);
     }
 
+    static void setSnippetsToLanguage(EntityManager em, Language lang, Collection<Snippet> snippets) {
+        lang.setSnippetsUsing(snippets);
+        em.persist(lang);
+    }
+
     static Map<String, Object> dataForSnippetCriteriaSearching(
             EntityManager em,
             Tag tag,

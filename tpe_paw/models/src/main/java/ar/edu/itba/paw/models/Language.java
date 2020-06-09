@@ -38,6 +38,9 @@ public class Language {
         return snippetsUsing;
     }
 
+    public void setSnippetsUsing(Collection<Snippet> snippetsUsing) {
+        this.snippetsUsing = snippetsUsing;
+    }
     public boolean snippetsUsingIsEmpty() {
         return this.getSnippetsUsing().stream().allMatch(Snippet::isDeleted);
     }

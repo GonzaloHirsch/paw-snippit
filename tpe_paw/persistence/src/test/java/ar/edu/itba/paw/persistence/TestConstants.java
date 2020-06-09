@@ -52,7 +52,7 @@ public final class TestConstants {
 
     static final int SNIPPET_PAGE_SIZE = 6;
     static final int TAG_PAGE_SIZE = 20;
-    static final int LANGUAGE_PAGE_SIZE = 15;
+    static final int LANGUAGE_PAGE_SIZE = 20;
 
     /* Snippet Criteria Testing */
     static final String SNIPPET_TITLE_TERM = "Snippet T";

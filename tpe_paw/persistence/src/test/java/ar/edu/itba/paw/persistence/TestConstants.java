@@ -58,10 +58,10 @@ public final class TestConstants {
     static final String SNIPPET_TITLE_TERM_INVALID = "Sorting";
     static final String USER_NAME_TERM = "NAME1";
     static final String USER_NAME_TERM_INVALID = "userWiz";
-    static final String TAG_NAME_TERM = "tag";
-    static final String TAG_NAME_TERM_INVALID = "tag8";
-    static final String CODE_NAME_TERM = "code";
-    static final String CODE_NAME_TERM_INVALID = "INVALID";
+    static final String TAG_TERM = "tag";
+    static final String TAG_TERM_INVALID = "tag8";
+    static final String CODE_TERM = "code";
+    static final String CODE_TERM_INVALID = "INVALID";
 
     static final String GENERAL_TERM = "3";
 

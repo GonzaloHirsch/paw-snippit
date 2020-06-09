@@ -75,20 +75,6 @@ public class Snippet {
         this.deleted = deleted;
     }
 
-    @Deprecated
-    public Snippet(long id, User owner, String code, String title, String description, String dateCreated, String language, Collection<Tag> tags, int votes, boolean flagged) {
-        this.id = id;
-        this.owner = owner;
-        this.code = code;
-        this.title = title;
-        this.description = description;
-//        this.dateCreated = dateCreated;
-//        this.language = language;
-        this.tags = tags;
-//        this.votes = votes;
-        this.flagged = flagged;
-    }
-
     /**
      * Returns the string representation of the creation date
      * @return

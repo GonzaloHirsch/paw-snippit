@@ -686,13 +686,189 @@ public class SnippetDaoTest {
     }
 
     /* Testing HOME location */
+    @Test
+    public void findSnippetByCriteriaHomeTitleTest() {
+        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Collection<Snippet> result = snippetDao.findSnippetByCriteria(
+                SnippetDao.Types.TITLE,
+                TestConstants.SNIPPET_TITLE_TERM,
+                SnippetDao.Locations.HOME,
+                SnippetDao.Orders.ASC,
+                null,
+                null,
+                1,
+                TestConstants.SNIPPET_PAGE_SIZE
+        );
+        Assert.assertNotNull(result);
+        Assert.assertEquals(1, result.size());
+        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE3)));
+    }
+
+    @Test
+    public void findSnippetByCriteriaHomeCapsTitleTest() {
+        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Collection<Snippet> result = snippetDao.findSnippetByCriteria(
+                SnippetDao.Types.TITLE,
+                TestConstants.SNIPPET_TITLE_TERM_CAPS,
+                SnippetDao.Locations.HOME,
+                SnippetDao.Orders.ASC,
+                null,
+                null,
+                1,
+                TestConstants.SNIPPET_PAGE_SIZE
+        );
+        Assert.assertNotNull(result);
+        Assert.assertEquals(3, result.size());
+        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE8)));
+    }
+
+    @Test
+    public void findSnippetByCriteriaHomeInvalidTitleTest() {
+        Collection<Snippet> result = snippetDao.findSnippetByCriteria(
+                SnippetDao.Types.TITLE,
+                TestConstants.SNIPPET_TITLE_TERM_INVALID,
+                SnippetDao.Locations.HOME,
+                SnippetDao.Orders.ASC,
+                null,
+                null,
+                1,
+                TestConstants.SNIPPET_PAGE_SIZE
+        );
+        Assert.assertNotNull(result);
+        Assert.assertEquals(0, result.size());
+    }
 
     /* Testing USER location */
+    @Test
+    public void findSnippetByCriteriaOwnerTitleTest() {
+        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Collection<Snippet> result = snippetDao.findSnippetByCriteria(
+                SnippetDao.Types.TITLE,
+                TestConstants.SNIPPET_TITLE_TERM_MANY,
+                SnippetDao.Locations.USER,
+                SnippetDao.Orders.ASC,
+                owner.getId(),
+                null,
+                1,
+                TestConstants.SNIPPET_PAGE_SIZE
+        );
+        Assert.assertNotNull(result);
+        Assert.assertEquals(1, result.size());
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE9)));
+    }
+
+    @Test
+    public void findSnippetByCriteriaUserTitleTest() {
+        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Collection<Snippet> result = snippetDao.findSnippetByCriteria(
+                SnippetDao.Types.TITLE,
+                TestConstants.SNIPPET_TITLE_TERM_MANY,
+                SnippetDao.Locations.USER,
+                SnippetDao.Orders.ASC,
+                ((User)data.get(TestConstants.USER_USERNAME2)).getId(),
+                null,
+                1,
+                TestConstants.SNIPPET_PAGE_SIZE
+        );
+        Assert.assertNotNull(result);
+        Assert.assertEquals(2, result.size());
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE4)));
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE7)));
+    }
 
     /* Testing FLAGGED location */
+    @Test
+    public void findSnippetByCriteriaFlaggedTitleTest() {
+        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Collection<Snippet> result = snippetDao.findSnippetByCriteria(
+                SnippetDao.Types.TITLE,
+                TestConstants.SNIPPET_TITLE_TERM_CAPS,
+                SnippetDao.Locations.FLAGGED,
+                SnippetDao.Orders.ASC,
+                null,
+                null,
+                1,
+                TestConstants.SNIPPET_PAGE_SIZE
+        );
+        Assert.assertNotNull(result);
+        Assert.assertEquals(2, result.size());
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE3)));
+    }
+
+    @Test
+    public void findSnippetByCriteriaFlaggedTitleInvalidTest() {
+        Collection<Snippet> result = snippetDao.findSnippetByCriteria(
+                SnippetDao.Types.TITLE,
+                TestConstants.SNIPPET_TITLE_TERM_UNIQUE,
+                SnippetDao.Locations.FLAGGED,
+                SnippetDao.Orders.ASC,
+                null,
+                null,
+                1,
+                TestConstants.SNIPPET_PAGE_SIZE
+        );
+        Assert.assertNotNull(result);
+        Assert.assertTrue(result.isEmpty());
+    }
 
     /* Testing FAVORITE location */
+    @Test
+    public void findSnippetByCriteriaOwnerFavoritesTitleTest() {
+        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        TestMethods.setUserFavoriteSnippets(em, owner, Arrays.asList(
+                (Snippet) data.get(TestConstants.SNIPPET_TITLE),
+                (Snippet) data.get(TestConstants.SNIPPET_TITLE3),
+                (Snippet) data.get(TestConstants.SNIPPET_TITLE5),
+                (Snippet) data.get(TestConstants.SNIPPET_TITLE6),
+                (Snippet) data.get(TestConstants.SNIPPET_TITLE9)
+        ));
+        Collection<Snippet> result = snippetDao.findSnippetByCriteria(
+                SnippetDao.Types.TITLE,
+                TestConstants.SNIPPET_TITLE_TERM_MANY,
+                SnippetDao.Locations.FAVORITES,
+                SnippetDao.Orders.ASC,
+                owner.getId(),
+                null,
+                1,
+                TestConstants.SNIPPET_PAGE_SIZE
+        );
+        Assert.assertNotNull(result);
+        Assert.assertEquals(4, result.size());
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE9)));
+    }
 
     /* Testing FOLLOWING location */
-    
+    @Test
+    public void findSnippetByCriteriaOwnerFollowingTitleTest() {
+        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        TestMethods.setUserFollowingTags(em, owner, Arrays.asList(
+                (Tag) data.get(TestConstants.TAG),
+                (Tag) data.get(TestConstants.TAG2)
+        ));
+        Collection<Snippet> result = snippetDao.findSnippetByCriteria(
+                SnippetDao.Types.TITLE,
+                TestConstants.SNIPPET_TITLE_TERM_CAPS,
+                SnippetDao.Locations.FOLLOWING,
+                SnippetDao.Orders.ASC,
+                owner.getId(),
+                null,
+                1,
+                TestConstants.SNIPPET_PAGE_SIZE
+        );
+        Assert.assertNotNull(result);
+        Assert.assertEquals(2, result.size());
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
+    }
+
 }

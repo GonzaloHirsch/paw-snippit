@@ -332,7 +332,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
         List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())
-                .stream().map(i -> ((Integer) i[0]).longValue()).collect(Collectors.toList());
+                .stream().map(i -> ((Number) i[0]).longValue()).collect(Collectors.toList());
         if (filteredIds.size() > 0) {
             final TypedQuery<Snippet> query = isDeepSearch ? this.getSortedDeepSearchQuery(order, type) : this.getSortedDeepSearchQuery(order, type);
             query.setParameter("filteredIds", filteredIds);

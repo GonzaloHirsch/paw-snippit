@@ -11,7 +11,7 @@
         <c:set var="pages" value="${requestScope.pages}"/>
         <c:set var="page" value="${requestScope.page}"/>
         <c:set var="qs" value="${pageContext.request.queryString}"/>
-        <c:if test="${pages > 1}">
+        <c:if test="${pages > 1 && page <= pages}">
             <div class="navigation-page-container search-container flex-center flex-row">
             <c:if test="${page > 2}">
                 <c:url var="prevUrl" value="">

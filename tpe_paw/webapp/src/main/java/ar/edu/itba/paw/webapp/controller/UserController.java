@@ -69,7 +69,7 @@ public class  UserController {
 
         Collection<Snippet> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
-        return profileMav(id, currentUser, user, "user/"+id+"/active/", descriptionForm, Constants.OWNER_ACTIVE_CONTEXT, snippets, totalSnippetCount, page, editing);
+        return profileMav(id, currentUser, user, "user/"+id+"/active/", descriptionForm, Constants.OWNER_ACTIVE_CONTEXT, snippets, totalSnippetCount, totalSnippetCount, page, editing);
     }
 
     @RequestMapping(value = "/user/{id}/deleted", method = {RequestMethod.GET})
@@ -88,7 +88,8 @@ public class  UserController {
 
         Collection<Snippet> snippets = this.snippetService.getAllDeletedSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllDeletedSnippetsByOwnerCount(user.getId());
-        return profileMav(id, currentUser, user, "user/"+id+"/deleted/", descriptionForm, Constants.OWNER_DELETED_CONTEXT, snippets, totalSnippetCount, page, editing);
+        int userTotalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
+        return profileMav(id, currentUser, user, "user/"+id+"/deleted/", descriptionForm, Constants.OWNER_DELETED_CONTEXT, snippets, totalSnippetCount, userTotalSnippetCount, page, editing);
     }
 
     @RequestMapping(value = "/user/{id}", method = {RequestMethod.GET})
@@ -111,7 +112,7 @@ public class  UserController {
         }
         Collection<Snippet> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
-        return profileMav(id, currentUser, user, searchContext.toString(), descriptionForm, tabContext, snippets, totalSnippetCount, page, editing);
+        return profileMav(id, currentUser, user, searchContext.toString(), descriptionForm, tabContext, snippets, totalSnippetCount, totalSnippetCount, page, editing);
     }
 
     @RequestMapping(value = "/user/{id}/{context}", method = {RequestMethod.POST})
@@ -205,7 +206,7 @@ public class  UserController {
         return user.get();
     }
 
-    private ModelAndView profileMav(long id, User currentUser, User user, String searchContext, DescriptionForm descriptionForm, String tabContext, Collection<Snippet> snippets, final int totalSnippetCount, final int page, final boolean editing) {
+    private ModelAndView profileMav(long id, User currentUser, User user, String searchContext, DescriptionForm descriptionForm, String tabContext, Collection<Snippet> snippets, final int totalSnippetCount, final int totalUserSnippetCount, final int page, final boolean editing) {
         final ModelAndView mav = new ModelAndView("user/profile");
 
         /* Set the current user and its following tags */
@@ -231,7 +232,7 @@ public class  UserController {
         mav.addObject("isEdit", false);
         mav.addObject("user", user);
         mav.addObject("snippets", snippets);
-        mav.addObject("snippetsCount", totalSnippetCount);
+        mav.addObject("snippetsCount", totalUserSnippetCount);
         mav.addObject("searchContext", searchContext);
         mav.addObject("tabContext", tabContext);
         return mav;

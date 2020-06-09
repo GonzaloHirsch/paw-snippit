@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models;
 import javax.persistence.*;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -37,7 +38,7 @@ public class User {
     private int reputation;
 
     @Column(name = "date_joined")
-    private Timestamp dateJoined;
+    private Instant dateJoined;
 
     @Column(name="icon")
     private byte[] icon;
@@ -82,7 +83,7 @@ public class User {
         // Hibernate constructor
     }
 
-    public User(String username, String password, String email, Timestamp dateJoined, Locale locale, boolean verified) {
+    public User(String username, String password, String email, Instant dateJoined, Locale locale, boolean verified) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -137,7 +138,7 @@ public class User {
      * @return
      */
     public String getDateJoined(){
-        return DATE.format(this.dateJoined.toInstant());
+        return DATE.format(this.dateJoined);
     }
 
     public Locale getLocale(){

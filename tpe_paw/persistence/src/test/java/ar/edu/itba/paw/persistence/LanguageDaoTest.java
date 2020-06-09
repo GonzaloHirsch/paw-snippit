@@ -122,8 +122,8 @@ public class LanguageDaoTest {
 
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, false);
 
-        Snippet activeSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), lang1, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
-        Snippet deletedSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), lang2, Collections.emptyList(), false, TestConstants.SNIPPET_DELETED);
+        Snippet activeSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang1, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
+        Snippet deletedSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang2, Collections.emptyList(), false, TestConstants.SNIPPET_DELETED);
 
         TestMethods.setSnippetsToLanguage(em, lang1, Collections.singletonList(activeSnippet));
         TestMethods.setSnippetsToLanguage(em, lang2, Collections.singletonList(deletedSnippet));
@@ -143,8 +143,8 @@ public class LanguageDaoTest {
 
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, false);
 
-        Snippet activeSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), lang1, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
-        Snippet deletedSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), lang2, Collections.emptyList(), false, TestConstants.SNIPPET_DELETED);
+        Snippet activeSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang1, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
+        Snippet deletedSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang2, Collections.emptyList(), false, TestConstants.SNIPPET_DELETED);
 
         TestMethods.setSnippetsToLanguage(em, lang1, Collections.singletonList(activeSnippet));
         TestMethods.setSnippetsToLanguage(em, lang2, Collections.singletonList(deletedSnippet));
@@ -187,8 +187,8 @@ public class LanguageDaoTest {
 
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, false);
 
-        Snippet activeSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), lang1, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
-        Snippet deletedSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), lang2, Collections.emptyList(), false, TestConstants.SNIPPET_DELETED);
+        Snippet activeSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang1, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
+        Snippet deletedSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang2, Collections.emptyList(), false, TestConstants.SNIPPET_DELETED);
 
         TestMethods.setSnippetsToLanguage(em, lang1, Collections.singletonList(activeSnippet));
         TestMethods.setSnippetsToLanguage(em, lang2, Collections.singletonList(deletedSnippet));
@@ -205,8 +205,8 @@ public class LanguageDaoTest {
 
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, false);
 
-        Snippet activeSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), lang1, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
-        Snippet deletedSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Timestamp.from(Instant.now()), lang2, Collections.emptyList(), false, TestConstants.SNIPPET_DELETED);
+        Snippet activeSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang1, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
+        Snippet deletedSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang2, Collections.emptyList(), false, TestConstants.SNIPPET_DELETED);
 
         TestMethods.setSnippetsToLanguage(em, lang1, Collections.singletonList(activeSnippet));
         TestMethods.setSnippetsToLanguage(em, lang2, Collections.singletonList(deletedSnippet));

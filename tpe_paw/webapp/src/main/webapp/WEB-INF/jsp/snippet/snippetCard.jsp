@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <html>
 <head>
@@ -26,7 +27,9 @@
                 </c:if>
                 <div class="flex-column snippet-upload-info card-snippet-icon">
                     <div class="snippet-text">${snippet.owner.username}</div>
-                    <div class="snippet-text card-snippet-date">${snippet.getCreationDate()}</div>
+                    <div class="snippet-text card-snippet-date">
+                        ${snippet.getCreationDate()}
+                    </div>
                 </div>
             </div>
             <div class="flex-row flex-align">

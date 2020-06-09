@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -34,7 +35,7 @@ public class Snippet {
     private String description;
 
     @Column(name = "date_created")
-    private Timestamp dateCreated;
+    private Instant dateCreated;
 
     @Column(name = "flagged")
     private boolean flagged;
@@ -63,7 +64,7 @@ public class Snippet {
         // Hibernate constructor
     }
 
-    public Snippet(User owner, String code, String title, String description, Timestamp dateCreated, Language language, Collection<Tag> tags, boolean flagged, boolean deleted) {
+    public Snippet(User owner, String code, String title, String description, Instant dateCreated, Language language, Collection<Tag> tags, boolean flagged, boolean deleted) {
         this.owner = owner;
         this.code = code;
         this.title = title;
@@ -80,7 +81,7 @@ public class Snippet {
      * @return
      */
     public String getCreationDate(){
-        return DATE.format(this.dateCreated.toInstant());
+        return DATE.format(this.dateCreated);
     }
 
     /**
@@ -143,11 +144,11 @@ public class Snippet {
         this.description = description;
     }
 
-    public Timestamp getDateCreated() {
+    public Instant getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Timestamp dateCreated) {
+    public void setDateCreated(Instant dateCreated) {
         this.dateCreated = dateCreated;
     }
 

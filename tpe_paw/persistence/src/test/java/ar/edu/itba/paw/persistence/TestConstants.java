@@ -15,7 +15,7 @@ public final class TestConstants {
     static final String USER_EMAIL2 = "email2@email.com";
     static final Locale LOCALE_EN = new Locale("en","EN");
     static final Locale LOCALE_ES = new Locale("es","ES");
-    static final Timestamp USER_DATE = Timestamp.from(Instant.now());
+    static final Instant USER_DATE = Instant.now();
     static final boolean USER_VERIFIED = true;
     static final long USER_INVALID_ID = 100;
 

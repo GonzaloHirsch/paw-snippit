@@ -166,7 +166,6 @@ public class User {
         this.region = region;
     }
 
-
     public boolean isVerified() {
         return verified;
     }
@@ -187,8 +186,20 @@ public class User {
         this.followedTags = followedTags;
     }
 
+    public Collection<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(Collection<Vote> votes) {
+        this.votes = votes;
+    }
+
     public Collection<Role> getRoles() {
-        return this.roles;
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 
     public Collection<Snippet> getFavorites() {
@@ -235,13 +246,5 @@ public class User {
         }
         User user = (User) o;
         return this.getId().equals(user.getId());
-    }
-
-    public Collection<Vote> getVotes() {
-        return votes;
-    }
-
-    public void setVotes(Collection<Vote> votes) {
-        this.votes = votes;
     }
 }

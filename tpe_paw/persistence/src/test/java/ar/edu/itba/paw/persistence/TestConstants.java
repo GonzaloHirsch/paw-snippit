@@ -17,6 +17,7 @@ public final class TestConstants {
     static final Locale LOCALE_ES = new Locale("es","ES");
     static final Timestamp USER_DATE = Timestamp.from(Instant.now());
     static final boolean USER_VERIFIED = true;
+    static final long USER_INVALID_ID = 100;
 
     static final String SNIPPET_TITLE = "Snippet Title";
     static final String SNIPPET_TITLE2 = "Snippet Title 2";

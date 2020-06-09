@@ -61,6 +61,11 @@ public final class TestMethods {
         em.persist(lang);
     }
 
+    static void setUserRoles(EntityManager em, User user, Collection<Role> roles) {
+        user.setRoles(roles);
+        em.persist(user);
+    }
+
     static Map<String, Object> dataForSnippetCriteriaSearching(
             EntityManager em,
             Tag tag,
@@ -112,45 +117,4 @@ public final class TestMethods {
 
         return data;
     }
-
-// TODO REMOVE
-
-//    static void insertSnippetTagIntoDb(SimpleJdbcInsert jdbcInsert, long snippet, long tag){
-//        final Map<String, Object> map = new HashMap<String,Object>();
-//        map.put("snippet_id", snippet);
-//        map.put("tag_id",tag);
-//
-//        jdbcInsert.execute(map);
-//    }
-//
-//    static void insertVotesForIntoDb(SimpleJdbcInsert jdbcInsert, long snippetId, long userId,int type){
-//        final Map<String, Object> map = new HashMap<String,Object>();
-//        map.put("snippet_id", snippetId);
-//        map.put("user_id",userId);
-//        map.put("type", type);
-//
-//        jdbcInsert.execute(map);
-//    }
-//
-//    static void insertFavoriteIntoDb(SimpleJdbcInsert jdbcInsert, long snippetId, long userId){
-//        final Map<String, Object> map = new HashMap<String,Object>();
-//        map.put("snippet_id", snippetId);
-//        map.put("user_id",userId);
-//        jdbcInsert.execute(map);
-//    }
-//    static void insertFollowingIntoDb(SimpleJdbcInsert jdbcInsert, long tagId, long userId){
-//        final Map<String, Object> map = new HashMap<String,Object>();
-//        map.put("tag_id", tagId);
-//        map.put("user_id",userId);
-//
-//        jdbcInsert.execute(map);
-//    }
-//
-//    static void insertUserRoleIntoDb(SimpleJdbcInsert jdbcInsert, long roleid, long userid){
-//        final Map<String, Object> map = new HashMap<String,Object>();
-//        map.put("role_id", roleid);
-//        map.put("user_id",userid);
-//
-//        jdbcInsert.execute(map);
-//    }
 }

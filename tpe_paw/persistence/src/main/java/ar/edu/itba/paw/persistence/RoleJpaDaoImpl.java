@@ -24,13 +24,14 @@ public class RoleJpaDaoImpl implements RoleDao {
     private final static String USER_ROLE = "USER";
     private final static String ADMIN_ROLE = "ADMIN";
 
-    private void addToUserRoles(final long userId, final long roleId) {
+    private boolean addToUserRoles(final long userId, final long roleId) {
         Optional<User> user = Optional.ofNullable(this.em.find(User.class, userId));
         Optional<Role> role = Optional.ofNullable(this.em.find(Role.class,roleId));
         if(user.isPresent() && role.isPresent()) {
             user.get().addRole(role.get());
             this.em.persist(user.get());
         }
+        return user.isPresent();
     }
 
     @Override
@@ -50,20 +51,20 @@ public class RoleJpaDaoImpl implements RoleDao {
 
     @Override
     @Transactional
-    public void assignUserRole(long userId) {
+    public boolean assignUserRole(long userId) {
         final TypedQuery<Role> query = this.em.createQuery("from Role as r where r.name = :name", Role.class)
                 .setParameter("name", USER_ROLE);
         Optional<Role> userRole = query.getResultList().stream().findFirst();
-        userRole.ifPresent(role -> this.addToUserRoles(userId, role.getId()));
+        return userRole.filter(role -> this.addToUserRoles(userId, role.getId())).isPresent();
     }
 
     @Override
     @Transactional
-    public void assignAdminRole(long userId) {
+    public boolean assignAdminRole(long userId) {
         final TypedQuery<Role> query = this.em.createQuery("from Role as r where r.name = :name", Role.class)
                 .setParameter("name", ADMIN_ROLE);
         Optional<Role> adminRole = query.getResultList().stream().findFirst();
-        adminRole.ifPresent(role -> this.addToUserRoles(userId, role.getId()));
+        return adminRole.filter(role -> this.addToUserRoles(userId, role.getId())).isPresent();
     }
 
     @Override

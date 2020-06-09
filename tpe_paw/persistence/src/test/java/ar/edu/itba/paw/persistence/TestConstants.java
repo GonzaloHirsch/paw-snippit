@@ -62,6 +62,7 @@ public final class TestConstants {
     static final String TAG_TERM_INVALID = "tag8";
     static final String CODE_TERM = "code";
     static final String CODE_TERM_INVALID = "INVALID";
+    static final String LANGUAGE_TERM = "guage 2";
 
     static final String GENERAL_TERM = "3";
 

@@ -38,6 +38,10 @@ public final class TestConstants {
     static final String LANGUAGE = "Language 1";
     static final String LANGUAGE2 = "Language 2";
     static final String LANGUAGE3 = "Language 3";
+    static final long INVALID_LANGUAGE_ID = 1000000;
+    static final String INVALID_LANGUAGE_NAME = "Not a lang";
+    static final String VALID_LANGUAGE_NAME_SEARCH = "Language";
+    static final String INVALID_LANGUAGE_NAME_SEARCH = "XXXX";
 
     static final String TAG = "tag1";
     static final String TAG2 = "tag2";

@@ -71,7 +71,7 @@ public class LanguageJpaDaoImpl implements LanguageDao {
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
         List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())
-                .stream().map(i -> ((Integer) i[0]).longValue()).collect(Collectors.toList());
+                .stream().map(i -> ((Number) i[0]).longValue()).collect(Collectors.toList());
         if (!filteredIds.isEmpty()){
             final TypedQuery<Language> query = this.em.createQuery("FROM Language WHERE id IN :filteredIds ORDER BY name ASC", Language.class);
             query.setParameter("filteredIds", filteredIds);

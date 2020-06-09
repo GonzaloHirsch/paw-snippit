@@ -1,220 +1,241 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.dao.LanguageDao;
-import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.models.Language;
-import ar.edu.itba.paw.models.Tag;
+import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.User;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertNotNull;
-import static junit.framework.TestCase.*;
-import static ar.edu.itba.paw.persistence.TestHelper.*;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
+@Transactional
 public class LanguageDaoTest {
 
-    @Autowired private DataSource ds;
-    @Autowired private LanguageDao languageDao;
+    @PersistenceContext
+    private EntityManager em;
 
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsertLanguage;
-
-
-//    private final static RowMapper<Language> ROW_MAPPER = (rs, rowNum) -> new Language(rs.getInt("id"), rs.getString("name"));
-
+    @Autowired
+    private LanguageDao languageDao;
 
     @Before
     public void setUp() {
-        jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsertLanguage = new SimpleJdbcInsert(ds).withTableName(LANGUAGES_TABLE).usingGeneratedKeyColumns("id");
-
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
-    }
-
- /*   @Test
-    public void testAddLanguage(){
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
-
-        Language maybeLanguage = languageDao.addLanguage(LANGUAGE);
-
-        assertNotNull(maybeLanguage);
-        assertEquals(LANGUAGE.toLowerCase(),maybeLanguage.getName());
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate,  LANGUAGES_TABLE));
-    }*/
-
-/*    @Test
-    public void testAddLanguageS(){
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
-        List<String> stringList = Arrays.asList(LANGUAGE,LANGUAGE2,LANGUAGE3,null);
-
-        languageDao.addLanguages(stringList);
-
-        Collection<Language> maybeLanguages = jdbcTemplate.query("SELECT * FROM languages", ROW_MAPPER);
-        assertEquals(3,JdbcTestUtils.countRowsInTable(jdbcTemplate,LANGUAGES_TABLE));
-        assertFalse(maybeLanguages.isEmpty());
-        List<String> maybeStringList = new ArrayList<String>();
-        for(Language l:maybeLanguages){
-            maybeStringList.add(l.getName());
-        }
-        assertTrue(maybeStringList.contains(LANGUAGE.toLowerCase()));
-        assertTrue(maybeStringList.contains(LANGUAGE2.toLowerCase()));
-        assertTrue(maybeStringList.contains(LANGUAGE3.toLowerCase()));
-    }*/
-
-    @Test
-    public void testAddLanguageSEmpty(){
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
-        List<String> stringList = new ArrayList<>();
-
-        languageDao.addLanguages(stringList);
-
-        assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,LANGUAGES_TABLE));
-    }
-    
-    @Test 
-    public void testGetAll(){ 
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
-        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
-        long lanId2 = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE2);
-        
-        Collection<Language> maybeLanguages = languageDao.getAllLanguages();
-        
-        assertFalse(maybeLanguages.isEmpty());
-        assertEquals(2,maybeLanguages.size());
-        List<Long> maybeIdList = maybeLanguages.stream().mapToLong(Language::getId).boxed().collect(Collectors.toList());
-        assertTrue(maybeIdList.contains(lanId1));
-        assertTrue(maybeIdList.contains(lanId2));
     }
 
     @Test
-    public void testGetAllEmpty(){
-        Collection<Language> maybeLanguages = languageDao.getAllLanguages();
-
-        assertTrue(maybeLanguages.isEmpty());
-
+    public void addLanguageTest(){
+        Language language = TestMethods.insertLanguage(this.em, TestConstants.LANGUAGE);
+        Assert.assertTrue(language.getId() > 0);
     }
 
     @Test
-    public void testFindById(){
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
-        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);
+    public void addLanguagesTest(){
+        List<String> languages = Arrays.asList(TestConstants.LANGUAGE, TestConstants.LANGUAGE2, TestConstants.LANGUAGE3);
+        this.languageDao.addLanguages(languages);
 
-        Optional<Language> maybeLanguage = languageDao.findById(lanId1);
-
-        assertTrue(maybeLanguage.isPresent());
-//        assertEquals(lanId1,maybeLanguage.get().getId());
-        assertEquals(LANGUAGE,maybeLanguage.get().getName());
+        // TODO: VER COMO HACER
     }
 
     @Test
-    public void testFindByIdEmpty(){
-        Optional<Language> maybeLanguage = languageDao.findById(10);
+    public void addLanguagesEmptyTest(){
+        List<String> stringList = Collections.emptyList();
+        this.languageDao.addLanguages(stringList);
 
-        assertFalse(maybeLanguage.isPresent());
+        // TODO: VER COMO HACER
     }
 
     @Test
-    public void testFindByName(){
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
-        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);
+    public void getAllTest(){
+        Language lang1 = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        Language lang2 = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        Language lang3 = TestMethods.insertLanguage(em, TestConstants.LANGUAGE3);
+        Collection<Language> langs = this.languageDao.getAllLanguages();
 
-        Optional<Language> maybeLanguage = languageDao.findByName(LANGUAGE);
-
-        assertTrue(maybeLanguage.isPresent());
-//        assertEquals(lanId1,maybeLanguage.get().getId());
-        assertEquals(LANGUAGE,maybeLanguage.get().getName());
+        Assert.assertFalse(langs.isEmpty());
+        Assert.assertEquals(3, langs.size());
+        List<Long> langIds = langs.stream().mapToLong(Language::getId).boxed().collect(Collectors.toList());
+        Assert.assertTrue(langIds.contains(lang1.getId()));
+        Assert.assertTrue(langIds.contains(lang2.getId()));
+        Assert.assertTrue(langIds.contains(lang3.getId()));
     }
 
     @Test
-    public void testFindByNameEmpty(){
-        Optional<Language> maybeLanguage = languageDao.findByName(LANGUAGE);
-
-        assertFalse(maybeLanguage.isPresent());
+    public void getAllEmptyTest(){
+        Collection<Language> maybeLanguages = this.languageDao.getAllLanguages();
+        Assert.assertTrue(maybeLanguages.isEmpty());
     }
 
     @Test
-    public void testFindAllLanguagesByName(){
-        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
-        long lanId2 = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE2);
+    public void findByIdTest(){
+        Language language = TestMethods.insertLanguage(this.em, TestConstants.LANGUAGE);
 
-        Collection<Language> maybeCollection = languageDao.findAllLanguagesByName("Language", true,1,PAGE_SIZE);
+        Optional<Language> maybeLanguage = languageDao.findById(language.getId());
 
-        assertNotNull(maybeCollection);
-        List<Long> maybeIdList = maybeCollection.stream().mapToLong(Language::getId).boxed().collect(Collectors.toList());
-        assertTrue(maybeIdList.contains(lanId1));
-        assertTrue(maybeIdList.contains(lanId2));
+        Assert.assertTrue(maybeLanguage.isPresent());
+        Assert.assertEquals(language.getId(), maybeLanguage.get().getId());
+        Assert.assertEquals(TestConstants.LANGUAGE, maybeLanguage.get().getName());
     }
 
     @Test
-    public void testFindAllLanguagesByNameEmpty(){
-        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
-        long lanId2 = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE2);
-
-        Collection<Language> maybeCollection = languageDao.findAllLanguagesByName("zzzz", true,1,PAGE_SIZE);
-
-        assertNotNull(maybeCollection);
-        assertEquals(0,maybeCollection.size());
+    public void findByNonExistentIdTest(){
+        TestMethods.insertLanguage(this.em, TestConstants.LANGUAGE);
+        Optional<Language> maybeLanguage = languageDao.findById(TestConstants.INVALID_LANGUAGE_ID);
+        Assert.assertFalse(maybeLanguage.isPresent());
     }
-
-   /* @Test
-    public void testRemoveLanguage(){
-        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
-
-        languageDao.removeLanguage(lanId1);
-
-        assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,LANGUAGES_TABLE));
-    }*/
 
     @Test
-    public void testRemoveLanguageEmpty(){
-        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
+    public void findByNameTest(){
+        Language language = TestMethods.insertLanguage(this.em, TestConstants.LANGUAGE);
+        Optional<Language> maybeLanguage = languageDao.findByName(TestConstants.LANGUAGE);
 
-        languageDao.removeLanguage(lanId1+10);
-
-        assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,LANGUAGES_TABLE));
+        Assert.assertTrue(maybeLanguage.isPresent());
+        Assert.assertEquals(language.getId(), maybeLanguage.get().getId());
+        Assert.assertEquals(TestConstants.LANGUAGE, maybeLanguage.get().getName());
     }
-
-  /*  @Test
-    public void testLanguageInUse(){
-        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
-
-        boolean result = languageDao.languageInUse(lanId1);
-
-        assertFalse(result);
-    }*/
 
     @Test
-    public void testLanguageInUseEmpty(){
-        long lanId1 = insertLanguageIntoDb(jdbcInsertLanguage, LANGUAGE);
+    public void findByNonExistentNameTest(){
+        TestMethods.insertLanguage(this.em, TestConstants.LANGUAGE);
+        Optional<Language> maybeLanguage = languageDao.findByName(TestConstants.INVALID_LANGUAGE_NAME);
+        Assert.assertFalse(maybeLanguage.isPresent());
+    }
 
-        boolean result = languageDao.languageInUse(lanId1+10);
+    @Test
+    public void findAllLanguagesByNameTest(){
+        Language lang1 = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        Language lang2 = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        Language lang3 = TestMethods.insertLanguage(em, TestConstants.LANGUAGE3);
 
-        assertFalse(result);
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, false);
+
+        Snippet activeSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang1, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
+        Snippet deletedSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang2, Collections.emptyList(), false, TestConstants.SNIPPET_DELETED);
+
+        TestMethods.setSnippetsToLanguage(em, lang1, Collections.singletonList(activeSnippet));
+        TestMethods.setSnippetsToLanguage(em, lang2, Collections.singletonList(deletedSnippet));
+
+        Collection<Language> collection = languageDao.findAllLanguagesByName(TestConstants.VALID_LANGUAGE_NAME_SEARCH, true,1, 20);
+        Assert.assertNotNull(collection);
+        Assert.assertTrue(collection.contains(lang1));
+        Assert.assertTrue(collection.contains(lang2));
+        Assert.assertTrue(collection.contains(lang3));
+    }
+
+    @Test
+    public void getAllLanguagesByNameHideEmptyTest(){
+        Language lang1 = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        Language lang2 = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        TestMethods.insertLanguage(em, TestConstants.LANGUAGE3);
+
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, false);
+
+        Snippet activeSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang1, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
+        Snippet deletedSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang2, Collections.emptyList(), false, TestConstants.SNIPPET_DELETED);
+
+        TestMethods.setSnippetsToLanguage(em, lang1, Collections.singletonList(activeSnippet));
+        TestMethods.setSnippetsToLanguage(em, lang2, Collections.singletonList(deletedSnippet));
+        Collection<Language> collection = languageDao.findAllLanguagesByName(TestConstants.VALID_LANGUAGE_NAME_SEARCH, false,1, TestConstants.LANGUAGE_PAGE_SIZE);
+        Assert.assertNotNull(collection);
+        Assert.assertEquals(1, collection.size());
+        Assert.assertTrue(collection.contains(lang1));
     }
 
 
+    @Test
+    public void findAllLanguagesByNonExistentNameTest(){
+        TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        TestMethods.insertLanguage(em, TestConstants.LANGUAGE3);
+        Collection<Language> collection = languageDao.findAllLanguagesByName(TestConstants.INVALID_LANGUAGE_NAME_SEARCH, true,1, 20);
+        Assert.assertNotNull(collection);
+        Assert.assertTrue(collection.isEmpty());
+    }
 
+    @Test
+    public void RemoveLanguageTest(){
+        Language lang = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        languageDao.removeLanguage(lang.getId());
+        Assert.assertTrue(lang.isDeleted());
+    }
 
+    @Test
+    public void removeLanguageEmptyTest(){
+        Language lang = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        languageDao.removeLanguage(TestConstants.INVALID_LANGUAGE_ID);
+        Assert.assertFalse(lang.isDeleted());
+    }
 
+    @Test
+    public void getAllLanguagesByNameCountTest(){
+        Language lang1 = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        Language lang2 = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        TestMethods.insertLanguage(em, TestConstants.LANGUAGE3);
 
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, false);
+
+        Snippet activeSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang1, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
+        Snippet deletedSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang2, Collections.emptyList(), false, TestConstants.SNIPPET_DELETED);
+
+        TestMethods.setSnippetsToLanguage(em, lang1, Collections.singletonList(activeSnippet));
+        TestMethods.setSnippetsToLanguage(em, lang2, Collections.singletonList(deletedSnippet));
+
+        int langCount = languageDao.getAllLanguagesCountByName(TestConstants.VALID_LANGUAGE_NAME_SEARCH, true);
+        Assert.assertEquals(3, langCount);
+    }
+
+    @Test
+    public void getAllLanguagesByNameCountHideEmptyTest(){
+        Language lang1 = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        Language lang2 = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        TestMethods.insertLanguage(em, TestConstants.LANGUAGE3);
+
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, false);
+
+        Snippet activeSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang1, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
+        Snippet deletedSnippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), lang2, Collections.emptyList(), false, TestConstants.SNIPPET_DELETED);
+
+        TestMethods.setSnippetsToLanguage(em, lang1, Collections.singletonList(activeSnippet));
+        TestMethods.setSnippetsToLanguage(em, lang2, Collections.singletonList(deletedSnippet));
+        int langCount = languageDao.getAllLanguagesCountByName(TestConstants.VALID_LANGUAGE_NAME_SEARCH, false);
+        Assert.assertEquals(1, langCount);
+    }
+
+    @Test
+    public void getAllLanguagesByNameCountSpecificLangTest(){
+        TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        TestMethods.insertLanguage(em, TestConstants.LANGUAGE3);
+        int langCount = languageDao.getAllLanguagesCountByName(TestConstants.LANGUAGE2, true);
+        Assert.assertEquals(1, langCount);
+    }
+
+    @Test
+    public void getAllLanguagesByNameCountSpecificLangHideEmptyTest(){
+        TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        int langCount = languageDao.getAllLanguagesCountByName(TestConstants.LANGUAGE, false);
+        Assert.assertEquals(0, langCount);
+    }
+
+    @Test
+    public void getAllLanguagesByNonExistentNameCountTest(){
+        TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        TestMethods.insertLanguage(em, TestConstants.LANGUAGE3);
+        int langCount = languageDao.getAllLanguagesCountByName(TestConstants.INVALID_LANGUAGE_NAME_SEARCH, true);
+        Assert.assertEquals(0, langCount);
+    }
 }

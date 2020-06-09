@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -24,7 +25,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     @PersistenceContext
     private EntityManager em;
     @Autowired
-    private TagDao tagJpaDaoImpl;
+    private TagDao tagDao;
 
     @Override
     public Collection<Snippet> findSnippetByCriteria(Types type, String term, Locations location, Orders order, Long userId, Long resourceId, int page, int pageSize) {
@@ -149,28 +150,30 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     public Long createSnippet(long ownerId, String title, String description, String code, Instant dateCreated, Long languageId, Collection<String> tags) {
         User owner = em.find(User.class, ownerId);
         Language lang = em.find(Language.class, languageId);
-        Collection<Tag> tagEntities = tagJpaDaoImpl.findSpecificTagsByName(tags);
+        Collection<Tag> tagEntities = tagDao.findSpecificTagsByName(tags);
         Snippet createdSnippet = new Snippet(owner, code, title, description, dateCreated, lang, tagEntities, false, false);
         em.persist(createdSnippet);
         return createdSnippet.getId();
     }
 
     @Override
-    public void flagSnippet(long snippetId) {
+    public boolean flagSnippet(long snippetId) {
         Optional<Snippet> maybeSnippet = this.findSnippetById(snippetId);
         maybeSnippet.ifPresent(snippet -> {
             snippet.setFlagged(true);
             this.em.persist(snippet);
         });
+        return maybeSnippet.isPresent();
     }
 
     @Override
-    public void unflagSnippet(long snippetId) {
+    public boolean unflagSnippet(long snippetId) {
         Optional<Snippet> maybeSnippet = this.findSnippetById(snippetId);
         maybeSnippet.ifPresent(snippet -> {
             snippet.setFlagged(false);
             this.em.persist(snippet);
         });
+        return maybeSnippet.isPresent();
     }
 
     @Override
@@ -305,8 +308,8 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     private Collection<Snippet> getSnippetsByPage(int page, int pageSize, Query nativeQuery) {
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
-        List<Long> filteredIds = ((List<Integer>) nativeQuery.getResultList())
-                .stream().map(i -> i.longValue()).collect(Collectors.toList());
+        @SuppressWarnings("unchecked")
+        List<Long> filteredIds = ((List<? extends Number>) nativeQuery.getResultList()).stream().map(bi -> bi.longValue()).collect(Collectors.toList());
         if (filteredIds.size() > 0) {
             final TypedQuery<Snippet> query = this.em.createQuery("from Snippet where id IN :filteredIds ORDER BY id DESC", Snippet.class);
             query.setParameter("filteredIds", filteredIds);
@@ -329,7 +332,7 @@ public class SnippetJpaDaoImpl implements SnippetDao {
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
         List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())
-                .stream().map(i -> ((Integer) i[0]).longValue()).collect(Collectors.toList());
+                .stream().map(i -> ((Number) i[0]).longValue()).collect(Collectors.toList());
         if (filteredIds.size() > 0) {
             final TypedQuery<Snippet> query = isDeepSearch ? this.getSortedDeepSearchQuery(order, type) : this.getSortedDeepSearchQuery(order, type);
             query.setParameter("filteredIds", filteredIds);

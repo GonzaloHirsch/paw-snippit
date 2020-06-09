@@ -95,34 +95,6 @@ public class User {
         this.verified = verified;
     }
 
-    @Deprecated
-    public User(long id, String username, String password, String email, String dateJoined, byte[] icon, Locale locale, boolean verified) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.description = "";
-        this.reputation = 0;
-//        this.dateJoined = dateJoined;
-        this.icon = icon;
-//        this.locale = locale;
-        this.verified = verified;
-    }
-
-    @Deprecated
-    public User(long id, String username, String password, String email, String description, int reputation, String dateJoined, byte[] icon, Locale locale, boolean verified) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.description = description;
-        this.reputation = reputation;
-//        this.dateJoined = dateJoined;
-        this.icon = icon;
-//        this.locale = locale;
-        this.verified = verified;
-    }
-
     public Long getId() { return id; }
 
     public String getUsername() {
@@ -195,7 +167,6 @@ public class User {
         this.region = region;
     }
 
-
     public boolean isVerified() {
         return verified;
     }
@@ -212,12 +183,32 @@ public class User {
         return this.followedTags;
     }
 
+    public void setFollowedTags(Collection<Tag> followedTags) {
+        this.followedTags = followedTags;
+    }
+
+    public Collection<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(Collection<Vote> votes) {
+        this.votes = votes;
+    }
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
+
     public Collection<Snippet> getFavorites() {
         return this.favorites;
     }
 
-    public Collection<Role> getRoles() {
-        return this.roles;
+    public void setFavorites(Collection<Snippet> favorites) {
+        this.favorites = favorites;
     }
 
     public void addFavorite(Snippet snippet) {
@@ -256,9 +247,5 @@ public class User {
         }
         User user = (User) o;
         return this.getId().equals(user.getId());
-    }
-
-    public Collection<Vote> getVotes() {
-        return votes;
     }
 }

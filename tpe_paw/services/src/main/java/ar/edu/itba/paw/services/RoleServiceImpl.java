@@ -28,14 +28,14 @@ public class RoleServiceImpl implements RoleService {
 
     @Transactional
     @Override
-    public void assignUserRole(long userId) {
-        this.roleDao.assignUserRole(userId);
+    public boolean assignUserRole(long userId) {
+        return this.roleDao.assignUserRole(userId);
     }
 
     @Transactional
     @Override
-    public void assignAdminRole(long userId) {
-        this.roleDao.assignAdminRole(userId);
+    public boolean assignAdminRole(long userId) {
+        return this.roleDao.assignAdminRole(userId);
     }
 
     @Override

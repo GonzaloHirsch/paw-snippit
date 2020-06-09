@@ -24,17 +24,32 @@ public class Role {
         // Hibernate constructor
     }
 
-    @Deprecated
-    public Role(long id, String name) {
-        this.id = id;
+    public Role(String name) {
         this.name = name;
     }
 
-    public long getId() { return this.id; }
+    public Long getId() { return this.id; }
 
     public Collection<User> getUsersWithRole() {
         return this.usersWithRole;
     }
 
+    public void setUsersWithRole(Collection<User> usersWithRole) {
+        this.usersWithRole = usersWithRole;
+    }
+
     public String getName() { return this.name;  }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Role)) {
+            return false;
+        }
+        Role role = (Role) o;
+        return this.getId().equals(role.getId());
+    }
 }

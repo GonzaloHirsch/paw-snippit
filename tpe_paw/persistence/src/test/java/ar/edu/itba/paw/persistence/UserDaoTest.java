@@ -267,9 +267,8 @@ public class UserDaoTest {
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
 
         userDao.updateLocale(user.getId()+10,LOCALE_ES);
-        this.em.flush();
 
-        assertEquals(LOCALE_EN.getCountry(),user.getLang());
+        assertEquals(LOCALE_EN.getCountry().toUpperCase(),user.getLang().toUpperCase());
     }
 
     @Transactional
@@ -277,10 +276,9 @@ public class UserDaoTest {
     public void testGetLocaleLanguage(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
 
-
         String loc = userDao.getLocaleLanguage(user.getId());
 
-        assertEquals(LOCALE_EN.getLanguage(),loc);
+        assertEquals(LOCALE_EN.getLanguage().toUpperCase(),loc.toUpperCase());
     }
 
     @Transactional

@@ -95,8 +95,9 @@ public class RegistrationController {
             return signUpForm(request, registerForm);
         }
 
+        User user = this.userService.register(registerForm.getUsername(), this.passwordEncoder.encode(registerForm.getPassword()), registerForm.getEmail(), Instant.now(), LocaleContextHolder.getLocale());
         try {
-            this.userService.register(registerForm.getUsername(), this.passwordEncoder.encode(registerForm.getPassword()), registerForm.getEmail(), Instant.now(), LocaleContextHolder.getLocale());
+            this.userService.registerFollowUp(user);
         } catch (Exception e) {
             LOGGER.error(e.getMessage() + "Failed to send registration email to user {}", registerForm.getUsername());
         }

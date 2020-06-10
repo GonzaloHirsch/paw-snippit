@@ -41,9 +41,9 @@ public class UserDaoTest {
     @Test
     @Transactional
     public void testCreateUser() {
-        final long userId = userDao.createUser(USER_USERNAME, USER_PASSWORD, USER_EMAIL, 0, Instant.now(),new Locale("en"));
+        final User user = userDao.createUser(USER_USERNAME, USER_PASSWORD, USER_EMAIL, 0, Instant.now(),new Locale("en"));
 
-        assertTrue(userId>0);
+        assertTrue(user.getId()>0);
     }
 
     @Transactional

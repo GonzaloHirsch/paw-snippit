@@ -10,7 +10,7 @@ public class Vote {
      * Method to set the Embedded Id of the vote object
      */
     @PrePersist
-    private void prePersiste() {
+    private void prePersist() {
         if (this.id == null) {
             this.id = new VoteId(this.user.getId(), this.snippet.getId());
         }

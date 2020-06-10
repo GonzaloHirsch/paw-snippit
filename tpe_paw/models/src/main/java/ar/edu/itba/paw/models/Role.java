@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 @Entity
@@ -18,7 +19,7 @@ public class Role {
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles", cascade = CascadeType.PERSIST)
-    private Collection<User> usersWithRole;
+    private Collection<User> usersWithRole = new HashSet<>();
 
     public Role(){
         // Hibernate constructor

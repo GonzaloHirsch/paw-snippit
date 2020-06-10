@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "tags")
@@ -16,10 +17,10 @@ public class Tag {
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags", cascade = CascadeType.PERSIST)
-    private Collection<Snippet> snippetsUsing;
+    private Collection<Snippet> snippetsUsing = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followedTags", cascade = CascadeType.PERSIST)
-    private Collection<User> followingUsers;
+    private Collection<User> followingUsers = new HashSet<>();
 
     public Tag(String name) {
         this.name = name;

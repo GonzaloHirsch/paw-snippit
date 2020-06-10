@@ -39,7 +39,6 @@ public class RoleJpaDaoImpl implements RoleDao {
         return this.em.createQuery("from Role", Role.class).getResultList();
     }
 
-    //TODO: See if its better to move to UserJpaDaoImpl
     @Override
     public Collection<String> getUserRoles(long userId) {
         Optional<User> user = em.createQuery("SELECT u from User u JOIN FETCH u.roles WHERE u.id = :userId", User.class)
@@ -50,7 +49,6 @@ public class RoleJpaDaoImpl implements RoleDao {
     }
 
     @Override
-    @Transactional
     public boolean assignUserRole(long userId) {
         final TypedQuery<Role> query = this.em.createQuery("from Role as r where r.name = :name", Role.class)
                 .setParameter("name", USER_ROLE);
@@ -59,7 +57,6 @@ public class RoleJpaDaoImpl implements RoleDao {
     }
 
     @Override
-    @Transactional
     public boolean assignAdminRole(long userId) {
         final TypedQuery<Role> query = this.em.createQuery("from Role as r where r.name = :name", Role.class)
                 .setParameter("name", ADMIN_ROLE);

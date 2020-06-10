@@ -15,10 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -144,4 +141,52 @@ public class FollowingDaoTest {
         Assert.assertTrue(followingTags.isEmpty());
     }
 
+    /*
+    @Test
+    public void followTagTest(){
+        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
+
+        followingDao.followTag(defaultUser.getId(), tag.getId());
+
+        Assert.assertTrue(tag.getFollowingUsers().contains(defaultUser));
+        Assert.assertTrue(defaultUser.getFollowedTags().contains(tag));
+    }
+
+    @Test
+    public void followTagEmptyTest(){
+        followingDao.followTag(defaultUser.getId(),  -1);
+
+        Assert.assertTrue(defaultUser.getFollowedTags().isEmpty());
+    }
+
+    @Test
+    public void unfollowTagTest(){
+        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
+        TestMethods.setUserFollowingTags(
+                em,
+                defaultUser,
+                Collections.singletonList(tag)
+        );
+
+        followingDao.unfollowTag(defaultUser.getId(), tag.getId());
+
+        Assert.assertFalse(tag.getFollowingUsers().contains(defaultUser));
+        Assert.assertFalse(defaultUser.getFollowedTags().contains(tag));
+    }
+
+    @Test
+    public void unfollowTagEmptyTest(){
+        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
+        TestMethods.setUserFollowingTags(
+                em,
+                defaultUser,
+                Collections.singletonList(tag)
+        );
+
+        followingDao.unfollowTag(defaultUser.getId(), tag.getId() + 10);
+
+        Assert.assertTrue(tag.getFollowingUsers().contains(defaultUser));
+        Assert.assertTrue(defaultUser.getFollowedTags().contains(tag));
+    }
+    */
 }

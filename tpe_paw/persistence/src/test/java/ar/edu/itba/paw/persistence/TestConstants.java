@@ -98,6 +98,10 @@ public final class TestConstants {
     static final Instant DATE_7 = Instant.parse("2013-11-30T18:35:24.00Z");
     static final Instant DATE_8 = Instant.parse("2012-11-30T18:35:24.00Z");
     static final Instant DATE_9 = Instant.parse("2011-11-30T18:35:24.00Z");
+    static final Instant DATE_MIN_MINUTES = Instant.parse("2016-12-30T18:30:00.00Z");
+    static final Instant DATE_MAX_MINUTES = Instant.parse("2016-12-30T18:40:00.00Z");
+    static final Instant DATE_MIN_YEAR = Instant.parse("2016-01-01T00:00:00.00Z");
+    static final Instant DATE_MAX_YEAR = Instant.parse("2017-01-01T00:00:00.00Z");
 
     static final int repMin1 = -1;
     static final int repMin2 = 0;

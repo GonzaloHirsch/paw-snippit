@@ -37,8 +37,7 @@ public class UserDaoTest {
     public void setUp() {
 
     }
-
-
+    
     @Test
     @Transactional
     public void testCreateUser() {
@@ -126,7 +125,6 @@ public class UserDaoTest {
         String newDescription = "New Description";
 
         userDao.changeDescription(user.getId(),newDescription);
-        this.em.flush();
 
         assertEquals(newDescription, user.getDescription());
         assertEquals(user.getId(),user.getId());
@@ -148,7 +146,6 @@ public class UserDaoTest {
         String newPassword = "newpassword";
 
         userDao.changePassword(user.getEmail(),newPassword);
-        em.flush();
 
         assertEquals(newPassword, user.getPassword());
         assertEquals(user.getId(),user.getId());
@@ -169,7 +166,6 @@ public class UserDaoTest {
         String newDescription = "new description";
 
         userDao.changeDescription(user.getId(),newDescription);
-        em.flush();
 
         assertEquals(newDescription, user.getDescription());
         assertEquals(user.getId(), user.getId());
@@ -190,7 +186,7 @@ public class UserDaoTest {
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
 
         userDao.changeReputation(user.getId(),10);
-        em.flush();
+        ;
 
         int rep = user.getReputation();
         assertEquals(10,rep);
@@ -234,7 +230,6 @@ public class UserDaoTest {
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
 
         userDao.updateLocale(user.getId(),LOCALE_ES);
-        em.flush();
 
         assertEquals(LOCALE_ES.getCountry(),user.getRegion());
     }
@@ -245,7 +240,6 @@ public class UserDaoTest {
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
 
         userDao.updateLocale(user.getId(),LOCALE_ES);
-        em.flush();
 
         assertEquals(LOCALE_ES.getCountry(),user.getRegion());
     }
@@ -334,7 +328,6 @@ public class UserDaoTest {
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
 
         userDao.verifyUserEmail(user.getId());
-        em.flush();
 
         assertTrue(user.isVerified());
     }

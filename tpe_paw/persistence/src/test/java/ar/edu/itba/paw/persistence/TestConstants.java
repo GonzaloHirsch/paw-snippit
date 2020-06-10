@@ -103,18 +103,16 @@ public final class TestConstants {
     static final Instant DATE_MIN_YEAR = Instant.parse("2016-01-01T00:00:00.00Z");
     static final Instant DATE_MAX_YEAR = Instant.parse("2017-01-01T00:00:00.00Z");
 
-    static final int repMin1 = -1;
-    static final int repMin2 = 0;
-    static final int repMin3 = 1;
+    static final int REP_VALUE_1 = -10;
+    static final int REP_VALUE_2 = 0;
+    static final int REP_VALUE_3 = 5;
+    static final int REP_VALUE_4 = 10;
+    static final int REP_VALUE_5 = 10000000;
 
-    static final int repMax1 = -1;
-    static final int repMax2 = 5;
-    static final int repMax3 = 10;
-
-    static final int voteMin1 = 0;
-    static final int voteMin2 = 5;
-    static final int voteMin3 = 10;
-    static final int voteMinTooHigh = 10000000;
+    static final int VOTE_VALUE_1 = 0;
+    static final int VOTE_VALUE_2 = 5;
+    static final int VOTE_VALUE_3 = 10;
+    static final int VOTE_VALUE_4 = 10000000;
 
     private TestConstants() {}
 }

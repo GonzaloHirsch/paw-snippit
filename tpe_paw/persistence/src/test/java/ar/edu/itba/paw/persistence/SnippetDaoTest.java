@@ -1335,11 +1335,37 @@ public class SnippetDaoTest {
         Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE7)));
         Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE8)));
         Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE9)));
-
+        
     }
 
     @Test
-    public void findSnippetByDeepCriteriaMonthsDateTest() {
+    public void findSnippetByDeepCriteriaMinutesDateTest() {
+        Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
+
+        Collection<Snippet> result = snippetDao.findSnippetByDeepCriteria(
+                TestConstants.DATE_MIN_MINUTES,
+                TestConstants.DATE_MAX_MINUTES,
+                Integer.MIN_VALUE,
+                Integer.MAX_VALUE,
+                Integer.MIN_VALUE,
+                Integer.MAX_VALUE,
+                language.getId(),
+                tag.getId(),
+                "",
+                "",
+                SnippetDao.Orders.ASC,
+                SnippetDao.Types.TITLE,
+                true,
+                1,
+                TestConstants.SNIPPET_PAGE_SIZE
+        );
+
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE4)));
+        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE6)));
+    }
+
+    @Test
+    public void findSnippetByDeepCriteriaYearDateTest() {
         Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
 
         Collection<Snippet> result = snippetDao.findSnippetByDeepCriteria(
@@ -1359,21 +1385,95 @@ public class SnippetDaoTest {
                 1,
                 TestConstants.SNIPPET_PAGE_SIZE
         );
+
         Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE3)));
         Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE4)));
         Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
         Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE6)));
     }
 
+
     @Test
-    public void findSnippetByDeepCriteriaMinutesDateTest() {
+    public void findSnippetByDeepCriteriaVotesTest() {
         Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
 
-        Collection<Snippet> result2 = snippetDao.findSnippetByDeepCriteria(
-                TestConstants.DATE_MIN_MINUTES,
-                TestConstants.DATE_MAX_MINUTES,
+        Collection<Snippet> result1 = snippetDao.findSnippetByDeepCriteria(
+                Instant.EPOCH,
+                TestConstants.USER_DATE,
                 Integer.MIN_VALUE,
                 Integer.MAX_VALUE,
+                TestConstants.VOTE_VALUE_1,
+                TestConstants.VOTE_VALUE_1,
+                language.getId(),
+                tag.getId(),
+                "",
+                "",
+                SnippetDao.Orders.ASC,
+                SnippetDao.Types.TITLE,
+                true,
+                1,
+                TestConstants.SNIPPET_PAGE_SIZE
+        );
+
+        Collection<Snippet> result2 = snippetDao.findSnippetByDeepCriteria(
+                Instant.EPOCH,
+                TestConstants.USER_DATE,
+                Integer.MIN_VALUE,
+                Integer.MAX_VALUE,
+                TestConstants.VOTE_VALUE_2,
+                TestConstants.VOTE_VALUE_3,
+                language.getId(),
+                tag.getId(),
+                "",
+                "",
+                SnippetDao.Orders.ASC,
+                SnippetDao.Types.TITLE,
+                true,
+                1,
+                TestConstants.SNIPPET_PAGE_SIZE
+        );
+
+        Collection<Snippet> result3 = snippetDao.findSnippetByDeepCriteria(
+                Instant.EPOCH,
+                TestConstants.USER_DATE,
+                Integer.MIN_VALUE,
+                Integer.MAX_VALUE,
+                TestConstants.VOTE_VALUE_4,
+                TestConstants.VOTE_VALUE_3,
+                language.getId(),
+                tag.getId(),
+                "",
+                "",
+                SnippetDao.Orders.ASC,
+                SnippetDao.Types.TITLE,
+                true,
+                1,
+                TestConstants.SNIPPET_PAGE_SIZE
+        );
+
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE6)));
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE7)));
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE8)));
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE9)));
+
+        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE4)));
+        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE5)));
+
+        Assert.assertTrue(result3.isEmpty());
+
+    }
+
+    @Test
+    public void findSnippetByDeepCriteriaReputationTest() {
+        Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
+
+        Collection<Snippet> result1 = snippetDao.findSnippetByDeepCriteria(
+                Instant.EPOCH, 
+                TestConstants.USER_DATE, // Instant.now()
+                TestConstants.REP_VALUE_1,
+                TestConstants.REP_VALUE_2,
                 Integer.MIN_VALUE,
                 Integer.MAX_VALUE,
                 language.getId(),
@@ -1386,8 +1486,47 @@ public class SnippetDaoTest {
                 1,
                 TestConstants.SNIPPET_PAGE_SIZE
         );
+        Collection<Snippet> result2 = snippetDao.findSnippetByDeepCriteria(
+                Instant.EPOCH, 
+                TestConstants.USER_DATE, // Instant.now()
+                TestConstants.REP_VALUE_3,
+                TestConstants.REP_VALUE_4,
+                Integer.MIN_VALUE,
+                Integer.MAX_VALUE,
+                language.getId(),
+                tag.getId(),
+                "",
+                "",
+                SnippetDao.Orders.ASC,
+                SnippetDao.Types.TITLE,
+                true,
+                1,
+                TestConstants.SNIPPET_PAGE_SIZE
+        );
+        Collection<Snippet> result3 = snippetDao.findSnippetByDeepCriteria(
+                Instant.EPOCH, 
+                TestConstants.USER_DATE, // Instant.now()
+                TestConstants.REP_VALUE_5,
+                TestConstants.REP_VALUE_5,
+                Integer.MIN_VALUE,
+                Integer.MAX_VALUE,
+                language.getId(),
+                tag.getId(),
+                "",
+                "",
+                SnippetDao.Orders.ASC,
+                SnippetDao.Types.TITLE,
+                true,
+                1,
+                TestConstants.SNIPPET_PAGE_SIZE
+        );
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE4)));
 
-        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE4)));
-        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE6)));
+        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE5)));
+
+        Assert.assertTrue(result3.isEmpty());
     }
 }

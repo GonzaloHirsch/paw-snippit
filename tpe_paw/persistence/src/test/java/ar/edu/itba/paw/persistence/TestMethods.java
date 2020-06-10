@@ -206,11 +206,11 @@ public final class TestMethods {
         insertVote(em, user10, snip4, true);
         insertVote(em, owner, snip4, true);
 
-        insertVote(em, user2, snip5, false);
-        insertVote(em, user3, snip5, false);
-        insertVote(em, user4, snip5, false);
-        insertVote(em, user5, snip5, false);
-        insertVote(em, user6, snip5, false);
+        insertVote(em, user2, snip5, true);
+        insertVote(em, user3, snip5, true);
+        insertVote(em, user4, snip5, true);
+        insertVote(em, user5, snip5, true);
+        insertVote(em, user6, snip5, true);
         insertVote(em, user7, snip5, true);
         insertVote(em, user8, snip5, true);
         insertVote(em, user9, snip5, true);

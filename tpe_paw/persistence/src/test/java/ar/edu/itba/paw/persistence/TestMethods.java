@@ -159,15 +159,15 @@ public final class TestMethods {
 
         /* SNIPPETS */
 
-        Snippet snip1 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.singletonList(tag), false, false);
+        Snippet snip1 = TestMethods.insertSnippet(em, user10, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.singletonList(tag), false, false);
         Snippet snip2 = TestMethods.insertSnippet(em, user2, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, TestConstants.DATE_2, language, Collections.singletonList(tag), false, false);
         Snippet snip3 = TestMethods.insertSnippet(em, user3, TestConstants.SNIPPET_TITLE3, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE3, TestConstants.DATE_3, language, Collections.singletonList(tag), false, false);
         Snippet snip4 = TestMethods.insertSnippet(em, user4, TestConstants.SNIPPET_TITLE4, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_4, language, Collections.singletonList(tag), false, false);
         Snippet snip5 = TestMethods.insertSnippet(em, user5, TestConstants.SNIPPET_TITLE5, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_5, language, Collections.singletonList(tag), false, false);
         Snippet snip6 = TestMethods.insertSnippet(em, user6, TestConstants.SNIPPET_TITLE6, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE3, TestConstants.DATE_6, language, Collections.emptyList(), false, false);
-        Snippet snip7 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE7, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, TestConstants.DATE_7, language, Collections.emptyList(), false, false);
-        Snippet snip8 = TestMethods.insertSnippet(em, user2, TestConstants.SNIPPET_TITLE8, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, TestConstants.DATE_8, language, Collections.emptyList(), false, false);
-        Snippet snip9 = TestMethods.insertSnippet(em, user3, TestConstants.SNIPPET_TITLE9, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_9, language, Collections.emptyList(), false, false);
+        Snippet snip7 = TestMethods.insertSnippet(em, user7, TestConstants.SNIPPET_TITLE7, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, TestConstants.DATE_7, language, Collections.emptyList(), false, false);
+        Snippet snip8 = TestMethods.insertSnippet(em, user8, TestConstants.SNIPPET_TITLE8, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, TestConstants.DATE_8, language, Collections.emptyList(), false, false);
+        Snippet snip9 = TestMethods.insertSnippet(em, user9, TestConstants.SNIPPET_TITLE9, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_9, language, Collections.emptyList(), false, false);
         data.put(snip1.getTitle(), snip1);
         data.put(snip2.getTitle(), snip2);
         data.put(snip3.getTitle(), snip3);

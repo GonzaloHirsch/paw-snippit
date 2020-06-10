@@ -1398,14 +1398,14 @@ public class SnippetDaoTest {
         Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
 
         Collection<Snippet> result1 = snippetDao.findSnippetByDeepCriteria(
-                Instant.EPOCH,
-                TestConstants.USER_DATE,
-                Integer.MIN_VALUE,
-                Integer.MAX_VALUE,
+                null,
+                null,
+                null,
+                null,
                 TestConstants.VOTE_VALUE_1,
                 TestConstants.VOTE_VALUE_1,
-                language.getId(),
-                tag.getId(),
+                null,
+                null,
                 "",
                 "",
                 SnippetDao.Orders.ASC,
@@ -1416,14 +1416,14 @@ public class SnippetDaoTest {
         );
 
         Collection<Snippet> result2 = snippetDao.findSnippetByDeepCriteria(
-                Instant.EPOCH,
-                TestConstants.USER_DATE,
-                Integer.MIN_VALUE,
-                Integer.MAX_VALUE,
+                null,
+                null,
+                null,
+                null,
                 TestConstants.VOTE_VALUE_2,
                 TestConstants.VOTE_VALUE_3,
-                language.getId(),
-                tag.getId(),
+                null,
+                null,
                 "",
                 "",
                 SnippetDao.Orders.ASC,
@@ -1434,14 +1434,14 @@ public class SnippetDaoTest {
         );
 
         Collection<Snippet> result3 = snippetDao.findSnippetByDeepCriteria(
-                Instant.EPOCH,
-                TestConstants.USER_DATE,
-                Integer.MIN_VALUE,
-                Integer.MAX_VALUE,
+                null,
+                null,
+                null,
+                null,
                 TestConstants.VOTE_VALUE_4,
                 TestConstants.VOTE_VALUE_3,
-                language.getId(),
-                tag.getId(),
+                null,
+                null,
                 "",
                 "",
                 SnippetDao.Orders.ASC,

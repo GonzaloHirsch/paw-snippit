@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
+@Transactional
 public class TagDaoTest {
 
     @Autowired private DataSource ds;
@@ -160,34 +161,29 @@ public class TagDaoTest {
 //        Assert.assertEquals(0,maybeTags.size());
 //    }
 
-    /*
+
     @Test
     @Transactional
     public void testRemoveTag(){
-        long tagId = insertTagIntoDb(jdbcInsertTag,TAG);
-        Assert.assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,TAGS_TABLE));
-        tagDao.removeTag(tagId);
-        em.flush();
+        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
 
-        Assert.assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,TAGS_TABLE));
+        tagDao.removeTag(tag.getId());
     }
 
     @Test
     public void testRemoveTagEmpty(){
-        long tagId = insertTagIntoDb(jdbcInsertTag,TAG);
+        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
 
-        tagDao.removeTag(tagId+10);
-
-        Assert.assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,TAGS_TABLE));
+        tagDao.removeTag(tag.getId());
     }
 
     @Test
     public void testGetAllTagsCountByName(){
-        long tagId1 = insertTagIntoDb(jdbcInsertTag,TAG);
-        long tagId2 = insertTagIntoDb(jdbcInsertTag,TAG2);
+        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
+        Tag tag2 = TestMethods.insertTag(em, TestConstants.TAG2);
 
-        int res1 = tagDao.getAllTagsCountByName(TAG, true);
-        int res2 = tagDao.getAllTagsCountByName(TAG2, true);
+        int res1 = tagDao.getAllTagsCountByName(TestConstants.TAG, true);
+        int res2 = tagDao.getAllTagsCountByName(TestConstants.TAG2, true);
 
         Assert.assertEquals(1,res1);
         Assert.assertEquals(1,res2);
@@ -195,21 +191,22 @@ public class TagDaoTest {
 
     @Test
     public void testGetAllTagsCountByNameEmpty(){
-        long tagId1 = insertTagIntoDb(jdbcInsertTag,TAG);
-        long tagId2 = insertTagIntoDb(jdbcInsertTag,TAG2);
+        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
+        Tag tag2 = TestMethods.insertTag(em, TestConstants.TAG2);
 
-        int res = tagDao.getAllTagsCountByName("zzzz", true);
+        int res = tagDao.getAllTagsCountByName("Not a tag name-xxxxx", true);
 
         Assert.assertEquals(0,res);
     }
 
     @Test
     public void testGetAllTagsCount(){
-        insertTagIntoDb(jdbcInsertTag,TAG);
+        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
+        Tag tag2 = TestMethods.insertTag(em, TestConstants.TAG2);
 
         int res = tagDao.getAllTagsCount(true);
 
-        Assert.assertEquals(1,res);
+        Assert.assertEquals(2,res);
     }
 
     @Test
@@ -221,30 +218,30 @@ public class TagDaoTest {
 
     @Test
     public void testFindTagsByName(){
-        long tagId1 = insertTagIntoDb(jdbcInsertTag,TAG);
-        long tagId2 = insertTagIntoDb(jdbcInsertTag,TAG2);
+        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
+        Tag tag2 = TestMethods.insertTag(em, TestConstants.TAG2);
 
-        Collection<Tag> maybeCollection = tagDao.findTagsByName("tag", true,1,PAGE_SIZE);
+        Collection<Tag> maybeCollection = tagDao.findTagsByName("tag", true,1,TestConstants.TAG_PAGE_SIZE);
 
         Assert.assertNotNull(maybeCollection);
         Assert.assertEquals(2,maybeCollection.size());
         List<Long> idCol = maybeCollection.stream().mapToLong(Tag::getId).boxed().collect(Collectors.toList());
-        Assert.assertTrue(idCol.contains(tagId1));
-        Assert.assertTrue(idCol.contains(tagId2));
+        Assert.assertTrue(idCol.contains(tag.getId()));
+        Assert.assertTrue(idCol.contains(tag2.getId()));
     }
 
     @Test
     public void testFindTagsByNameEmpty(){
-        long tagId1 = insertTagIntoDb(jdbcInsertTag,TAG);
-        long tagId2 = insertTagIntoDb(jdbcInsertTag,TAG2);
+        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
+        Tag tag2 = TestMethods.insertTag(em, TestConstants.TAG2);
 
-        Collection<Tag> maybeCollection = tagDao.findTagsByName("zzzz", true,1,PAGE_SIZE);
+        Collection<Tag> maybeCollection = tagDao.findTagsByName("notatagname-xxxx", true,1,TestConstants.TAG_PAGE_SIZE);
 
         Assert.assertNotNull(maybeCollection);
         Assert.assertEquals(0,maybeCollection.size());
 
     }
 
-*/
+
 
 }

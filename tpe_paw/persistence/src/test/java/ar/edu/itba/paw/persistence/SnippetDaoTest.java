@@ -1307,6 +1307,17 @@ public class SnippetDaoTest {
     /* Testing finding snippet by deep criteria */
     @Test
     public void findSnippetByDeepCriteriaDateTest() {
-//        snippetDao.findSnippetByDeepCriteria();
+        Map<String, Object> data = TestMethods.dataForDateDeepSnippetCriteriaSearching(em, tag, owner, language);
+        
+        Collection<Snippet> result1 = snippetDao.findSnippetByDeepCriteria(TestConstants.DATE_9, TestConstants.DATE_1, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, language.getId(), tag.getId(), "", "", SnippetDao.Orders.NO, SnippetDao.Types.TITLE, true, 1, TestConstants.SNIPPET_PAGE_SIZE);
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE4)));
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE6)));
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE7)));
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE8)));
+        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE9)));
     }
 }

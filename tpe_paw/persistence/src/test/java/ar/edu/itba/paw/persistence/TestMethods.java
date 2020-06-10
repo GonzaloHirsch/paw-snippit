@@ -126,13 +126,33 @@ public final class TestMethods {
         return data;
     }
 
-    static Map<String, Object> dataForDeepSnippetCriteriaSearching (
+    static Map<String, Object> dataForDateDeepSnippetCriteriaSearching (
             EntityManager em,
             Tag tag,
             User owner,
             Language language
     ) {
         Map<String, Object> data = new HashMap<>();
+
+        /* SNIPPET */
+        Snippet snip1 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.singletonList(tag), false, TestConstants.SNIPPET_DELETED);
+        Snippet snip2 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, TestConstants.DATE_2, language, Collections.singletonList(tag), TestConstants.SNIPPET_FLAGGED, false);
+        Snippet snip3 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE3, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE3, TestConstants.DATE_3, language, Collections.singletonList(tag), TestConstants.SNIPPET_FLAGGED, TestConstants.SNIPPET_DELETED);
+        Snippet snip4 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE4, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_4, language, Collections.singletonList(tag), false, false);
+        Snippet snip5 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE5, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_5, language, Collections.singletonList(tag), false, false);
+        Snippet snip6 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE6, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE3, TestConstants.DATE_6, language, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
+        Snippet snip7 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE7, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, TestConstants.DATE_7, language, Collections.emptyList(), false, false);
+        Snippet snip8 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE8, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, TestConstants.DATE_8, language, Collections.emptyList(), false, false);
+        Snippet snip9 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE9, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_9, language, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
+        data.put(snip1.getTitle(), snip1);
+        data.put(snip2.getTitle(), snip2);
+        data.put(snip3.getTitle(), snip3);
+        data.put(snip4.getTitle(), snip4);
+        data.put(snip5.getTitle(), snip5);
+        data.put(snip6.getTitle(), snip6);
+        data.put(snip7.getTitle(), snip7);
+        data.put(snip8.getTitle(), snip8);
+        data.put(snip9.getTitle(), snip9);
 
         return data;
     }

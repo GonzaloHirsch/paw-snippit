@@ -42,7 +42,7 @@ public class FollowingJpaDaoImpl implements FollowingDao {
                 .setMaxResults(amount);
 
         List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())
-                .stream().map(i -> ((Integer) i[0]).longValue()).collect(Collectors.toList());
+                .stream().map(i -> ((Number) i[0]).longValue()).collect(Collectors.toList());
         if (filteredIds.size() > 0) {
             final TypedQuery<Tag> query = this.em.createQuery("from Tag where id IN :filteredIds", Tag.class);
             query.setParameter("filteredIds", filteredIds);
@@ -71,16 +71,5 @@ public class FollowingJpaDaoImpl implements FollowingDao {
             user.get().unfollow(tag.get());
             this.em.persist(user.get());
         }
-    }
-
-    @Override
-    public boolean userFollowsTag(long userId, long tagId) {
-        Optional<User> user = Optional.ofNullable(this.em.find(User.class, userId));
-        Optional<Tag> tag = Optional.ofNullable(this.em.find(Tag.class, tagId));
-
-        if (user.isPresent() && tag.isPresent()) {
-            return user.get().getFollowedTags().contains(tag.get());
-        }
-        return false;
     }
 }

@@ -66,6 +66,15 @@ public final class TestMethods {
         em.persist(user);
     }
 
+    static Map<String, Object> populateData(EntityManager em) {
+        return dataForSnippetCriteriaSearching(
+                em,
+                TestMethods.insertTag(em, TestConstants.TAG),
+                TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED),
+                TestMethods.insertLanguage(em, TestConstants.LANGUAGE)
+        );
+    }
+
     static Map<String, Object> dataForSnippetCriteriaSearching(
             EntityManager em,
             Tag tag,

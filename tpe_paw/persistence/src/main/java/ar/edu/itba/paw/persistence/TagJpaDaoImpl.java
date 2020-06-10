@@ -91,7 +91,7 @@ public class TagJpaDaoImpl implements TagDao {
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
         List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())
-                .stream().map(i -> ((Integer) i[0]).longValue()).collect(Collectors.toList());
+                .stream().map(i -> ((Number) i[0]).longValue()).collect(Collectors.toList());
         if (!filteredIds.isEmpty()){
             final TypedQuery<Tag> query = this.em.createQuery("from Tag where id IN :filteredIds ORDER BY name ASC", Tag.class);
             query.setParameter("filteredIds", filteredIds);
@@ -153,7 +153,7 @@ public class TagJpaDaoImpl implements TagDao {
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
         List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())
-                .stream().map(i -> ((Integer) i[0]).longValue()).collect(Collectors.toList());
+                .stream().map(i -> ((Number) i[0]).longValue()).collect(Collectors.toList());
         if (!filteredIds.isEmpty()){
             final TypedQuery<Tag> query = this.em.createQuery("from Tag where id IN :filteredIds ORDER BY name ASC", Tag.class);
             query.setParameter("filteredIds", filteredIds);

@@ -1,134 +1,147 @@
-//package ar.edu.itba.paw.persistence;
-//
-//import ar.edu.itba.paw.interfaces.dao.FavoriteDao;
-//import ar.edu.itba.paw.interfaces.dao.FollowingDao;
-//import ar.edu.itba.paw.models.Favorite;
-//import ar.edu.itba.paw.models.Tag;
-//import ar.edu.itba.paw.models.User;
-//import org.junit.Before;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.mockito.Mockito;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.jdbc.core.JdbcTemplate;
-//import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-//import org.springframework.test.context.ContextConfiguration;
-//import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-//import org.springframework.test.jdbc.JdbcTestUtils;
-//
-//import javax.sql.DataSource;
-//
-//import java.util.Collection;
-//import java.util.Optional;
-//
-//import static ar.edu.itba.paw.persistence.TestConstants.*;
-//
-//import static junit.framework.TestCase.*;
-//
-//
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(classes = TestConfig.class)
-//public class FollowingDaoTest {
-//
-//    @Autowired
-//    private DataSource ds;
-//
-//    private FollowingDao followingDao;
-//
-//    private JdbcTemplate jdbcTemplate;
-//    private SimpleJdbcInsert jdbcInsertFollowing;
-//
-//    private long defaultTagId;
-//    private User defaultUser;
-//
-//    @Before
-//    public void setUp(){
-//        jdbcTemplate = new JdbcTemplate(ds);
-//        followingDao = new FollowingJpaDaoImpl();
-//
-//        jdbcInsertFollowing = new SimpleJdbcInsert(ds).withTableName(FOLLOWS_TABLE);
-//
-//        SimpleJdbcInsert jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
-//        SimpleJdbcInsert jdbcInsertTag = new SimpleJdbcInsert(ds).withTableName(TAGS_TABLE).usingGeneratedKeyColumns("id");
-//
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,FOLLOWS_TABLE);
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,TAGS_TABLE);
-//        defaultTagId = insertTagIntoDb(jdbcInsertTag,TAG);
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-//        defaultUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR,LOCALE_EN);
-//
-//    }
-//
-//    @Test
-//    public void followTag(){
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,FOLLOWS_TABLE);
-//
-//        followingDao.followTag(defaultUser.getId(),defaultTagId);
-//
-//        assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,FOLLOWS_TABLE));
-//    }
-//
-//    @Test
-//    public void testGetFollowedTagsForUser(){
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,FOLLOWS_TABLE);
-//        insertFollowingIntoDb(jdbcInsertFollowing,defaultTagId,defaultUser.getId());
-//
-//        Collection<Tag> maybeTags = followingDao.getFollowedTagsForUser(defaultUser.getId());
-//
-//        assertNotNull(maybeTags);
-//        assertEquals(1,maybeTags.size());
-//
-//    }
-//
-//    @Test
-//    public void testGetFollowedTagsForUserEmpty(){
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,FOLLOWS_TABLE);
-//
-//        Collection<Tag> maybeTags = followingDao.getFollowedTagsForUser(6);
-//
-//        assertNotNull(maybeTags);
-//        assertEquals(0,maybeTags.size());
-//
-//    }
-//
-//    @Test
-//    public void testUnfollowTag(){
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,FOLLOWS_TABLE);
-//        insertFollowingIntoDb(jdbcInsertFollowing,defaultTagId,defaultUser.getId());
-//
-//        followingDao.unfollowTag(defaultUser.getId(),defaultTagId);
-//
-//        assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,FOLLOWS_TABLE));
-//    }
-//
-//    @Test
-//    public void testUnfollowTagEmpty(){
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,FOLLOWS_TABLE);
-//        insertFollowingIntoDb(jdbcInsertFollowing,defaultTagId,defaultUser.getId());
-//
-//        followingDao.unfollowTag(defaultUser.getId()+10,defaultTagId+10);
-//
-//        assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,FOLLOWS_TABLE));
-//    }
-//
-//    @Test
-//    public void testUserFollowsTag(){
-//        insertFollowingIntoDb(jdbcInsertFollowing,defaultTagId,defaultUser.getId());
-//
-//        boolean result = followingDao.userFollowsTag(defaultUser.getId(),defaultTagId);
-//
-//        assertTrue(result);
-//    }
-//
-//    @Test
-//    public void testUserFollowsTagEmpty(){
-//        insertFollowingIntoDb(jdbcInsertFollowing,defaultTagId,defaultUser.getId());
-//
-//        boolean result = followingDao.userFollowsTag(defaultUser.getId()+10,defaultTagId+10);
-//
-//        assertFalse(result);
-//    }
-//
-//
-//
-//}
+package ar.edu.itba.paw.persistence;
+
+import ar.edu.itba.paw.interfaces.dao.FollowingDao;
+import ar.edu.itba.paw.interfaces.dao.RoleDao;
+import ar.edu.itba.paw.models.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestConfig.class)
+@Transactional
+public class FollowingDaoTest {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Autowired
+    private FollowingDao followingDao;
+
+    private User defaultUser;
+
+    @Before
+    public void setup(){
+        defaultUser = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED);
+    }
+
+    @Test
+    public void getFollowedTagsForUserTest() {
+        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
+        Tag tag2 = TestMethods.insertTag(em, TestConstants.TAG2);
+
+        TestMethods.setUserFollowingTags(em, defaultUser, Arrays.asList(tag, tag2));
+
+        Collection<Tag> followingTags = followingDao.getFollowedTagsForUser(defaultUser.getId());
+        Assert.assertNotNull(followingTags);
+        Assert.assertEquals(2, followingTags.size());
+        Assert.assertTrue(followingTags.contains(tag));
+        Assert.assertTrue(followingTags.contains(tag2));
+    }
+
+    @Test
+    public void getMostPopularFollowedTagsForUserEmptyTagTest() {
+        Map<String, Object> data = TestMethods.populateData(em);
+        Tag unpopularTag = TestMethods.insertTag(em, TestConstants.TAG4);
+
+        TestMethods.setUserFollowingTags(
+                em,
+                defaultUser,
+                Arrays.asList(
+                        (Tag) data.get(TestConstants.TAG),
+                        (Tag) data.get(TestConstants.TAG2),
+                        (Tag) data.get(TestConstants.TAG3),
+                        unpopularTag
+                )
+        );
+
+        Collection<Tag> followingTags = followingDao.getMostPopularFollowedTagsForUser(defaultUser.getId(), 10);
+        Assert.assertNotNull(followingTags);
+        Assert.assertEquals(3, followingTags.size());
+        Assert.assertFalse(followingTags.contains(unpopularTag));
+    }
+
+    @Test
+    public void getMostPopularFollowedTagsForUserTagWithDeletedSnippetTest() {
+        Map<String, Object> data = TestMethods.populateData(em);
+
+        /* Only contains a deleted snippet */
+        Tag unpopularTag = TestMethods.insertTag(em, TestConstants.TAG4);
+        TestMethods.insertSnippet(em, defaultUser, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), (Language) data.get(TestConstants.LANGUAGE), Collections.singletonList(unpopularTag), false, TestConstants.SNIPPET_DELETED);
+
+        TestMethods.setUserFollowingTags(
+                em,
+                defaultUser,
+                Arrays.asList(
+                        (Tag) data.get(TestConstants.TAG),
+                        (Tag) data.get(TestConstants.TAG2),
+                        (Tag) data.get(TestConstants.TAG3),
+                        unpopularTag
+                )
+        );
+
+        Collection<Tag> followingTags = followingDao.getMostPopularFollowedTagsForUser(defaultUser.getId(), 10);
+        Assert.assertNotNull(followingTags);
+        Assert.assertEquals(3, followingTags.size());
+        Assert.assertFalse(followingTags.contains(unpopularTag));
+    }
+
+    @Test
+    public void getMostPopularFollowedTagsForUserTooManyTagTest() {
+        Map<String, Object> data = TestMethods.populateData(em);
+
+        /* Only contains a deleted snippet */
+        Tag unpopularTag = TestMethods.insertTag(em, TestConstants.TAG4);
+        TestMethods.insertSnippet(em, defaultUser, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), (Language) data.get(TestConstants.LANGUAGE), Collections.singletonList(unpopularTag), false, TestConstants.SNIPPET_DELETED);
+
+        TestMethods.setUserFollowingTags(
+                em,
+                defaultUser,
+                Arrays.asList(
+                        (Tag) data.get(TestConstants.TAG),
+                        (Tag) data.get(TestConstants.TAG2),
+                        (Tag) data.get(TestConstants.TAG3),
+                        unpopularTag
+                )
+        );
+
+        /* Only want the two most popular --> TAG is only in 3 snippets */
+        Collection<Tag> followingTags = followingDao.getMostPopularFollowedTagsForUser(defaultUser.getId(), 2);
+        Assert.assertNotNull(followingTags);
+        Assert.assertEquals(2, followingTags.size());
+        Assert.assertFalse(followingTags.contains(unpopularTag));
+        Assert.assertFalse(followingTags.contains(data.get(TestConstants.TAG)));
+    }
+
+    @Test
+    public void getMostPopularFollowedTagsForUserNoTagsTest() {
+        /* Only contains a deleted snippet */
+        Tag unpopularTag = TestMethods.insertTag(em, TestConstants.TAG4);
+        TestMethods.insertSnippet(em, defaultUser, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), TestMethods.insertLanguage(em, TestConstants.LANGUAGE2), Collections.singletonList(unpopularTag), false, TestConstants.SNIPPET_DELETED);
+
+        TestMethods.setUserFollowingTags(
+                em,
+                defaultUser,
+                Collections.singletonList(unpopularTag)
+        );
+
+        /* Only want the two most popular --> TAG is only in 3 snippets */
+        Collection<Tag> followingTags = followingDao.getMostPopularFollowedTagsForUser(defaultUser.getId(), 2);
+        Assert.assertNotNull(followingTags);
+        Assert.assertTrue(followingTags.isEmpty());
+    }
+
+}

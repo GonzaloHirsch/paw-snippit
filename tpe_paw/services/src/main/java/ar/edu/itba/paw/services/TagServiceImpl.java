@@ -2,8 +2,11 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.dao.FollowingDao;
 import ar.edu.itba.paw.interfaces.dao.TagDao;
+import ar.edu.itba.paw.interfaces.dao.UserDao;
 import ar.edu.itba.paw.interfaces.service.TagService;
+import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Tag;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,8 @@ public class TagServiceImpl implements TagService {
     private TagDao tagDao;
     @Autowired
     private FollowingDao followingDao;
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public Collection<Tag> getAllTags(boolean showEmpty, int page, int pageSize) {
@@ -123,7 +128,12 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public boolean userFollowsTag(long userId, long tagId) {
-        return this.followingDao.userFollowsTag(userId, tagId);
-    }
+        Optional<User> user = this.userDao.findUserById(userId);
+        Optional<Tag> tag = this.tagDao.findById(tagId);
 
+        if (user.isPresent() && tag.isPresent()) {
+            return user.get().getFollowedTags().contains(tag.get());
+        }
+        return false;
+    }
 }

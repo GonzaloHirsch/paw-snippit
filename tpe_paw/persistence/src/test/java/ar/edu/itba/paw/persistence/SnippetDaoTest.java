@@ -1377,10 +1377,10 @@ public class SnippetDaoTest {
                 Integer.MAX_VALUE,
                 language.getId(),
                 tag.getId(),
-                "",
-                "",
+                "t",
+                "u",
                 SnippetDao.Orders.ASC,
-                SnippetDao.Types.TITLE,
+                SnippetDao.Types.ALL,
                 true,
                 1,
                 TestConstants.SNIPPET_PAGE_SIZE
@@ -1468,14 +1468,14 @@ public class SnippetDaoTest {
     @Test
     public void findSnippetByDeepCriteriaReputationTest() {
         Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
-
+        em.flush();
         Collection<Snippet> result1 = snippetDao.findSnippetByDeepCriteria(
-                Instant.EPOCH, 
-                TestConstants.USER_DATE, // Instant.now()
+                null,
+                null, // Instant.now()
                 TestConstants.REP_VALUE_1,
                 TestConstants.REP_VALUE_2,
-                Integer.MIN_VALUE,
-                Integer.MAX_VALUE,
+                null,
+                null,
                 language.getId(),
                 tag.getId(),
                 "",
@@ -1487,12 +1487,12 @@ public class SnippetDaoTest {
                 TestConstants.SNIPPET_PAGE_SIZE
         );
         Collection<Snippet> result2 = snippetDao.findSnippetByDeepCriteria(
-                Instant.EPOCH, 
-                TestConstants.USER_DATE, // Instant.now()
+                null,
+                null, // Instant.now()
                 TestConstants.REP_VALUE_3,
-                TestConstants.REP_VALUE_4,
-                Integer.MIN_VALUE,
-                Integer.MAX_VALUE,
+                TestConstants.REP_VALUE_5,
+                null,
+                null,
                 language.getId(),
                 tag.getId(),
                 "",
@@ -1504,12 +1504,12 @@ public class SnippetDaoTest {
                 TestConstants.SNIPPET_PAGE_SIZE
         );
         Collection<Snippet> result3 = snippetDao.findSnippetByDeepCriteria(
-                Instant.EPOCH, 
-                TestConstants.USER_DATE, // Instant.now()
-                TestConstants.REP_VALUE_5,
-                TestConstants.REP_VALUE_5,
-                Integer.MIN_VALUE,
-                Integer.MAX_VALUE,
+                null,
+                null, // Instant.now()
+                TestConstants.REP_VALUE_6,
+                TestConstants.REP_VALUE_6,
+                null,
+                null,
                 language.getId(),
                 tag.getId(),
                 "",

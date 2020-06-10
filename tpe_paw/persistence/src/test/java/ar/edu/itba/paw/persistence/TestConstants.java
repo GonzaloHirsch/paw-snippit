@@ -104,10 +104,11 @@ public final class TestConstants {
     static final Instant DATE_MAX_YEAR = Instant.parse("2017-01-01T00:00:00.00Z");
 
     static final int REP_VALUE_1 = -10;
-    static final int REP_VALUE_2 = 0;
-    static final int REP_VALUE_3 = 5;
-    static final int REP_VALUE_4 = 10;
-    static final int REP_VALUE_5 = 10000000;
+    static final int REP_VALUE_2 = -1;
+    static final int REP_VALUE_3 = 0;
+    static final int REP_VALUE_4 = 5;
+    static final int REP_VALUE_5 = 10;
+    static final int REP_VALUE_6 = 10000000;
 
     static final int VOTE_VALUE_1 = 0;
     static final int VOTE_VALUE_2 = 5;

@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Locale;
 
@@ -72,6 +71,24 @@ public final class TestConstants {
 
     static final String GENERAL_TERM = "3";
 
+    /* Snippet Deep Criteria Testing */
+
+    static final Instant DATE_1 = Instant.parse("2018-11-30T18:35:24.00Z");
+    static final Instant DATE_2 = Instant.parse("2017-11-30T18:35:24.00Z");
+    static final Instant DATE_3 = Instant.parse("2016-11-30T18:35:24.00Z");
+
+    static final int repMin1 = -1;
+    static final int repMin2 = 0;
+    static final int repMin3 = 1;
+
+    static final int repMax1 = -1;
+    static final int repMax2 = 5;
+    static final int repMax3 = 10;
+
+    static final int voteMin1 = 0;
+    static final int voteMin2 = 5;
+    static final int voteMin3 = 10;
+    static final int voteMinTooHigh = 10000000;
 
     private TestConstants() {}
 }

@@ -1303,4 +1303,10 @@ public class SnippetDaoTest {
         Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE4)));
         Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
     }
+
+    /* Testing finding snippet by deep criteria */
+    @Test
+    public void findSnippetByDeepCriteriaDateTest() {
+//        snippetDao.findSnippetByDeepCriteria();
+    }
 }

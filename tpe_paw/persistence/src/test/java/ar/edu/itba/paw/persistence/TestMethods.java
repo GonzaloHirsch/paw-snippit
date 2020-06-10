@@ -3,7 +3,6 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.models.*;
 
 import javax.persistence.EntityManager;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
 
@@ -123,6 +122,17 @@ public final class TestMethods {
         data.put(snip7.getTitle(), snip7);
         data.put(snip8.getTitle(), snip8);
         data.put(snip9.getTitle(), snip9);
+
+        return data;
+    }
+
+    static Map<String, Object> dataForDeepSnippetCriteriaSearching (
+            EntityManager em,
+            Tag tag,
+            User owner,
+            Language language
+    ) {
+        Map<String, Object> data = new HashMap<>();
 
         return data;
     }

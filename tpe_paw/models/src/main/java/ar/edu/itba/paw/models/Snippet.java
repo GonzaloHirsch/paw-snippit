@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,17 +45,17 @@ public class Snippet {
     private boolean deleted;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "snippet")
-    private Collection<Vote> votes;
+    private Collection<Vote> votes = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites", cascade = CascadeType.PERSIST)
-    private Collection<User> userFavorites;
+    private Collection<User> userFavorites = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "snippet_tags",
             joinColumns = @JoinColumn(name = "snippet_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Collection<Tag> tags;
+    private Collection<Tag> tags = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "language_id", referencedColumnName = "id")

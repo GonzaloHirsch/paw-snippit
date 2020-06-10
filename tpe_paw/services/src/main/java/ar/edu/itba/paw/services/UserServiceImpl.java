@@ -25,16 +25,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public long createUser(String username, String password, String email, int reputation, Instant dateJoined, Locale locale) {
-        return this.userDao.createUser(username, password, email, reputation, dateJoined, locale);
+    public User register(String username, String password, String email, Instant dateJoined, Locale locale) {
+        User user = this.userDao.createUser(username, password, email, 0, dateJoined, locale);
+        this.roleService.assignUserRole(user.getId());
+        return user;
     }
-    
+
     @Override
-    public long register(String username, String password, String email, Instant dateJoined, Locale locale) {
-        long userId = createUser(username, password, email, 0, dateJoined, locale);
-        this.roleService.assignUserRole(userId);
-        this.emailService.sendRegistrationEmail(email, username, LocaleContextHolder.getLocale());
-        return userId;
+    public void registerFollowUp(User user) {
+        this.emailService.sendRegistrationEmail(user.getEmail(), user.getUsername(), LocaleContextHolder.getLocale());
     }
 
     @Override

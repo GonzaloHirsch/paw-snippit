@@ -9,9 +9,10 @@ import java.util.Locale;
 import java.util.Optional;
 
 public interface UserService {
-    long createUser(String username, String password, String email, int reputation, Instant dateJoined, Locale locale);
 
-    long register(String username, String password, String email, Instant dateJoined, Locale locale);
+    User register(String username, String password, String email, Instant dateJoined, Locale locale);
+
+    void registerFollowUp(User user);
 
     Optional<User> findUserByUsername(String username);
 

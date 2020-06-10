@@ -126,24 +126,48 @@ public final class TestMethods {
         return data;
     }
 
-    static Map<String, Object> dataForDateDeepSnippetCriteriaSearching (
-            EntityManager em,
-            Tag tag,
-            User owner,
-            Language language
+    static Map<String, Object> dataForSearchByDeepCriteria (
+        EntityManager em,
+        Tag tag,
+        User owner,
+        Language language
     ) {
         Map<String, Object> data = new HashMap<>();
 
-        /* SNIPPET */
+        /* USERS */
+
+        User user2 = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, false);
+        User user3 = TestMethods.insertUser(em, TestConstants.USER_USERNAME3, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL3, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED);
+        User user4 = TestMethods.insertUser(em, TestConstants.USER_USERNAME4, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL4, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED);
+        User user5 = TestMethods.insertUser(em, TestConstants.USER_USERNAME5, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL5, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED);
+        User user6 = TestMethods.insertUser(em, TestConstants.USER_USERNAME6, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL6, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED);
+        User user7 = TestMethods.insertUser(em, TestConstants.USER_USERNAME7, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL7, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED);
+        User user8 = TestMethods.insertUser(em, TestConstants.USER_USERNAME8, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL8, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED);
+        User user9 = TestMethods.insertUser(em, TestConstants.USER_USERNAME9, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL9, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED);
+        User user10 = TestMethods.insertUser(em, TestConstants.USER_USERNAME10, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL10, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED);
+
+        data.put(owner.getUsername(), owner);
+        data.put(user2.getUsername(), user2);
+        data.put(user3.getUsername(), user3);
+        data.put(user4.getUsername(), user4);
+        data.put(user5.getUsername(), user5);
+        data.put(user6.getUsername(), user6);
+        data.put(user7.getUsername(), user7);
+        data.put(user8.getUsername(), user8);
+        data.put(user9.getUsername(), user9);
+        data.put(user10.getUsername(), user10);
+
+        /* SNIPPETS */
+
         Snippet snip1 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.singletonList(tag), false, TestConstants.SNIPPET_DELETED);
-        Snippet snip2 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, TestConstants.DATE_2, language, Collections.singletonList(tag), TestConstants.SNIPPET_FLAGGED, false);
-        Snippet snip3 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE3, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE3, TestConstants.DATE_3, language, Collections.singletonList(tag), TestConstants.SNIPPET_FLAGGED, TestConstants.SNIPPET_DELETED);
-        Snippet snip4 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE4, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_4, language, Collections.singletonList(tag), false, false);
-        Snippet snip5 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE5, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_5, language, Collections.singletonList(tag), false, false);
-        Snippet snip6 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE6, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE3, TestConstants.DATE_6, language, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
+        Snippet snip2 = TestMethods.insertSnippet(em, user2, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, TestConstants.DATE_2, language, Collections.singletonList(tag), TestConstants.SNIPPET_FLAGGED, false);
+        Snippet snip3 = TestMethods.insertSnippet(em, user3, TestConstants.SNIPPET_TITLE3, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE3, TestConstants.DATE_3, language, Collections.singletonList(tag), TestConstants.SNIPPET_FLAGGED, TestConstants.SNIPPET_DELETED);
+        Snippet snip4 = TestMethods.insertSnippet(em, user4, TestConstants.SNIPPET_TITLE4, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_4, language, Collections.singletonList(tag), false, false);
+        Snippet snip5 = TestMethods.insertSnippet(em, user5, TestConstants.SNIPPET_TITLE5, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_5, language, Collections.singletonList(tag), false, false);
+        Snippet snip6 = TestMethods.insertSnippet(em, user6, TestConstants.SNIPPET_TITLE6, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE3, TestConstants.DATE_6, language, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
         Snippet snip7 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE7, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, TestConstants.DATE_7, language, Collections.emptyList(), false, false);
-        Snippet snip8 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE8, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, TestConstants.DATE_8, language, Collections.emptyList(), false, false);
-        Snippet snip9 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE9, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_9, language, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
+        Snippet snip8 = TestMethods.insertSnippet(em, user2, TestConstants.SNIPPET_TITLE8, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, TestConstants.DATE_8, language, Collections.emptyList(), false, false);
+        Snippet snip9 = TestMethods.insertSnippet(em, user3, TestConstants.SNIPPET_TITLE9, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_9, language, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
         data.put(snip1.getTitle(), snip1);
         data.put(snip2.getTitle(), snip2);
         data.put(snip3.getTitle(), snip3);
@@ -153,6 +177,45 @@ public final class TestMethods {
         data.put(snip7.getTitle(), snip7);
         data.put(snip8.getTitle(), snip8);
         data.put(snip9.getTitle(), snip9);
+
+        /* VOTES */
+
+        insertVote(em, user2, snip1, true);
+        insertVote(em, user3, snip1, true);
+        insertVote(em, user4, snip1, true);
+        insertVote(em, user5, snip1, true);
+        insertVote(em, user6, snip1, true);
+
+        insertVote(em, user2, snip2, false);
+        insertVote(em, user3, snip2, false);
+        insertVote(em, user4, snip2, false);
+        insertVote(em, user5, snip2, false);
+        insertVote(em, user6, snip2, false);
+
+        insertVote(em, user2, snip3, true);
+        insertVote(em, user3, snip3, false);
+
+        insertVote(em, user2, snip4, false);
+        insertVote(em, user3, snip4, false);
+        insertVote(em, user4, snip4, false);
+        insertVote(em, user5, snip4, false);
+        insertVote(em, user6, snip4, false);
+        insertVote(em, user7, snip4, true);
+        insertVote(em, user8, snip4, true);
+        insertVote(em, user9, snip4, true);
+        insertVote(em, user10, snip4, true);
+        insertVote(em, owner, snip4, true);
+
+        insertVote(em, user2, snip5, false);
+        insertVote(em, user3, snip5, false);
+        insertVote(em, user4, snip5, false);
+        insertVote(em, user5, snip5, false);
+        insertVote(em, user6, snip5, false);
+        insertVote(em, user7, snip5, true);
+        insertVote(em, user8, snip5, true);
+        insertVote(em, user9, snip5, true);
+        insertVote(em, user10, snip5, true);
+        insertVote(em, owner, snip5, true);
 
         return data;
     }

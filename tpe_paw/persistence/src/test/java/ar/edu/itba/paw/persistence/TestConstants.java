@@ -9,9 +9,25 @@ public final class TestConstants {
     static final String USER_USERNAME = "Username";
     static final String USER_USERNAME2 = "Username2";
     static final String USER_USERNAME3 = "userNAME123";
-    static final String USER_EMAIL3 = "user@gmail.com";
+    static final String USER_USERNAME4 = "userNAME4";
+    static final String USER_USERNAME5 = "userNAME5";
+    static final String USER_USERNAME6 = "userNAME6";
+    static final String USER_USERNAME7 = "userNAME7";
+    static final String USER_USERNAME8 = "userNAME8";
+    static final String USER_USERNAME9 = "userNAME9";
+    static final String USER_USERNAME10 = "userNAME10";
+
     static final String USER_EMAIL = "email@email.com";
     static final String USER_EMAIL2 = "email2@email.com";
+    static final String USER_EMAIL3 = "user3@gmail.com";
+    static final String USER_EMAIL4 = "user4@gmail.com";
+    static final String USER_EMAIL5 = "user5@gmail.com";
+    static final String USER_EMAIL6 = "user6@gmail.com";
+    static final String USER_EMAIL7 = "user7@gmail.com";
+    static final String USER_EMAIL8 = "user8@gmail.com";
+    static final String USER_EMAIL9 = "user9@gmail.com";
+    static final String USER_EMAIL10 = "user10@gmail.com";
+
     static final Locale LOCALE_EN = new Locale("en","EN");
     static final Locale LOCALE_ES = new Locale("es","ES");
     static final Instant USER_DATE = Instant.now();

@@ -1394,6 +1394,7 @@ public class SnippetDaoTest {
 
 
     @Test
+    @Transactional
     public void findSnippetByDeepCriteriaVotesTest() {
         Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
 
@@ -1466,9 +1467,9 @@ public class SnippetDaoTest {
     }
 
     @Test
+    @Transactional
     public void findSnippetByDeepCriteriaReputationTest() {
         Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
-        em.flush();
         Collection<Snippet> result1 = snippetDao.findSnippetByDeepCriteria(
                 null,
                 null, // Instant.now()
@@ -1521,12 +1522,135 @@ public class SnippetDaoTest {
                 TestConstants.SNIPPET_PAGE_SIZE
         );
         Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE2)));
-        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE3)));
-        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE4)));
 
         Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE4)));
         Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE5)));
 
         Assert.assertTrue(result3.isEmpty());
+    }
+
+    /* Testing getting snippet by deep criteria count */
+
+    @Test
+    public void findSnippetByDeepCriteriaCountSpanningManyYearsDateTest() {
+        Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
+
+        int result = snippetDao.getSnippetByDeepCriteriaCount(
+                TestConstants.DATE_9,
+                TestConstants.DATE_1,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "",
+                "",
+                true);
+
+        Assert.assertEquals(9, result);
+    }
+
+    @Test
+    public void findSnippetByDeepCriteriaCountVotesTest() {
+        Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
+
+        int result1 = snippetDao.getSnippetByDeepCriteriaCount(
+                null,
+                null,
+                null,
+                null,
+                TestConstants.VOTE_VALUE_1,
+                TestConstants.VOTE_VALUE_1,
+                null,
+                null,
+                "",
+                "",
+                true
+        );
+
+        int result2 = snippetDao.getSnippetByDeepCriteriaCount(
+                null,
+                null,
+                null,
+                null,
+                TestConstants.VOTE_VALUE_2,
+                TestConstants.VOTE_VALUE_3,
+                null,
+                null,
+                "",
+                "",
+                true
+        );
+
+        int result3 = snippetDao.getSnippetByDeepCriteriaCount(
+                null,
+                null,
+                null,
+                null,
+                TestConstants.VOTE_VALUE_4,
+                TestConstants.VOTE_VALUE_3,
+                null,
+                null,
+                "",
+                "",
+                true
+        );
+
+        Assert.assertEquals(4, result1);
+        Assert.assertEquals(4, result2);
+        Assert.assertEquals(0, result3);
+
+    }
+
+    @Test
+    @Transactional
+    public void findSnippetByDeepCriteriaCountReputationTest() {
+        Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
+        int result1 = snippetDao.getSnippetByDeepCriteriaCount(
+                null,
+                null, // Instant.now()
+                TestConstants.REP_VALUE_1,
+                TestConstants.REP_VALUE_2,
+                null,
+                null,
+                language.getId(),
+                tag.getId(),
+                "",
+                "",
+                true
+        );
+        int result2 = snippetDao.getSnippetByDeepCriteriaCount(
+                null,
+                null, // Instant.now()
+                TestConstants.REP_VALUE_3,
+                TestConstants.REP_VALUE_5,
+                null,
+                null,
+                language.getId(),
+                tag.getId(),
+                "",
+                "",
+                true
+        );
+        int result3 = snippetDao.getSnippetByDeepCriteriaCount(
+                null,
+                null, // Instant.now()
+                TestConstants.REP_VALUE_6,
+                TestConstants.REP_VALUE_6,
+                null,
+                null,
+                language.getId(),
+                tag.getId(),
+                "",
+                "",
+                true
+        );
+
+        Assert.assertEquals(1, result1);
+        Assert.assertEquals(4, result2);
+        Assert.assertEquals(0, result3);
     }
 }

@@ -217,6 +217,8 @@ public final class TestMethods {
         insertVote(em, user10, snip5, true);
         insertVote(em, owner, snip5, true);
 
+        em.flush();
+        data.values().forEach(em::refresh);
         return data;
     }
 }

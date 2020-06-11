@@ -1,0 +1,131 @@
+#parse("/templates/macros/macro.vm")
+<head>
+    <meta charset="UTF-8">
+    <title>Reported Snippet</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body * {
+            font-family: Roboto, "sans-serif";
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: transparent;
+            width: 100%;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            margin: 5px;
+            list-style-type: none;
+        }
+
+        .mid-container {
+            background-color: #eeedf2;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            width: 100%;
+        }
+
+        .mid-container-info {
+            padding: 20px;
+        }
+
+        .disclaimer {
+            color: grey;
+            font-size: 12px;
+        }
+
+        *:focus {
+            outline: none;
+        }
+
+        .fw-100 {
+            font-weight: 100;
+        }
+
+        .fw-300 {
+            font-weight: 300;
+        }
+
+        .fw-500 {
+            font-weight: 500;
+        }
+
+        .white-text {
+            color: white !important;
+        }
+
+        .black-text {
+            color: black !important;
+        }
+
+        .title-container {
+            font-size: 60px !important;
+            padding: 20px 0 20px 0;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            background: #5E35B1;
+        }
+
+        .bottom-container {
+            max-height: 100px;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .greeting {
+            margin-top: 15px;
+            font-size: 30px;
+        }
+
+        .info {
+            font-size: 20px;
+        }
+
+        .center {
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .full-width {
+            width: 100%;
+        }
+    </style>
+</head>
+<body style="background-color: transparent;width: 100%;">
+<div class="full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;width: 100%;">
+    <div class="fw-100 mid-container" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;background-color: #eeedf2;border-bottom-left-radius: 30px;border-bottom-right-radius: 30px;width: 100%;font-weight: 100;">
+        <div class="center white-text fw-300 title-container full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-weight: 300;padding: 20px 0 20px 0;border-bottom-left-radius: 30px;border-bottom-right-radius: 30px;background: #5E35B1;align-items: center;justify-content: center;text-align: center;width: 100%;color: white !important;font-size: 60px !important;">
+            <span class="fw-500" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-weight: 500;">#msg("email.app.title")</span>
+        </div>
+        <div class="mid-container-info" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;padding: 20px;">
+            <h1 class="center black-text greeting full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;margin-top: 15px;font-size: 30px;align-items: center;justify-content: center;text-align: center;width: 100%;color: black !important;">
+                #msgArgs("email.reported.greeting", [${username}])
+            </h1>
+            <p class="center black-text info full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-size: 20px;align-items: center;justify-content: center;text-align: center;width: 100%;color: black !important;">
+                #msgArgs("email.reported.description", [${snippetName}, ${reportingUserName}])
+            </p>
+            <p>
+                ${reportDetail}
+            </p>
+            <div class="center full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;align-items: center;justify-content: center;text-align: center;width: 100%;">
+                <a class="center black-text info full-width" href="${snippetUrl}" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-size: 20px;align-items: center;justify-content: center;text-align: center;width: 100%;color: black !important;">
+                    #msg("email.reported.goto")
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="bottom-container fw-100 center disclaimer" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;color: grey;font-size: 12px;font-weight: 100;max-height: 100px;padding: 10px;width: 100%;align-items: center;justify-content: center;text-align: center;">
+    #msg("email.reported.disclaimer")
+</div>
+<div class="bottom-container fw-100 center disclaimer" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;color: grey;font-size: 12px;font-weight: 100;max-height: 100px;padding: 10px;width: 100%;align-items: center;justify-content: center;text-align: center;">
+    #msg("email.end")
+</div>
+</body>

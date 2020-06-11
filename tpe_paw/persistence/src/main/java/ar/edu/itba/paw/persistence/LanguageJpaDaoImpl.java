@@ -141,10 +141,4 @@ public class LanguageJpaDaoImpl implements LanguageDao {
         }
     }
 
-    //TODO REMOVE
-    @Override
-    public boolean languageInUse(final long langId) {
-        Optional<Language> lang = this.findById(langId);
-        return lang.filter(language -> !language.snippetsUsingIsEmpty()).isPresent();
-    }
 }

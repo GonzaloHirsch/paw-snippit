@@ -60,12 +60,15 @@ public class TagsController {
         mav.addObject("itemSearchContext", "tags/");
 
         User currentUser = loginAuthentication.getLoggedInUser();
-        if (currentUser != null) {
-            for (Tag tag : allTags) {
+        for (Tag tag : allTags) {
+            if (currentUser != null) {
+                /* Follow form quick action */
                 FollowForm followForm = new FollowForm();
                 followForm.setFollows(currentUser.getFollowedTags().contains(tag));
                 mav.addObject("followIconForm" + tag.getId().toString(), followForm);
+                /* Tag snippet amount count */
             }
+            this.tagService.analizeSnippetsUsing(tag);
         }
         return mav;
     }
@@ -83,14 +86,18 @@ public class TagsController {
 
         Collection<String> userRoles = Collections.emptyList();
         User currentUser = loginAuthentication.getLoggedInUser();
-        if (currentUser != null) {
-            for (Tag tag : allTags) {
+        for (Tag tag : allTags) {
+            if (currentUser != null) {
                 FollowForm followForm = new FollowForm();
                 followForm.setFollows(currentUser.getFollowedTags().contains(tag));
                 mav.addObject("followIconForm" + tag.getId().toString(), followForm);
             }
+            this.tagService.analizeSnippetsUsing(tag);
+        }
+        if (currentUser != null) {
             userRoles = this.roleService.getUserRoles(currentUser.getId());
         }
+        
         mav.addObject("userRoles", userRoles);
         return mav;
     }

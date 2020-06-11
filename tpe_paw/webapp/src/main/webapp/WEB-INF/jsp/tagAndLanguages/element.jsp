@@ -39,7 +39,7 @@
                     </label>
                 </form:form>
             </c:if>
-            <c:if test="${element.snippetsUsingIsEmpty()}">
+            <c:if test="${element.snippetsUsingIsEmpty != null && element.snippetsUsingIsEmpty}">
                 <div class="material-icons element-icon transition" data-toggle="tooltip" data-placement="left" title="${emptyTooltip}">block</div>
             </c:if>
         </div>

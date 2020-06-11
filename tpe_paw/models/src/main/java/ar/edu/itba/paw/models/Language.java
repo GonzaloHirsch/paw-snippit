@@ -22,6 +22,8 @@ public class Language {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "language", cascade = CascadeType.PERSIST)
     private Collection<Snippet> snippetsUsing = new HashSet<>();
 
+    private Boolean snippetsUsingIsEmpty = null;
+
     protected Language(){
         // Hibernate constructor
     }
@@ -42,8 +44,13 @@ public class Language {
     public void setSnippetsUsing(Collection<Snippet> snippetsUsing) {
         this.snippetsUsing = snippetsUsing;
     }
-    public boolean snippetsUsingIsEmpty() {
-        return this.getSnippetsUsing().stream().allMatch(Snippet::isDeleted);
+
+    public Boolean getSnippetsUsingIsEmpty() {
+        return snippetsUsingIsEmpty;
+    }
+
+    public void setSnippetsUsingIsEmpty(Boolean snippetsUsingIsEmpty) {
+        this.snippetsUsingIsEmpty = snippetsUsingIsEmpty;
     }
 
     public boolean isDeleted() {

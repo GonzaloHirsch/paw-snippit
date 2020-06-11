@@ -27,7 +27,7 @@
             </c:when>
             <c:otherwise>
                 <label for="report-button" class="no-margin">
-                    <i class="selected-brown-icon material-icons snippet-icon">favorite</i>
+                    <i class="selected-brown-icon material-icons snippet-icon">report</i>
                 </label>
             </c:otherwise>
         </c:choose>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="modal-footer flex-end">
                         <div class="flex-center">
-                            <form:checkbox class="hidden" path="reported" value="true" id="snippet-report-button" onclick="updateForm(this)"/>
+                            <form:checkbox class="hidden" path="reported" id="snippet-report-button" onclick="updateForm(this)"/>
                             <label for="snippet-report-button" class="btn btn-primary purple-button  no-margin">
                                 <spring:message code="modal.report.confirm"/>
                             </label>

@@ -15,7 +15,7 @@ public class ReportForm {
     }
 
     public void setReported(boolean reported) {
-        reported = reported;
+        this.reported = reported;
     }
 
     public String getReportDetail() {

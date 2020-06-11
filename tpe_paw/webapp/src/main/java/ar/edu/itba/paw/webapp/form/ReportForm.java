@@ -2,17 +2,17 @@ package ar.edu.itba.paw.webapp.form;
 
 public class ReportForm {
 
-    private boolean isReported;
+    private boolean reported;
 
     private String reportDetail;
 
 
     public boolean isReported() {
-        return isReported;
+        return reported;
     }
 
     public void setReported(boolean reported) {
-        isReported = reported;
+        reported = reported;
     }
 
     public String getReportDetail() {

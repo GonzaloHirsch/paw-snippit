@@ -15,6 +15,7 @@
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/element.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/elementsList.css'/>" rel="stylesheet"/>
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
           rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
@@ -107,10 +108,6 @@
                             </div>
                         </c:if>
 
-                        <!-- REPORT -->
-                        <div class="flex-center detail-snippet-block border-radius form-shadow">
-                            <c:import url="/WEB-INF/jsp/snippet/snippetReportForm.jsp"/>
-                        </div>
                         <!-- FAVORITES -->
                         <div class="flex-center detail-snippet-block border-radius form-shadow">
                             <c:import url="/WEB-INF/jsp/snippet/favForm.jsp"/>
@@ -123,6 +120,10 @@
                             </div>
                         </c:if>
 
+                        <!-- REPORT -->
+                        <div class="flex-center detail-snippet-block border-radius form-shadow">
+                            <c:import url="/WEB-INF/jsp/snippet/snippetReportForm.jsp"/>
+                        </div>
                         <!-- USER DETAILS -->
                         <c:choose>
                             <c:when test="${currentUser != null && currentUser.id == snippet.owner.id}">

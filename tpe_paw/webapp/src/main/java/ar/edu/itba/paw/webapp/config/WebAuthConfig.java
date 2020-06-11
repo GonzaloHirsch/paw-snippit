@@ -50,7 +50,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/add").hasRole("ADMIN")
                 .antMatchers("/flagged/**", "/snippet/**/flag").hasRole("ADMIN")
                 .antMatchers("/favorites/**", "/following/**", "/upvoted/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/snippet/**/vote", "/snippet/**/fav").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/snippet/**/vote", "/snippet/**/fav", "/snippet/**/report").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/snippet/create", "/snippet/**/delete"). hasRole("USER")
                 .antMatchers("/user/**/active", "/user/**/deleted", "user/**/active/edit", "user/**/deleted/edit"). hasRole("USER")
                 .antMatchers("/tags/**/follow").hasAnyRole("USER", "ADMIN")

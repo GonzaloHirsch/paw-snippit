@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -51,7 +50,8 @@ public class SnippetController {
             @ModelAttribute("adminFlagForm") final FlagSnippetForm adminFlagForm,
             @ModelAttribute("deleteForm") final DeleteForm deleteForm,
             @ModelAttribute("favForm") final FavoriteForm favForm,
-            @ModelAttribute("voteForm") final VoteForm voteForm
+            @ModelAttribute("voteForm") final VoteForm voteForm,
+            @ModelAttribute("reportForm") final ReportForm reportForm
     ) {
         final ModelAndView mav = new ModelAndView("snippet/snippetDetail");
         // Snippet
@@ -86,6 +86,9 @@ public class SnippetController {
 
             //Delete
             deleteForm.setDelete(retrievedSnippet.get().isDeleted());
+
+            //Report
+            reportForm.setReported(currentUser.getReported().contains(retrievedSnippet.get()));
 
             if (roleService.isAdmin(currentUser.getId())) {
                 adminFlagForm.setFlagged(retrievedSnippet.get().isFlagged());
@@ -156,6 +159,22 @@ public class SnippetController {
         } else {
             this.favService.updateFavorites(currentUser.getId(), id, favForm.getFavorite());
             LOGGER.debug("User {} updated favorite on snippet {}", currentUser.getUsername(), id);
+        }
+        return mav;
+    }
+
+    @RequestMapping(value="/snippet/{id}/report", method=RequestMethod.POST)
+    public ModelAndView reportSnippet(
+            @ModelAttribute("snippetId") @PathVariable("id") long id,
+            @ModelAttribute("reportForm") final ReportForm reportForm
+    ) {
+        final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) {
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report", null, LocaleContextHolder.getLocale()));
+        } else {
+//            this.snippetService.reportSnippet(currentUser.getId(), id, reportForm.getReportDetail());
+            LOGGER.debug("User {} reported snippet {} with message {}", currentUser.getUsername(), id, reportForm.getReportDetail());
         }
         return mav;
     }

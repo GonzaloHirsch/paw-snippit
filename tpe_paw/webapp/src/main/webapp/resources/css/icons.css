@@ -22,6 +22,19 @@
     color: black !important;
 }
 
+unselected-brown-icon {
+    color: gray !important;
+    transition: 0.3s;
+}
+
+unselected-brown-icon:hover {
+    color: crimson !important;
+}
+
+selected-brown-icon {
+    color: crimson !important;
+}
+
 .warning-icon {
     color: red;
     font-size: 70px !important;

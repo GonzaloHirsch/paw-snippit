@@ -98,6 +98,7 @@
                             </div>
                         </c:if>
 
+
                         <!-- DELETE -->
                         <c:if test="${currentUser.id == snippet.owner.id}">
                             <c:set var="snippet" value="${snippet}" scope="request"/>
@@ -106,6 +107,10 @@
                             </div>
                         </c:if>
 
+                        <!-- REPORT -->
+                        <div class="flex-center detail-snippet-block border-radius form-shadow">
+                            <c:import url="/WEB-INF/jsp/snippet/snippetReportForm.jsp"/>
+                        </div>
                         <!-- FAVORITES -->
                         <div class="flex-center detail-snippet-block border-radius form-shadow">
                             <c:import url="/WEB-INF/jsp/snippet/favForm.jsp"/>

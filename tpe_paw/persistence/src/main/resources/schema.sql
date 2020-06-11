@@ -7,6 +7,7 @@
 -- drop table if exists snippets cascade;
 -- drop table if exists languages cascade;
 -- drop table if exists users cascade;
+-- drop table if exists reported cascade;
 
 CREATE TABLE IF NOT EXISTS users
 (
@@ -126,6 +127,13 @@ CREATE TABLE IF NOT EXISTS user_roles
     user_id INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
     role_id INT REFERENCES roles (id) ON UPDATE CASCADE ON DELETE CASCADE,
     PRIMARY KEY (user_id, role_id)
+);
+
+CREATE TABLE IF NOT EXISTS reported
+(
+    snippet_id INT REFERENCES snippets (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    user_id    INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    PRIMARY KEY (snippet_id, user_id)
 );
 
 CREATE OR REPLACE VIEW complete_snippets AS

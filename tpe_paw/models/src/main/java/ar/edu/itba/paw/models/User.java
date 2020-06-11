@@ -1,13 +1,10 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 
 @Entity
@@ -64,10 +61,18 @@ public class User {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
-            name= "favorites",
+            name = "favorites",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "snippet_id"))
     private Collection<Snippet> favorites;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "reported",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "snippet_id")
+    )
+    private Collection<Snippet> reported;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
@@ -236,6 +241,24 @@ public class User {
         tag.getFollowingUsers().remove(this);
     }
 
+    public Collection<Snippet> getReported() {
+        return reported;
+    }
+
+    public void setReported(Collection<Snippet> reported) {
+        this.reported = reported;
+    }
+
+    public void addReported(Snippet snippet) {
+        this.reported.add(snippet);
+        snippet.getUserReported().add(this);
+    }
+
+    public void removeReported(Snippet snippet) {
+        this.reported.remove(snippet);
+        snippet.getUserReported().add(this);
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -248,4 +271,5 @@ public class User {
         User user = (User) o;
         return this.getId().equals(user.getId());
     }
+
 }

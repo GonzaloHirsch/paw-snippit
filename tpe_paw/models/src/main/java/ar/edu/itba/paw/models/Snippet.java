@@ -1,13 +1,10 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 
 @Entity
@@ -48,6 +45,9 @@ public class Snippet {
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites", cascade = CascadeType.PERSIST)
     private Collection<User> userFavorites;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "reported", cascade = CascadeType.PERSIST)
+    private Collection<User> userReported;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
@@ -209,4 +209,11 @@ public class Snippet {
         return this.getId().equals(snippet.getId());
     }
 
+    public Collection<User> getUserReported() {
+        return userReported;
+    }
+
+    public void setUserReported(Collection<User> userReported) {
+        this.userReported = userReported;
+    }
 }

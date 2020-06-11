@@ -5,7 +5,6 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Optional;

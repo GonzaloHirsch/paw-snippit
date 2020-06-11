@@ -6,8 +6,11 @@ public class ReportForm {
 
     private String reportDetail;
 
+    public ReportForm (){
 
-    public boolean isReported() {
+    }
+
+    public boolean getReported() {
         return reported;
     }
 

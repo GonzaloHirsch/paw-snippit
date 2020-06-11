@@ -22,17 +22,17 @@
     color: black !important;
 }
 
-unselected-brown-icon {
+.unselected-brown-icon {
     color: gray !important;
     transition: 0.3s;
 }
 
-unselected-brown-icon:hover {
-    color: crimson !important;
+.unselected-brown-icon:hover {
+    color: tan !important;
 }
 
-selected-brown-icon {
-    color: crimson !important;
+.selected-brown-icon {
+    color: tan !important;
 }
 
 .warning-icon {

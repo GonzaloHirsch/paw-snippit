@@ -7,6 +7,7 @@
 <head>
     <script src="<c:url value='/resources/js/form.js'/>"></script>
     <link href="<c:url value='/resources/css/elementSnippets.css'/>" type="text/css" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
@@ -17,17 +18,19 @@
 <div class="flex-column">
     <c:set var="snippetId" value="${requestScope.snippetId}"/>
     <form:form class="form-container flex-center" action="${snippetId}/report" method="post" modelAttribute="reportForm">
-        <checkbox class="hidden" id="report-button"></checkbox>
-        <label for="report-button" class="no-margin" data-toggle="modal" data-target="#report-modal">
-            <c:choose>
-                <c:when test="${reportForm.reported}">
+        <input type="checkbox" class="hidden" id="report-button"/>
+        <c:choose>
+            <c:when test="${!reportForm.reported}">
+                <label for="report-button" class="no-margin" data-toggle="modal" data-target="#report-modal">
                     <i class="unselected-brown-icon material-icons snippet-icon">report</i>
-                </c:when>
-                <c:otherwise>
+                </label>
+            </c:when>
+            <c:otherwise>
+                <label for="report-button" class="no-margin">
                     <i class="selected-brown-icon material-icons snippet-icon">favorite</i>
-                </c:otherwise>
-            </c:choose>
-        </label>
+                </label>
+            </c:otherwise>
+        </c:choose>
         <!-- Modal -->
         <div class="modal fade" id="report-modal" tabindex="-1" role="dialog" aria-labelledby="reportSnippetModal" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -39,7 +42,10 @@
                         </button>
                     </div>
                     <div class="modal-body modal-body-text fw-100">
-                        <form:textarea class="full-width snippetC-code-input snippetC-border" type="text" path="reportDetail" placeholder='${detailHint}'/>
+                        <div class="modal-body-sub-text fw-400">
+                            <spring:message code="modal.report.reasonText"/>
+                        </div>
+                        <form:textarea class="full-width" type="text" path="reportDetail" placeholder='${detailHint}'/>
                     </div>
                     <div class="modal-footer flex-end">
                         <div class="flex-center">

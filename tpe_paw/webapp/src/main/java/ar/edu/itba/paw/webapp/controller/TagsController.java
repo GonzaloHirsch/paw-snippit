@@ -53,6 +53,18 @@ public class TagsController {
         ModelAndView mav = new ModelAndView("tagAndLanguages/tags");
         Collection<Tag> allTags = tagService.getAllTags(searchForm.isShowEmpty(), page, TAG_PAGE_SIZE);
         int tagCount = this.tagService.getAllTagsCount(searchForm.isShowEmpty());
+        return this.setTagsWithPage(mav, allTags, tagCount, page);
+    }
+
+    @RequestMapping("/tags/search")
+    public ModelAndView searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
+        final ModelAndView mav = new ModelAndView("tagAndLanguages/tags");
+        Collection<Tag> allTags = this.tagService.findTagsByName(searchForm.getName(), searchForm.isShowEmpty(), page, TAG_PAGE_SIZE);
+        int tagCount = this.tagService.getAllTagsCountByName(searchForm.getName(), searchForm.isShowEmpty());
+        return this.setTagsWithPage(mav, allTags, tagCount, page);
+    }
+
+    private ModelAndView setTagsWithPage(ModelAndView mav, Collection<Tag> allTags, int tagCount, int page) {
         mav.addObject("pages", (tagCount/TAG_PAGE_SIZE) + (tagCount % TAG_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("searchContext","tags/");
@@ -70,35 +82,7 @@ public class TagsController {
             }
             this.tagService.analizeSnippetsUsing(tag);
         }
-        return mav;
-    }
-
-    @RequestMapping("/tags/search")
-    public ModelAndView searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
-        final ModelAndView mav = new ModelAndView("tagAndLanguages/tags");
-        Collection<Tag> allTags = this.tagService.findTagsByName(searchForm.getName(), searchForm.isShowEmpty(), page, TAG_PAGE_SIZE);
-        int tagCount = this.tagService.getAllTagsCountByName(searchForm.getName(), searchForm.isShowEmpty());
-        mav.addObject("pages", (tagCount/TAG_PAGE_SIZE) + (tagCount % TAG_PAGE_SIZE == 0 ? 0 : 1));
-        mav.addObject("page", page);
-        mav.addObject("searchContext","tags/");
-        mav.addObject("tags", allTags);
-        mav.addObject("itemSearchContext", "tags/");
-
-        Collection<String> userRoles = Collections.emptyList();
-        User currentUser = loginAuthentication.getLoggedInUser();
-        for (Tag tag : allTags) {
-            if (currentUser != null) {
-                FollowForm followForm = new FollowForm();
-                followForm.setFollows(currentUser.getFollowedTags().contains(tag));
-                mav.addObject("followIconForm" + tag.getId().toString(), followForm);
-            }
-            this.tagService.analizeSnippetsUsing(tag);
-        }
-        if (currentUser != null) {
-            userRoles = this.roleService.getUserRoles(currentUser.getId());
-        }
-        
-        mav.addObject("userRoles", userRoles);
+        this.addAttributes(mav);
         return mav;
     }
 
@@ -117,11 +101,9 @@ public class TagsController {
             throw new TagNotFoundException(messageSource.getMessage("error.404.tag", new Object[]{tagId}, LocaleContextHolder.getLocale()));
         }
         /* If user is logged in, check if they follow the tag */
-        Collection<String> userRoles = Collections.emptyList();
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser != null){
             followForm.setFollows(this.tagService.userFollowsTag(currentUser.getId(), tagId));
-            userRoles = this.roleService.getUserRoles(currentUser.getId());
         }
 
         int totalSnippetCount = this.snippetService.getAllSnippetsByTagCount(tag.get().getId());
@@ -130,7 +112,7 @@ public class TagsController {
         mav.addObject("tag", tag.get());
         mav.addObject("searchContext","tags/"+tagId+"/");
         mav.addObject("snippetList", snippetService.findSnippetsForTag(tagId, page, SNIPPET_PAGE_SIZE));
-        mav.addObject("userRoles", userRoles);
+        this.addAttributes(mav);
         return mav;
     }
 
@@ -165,20 +147,27 @@ public class TagsController {
         return new ModelAndView("redirect:/tags");
     }
 
-    @ModelAttribute
-    public void addAttributes(Model model, @Valid final SearchForm searchForm) {
+    /* Are not in the @ModelAttribute method because I do not want the values in the URL */
+    private void addAttributes(ModelAndView mav) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Tag> userTags =  Collections.emptyList();
         Collection<Tag> allFollowedTags = Collections.emptyList();
+        Collection<String> userRoles = Collections.emptyList();
 
         if (currentUser != null) {
             userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
             allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
+            userRoles = this.roleService.getUserRoles(currentUser.getId());
         }
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("userTags", userTags);
-        model.addAttribute("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
+        mav.addObject("currentUser", currentUser);
+        mav.addObject("userTags", userTags);
+        mav.addObject("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
+        mav.addObject("userRoles", userRoles);
+    }
+
+    @ModelAttribute
+    public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         model.addAttribute("searchForm", searchForm);
     }
 }

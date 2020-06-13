@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
+import java.sql.SQLOutput;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -170,8 +173,13 @@ public class SnippetController {
     @RequestMapping(value="/snippet/{id}/report", method=RequestMethod.POST)
     public ModelAndView reportSnippet(
             @ModelAttribute("snippetId") @PathVariable("id") long id,
-            @ModelAttribute("reportForm") final ReportForm reportForm
+            @Valid @ModelAttribute("reportForm") final ReportForm reportForm,
+            final BindingResult errors
     ) {
+        if (errors.hasErrors()) {
+            System.out.println("I have errorrs");
+        }
+
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {

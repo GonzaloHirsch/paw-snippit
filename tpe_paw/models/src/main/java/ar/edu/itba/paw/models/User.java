@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Locale;
 
 @Entity
@@ -60,7 +61,7 @@ public class User {
     private Collection<Vote> votes;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE},fetch = FetchType.LAZY, mappedBy = "user")
-    private Collection<Report> reports;
+    private Collection<Report> reports = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
@@ -68,7 +69,6 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "snippet_id"))
     private Collection<Snippet> favorites;
-
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(

@@ -54,6 +54,22 @@
     cursor: pointer;
 }
 
+.report-detail-input{
+    margin-top: 5px;
+    padding: 10px 0 0 10px;
+    line-height: 19px;
+    font-size: 17px;
+    border-radius: 4px;
+    border-width:thin;
+    border-color: #5E35B1;
+}
+
+.report-subtitle{
+    margin: 5px 0 12px 0;
+    color: #5E35B1;
+    font-size: 19px;
+}
+
 pre {
     white-space: pre-wrap !important;
     white-space: -moz-pre-wrap !important;

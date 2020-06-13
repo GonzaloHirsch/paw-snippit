@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Locale;
 
 @Entity
@@ -44,7 +45,7 @@ public class Snippet {
     private Collection<Vote> votes;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "snippet")
-    private Collection<Report> reports;
+    private Collection<Report> reports = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites", cascade = CascadeType.PERSIST)
     private Collection<User> userFavorites;

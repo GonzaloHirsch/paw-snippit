@@ -42,10 +42,9 @@
                         </button>
                     </div>
                     <div class="modal-body modal-body-text fw-100">
-                        <div class="modal-body-sub-text fw-400">
-                            <spring:message code="modal.report.reasonText"/>
-                        </div>
-                        <form:textarea class="full-width" type="text" path="reportDetail" placeholder='${detailHint}'/>
+                        <form:label class="fw-400 report-subtitle" path="reportDetail"><spring:message code="modal.report.reasonText"/> </form:label>
+                        <form:textarea class="full-width report-detail-input" rows="5" type="text" path="reportDetail" placeholder='${detailHint}'/>
+                        <form:errors class="form-error error-extra-margins" path="reportDetail" element="p"/>
                     </div>
                     <div class="modal-footer flex-end">
                         <div class="flex-center">

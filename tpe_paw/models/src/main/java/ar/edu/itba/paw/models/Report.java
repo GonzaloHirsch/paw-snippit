@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Report {
 
     /**
-     * Method to set the Embedded Id of the vote object
+     * Method to set the Embedded Id of the Report object
      */
     @PrePersist
     private void prePersist() {

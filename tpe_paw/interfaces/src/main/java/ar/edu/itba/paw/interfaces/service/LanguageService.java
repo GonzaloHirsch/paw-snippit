@@ -17,5 +17,5 @@ public interface LanguageService {
     boolean languageExists(final String language);
     boolean languageExists(final long id);
     void removeLanguage(final long langId);
-    boolean languageInUse(final long langId);
+    void analizeSnippetsUsing(Language language);
 }

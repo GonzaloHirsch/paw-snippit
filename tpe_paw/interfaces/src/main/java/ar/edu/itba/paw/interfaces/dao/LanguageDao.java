@@ -18,5 +18,4 @@ public interface LanguageDao {
     Language addLanguage(String lang);
     void addLanguages(List<String> languages);
     void removeLanguage(final long langId);
-    boolean languageInUse(final long langId);
 }

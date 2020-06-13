@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.dao.FollowingDao;
 import ar.edu.itba.paw.interfaces.dao.TagDao;
 import ar.edu.itba.paw.interfaces.dao.UserDao;
+import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Tag;
@@ -19,12 +20,10 @@ import java.util.Optional;
 @Service
 public class TagServiceImpl implements TagService {
 
-    @Autowired
-    private TagDao tagDao;
-    @Autowired
-    private FollowingDao followingDao;
-    @Autowired
-    private UserDao userDao;
+    @Autowired private TagDao tagDao;
+    @Autowired private FollowingDao followingDao;
+    @Autowired private UserService userService;
+    @Autowired private SnippetService snippetService;
 
     @Override
     public Collection<Tag> getAllTags(boolean showEmpty, int page, int pageSize) {
@@ -116,6 +115,12 @@ public class TagServiceImpl implements TagService {
         this.tagDao.removeTag(tagId);
     }
 
+    @Override
+    public void analizeSnippetsUsing(Tag tag) {
+        int amount = this.snippetService.getAllSnippetsByTagCount(tag.getId());
+        tag.setSnippetsUsingIsEmpty(amount == 0);
+    }
+
     @Transactional
     @Override
     public void updateFollowing(long userId, long tagId, boolean followed) {
@@ -128,7 +133,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public boolean userFollowsTag(long userId, long tagId) {
-        Optional<User> user = this.userDao.findUserById(userId);
+        Optional<User> user = this.userService.findUserById(userId);
         Optional<Tag> tag = this.tagDao.findById(tagId);
 
         if (user.isPresent() && tag.isPresent()) {

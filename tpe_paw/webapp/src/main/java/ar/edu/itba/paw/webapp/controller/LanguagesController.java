@@ -47,6 +47,10 @@ public class LanguagesController {
     public ModelAndView showAllLanguages(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         ModelAndView mav = new ModelAndView("tagAndLanguages/languages");
         Collection<Language> allLanguages = this.languageService.getAllLanguages(searchForm.isShowEmpty(), page, LANGUAGE_PAGE_SIZE);
+
+        for (Language language : allLanguages) {
+            this.languageService.analizeSnippetsUsing(language);
+        }
         int languageCount = this.languageService.getAllLanguagesCount(searchForm.isShowEmpty());
         mav.addObject("pages", (languageCount/ LANGUAGE_PAGE_SIZE) + (languageCount % LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
@@ -61,6 +65,10 @@ public class LanguagesController {
         final ModelAndView mav = new ModelAndView("tagAndLanguages/languages");
         Collection<Language> allLanguages = this.languageService.findAllLanguagesByName(searchForm.getName(), searchForm.isShowEmpty(), page, LANGUAGE_PAGE_SIZE);
         int languageCount = this.languageService.getAllLanguagesCountByName(searchForm.getName(), searchForm.isShowEmpty());
+
+        for (Language language : allLanguages) {
+            this.languageService.analizeSnippetsUsing(language);
+        }
         mav.addObject("pages", (languageCount/ LANGUAGE_PAGE_SIZE) + (languageCount % LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("searchContext","languages/");

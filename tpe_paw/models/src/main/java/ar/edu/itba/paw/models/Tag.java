@@ -22,6 +22,8 @@ public class Tag {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followedTags", cascade = CascadeType.PERSIST)
     private Collection<User> followingUsers = new HashSet<>();
 
+    private Boolean snippetsUsingIsEmpty = null;
+
     public Tag(String name) {
         this.name = name;
     }
@@ -51,8 +53,12 @@ public class Tag {
         return followingUsers;
     }
 
-    public boolean snippetsUsingIsEmpty() {
-        return this.getSnippetsUsing().stream().allMatch(Snippet::isDeleted);
+    public Boolean getSnippetsUsingIsEmpty() {
+        return snippetsUsingIsEmpty;
+    }
+
+    public void setSnippetsUsingIsEmpty(Boolean snippetsUsingIsEmpty) {
+        this.snippetsUsingIsEmpty = snippetsUsingIsEmpty;
     }
 
     @Override
@@ -67,5 +73,4 @@ public class Tag {
         Tag tag = (Tag) o;
         return this.getId().equals(tag.getId());
     }
-
 }

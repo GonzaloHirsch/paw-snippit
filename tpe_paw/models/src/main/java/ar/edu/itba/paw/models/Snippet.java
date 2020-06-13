@@ -43,11 +43,12 @@ public class Snippet {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "snippet")
     private Collection<Vote> votes;
 
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "snippet")
+    private Collection<Report> reports;
+
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites", cascade = CascadeType.PERSIST)
     private Collection<User> userFavorites;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "reported", cascade = CascadeType.PERSIST)
-    private Collection<User> userReported;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
@@ -196,6 +197,14 @@ public class Snippet {
         this.deleted = deleted;
     }
 
+    public Collection<Report> getReports() {
+        return reports;
+    }
+
+    public void setReports(Collection<Report> reports) {
+        this.reports = reports;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -209,11 +218,4 @@ public class Snippet {
         return this.getId().equals(snippet.getId());
     }
 
-    public Collection<User> getUserReported() {
-        return userReported;
-    }
-
-    public void setUserReported(Collection<User> userReported) {
-        this.userReported = userReported;
-    }
 }

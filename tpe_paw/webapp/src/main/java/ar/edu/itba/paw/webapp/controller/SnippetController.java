@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Vote;
+import ar.edu.itba.paw.models.Report;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.ElementDeletionException;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class SnippetController {
@@ -88,7 +90,9 @@ public class SnippetController {
             deleteForm.setDelete(retrievedSnippet.get().isDeleted());
 
             //Report
-            reportForm.setReported(currentUser.getReported().contains(retrievedSnippet.get()));
+            //currentUser.getReports().stream().mapToLong(Report::getSnippet.ge).boxed().collect(Collectors.toList());
+            //        .contains(retrievedSnippet.get())
+            //reportForm.setReported();
 
             if (roleService.isAdmin(currentUser.getId())) {
                 adminFlagForm.setFlagged(retrievedSnippet.get().isFlagged());

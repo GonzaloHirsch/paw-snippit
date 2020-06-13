@@ -59,6 +59,9 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Collection<Vote> votes;
 
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE},fetch = FetchType.LAZY, mappedBy = "user")
+    private Collection<Report> reports;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "favorites",
@@ -66,13 +69,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "snippet_id"))
     private Collection<Snippet> favorites;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinTable(
-            name = "reported",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "snippet_id")
-    )
-    private Collection<Snippet> reported;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
@@ -241,23 +237,14 @@ public class User {
         tag.getFollowingUsers().remove(this);
     }
 
-    public Collection<Snippet> getReported() {
-        return reported;
+    public Collection<Report> getReports() {
+        return reports;
     }
 
-    public void addReported(Snippet snippet) {
-        this.reported.add(snippet);
-        snippet.getUserReported().add(this);
+    public void setReports(Collection<Report> reports) {
+        this.reports = reports;
     }
 
-    public void removeReported(Snippet snippet) {
-        this.reported.remove(snippet);
-        snippet.getUserReported().add(this);
-    }
-
-    public void setReported(Collection<Snippet> reported) {
-        this.reported = reported;
-    }
 
     @Override
     public boolean equals(Object o) {

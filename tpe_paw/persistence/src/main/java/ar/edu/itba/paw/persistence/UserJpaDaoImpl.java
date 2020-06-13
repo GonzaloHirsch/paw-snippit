@@ -141,7 +141,7 @@ public class UserJpaDaoImpl implements UserDao {
         }
         return false;
     }
-    
+
     @Override
     public void verifyUserEmail(long userId) {
         Optional<User> maybeUser = this.findUserById(userId);

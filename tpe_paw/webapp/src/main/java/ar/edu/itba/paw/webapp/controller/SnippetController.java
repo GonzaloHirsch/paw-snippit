@@ -173,8 +173,7 @@ public class SnippetController {
         if (currentUser == null) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report", null, LocaleContextHolder.getLocale()));
         } else {
-            // TODO backend for reporting snippets
-//            this.snippetService.reportSnippet(currentUser.getId(), id, reportForm.getReportDetail());
+            snippetService.reportSnippet(currentUser.getId(), id, reportForm.getReportDetail());
             LOGGER.debug("User {} reported snippet {} with message {}", currentUser.getUsername(), id, reportForm.getReportDetail());
         }
         return mav;

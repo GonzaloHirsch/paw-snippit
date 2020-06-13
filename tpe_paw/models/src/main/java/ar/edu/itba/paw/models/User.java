@@ -245,10 +245,6 @@ public class User {
         return reported;
     }
 
-    public void setReported(Collection<Snippet> reported) {
-        this.reported = reported;
-    }
-
     public void addReported(Snippet snippet) {
         this.reported.add(snippet);
         snippet.getUserReported().add(this);
@@ -257,6 +253,10 @@ public class User {
     public void removeReported(Snippet snippet) {
         this.reported.remove(snippet);
         snippet.getUserReported().add(this);
+    }
+
+    public void setReported(Collection<Snippet> reported) {
+        this.reported = reported;
     }
 
     @Override

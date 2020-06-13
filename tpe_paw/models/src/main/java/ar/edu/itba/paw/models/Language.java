@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "languages")
@@ -19,7 +20,7 @@ public class Language {
     private boolean deleted;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "language", cascade = CascadeType.PERSIST)
-    private Collection<Snippet> snippetsUsing;
+    private Collection<Snippet> snippetsUsing = new HashSet<>();
 
     protected Language(){
         // Hibernate constructor

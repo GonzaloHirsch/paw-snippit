@@ -40,22 +40,22 @@ public class RoleDaoTest {
         defaultUser = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED);
     }
 
-    //TODO no anda pq el get siempre devuelve null
-//    @Test
-//    public void assignUserRoleTest(){
-//        Assert.assertTrue(roleDao.assignUserRole(defaultUser.getId()));
-//    }
+    @Test
+    public void assignUserRoleTest(){
+        Assert.assertTrue(roleDao.assignUserRole(defaultUser.getId()));
+        Assert.assertTrue(defaultUser.getRoles().contains(userRole));
+    }
 
     @Test
     public void assignUserRoleToInvalidUserTest(){
         Assert.assertFalse(roleDao.assignUserRole(TestConstants.USER_INVALID_ID));
     }
 
-    //TODO no anda pq el get siempre devuelve null
-//    @Test
-//    public void assignAdminRoleTest(){
-//        Assert.assertTrue(roleDao.assignAdminRole(defaultUser.getId()));
-//    }
+    @Test
+    public void assignAdminRoleTest(){
+        Assert.assertTrue(roleDao.assignAdminRole(defaultUser.getId()));
+        Assert.assertTrue(defaultUser.getRoles().contains(adminRole));
+    }
 
     @Test
     public void assignAdminRoleToInvalidUserTest(){

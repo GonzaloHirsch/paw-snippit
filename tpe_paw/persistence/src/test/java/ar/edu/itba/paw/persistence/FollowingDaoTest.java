@@ -141,7 +141,7 @@ public class FollowingDaoTest {
         Assert.assertTrue(followingTags.isEmpty());
     }
 
-    /*
+
     @Test
     public void followTagTest(){
         Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
@@ -165,8 +165,10 @@ public class FollowingDaoTest {
         TestMethods.setUserFollowingTags(
                 em,
                 defaultUser,
-                Collections.singletonList(tag)
+                // Wrapper to support modifications( singletonList is inmutable)
+                new LinkedList<>(Collections.singletonList(tag))
         );
+        tag.setFollowingUsers(new LinkedList<>(Collections.singletonList(defaultUser)));
 
         followingDao.unfollowTag(defaultUser.getId(), tag.getId());
 
@@ -180,13 +182,14 @@ public class FollowingDaoTest {
         TestMethods.setUserFollowingTags(
                 em,
                 defaultUser,
-                Collections.singletonList(tag)
+                new LinkedList<>(Collections.singletonList(tag))
         );
+        tag.setFollowingUsers(new LinkedList<>(Collections.singletonList(defaultUser)));
 
-        followingDao.unfollowTag(defaultUser.getId(), tag.getId() + 10);
+        followingDao.unfollowTag(defaultUser.getId(), -1);
 
         Assert.assertTrue(tag.getFollowingUsers().contains(defaultUser));
         Assert.assertTrue(defaultUser.getFollowedTags().contains(tag));
     }
-    */
+
 }

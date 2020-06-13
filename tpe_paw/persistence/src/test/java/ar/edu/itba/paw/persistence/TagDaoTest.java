@@ -137,7 +137,7 @@ public class TagDaoTest {
     }
     
     //TODO: Fix why fails
-    /*
+
     @Test
     @Transactional
     public void testRemoveTag(){
@@ -152,7 +152,7 @@ public class TagDaoTest {
 
         tagDao.removeTag(tag.getId());
     }
-    */
+
 
     @Test
     public void testGetAllTagsCountByName(){

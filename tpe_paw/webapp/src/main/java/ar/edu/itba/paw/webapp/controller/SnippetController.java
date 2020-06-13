@@ -42,6 +42,7 @@ public class SnippetController {
     @Autowired private UserService userService;
     @Autowired private MessageSource messageSource;
     @Autowired private EmailService emailService;
+    @Autowired private ReportService reportService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetController.class);
 
@@ -86,13 +87,12 @@ public class SnippetController {
             // Fav
             favForm.setFavorite(currentUser.getFavorites().contains(retrievedSnippet.get()));
 
-            //Delete
+            // Delete
             deleteForm.setDelete(retrievedSnippet.get().isDeleted());
 
-            //Report
-            //currentUser.getReports().stream().mapToLong(Report::getSnippet.ge).boxed().collect(Collectors.toList());
-            //        .contains(retrievedSnippet.get())
-            //reportForm.setReported();
+            // Report
+            Optional<Report> report = this.reportService.getReport(currentUser.getId(),retrievedSnippet.get().getId());
+            reportForm.setReported(report.isPresent());
 
             if (roleService.isAdmin(currentUser.getId())) {
                 adminFlagForm.setFlagged(retrievedSnippet.get().isFlagged());
@@ -177,7 +177,7 @@ public class SnippetController {
         if (currentUser == null) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report", null, LocaleContextHolder.getLocale()));
         } else {
-            snippetService.reportSnippet(currentUser.getId(), id, reportForm.getReportDetail());
+            reportService.reportSnippet(currentUser.getId(), id, reportForm.getReportDetail());
             LOGGER.debug("User {} reported snippet {} with message {}", currentUser.getUsername(), id, reportForm.getReportDetail());
         }
         return mav;

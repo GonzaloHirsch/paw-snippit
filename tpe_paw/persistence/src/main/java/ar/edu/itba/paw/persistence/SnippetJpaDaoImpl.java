@@ -177,18 +177,6 @@ public class SnippetJpaDaoImpl implements SnippetDao {
     }
 
     @Override
-    public boolean reportSnippet(Long userId, Long snippetId){
-        Optional<Snippet> maybeSnippet = this.findSnippetById(snippetId);
-        Optional<User> maybeUser = Optional.ofNullable(em.find(User.class, userId));
-
-        if(maybeSnippet.isPresent() && maybeUser.isPresent()){
-            maybeUser.get().addReported(maybeSnippet.get());
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public int getAllSnippetsCount() {
         Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets WHERE deleted = FALSE");
         return nativeQuery.getResultList().size();

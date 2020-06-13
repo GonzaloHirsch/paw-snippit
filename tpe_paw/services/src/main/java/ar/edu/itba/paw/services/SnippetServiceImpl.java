@@ -168,12 +168,5 @@ public class SnippetServiceImpl implements SnippetService {
         this.emailService.sendFlaggedEmail(baseUrl + "/snippet/" + snippet.getId(), snippet.getTitle(), owner.getEmail(), owner.getUsername(), isFlagged, owner.getLocale());
     }
 
-    @Transactional
-    @Override
-    public boolean reportSnippet(Long userId, Long snippetId, String reportDetail){
-        // Mailing stuff
-
-        return this.snippetDao.reportSnippet(userId, snippetId);
-    }
 
 }

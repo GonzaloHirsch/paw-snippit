@@ -29,7 +29,7 @@ public class Report {
     @JoinColumn(name = "snippet_id")
     private Snippet snippet;
 
-    @Column(name = "detail")
+    @Column(length = 500, name = "detail")
     private String detail;
 
     public Report(){

@@ -73,5 +73,7 @@ public final class TestConstants {
     static final String GENERAL_TERM = "3";
 
 
-    private TestConstants() {}
+    private TestConstants() {
+        throw new AssertionError();
+    }
 }

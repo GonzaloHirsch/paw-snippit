@@ -210,4 +210,8 @@ public class Snippet {
         return this.getId().equals(snippet.getId());
     }
 
+    @Override public int hashCode() {
+        return Long.hashCode(this.getId());
+    }
+
 }

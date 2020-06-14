@@ -223,7 +223,7 @@ public class SearchController {
         descriptionForm.setDescription(user.getDescription());
 
         //If context is "" but it is my profile, change it to active
-        if (currentUser != null && currentUser.getId().equals(user.getId()) && context.equals(Constants.USER_PROFILE_CONTEXT)){
+        if (currentUser != null && currentUser.equals(user) && context.equals(Constants.USER_PROFILE_CONTEXT)){
             context = Constants.OWNER_ACTIVE_CONTEXT;
         }
 

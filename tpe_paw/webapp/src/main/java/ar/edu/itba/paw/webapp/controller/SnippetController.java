@@ -1,11 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.*;
-import ar.edu.itba.paw.models.Snippet;
-import ar.edu.itba.paw.models.Tag;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.Vote;
-import ar.edu.itba.paw.models.Report;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.ElementDeletionException;
@@ -27,11 +23,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.sql.SQLOutput;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 public class SnippetController {
@@ -57,7 +51,8 @@ public class SnippetController {
             @ModelAttribute("deleteForm") final DeleteForm deleteForm,
             @ModelAttribute("favForm") final FavoriteForm favForm,
             @ModelAttribute("voteForm") final VoteForm voteForm,
-            @ModelAttribute("reportForm") final ReportForm reportForm
+            @ModelAttribute("reportForm") final ReportForm reportForm,
+            BindingResult errors
     ) {
         final ModelAndView mav = new ModelAndView("snippet/snippetDetail");
         // Snippet
@@ -173,11 +168,16 @@ public class SnippetController {
     @RequestMapping(value="/snippet/{id}/report", method=RequestMethod.POST)
     public ModelAndView reportSnippet(
             @ModelAttribute("snippetId") @PathVariable("id") long id,
+            @ModelAttribute("searchForm") final SearchForm searchForm,
+            @ModelAttribute("adminFlagForm") final FlagSnippetForm adminFlagForm,
+            @ModelAttribute("deleteForm") final DeleteForm deleteForm,
+            @ModelAttribute("favForm") final FavoriteForm favForm,
+            @ModelAttribute("voteForm") final VoteForm voteForm,
             @Valid @ModelAttribute("reportForm") final ReportForm reportForm,
             final BindingResult errors
     ) {
         if (errors.hasErrors()) {
-            System.out.println("I have errorrs");
+            return snippetDetail(id, searchForm, adminFlagForm, deleteForm, favForm, voteForm, reportForm, errors);
         }
 
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
@@ -186,7 +186,7 @@ public class SnippetController {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report", null, LocaleContextHolder.getLocale()));
         } else {
             reportService.reportSnippet(currentUser.getId(), id, reportForm.getReportDetail());
-            LOGGER.debug("User {} reported snippet {} with message {}", currentUser.getUsername(), id, reportForm.getReportDetail());
+//            LOGGER.debug("User {} reported snippet {} with message {}", currentUser.getUsername(), id, reportForm.getReportDetail());
         }
         return mav;
     }

@@ -91,6 +91,7 @@ public class SnippetController {
             // Report
             Optional<Report> report = this.reportService.getReport(currentUser.getId(),retrievedSnippet.get().getId());
             reportForm.setReported(report.isPresent());
+            mav.addObject("displayReportDialog", errors.hasErrors());
 
             if (roleService.isAdmin(currentUser.getId())) {
                 adminFlagForm.setFlagged(retrievedSnippet.get().isFlagged());

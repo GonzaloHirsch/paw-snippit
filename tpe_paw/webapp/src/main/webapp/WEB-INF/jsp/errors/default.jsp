@@ -17,23 +17,25 @@
 </head>
 
 <body>
+<spring:message code="error.home" var="errHome"/>
+<spring:message code="error.home.redirect" var="errRedirect"/>
 
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
         <div class="flex-column flex-center error-page-main">
-            <div class="error-code border-radius">${err}</div>
-            <div class="error-page-not-found">${errName}</div>
+            <div class="error-code border-radius"><c:out value="${err}"/></div>
+            <div class="error-page-not-found"><c:out value="${errName}"/></div>
 
             <div class="error-dialog border-radius flex-column flex-column">
                 <h2>
-                    ${msg}
+                    <c:out value="${msg}"/>
                 </h2>
                 <h3>
-                    <spring:message code="error.home"/>
+                    <c:out value="${errHome}"/>
                 </h3>
                 <a class="link-button border-radius flex-center" href="<c:url value='/'/>">
-                    <spring:message code="error.home.redirect"/>
+                    <c:out value="${errRedirect}"/>
                 </a>
             </div>
         </div>

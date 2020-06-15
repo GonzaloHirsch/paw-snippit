@@ -28,12 +28,12 @@
                 <c:choose>
                     <c:when test="${itemSearchForm.showEmpty}">
                         <div class="flex-center side-button no-text-decoration transition">
-                        ${hide_hint}
+                        <c:out value="${hide_hint}"/>
                         </div>
                     </c:when>
                     <c:otherwise>
                         <div class="flex-center side-button no-text-decoration transition">
-                        ${show_hint}
+                        <c:out value="${show_hint}"/>
                         </div>
                     </c:otherwise>
                 </c:choose>

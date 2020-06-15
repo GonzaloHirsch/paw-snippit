@@ -12,7 +12,7 @@
 
     <div class="flex-row flex-space-between chip-container transition">
         <a href="<c:url value='/tags/${tag.id}'/>" class="no-text-decoration fw-300 chip-name">
-            ${tag.name.toLowerCase()}
+            <c:out value="${tag.name.toLowerCase()}"/>
         </a>
         <c:set var="followForm" value="unfollowForm${tag.id}"/>
         <c:url var="tagFollowIconUrl" value="/tags/${tag.id}/follow"/>

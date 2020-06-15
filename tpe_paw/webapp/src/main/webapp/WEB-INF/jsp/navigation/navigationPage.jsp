@@ -49,10 +49,10 @@
                 </c:url>
                 <c:choose>
                     <c:when test="${page == pageIndex.index}">
-                        <a class="navigation-page navigation-page-selected" href="${actUrl}">${pageIndex.index}</a>
+                        <a class="navigation-page navigation-page-selected" href="${actUrl}"><c:out value="${pageIndex.index}"/></a>
                     </c:when>
                     <c:otherwise>
-                        <a class="navigation-page transition" href="${actUrl}">${pageIndex.index}</a>
+                        <a class="navigation-page transition" href="${actUrl}"><c:out value="${pageIndex.index}"/></a>
                     </c:otherwise>
                 </c:choose>
             </c:forEach>

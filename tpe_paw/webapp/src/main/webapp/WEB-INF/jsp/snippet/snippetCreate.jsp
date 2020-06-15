@@ -24,11 +24,16 @@
 </head>
 
 <body>
-
-<spring:message code="snippetCreateForm.title" var="title_hint"/>
+<spring:message code="snippetCreateForm.header" var="snippetCreateHeader"/>
+<spring:message code="snippetCreateForm.title" var="snippetCreateTitle"/>
+<spring:message code="snippetCreateForm.description" var="snippetCreateDescr"/>
 <spring:message code="snippetCreateForm.descriptionHint" var="desc_hint"/>
 <spring:message code="snippetCreateForm.codeHint" var="code_hint"/>
+<spring:message code="snippetCreateForm.code" var="snippetCreateCode"/>
+<spring:message code="snippetCreateForm.tags" var="snippetCreateTags"/>
 <spring:message code="snippetCreateForm.tagsHint" var="tag_hint"/>
+<spring:message code="snippetCreateForm.language" var="snippetCreateLang"/>
+<spring:message code="snippetCreateForm.languageHint" var="snippetCreateLangHint"/>
 
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
@@ -37,7 +42,7 @@
 
         <div class="flex-center">
             <div class="fw-100 title-container">
-                <spring:message code="snippetCreateForm.header"> </spring:message>
+                <c:out value="${snippetCreateHeader}"/>
             </div>
         </div>
 
@@ -48,15 +53,15 @@
                     <div class="flex-column snippetC-top-container">
                         <div class="flex-row">
                             <div class="snippetC-title-container">
-                                <form:label class="fw-400 snippetC-subtitles" path="title"><spring:message code="snippetCreateForm.title"/> </form:label>
-                                <form:input class="snippetC-title-input snippetC-border fw-400" type="text" path="title" placeholder='${title_hint}'/>
+                                <form:label class="fw-400 snippetC-subtitles" path="title"><c:out value="${snippetCreateTitle}"/></form:label>
+                                <form:input class="snippetC-title-input snippetC-border fw-400" type="text" path="title" placeholder='${snippetCreateTitle}'/>
                             </div>
                             <div class="snippetC-language-container">
-                                <form:label class="fw-400 snippetC-subtitles" path="title"><spring:message code="snippetCreateForm.language"/> </form:label>
+                                <form:label class="fw-400 snippetC-subtitles" path="title"><c:out value="${snippetCreateLang}"/> </form:label>
                                 <form:select class="selectpicker snippetC-language"  data-live-search="true" path="language">
-                                    <form:option value="-1"><spring:message code="snippetCreateForm.languageHint"/></form:option>
+                                    <form:option value="-1"><c:out value="${snippetCreateLangHint}"/></form:option>
                                     <c:forEach items="${languageList}" var="lan" varStatus="status">
-                                        <form:option value="${lan.id}">${lan.name.toUpperCase()}</form:option>
+                                        <form:option value="${lan.id}"><c:out value="${lan.name.toUpperCase()}"/></form:option>
                                     </c:forEach>
                                 </form:select>
                             </div>
@@ -69,7 +74,7 @@
                     <hr class="snippetC-divider"/>
 
                     <div class="snippetC-elem-container">
-                        <form:label class="fw-400 snippetC-subtitles" path="description"><spring:message code="snippetCreateForm.description"/> </form:label>
+                        <form:label class="fw-400 snippetC-subtitles" path="description"><c:out value="${snippetCreateDescr}"/></form:label>
                         <form:textarea class="full-width snippetC-description-input snippetC-border" rows="2" type="text" path="description" placeholder='${desc_hint}'/>
                         <form:errors class="form-error error-extra-margins" path="description" element="p"/>
                     </div>
@@ -77,7 +82,7 @@
                     <hr class="snippetC-divider"/>
 
                     <div class="snippetC-elem-container">
-                        <form:label class="fw-400 snippetC-subtitles" path="code"><spring:message code="snippetCreateForm.code"/> </form:label>
+                        <form:label class="fw-400 snippetC-subtitles" path="code"><c:out value="${snippetCreateCode}"/></form:label>
                         <form:textarea class="full-width snippetC-code-input snippetC-border"  rows="5" type="text" path="code" placeholder='${code_hint}'/>
                         <form:errors class="form-error error-extra-margins" path="code" element="p"/>
                     </div>
@@ -87,7 +92,7 @@
                     <div class="flex-row flex-space-between snippetC-elem-container flex-center">
 
                         <div class="flex-column snippetC-tags-container">
-                            <form:label class="fw-400 snippetC-subtitles" path="tags"><spring:message code="snippetCreateForm.tags"/></form:label>
+                            <form:label class="fw-400 snippetC-subtitles" path="tags"><c:out value="${snippetCreateTags}"/></form:label>
                             <form:select class="selectpicker snippetC-tags" multiple="true" data-live-search="true" path="tags" title='${tag_hint}' name="tagselect" >
                                 <form:options items="${tagList}" itemValue="name" itemLabel="name"/>
                             </form:select>

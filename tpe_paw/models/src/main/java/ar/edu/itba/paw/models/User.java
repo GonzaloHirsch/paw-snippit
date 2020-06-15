@@ -249,4 +249,8 @@ public class User {
         User user = (User) o;
         return this.getId().equals(user.getId());
     }
+
+    @Override public int hashCode() {
+        return this.getId().hashCode();
+    }
 }

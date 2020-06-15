@@ -7,7 +7,9 @@ import java.time.Instant;
 import java.util.*;
 
 public final class TestMethods {
-    private TestMethods() {}
+    private TestMethods() {
+        throw new AssertionError();
+    }
 
     static Snippet insertSnippet(EntityManager em, User user, String title, String description, String code, Instant dateCreated, Language language, Collection<Tag> tags, boolean flagged, boolean deleted) {
         Snippet snippet = new Snippet(user, code, title, description, dateCreated, language, tags, flagged, deleted);

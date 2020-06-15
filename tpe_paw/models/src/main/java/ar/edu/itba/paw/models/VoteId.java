@@ -3,7 +3,6 @@ package ar.edu.itba.paw.models;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Embeddable
 public class VoteId implements Serializable {
@@ -34,6 +33,8 @@ public class VoteId implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, snippetId);
+        int result = userId.hashCode();
+        result = 31 * result + snippetId.hashCode();
+        return result;
     }
 }

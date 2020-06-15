@@ -1,7 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
@@ -49,16 +48,16 @@
 
                     <div class="flex-row flex-center flex-space-between">
                         <div class="snippet-text snippet-title detail-snippet-title">
-                            ${fn:escapeXml(snippet.title)}
+                            <c:out value="${snippet.title}"/>
                         </div>
                         <a href="<c:url value="/languages/${snippet.language.id}"/>" class="flex-center snippet-language-tag detail-snippet-language-margin border-radius transition">
-                            ${snippet.language.name.toUpperCase()}
+                            <c:out value="${snippet.language.name.toUpperCase()}"/>
                         </a>
                     </div>
 
                     <c:if test="${!StringUtils.isEmpty(snippet.description)}">
                         <div class="detail-snippet-block-descr">
-                            <div class="snippet-text detail-snippet-descr justify-text">${fn:escapeXml(snippet.description)}</div>
+                            <div class="snippet-text detail-snippet-descr justify-text"><c:out value="${snippet.description}"/></div>
                         </div>
                     </c:if>
 
@@ -71,7 +70,7 @@
                                 <span class="material-icons copy-icon border-radius" onclick="copyContent(this)">
                                     file_copy
                                 </span>
-                                <pre><code id="code-block" class="${snippet.language.name}">${fn:escapeXml(snippet.code)}</code></pre>
+                                <pre><code id="code-block" class="${snippet.language.name}"><c:out value="${snippet.code}"/></code></pre>
                                 <input id="hidden-code-input" class="hidden-code"/>
                             </div>
                         </div>
@@ -129,7 +128,8 @@
                         </c:choose>
                         <a class="no-text-decoration" href="${userProfile}">
                             <div class="flex-column flex-center detail-snippet-block border-radius form-shadow">
-                                <div class="snippet-text detail-snippet-date">Uploaded ${snippet.getCreationDate()}</div>
+                                <spring:message var="uploadedOn" code="snippetDetails.upload.date" arguments="${snippet.getCreationDate()}"/>
+                                <div class="snippet-text detail-snippet-date"><c:out value="${uploadedOn}"/></div>
                                 <div class="flex-row snippet-user-info detail-snippet-user-info">
                                     <c:if test="${snippet.owner.icon != null}">
                                         <img src="<c:url value="/user/${snippet.owner.id}/image"/>" alt="User Icon"/>
@@ -139,7 +139,7 @@
                                     </c:if>
                                     <div class="flex-column snippet-upload-info">
                                         <div class="snippet-text">
-                                            ${snippet.owner.username}
+                                            <c:out value="${snippet.owner.username}"/>
                                         </div>
                                         <div class="flex-row">
                                             <div class="snippet-text">${snippet.owner.reputation}</div>

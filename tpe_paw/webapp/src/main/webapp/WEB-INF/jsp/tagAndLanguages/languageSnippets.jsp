@@ -20,6 +20,10 @@
     <script src="<c:url value='/resources/js/form.js'/>"></script>
 </head>
 <body>
+<spring:message var="languageTitle" code="languageSnippets.title" arguments="${language.name.toUpperCase()}"/>
+<spring:message var="modalCancel" code="modal.cancel"/>
+<spring:message var="modalConfirm" code="modal.delete.confirm"/>
+
 <c:set var="snippetList" value="${snippetList}" scope="request"/>
 <c:url var="langDeleteUrl" value="/languages/${language.id}/delete"/>
 <div class="wrapper">
@@ -34,8 +38,8 @@
             <div class="flex-row flex-center element-snippets-top-container">
                 <div class="flex-row flex-center title-container">
 
-                    <div class="fw-100">
-                        <spring:message code="languageSnippets.title" arguments="${language.name.toUpperCase()}"/>
+                    <div class="element-snippets-title fw-100">
+                        <c:out value="${languageTitle}"/>
                     </div>
                     <c:if test="${currentUser != null && userRoles.contains('ADMIN') && !language.deleted}">
                         <form:form action="${langDeleteUrl}" class="form-container" method="post" modelAttribute="deleteForm">
@@ -54,15 +58,16 @@
                                             </button>
                                         </div>
                                         <div class="modal-body modal-body-text fw-100">
-                                            <spring:message code="modal.delete.language.text" arguments="${language.name}"/>
+                                            <spring:message var="languageName" code="modal.delete.language.text" arguments="${language.name}"/>
+                                            <c:out value="${languageName}"/>
                                         </div>
                                         <div class="modal-footer flex-end">
                                             <div class="flex-center">
-                                                <div type="button" class="btn btn-secondary modal-close-button" data-dismiss="modal"><spring:message code="modal.cancel"/></div>
+                                                <div type="button" class="btn btn-secondary modal-close-button" data-dismiss="modal"><c:out value="${modalCancel}"/></div>
                                                 <form:checkbox class="hidden" path="delete" value="true" id="lang-delete-button" onclick="updateForm(this)"/>
                                                 <label for="lang-delete-button" class="btn btn-primary purple-button  no-margin">
                                                     <div typeof="button">
-                                                        <spring:message code="modal.delete.confirm"/>
+                                                        <c:out value="${modalConfirm}"/>
                                                     </div>
                                                 </label>
                                             </div>

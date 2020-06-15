@@ -51,6 +51,13 @@ public class Role {
             return false;
         }
         Role role = (Role) o;
-        return this.getId().equals(role.getId());
+        return this.getId().equals(role.getId()) && this.getName().equals(role.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = this.getId().hashCode();
+        result = 31 * result + this.getName().hashCode();
+        return result;
     }
 }

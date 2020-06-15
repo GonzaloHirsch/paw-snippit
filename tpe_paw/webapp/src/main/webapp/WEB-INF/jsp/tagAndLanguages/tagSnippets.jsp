@@ -20,6 +20,10 @@
     <script src="<c:url value='/resources/js/form.js'/>"></script>
 </head>
 <body>
+<spring:message var="tagTitle" code="tagSnippets.title" arguments="${tag.name.toUpperCase()}"/>
+<spring:message var="modalCancel" code="modal.cancel"/>
+<spring:message var="modalConfirm" code="modal.delete.confirm"/>
+
 <c:set var="tagId" value="${tag.id}" scope="request"/>
 <c:url var="tagDeleteUrl" value="/tags/${tagId}/delete"/>
 <div class="wrapper">
@@ -27,9 +31,8 @@
     <div class="main-content">
         <div class="flex-row flex-center element-snippets-top-container">
             <div class="flex-row flex-center title-container">
-
-                <div class="fw-100">
-                    <spring:message code="tagSnippets.title" arguments="${tag.name.toUpperCase()}"/>
+                <div class="element-snippets-title fw-100">
+                    <c:out value="${tagTitle}"/>
                 </div>
                 <c:import url="/WEB-INF/jsp/tagAndLanguages/tagFollowForm.jsp"/>
                 <c:if test="${currentUser != null}">
@@ -50,14 +53,15 @@
                                             </button>
                                         </div>
                                         <div class="modal-body modal-body-text fw-100">
-                                            <spring:message code="modal.delete.tag.text" arguments="${tag.name}"/>
+                                            <spring:message var="modalTagDeleteMessage" code="modal.delete.tag.text" arguments="${tag.name}"/>
+                                            <c:out value="${modalTagDeleteMessage}"/>
                                         </div>
                                         <div class="modal-footer flex-end">
                                             <div class="flex-center">
-                                                <div type="button" class="btn btn-secondary modal-close-button" data-dismiss="modal"><spring:message code="modal.cancel"/></div>
+                                                <div type="button" class="btn btn-secondary modal-close-button" data-dismiss="modal"><c:out value="${modalCancel}"/></div>
                                                 <form:checkbox class="hidden" path="delete" value="true" id="tag-delete-button" onclick="updateForm(this)"/>
                                                 <label for="tag-delete-button" class="btn btn-primary purple-button  no-margin">
-                                                    <spring:message code="modal.delete.confirm"/>
+                                                    <c:out value="${modalConfirm}"/>
                                                 </label>
                                             </div>
                                         </div>

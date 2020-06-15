@@ -15,7 +15,7 @@
 <div class="flex-grow ${style}">
     <div class="flex-row flex-center">
         <a href="<c:url value='/${context}/${element.id}'/>" class="no-text-decoration fw-300 text-center flex-grow">
-            ${element.name.toUpperCase()}
+            <c:out value="${element.name.toUpperCase()}"/>
         </a>
     </div>
 </div>

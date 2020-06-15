@@ -115,5 +115,7 @@ public final class TestConstants {
     static final int VOTE_VALUE_3 = 10;
     static final int VOTE_VALUE_4 = 10000000;
 
-    private TestConstants() {}
+    private TestConstants() {
+        throw new AssertionError();
+    }
 }

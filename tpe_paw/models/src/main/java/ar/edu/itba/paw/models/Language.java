@@ -71,6 +71,12 @@ public class Language {
             return false;
         }
         Language tag = (Language) o;
-        return this.getId().equals(tag.getId());
+        return this.getId().equals(tag.getId()) && this.getName().equals(tag.getName());
+    }
+
+    @Override public int hashCode() {
+        int result = this.getId().hashCode();
+        result = 31 * result + this.getName().hashCode();
+        return result;
     }
 }

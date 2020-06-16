@@ -8,10 +8,11 @@
     <script src="<c:url value='/resources/js/form.js'/>"></script>
     <link href="<c:url value='/resources/css/elementSnippets.css'/>" type="text/css" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
+    <script src="<c:url value='/resources/js/reportForm.js'/>"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
-<body>
+<body onload="displayErrors(${displayReportDialog})">
 
 <spring:message code="modal.report.hint" var="detailHint"/>
 

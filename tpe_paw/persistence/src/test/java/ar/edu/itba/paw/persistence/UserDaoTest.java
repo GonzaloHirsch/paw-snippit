@@ -23,9 +23,8 @@ import static junit.framework.TestCase.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
+@Transactional
 public class UserDaoTest {
-
-    @Autowired private DataSource ds;
 
     @Autowired
     private UserDao userDao;
@@ -39,14 +38,12 @@ public class UserDaoTest {
     }
     
     @Test
-    @Transactional
     public void testCreateUser() {
         final User user = userDao.createUser(USER_USERNAME, USER_PASSWORD, USER_EMAIL, 0, Instant.now(),new Locale("en"));
 
         assertTrue(user.getId()>0);
     }
 
-    @Transactional
     @Test
     public void testFindUserById(){
         User expectedUser = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -60,7 +57,6 @@ public class UserDaoTest {
         assertEquals(expectedUser.getEmail(), maybeUser.get().getEmail());
     }
 
-    @Transactional
     @Test
     public void testFindUserByIdEmpty(){
         User expectedUser = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -70,7 +66,7 @@ public class UserDaoTest {
         assertFalse(maybeUser.isPresent());
     }
 
-    @Transactional
+    
     @Test
     public void testFindUserByUsername(){
         User expectedUser = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -84,7 +80,7 @@ public class UserDaoTest {
         assertEquals(expectedUser.getEmail(), maybeUser.get().getEmail());
     }
 
-    @Transactional
+    
     @Test
     public void testFindUserByUsernameEmpty(){
         User expectedUser = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -94,7 +90,7 @@ public class UserDaoTest {
         assertFalse(maybeUser.isPresent());
     }
 
-    @Transactional
+    
     @Test
     public void testFindUserByEmail(){
         User expectedUser = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -108,7 +104,7 @@ public class UserDaoTest {
         assertEquals(expectedUser.getEmail(), maybeUser.get().getEmail());
     }
 
-    @Transactional
+    
     @Test
     public void testFindUserByEmailEmpty(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -118,7 +114,7 @@ public class UserDaoTest {
         assertFalse(maybeUser.isPresent());
     }
 
-    @Transactional
+    
     @Test
     public void testFindUpdateDescription(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -130,7 +126,7 @@ public class UserDaoTest {
         assertEquals(user.getId(),user.getId());
     }
 
-    @Transactional
+    
     @Test
     public void testFindUpdateDescriptionEmpty(){
         String newDescription = "New Description";
@@ -138,7 +134,7 @@ public class UserDaoTest {
         userDao.changeDescription(334548,newDescription);
     }
 
-    @Transactional
+    
     @Test
     public void testChangePassword(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -151,7 +147,7 @@ public class UserDaoTest {
         assertEquals(user.getId(),user.getId());
     }
 
-    @Transactional
+    
     @Test
     public void testChangePasswordEmpty(){
         String newPassword = "newpassword";
@@ -159,7 +155,7 @@ public class UserDaoTest {
         userDao.changePassword("NOT AN EMAIL",newPassword);
     }
 
-    @Transactional
+    
     @Test
     public void testChangeDescription(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -171,7 +167,7 @@ public class UserDaoTest {
         assertEquals(user.getId(), user.getId());
     }
 
-    @Transactional
+    
     @Test
     public void testChangeDescriptionEmpty(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -180,7 +176,7 @@ public class UserDaoTest {
         userDao.changeDescription(user.getId()+10,newDescription);
     }
 
-    @Transactional
+    
     @Test
     public void testChangeReputation(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -192,7 +188,7 @@ public class UserDaoTest {
         assertEquals(10,rep);
     }
 
-    @Transactional
+    
     @Test
     public void testChangeReputationEmpty(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -203,7 +199,7 @@ public class UserDaoTest {
         assertEquals(0,rep);
     }
 
-    @Transactional
+    
     @Test
     public void getAllUsersTests(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -215,7 +211,7 @@ public class UserDaoTest {
         assertEquals(user.getId(),maybeCollection.stream().findFirst().get().getId());
     }
 
-    @Transactional
+    
     @Test
     public void getAllUsersTestsEmpty(){
         Collection<User> maybeCollection = userDao.getAllUsers();
@@ -224,7 +220,7 @@ public class UserDaoTest {
         assertEquals(0,maybeCollection.size());
     }
 
-    @Transactional
+    
     @Test
     public void testUpdateLocaleRegion(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -235,7 +231,7 @@ public class UserDaoTest {
     }
 
     @Test
-    @Transactional
+    
     public void testUpdateLocaleLanguage(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
 
@@ -245,7 +241,7 @@ public class UserDaoTest {
     }
 
 
-    @Transactional
+    
     @Test
     public void testUpdateLocaleRegionEmpty(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -255,7 +251,7 @@ public class UserDaoTest {
         assertEquals(LOCALE_EN.getCountry(),user.getRegion());
     }
 
-    @Transactional
+    
     @Test
     public void testUpdateLocaleLanguageEmpty(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -265,7 +261,7 @@ public class UserDaoTest {
         assertEquals(LOCALE_EN.getCountry().toUpperCase(),user.getLang().toUpperCase());
     }
 
-    @Transactional
+    
     @Test
     public void testGetLocaleLanguage(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -275,7 +271,7 @@ public class UserDaoTest {
         assertEquals(LOCALE_EN.getLanguage().toUpperCase(),loc.toUpperCase());
     }
 
-    @Transactional
+    
     @Test
     public void testGetLocaleLanguageEmpty(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -284,7 +280,7 @@ public class UserDaoTest {
         assertEquals(loc, "");
     }
 
-    @Transactional
+    
     @Test
     public void testGetLocaleRegion(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -294,7 +290,7 @@ public class UserDaoTest {
         assertEquals(LOCALE_EN.getCountry(),loc);
     }
 
-    @Transactional
+    
     @Test
     public void testGetLocaleRegionEmpty(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -303,7 +299,7 @@ public class UserDaoTest {
         assertEquals(loc, "");
     }
 
-    @Transactional
+    
     @Test
     public void testUserEmailIsVerified(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -313,7 +309,7 @@ public class UserDaoTest {
         assertFalse(result);
     }
 
-    @Transactional
+    
     @Test
     public void testUserEmailIsVerifiedEmpty(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -322,7 +318,7 @@ public class UserDaoTest {
         assertFalse(result);
     }
 
-    @Transactional
+    
     @Test
     public void testVerifyUserEmail(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -332,7 +328,7 @@ public class UserDaoTest {
         assertTrue(user.isVerified());
     }
 
-    @Transactional
+    
     @Test
     public void testVerifyUserEmailEmpty(){
         User user = TestMethods.insertUser(em, USER_USERNAME, USER_PASSWORD, USER_EMAIL,Instant.now(),LOCALE_EN,false);
@@ -341,8 +337,5 @@ public class UserDaoTest {
 
         assertFalse(user.isVerified());
     }
-
-
-
 
 }

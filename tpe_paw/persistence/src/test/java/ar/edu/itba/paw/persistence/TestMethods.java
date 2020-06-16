@@ -182,45 +182,43 @@ public final class TestMethods {
 
         /* VOTES */
 
-        insertVote(em, user2, snip1, true);
-        insertVote(em, user3, snip1, true);
-        insertVote(em, user4, snip1, true);
-        insertVote(em, user5, snip1, true);
-        insertVote(em, user6, snip1, true);
+        TestMethods.insertVote(em, user2, snip1, true);
+        TestMethods.insertVote(em, user3, snip1, true);
+        TestMethods.insertVote(em, user4, snip1, true);
+        TestMethods.insertVote(em, user5, snip1, true);
+        TestMethods.insertVote(em, user6, snip1, true);
 
-        insertVote(em, user2, snip2, false);
-        insertVote(em, user3, snip2, false);
-        insertVote(em, user4, snip2, false);
-        insertVote(em, user5, snip2, false);
-        insertVote(em, user6, snip2, false);
+        TestMethods.insertVote(em, user2, snip2, false);
+        TestMethods.insertVote(em, user3, snip2, false);
+        TestMethods.insertVote(em, user4, snip2, false);
+        TestMethods.insertVote(em, user5, snip2, false);
+        TestMethods.insertVote(em, user6, snip2, false);
 
-        insertVote(em, user2, snip3, true);
-        insertVote(em, user3, snip3, false);
+        TestMethods.insertVote(em, user2, snip3, true);
+        TestMethods.insertVote(em, user3, snip3, false);
 
-        insertVote(em, user2, snip4, false);
-        insertVote(em, user3, snip4, false);
-        insertVote(em, user4, snip4, false);
-        insertVote(em, user5, snip4, false);
-        insertVote(em, user6, snip4, false);
-        insertVote(em, user7, snip4, true);
-        insertVote(em, user8, snip4, true);
-        insertVote(em, user9, snip4, true);
-        insertVote(em, user10, snip4, true);
-        insertVote(em, owner, snip4, true);
+        TestMethods.insertVote(em, user2, snip4, false);
+        TestMethods.insertVote(em, user3, snip4, false);
+        TestMethods.insertVote(em, user4, snip4, false);
+        TestMethods.insertVote(em, user5, snip4, false);
+        TestMethods.insertVote(em, user6, snip4, false);
+        TestMethods.insertVote(em, user7, snip4, true);
+        TestMethods.insertVote(em, user8, snip4, true);
+        TestMethods.insertVote(em, user9, snip4, true);
+        TestMethods.insertVote(em, user10, snip4, true);
+        TestMethods.insertVote(em, owner, snip4, true);
 
-        insertVote(em, user2, snip5, true);
-        insertVote(em, user3, snip5, true);
-        insertVote(em, user4, snip5, true);
-        insertVote(em, user5, snip5, true);
-        insertVote(em, user6, snip5, true);
-        insertVote(em, user7, snip5, true);
-        insertVote(em, user8, snip5, true);
-        insertVote(em, user9, snip5, true);
-        insertVote(em, user10, snip5, true);
-        insertVote(em, owner, snip5, true);
+        TestMethods.insertVote(em, user2, snip5, true);
+        TestMethods.insertVote(em, user3, snip5, true);
+        TestMethods.insertVote(em, user4, snip5, true);
+        TestMethods.insertVote(em, user5, snip5, true);
+        TestMethods.insertVote(em, user6, snip5, true);
+        TestMethods.insertVote(em, user7, snip5, true);
+        TestMethods.insertVote(em, user8, snip5, true);
+        TestMethods.insertVote(em, user9, snip5, true);
+        TestMethods.insertVote(em, user10, snip5, true);
+        TestMethods.insertVote(em, owner, snip5, true);
 
-        em.flush();
-        data.values().forEach(em::refresh);
         return data;
     }
 }

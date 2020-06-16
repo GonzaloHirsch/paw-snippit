@@ -44,4 +44,9 @@ public class ReportServiceImpl implements ReportService {
 
         return result;
     }
+
+    @Override
+    public boolean canReport(User user) {
+        return user.getReputation() >= 3;
+    }
 }

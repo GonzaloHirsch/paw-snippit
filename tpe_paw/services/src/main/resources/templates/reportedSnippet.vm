@@ -1,4 +1,4 @@
-#parse("/templates/macros/macro.vm")
+    #parse("/templates/macros/macro.vm")
 <head>
     <meta charset="UTF-8">
     <title>Reported Snippet</title>

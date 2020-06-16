@@ -179,13 +179,25 @@ public class SnippetController {
         if (errors.hasErrors()) {
             System.out.println("I have errorrs");
         }
+        // Getting the url of the server
+        final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
 
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report", null, LocaleContextHolder.getLocale()));
         } else {
-            reportService.reportSnippet(currentUser.getId(), id, reportForm.getReportDetail());
+            // Getting the snippet
+            Optional<Snippet> snippetOpt = this.snippetService.findSnippetById(id);
+            if (!snippetOpt.isPresent()){
+                this.logAndThrow(id);
+            }
+            Snippet snippet = snippetOpt.get();
+            try {
+                reportService.reportSnippet(currentUser, snippet, reportForm.getReportDetail(), baseUrl);
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage() + "Failed report snippet: user {} about their snippet {}", snippet.getOwner().getUsername(), snippet.getId());
+            }
             LOGGER.debug("User {} reported snippet {} with message {}", currentUser.getUsername(), id, reportForm.getReportDetail());
         }
         return mav;

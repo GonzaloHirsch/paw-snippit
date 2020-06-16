@@ -18,4 +18,7 @@ public interface EmailService {
     void sendDigestNoFollowEmail(String to, String username, Locale locale);
 
     void sendDigestFollowOtherEmail(String to, String username, Locale locale);
-}
+
+   void sendReportedEmail(String snippetUrl, String snippetTitle, String userEmail, String username, String reportDetail, String reportingUserName, Locale locale);
+
+    }

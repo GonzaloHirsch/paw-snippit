@@ -4,6 +4,8 @@ import ar.edu.itba.paw.interfaces.dao.ReportDao;
 import ar.edu.itba.paw.interfaces.service.EmailService;
 import ar.edu.itba.paw.interfaces.service.ReportService;
 import ar.edu.itba.paw.models.Report;
+import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,9 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     private ReportDao reportDao;
+    @Autowired
+    private EmailService emailService;
+
 
     @Override
     public Optional<Report> getReport(long userId, long snippetId){
@@ -23,9 +28,20 @@ public class ReportServiceImpl implements ReportService {
 
     @Transactional
     @Override
-    public boolean reportSnippet(Long userId, Long snippetId, String reportDetail){
-        // Mailing stuff
+    public boolean reportSnippet(User user, Snippet snippet, String reportDetail, String baseUrl){
+        boolean result = this.reportDao.reportSnippet(user.getId(), snippet.getId(), reportDetail);
 
-        return this.reportDao.reportSnippet(userId, snippetId, reportDetail);
+        if(result) {
+            this.emailService.sendReportedEmail(
+                    baseUrl + "/snippet/" + snippet.getId(),
+                    snippet.getTitle(),
+                    snippet.getOwner().getEmail(),
+                    snippet.getOwner().getUsername(),
+                    reportDetail,
+                    user.getUsername(),
+                    user.getLocale());
+        }
+
+        return result;
     }
 }

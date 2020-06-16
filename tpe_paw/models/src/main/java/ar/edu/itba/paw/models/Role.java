@@ -60,4 +60,15 @@ public class Role {
         result = 31 * result + this.getName().hashCode();
         return result;
     }
+
+    /**
+     * Returns a brief description of this role. The exact details
+     * of the representation are unspecified and subject to change,
+     * but the following may be regarded as typical:
+     *
+     * "[Role #1: name=USER]"
+     */
+    @Override public String toString() {
+        return String.format("Role #%d: name=%s]", this.getId(), this.getName());
+    }
 }

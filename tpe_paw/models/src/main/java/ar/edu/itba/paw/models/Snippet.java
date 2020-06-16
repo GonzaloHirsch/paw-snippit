@@ -214,4 +214,15 @@ public class Snippet {
         return Long.hashCode(this.getId());
     }
 
+    /**
+     * Returns a brief description of this snippet. The exact details
+     * of the representation are unspecified and subject to change,
+     * but the following may be regarded as typical:
+     *
+     * "[Snippet #12: title=Floyd Algorithm, owner=user123]"
+     */
+    @Override public String toString() {
+        return String.format("Snippet #%d: title=%s, owner=%s]", this.getId(), this.getTitle(), this.getOwner());
+    }
+
 }

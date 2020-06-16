@@ -71,13 +71,12 @@ public class SnippetController {
             Collection<Tag> userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
             mav.addObject("userTags", userTags);
             mav.addObject("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
+            mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
 
             // Vote
             Optional<Vote> vote = this.voteService.getVote(currentUser.getId(), retrievedSnippet.get().getId());
-            int voteType = 0;
-            if (vote.isPresent()) {
-                voteType = vote.get().getVoteWeight();
-            }
+            int voteType = vote.map(Vote::getVoteWeight).orElse(0);
+
             voteForm.setType(voteType);
             voteForm.setOldType(voteType);
 
@@ -89,20 +88,13 @@ public class SnippetController {
 
             if (roleService.isAdmin(currentUser.getId())) {
                 adminFlagForm.setFlagged(retrievedSnippet.get().isFlagged());
-                mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
             }
         } else {
             mav.addObject("userRoles", Collections.emptyList());
         }
 
         // Vote Count
-        Optional<Integer> voteCount = this.voteService.getVoteBalance(retrievedSnippet.get().getId());
-        if (voteCount.isPresent()){
-            mav.addObject("voteCount",voteCount.get());
-        } else {
-            mav.addObject("voteCount",0);
-        }
-
+        mav.addObject("voteCount", this.voteService.getVoteBalance(retrievedSnippet.get().getId()));
         mav.addObject("searchContext","");
         return mav;
     }

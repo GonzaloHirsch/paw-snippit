@@ -26,8 +26,8 @@ public class TagServiceImpl implements TagService {
     @Autowired private SnippetService snippetService;
 
     @Override
-    public Collection<Tag> getAllTags(boolean showEmpty, int page, int pageSize) {
-        return this.tagDao.getAllTags(showEmpty, page, pageSize);
+    public Collection<Tag> getAllTags(boolean showEmpty, boolean showOnlyFollowing, Long userId, int page, int pageSize) {
+        return this.tagDao.getAllTags(showEmpty, showOnlyFollowing, userId, page, pageSize);
     }
 
     @Override
@@ -36,18 +36,18 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public int getAllTagsCountByName(String name, boolean showEmpty) {
-        return this.tagDao.getAllTagsCountByName(name, showEmpty);
+    public int getAllTagsCountByName(String name, boolean showEmpty, boolean showOnlyFollowing, Long userId) {
+        return this.tagDao.getAllTagsCountByName(name, showEmpty, showOnlyFollowing, userId);
     }
 
     @Override
-    public int getAllTagsCount(boolean showEmpty) {
-        return this.tagDao.getAllTagsCount(showEmpty);
+    public int getAllTagsCount(boolean showEmpty, boolean showOnlyFollowing, Long userId) {
+        return this.tagDao.getAllTagsCount(showEmpty, showOnlyFollowing, userId);
     }
 
     @Override
-    public Collection<Tag> findTagsByName(String name, boolean showEmpty, int page, int pageSize) {
-        return this.tagDao.findTagsByName(name, showEmpty, page, pageSize);
+    public Collection<Tag> findTagsByName(String name, boolean showEmpty, boolean showOnlyFollowing, Long userId, int page, int pageSize) {
+        return this.tagDao.findTagsByName(name, showEmpty, showOnlyFollowing, userId, page, pageSize);
     }
 
     @Override

@@ -15,17 +15,17 @@ public interface TagDao {
 
     Tag addTag(final String name);
 
-    Collection<Tag> getAllTags(boolean showEmpty, int page, int pageSize);
+    Collection<Tag> getAllTags(boolean showEmpty, boolean showOnlyFollowing, Long userId, int page, int pageSize);
 
     Collection<Tag> getAllTags();
 
-    int getAllTagsCountByName(String name, boolean showEmpty);
+    int getAllTagsCountByName(String name, boolean showEmpty, boolean showOnlyFollowing, Long userId);
 
-    int getAllTagsCount(boolean showEmpty);
+    int getAllTagsCount(boolean showEmpty, boolean showOnlyFollowing, Long userId);
 
     Collection<Tag> findSpecificTagsByName(Collection<String> tags);
 
-    Collection<Tag> findTagsByName(String name, boolean showEmpty, int page, int pageSize);
+    Collection<Tag> findTagsByName(String name, boolean showEmpty, boolean showOnlyFollowing, Long userId, int page, int pageSize);
 
     void addSnippetTag(final long snippetId, final long tagId);
 

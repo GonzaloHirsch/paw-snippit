@@ -51,27 +51,29 @@ public class TagsController {
     @RequestMapping("/tags")
     public ModelAndView showAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         ModelAndView mav = new ModelAndView("tagAndLanguages/tags");
-        Collection<Tag> allTags = tagService.getAllTags(searchForm.isShowEmpty(), page, TAG_PAGE_SIZE);
-        int tagCount = this.tagService.getAllTagsCount(searchForm.isShowEmpty());
-        return this.setTagsWithPage(mav, allTags, tagCount, page);
+        User currentUser = loginAuthentication.getLoggedInUser();
+        Collection<Tag> allTags = tagService.getAllTags(searchForm.isShowEmpty(), searchForm.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null, page, TAG_PAGE_SIZE);
+        int tagCount = this.tagService.getAllTagsCount(searchForm.isShowEmpty(), searchForm.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null);
+        return this.setTagsWithPage(mav, allTags, currentUser, tagCount, page);
     }
 
     @RequestMapping("/tags/search")
     public ModelAndView searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         final ModelAndView mav = new ModelAndView("tagAndLanguages/tags");
-        Collection<Tag> allTags = this.tagService.findTagsByName(searchForm.getName(), searchForm.isShowEmpty(), page, TAG_PAGE_SIZE);
-        int tagCount = this.tagService.getAllTagsCountByName(searchForm.getName(), searchForm.isShowEmpty());
-        return this.setTagsWithPage(mav, allTags, tagCount, page);
+        User currentUser = loginAuthentication.getLoggedInUser();
+        Collection<Tag> allTags = this.tagService.findTagsByName(searchForm.getName(), searchForm.isShowEmpty(), searchForm.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null, page, TAG_PAGE_SIZE);
+        int tagCount = this.tagService.getAllTagsCountByName(searchForm.getName(), searchForm.isShowEmpty(), searchForm.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null);
+        return this.setTagsWithPage(mav, allTags, currentUser, tagCount, page);
     }
 
-    private ModelAndView setTagsWithPage(ModelAndView mav, Collection<Tag> allTags, int tagCount, int page) {
+    private ModelAndView setTagsWithPage(ModelAndView mav, Collection<Tag> allTags, User currentUser, int tagCount, int page) {
         mav.addObject("pages", (tagCount/TAG_PAGE_SIZE) + (tagCount % TAG_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("searchContext","tags/");
         mav.addObject("tags", allTags);
         mav.addObject("itemSearchContext", "tags/");
+        mav.addObject("loggedUser", currentUser);
 
-        User currentUser = loginAuthentication.getLoggedInUser();
         for (Tag tag : allTags) {
             if (currentUser != null) {
                 /* Follow form quick action */

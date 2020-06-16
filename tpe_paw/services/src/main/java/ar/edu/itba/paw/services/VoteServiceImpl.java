@@ -49,7 +49,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public Optional<Integer> getVoteBalance(final long snippetId) {
+    public int getVoteBalance(final long snippetId) {
         return voteDao.getVoteBalance(snippetId);
     }
 }

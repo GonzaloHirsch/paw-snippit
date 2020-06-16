@@ -79,6 +79,15 @@ DO '
     END
 ' language plpgsql;
 
+CREATE TABLE IF NOT EXISTS reported
+(
+    snippet_id INT REFERENCES snippets (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    user_id    INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    detail VARCHAR(500),
+    PRIMARY KEY (snippet_id, user_id)
+);
+
+
 
 CREATE OR REPLACE VIEW complete_snippets AS
 SELECT aux.sn_id   AS id,

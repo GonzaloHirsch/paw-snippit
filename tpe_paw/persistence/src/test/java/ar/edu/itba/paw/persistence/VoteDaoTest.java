@@ -135,10 +135,9 @@ public class VoteDaoTest {
         Vote vote3 = TestMethods.insertVote(em, user3, snip1, false);
         snip1.setVotes(Arrays.asList(vote1, vote2, vote3));
 
-        Optional<Integer> maybeVoteBalance = voteDao.getVoteBalance(snip1.getId());
+        int voteBalance = voteDao.getVoteBalance(snip1.getId());
 
-        Assert.assertTrue(maybeVoteBalance.isPresent());
-        Assert.assertEquals(Integer.valueOf(-1), maybeVoteBalance.get());
+        Assert.assertEquals(-1, voteBalance);
     }
 
     @Test
@@ -154,16 +153,23 @@ public class VoteDaoTest {
         Vote vote3 = TestMethods.insertVote(em, user3, snip1, true);
         snip1.setVotes(Arrays.asList(vote1, vote2, vote3));
 
-        Optional<Integer> maybeVoteBalance = voteDao.getVoteBalance(snip1.getId());
+        int voteBalance = voteDao.getVoteBalance(snip1.getId());
 
-        Assert.assertTrue(maybeVoteBalance.isPresent());
-        Assert.assertEquals(Integer.valueOf(3), maybeVoteBalance.get());
+        Assert.assertEquals(3, voteBalance);
     }
 
     @Test
-    public void testGetVoteBalanceNoneExistingSnippet(){
-        Optional<Integer> maybeVoteBalance = voteDao.getVoteBalance(TestConstants.SNIPPET_INVALID_ID);
-        Assert.assertFalse(maybeVoteBalance.isPresent());
+    public void testGetVoteBalanceNoVotes() {
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        Snippet snip1 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
+        
+        Assert.assertEquals(0, voteDao.getVoteBalance(snip1.getId()));
+    }
+
+    @Test
+    public void testGetVoteBalanceNoneExistingSnippet() {
+        Assert.assertEquals(0, voteDao.getVoteBalance(TestConstants.SNIPPET_INVALID_ID));
     }
 
 }

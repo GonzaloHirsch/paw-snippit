@@ -253,4 +253,15 @@ public class User {
     @Override public int hashCode() {
         return this.getId().hashCode();
     }
+
+    /**
+     * Returns a brief description of this user. The exact details
+     * of the representation are unspecified and subject to change,
+     * but the following may be regarded as typical:
+     *
+     * "[User #12: username=user123, email=user123@gmail.com]"
+     */
+    @Override public String toString() {
+        return String.format("User #%d: username=%s, email=%s]", this.getId(), this.getUsername(), this.getEmail());
+    }
 }

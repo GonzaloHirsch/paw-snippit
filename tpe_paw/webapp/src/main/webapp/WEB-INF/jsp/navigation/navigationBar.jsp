@@ -320,8 +320,8 @@
                             <c:out value="${userWelcome}"/>
                         </a>
                     </c:when>
-                    <!-- Admin does not have a user profile -->
                     <c:otherwise>
+                        <!-- Admin does not have a user profile -->
                         <div class="white-text flex-center navtop-welcome-text">
                             <c:out value="${userWelcome}"/>
                         </div>

@@ -8,15 +8,15 @@ import java.util.Optional;
 
 public interface TagService {
 
-    Collection<Tag> getAllTags(boolean showEmpty, int page, int pageSize);
+    Collection<Tag> getAllTags(boolean showEmpty, boolean showOnlyFollowing, Long userId, int page, int pageSize);
 
     Collection<Tag> getAllTags();
 
-    int getAllTagsCountByName(String name, boolean showEmpty);
+    int getAllTagsCountByName(String name, boolean showEmpty, boolean showOnlyFollowing, Long userId);
 
-    int getAllTagsCount(boolean showEmpty);
+    int getAllTagsCount(boolean showEmpty, boolean showOnlyFollowing, Long userId);
 
-    Collection<Tag> findTagsByName(String name, boolean showEmpty, int page, int pageSize);
+    Collection<Tag> findTagsByName(String name, boolean showEmpty, boolean showOnlyFollowing, Long userId, int page, int pageSize);
 
     Collection<Tag> getFollowedTagsForUser(long userId);
 

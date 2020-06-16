@@ -38,11 +38,6 @@ public class Tag {
         // Hibernate constructor
     }
 
-    @Override
-    public String toString() {
-        return this.name;
-    }
-
     public Long getId() { return this.id; }
 
     public String getName() { return this.name; }
@@ -75,12 +70,21 @@ public class Tag {
             return false;
         }
         Tag tag = (Tag) o;
-        return this.getId().equals(tag.getId()) && this.getName().equals(tag.getName());
+        return this.getId().equals(tag.getId());
     }
 
     @Override public int hashCode() {
-        int result = this.getId().hashCode();
-        result = 31 * result + this.getName().hashCode();
-        return result;
+        return this.getId().hashCode();
+    }
+
+    /**
+     * Returns a brief description of this tag. The exact details
+     * of the representation are unspecified and subject to change,
+     * but the following may be regarded as typical:
+     *
+     * "[Tag #12: name=algorithm]"
+     */
+    @Override public String toString() {
+        return String.format("Tag #%d: name=%s]", this.getId(), this.getName());
     }
 }

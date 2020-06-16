@@ -71,12 +71,21 @@ public class Language {
             return false;
         }
         Language tag = (Language) o;
-        return this.getId().equals(tag.getId()) && this.getName().equals(tag.getName());
+        return this.getId().equals(tag.getId());
     }
 
     @Override public int hashCode() {
-        int result = this.getId().hashCode();
-        result = 31 * result + this.getName().hashCode();
-        return result;
+        return this.getId().hashCode();
+    }
+
+    /**
+     * Returns a brief description of this language. The exact details
+     * of the representation are unspecified and subject to change,
+     * but the following may be regarded as typical:
+     *
+     * "[Language #12: name=java]"
+     */
+    @Override public String toString() {
+        return String.format("Language #%d: name=%s]", this.getId(), this.getName());
     }
 }

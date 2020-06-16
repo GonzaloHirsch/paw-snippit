@@ -30,9 +30,14 @@
                     <spring:message code="search.tags.hint" var="search_hint"/>
                     <spring:message code="hide.tags.hint" var="hide_hint"/>
                     <spring:message code="show.tags.hint" var="show_hint"/>
+                    <spring:message code="hide.following.tags.hint" var="hide_following_hint"/>
+                    <spring:message code="show.following.tags.hint" var="show_following_hint"/>
                     <c:set var="search_hint" value="${search_hint}" scope="request"/>
                     <c:set var="hide_hint" value="${hide_hint}" scope="request"/>
                     <c:set var="show_hint" value="${show_hint}" scope="request"/>
+                    <c:set var="hide_following_hint" value="${hide_following_hint}" scope="request"/>
+                    <c:set var="show_following_hint" value="${show_following_hint}" scope="request"/>
+                    <c:set var="loggedUser" value="${loggedUser}" scope="request"/>
                     <c:import url="/WEB-INF/jsp/navigation/itemNavigationBar.jsp"/>
                 </div>
                 <c:choose>

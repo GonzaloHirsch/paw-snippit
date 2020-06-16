@@ -134,7 +134,7 @@ public class EmailServiceImpl implements EmailService {
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("snippetUrl", snippetUrl);
         data.put("username", username);
-        data.put("title", snippetTitle);
+        data.put("snippetTitle", snippetTitle);
         data.put("reportDetail", reportDetail);
         data.put("reportingUserName", reportingUserName);
         String body;

@@ -200,7 +200,6 @@ public class SnippetController {
                 LOGGER.error(e.getMessage() + "Failed report snippet: user {} about their snippet {}", snippet.getOwner().getUsername(), snippet.getId());
             }
             LOGGER.debug("User {} reported snippet {} with message {}", currentUser.getUsername(), id, reportForm.getReportDetail());
-            reportService.reportSnippet(currentUser.getId(), id, reportForm.getReportDetail());
 //            LOGGER.debug("User {} reported snippet {} with message {}", currentUser.getUsername(), id, reportForm.getReportDetail());
         }
         return mav;

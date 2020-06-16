@@ -1,4 +1,4 @@
-    #parse("/templates/macros/macro.vm")
+        #parse("/templates/macros/macro.vm")
 <head>
     <meta charset="UTF-8">
     <title>Reported Snippet</title>
@@ -109,7 +109,7 @@
                 #msgArgs("email.reported.greeting", [${username}])
             </h1>
             <p class="center black-text info full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-size: 20px;align-items: center;justify-content: center;text-align: center;width: 100%;color: black !important;">
-                #msgArgs("email.reported.description", [${snippetName}, ${reportingUserName}])
+                #msgArgs("email.reported.description", [${snippetTitle}, ${reportingUserName}])
             </p>
             <p>
                 ${reportDetail}

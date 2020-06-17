@@ -56,6 +56,10 @@ public class Tag {
         this.snippetsUsingIsEmpty = snippetsUsingIsEmpty;
     }
 
+    public void setFollowingUsers(Collection<User> followingUsers) {
+        this.followingUsers= followingUsers;
+    }
+
     @Override
     public boolean equals(Object o) {
 

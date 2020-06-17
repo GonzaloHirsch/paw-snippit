@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Locale;
 
@@ -10,9 +9,25 @@ public final class TestConstants {
     static final String USER_USERNAME = "Username";
     static final String USER_USERNAME2 = "Username2";
     static final String USER_USERNAME3 = "userNAME123";
-    static final String USER_EMAIL3 = "user@gmail.com";
+    static final String USER_USERNAME4 = "userNAME4";
+    static final String USER_USERNAME5 = "userNAME5";
+    static final String USER_USERNAME6 = "userNAME6";
+    static final String USER_USERNAME7 = "userNAME7";
+    static final String USER_USERNAME8 = "userNAME8";
+    static final String USER_USERNAME9 = "userNAME9";
+    static final String USER_USERNAME10 = "userNAME10";
+
     static final String USER_EMAIL = "email@email.com";
     static final String USER_EMAIL2 = "email2@email.com";
+    static final String USER_EMAIL3 = "user3@gmail.com";
+    static final String USER_EMAIL4 = "user4@gmail.com";
+    static final String USER_EMAIL5 = "user5@gmail.com";
+    static final String USER_EMAIL6 = "user6@gmail.com";
+    static final String USER_EMAIL7 = "user7@gmail.com";
+    static final String USER_EMAIL8 = "user8@gmail.com";
+    static final String USER_EMAIL9 = "user9@gmail.com";
+    static final String USER_EMAIL10 = "user10@gmail.com";
+
     static final Locale LOCALE_EN = new Locale("en","EN");
     static final Locale LOCALE_ES = new Locale("es","ES");
     static final Instant USER_DATE = Instant.now();
@@ -72,6 +87,33 @@ public final class TestConstants {
 
     static final String GENERAL_TERM = "3";
 
+    /* Snippet Deep Criteria Testing */
+
+    static final Instant DATE_1 = Instant.parse("2018-11-30T18:35:24.00Z");
+    static final Instant DATE_2 = Instant.parse("2014-11-30T18:35:24.00Z");
+    static final Instant DATE_3 = Instant.parse("2016-11-30T18:35:24.00Z");
+    static final Instant DATE_4 = Instant.parse("2016-12-30T18:35:24.00Z");
+    static final Instant DATE_5 = Instant.parse("2016-12-30T19:35:24.00Z");
+    static final Instant DATE_6 = Instant.parse("2016-12-30T18:34:24.00Z");
+    static final Instant DATE_7 = Instant.parse("2013-11-30T18:35:24.00Z");
+    static final Instant DATE_8 = Instant.parse("2012-11-30T18:35:24.00Z");
+    static final Instant DATE_9 = Instant.parse("2011-11-30T18:35:24.00Z");
+    static final Instant DATE_MIN_MINUTES = Instant.parse("2016-12-30T18:30:00.00Z");
+    static final Instant DATE_MAX_MINUTES = Instant.parse("2016-12-30T18:40:00.00Z");
+    static final Instant DATE_MIN_YEAR = Instant.parse("2016-01-01T00:00:00.00Z");
+    static final Instant DATE_MAX_YEAR = Instant.parse("2017-01-01T00:00:00.00Z");
+
+    static final int REP_VALUE_1 = -10;
+    static final int REP_VALUE_2 = -1;
+    static final int REP_VALUE_3 = 0;
+    static final int REP_VALUE_4 = 5;
+    static final int REP_VALUE_5 = 10;
+    static final int REP_VALUE_6 = 10000000;
+
+    static final int VOTE_VALUE_1 = 0;
+    static final int VOTE_VALUE_2 = 5;
+    static final int VOTE_VALUE_3 = 10;
+    static final int VOTE_VALUE_4 = 10000000;
 
     private TestConstants() {
         throw new AssertionError();

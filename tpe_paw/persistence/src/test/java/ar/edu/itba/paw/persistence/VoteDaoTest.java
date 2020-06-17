@@ -1,204 +1,177 @@
-//package ar.edu.itba.paw.persistence;
-//
-//import ar.edu.itba.paw.interfaces.dao.SnippetDao;
-//import ar.edu.itba.paw.interfaces.dao.TagDao;
-//import ar.edu.itba.paw.interfaces.dao.UserDao;
-//import ar.edu.itba.paw.interfaces.dao.VoteDao;
-//import ar.edu.itba.paw.models.Language;
-//import ar.edu.itba.paw.models.Snippet;
-//import ar.edu.itba.paw.models.User;
-//import ar.edu.itba.paw.models.Vote;
-//import org.junit.Before;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.Mockito;
-//import org.mockito.MockitoAnnotations;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.jdbc.core.JdbcTemplate;
-//import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-//import org.springframework.test.context.ContextConfiguration;
-//import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-//import org.springframework.test.jdbc.JdbcTestUtils;
-//
-//import javax.sql.DataSource;
-//
-//import java.util.Collection;
-//import java.util.Optional;
-//
-//import static ar.edu.itba.paw.persistence.TestConstants.*;
-//
-//import static junit.framework.TestCase.*;
-//
-//
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(classes = TestConfig.class)
-//public class VoteDaoTest {
-//
-//    @Autowired
-//    private DataSource ds;
-//
-//    @InjectMocks
-//    private VoteDao voteDao;
-//
-//    @Mock
-//    private SnippetDao mockSnippetDao;
-//    @Mock
-//    private UserDao mockUserDao;
-//
-//    private JdbcTemplate jdbcTemplate;
-//    private SimpleJdbcInsert jdbcInsertVotesFor;
-//
-//
-//    private User defaultUser;
-//    private long defaultSnippetId;
-//
-//
-//    @Before
-//    public void setUp() {
-//        jdbcTemplate = new JdbcTemplate(ds);
-////        voteDao = new VoteDaoImpl(ds);
-//        MockitoAnnotations.initMocks(this); // Replaces @RunWith(MockitJUnitRunner.class)
-//
-//        jdbcInsertVotesFor = new SimpleJdbcInsert(ds).withTableName(VOTES_FOR_TABLE);
-//        SimpleJdbcInsert jdbcInsertSnippet= new SimpleJdbcInsert(ds).withTableName(SNIPPETS_TABLE).usingGeneratedKeyColumns("id");
-//        SimpleJdbcInsert jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
-//        SimpleJdbcInsert jdbcInsertLanguage = new SimpleJdbcInsert(ds).withTableName(LANGUAGES_TABLE).usingGeneratedKeyColumns("id");
-//
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-//        defaultUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR,LOCALE_EN);
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,LANGUAGES_TABLE);
-//        long languageId = insertLanguageIntoDb(jdbcInsertLanguage,LANGUAGE);
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,SNIPPETS_TABLE);
-//        defaultSnippetId = insertSnippetIntoDb(jdbcInsertSnippet,defaultUser.getId(),TITLE,DESCR,CODE,languageId,0);
-//
-//    }
-//
-//
-//    @Test
-//    public void testAddVote() {
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
-//        //To mock a method of the same class.
-//        VoteDao voteSpyDao = Mockito.spy(voteDao);
-//        Mockito.doReturn(Optional.empty()).when(voteSpyDao).getVote(defaultUser.getId(),defaultSnippetId);
-//
-//        voteSpyDao.addVote(defaultUser.getId(),defaultSnippetId,true);
-//
-//        assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,VOTES_FOR_TABLE));
-//
-//    }
-//
-//    //To test when the vote is already in the DB.
-//    @Test
-//    public void testAddVote2() {
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
-//        insertVotesForIntoDb(jdbcInsertVotesFor,defaultSnippetId,defaultUser.getId(),-1);
-//        //To mock a method of the same class.
-//        VoteDao voteSpyDao = Mockito.spy(voteDao);
-//        Mockito.doReturn(Optional.of(new Vote(defaultUser,null,false))).when(voteSpyDao).getVote(defaultUser.getId(),defaultSnippetId);
-//
-//        voteSpyDao.addVote(defaultUser.getId(),defaultSnippetId,true);
-//
-//        assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,VOTES_FOR_TABLE));
-//
-//    }
-//
-//    @Test
-//    public void testGetVote(){
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
-//        insertVotesForIntoDb(jdbcInsertVotesFor,defaultSnippetId,defaultUser.getId(),1);
-//        Mockito.when(mockSnippetDao.findSnippetById(defaultSnippetId)).thenReturn(Optional.of(new Snippet(defaultSnippetId,defaultUser,CODE,TITLE, DESCR,null,null,null,0,false)));
-//        Mockito.when(mockUserDao.findUserById(defaultUser.getId())).thenReturn(Optional.of(defaultUser));
-//
-//        Optional<Vote> maybeVote = voteDao.getVote(defaultUser.getId(),defaultSnippetId);
-//
-//        assertTrue(maybeVote.isPresent());
-////        assertEquals(defaultSnippetId, maybeVote.get().getSnippet().getId());
-//        assertEquals(defaultUser.getId(),maybeVote.get().getUser().getId());
-//        assertTrue(maybeVote.get().isPositive());
-//    }
-//
-//    @Test
-//    public void testGetVoteNotExists(){
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
-//        Mockito.when(mockSnippetDao.findSnippetById(defaultSnippetId)).thenReturn(Optional.of(new Snippet(defaultSnippetId,defaultUser,CODE,TITLE, DESCR,null,null,null,0,false)));
-//        Mockito.when(mockUserDao.findUserById(defaultUser.getId())).thenReturn(Optional.of(defaultUser));
-//
-//        Optional<Vote> maybeVote = voteDao.getVote(defaultUser.getId(),defaultSnippetId);
-//
-//        assertFalse(maybeVote.isPresent());
-//    }
-//
-//    @Test
-//    public void testGetUserVotes(){
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
-//        insertVotesForIntoDb(jdbcInsertVotesFor,defaultSnippetId,defaultUser.getId(),1);
-//        Mockito.when(mockSnippetDao.findSnippetById(defaultSnippetId)).thenReturn(Optional.of(new Snippet(defaultSnippetId,defaultUser,CODE,TITLE, DESCR,null,null,null,0,false)));
-//        Mockito.when(mockUserDao.findUserById(defaultUser.getId())).thenReturn(Optional.of(defaultUser));
-//
-//        Collection<Vote> maybeVotes = voteDao.getUserVotes(defaultUser.getId());
-//
-//        assertEquals(1, maybeVotes.size());
-//    }
-//
-//    @Test
-//    public void testGetUserVotesEmpty(){
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
-//        insertVotesForIntoDb(jdbcInsertVotesFor,defaultSnippetId,defaultUser.getId(),1);
-//        Mockito.when(mockSnippetDao.findSnippetById(defaultSnippetId)).thenReturn(Optional.of(new Snippet(defaultSnippetId,defaultUser,CODE,TITLE, DESCR,null,null,null,0,false)));
-//        Mockito.when(mockUserDao.findUserById(defaultUser.getId())).thenReturn(Optional.of(defaultUser));
-//
-//        Collection<Vote> maybeVotes = voteDao.getUserVotes(defaultUser.getId()+10);
-//
-//        assertEquals(0, maybeVotes.size());
-//    }
-//
-//    @Test
-//    public void testWithdrawVote(){
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
-//        insertVotesForIntoDb(jdbcInsertVotesFor,defaultSnippetId,defaultUser.getId(),1);
-//
-//        voteDao.withdrawVote(defaultUser.getId(),defaultSnippetId);
-//
-//        assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate,VOTES_FOR_TABLE));
-//    }
-//
-//    @Test
-//    public void testWithdrawVoteEmpty(){
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
-//        insertVotesForIntoDb(jdbcInsertVotesFor,defaultSnippetId,defaultUser.getId(),1);
-//
-//        voteDao.withdrawVote(defaultUser.getId(),defaultSnippetId+10);
-//
-//        assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,VOTES_FOR_TABLE));
-//    }
-//
-//    @Test
-//    public void testGetVoteBalance(){
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate,VOTES_FOR_TABLE);
-//        insertVotesForIntoDb(jdbcInsertVotesFor,defaultSnippetId,defaultUser.getId(),1);
-//
-//        Optional<Integer> maybeVoteBalance = voteDao.getVoteBalance(defaultSnippetId);
-//
-//        assertTrue(maybeVoteBalance.isPresent());
-//        assertEquals(Integer.valueOf(1), maybeVoteBalance.get());
-//    }
-//
-//}
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+package ar.edu.itba.paw.persistence;
+
+import ar.edu.itba.paw.interfaces.dao.VoteDao;
+import ar.edu.itba.paw.models.Language;
+import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.Vote;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestConfig.class)
+@Transactional
+public class VoteDaoTest {
+
+    @Autowired
+    private VoteDao voteDao;
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Before
+    public void setUp() {
+
+    }
+
+    @Test
+    public void testGetVotePositiveExists(){
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        Snippet snip1 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
+
+        TestMethods.insertVote(em, user, snip1, true);
+
+        Optional<Vote> vote = voteDao.getVote(user.getId(), snip1.getId());
+
+        Assert.assertTrue(vote.isPresent());
+        Assert.assertEquals(user, vote.get().getUser());
+        Assert.assertEquals(snip1, vote.get().getSnippet());
+    }
+
+    @Test
+    public void testGetVoteNegativeExists(){
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        Snippet snip1 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
+
+        TestMethods.insertVote(em, user, snip1, false);
+
+        Optional<Vote> vote = voteDao.getVote(user.getId(), snip1.getId());
+
+        Assert.assertTrue(vote.isPresent());
+        Assert.assertEquals(user, vote.get().getUser());
+        Assert.assertEquals(snip1, vote.get().getSnippet());
+    }
+
+
+    @Test
+    public void testGetVoteNotExists(){
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        Snippet snip1 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
+
+        Optional<Vote> vote = voteDao.getVote(user.getId(), snip1.getId());
+
+        Assert.assertFalse(vote.isPresent());
+    }
+
+
+    @Test
+    public void testGetUserVotes(){
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        Snippet snip1 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
+        Snippet snip2 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, TestConstants.DATE_2, language, Collections.emptyList(), false, false);
+
+        Vote vote1 = TestMethods.insertVote(em, user, snip1, true);
+        Vote vote2 = TestMethods.insertVote(em, user, snip2, false);
+        user.setVotes(Arrays.asList(vote1, vote2));
+
+        Collection<Vote> votes = voteDao.getUserVotes(user.getId());
+
+        Assert.assertEquals(2, votes.size());
+    }
+
+    @Test
+    public void testGetUserVotesDeletedSnippet(){
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        Snippet snip1 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, true);
+        Snippet snip2 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, TestConstants.DATE_2, language, Collections.emptyList(), false, false);
+
+        Vote vote1 = TestMethods.insertVote(em, user, snip1, true);
+        Vote vote2 = TestMethods.insertVote(em, user, snip2, false);
+
+        user.setVotes(Arrays.asList(vote1, vote2));
+
+        Collection<Vote> votes = voteDao.getUserVotes(user.getId());
+
+        Assert.assertEquals(2, votes.size());
+    }
+
+    @Test
+    public void testGetUserVotesEmpty(){
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+
+        Collection<Vote> votes = voteDao.getUserVotes(user.getId());
+
+        Assert.assertTrue(votes.isEmpty());
+    }
+
+    @Test
+    public void testGetVoteBalance(){
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        User user2 = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        User user3 = TestMethods.insertUser(em, TestConstants.USER_USERNAME3, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL3, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        Snippet snip1 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
+
+        Vote vote1 = TestMethods.insertVote(em, user, snip1, true);
+        Vote vote2 = TestMethods.insertVote(em, user2, snip1, false);
+        Vote vote3 = TestMethods.insertVote(em, user3, snip1, false);
+        snip1.setVotes(Arrays.asList(vote1, vote2, vote3));
+
+        int voteBalance = voteDao.getVoteBalance(snip1.getId());
+
+        Assert.assertEquals(-1, voteBalance);
+    }
+
+    @Test
+    public void testGetVotePositiveBalance(){
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        User user2 = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        User user3 = TestMethods.insertUser(em, TestConstants.USER_USERNAME3, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL3, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        Snippet snip1 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
+
+        Vote vote1 = TestMethods.insertVote(em, user, snip1, true);
+        Vote vote2 = TestMethods.insertVote(em, user2, snip1, true);
+        Vote vote3 = TestMethods.insertVote(em, user3, snip1, true);
+        snip1.setVotes(Arrays.asList(vote1, vote2, vote3));
+
+        int voteBalance = voteDao.getVoteBalance(snip1.getId());
+
+        Assert.assertEquals(3, voteBalance);
+    }
+
+    @Test
+    public void testGetVoteBalanceNoVotes() {
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        Snippet snip1 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
+        
+        Assert.assertEquals(0, voteDao.getVoteBalance(snip1.getId()));
+    }
+
+    @Test
+    public void testGetVoteBalanceNoneExistingSnippet() {
+        Assert.assertEquals(0, voteDao.getVoteBalance(TestConstants.SNIPPET_INVALID_ID));
+    }
+
+}
+
+

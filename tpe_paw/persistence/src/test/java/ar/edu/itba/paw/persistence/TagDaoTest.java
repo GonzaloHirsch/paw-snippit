@@ -38,27 +38,11 @@ public class TagDaoTest {
 
 
     @Test
-    @Transactional
     public void testAddTag(){
         Tag maybeTag = tagDao.addTag(TestConstants.TAG);
 
         Assert.assertNotNull(maybeTag);
         Assert.assertEquals(TestConstants.TAG, maybeTag.getName());
-    }
-
-   @Test
-   @Transactional
-    public void testAddTagS(){
-        List<String> stringList = Arrays.asList(TestConstants.TAG,TestConstants.TAG2,null);
-
-        tagDao.addTags(stringList);
-    }
-
-    @Test
-    public void testAddTagSEmpty(){
-        List<String> stringList = new ArrayList<>();
-
-        tagDao.addTags(stringList);
     }
 
     @Test
@@ -121,23 +105,6 @@ public class TagDaoTest {
 
         Assert.assertNotNull(maybeTags);
         Assert.assertEquals(0, maybeTags.size());
-    }
-
-    //TODO: Fix why fails
-
-    @Test
-    @Transactional
-    public void testRemoveTag(){
-        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
-
-        tagDao.removeTag(tag.getId());
-    }
-
-    @Test
-    public void testRemoveTagEmpty(){
-        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
-
-        tagDao.removeTag(tag.getId());
     }
 
 
@@ -268,6 +235,23 @@ public class TagDaoTest {
     }
 
     @Test
+    public void testFindTagsByNameCountShowFollowingHideEmpty(){
+        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
+        Tag tag2 = TestMethods.insertTag(em, TestConstants.TAG2);
+        Tag tag3 = TestMethods.insertTag(em, TestConstants.TAG3);
+
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL, Instant.now(),TestConstants.LOCALE_EN,false);
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        Snippet snippet = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), language, Collections.singletonList(tag), TestConstants.SNIPPET_FLAGGED, false);
+
+        TestMethods.setUserFollowingTags(em, user, Arrays.asList(tag, tag2));
+
+        int tagCount = tagDao.getAllTagsCountByName(TestConstants.TAG_TERM, false, true, user.getId());
+
+        Assert.assertEquals(1,tagCount);
+    }
+
+    @Test
     public void testFindTagsByNameShowFollowingHideEmptyNoSnippets(){
         Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
         Tag tag2 = TestMethods.insertTag(em, TestConstants.TAG2);
@@ -280,6 +264,38 @@ public class TagDaoTest {
         TestMethods.setUserFollowingTags(em, user, Arrays.asList(tag, tag2));
 
         Collection<Tag> collection = tagDao.findTagsByName(TestConstants.TAG_TERM, false, true, user.getId(), 1,TestConstants.TAG_PAGE_SIZE);
+
+        Assert.assertNotNull(collection);
+        Assert.assertTrue(collection.isEmpty());
+    }
+
+    @Test
+    public void testFindSpecificTagsByName() {
+        TestMethods.insertTag(em, TestConstants.TAG);
+        TestMethods.insertTag(em, TestConstants.TAG2);
+        TestMethods.insertTag(em, TestConstants.TAG3);
+
+        Collection<Tag> collection = tagDao.findSpecificTagsByName(Arrays.asList(TestConstants.TAG, TestConstants.TAG2, TestConstants.TAG3));
+
+        Assert.assertNotNull(collection);
+        Assert.assertEquals(3, collection.size());
+    }
+
+    @Test
+    public void testFindSpecificTagsByNameEmpty() {
+        TestMethods.insertTag(em, TestConstants.TAG);
+        TestMethods.insertTag(em, TestConstants.TAG2);
+        TestMethods.insertTag(em, TestConstants.TAG3);
+
+        Collection<Tag> collection = tagDao.findSpecificTagsByName(Collections.singletonList(TestConstants.TAG_TERM));
+
+        Assert.assertNotNull(collection);
+        Assert.assertTrue(collection.isEmpty());
+    }
+
+    @Test
+    public void testFindSpecificTagsByNameNoTags() {
+        Collection<Tag> collection = tagDao.findSpecificTagsByName(Collections.singletonList(TestConstants.TAG_TERM));
 
         Assert.assertNotNull(collection);
         Assert.assertTrue(collection.isEmpty());

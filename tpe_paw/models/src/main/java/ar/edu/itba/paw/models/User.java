@@ -55,10 +55,10 @@ public class User {
         name= "user_roles",
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles;
+    private Collection<Role> roles = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private Collection<Vote> votes;
+    private Collection<Vote> votes = new HashSet<>();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE},fetch = FetchType.LAZY, mappedBy = "user")
     private Collection<Report> reports = new HashSet<>();
@@ -68,17 +68,17 @@ public class User {
             name = "favorites",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "snippet_id"))
-    private Collection<Snippet> favorites;
+    private Collection<Snippet> favorites= new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "follows",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Collection<Tag> followedTags;
+    private Collection<Tag> followedTags = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner", cascade = CascadeType.PERSIST)
-    private Collection<Snippet> createdSnippets;
+    private Collection<Snippet> createdSnippets = new HashSet<>();
 
     protected User() {
         // Hibernate constructor
@@ -259,4 +259,18 @@ public class User {
         return this.getId().equals(user.getId());
     }
 
+    @Override public int hashCode() {
+        return this.getId().hashCode();
+    }
+
+    /**
+     * Returns a brief description of this user. The exact details
+     * of the representation are unspecified and subject to change,
+     * but the following may be regarded as typical:
+     *
+     * "[User #12: username=user123, email=user123@gmail.com]"
+     */
+    @Override public String toString() {
+        return String.format("User #%d: username=%s, email=%s]", this.getId(), this.getUsername(), this.getEmail());
+    }
 }

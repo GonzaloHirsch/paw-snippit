@@ -26,6 +26,12 @@ public class VoteServiceImpl implements VoteService {
         return this.voteDao.getVote(userId, snippetId);
     }
 
+    @Override
+    public int getVoteWeight(final long userId, final long snippetId) {
+        Optional<Vote> vote = this.getVote(userId, snippetId);
+        return vote.map(Vote::getVoteWeight).orElse(0);
+    }
+
     @Transactional
     @Override
     public void performVote(final long userId, final long snippetId, final int voteType, final int oldVoteType) {
@@ -49,7 +55,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public Optional<Integer> getVoteBalance(final long snippetId) {
+    public int getVoteBalance(final long snippetId) {
         return voteDao.getVoteBalance(snippetId);
     }
 }

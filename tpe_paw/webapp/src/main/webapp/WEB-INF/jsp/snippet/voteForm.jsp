@@ -26,7 +26,7 @@
                 </c:choose>
             </label>
             <label class="flex-center vote-count">
-                ${votes}
+                <c:out value="${votes}"/>
             </label>
             <form:radiobutton class="hidden" id="vote-down-button" path="type" value="-1" onclick="updateForm(this)"/>
             <label for="vote-down-button">

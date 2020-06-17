@@ -10,7 +10,7 @@ public class Vote {
      * Method to set the Embedded Id of the vote object
      */
     @PrePersist
-    private void prePersiste() {
+    private void prePersist() {
         if (this.id == null) {
             this.id = new VoteId(this.user.getId(), this.snippet.getId());
         }
@@ -61,5 +61,20 @@ public class Vote {
 
     public int getVoteWeight() {
         return isPositive ? 1 : -1;
+    }
+    
+
+    /**
+     * Returns the string representation of this Vote.
+     * The string consists of the Class name, the id of the
+     * user that voted, the snippet id the vote was directed at,
+     * and a boolean to specify if the vote was positive or negative.
+     * The exact details of the representation are unspecified
+     * and subject to change, but the following may be regarded as typical:
+     *
+     * Example: "[Vote: userId=12, snippetId=30, isPositive=true]"
+     */
+    @Override public String toString() {
+        return String.format("[Vote: user=%d, snippet=%d, isPositive=%b]", this.getUser().getId(), this.getSnippet().getId(), this.isPositive());
     }
 }

@@ -9,6 +9,9 @@
 </head>
 
 <body>
+<spring:message var="unfollow" code="tags.unfollow"/>
+<spring:message var="follow" code="tags.follow"/>
+
 <div class="flex-column">
     <c:set var="tagtId" value="${requestScope.tagId}"/>
     <c:url var="tagFollowUrl" value="/tags/${tagId}/follow"/>
@@ -18,12 +21,12 @@
             <c:choose>
                 <c:when test="${followForm.follows}">
                     <div class="tag-snippets-button border-radius flex-center no-text-decoration">
-                        <spring:message code="tags.unfollow"/>
+                        <c:out value="${unfollow}"/>
                     </div>
                 </c:when>
                 <c:otherwise>
                     <div class="tag-snippets-button border-radius flex-center no-text-decoration">
-                        <spring:message code="tags.follow"/>
+                        <c:out value="${follow}"/>
                     </div>
                 </c:otherwise>
             </c:choose>

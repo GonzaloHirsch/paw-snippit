@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.dao.LanguageDao;
 import ar.edu.itba.paw.interfaces.service.LanguageService;
+import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.models.Language;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,8 @@ import java.util.Optional;
 @Service
 public class LanguageServiceImpl implements LanguageService {
 
-    @Autowired
-    private LanguageDao languageDao;
+    @Autowired private LanguageDao languageDao;
+    @Autowired private SnippetService snippetService;
 
     @Override
     public Optional<Language> findById(long id) {
@@ -71,10 +72,9 @@ public class LanguageServiceImpl implements LanguageService {
         this.languageDao.removeLanguage(langId);
     }
 
-    @Transactional
     @Override
-    public boolean languageInUse(final long langId) {
-        return this.languageDao.languageInUse(langId);
+    public void analizeSnippetsUsing(Language language) {
+        int amount = this.snippetService.getAllSnippetsByLanguageCount(language.getId());
+        language.setSnippetsUsingIsEmpty(amount == 0);
     }
-
 }

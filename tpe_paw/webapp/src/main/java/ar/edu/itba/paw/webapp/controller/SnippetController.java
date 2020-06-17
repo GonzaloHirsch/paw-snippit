@@ -55,6 +55,8 @@ public class SnippetController {
             BindingResult errors
     ) {
         final ModelAndView mav = new ModelAndView("snippet/snippetDetail");
+        boolean showFavorite = true;
+
         // Snippet
         Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
         retrievedSnippet.ifPresent(snippet -> {
@@ -64,6 +66,7 @@ public class SnippetController {
         if (!retrievedSnippet.isPresent()) {
             logAndThrow(id);
         }
+        Snippet snippet = retrievedSnippet.get();
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
@@ -72,44 +75,36 @@ public class SnippetController {
             Collection<Tag> userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
             mav.addObject("userTags", userTags);
             mav.addObject("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
+            mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
 
             // Vote
-            Optional<Vote> vote = this.voteService.getVote(currentUser.getId(), retrievedSnippet.get().getId());
-            int voteType = 0;
-            if (vote.isPresent()) {
-                voteType = vote.get().getVoteWeight();
-            }
+            int voteType = this.voteService.getVoteWeight(currentUser.getId(), snippet.getId());
+
             voteForm.setType(voteType);
             voteForm.setOldType(voteType);
 
             // Fav
-            favForm.setFavorite(currentUser.getFavorites().contains(retrievedSnippet.get()));
+            showFavorite = currentUser.getFavorites().contains(snippet);
+            favForm.setFavorite(showFavorite);
 
-            // Delete
-            deleteForm.setDelete(retrievedSnippet.get().isDeleted());
+            //Delete
+            deleteForm.setDelete(snippet.isDeleted());
 
             // Report
-            Optional<Report> report = this.reportService.getReport(currentUser.getId(),retrievedSnippet.get().getId());
+            Optional<Report> report = this.reportService.getReport(currentUser.getId(), snippet.getId());
             reportForm.setReported(report.isPresent());
             mav.addObject("displayReportDialog", errors.hasErrors());
             mav.addObject("canReport", reportService.canReport(currentUser));
 
             if (roleService.isAdmin(currentUser.getId())) {
-                adminFlagForm.setFlagged(retrievedSnippet.get().isFlagged());
-                mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
+                adminFlagForm.setFlagged(snippet.isFlagged());
             }
         } else {
             mav.addObject("userRoles", Collections.emptyList());
         }
 
-        // Vote Count
-        Optional<Integer> voteCount = this.voteService.getVoteBalance(retrievedSnippet.get().getId());
-        if (voteCount.isPresent()){
-            mav.addObject("voteCount",voteCount.get());
-        } else {
-            mav.addObject("voteCount",0);
-        }
-
+        mav.addObject("showFavorite", showFavorite || !snippet.isDeleted());
+        mav.addObject("voteCount", this.voteService.getVoteBalance(snippet.getId()));
         mav.addObject("searchContext","");
         return mav;
     }

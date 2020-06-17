@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "languages")
@@ -19,7 +20,9 @@ public class Language {
     private boolean deleted;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "language", cascade = CascadeType.PERSIST)
-    private Collection<Snippet> snippetsUsing;
+    private Collection<Snippet> snippetsUsing = new HashSet<>();
+
+    private Boolean snippetsUsingIsEmpty = null;
 
     protected Language(){
         // Hibernate constructor
@@ -41,8 +44,13 @@ public class Language {
     public void setSnippetsUsing(Collection<Snippet> snippetsUsing) {
         this.snippetsUsing = snippetsUsing;
     }
-    public boolean snippetsUsingIsEmpty() {
-        return this.getSnippetsUsing().stream().allMatch(Snippet::isDeleted);
+
+    public Boolean getSnippetsUsingIsEmpty() {
+        return snippetsUsingIsEmpty;
+    }
+
+    public void setSnippetsUsingIsEmpty(Boolean snippetsUsingIsEmpty) {
+        this.snippetsUsingIsEmpty = snippetsUsingIsEmpty;
     }
 
     public boolean isDeleted() {
@@ -64,5 +72,20 @@ public class Language {
         }
         Language tag = (Language) o;
         return this.getId().equals(tag.getId());
+    }
+
+    @Override public int hashCode() {
+        return this.getId().hashCode();
+    }
+
+    /**
+     * Returns a brief description of this language. The exact details
+     * of the representation are unspecified and subject to change,
+     * but the following may be regarded as typical:
+     *
+     * "[Language #12: name=java]"
+     */
+    @Override public String toString() {
+        return String.format("Language #%d: name=%s]", this.getId(), this.getName());
     }
 }

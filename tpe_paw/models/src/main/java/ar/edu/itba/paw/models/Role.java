@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 @Entity
@@ -18,7 +19,7 @@ public class Role {
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles", cascade = CascadeType.PERSIST)
-    private Collection<User> usersWithRole;
+    private Collection<User> usersWithRole = new HashSet<>();
 
     public Role(){
         // Hibernate constructor
@@ -50,6 +51,24 @@ public class Role {
             return false;
         }
         Role role = (Role) o;
-        return this.getId().equals(role.getId());
+        return this.getId().equals(role.getId()) && this.getName().equals(role.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = this.getId().hashCode();
+        result = 31 * result + this.getName().hashCode();
+        return result;
+    }
+
+    /**
+     * Returns a brief description of this role. The exact details
+     * of the representation are unspecified and subject to change,
+     * but the following may be regarded as typical:
+     *
+     * "[Role #1: name=USER]"
+     */
+    @Override public String toString() {
+        return String.format("Role #%d: name=%s]", this.getId(), this.getName());
     }
 }

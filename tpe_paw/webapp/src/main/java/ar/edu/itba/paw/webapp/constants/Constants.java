@@ -9,10 +9,17 @@ public final class Constants {
 
     public static final String REFERER = "Referer";
     public static final String HOME = "/";
+    public static final String REDIRECT_ATTRIBUTE = "url_prior_login";
 
     public static final String OWNER_DELETED_CONTEXT = "deleted";
     public static final String OWNER_ACTIVE_CONTEXT = "active";
     public static final String USER_PROFILE_CONTEXT = "";
 
-    private Constants(){}
+    /*
+     * "The AssertionError isn’t strictly required, but it provides insurance in case the
+     *  constructor is accidentally invoked from within the class" - Page 19, Effective Java
+     */
+    private Constants() {
+        throw new AssertionError();
+    }
 }

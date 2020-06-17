@@ -63,7 +63,7 @@ public class  UserController {
     ) {
         User user = this.getUserWithId(id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null || !user.getId().equals(currentUser.getId())) {
+        if (currentUser == null || !user.equals(currentUser)) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));
         }
 
@@ -82,7 +82,7 @@ public class  UserController {
     ) {
         User user = this.getUserWithId(id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null || !user.getId().equals(currentUser.getId())) {
+        if (currentUser == null || !user.equals(currentUser)) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));
         }
 
@@ -106,7 +106,7 @@ public class  UserController {
         String tabContext = "";
 
         //The context is "" but it is my profile --> change it to active
-        if (currentUser != null && currentUser.getId().equals(user.getId())){
+        if (currentUser != null && currentUser.equals(user)){
             searchContext.append(Constants.OWNER_ACTIVE_CONTEXT).append("/");
             tabContext = Constants.OWNER_ACTIVE_CONTEXT;
         }
@@ -185,7 +185,7 @@ public class  UserController {
         }
         User currentUser = this.loginAuthentication.getLoggedInUser();
         User user = this.getUserWithId(id);
-        if (currentUser != null && currentUser.getId().equals(user.getId())) {
+        if (currentUser != null && currentUser.equals(user)) {
             this.userService.changeDescription(id, descriptionForm.getDescription());
         } else {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));

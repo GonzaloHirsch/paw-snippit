@@ -12,6 +12,17 @@
         <script src="<c:url value='/resources/js/searchForm.js'/>"></script>
         </head>
         <body>
+        <spring:message code="menu.profile" var="menuProfile"/>
+        <spring:message code="menu.home" var="menuHome"/>
+        <spring:message code="menu.flagged" var="menuFlagged"/>
+        <spring:message code="menu.following" var="menuFollowing"/>
+        <spring:message code="menu.favorites" var="menuFavorites"/>
+        <spring:message code="menu.tags" var="menuTags"/>
+        <spring:message code="menu.languages" var="menuLanguages"/>
+        <spring:message code="menu.explore" var="menuExplore"/>
+        <spring:message code="menu.upvoted" var="menuUpvoted"/>
+        <spring:message code="menu.logout" var="menuLogout"/>
+
         <c:set var="currentUser" value="${requestScope.currentUser}"/>
         <c:set var="userTags" value="${requestScope.userTags}"/>
         <c:url var="userTagsCount" value="${requestScope.userTagsCount}"/>
@@ -37,48 +48,54 @@
             <c:when test="${searchContext == ''}">
                 <a class="fw-100 menu-option menu-selected" href="<c:url value="/"/>"><span
                 class="material-icons menu-option-icon">home</span>
-                <spring:message code="menu.home"/></a>
+                <c:out value="${menuHome}"/>
+                </a>
             </c:when>
             <c:otherwise>
                 <a class="fw-100 menu-option" href="<c:url value="/"/>"><span
                 class="material-icons menu-option-icon">home</span>
-                <spring:message code="menu.home"/></a>
+                <c:out value="${menuHome}"/></a>
             </c:otherwise>
         </c:choose>
         <c:choose>
             <c:when test="${searchContext == 'tags/'}">
                 <a class="fw-100 menu-option menu-selected" href="<c:url value="/tags/"/>"><span
                 class="material-icons menu-option-icon">local_offer</span>
-                <spring:message code="menu.tags"/></a>
+                <c:out value="${menuTags}"/></a>
             </c:when>
             <c:otherwise>
                 <a class="fw-100 menu-option" href="<c:url value="/tags/"/>"><span
                 class="material-icons menu-option-icon">local_offer</span>
-                <spring:message code="menu.tags"/></a>
+                <c:out value="${menuTags}"/>
+                </a>
             </c:otherwise>
         </c:choose>
         <c:choose>
             <c:when test="${searchContext == 'languages/'}">
                 <a class="fw-100 menu-option menu-selected" href="<c:url value="/languages/"/>"><span
                 class="material-icons menu-option-icon">desktop_windows</span>
-                <spring:message code="menu.languages"/></a>
+                <c:out value="${menuLanguages}"/>
+                </a>
             </c:when>
             <c:otherwise>
                 <a class="fw-100 menu-option" href="<c:url value="/languages/"/>"><span
                 class="material-icons menu-option-icon">desktop_windows</span>
-                <spring:message code="menu.languages"/></a>
+                <c:out value="${menuLanguages}"/>
+                </a>
             </c:otherwise>
         </c:choose>
         <c:choose>
             <c:when test="${searchContext == 'explore/'}">
                 <a class="fw-100 menu-option menu-selected" href="<c:url value="/explore/"/>"><span
                 class="material-icons menu-option-icon">search</span>
-                <spring:message code="menu.explore"/></a>
+                <c:out value="${menuExplore}"/>
+                </a>
             </c:when>
             <c:otherwise>
                 <a class="fw-100 menu-option" href="<c:url value="/explore/"/>"><span
                 class="material-icons menu-option-icon">search</span>
-                <spring:message code="menu.explore"/></a>
+                <c:out value="${menuExplore}"/>
+                </a>
             </c:otherwise>
         </c:choose>
         <c:if test="${currentUser != null}">
@@ -95,7 +112,7 @@
                             <c:if test="${currentUser.icon == null}">
                                 <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
                             </c:if>
-                            <spring:message code="menu.profile"/>
+                            <c:out value="${menuProfile}"/>
                             </a>
                         </c:when>
                         <c:otherwise>
@@ -106,7 +123,8 @@
                             <c:if test="${currentUser.icon == null}">
                                 <img src="<c:url value='/resources/images/userIcon.jpg'/>" alt="User Icon"/>
                             </c:if>
-                            <spring:message code="menu.profile"/></a>
+                            <c:out value="${menuProfile}"/>
+                            </a>
                         </c:otherwise>
                     </c:choose>
                 </c:when>
@@ -115,12 +133,14 @@
                         <c:when test="${searchContext == 'flagged/'}">
                             <a class="fw-100 menu-option menu-selected" href="<c:url value="/flagged/"/>">
                             <span class="material-icons menu-option-icon">flag</span>
-                            <spring:message code="menu.flagged"/></a>
+                            <c:out value="${menuFlagged}"/>
+                            </a>
                         </c:when>
                         <c:otherwise>
                             <a class="fw-100 menu-option" href="<c:url value="/flagged/"/>"><span
                             class="material-icons menu-option-icon">flag</span>
-                            <spring:message code="menu.flagged"/></a>
+                            <c:out value="${menuFlagged}"/>
+                            </a>
                         </c:otherwise>
                     </c:choose>
                 </c:otherwise>
@@ -129,66 +149,89 @@
                 <c:when test="${searchContext == 'following/'}">
                     <a class="fw-100 menu-option menu-selected" href="<c:url value="/following/"/>">
                     <span class="material-icons menu-option-icon">loyalty</span>
-                    <spring:message code="menu.following"/></a>
+                    <c:out value="${menuFollowing}"/>
+                    </a>
                 </c:when>
                 <c:otherwise>
                     <a class="fw-100 menu-option" href="<c:url value="/following/"/>"><span
                     class="material-icons menu-option-icon">loyalty</span>
-                    <spring:message code="menu.following"/></a>
+                    <c:out value="${menuFollowing}"/>
+                    </a>
                 </c:otherwise>
             </c:choose>
             <c:choose>
                 <c:when test="${searchContext == 'favorites/'}">
                     <a class="fw-100 menu-option menu-selected" href="<c:url value="/favorites/"/>"><span
                     class="material-icons menu-option-icon">favorite</span>
-                    <spring:message code="menu.favorites"/></a>
+                    <c:out value="${menuFavorites}"/>
+                    </a>
                 </c:when>
                 <c:otherwise>
                     <a class="fw-100 menu-option" href="<c:url value="/favorites/"/>"><span
                     class="material-icons menu-option-icon">favorite</span>
-                    <spring:message code="menu.favorites"/></a>
+                    <c:out value="${menuFavorites}"/>
+                    </a>
                 </c:otherwise>
             </c:choose>
             <c:choose>
                 <c:when test="${searchContext == 'upvoted/'}">
                     <a class="fw-100 menu-option menu-selected" href="<c:url value="/upvoted/"/>"><span
                     class="material-icons menu-option-icon">thumb_up</span>
-                    <spring:message code="menu.upvoted"/></a>
+                    <c:out value="${menuUpvoted}"/>
+                    </a>
                 </c:when>
                 <c:otherwise>
                     <a class="fw-100 menu-option" href="<c:url value="/upvoted/"/>"><span
                     class="material-icons menu-option-icon">thumb_up</span>
-                    <spring:message code="menu.upvoted"/></a>
+                    <c:out value="${menuUpvoted}"/>
+                    </a>
                 </c:otherwise>
             </c:choose>
             <c:if test="${userTags.size() > 0}">
+                <spring:message code="menu.following.others.1" var="followingOthers1"/>
+                <spring:message code="menu.following.others.many" arguments="${userTagsCount}" var="followingMany"/>
                 <hr/>
-                <span class="fw-100 section-title"><spring:message code="menu.following"/></span>
+                <span class="fw-100 section-title"><c:out value="${menuFollowing}"/></span>
                 <c:forEach var="tag" items="${userTags}">
                     <a class="fw-100 tag-section" href="<c:url value="${'/tags/'}${tag.id}"/>">${tag.name}</a>
                 </c:forEach>
                 <c:choose>
                     <c:when test="${userTagsCount == 1}">
-                        <a class="fw-100 tag-section" href="<c:url value="/following"/>"><spring:message code="menu.following.others.1"/></a>
+                        <a class="fw-100 tag-section" href="<c:url value="/following"/>"><c:out value="${followingOthers1}"/></a>
                     </c:when>
                     <c:when test="${userTagsCount > 1}">
-                        <a class="fw-100 tag-section" href="<c:url value="/following"/>"><spring:message code="menu.following.others.many" arguments="${userTagsCount}"/></a>
+                        <a class="fw-100 tag-section" href="<c:url value="/following"/>"><c:out value="${followingMany}"/></a>
                     </c:when>
                 </c:choose>
             </c:if>
             <hr/>
             <a class="fw-100 menu-option" href="<c:url value="/logout"/>">
             <span class="material-icons menu-option-icon">exit_to_app</span>
-            <spring:message code="menu.logout"/></a>
+            <c:out value="${menuLogout}"/></a>
         </c:if>
         </ul>
         </div>
+
+        <spring:message code="app.name" var="appName"/>
+        <spring:message code="search.searchby" var="searchBy"/>
+        <spring:message code="search.all" var="searchAll"/>
+        <spring:message code="search.title" var="searchTitle"/>
+        <spring:message code="search.tag" var="searchTag"/>
+        <spring:message code="search.content" var="searchContent"/>
+        <spring:message code="search.username" var="searchUser"/>
+        <spring:message code="search.language" var="searchLang"/>
+        <spring:message code="sort.sortby" var="sortBy"/>
+        <spring:message code="sort.asc" var="sortAsc"/>
+        <spring:message code="sort.desc" var="sortDesc"/>
+
+
+
         <div class="navtop flex-row flex-space-between">
         <div class="flex-center">
         <span id="menu-icon" class="material-icons menu-icon" onclick="openNav()">menu</span>
         <a class="flex-row white-text app-name fw-100" href="<c:url value="/"/>">
         <span class="material-icons navtop-icons">code</span>
-        <spring:message code="app.name"/>
+        <c:out value="${appName}"/>
         </a>
         </div>
         <c:if test="${searchContext != 'error/' && searchContext != 'explore/'}">
@@ -204,38 +247,38 @@
                 <div class="dropdown-type">
                 <form:select class="flex-center" path="type" name="Type">
                     <form:option value="all">
-                        <spring:message code="search.searchby"/>
+                        <c:out value="${searchBy}"/>
                     </form:option>
                     <form:option value="all">
-                        <spring:message code="search.all"/>
+                        <c:out value="${searchAll}"/>
                     </form:option>
                     <form:option value="title">
-                        <spring:message code="search.title"/>
+                        <c:out value="${searchTitle}"/>
                     </form:option>
                     <form:option value="tag">
-                        <spring:message code="search.tag"/>
+                        <c:out value="${searchTag}"/>
                     </form:option>
                     <form:option value="content">
-                        <spring:message code="search.content"/>
+                        <c:out value="${searchContent}"/>
                     </form:option>
                     <form:option value="username">
-                        <spring:message code="search.username"/>
+                        <c:out value="${searchUser}"/>
                     </form:option>
                     <form:option value="language">
-                        <spring:message code="search.language"/>
+                        <c:out value="${searchLang}"/>
                     </form:option>
                 </form:select>
                 </div>
                 <div class="dropdown-type">
                 <form:select path="sort" name="Sort" onchange="submitForm(this)">
                     <form:option value="no">
-                        <spring:message code="sort.sortby"/>
+                        <c:out value="${sortBy}"/>
                     </form:option>
                     <form:option value="asc">
-                        <spring:message code="sort.asc"/>
+                        <c:out value="${sortAsc}"/>
                     </form:option>
                     <form:option value="desc">
-                        <spring:message code="sort.desc"/>
+                        <c:out value="${sortDesc}"/>
                     </form:option>
                 </form:select>
                 </div>
@@ -244,13 +287,17 @@
             </div>
         </c:if>
         <div class="flex-row flex-center navtop-register-buttons">
+        <spring:message code="login.button" var="loginButton"/>
+        <spring:message code="register.button" var="registerButton"/>
+        <spring:message code="app.userWelcome" arguments="${currentUser.username}" var="userWelcome"/>
+
         <c:choose>
             <c:when test="${currentUser == null}">
                 <a class="flex-center purple-text navtop-button form-button-basics small-border-radius" href="<c:url value="/login"/>">
-                <spring:message code="login.button"/>
+                <c:out value="${loginButton}"/>
                 </a>
                 <a class="flex-center purple-text navtop-button form-button-basics small-border-radius" href="<c:url value="/signup"/>">
-                <spring:message code="register.button"/>
+                <c:out value="${registerButton}"/>
                 </a>
             </c:when>
             <c:otherwise>
@@ -267,9 +314,19 @@
                     </c:otherwise>
                 </c:choose>
 
-                <a href="<c:url value="${'/user/'}${currentUser.id}${'/active'}"/>" class="white-text flex-center navtop-welcome-text">
-                   <spring:message code="app.userWelcome" arguments="${currentUser.username}"/>
-                </a>
+                <c:choose>
+                    <c:when test="${!userRoles.contains('ADMIN')}">
+                        <a href="<c:url value="${'/user/'}${currentUser.id}${'/active'}"/>" class="white-text flex-center navtop-welcome-text">
+                            <c:out value="${userWelcome}"/>
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <!-- Admin does not have a user profile -->
+                        <div class="white-text flex-center navtop-welcome-text">
+                            <c:out value="${userWelcome}"/>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </c:otherwise>
         </c:choose>
         </div>

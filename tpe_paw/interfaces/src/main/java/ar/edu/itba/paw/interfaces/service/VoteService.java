@@ -8,8 +8,9 @@ import java.util.Optional;
 public interface VoteService {
     Collection<Vote> getUserVotes(final long userId);
     Optional<Vote> getVote(final long userId, final long snippetId);
+    int getVoteWeight(final long userId, final long snippetId);
     void performVote(final long userId, final long snippetId, final int voteType, final int oldVoteType);
     void withdrawVote(final long userId, final long snippetId);
     void addVote(final long userId, final long snippetId, boolean isPositive);
-    Optional<Integer> getVoteBalance(final long snippetId);
+    int getVoteBalance(final long snippetId);
 }

@@ -19,7 +19,7 @@
     <div class="flex-grow ${style}">
         <div class="flex-row flex-center expand">
             <a href="<c:url value='/${context}/${element.id}'/>" class="no-text-decoration fw-300 element-title flex-grow">
-                ${element.name.toUpperCase()}
+                <c:out value="${element.name.toUpperCase()}"/>
             </a>
             <c:if test="${context == 'tags' && currentUser != null}">
                 <c:set var="followForm" value="followIconForm${element.id}"/>
@@ -39,7 +39,7 @@
                     </label>
                 </form:form>
             </c:if>
-            <c:if test="${element.snippetsUsingIsEmpty()}">
+            <c:if test="${element.snippetsUsingIsEmpty != null && element.snippetsUsingIsEmpty}">
                 <div class="material-icons element-icon transition" data-toggle="tooltip" data-placement="left" title="${emptyTooltip}">block</div>
             </c:if>
         </div>

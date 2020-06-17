@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "tags")
@@ -16,10 +17,12 @@ public class Tag {
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags", cascade = CascadeType.PERSIST)
-    private Collection<Snippet> snippetsUsing;
+    private Collection<Snippet> snippetsUsing = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followedTags", cascade = CascadeType.PERSIST)
-    private Collection<User> followingUsers;
+    private Collection<User> followingUsers = new HashSet<>();
+
+    private Boolean snippetsUsingIsEmpty = null;
 
     public Tag(String name) {
         this.name = name;
@@ -35,11 +38,6 @@ public class Tag {
         // Hibernate constructor
     }
 
-    @Override
-    public String toString() {
-        return this.name;
-    }
-
     public Long getId() { return this.id; }
 
     public String getName() { return this.name; }
@@ -50,8 +48,16 @@ public class Tag {
         return followingUsers;
     }
 
-    public boolean snippetsUsingIsEmpty() {
-        return this.getSnippetsUsing().stream().allMatch(Snippet::isDeleted);
+    public Boolean getSnippetsUsingIsEmpty() {
+        return snippetsUsingIsEmpty;
+    }
+
+    public void setSnippetsUsingIsEmpty(Boolean snippetsUsingIsEmpty) {
+        this.snippetsUsingIsEmpty = snippetsUsingIsEmpty;
+    }
+
+    public void setFollowingUsers(Collection<User> followingUsers) {
+        this.followingUsers= followingUsers;
     }
 
     @Override
@@ -67,4 +73,18 @@ public class Tag {
         return this.getId().equals(tag.getId());
     }
 
+    @Override public int hashCode() {
+        return this.getId().hashCode();
+    }
+
+    /**
+     * Returns a brief description of this tag. The exact details
+     * of the representation are unspecified and subject to change,
+     * but the following may be regarded as typical:
+     *
+     * "[Tag #12: name=algorithm]"
+     */
+    @Override public String toString() {
+        return String.format("Tag #%d: name=%s]", this.getId(), this.getName());
+    }
 }

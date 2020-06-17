@@ -19,8 +19,6 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Autowired private SnippetDao snippetDao;
     @Autowired private UserService userService;
-    @Autowired private TagService tagService;
-    @Autowired private VoteService voteService;
     @Autowired private EmailService emailService;
 
     @Override

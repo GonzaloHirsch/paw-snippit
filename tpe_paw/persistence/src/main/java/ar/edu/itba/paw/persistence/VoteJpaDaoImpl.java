@@ -74,14 +74,14 @@ public class VoteJpaDaoImpl implements VoteDao {
     }
 
     @Override
-    public Optional<Integer> getVoteBalance(long snippetId) {
+    public int getVoteBalance(long snippetId) {
         Snippet snippet = this.em.find(Snippet.class, snippetId);
         if(snippet != null){
             Collection<Vote> votes = snippet.getVotes();
-            Integer result = votes.stream().mapToInt(Vote::getVoteWeight).sum();
-            return Optional.of(result);
+            int result = votes.stream().mapToInt(Vote::getVoteWeight).sum();
+            return result;
         }
 
-        return Optional.empty();
+        return 0;
     }
 }

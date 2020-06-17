@@ -42,13 +42,13 @@ public class Snippet {
     private boolean deleted;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "snippet")
-    private Collection<Vote> votes;
+    private Collection<Vote> votes = new HashSet<>();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "snippet")
     private Collection<Report> reports = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites", cascade = CascadeType.PERSIST)
-    private Collection<User> userFavorites;
+    private Collection<User> userFavorites = new HashSet<>();
 
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
@@ -56,7 +56,7 @@ public class Snippet {
             name = "snippet_tags",
             joinColumns = @JoinColumn(name = "snippet_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Collection<Tag> tags;
+    private Collection<Tag> tags = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "language_id", referencedColumnName = "id")
@@ -217,6 +217,21 @@ public class Snippet {
         }
         Snippet snippet = (Snippet) o;
         return this.getId().equals(snippet.getId());
+    }
+
+    @Override public int hashCode() {
+        return Long.hashCode(this.getId());
+    }
+
+    /**
+     * Returns a brief description of this snippet. The exact details
+     * of the representation are unspecified and subject to change,
+     * but the following may be regarded as typical:
+     *
+     * "[Snippet #12: title=Floyd Algorithm, owner=user123]"
+     */
+    @Override public String toString() {
+        return String.format("Snippet #%d: title=%s, owner=%s]", this.getId(), this.getTitle(), this.getOwner());
     }
 
 }

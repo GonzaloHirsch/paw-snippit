@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,12 +17,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StreamUtils;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
 @EnableWebSecurity
 @ComponentScan({ "ar.edu.itba.paw.webapp.auth"})
-@PropertySource("classpath:authKey.properties")
 @Configuration
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
@@ -67,7 +70,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .rememberMeParameter("rememberme")
                 .userDetailsService(userDetails)
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
-                .key("${key}")
+                .key(getRememberMeKey())
             .and().logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/goodbye")
@@ -88,6 +91,15 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    private String getRememberMeKey() {
+        ClassPathResource keyResource = new ClassPathResource("authKey.key");
+        try {
+            return StreamUtils.copyToString(keyResource.getInputStream(), Charset.defaultCharset());
+        } catch (IOException e) {
+            throw new RuntimeException("Remember me key threw IOException");
+        }
     }
 
 }

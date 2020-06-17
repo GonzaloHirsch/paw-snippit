@@ -69,8 +69,7 @@
                                   onclick="submitImageForm(this)">
                                 <spring:message code="profile.edit.save"/>
                             </span>
-                                <a id="image-discard" class="image-discard-button hidden-button"
-                                   href="<c:url value="${ownerProfile}"/>">
+                                <a id="image-discard" class="image-discard-button hidden-button" href="<c:url value="${ownerProfile}"/>">
                                     <spring:message code="profile.edit.discard"/>
                                 </a>
                             </div>
@@ -98,18 +97,17 @@
                     <div class="flex-column">
                     <div class="flex-row">
                         <div class="profile-username">
-                            ${user.username}
+                            <c:out value="${user.username}"/>
                         </div>
                         <c:if test="${currentUser.id == user.id}">
                             <c:if test="${!editing}">
                                 <a class="flex-center purple-text edit-button"
                                 href="<c:url value="/user/${user.id}/${tabContext}?editing=true"/>">
-                                <spring:message code="profile.edit"/>
+                                    <spring:message code="profile.edit"/>
                                 </a>
                             </c:if>
                             <c:if test="${editing}">
                                 <div onclick="submitDescriptionForm(this)" class="flex-center purple-text edit-button clickable-entity">
-<%--                                   href="<c:url value="/user/${user.id}/edit"/>">--%>
                                     <spring:message code="profile.edit.save"/>
                                 </div>
                                 <a class="flex-center purple-text edit-button"
@@ -121,19 +119,19 @@
                     </div>
                     <div class="fw-100">
                         <spring:message code="profile.joined"/>
-                        ${user.getDateJoined()}
+                        <c:out value="${user.getDateJoined()}"/>
                     </div>
                     <div class="flex-row profile-info-item">
                         <div class="flex-center stat-bundle">
-                            <div class="fw-700 stat">${snippetsCount}</div>
+                            <div class="fw-700 stat"><c:out value="${snippetsCount}"/></div>
                             <div class="fw-100 stat"><spring:message code="profile.stats.snippets"/></div>
                         </div>
                         <div class="flex-center stat-bundle">
-                            <div class="fw-700 stat">${user.reputation}</div>
+                            <div class="fw-700 stat"><c:out value="${user.reputation}"/></div>
                             <div class="fw-100 stat"><spring:message code="profile.stats.reputation"/></div>
                         </div>
                         <div class="flex-center stat-bundle">
-                            <div class="fw-700 stat">${followedTags.size()}</div>
+                            <div class="fw-700 stat"><c:out value="${followedTags.size()}"/></div>
                             <div class="fw-100 stat"><spring:message code="profile.stats.following"/></div>
                         </div>
                     </div>
@@ -141,7 +139,7 @@
                     <form:form id="description-form" method="POST" cssClass="profile-info-item" action="${editUrl}" modelAttribute="descriptionForm">
                         <c:if test="${!editing}">
                             <div class="profile-description profile-info-item">
-                                    ${user.description}
+                                    <c:out value="${user.description}"/>
                             </div>
                         </c:if>
                         <c:if test="${currentUser.id == user.id && editing}">

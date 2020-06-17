@@ -79,3 +79,8 @@
 .visibility-label {
     cursor: pointer;
 }
+
+.following-visibility-label {
+    cursor: pointer;
+    margin-left: 10px;
+}

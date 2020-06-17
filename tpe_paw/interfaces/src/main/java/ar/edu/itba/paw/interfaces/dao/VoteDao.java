@@ -10,5 +10,5 @@ public interface VoteDao {
     Optional<Vote> getVote(final long userId, final long snippetId);
     void addVote(final long userId, final long snippetId, boolean isPositive);
     void withdrawVote(final long userId, final long snippetId);
-    Optional<Integer> getVoteBalance(final long snippetId);
+    int getVoteBalance(long snippetId);
 }

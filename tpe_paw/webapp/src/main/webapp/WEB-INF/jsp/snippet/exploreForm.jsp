@@ -102,7 +102,7 @@
                 <form:select class="selectpicker flex-grow" data-live-search="true" path="language">
                     <form:option value="-1"><spring:message code="advanced.language.hint"/></form:option>
                     <c:forEach items="${languageList}" var="lan" varStatus="status">
-                        <form:option value="${lan.id}">${lan.name.toUpperCase()}</form:option>
+                        <form:option value="${lan.id}"><c:out value="${lan.name.toUpperCase()}"/></form:option>
                     </c:forEach>
                 </form:select>
             </div>
@@ -112,7 +112,7 @@
                 <form:select class="selectpicker flex-grow" data-live-search="true" path="tag">
                     <form:option value="-1"><spring:message code="advanced.tag.hint"/></form:option>
                     <c:forEach items="${tagList}" var="tag" varStatus="status">
-                        <form:option value="${tag.id}">${tag.name.toLowerCase()}</form:option>
+                        <form:option value="${tag.id}"><c:out value="${tag.name.toLowerCase()}"/></form:option>
                     </c:forEach>
                 </form:select>
             </div>

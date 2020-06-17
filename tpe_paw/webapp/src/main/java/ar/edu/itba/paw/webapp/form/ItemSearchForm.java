@@ -2,7 +2,7 @@ package ar.edu.itba.paw.webapp.form;
 
 public class ItemSearchForm {
     private String name;
-
+    private boolean showOnlyFollowing = false;
     private boolean showEmpty = true;
 
     public String getName() {
@@ -19,5 +19,13 @@ public class ItemSearchForm {
 
     public void setShowEmpty(boolean showEmpty) {
         this.showEmpty = showEmpty;
+    }
+
+    public boolean isShowOnlyFollowing() {
+        return showOnlyFollowing;
+    }
+
+    public void setShowOnlyFollowing(boolean showOnlyFollowing) {
+        this.showOnlyFollowing = showOnlyFollowing;
     }
 }

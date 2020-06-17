@@ -81,12 +81,22 @@ public class TagJpaDaoImpl implements TagDao {
 
 
     @Override
-    public Collection<Tag> getAllTags(boolean showEmpty, int page, int pageSize) {
+    public Collection<Tag> getAllTags(boolean showEmpty, boolean showOnlyFollowing, Long userId, int page, int pageSize) {
         Query nativeQuery;
         if (showEmpty){
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM tags ORDER BY name ASC");
+            if (showOnlyFollowing){
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM follows AS f LEFT OUTER JOIN tags AS t ON t.id = f.tag_id WHERE f.user_id = :id ORDER BY t.name ASC");
+                nativeQuery.setParameter("id", userId);
+            } else {
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM tags ORDER BY name ASC");
+            }
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE ORDER BY t.name ASC");
+            if (showOnlyFollowing){
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND f.user_id = :id ORDER BY t.name ASC");
+                nativeQuery.setParameter("id", userId);
+            } else {
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE ORDER BY t.name ASC");
+            }
         }
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
@@ -106,25 +116,45 @@ public class TagJpaDaoImpl implements TagDao {
     }
 
     @Override
-    public int getAllTagsCountByName(String name, boolean showEmpty) {
+    public int getAllTagsCountByName(String name, boolean showEmpty, boolean showOnlyFollowing, Long userId) {
         Query nativeQuery;
         if (showEmpty){
-            nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM tags WHERE LOWER(name) LIKE LOWER(:term)")
-                    .setParameter("term", "%"+name+"%");
+            if (showOnlyFollowing){
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id WHERE LOWER(t.name) LIKE LOWER(:term) AND f.user_id = :id")
+                        .setParameter("term", "%"+name+"%").setParameter("id", userId);
+            } else {
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM tags WHERE LOWER(name) LIKE LOWER(:term)")
+                        .setParameter("term", "%"+name+"%");
+            }
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term)")
-                    .setParameter("term", "%"+name+"%");
+            if (showOnlyFollowing){
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term) AND f.user_id = :id")
+                        .setParameter("term", "%"+name+"%").setParameter("id", userId);
+            } else {
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term)")
+                        .setParameter("term", "%"+name+"%");
+            }
         }
         return ((Number) nativeQuery.getSingleResult()).intValue();
     }
 
     @Override
-    public int getAllTagsCount(boolean showEmpty) {
+    public int getAllTagsCount(boolean showEmpty, boolean showOnlyFollowing, Long userId) {
         Query nativeQuery;
         if (showEmpty){
-            nativeQuery = this.em.createNativeQuery("SELECT id FROM tags");
+            if (showOnlyFollowing){
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT tag_id FROM follows WHERE user_id = :id");
+                nativeQuery.setParameter("id", userId);
+            } else {
+                nativeQuery = this.em.createNativeQuery("SELECT id FROM tags");
+            }
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT tag_id FROM snippet_tags AS st INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE");
+            if (showOnlyFollowing){
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT tag_id FROM follows AS f LEFT OUTER JOIN snippet_tags AS st ON f.tag_id = st.tag_id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE sn.deleted = FALSE AND f.user_id = :id");
+                nativeQuery.setParameter("id", userId);
+            } else {
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT tag_id FROM snippet_tags AS st INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE sn.deleted = FALSE");
+            }
         }
         return nativeQuery.getResultList().size();
     }
@@ -140,14 +170,24 @@ public class TagJpaDaoImpl implements TagDao {
     }
 
     @Override
-    public Collection<Tag> findTagsByName(String name, boolean showEmpty, int page, int pageSize) {
+    public Collection<Tag> findTagsByName(String name, boolean showEmpty, boolean showOnlyFollowing, Long userId, int page, int pageSize) {
         Query nativeQuery;
         if (showEmpty){
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM tags WHERE LOWER(name) LIKE LOWER(:term) ORDER BY name ASC")
-                    .setParameter("term", "%"+name+"%");
+            if (showOnlyFollowing){
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id WHERE f.user_id = :id AND LOWER(t.name) LIKE LOWER(:term) ORDER BY t.name ASC")
+                        .setParameter("term", "%"+name+"%").setParameter("id", userId);
+            } else {
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM tags WHERE LOWER(name) LIKE LOWER(:term) ORDER BY name ASC")
+                        .setParameter("term", "%"+name+"%");
+            }
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term) ORDER BY t.name ASC")
-                    .setParameter("term", "%"+name+"%");
+            if (showOnlyFollowing){
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE f.user_id = :id AND sn.deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term) ORDER BY t.name ASC")
+                        .setParameter("term", "%"+name+"%").setParameter("id", userId);
+            } else {
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term) ORDER BY t.name ASC")
+                        .setParameter("term", "%"+name+"%");
+            }
         }
         nativeQuery.setParameter("term", "%"+name+"%");
         nativeQuery.setFirstResult((page - 1) * pageSize);

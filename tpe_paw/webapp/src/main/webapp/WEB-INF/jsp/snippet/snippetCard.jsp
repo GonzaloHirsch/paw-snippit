@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <html>
@@ -8,9 +7,6 @@
 </head>
 <body>
 <c:set var="snippet" value="${requestScope.snippet}"/>
-
-<c:set var="desc" value="${fn:escapeXml(snippet.description)}"/>
-<c:set var="code" value="${fn:escapeXml(snippet.code)}"/>
 
 <%--<a href="<c:url value='/snippet/${snippet.id}'/>" class="flex-column card-item border-radius">--%>
 <a href="<c:url value='/snippet/${snippet.id}'/>" class="flex-column card-snippet-container">
@@ -28,7 +24,7 @@
                 <div class="flex-column snippet-upload-info card-snippet-icon">
                     <div class="snippet-text">${snippet.owner.username}</div>
                     <div class="snippet-text card-snippet-date">
-                        ${snippet.getCreationDate()}
+                        <c:out value="${snippet.getCreationDate()}"/>
                     </div>
                 </div>
             </div>
@@ -39,24 +35,24 @@
                 <c:if test="${snippet.flagged}">
                     <div class="card-warning-icon material-icons">warning</div>
                 </c:if>
-                <div class="flex-center snippet-language-tag border-radius">${snippet.language.name.toUpperCase()}</div>
+                <div class="flex-center snippet-language-tag border-radius"><c:out value="${snippet.language.name.toUpperCase()}"/> </div>
             </div>
         </div>
 
         <!-- Bottom part of the card with the title, description and code -->
         <div class="flex-row snippet-title-container">
-            <div class="snippet-text snippet-title">${fn:escapeXml(snippet.title)}</div>
+            <div class="snippet-text snippet-title"><c:out value="${snippet.title}"/></div>
         </div>
         <c:if test="${!StringUtils.isEmpty(snippet.description)}">
             <div class="card-snippet-block card-snippet-descr-block">
-                <div class="snippet-text justify-text">${desc}</div>
+                <div class="snippet-text justify-text"><c:out value="${snippet.description}"/></div>
                 <p class="card-snippet-fade-out card-snippet-fade-out-descr hidden"></p>
             </div>
         </c:if>
 
         <div class="flex-column snippet-code-container border-radius">
             <div class="card-snippet-block">
-                <pre><code class="code-element ${snippet.language.name}">${code}</code></pre>
+                <pre><code class="code-element ${snippet.language.name}"><c:out value="${snippet.code}"/></code></pre>
                 <p class="card-snippet-fade-out card-snippet-fade-out-code hidden"></p>
             </div>
         </div>

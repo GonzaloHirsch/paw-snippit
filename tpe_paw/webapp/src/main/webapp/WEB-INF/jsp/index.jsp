@@ -21,7 +21,7 @@
             <spring:message code="menu.upvoted" var="title"/>
         </c:when>
     </c:choose>
-    <title><spring:message code="app.name"/> | ${title}</title>
+    <title><spring:message code="app.name"/> | <c:out value="${title}"/></title>
     <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/favicon/favicon.ico'/>"/>
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"

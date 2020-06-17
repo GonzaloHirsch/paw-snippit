@@ -29,14 +29,11 @@ public class LoginAuthentication {
     private UserService userService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginAuthentication.class);
-    private static final String REDIRECT_ATTRIBUTE = "url_prior_login";
 
     public void setLoginRedirect(HttpServletRequest request) {
         String referrer = request.getHeader(Constants.REFERER);
         if (referrer != null && !referrer.contains("signup")) {
-            request.getSession().setAttribute(REDIRECT_ATTRIBUTE, referrer);
-        } else {
-            request.getSession().setAttribute(REDIRECT_ATTRIBUTE, Constants.HOME);
+            request.getSession().setAttribute(Constants.REDIRECT_ATTRIBUTE, referrer);
         }
     }
 

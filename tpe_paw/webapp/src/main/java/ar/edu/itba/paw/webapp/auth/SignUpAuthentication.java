@@ -20,15 +20,12 @@ public class SignUpAuthentication {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    private static final String REDIRECT_ATTRIBUTE = "url_prior_login";
     private static final String SAVED_REQUEST_ATTRIBUTE = "SPRING_SECURITY_SAVED_REQUEST";
 
     public void setRegisterRedirect(HttpServletRequest request) {
         String referrer = request.getHeader(Constants.REFERER);
         if (referrer != null && !referrer.contains("login")) {
-            request.getSession().setAttribute(REDIRECT_ATTRIBUTE, referrer);
-        } else {
-            request.getSession().setAttribute(REDIRECT_ATTRIBUTE, Constants.HOME);
+            request.getSession().setAttribute(Constants.REDIRECT_ATTRIBUTE, referrer);
         }
     }
 
@@ -62,16 +59,16 @@ public class SignUpAuthentication {
             if (redirectUrl.compareTo(request.getContextPath() + "/") != 0) {
                 return redirectUrl;
             }
-            redirectUrl = (String) session.getAttribute(REDIRECT_ATTRIBUTE);
+            redirectUrl = (String) session.getAttribute(Constants.REDIRECT_ATTRIBUTE);
             if (redirectUrl != null) {
                 /* Remove the attribute from the session --> clean up */
-                session.removeAttribute(REDIRECT_ATTRIBUTE);
+                session.removeAttribute(Constants.REDIRECT_ATTRIBUTE);
                 /* Don't want to redirect to any of these urls */
                 if (!(redirectUrl.contains("login") || redirectUrl.contains("signup") || redirectUrl.contains("goodbye") || redirectUrl.contains("reset-password") || redirectUrl.contains("recover-password"))) {
                     return redirectUrl;
                 }
             }
         }
-        return "/";
+        return Constants.HOME;
     }
 }

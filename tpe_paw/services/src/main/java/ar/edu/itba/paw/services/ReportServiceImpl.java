@@ -20,6 +20,7 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     private EmailService emailService;
 
+    private static final int MIN_REPUTATION_TO_REPORT = 3;
 
     @Override
     public Optional<Report> getReport(long userId, long snippetId){
@@ -47,6 +48,6 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public boolean canReport(User user) {
-        return user.getReputation() >= 3;
+        return user.getReputation() >= MIN_REPUTATION_TO_REPORT;
     }
 }

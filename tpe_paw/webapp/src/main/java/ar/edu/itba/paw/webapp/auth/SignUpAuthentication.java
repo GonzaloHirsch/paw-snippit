@@ -20,11 +20,9 @@ public class SignUpAuthentication {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    private static final String SAVED_REQUEST_ATTRIBUTE = "SPRING_SECURITY_SAVED_REQUEST";
-
     public void setRegisterRedirect(HttpServletRequest request) {
         String referrer = request.getHeader(Constants.REFERER);
-        if (referrer != null && !referrer.contains("login")) {
+        if (referrer != null && !referrer.contains(Constants.LOGIN)) {
             request.getSession().setAttribute(Constants.REDIRECT_ATTRIBUTE, referrer);
         }
     }
@@ -44,7 +42,7 @@ public class SignUpAuthentication {
     private String getSavedRequestRedirectUrl(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if(session != null) {
-            SavedRequest savedRequest = (SavedRequest)session.getAttribute(SAVED_REQUEST_ATTRIBUTE);
+            SavedRequest savedRequest = (SavedRequest)session.getAttribute(Constants.SAVED_REQUEST_ATTRIBUTE);
             if(savedRequest != null) {
                 return savedRequest.getRedirectUrl();
             }
@@ -64,7 +62,7 @@ public class SignUpAuthentication {
                 /* Remove the attribute from the session --> clean up */
                 session.removeAttribute(Constants.REDIRECT_ATTRIBUTE);
                 /* Don't want to redirect to any of these urls */
-                if (!(redirectUrl.contains("login") || redirectUrl.contains("signup") || redirectUrl.contains("goodbye") || redirectUrl.contains("reset-password") || redirectUrl.contains("recover-password"))) {
+                if (!(redirectUrl.contains(Constants.LOGIN) || redirectUrl.contains(Constants.SIGNUP) || redirectUrl.contains(Constants.GOODBYE) || redirectUrl.contains(Constants.RESET_PASSWORD) || redirectUrl.contains(Constants.RECOVER_PASSWORD))) {
                     return redirectUrl;
                 }
             }

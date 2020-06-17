@@ -106,9 +106,11 @@
                         </c:if>
 
                         <!-- FAVORITES -->
-                        <div class="flex-center detail-snippet-block border-radius form-shadow">
-                            <c:import url="/WEB-INF/jsp/snippet/favForm.jsp"/>
-                        </div>
+                        <c:if test="${showFavorite}">
+                            <div class="flex-center detail-snippet-block border-radius form-shadow">
+                                <c:import url="/WEB-INF/jsp/snippet/favForm.jsp"/>
+                            </div>
+                        </c:if>
                         <c:set var="votes" value="${voteCount}" scope="request"/>
                         <!-- VOTE -->
                         <c:if test="${!snippet.deleted}">

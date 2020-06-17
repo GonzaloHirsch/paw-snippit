@@ -54,6 +54,8 @@ public class SnippetController {
             @ModelAttribute("voteForm") final VoteForm voteForm
     ) {
         final ModelAndView mav = new ModelAndView("snippet/snippetDetail");
+        boolean showFavorite = true;
+
         // Snippet
         Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
         retrievedSnippet.ifPresent(snippet -> {
@@ -63,6 +65,7 @@ public class SnippetController {
         if (!retrievedSnippet.isPresent()) {
             logAndThrow(id);
         }
+        Snippet snippet = retrievedSnippet.get();
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
@@ -74,27 +77,27 @@ public class SnippetController {
             mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
 
             // Vote
-            Optional<Vote> vote = this.voteService.getVote(currentUser.getId(), retrievedSnippet.get().getId());
-            int voteType = vote.map(Vote::getVoteWeight).orElse(0);
+            int voteType = this.voteService.getVoteWeight(currentUser.getId(), snippet.getId());
 
             voteForm.setType(voteType);
             voteForm.setOldType(voteType);
 
             // Fav
-            favForm.setFavorite(currentUser.getFavorites().contains(retrievedSnippet.get()));
+            showFavorite = currentUser.getFavorites().contains(snippet);
+            favForm.setFavorite(showFavorite);
 
             //Delete
-            deleteForm.setDelete(retrievedSnippet.get().isDeleted());
+            deleteForm.setDelete(snippet.isDeleted());
 
             if (roleService.isAdmin(currentUser.getId())) {
-                adminFlagForm.setFlagged(retrievedSnippet.get().isFlagged());
+                adminFlagForm.setFlagged(snippet.isFlagged());
             }
         } else {
             mav.addObject("userRoles", Collections.emptyList());
         }
 
-        // Vote Count
-        mav.addObject("voteCount", this.voteService.getVoteBalance(retrievedSnippet.get().getId()));
+        mav.addObject("showFavorite", showFavorite || !snippet.isDeleted());
+        mav.addObject("voteCount", this.voteService.getVoteBalance(snippet.getId()));
         mav.addObject("searchContext","");
         return mav;
     }

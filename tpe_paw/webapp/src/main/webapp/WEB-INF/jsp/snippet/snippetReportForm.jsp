@@ -5,10 +5,8 @@
 
 <html>
 <head>
-    <script src="<c:url value='/resources/js/form.js'/>"></script>
     <link href="<c:url value='/resources/css/elementSnippets.css'/>" type="text/css" rel="stylesheet"/>
-    <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
-    <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/resources/css/errorPages.css'/>" type="text/css" rel="stylesheet"/>
     <script src="<c:url value='/resources/js/reportForm.js'/>"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
@@ -44,10 +42,10 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body modal-body-text fw-100">
-                        <form:label class="fw-400 report-subtitle" path="reportDetail"><spring:message code="modal.report.reasonText"/> </form:label>
+                    <div class="flex-column modal-body modal-body-text fw-100">
+                        <form:label class="fw-400 report-subtitle black-text" path="reportDetail"><spring:message code="modal.report.reasonText"/> </form:label>
+                        <form:errors class="fw-300 error-report-modal no-margin form-text-error form-error" path="reportDetail" element="p"/>
                         <form:textarea class="full-width report-detail-input" rows="5" type="text" path="reportDetail" placeholder='${detailHint}'/>
-                        <form:errors class="form-error error-extra-margins" path="reportDetail" element="p"/>
                     </div>
                     <div class="modal-footer flex-end">
                         <div class="flex-center">

@@ -52,7 +52,7 @@ public class SnippetController {
             @ModelAttribute("favForm") final FavoriteForm favForm,
             @ModelAttribute("voteForm") final VoteForm voteForm,
             @ModelAttribute("reportForm") final ReportForm reportForm,
-            BindingResult errors
+            final BindingResult errors
     ) {
         final ModelAndView mav = new ModelAndView("snippet/snippetDetail");
         boolean showFavorite = true;
@@ -94,7 +94,7 @@ public class SnippetController {
             Optional<Report> report = this.reportService.getReport(currentUser.getId(), snippet.getId());
             reportForm.setReported(report.isPresent());
             mav.addObject("displayReportDialog", errors.hasErrors());
-            mav.addObject("canReport", reportService.canReport(currentUser));
+            mav.addObject("canReport", this.reportService.canReport(currentUser));
 
             if (roleService.isAdmin(currentUser.getId())) {
                 adminFlagForm.setFlagged(snippet.isFlagged());
@@ -181,23 +181,22 @@ public class SnippetController {
 
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null) {
+        if (currentUser == null || !this.reportService.canReport(currentUser)) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report", null, LocaleContextHolder.getLocale()));
-        } else {
-            // Getting the snippet
-            Optional<Snippet> snippetOpt = this.snippetService.findSnippetById(id);
-            if (!snippetOpt.isPresent()){
-                this.logAndThrow(id);
-            }
-            Snippet snippet = snippetOpt.get();
-            try {
-                reportService.reportSnippet(currentUser, snippet, reportForm.getReportDetail(), baseUrl);
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage() + "Failed report snippet: user {} about their snippet {}", snippet.getOwner().getUsername(), snippet.getId());
-            }
-            LOGGER.debug("User {} reported snippet {} with message {}", currentUser.getUsername(), id, reportForm.getReportDetail());
-//            LOGGER.debug("User {} reported snippet {} with message {}", currentUser.getUsername(), id, reportForm.getReportDetail());
         }
+        // Getting the snippet
+        Optional<Snippet> snippetOpt = this.snippetService.findSnippetById(id);
+        if (!snippetOpt.isPresent()){
+            this.logAndThrow(id);
+        }
+        Snippet snippet = snippetOpt.get();
+        try {
+            reportService.reportSnippet(currentUser, snippet, reportForm.getReportDetail(), baseUrl);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage() + "Failed report snippet: user {} about their snippet {}", snippet.getOwner().getUsername(), snippet.getId());
+        }
+        LOGGER.debug("User {} reported snippet {} with message {}", currentUser.getUsername(), id, reportForm.getReportDetail());
+
         return mav;
     }
 

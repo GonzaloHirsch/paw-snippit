@@ -20,8 +20,6 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     private EmailService emailService;
 
-    private static final int MIN_REPUTATION_TO_REPORT = 3;
-
     @Override
     public Optional<Report> getReport(long userId, long snippetId){
         return this.reportDao.getReport(userId,snippetId);

@@ -15,27 +15,27 @@
     <div class="flex-column">
         <form:form class="flex-row form-container" action="${snippetId}/vote" method="post" modelAttribute="voteForm">
             <form:radiobutton class="hidden" id="vote-up-button" path="type" value="1" onclick="updateForm(this)"/>
-            <label for="vote-up-button">
+            <label for="vote-up-button" class="no-margin">
                 <c:choose>
                     <c:when test="${voteForm.oldType == 1}">
-                        <i class="vote-up-selected material-icons snippet-icon">thumb_up</i>
+                        <i class="vote-up-selected material-icons snippet-icon transition">thumb_up</i>
                     </c:when>
                     <c:otherwise>
-                        <i class="vote-up material-icons snippet-icon">thumb_up</i>
+                        <i class="vote-up material-icons snippet-icon transition">thumb_up</i>
                     </c:otherwise>
                 </c:choose>
             </label>
-            <label class="flex-center vote-count">
+            <label class="flex-center no-margin vote-count">
                 <c:out value="${votes}"/>
             </label>
             <form:radiobutton class="hidden" id="vote-down-button" path="type" value="-1" onclick="updateForm(this)"/>
-            <label for="vote-down-button">
+            <label for="vote-down-button" class="no-margin">
                 <c:choose>
                     <c:when test="${voteForm.oldType == -1}">
-                        <i class="vote-down-selected material-icons snippet-icon">thumb_down</i>
+                        <i class="vote-down-selected material-icons snippet-icon transition">thumb_down</i>
                     </c:when>
                     <c:otherwise>
-                        <i class="vote-down material-icons snippet-icon">thumb_down</i>
+                        <i class="vote-down material-icons snippet-icon transition">thumb_down</i>
                     </c:otherwise>
                 </c:choose>
             </label>

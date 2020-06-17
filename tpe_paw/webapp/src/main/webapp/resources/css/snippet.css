@@ -54,6 +54,18 @@
     cursor: pointer;
 }
 
+.snippet-icon:hover {
+    font-size: 62px !important;
+}
+
+.snippet-icon-no-pointer {
+    font-size: 60px !important;
+}
+
+.snippet-vote-container {
+    min-width: 184px;
+}
+
 .report-detail-input{
     margin-top: 5px;
     padding: 10px 0 0 10px;

@@ -10,36 +10,32 @@
 
 .unselected-red-icon {
     color: gray !important;
-    transition: 0.3s;
 }
 
 .delete-snippet-icon {
     color: gray !important;
-    transition: 0.3s;
 }
 
 .delete-snippet-icon:hover {
     color: black !important;
 }
 
-.unselected-brown-icon {
+.unselected-coral-icon {
     color: gray !important;
-    transition: 0.3s;
 }
 
-.unselected-brown-icon:hover {
-    color: tan !important;
+.unselected-coral-icon:hover {
+    color: lightcoral !important;
 }
 
-.selected-brown-icon {
-    color: tan !important;
+.selected-coral-icon {
+    color: lightcoral !important;
 }
 
 .warning-icon {
     color: red;
     font-size: 70px !important;
     margin: 5px 15px 5px 2px;
-    transition: 0.3s;
 }
 
 .verify-email-icon {
@@ -62,7 +58,6 @@
     font-size: 40px !important;
     margin: 0px 0px 0px 30px;
     padding: 5px;
-    transition: 0.3s;
 }
 
 .delete-element-icon:hover {

@@ -116,7 +116,7 @@
                         <c:set var="votes" value="${voteCount}" scope="request"/>
                         <!-- VOTE -->
                         <c:if test="${!snippet.deleted}">
-                            <div class="flex-column flex-center detail-snippet-block border-radius form-shadow">
+                            <div class="snippet-vote-container flex-column flex-center detail-snippet-block border-radius form-shadow">
                                 <c:import url="/WEB-INF/jsp/snippet/voteForm.jsp"/>
                             </div>
                         </c:if>

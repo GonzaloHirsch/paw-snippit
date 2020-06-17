@@ -14,7 +14,7 @@
 <spring:message code="flagged.warning.message.2" var="flaggedMsg2"/>
 
     <div class="flex-row flex-align warning-container border-radius">
-        <i class="warning-icon material-icons">warning</i>
+        <i class="warning-icon material-icons transition">warning</i>
         <div class="flex-column warning-message-container">
             <h3 class="form-error"><c:out value="${flaggedWarn}"/></h3>
             <p class="form-error"><c:out value="${flaggedMsg1}"/></p>

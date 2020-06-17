@@ -12,7 +12,7 @@
 <spring:message code="deleted.snippet.warning" var="deletedWarn"/>
 <spring:message code="deleted.snippet.warning.message" var="deleteMsg"/>
 <div class="flex-row flex-center warning-container border-radius">
-    <i class="warning-icon material-icons">delete_sweep</i>
+    <i class="warning-icon material-icons transition">delete_sweep</i>
     <div class="flex-column warning-message-container">
         <h3 class="form-error"><c:out value="${deletedWarn}"/></h3>
         <p class="form-error"><c:out value="${deleteMsg}"/></p>

@@ -18,12 +18,12 @@
             <c:choose>
                 <c:when test="${deleteForm.delete}">
                     <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#delete-snippet">
-                        <i class="delete-snippet-icon snippet-icon material-icons ">restore_from_trash</i>
+                        <i class="delete-snippet-icon snippet-icon transition material-icons ">restore_from_trash</i>
                     </div>
                 </c:when>
                 <c:otherwise>
                     <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#delete-snippet">
-                        <i class="delete-snippet-icon snippet-icon material-icons ">delete</i>
+                        <i class="delete-snippet-icon snippet-icon transition material-icons ">delete</i>
                     </div>
                 </c:otherwise>
             </c:choose>

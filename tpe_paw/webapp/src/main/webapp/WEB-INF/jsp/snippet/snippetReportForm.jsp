@@ -23,12 +23,12 @@
         <c:choose>
             <c:when test="${!reportForm.reported}">
                 <label for="report-button" class="no-margin" data-toggle="modal" data-target="#report-modal">
-                    <i class="unselected-brown-icon material-icons snippet-icon">report</i>
+                    <i class="unselected-coral-icon material-icons snippet-icon transition">report</i>
                 </label>
             </c:when>
             <c:otherwise>
                 <label for="report-button" class="no-margin">
-                    <i class="selected-brown-icon material-icons snippet-icon">report</i>
+                    <i class="selected-coral-icon material-icons snippet-icon-no-pointer transition">report</i>
                 </label>
             </c:otherwise>
         </c:choose>

@@ -44,7 +44,7 @@
                     <c:if test="${currentUser != null && userRoles.contains('ADMIN') && !language.deleted}">
                         <form:form action="${langDeleteUrl}" class="form-container" method="post" modelAttribute="deleteForm">
                             <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#delete-lang">
-                                <i class="delete-element-icon material-icons border-radius">delete</i>
+                                <i class="delete-element-icon material-icons border-radius transition">delete</i>
                             </div>
 
                             <!-- Modal -->

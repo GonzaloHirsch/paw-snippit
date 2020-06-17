@@ -39,7 +39,7 @@
                     <c:if test="${userRoles.contains('ADMIN')}">
                         <form:form action="${tagDeleteUrl}" class="form-container" method="post" modelAttribute="deleteForm">
                             <div class="flex-center no-text-decoration" data-toggle="modal" data-target="#tag-snippet">
-                                <i class="delete-element-icon material-icons border-radius">delete</i>
+                                <i class="delete-element-icon material-icons border-radius transition">delete</i>
                             </div>
 
                             <!-- Modal -->

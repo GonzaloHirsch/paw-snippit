@@ -12,7 +12,7 @@
 <spring:message var="langWarn" code="deleted.language.warning"/>
 <spring:message var="langWarnMessage" code="deleted.language.warning.message"/>
 <div class="flex-row flex-center warning-container border-radius">
-    <i class="warning-icon material-icons">delete_sweep</i>
+    <i class="warning-icon material-icons transition">delete_sweep</i>
     <div class="flex-column warning-message-container">
         <h3 class="form-error"><c:out value="${langWarn}"/></h3>
         <p class="form-error"><c:out value="${langWarnMessage}"/></p>

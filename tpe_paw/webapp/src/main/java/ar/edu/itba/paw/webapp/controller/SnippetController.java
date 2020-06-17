@@ -162,7 +162,7 @@ public class SnippetController {
         return mav;
     }
 
-    @RequestMapping(value="/snippet/{id}/report", method=RequestMethod.POST)
+    @RequestMapping(value="/snippet/{id}/report", method={RequestMethod.POST})
     public ModelAndView reportSnippet(
             @ModelAttribute("snippetId") @PathVariable("id") long id,
             @ModelAttribute("searchForm") final SearchForm searchForm,

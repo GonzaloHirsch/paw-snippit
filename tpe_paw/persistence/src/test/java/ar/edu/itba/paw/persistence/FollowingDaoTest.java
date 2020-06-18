@@ -155,7 +155,6 @@ public class FollowingDaoTest {
     @Test
     public void followTagEmptyTest(){
         followingDao.followTag(defaultUser.getId(),  -1);
-
         Assert.assertTrue(defaultUser.getFollowedTags().isEmpty());
     }
 

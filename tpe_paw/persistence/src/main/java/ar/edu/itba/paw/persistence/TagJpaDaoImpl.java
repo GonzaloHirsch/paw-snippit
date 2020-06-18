@@ -11,6 +11,7 @@ import javax.persistence.TypedQuery;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.swing.text.html.Option;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -39,9 +40,13 @@ public class TagJpaDaoImpl implements TagDao {
 
     @Override
     public Tag addTag(String name) {
-        final Tag tag = new Tag(name);
-        em.persist(tag);
-        return tag;
+        Optional<Tag> maybeTag = this.findByName(name);
+        if (!maybeTag.isPresent()) {
+            final Tag tag = new Tag(name);
+            em.persist(tag);
+            return tag;
+        }
+        return maybeTag.get();
     }
 
     @Override
@@ -58,9 +63,11 @@ public class TagJpaDaoImpl implements TagDao {
 
     @Override
     public void addTags(List<String> tags) {
-        for(String name : tags){
-            if (name != null)
-                this.addTag(name);
+        if (tags != null) {
+            for (String name : tags) {
+                if (name != null)
+                    this.addTag(name);
+            }
         }
     }
 

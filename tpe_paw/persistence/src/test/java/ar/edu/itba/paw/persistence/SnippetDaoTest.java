@@ -1411,12 +1411,12 @@ public class SnippetDaoTest {
         Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
     }
 
-    /*
+    
 
-    /* Testing finding snippet by deep criteria
+    /* Testing finding snippet by deep criteria */
     @Test
     public void findSnippetByDeepCriteriaSpanningManyYearsDateTest() {
-        Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
 
         Collection<Snippet> result = snippetDao.findSnippetByDeepCriteria(
                 TestConstants.DATE_9,
@@ -1449,7 +1449,7 @@ public class SnippetDaoTest {
 
     @Test
     public void findSnippetByDeepCriteriaMinutesDateTest() {
-        Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
 
         Collection<Snippet> result = snippetDao.findSnippetByDeepCriteria(
                 TestConstants.DATE_MIN_MINUTES,
@@ -1475,7 +1475,7 @@ public class SnippetDaoTest {
 
     @Test
     public void findSnippetByDeepCriteriaYearDateTest() {
-        Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
 
         Collection<Snippet> result = snippetDao.findSnippetByDeepCriteria(
                 TestConstants.DATE_MIN_YEAR,
@@ -1503,9 +1503,8 @@ public class SnippetDaoTest {
 
 
     @Test
-    @Transactional
     public void findSnippetByDeepCriteriaVotesTest() {
-        Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
 
         Collection<Snippet> result1 = snippetDao.findSnippetByDeepCriteria(
                 null,
@@ -1576,9 +1575,8 @@ public class SnippetDaoTest {
     }
 
     @Test
-    @Transactional
     public void findSnippetByDeepCriteriaReputationTest() {
-        Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
         Collection<Snippet> result1 = snippetDao.findSnippetByDeepCriteria(
                 null,
                 null, // Instant.now()
@@ -1640,11 +1638,11 @@ public class SnippetDaoTest {
         Assert.assertTrue(result3.isEmpty());
     }
 
-    /* Testing getting snippet by deep criteria count
+    /* Testing getting snippet by deep criteria count */
 
     @Test
     public void findSnippetByDeepCriteriaCountSpanningManyYearsDateTest() {
-        Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
 
         int result = snippetDao.getSnippetByDeepCriteriaCount(
                 TestConstants.DATE_9,
@@ -1664,7 +1662,7 @@ public class SnippetDaoTest {
 
     @Test
     public void findSnippetByDeepCriteriaCountVotesTest() {
-        Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
 
         int result1 = snippetDao.getSnippetByDeepCriteriaCount(
                 null,
@@ -1715,9 +1713,8 @@ public class SnippetDaoTest {
     }
 
     @Test
-    @Transactional
     public void findSnippetByDeepCriteriaCountReputationTest() {
-        Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
         int result1 = snippetDao.getSnippetByDeepCriteriaCount(
                 null,
                 null, // Instant.now()
@@ -1761,5 +1758,5 @@ public class SnippetDaoTest {
         Assert.assertEquals(1, result1);
         Assert.assertEquals(4, result2);
         Assert.assertEquals(0, result3);
-    } */
+    }
 }

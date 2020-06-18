@@ -122,11 +122,14 @@
                         </c:if>
 
                         <!-- REPORT -->
-                        <c:if test="${canReport}">
-                            <div class="flex-center detail-snippet-block border-radius form-shadow">
-                                <c:import url="/WEB-INF/jsp/snippet/snippetReportForm.jsp"/>
-                            </div>
+                        <c:if test="${currentUser != null && currentUser.id != snippet.owner.id && !userRoles.contains('ADMIN')}">
+                            <c:if test="${canReport}">
+                                <div class="flex-center detail-snippet-block border-radius form-shadow">
+                                    <c:import url="/WEB-INF/jsp/snippet/snippetReportForm.jsp"/>
+                                </div>
+                            </c:if>
                         </c:if>
+
                         <!-- USER DETAILS -->
                         <c:choose>
                             <c:when test="${currentUser != null && currentUser.id == snippet.owner.id}">

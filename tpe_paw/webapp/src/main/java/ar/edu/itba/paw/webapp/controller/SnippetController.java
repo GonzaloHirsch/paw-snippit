@@ -36,9 +36,7 @@ public class SnippetController {
     @Autowired private FavoriteService favService;
     @Autowired private LoginAuthentication loginAuthentication;
     @Autowired private TagService tagService;
-    @Autowired private UserService userService;
     @Autowired private MessageSource messageSource;
-    @Autowired private EmailService emailService;
     @Autowired private ReportService reportService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetController.class);
@@ -57,16 +55,7 @@ public class SnippetController {
         final ModelAndView mav = new ModelAndView("snippet/snippetDetail");
         boolean showFavorite = true;
 
-        // Snippet
-        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
-        retrievedSnippet.ifPresent(snippet -> {
-                mav.addObject("snippet", snippet);
-        });
-
-        if (!retrievedSnippet.isPresent()) {
-            logAndThrow(id);
-        }
-        Snippet snippet = retrievedSnippet.get();
+        Snippet snippet = this.getSnippet(id);
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
@@ -102,7 +91,7 @@ public class SnippetController {
         } else {
             mav.addObject("userRoles", Collections.emptyList());
         }
-
+        mav.addObject("snippet", snippet);
         mav.addObject("showFavorite", showFavorite || !snippet.isDeleted());
         mav.addObject("voteCount", this.voteService.getVoteBalance(snippet.getId()));
         mav.addObject("searchContext","");
@@ -179,17 +168,17 @@ public class SnippetController {
         // Getting the url of the server
         final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
 
-        final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
+        Snippet snippet = this.getSnippet(id);
+
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null || !this.reportService.canReport(currentUser)) {
-            throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report", null, LocaleContextHolder.getLocale()));
+        if (currentUser == null || currentUser.equals(snippet.getOwner())) {
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report.owner", null, LocaleContextHolder.getLocale()));
+        } else if (!this.reportService.canReport(currentUser)) {
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report.reputation", null, LocaleContextHolder.getLocale()));
         }
-        // Getting the snippet
-        Optional<Snippet> snippetOpt = this.snippetService.findSnippetById(id);
-        if (!snippetOpt.isPresent()){
-            this.logAndThrow(id);
-        }
-        Snippet snippet = snippetOpt.get();
+
+        final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
+
         try {
             reportService.reportSnippet(currentUser, snippet, reportForm.getReportDetail(), baseUrl);
         } catch (Exception e) {
@@ -210,12 +199,7 @@ public class SnippetController {
         if (currentUser == null || !roleService.isAdmin(currentUser.getId())) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.flag", null, LocaleContextHolder.getLocale()));
         } else {
-            // Getting the snippet
-            Optional<Snippet> snippetOpt = this.snippetService.findSnippetById(id);
-            if (!snippetOpt.isPresent()){
-                this.logAndThrow(id);
-            }
-            Snippet snippet = snippetOpt.get();
+            Snippet snippet = this.getSnippet(id);
 
             // Getting the url of the server
             final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
@@ -223,12 +207,20 @@ public class SnippetController {
                 // Updating the flagged variable of snippet
                 this.snippetService.updateFlagged(snippet, snippet.getOwner(), adminFlagForm.isFlagged(), baseUrl);
             } catch (Exception e) {
-                LOGGER.error(e.getMessage() + "Failed to send flagged email to user {} about their snippet {}", snippetOpt.get().getOwner().getUsername(), snippetOpt.get().getId());
+                LOGGER.error(e.getMessage() + "Failed to send flagged email to user {} about their snippet {}", snippet.getOwner().getUsername(), snippet.getId());
             }
             LOGGER.debug("Marked snippet {} as flagged by admin", id);
 
         }
         return mav;
+    }
+
+    private Snippet getSnippet(final long snippetId) {
+        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(snippetId);
+        if (!retrievedSnippet.isPresent()) {
+            logAndThrow(snippetId);
+        }
+        return retrievedSnippet.get();
     }
 
     private void logAndThrow(final long snippetId) {

@@ -111,7 +111,7 @@
             <p class="center black-text info full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-size: 20px;align-items: center;justify-content: center;text-align: center;width: 100%;color: black !important;">
                 #msgArgs("email.reported.description", [${snippetTitle}, ${reportingUserName}])
             </p>
-            <p>
+            <p class="center black-text info full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-size: 20px;align-items: center;justify-content: center;text-align: center;width: 100%;color: black !important;">
                 ${reportDetail}
             </p>
             <div class="center full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;align-items: center;justify-content: center;text-align: center;width: 100%;">

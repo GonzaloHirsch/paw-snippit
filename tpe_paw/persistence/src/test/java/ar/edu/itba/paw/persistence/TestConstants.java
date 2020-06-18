@@ -65,6 +65,8 @@ public final class TestConstants {
     static final String TAG4 = "Unpopular Tag";
     static final long INVALID_TAG_ID = 50;
 
+    static final String REPORT_DETAIL = "I found a problem with your snippet!";
+
     static final String ADMIN_ROLE = "ADMIN";
     static final String USER_ROLE = "USER";
 

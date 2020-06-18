@@ -29,6 +29,12 @@ public final class TestMethods {
         return lang;
     }
 
+    static Report insertReport(EntityManager em, User reportedBy, Snippet snippet, String detail, boolean ownerDismissed) {
+        Report report = new Report(reportedBy, snippet, detail, ownerDismissed);
+        em.persist(report);
+        return report;
+    }
+
     static Role insertRole(EntityManager em, String name) {
         Role role = new Role(name);
         em.persist(role);

@@ -54,10 +54,8 @@ public class RegistrationController {
     @Autowired private ValidatorHelper validatorHelper;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
-    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK)
-            .withZone(ZoneId.systemDefault());
 
-    @RequestMapping(value = "/login")
+    @RequestMapping(value = Constants.LOGIN)
     public ModelAndView login(HttpServletRequest request) {
         this.throwIfUserIsLoggedIn();
 
@@ -75,12 +73,12 @@ public class RegistrationController {
         return mav;
     }
 
-    @RequestMapping(value = "/goodbye")
+    @RequestMapping(value = Constants.GOODBYE)
     public ModelAndView logout() {
         return new ModelAndView("user/logout");
     }
 
-    @RequestMapping(value = "/signup", method = {RequestMethod.GET})
+    @RequestMapping(value = Constants.SIGNUP, method = {RequestMethod.GET})
     public ModelAndView signUpForm(HttpServletRequest request, @ModelAttribute("registerForm") final RegisterForm form) {
         this.throwIfUserIsLoggedIn();
 
@@ -89,7 +87,7 @@ public class RegistrationController {
         return new ModelAndView("user/signUpForm");
     }
 
-    @RequestMapping(value = "/signup", method = {RequestMethod.POST})
+    @RequestMapping(value = Constants.SIGNUP, method = {RequestMethod.POST})
     public ModelAndView signUp(@Valid @ModelAttribute("registerForm") final RegisterForm registerForm, final BindingResult errors, HttpServletRequest request, HttpServletResponse response) {
         if (errors.hasErrors()) {
             return signUpForm(request, registerForm);
@@ -165,14 +163,14 @@ public class RegistrationController {
         return mav;
     }
 
-    @RequestMapping(value = "/recover-password")
+    @RequestMapping(value = Constants.RECOVER_PASSWORD)
     public ModelAndView recoverPassword(@ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
         this.throwIfUserIsLoggedIn();
         return new ModelAndView("user/recoverPassword");
     }
 
-    @RequestMapping(value = "/recover-password", method = RequestMethod.POST)
-    public ModelAndView sendEmail(@Valid @ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
+    @RequestMapping(value = Constants.RECOVER_PASSWORD, method = RequestMethod.POST)
+    public ModelAndView sendRecoveryMail(@Valid @ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
         if (errors.hasErrors()){
             return recoverPassword(recoveryForm, errors);
         }
@@ -190,7 +188,7 @@ public class RegistrationController {
         return new ModelAndView("user/emailSent");
     }
 
-    @RequestMapping(value = "/reset-password", method = RequestMethod.GET)
+    @RequestMapping(value = Constants.RESET_PASSWORD, method = RequestMethod.GET)
     public ModelAndView resetPassword(final @RequestParam(value="id") long id,
                                       final @RequestParam(value="token") String token,
                                       @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm) {
@@ -210,7 +208,7 @@ public class RegistrationController {
         return new ModelAndView("user/resetPassword");
     }
 
-    @RequestMapping(value = "/reset-password", method = RequestMethod.POST)
+    @RequestMapping(value = Constants.RESET_PASSWORD, method = RequestMethod.POST)
     public ModelAndView endResetPassword (final @RequestParam(value="id") long id,
                                           final @RequestParam(value="token") String token,
                                           @ModelAttribute("resetPasswordForm") @Valid final ResetPasswordForm resetPasswordForm,

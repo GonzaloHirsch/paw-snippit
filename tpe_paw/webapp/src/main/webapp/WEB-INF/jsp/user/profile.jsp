@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html>
 <head>
@@ -119,7 +120,9 @@
                     </div>
                     <div class="fw-100">
                         <spring:message code="profile.joined"/>
-                        <c:out value="${user.getDateJoined()}"/>
+                        <fmt:parseDate value="${user.dateJoined}" pattern="yyyy-MM-dd" type="date" var="userJoined"/>
+                        <fmt:formatDate value="${userJoined}" dateStyle="long" type="date" var="formattedDate"/>
+                        <c:out value="${formattedDate}"/>
                     </div>
                     <div class="flex-row profile-info-item">
                         <div class="flex-center stat-bundle">

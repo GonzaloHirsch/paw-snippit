@@ -24,7 +24,9 @@
                 <div class="flex-column snippet-upload-info card-snippet-icon">
                     <div class="snippet-text">${snippet.owner.username}</div>
                     <div class="snippet-text card-snippet-date">
-                        <c:out value="${snippet.getCreationDate()}"/>
+                        <fmt:parseDate value="${snippet.dateCreated}" pattern="yyyy-MM-dd" type="date" var="snippetDate"/>
+                        <fmt:formatDate value="${snippetDate}" dateStyle="long" type="date" var="formattedDate"/>
+                        <c:out value="${formattedDate}"/>
                     </div>
                 </div>
             </div>

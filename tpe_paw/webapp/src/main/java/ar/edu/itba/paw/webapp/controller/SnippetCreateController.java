@@ -52,8 +52,6 @@ public class SnippetCreateController {
     @Autowired
     private ValidatorHelper validator;
 
-    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK)
-            .withZone(ZoneId.systemDefault());
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetCreateController.class);
 
     @RequestMapping(value = "/snippet/create")

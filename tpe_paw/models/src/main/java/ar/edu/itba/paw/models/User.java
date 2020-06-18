@@ -12,8 +12,6 @@ import java.util.Locale;
 @Table(name = "users")
 public class User {
 
-    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK).withZone(ZoneId.systemDefault());
-
     //TODO: Check correct sequence generator
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
@@ -138,8 +136,8 @@ public class User {
      * Returns the string representation of the creation date
      * @return
      */
-    public String getDateJoined(){
-        return DATE.format(this.dateJoined);
+    public Instant getDateJoined(){
+        return this.dateJoined;
     }
 
     public Locale getLocale(){

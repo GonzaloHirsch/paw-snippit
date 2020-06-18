@@ -21,7 +21,7 @@ public class ReportJpaDaoImpl implements ReportDao {
 
     @Override
     public Optional<Report> getReport(long userId, long snippetId) {
-        final TypedQuery<Report> query = this.em.createQuery("from Report as v where v.user.id = :user_id and v.snippet.id = :snippet_id", Report.class)
+        final TypedQuery<Report> query = this.em.createQuery("from Report as r where r.reportedBy.id = :user_id and r.snippet.id = :snippet_id", Report.class)
                 .setParameter("user_id", userId)
                 .setParameter("snippet_id",snippetId);
         return query.getResultList().stream().findFirst();
@@ -29,7 +29,7 @@ public class ReportJpaDaoImpl implements ReportDao {
 
     @Override
     public boolean isReported(long snippetId) {
-        final TypedQuery<Report> query = this.em.createQuery("from Report as v where v.snippet.id = :snippet_id", Report.class)
+        final TypedQuery<Report> query = this.em.createQuery("from Report as r where r.snippet.id = :snippet_id", Report.class)
                 .setParameter("snippet_id",snippetId);
         return query.getResultList().size() > 0;
     }
@@ -53,7 +53,7 @@ public class ReportJpaDaoImpl implements ReportDao {
 
     @Override
     public void dismissReportsForSnippet(long snippetId){
-        final TypedQuery<Report> query = this.em.createQuery("from Report as v where v.snippet.id = :snippet_id", Report.class)
+        final TypedQuery<Report> query = this.em.createQuery("from Report as r where r.snippet.id = :snippet_id", Report.class)
                 .setParameter("snippet_id",snippetId);
 
         for (Report report : query.getResultList()) {

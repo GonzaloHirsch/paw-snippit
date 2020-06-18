@@ -12,7 +12,7 @@ public class Report {
     @PrePersist
     private void prePersist() {
         if (this.id == null) {
-            this.id = new ReportId(this.user.getId(), this.snippet.getId());
+            this.id = new ReportId(this.reportedBy.getId(), this.snippet.getId());
         }
     }
 
@@ -20,16 +20,16 @@ public class Report {
     private ReportId id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @MapsId("user_id")
-    @JoinColumn(name = "user_id")
-    private User user;
+    @MapsId("reporter_id")
+    @JoinColumn(name = "reporter_id")
+    private User reportedBy;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @MapsId("snippet_id")
     @JoinColumn(name = "snippet_id")
     private Snippet snippet;
 
-    @Column(length = 500, name = "detail")
+    @Column(length = 310, name = "detail")
     private String detail;
 
     @Column(name="owner_dismissed")
@@ -39,8 +39,8 @@ public class Report {
         // Hibernate constructor
     }
 
-    public Report(User user, Snippet snippet, String detail, boolean ownerDismissed) {
-        this.user = user;
+    public Report(User reportedBy, Snippet snippet, String detail, boolean ownerDismissed) {
+        this.reportedBy = reportedBy;
         this.snippet = snippet;
         this.detail = detail;
         this.ownerDismissed = ownerDismissed;
@@ -54,12 +54,12 @@ public class Report {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public User getReportedBy() {
+        return reportedBy;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setReportedBy(User reportedBy) {
+        this.reportedBy = reportedBy;
     }
 
     public Snippet getSnippet() {
@@ -89,6 +89,17 @@ public class Report {
 
     public void addToLists() {
         this.snippet.getReports().add(this);
-        this.user.getReports().add(this);
+        this.reportedBy.getReports().add(this);
+    }
+
+    /**
+     * Returns a brief description of this report. The exact details
+     * of the representation are unspecified and subject to change,
+     * but the following may be regarded as typical:
+     *
+     * "[Report: snippet=12, reportedBy=21]"
+     */
+    @Override public String toString() {
+        return String.format("Report: snippet=%d, reportedBy=%d]", this.getSnippet().getId(), this.getReportedBy().getId());
     }
 }

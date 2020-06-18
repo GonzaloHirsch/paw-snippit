@@ -1,5 +1,5 @@
 drop view if exists complete_snippets;
-drop table if exists reported;
+-- drop table if exists reported;
 
 DO '
     BEGIN
@@ -83,13 +83,11 @@ DO '
 CREATE TABLE IF NOT EXISTS reported
 (
     snippet_id      INT REFERENCES snippets (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    user_id         INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    reporter_id     INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
     detail          VARCHAR(310),
     owner_dismissed BOOLEAN DEFAULT FALSE,
-    PRIMARY KEY (snippet_id, user_id)
+    PRIMARY KEY (snippet_id, reporter_id)
 );
-
-
 
 CREATE OR REPLACE VIEW complete_snippets AS
 SELECT aux.sn_id   AS id,

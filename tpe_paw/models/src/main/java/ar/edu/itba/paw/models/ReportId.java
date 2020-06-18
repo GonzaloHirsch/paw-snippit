@@ -8,8 +8,8 @@ import java.util.Objects;
 @Embeddable
 public class ReportId implements Serializable {
 
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "reporter_id")
+    private Long reporterId;
 
     @Column(name = "snippet_id")
     private Long snippetId;
@@ -18,8 +18,8 @@ public class ReportId implements Serializable {
         // Hibernate constructor
     }
 
-    public ReportId(Long userId, Long snippetId){
-        this.userId = userId;
+    public ReportId(Long reporterId, Long snippetId){
+        this.reporterId = reporterId;
         this.snippetId = snippetId;
     }
 
@@ -28,12 +28,12 @@ public class ReportId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ReportId reportId = (ReportId) o;
-        return Objects.equals(userId, reportId.userId) &&
+        return Objects.equals(reporterId, reportId.reporterId) &&
                 Objects.equals(snippetId, reportId.snippetId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, snippetId);
+        return Objects.hash(reporterId, snippetId);
     }
 }

@@ -54,8 +54,6 @@ public class RegistrationController {
     @Autowired private ValidatorHelper validatorHelper;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
-    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK)
-            .withZone(ZoneId.systemDefault());
 
     @RequestMapping(value = Constants.LOGIN)
     public ModelAndView login(HttpServletRequest request) {

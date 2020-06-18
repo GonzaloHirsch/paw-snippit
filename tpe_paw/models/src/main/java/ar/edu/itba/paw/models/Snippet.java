@@ -1,21 +1,13 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
 
 @Entity
 @Table(name = "snippets")
 public class Snippet {
-
-    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK).withZone(ZoneId.systemDefault());
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "snippets_id_seq")
@@ -81,8 +73,8 @@ public class Snippet {
      * Returns the string representation of the creation date
      * @return
      */
-    public String getCreationDate(){
-        return DATE.format(this.dateCreated);
+    public Instant getCreationDate(){
+        return this.dateCreated;
     }
 
     /**
@@ -146,7 +138,7 @@ public class Snippet {
     }
 
     public Instant getDateCreated() {
-        return dateCreated;
+        return this.dateCreated;
     }
 
     public void setDateCreated(Instant dateCreated) {

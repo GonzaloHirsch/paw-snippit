@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -130,7 +131,10 @@
                         </c:choose>
                         <a class="no-text-decoration" href="${userProfile}">
                             <div class="flex-column flex-center detail-snippet-block border-radius form-shadow">
-                                <spring:message var="uploadedOn" code="snippetDetails.upload.date" arguments="${snippet.getCreationDate()}"/>
+                                <fmt:parseDate value="${snippet.dateCreated}" pattern="yyyy-MM-dd" type="date" var="snippetDate"/>
+                                <fmt:formatDate value="${snippetDate}" dateStyle="short" type="date" var="formattedDate"/>
+
+                                <spring:message var="uploadedOn" code="snippetDetails.upload.date" arguments="${formattedDate}"/>
                                 <div class="snippet-text detail-snippet-date"><c:out value="${uploadedOn}"/></div>
                                 <div class="flex-row snippet-user-info detail-snippet-user-info">
                                     <c:if test="${snippet.owner.icon != null}">

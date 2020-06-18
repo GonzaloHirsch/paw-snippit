@@ -60,9 +60,6 @@ public class SnippetExploreController {
         ordersMap = Collections.unmodifiableMap(orders);
     }
 
-    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK)
-            .withZone(ZoneId.systemDefault());
-
     @RequestMapping("/explore")
     public ModelAndView explore(@ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("exploreForm") final ExploreForm exploreForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("snippet/snippetExplore");

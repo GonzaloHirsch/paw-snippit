@@ -1,21 +1,16 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 
 @Entity
 @Table(name = "users")
 public class User {
-
-    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK).withZone(ZoneId.systemDefault());
 
     //TODO: Check correct sequence generator
     @Id
@@ -138,8 +133,8 @@ public class User {
      * Returns the string representation of the creation date
      * @return
      */
-    public String getDateJoined(){
-        return DATE.format(this.dateJoined);
+    public Instant getDateJoined(){
+        return this.dateJoined;
     }
 
     public Locale getLocale(){

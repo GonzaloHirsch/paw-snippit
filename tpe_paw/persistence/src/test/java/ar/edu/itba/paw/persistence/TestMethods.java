@@ -73,54 +73,80 @@ public final class TestMethods {
         em.persist(user);
     }
 
-    static Map<String, Object> populateData(EntityManager em) {
-        return dataForSnippetCriteriaSearching(
-                em,
-                TestMethods.insertTag(em, TestConstants.TAG),
-                TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED),
-                TestMethods.insertLanguage(em, TestConstants.LANGUAGE)
-        );
+    static Map<String, Tag> tagsCreation(EntityManager em) {
+        return tagsCreation(em, TestMethods.insertTag(em, TestConstants.TAG));
     }
 
-    static Map<String, Object> dataForSnippetCriteriaSearching(
-            EntityManager em,
-            Tag tag,
-            User owner,
-            Language language
-    ) {
-        Map<String, Object> data = new HashMap<>();
+    static Map<String, Tag> tagsCreation(EntityManager em, Tag existingTag) {
+        Map<String, Tag> data = new HashMap<>();
 
         /* TAGS */
         Tag tag2 = TestMethods.insertTag(em, TestConstants.TAG2);
         Tag tag3 = TestMethods.insertTag(em, TestConstants.TAG3);
-        data.put(tag.getName(), tag);
+        data.put(existingTag.getName(), existingTag);
         data.put(tag2.getName(), tag2);
         data.put(tag3.getName(), tag3);
+        return data;
+    }
 
-        /* LANGUAGES */
+    static Map<String, Language> languageCreation(EntityManager em) {
+        return languageCreation(em, TestMethods.insertLanguage(em, TestConstants.LANGUAGE));
+    }
+
+    static Map<String, Language> languageCreation(EntityManager em, Language existingLang) {
+        Map<String, Language> data = new HashMap<>();
         Language language2 = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
         Language language3 = TestMethods.insertLanguage(em, TestConstants.LANGUAGE3);
-        data.put(language.getName(), language);
+        data.put(existingLang.getName(), existingLang);
         data.put(language2.getName(), language2);
         data.put(language3.getName(), language3);
+        return data;
+    }
 
-        /* USER */
+    static Map<String, User> userCreation(EntityManager em) {
+        return userCreation(em, TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED));
+    }
+
+    static Map<String, User> userCreation(EntityManager em, User existingUser) {
+        Map<String, User> data = new HashMap<>();
+
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, false);
         User user2 = TestMethods.insertUser(em, TestConstants.USER_USERNAME3, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL3, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED);
-        data.put(owner.getUsername(), owner);
+        data.put(existingUser.getUsername(), existingUser);
         data.put(user.getUsername(), user);
         data.put(user2.getUsername(), user2);
+        return data;
+    }
 
-        /* SNIPPET */
+    static Map<String, Snippet> snippetCreation(
+            EntityManager em,
+            Map<String, Tag> tagMap,
+            Map<String, Language> langMap,
+            Map<String, User> userMap
+    ) {
+        Map<String, Snippet> data = new HashMap<>();
+
+        User user = userMap.get(TestConstants.USER_USERNAME2);
+        User user2 = userMap.get(TestConstants.USER_USERNAME3);
+        User user3 = userMap.get(TestConstants.USER_USERNAME);
+
+        Language language = langMap.get(TestConstants.LANGUAGE);
+        Language language2 = langMap.get(TestConstants.LANGUAGE2);
+        Language language3 = langMap.get(TestConstants.LANGUAGE3);
+
+        Tag tag = tagMap.get(TestConstants.TAG);
+        Tag tag2 = tagMap.get(TestConstants.TAG2);
+        Tag tag3 = tagMap.get(TestConstants.TAG3);
+
         Snippet snip1 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), language, Collections.singletonList(tag2), false, TestConstants.SNIPPET_DELETED);
         Snippet snip2 = TestMethods.insertSnippet(em, user2, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, Instant.now(), language3, Arrays.asList(tag, tag2, tag3), TestConstants.SNIPPET_FLAGGED, false);
-        Snippet snip3 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE3, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE3, Instant.now(), language, Collections.singletonList(tag2), TestConstants.SNIPPET_FLAGGED, TestConstants.SNIPPET_DELETED);
+        Snippet snip3 = TestMethods.insertSnippet(em, user3, TestConstants.SNIPPET_TITLE3, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE3, Instant.now(), language, Collections.singletonList(tag2), TestConstants.SNIPPET_FLAGGED, TestConstants.SNIPPET_DELETED);
         Snippet snip4 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE4, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), language2, Arrays.asList(tag3, tag2), false, false);
         Snippet snip5 = TestMethods.insertSnippet(em, user2, TestConstants.SNIPPET_TITLE5, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), language2, Collections.singletonList(tag), false, false);
-        Snippet snip6 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE6, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE3, Instant.now(), language3, Collections.singletonList(tag2), TestConstants.SNIPPET_FLAGGED, false);
+        Snippet snip6 = TestMethods.insertSnippet(em, user3, TestConstants.SNIPPET_TITLE6, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE3, Instant.now(), language3, Collections.singletonList(tag2), TestConstants.SNIPPET_FLAGGED, false);
         Snippet snip7 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE7, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, Instant.now(), language, Arrays.asList(tag, tag2, tag3), false, false);
         Snippet snip8 = TestMethods.insertSnippet(em, user2, TestConstants.SNIPPET_TITLE8, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE2, Instant.now(), language2, Collections.singletonList(tag3), false, false);
-        Snippet snip9 = TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE9, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), language2, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
+        Snippet snip9 = TestMethods.insertSnippet(em, user3, TestConstants.SNIPPET_TITLE9, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), language2, Collections.emptyList(), TestConstants.SNIPPET_FLAGGED, false);
         data.put(snip1.getTitle(), snip1);
         data.put(snip2.getTitle(), snip2);
         data.put(snip3.getTitle(), snip3);

@@ -690,7 +690,11 @@ public class SnippetDaoTest {
     /* Testing HOME location */
     @Test
     public void findSnippetByCriteriaHomeTitleTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.TITLE,
                 TestConstants.SNIPPET_TITLE_TERM,
@@ -703,14 +707,18 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(1, result.size());
-        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE2)));
-        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertFalse(result.contains(snippets.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertFalse(result.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
     }
 
     @Test
     public void findSnippetByCriteriaHomeCapsTitleTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.TITLE,
                 TestConstants.SNIPPET_TITLE_TERM_CAPS,
@@ -723,16 +731,20 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(3, result.size());
-        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE)));
-        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE3)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE2)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE8)));
+        Assert.assertFalse(result.contains(snippets.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertFalse(result.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE8)));
     }
 
     @Test
     public void getSnippetByCriteriaCountHomeCapsTitleTest() {
-        TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        TestMethods.snippetCreation(em, tags, languages, users);
+        
         int count = snippetDao.getSnippetByCriteriaCount(
                 SnippetDao.Types.TITLE,
                 TestConstants.SNIPPET_TITLE_TERM_CAPS,
@@ -761,7 +773,11 @@ public class SnippetDaoTest {
 
     @Test
     public void findSnippetByCriteriaHomeAllTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.ALL,
                 TestConstants.GENERAL_TERM,
@@ -774,14 +790,18 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(6, result.size());
-        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE)));
-        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE3)));
-        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE9)));
+        Assert.assertFalse(result.contains(snippets.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertFalse(result.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertFalse(result.contains(snippets.get(TestConstants.SNIPPET_TITLE9)));
     }
 
     @Test
     public void findSnippetByCriteriaHomeTagTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.TAG,
                 TestConstants.TAG_TERM,
@@ -794,14 +814,17 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(TestConstants.SNIPPET_PAGE_SIZE, result.size());
-        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE)));
-        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE3)));
-        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE9)));
+        Assert.assertFalse(result.contains(snippets.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertFalse(result.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertFalse(result.contains(snippets.get(TestConstants.SNIPPET_TITLE9)));
     }
 
     @Test
     public void getSnippetByCriteriaCountHomeTagTest() {
-        TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        TestMethods.snippetCreation(em, tags, languages, users);
         int count = snippetDao.getSnippetByCriteriaCount(
                 SnippetDao.Types.TAG,
                 TestConstants.TAG_TERM,
@@ -814,7 +837,11 @@ public class SnippetDaoTest {
 
     @Test
     public void findSnippetByCriteriaHomeLanguageTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.LANGUAGE,
                 TestConstants.LANGUAGE_TERM,
@@ -827,16 +854,20 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(4, result.size());
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE4)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE8)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE9)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE4)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE8)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE9)));
     }
 
     /* Testing USER location */
     @Test
     public void findSnippetByCriteriaOwnerTitleTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.TITLE,
                 TestConstants.SNIPPET_TITLE_TERM_MANY,
@@ -849,26 +880,30 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(1, result.size());
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE9)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE9)));
     }
 
     @Test
     public void findSnippetByCriteriaUserTitleTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.TITLE,
                 TestConstants.SNIPPET_TITLE_TERM_MANY,
                 SnippetDao.Locations.USER,
                 SnippetDao.Orders.ASC,
-                ((User)data.get(TestConstants.USER_USERNAME2)).getId(),
+                (users.get(TestConstants.USER_USERNAME2)).getId(),
                 null,
                 1,
                 TestConstants.SNIPPET_PAGE_SIZE
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(2, result.size());
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE4)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE7)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE4)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE7)));
     }
 
     @Test
@@ -889,7 +924,11 @@ public class SnippetDaoTest {
 
     @Test
     public void findSnippetByCriteriaUserCodeTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.CONTENT,
                 TestConstants.CODE_TERM,
@@ -902,13 +941,17 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(1, result.size());
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE9)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE9)));
     }
 
     /* Testing FLAGGED location */
     @Test
     public void findSnippetByCriteriaFlaggedTitleTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.TITLE,
                 TestConstants.SNIPPET_TITLE_TERM_CAPS,
@@ -921,8 +964,8 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(2, result.size());
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE2)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
     }
 
     @Test
@@ -943,7 +986,11 @@ public class SnippetDaoTest {
 
     @Test
     public void findSnippetByCriteriaFlaggedCodeTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.CONTENT,
                 TestConstants.CODE_TERM,
@@ -956,13 +1003,17 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(2, result.size());
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE2)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE9)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE9)));
     }
 
     @Test
     public void findSnippetByCriteriaFlaggedUserInvalidTest() {
-        TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        TestMethods.snippetCreation(em, tags, languages, users);
+        
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.USER,
                 TestConstants.USER_NAME_TERM_INVALID,
@@ -979,7 +1030,11 @@ public class SnippetDaoTest {
 
     @Test
     public void getSnippetByCriteriaCountFlaggedUserInvalidTest() {
-        TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        TestMethods.snippetCreation(em, tags, languages, users);
+        
         int count = snippetDao.getSnippetByCriteriaCount(
                 SnippetDao.Types.USER,
                 TestConstants.USER_NAME_TERM_INVALID,
@@ -992,7 +1047,11 @@ public class SnippetDaoTest {
 
     @Test
     public void findSnippetByCriteriaFlaggedAllTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.ALL,
                 TestConstants.GENERAL_TERM,
@@ -1005,21 +1064,25 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(3, result.size());
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE2)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE3)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE6)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE6)));
     }
 
     /* Testing FAVORITE location */
     @Test
     public void findSnippetByCriteriaFavoritesTitleTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         TestMethods.setUserFavoriteSnippets(em, owner, Arrays.asList(
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE3),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE5),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE6),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE9)
+                snippets.get(TestConstants.SNIPPET_TITLE),
+                snippets.get(TestConstants.SNIPPET_TITLE3),
+                snippets.get(TestConstants.SNIPPET_TITLE5),
+                snippets.get(TestConstants.SNIPPET_TITLE6),
+                snippets.get(TestConstants.SNIPPET_TITLE9)
         ));
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.TITLE,
@@ -1033,21 +1096,25 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(4, result.size());
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE3)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE9)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE9)));
     }
 
     @Test
     public void getSnippetByCriteriaCountFavoritesTitleTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         TestMethods.setUserFavoriteSnippets(em, owner, Arrays.asList(
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE3),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE5),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE6),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE9)
+                snippets.get(TestConstants.SNIPPET_TITLE),
+                snippets.get(TestConstants.SNIPPET_TITLE3),
+                snippets.get(TestConstants.SNIPPET_TITLE5),
+                snippets.get(TestConstants.SNIPPET_TITLE6),
+                snippets.get(TestConstants.SNIPPET_TITLE9)
         ));
         int count = snippetDao.getSnippetByCriteriaCount(
                 SnippetDao.Types.TITLE,
@@ -1061,13 +1128,17 @@ public class SnippetDaoTest {
 
     @Test
     public void findSnippetByCriteriaFavoritesUserTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         TestMethods.setUserFavoriteSnippets(em, owner, Arrays.asList(
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE3),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE5),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE6),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE9)
+                snippets.get(TestConstants.SNIPPET_TITLE),
+                snippets.get(TestConstants.SNIPPET_TITLE3),
+                snippets.get(TestConstants.SNIPPET_TITLE5),
+                snippets.get(TestConstants.SNIPPET_TITLE6),
+                snippets.get(TestConstants.SNIPPET_TITLE9)
         ));
 
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
@@ -1082,18 +1153,22 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(1, result.size());
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
     }
 
     @Test
     public void findSnippetByCriteriaFavoritesCodeTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         TestMethods.setUserFavoriteSnippets(em, owner, Arrays.asList(
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE3),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE5),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE6),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE9)
+                snippets.get(TestConstants.SNIPPET_TITLE),
+                snippets.get(TestConstants.SNIPPET_TITLE3),
+                snippets.get(TestConstants.SNIPPET_TITLE5),
+                snippets.get(TestConstants.SNIPPET_TITLE6),
+                snippets.get(TestConstants.SNIPPET_TITLE9)
         ));
 
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
@@ -1108,20 +1183,24 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(3, result.size());
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE9)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE9)));
     }
 
     @Test
     public void findSnippetByCriteriaFavoritesTagInvalidTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         TestMethods.setUserFavoriteSnippets(em, owner, Arrays.asList(
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE3),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE5),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE6),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE9)
+                snippets.get(TestConstants.SNIPPET_TITLE),
+                snippets.get(TestConstants.SNIPPET_TITLE3),
+                snippets.get(TestConstants.SNIPPET_TITLE5),
+                snippets.get(TestConstants.SNIPPET_TITLE6),
+                snippets.get(TestConstants.SNIPPET_TITLE9)
         ));
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.TAG,
@@ -1139,13 +1218,17 @@ public class SnippetDaoTest {
 
     @Test
     public void findSnippetByCriteriaFavoritesLanguageTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         TestMethods.setUserFavoriteSnippets(em, owner, Arrays.asList(
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE3),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE5),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE6),
-                (Snippet) data.get(TestConstants.SNIPPET_TITLE9)
+                snippets.get(TestConstants.SNIPPET_TITLE),
+                snippets.get(TestConstants.SNIPPET_TITLE3),
+                snippets.get(TestConstants.SNIPPET_TITLE5),
+                snippets.get(TestConstants.SNIPPET_TITLE6),
+                snippets.get(TestConstants.SNIPPET_TITLE9)
         ));
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.LANGUAGE,
@@ -1159,17 +1242,21 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(2, result.size());
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE9)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE9)));
     }
 
     /* Testing FOLLOWING location */
     @Test
     public void findSnippetByCriteriaFollowingTitleTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         TestMethods.setUserFollowingTags(em, owner, Arrays.asList(
-                (Tag) data.get(TestConstants.TAG),
-                (Tag) data.get(TestConstants.TAG2)
+                tags.get(TestConstants.TAG),
+                tags.get(TestConstants.TAG2)
         ));
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.TITLE,
@@ -1183,16 +1270,20 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(2, result.size());
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE2)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
     }
 
     @Test
     public void findSnippetByCriteriaFollowingUsernameTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         TestMethods.setUserFollowingTags(em, owner, Arrays.asList(
-                (Tag) data.get(TestConstants.TAG),
-                (Tag) data.get(TestConstants.TAG2)
+                tags.get(TestConstants.TAG),
+                tags.get(TestConstants.TAG2)
         ));
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.USER,
@@ -1206,16 +1297,20 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(2, result.size());
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE2)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
     }
 
     @Test
     public void findSnippetByCriteriaFollowingCodeTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         TestMethods.setUserFollowingTags(em, owner, Arrays.asList(
-                (Tag) data.get(TestConstants.TAG),
-                (Tag) data.get(TestConstants.TAG2)
+                tags.get(TestConstants.TAG),
+                tags.get(TestConstants.TAG2)
         ));
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.CONTENT,
@@ -1229,18 +1324,22 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(4, result.size());
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE2)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE4)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE7)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE4)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE7)));
     }
 
     @Test
     public void findSnippetByCriteriaFollowingCodeInvalidTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         TestMethods.setUserFollowingTags(em, owner, Arrays.asList(
-                (Tag) data.get(TestConstants.TAG),
-                (Tag) data.get(TestConstants.TAG2)
+                tags.get(TestConstants.TAG),
+                tags.get(TestConstants.TAG2)
         ));
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.CONTENT,
@@ -1258,10 +1357,14 @@ public class SnippetDaoTest {
 
     @Test
     public void findSnippetByCriteriaFollowingTagTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         TestMethods.setUserFollowingTags(em, owner, Arrays.asList(
-                (Tag) data.get(TestConstants.TAG),
-                (Tag) data.get(TestConstants.TAG2)
+                tags.get(TestConstants.TAG),
+                tags.get(TestConstants.TAG2)
         ));
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.TAG,
@@ -1275,18 +1378,22 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(5, result.size());
-        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE)));
-        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE3)));
-        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE9)));
-        Assert.assertFalse(result.contains(data.get(TestConstants.SNIPPET_TITLE8)));
+        Assert.assertFalse(result.contains(snippets.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertFalse(result.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertFalse(result.contains(snippets.get(TestConstants.SNIPPET_TITLE9)));
+        Assert.assertFalse(result.contains(snippets.get(TestConstants.SNIPPET_TITLE8)));
     }
 
     @Test
     public void findSnippetByCriteriaFollowingLanguageTest() {
-        Map<String, Object> data = TestMethods.dataForSnippetCriteriaSearching(em, tag, owner, language);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em, tag);
+        Map<String, Language> languages = TestMethods.languageCreation(em, language);
+        Map<String, User> users = TestMethods.userCreation(em, owner);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         TestMethods.setUserFollowingTags(em, owner, Arrays.asList(
-                (Tag) data.get(TestConstants.TAG),
-                (Tag) data.get(TestConstants.TAG2)
+                tags.get(TestConstants.TAG),
+                tags.get(TestConstants.TAG2)
         ));
         Collection<Snippet> result = snippetDao.findSnippetByCriteria(
                 SnippetDao.Types.LANGUAGE,
@@ -1300,11 +1407,13 @@ public class SnippetDaoTest {
         );
         Assert.assertNotNull(result);
         Assert.assertEquals(2, result.size());
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE4)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE4)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
     }
 
-    /* Testing finding snippet by deep criteria */
+    /*
+
+    /* Testing finding snippet by deep criteria
     @Test
     public void findSnippetByDeepCriteriaSpanningManyYearsDateTest() {
         Map<String, Object> data = TestMethods.dataForSearchByDeepCriteria(em, tag, owner, language);
@@ -1326,15 +1435,15 @@ public class SnippetDaoTest {
                 1,
                 TestConstants.SNIPPET_PAGE_SIZE);
 
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE2)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE3)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE4)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE6)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE7)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE8)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE9)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE4)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE6)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE7)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE8)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE9)));
         
     }
 
@@ -1360,8 +1469,8 @@ public class SnippetDaoTest {
                 TestConstants.SNIPPET_PAGE_SIZE
         );
 
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE4)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE6)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE4)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE6)));
     }
 
     @Test
@@ -1386,10 +1495,10 @@ public class SnippetDaoTest {
                 TestConstants.SNIPPET_PAGE_SIZE
         );
 
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE3)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE4)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE5)));
-        Assert.assertTrue(result.contains(data.get(TestConstants.SNIPPET_TITLE6)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE4)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE6)));
     }
 
 
@@ -1452,15 +1561,15 @@ public class SnippetDaoTest {
                 TestConstants.SNIPPET_PAGE_SIZE
         );
 
-        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE6)));
-        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE7)));
-        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE8)));
-        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE9)));
+        Assert.assertTrue(result1.contains(snippets.get(TestConstants.SNIPPET_TITLE6)));
+        Assert.assertTrue(result1.contains(snippets.get(TestConstants.SNIPPET_TITLE7)));
+        Assert.assertTrue(result1.contains(snippets.get(TestConstants.SNIPPET_TITLE8)));
+        Assert.assertTrue(result1.contains(snippets.get(TestConstants.SNIPPET_TITLE9)));
 
-        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE)));
-        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE2)));
-        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE4)));
-        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE4)));
+        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
 
         Assert.assertTrue(result3.isEmpty());
 
@@ -1521,17 +1630,17 @@ public class SnippetDaoTest {
                 1,
                 TestConstants.SNIPPET_PAGE_SIZE
         );
-        Assert.assertTrue(result1.contains(data.get(TestConstants.SNIPPET_TITLE2)));
+        Assert.assertTrue(result1.contains(snippets.get(TestConstants.SNIPPET_TITLE2)));
 
-        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE)));
-        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE3)));
-        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE4)));
-        Assert.assertTrue(result2.contains(data.get(TestConstants.SNIPPET_TITLE5)));
+        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE4)));
+        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
 
         Assert.assertTrue(result3.isEmpty());
     }
 
-    /* Testing getting snippet by deep criteria count */
+    /* Testing getting snippet by deep criteria count
 
     @Test
     public void findSnippetByDeepCriteriaCountSpanningManyYearsDateTest() {
@@ -1652,5 +1761,5 @@ public class SnippetDaoTest {
         Assert.assertEquals(1, result1);
         Assert.assertEquals(4, result2);
         Assert.assertEquals(0, result3);
-    }
+    } */
 }

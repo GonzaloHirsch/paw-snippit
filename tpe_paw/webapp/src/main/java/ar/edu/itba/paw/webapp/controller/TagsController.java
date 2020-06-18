@@ -82,7 +82,7 @@ public class TagsController {
                 mav.addObject("followIconForm" + tag.getId().toString(), followForm);
                 /* Tag snippet amount count */
             }
-            this.tagService.analizeSnippetsUsing(tag);
+            this.snippetService.analizeSnippetsUsing(tag);
         }
         this.addAttributes(mav);
         return mav;

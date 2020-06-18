@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.service;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
+import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
@@ -40,4 +41,6 @@ public interface SnippetService {
     int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId, Long resourceId);
     int getSnippetByDeepCriteriaCount(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, Boolean includeFlagged);
     Long createSnippet(User owner, String title, String description, String code, Instant dateCreated, Long language, Collection<String> tags);
+    void analizeSnippetsUsing(Tag tag);
+    void analizeSnippetsUsing(Language language);
 }

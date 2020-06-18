@@ -23,7 +23,6 @@ public class TagServiceImpl implements TagService {
     @Autowired private TagDao tagDao;
     @Autowired private FollowingDao followingDao;
     @Autowired private UserService userService;
-    @Autowired private SnippetService snippetService;
 
     @Override
     public Collection<Tag> getAllTags(boolean showEmpty, boolean showOnlyFollowing, Long userId, int page, int pageSize) {
@@ -113,12 +112,6 @@ public class TagServiceImpl implements TagService {
     @Override
     public void removeTag(final long tagId) {
         this.tagDao.removeTag(tagId);
-    }
-
-    @Override
-    public void analizeSnippetsUsing(Tag tag) {
-        int amount = this.snippetService.getAllSnippetsByTagCount(tag.getId());
-        tag.setSnippetsUsingIsEmpty(amount == 0);
     }
 
     @Transactional

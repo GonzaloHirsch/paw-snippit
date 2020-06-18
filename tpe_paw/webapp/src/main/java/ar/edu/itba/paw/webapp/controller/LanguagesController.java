@@ -49,7 +49,7 @@ public class LanguagesController {
         Collection<Language> allLanguages = this.languageService.getAllLanguages(searchForm.isShowEmpty(), page, LANGUAGE_PAGE_SIZE);
 
         for (Language language : allLanguages) {
-            this.languageService.analizeSnippetsUsing(language);
+            this.snippetService.analizeSnippetsUsing(language);
         }
         int languageCount = this.languageService.getAllLanguagesCount(searchForm.isShowEmpty());
         mav.addObject("pages", (languageCount/ LANGUAGE_PAGE_SIZE) + (languageCount % LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
@@ -67,7 +67,7 @@ public class LanguagesController {
         int languageCount = this.languageService.getAllLanguagesCountByName(searchForm.getName(), searchForm.isShowEmpty());
 
         for (Language language : allLanguages) {
-            this.languageService.analizeSnippetsUsing(language);
+            this.snippetService.analizeSnippetsUsing(language);
         }
         mav.addObject("pages", (languageCount/ LANGUAGE_PAGE_SIZE) + (languageCount % LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);

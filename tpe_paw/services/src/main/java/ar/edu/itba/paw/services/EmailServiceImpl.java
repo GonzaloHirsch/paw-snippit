@@ -127,4 +127,19 @@ public class EmailServiceImpl implements EmailService {
         String subject = messageSource.getMessage("email.wdsf.subject", null, locale);
         this.sendEmail(to, subject, body, locale);
     }
+
+    @Async
+    @Override
+    public void sendReportedEmail(String snippetUrl, String snippetTitle, String userEmail, String username, String reportDetail, String reportingUserName, Locale locale){
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("snippetUrl", snippetUrl);
+        data.put("username", username);
+        data.put("snippetTitle", snippetTitle);
+        data.put("reportDetail", reportDetail);
+        data.put("reportingUserName", reportingUserName);
+        String body;
+        body = this.templateService.merge("/templates/reportedSnippet.vm", data, locale);
+        String subject = messageSource.getMessage("email.reported.subject", null, locale);
+        this.sendEmail(userEmail, subject, body, locale);
+    }
 }

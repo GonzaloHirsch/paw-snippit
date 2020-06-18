@@ -20,12 +20,12 @@
         <label class="no-margin" for="follow-button">
             <c:choose>
                 <c:when test="${followForm.follows}">
-                    <div class="tag-snippets-button border-radius flex-center no-text-decoration">
+                    <div class="text-center tag-snippets-button border-radius flex-center no-text-decoration">
                         <c:out value="${unfollow}"/>
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <div class="tag-snippets-button border-radius flex-center no-text-decoration">
+                    <div class="text-center tag-snippets-button border-radius flex-center no-text-decoration">
                         <c:out value="${follow}"/>
                     </div>
                 </c:otherwise>

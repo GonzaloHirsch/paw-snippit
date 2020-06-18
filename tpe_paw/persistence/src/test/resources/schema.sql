@@ -91,6 +91,15 @@ CREATE TABLE IF NOT EXISTS user_roles
     PRIMARY KEY (user_id, role_id)
 );
 
+CREATE TABLE IF NOT EXISTS reported
+(
+    snippet_id      INT REFERENCES snippets (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    reporter_id     INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    detail          VARCHAR(310),
+    owner_dismissed BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (snippet_id, reporter_id)
+);
+
 
 CREATE VIEW complete_snippets AS
 SELECT aux.sn_id   AS id,

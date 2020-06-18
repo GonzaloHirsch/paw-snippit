@@ -7,6 +7,7 @@
 -- drop table if exists snippets cascade;
 -- drop table if exists languages cascade;
 -- drop table if exists users cascade;
+-- drop table if exists reported cascade;
 
 CREATE TABLE IF NOT EXISTS users
 (
@@ -127,3 +128,4 @@ CREATE TABLE IF NOT EXISTS user_roles
     role_id INT REFERENCES roles (id) ON UPDATE CASCADE ON DELETE CASCADE,
     PRIMARY KEY (user_id, role_id)
 );
+

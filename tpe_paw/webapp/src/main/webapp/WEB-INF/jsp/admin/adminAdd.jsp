@@ -59,7 +59,7 @@
                     </div>
 
                     <div id="langButton" class="flex-center form-add-field-container">
-                        <label class="flex-center">
+                        <label class="flex-center form-admin-add-button border-radius transition">
                             <i class="material-icons form-add-icons">add_circle_outline</i>
                             <input class="form-add-description form-button-basics fw-300" type="button" value="${addLang}" onclick="addAdminRow('form-dynamic-lang', '${langPlaceholder}')"/>
                         </label>
@@ -91,7 +91,7 @@
                     </div>
 
                     <div id="tagButton" class="flex-center form-add-field-container">
-                        <label class="flex-center">
+                        <label class="flex-center form-admin-add-button border-radius transition">
                             <i class="material-icons form-add-icons">add_circle_outline</i>
                             <input class="form-add-description form-button-basics fw-300" type="button" value="${addTag}" onclick="addAdminRow('form-dynamic-tag', '${tagPlaceholder}')" />
                         </label>

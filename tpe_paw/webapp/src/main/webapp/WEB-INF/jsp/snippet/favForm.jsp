@@ -15,10 +15,10 @@
         <label for="fav-button" class="no-margin">
             <c:choose>
                 <c:when test="${favForm.favorite}">
-                    <i class="selected-red-icon material-icons snippet-icon">favorite</i>
+                    <i class="selected-red-icon material-icons snippet-icon transition">favorite</i>
                 </c:when>
                 <c:otherwise>
-                    <i class="unselected-red-icon material-icons snippet-icon">favorite_border</i>
+                    <i class="unselected-red-icon material-icons snippet-icon transition">favorite_border</i>
                 </c:otherwise>
             </c:choose>
         </label>

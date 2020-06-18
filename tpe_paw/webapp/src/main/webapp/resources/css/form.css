@@ -131,11 +131,18 @@
 }
 
 .form-add-description {
-    background-color: white;
+    background-color: inherit;
     color: #404040;
     font-size: 20px;
 }
 
+.form-admin-add-button {
+    padding: 0px 2px;
+}
+
+.form-admin-add-button:hover {
+    background: #eeedf2;
+}
 
 .form hr {
     border-style: inset;

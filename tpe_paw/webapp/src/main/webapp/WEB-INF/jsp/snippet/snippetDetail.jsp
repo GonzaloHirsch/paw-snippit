@@ -15,6 +15,7 @@
     <link href="<c:url value='/resources/css/general.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/element.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/elementsList.css'/>" rel="stylesheet"/>
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
           rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
@@ -45,6 +46,10 @@
 
                     <c:if test="${snippet.flagged}">
                         <c:import url="/WEB-INF/jsp/snippet/flaggedWarning.jsp"/>
+                    </c:if>
+
+                    <c:if test="${showReportedWarning}">
+                        <c:import url="/WEB-INF/jsp/snippet/reportedWarning.jsp"/>
                     </c:if>
 
                     <div class="flex-row flex-center flex-space-between">
@@ -98,6 +103,7 @@
                             </div>
                         </c:if>
 
+
                         <!-- DELETE -->
                         <c:if test="${currentUser.id == snippet.owner.id}">
                             <c:set var="snippet" value="${snippet}" scope="request"/>
@@ -115,9 +121,18 @@
                         <c:set var="votes" value="${voteCount}" scope="request"/>
                         <!-- VOTE -->
                         <c:if test="${!snippet.deleted}">
-                            <div class="flex-column flex-center detail-snippet-block border-radius form-shadow">
+                            <div class="snippet-vote-container flex-column flex-center detail-snippet-block border-radius form-shadow">
                                 <c:import url="/WEB-INF/jsp/snippet/voteForm.jsp"/>
                             </div>
+                        </c:if>
+
+                        <!-- REPORT -->
+                        <c:if test="${currentUser != null && currentUser.id != snippet.owner.id && !userRoles.contains('ADMIN')}">
+                            <c:if test="${canReport}">
+                                <div class="flex-center detail-snippet-block border-radius form-shadow">
+                                    <c:import url="/WEB-INF/jsp/snippet/snippetReportForm.jsp"/>
+                                </div>
+                            </c:if>
                         </c:if>
 
                         <!-- USER DETAILS -->

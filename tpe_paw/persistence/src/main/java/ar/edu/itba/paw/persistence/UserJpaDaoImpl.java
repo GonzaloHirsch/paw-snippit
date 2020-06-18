@@ -131,7 +131,6 @@ public class UserJpaDaoImpl implements UserDao {
         return "";
     }
 
-    //TODO: Check for inconsistency with boolean value of verified
     @Override
     public boolean userEmailIsVerified(long userId) {
         Optional<User> maybeUser = this.findUserById(userId);
@@ -142,7 +141,6 @@ public class UserJpaDaoImpl implements UserDao {
         return false;
     }
 
-    //TODO: Check for inconsistency with boolean value of verified
     @Override
     public void verifyUserEmail(long userId) {
         Optional<User> maybeUser = this.findUserById(userId);

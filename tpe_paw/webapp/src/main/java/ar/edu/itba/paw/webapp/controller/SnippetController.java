@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.*;
-import ar.edu.itba.paw.models.Snippet;
-import ar.edu.itba.paw.models.Tag;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.Vote;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.ElementDeletionException;
@@ -17,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -38,9 +36,8 @@ public class SnippetController {
     @Autowired private FavoriteService favService;
     @Autowired private LoginAuthentication loginAuthentication;
     @Autowired private TagService tagService;
-    @Autowired private UserService userService;
     @Autowired private MessageSource messageSource;
-    @Autowired private EmailService emailService;
+    @Autowired private ReportService reportService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetController.class);
 
@@ -51,21 +48,15 @@ public class SnippetController {
             @ModelAttribute("adminFlagForm") final FlagSnippetForm adminFlagForm,
             @ModelAttribute("deleteForm") final DeleteForm deleteForm,
             @ModelAttribute("favForm") final FavoriteForm favForm,
-            @ModelAttribute("voteForm") final VoteForm voteForm
+            @ModelAttribute("voteForm") final VoteForm voteForm,
+            @ModelAttribute("dismissReportForm") final DeleteForm dismissReportForm,
+            @ModelAttribute("reportForm") final ReportForm reportForm,
+            final BindingResult errors
     ) {
         final ModelAndView mav = new ModelAndView("snippet/snippetDetail");
         boolean showFavorite = true;
 
-        // Snippet
-        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
-        retrievedSnippet.ifPresent(snippet -> {
-                mav.addObject("snippet", snippet);
-        });
-
-        if (!retrievedSnippet.isPresent()) {
-            logAndThrow(id);
-        }
-        Snippet snippet = retrievedSnippet.get();
+        Snippet snippet = this.getSnippet(id);
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
         mav.addObject("currentUser", currentUser);
@@ -89,6 +80,11 @@ public class SnippetController {
             //Delete
             deleteForm.setDelete(snippet.isDeleted());
 
+            // Report
+            reportForm.setReported(this.reportService.getReport(currentUser.getId(), snippet.getId()).isPresent());
+            mav.addObject("displayReportDialog", errors.hasErrors());
+            mav.addObject("canReport", this.reportService.canReport(currentUser));
+
             if (roleService.isAdmin(currentUser.getId())) {
                 adminFlagForm.setFlagged(snippet.isFlagged());
             }
@@ -96,6 +92,8 @@ public class SnippetController {
             mav.addObject("userRoles", Collections.emptyList());
         }
 
+        mav.addObject("snippet", snippet);
+        mav.addObject("showReportedWarning", this.reportService.showReportedWarning(snippet, currentUser));
         mav.addObject("showFavorite", showFavorite || !snippet.isDeleted());
         mav.addObject("voteCount", this.voteService.getVoteBalance(snippet.getId()));
         mav.addObject("searchContext","");
@@ -155,22 +153,67 @@ public class SnippetController {
         return mav;
     }
 
+    @RequestMapping(value="/snippet/{id}/report", method={RequestMethod.POST})
+    public ModelAndView reportSnippet(
+            @ModelAttribute("snippetId") @PathVariable("id") long id,
+            @ModelAttribute("searchForm") final SearchForm searchForm,
+            @ModelAttribute("adminFlagForm") final FlagSnippetForm adminFlagForm,
+            @ModelAttribute("deleteForm") final DeleteForm deleteForm,
+            @ModelAttribute("favForm") final FavoriteForm favForm,
+            @ModelAttribute("voteForm") final VoteForm voteForm,
+            @ModelAttribute("dismissReportForm") final DeleteForm dismissReportForm,
+            @Valid @ModelAttribute("reportForm") final ReportForm reportForm,
+            final BindingResult errors
+    ) {
+        if (errors.hasErrors()) {
+            return snippetDetail(id, searchForm, adminFlagForm, deleteForm, favForm, voteForm, dismissReportForm, reportForm, errors);
+        }
+        // Getting the url of the server
+        final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        Snippet snippet = this.getSnippet(id);
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+
+        if (currentUser == null || currentUser.equals(snippet.getOwner())) {
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report.owner", null, LocaleContextHolder.getLocale()));
+        } else if (!this.reportService.canReport(currentUser)) {
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report.reputation", null, LocaleContextHolder.getLocale()));
+        }
+
+        try {
+            reportService.reportSnippet(currentUser, snippet, reportForm.getReportDetail(), baseUrl);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage() + "Failed report snippet: user {} about their snippet {}", snippet.getOwner().getUsername(), snippet.getId());
+        }
+        LOGGER.debug("User {} reported snippet {} with message {}", currentUser.getUsername(), id, reportForm.getReportDetail());
+
+        return new ModelAndView("redirect:/snippet/" + id);
+    }
+
+    @RequestMapping(value="/snippet/{id}/report/dismiss", method={RequestMethod.POST})
+    public ModelAndView reportSnippet(
+            @ModelAttribute("snippetId") @PathVariable("id") long id,
+            @ModelAttribute("dismissReportForm") final DeleteForm dismissReportForm
+    ) {
+        User currentUser = loginAuthentication.getLoggedInUser();
+        Snippet snippet = this.getSnippet(id);
+
+        if (currentUser == null || !currentUser.equals(snippet.getOwner())) {
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report.dismiss", null, LocaleContextHolder.getLocale()));
+        }
+        this.reportService.dismissReportsForSnippet(id);
+        return new ModelAndView("redirect:/snippet/" + id);
+    }
+
     @RequestMapping(value="/snippet/{id}/flag", method=RequestMethod.POST)
     public ModelAndView flagSnippet(
             @ModelAttribute("snippetId") @PathVariable("id") long id,
             @ModelAttribute("adminFlagForm") final FlagSnippetForm adminFlagForm
     ) {
-        final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null || !roleService.isAdmin(currentUser.getId())) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.flag", null, LocaleContextHolder.getLocale()));
         } else {
-            // Getting the snippet
-            Optional<Snippet> snippetOpt = this.snippetService.findSnippetById(id);
-            if (!snippetOpt.isPresent()){
-                this.logAndThrow(id);
-            }
-            Snippet snippet = snippetOpt.get();
+            Snippet snippet = this.getSnippet(id);
 
             // Getting the url of the server
             final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
@@ -178,12 +221,20 @@ public class SnippetController {
                 // Updating the flagged variable of snippet
                 this.snippetService.updateFlagged(snippet, snippet.getOwner(), adminFlagForm.isFlagged(), baseUrl);
             } catch (Exception e) {
-                LOGGER.error(e.getMessage() + "Failed to send flagged email to user {} about their snippet {}", snippetOpt.get().getOwner().getUsername(), snippetOpt.get().getId());
+                LOGGER.error(e.getMessage() + "Failed to send flagged email to user {} about their snippet {}", snippet.getOwner().getUsername(), snippet.getId());
             }
             LOGGER.debug("Marked snippet {} as flagged by admin", id);
 
         }
-        return mav;
+        return new ModelAndView("redirect:/snippet/" + id);
+    }
+
+    private Snippet getSnippet(final long snippetId) {
+        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(snippetId);
+        if (!retrievedSnippet.isPresent()) {
+            logAndThrow(snippetId);
+        }
+        return retrievedSnippet.get();
     }
 
     private void logAndThrow(final long snippetId) {

@@ -1,4 +1,5 @@
 drop view if exists complete_snippets;
+-- drop table if exists reported;
 
 DO '
     BEGIN
@@ -79,6 +80,14 @@ DO '
     END
 ' language plpgsql;
 
+CREATE TABLE IF NOT EXISTS reported
+(
+    snippet_id      INT REFERENCES snippets (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    reporter_id     INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    detail          VARCHAR(310),
+    owner_dismissed BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (snippet_id, reporter_id)
+);
 
 CREATE OR REPLACE VIEW complete_snippets AS
 SELECT aux.sn_id   AS id,

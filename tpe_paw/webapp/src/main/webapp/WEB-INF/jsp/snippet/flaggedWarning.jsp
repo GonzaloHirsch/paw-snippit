@@ -4,7 +4,6 @@
 
 <html>
 <head>
-    <link href="<c:url value='/resources/css/icons.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/flaggedSnippet.css'/>" rel="stylesheet"/>
 </head>
@@ -14,7 +13,7 @@
 <spring:message code="flagged.warning.message.2" var="flaggedMsg2"/>
 
     <div class="flex-row flex-align warning-container border-radius">
-        <i class="warning-icon material-icons">warning</i>
+        <i class="warning-icon material-icons transition">warning</i>
         <div class="flex-column warning-message-container">
             <h3 class="form-error"><c:out value="${flaggedWarn}"/></h3>
             <p class="form-error"><c:out value="${flaggedMsg1}"/></p>

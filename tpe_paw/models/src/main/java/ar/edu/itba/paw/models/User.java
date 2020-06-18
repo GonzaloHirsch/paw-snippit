@@ -58,9 +58,12 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Collection<Vote> votes = new HashSet<>();
 
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE},fetch = FetchType.LAZY, mappedBy = "reportedBy")
+    private Collection<Report> reports = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
-            name= "favorites",
+            name = "favorites",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "snippet_id"))
     private Collection<Snippet> favorites= new HashSet<>();
@@ -231,6 +234,15 @@ public class User {
         this.getFollowedTags().remove(tag);
         tag.getFollowingUsers().remove(this);
     }
+
+    public Collection<Report> getReports() {
+        return reports;
+    }
+
+    public void setReports(Collection<Report> reports) {
+        this.reports = reports;
+    }
+
 
     @Override
     public boolean equals(Object o) {

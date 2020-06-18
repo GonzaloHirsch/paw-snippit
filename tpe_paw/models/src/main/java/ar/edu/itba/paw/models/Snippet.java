@@ -39,8 +39,12 @@ public class Snippet {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "snippet")
     private Collection<Vote> votes = new HashSet<>();
 
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "snippet")
+    private Collection<Report> reports = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites", cascade = CascadeType.PERSIST)
     private Collection<User> userFavorites = new HashSet<>();
+
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
@@ -187,6 +191,14 @@ public class Snippet {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Collection<Report> getReports() {
+        return reports;
+    }
+
+    public void setReports(Collection<Report> reports) {
+        this.reports = reports;
     }
 
     @Override

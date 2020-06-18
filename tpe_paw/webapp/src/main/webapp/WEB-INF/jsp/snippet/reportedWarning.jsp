@@ -18,7 +18,7 @@
     <c:url var="dismissWarningUrl" value="/snippet/${snippet.id}/report/dismiss"/>
     <i class="reported-warning-icon material-icons transition">report</i>
     <div class="flex-column warning-message-container">
-        <div class="flex-row">
+        <div class="flex-row flex-space-between">
             <h3 class="reported-text"><c:out value="${reportWarn}"/></h3>
             <form:form class="form-container" action="${dismissWarningUrl}" method="post" modelAttribute="dismissReportForm">
                 <form:checkbox class="hidden" id="dismissWarn" path="delete" value="true" onclick="updateForm(this)"/>

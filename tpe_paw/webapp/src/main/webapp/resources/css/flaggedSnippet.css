@@ -4,6 +4,18 @@
     padding: 10px 20px;
 }
 
+.reported-container {
+    border: solid lightcoral 2px;
+    margin: 0px 0px 17px 0px;
+    padding: 10px 20px;
+}
+
+.reported-text {
+    color:lightcoral;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+}
+
 .warning-message-container {
     height: 80px;
     justify-content: center;

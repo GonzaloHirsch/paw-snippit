@@ -48,4 +48,19 @@ public class ReportServiceImpl implements ReportService {
     public boolean canReport(User user) {
         return user.getReputation() >= MIN_REPUTATION_TO_REPORT;
     }
+
+    /*
+     * Want reported warning to show only for the snippet owner and when it is valuable.
+     * When the snippet has been deleted or flagged, the warning is no longer relevant.
+     */
+    @Override
+    public boolean showReportedWarning(Snippet snippet, User currentUser) {
+        boolean isReported = this.reportDao.isReported(snippet.getId());
+        return currentUser != null && currentUser.equals(snippet.getOwner()) && isReported && !snippet.isDeleted() && !snippet.isFlagged();
+    }
+
+    @Override
+    public void dismissReportsForSnippet(long snippetId) {
+        this.reportDao.dismissReportsForSnippet(snippetId);
+    }
 }

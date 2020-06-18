@@ -17,7 +17,7 @@ public class Report {
     }
 
     @EmbeddedId
-    ReportId id;
+    private ReportId id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @MapsId("user_id")
@@ -32,14 +32,18 @@ public class Report {
     @Column(length = 500, name = "detail")
     private String detail;
 
+    @Column(name="owner_dismissed")
+    private boolean ownerDismissed;
+
     public Report(){
         // Hibernate constructor
     }
 
-    public Report(User user, Snippet snippet, String detail) {
+    public Report(User user, Snippet snippet, String detail, boolean ownerDismissed) {
         this.user = user;
         this.snippet = snippet;
         this.detail = detail;
+        this.ownerDismissed = ownerDismissed;
     }
 
     public ReportId getId() {
@@ -72,5 +76,19 @@ public class Report {
 
     public void setDetail(String detail) {
         this.detail = detail;
+    }
+
+    /* Owner can dismiss reports if they do not think they are correct */
+    public boolean isOwnerDismissed() {
+        return this.ownerDismissed;
+    }
+
+    public void setOwnerDismissed(boolean dismissed) {
+        this.ownerDismissed = dismissed;
+    }
+
+    public void addToLists() {
+        this.snippet.getReports().add(this);
+        this.user.getReports().add(this);
     }
 }

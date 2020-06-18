@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 @Repository
@@ -26,19 +28,22 @@ public class ReportJpaDaoImpl implements ReportDao {
     }
 
     @Override
-    public boolean reportSnippet(Long userId, Long snippetId, String detail){
+    public boolean isReported(long snippetId) {
+        final TypedQuery<Report> query = this.em.createQuery("from Report as v where v.snippet.id = :snippet_id", Report.class)
+                .setParameter("snippet_id",snippetId);
+        return query.getResultList().size() > 0;
+    }
+
+    @Override
+    public boolean reportSnippet(long userId, long snippetId, String detail){
         Optional<Report> maybeReport = this.getReport(userId,snippetId);
-        if(maybeReport.isPresent()){
-           return false;
-        }
-        else{
+        if(!maybeReport.isPresent()){
             User user = this.em.find(User.class, userId);
             Snippet snippet = this.em.find(Snippet.class, snippetId);
 
             if(user != null && snippet !=null){
-                Report report = new Report(user, snippet, detail);
-                snippet.getReports().add(report);
-                user.getReports().add(report);
+                Report report = new Report(user, snippet, detail, false);
+                report.addToLists();
                 this.em.persist(report);
                 return true;
             }
@@ -46,5 +51,14 @@ public class ReportJpaDaoImpl implements ReportDao {
         return false;
     }
 
+    @Override
+    public void dismissReportsForSnippet(long snippetId){
+        final TypedQuery<Report> query = this.em.createQuery("from Report as v where v.snippet.id = :snippet_id", Report.class)
+                .setParameter("snippet_id",snippetId);
 
+        for (Report report : query.getResultList()) {
+            report.setOwnerDismissed(true);
+            em.persist(report);
+        }
+    }
 }

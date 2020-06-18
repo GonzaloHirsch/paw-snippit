@@ -80,8 +80,7 @@ public class SnippetController {
             deleteForm.setDelete(snippet.isDeleted());
 
             // Report
-            Optional<Report> report = this.reportService.getReport(currentUser.getId(), snippet.getId());
-            reportForm.setReported(report.isPresent());
+            reportForm.setReported(this.reportService.getReport(currentUser.getId(), snippet.getId()).isPresent());
             mav.addObject("displayReportDialog", errors.hasErrors());
             mav.addObject("canReport", this.reportService.canReport(currentUser));
 
@@ -91,7 +90,10 @@ public class SnippetController {
         } else {
             mav.addObject("userRoles", Collections.emptyList());
         }
+
+        boolean todoDelete = this.reportService.showReportedWarning(snippet, currentUser);
         mav.addObject("snippet", snippet);
+        mav.addObject("showReportedWarning", todoDelete);
         mav.addObject("showFavorite", showFavorite || !snippet.isDeleted());
         mav.addObject("voteCount", this.voteService.getVoteBalance(snippet.getId()));
         mav.addObject("searchContext","");

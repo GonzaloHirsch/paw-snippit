@@ -17,7 +17,7 @@ public class Vote {
     }
 
     @EmbeddedId
-    VoteId id;
+    private VoteId id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @MapsId("user_id")

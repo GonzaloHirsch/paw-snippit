@@ -47,6 +47,10 @@
                         <c:import url="/WEB-INF/jsp/snippet/flaggedWarning.jsp"/>
                     </c:if>
 
+                    <c:if test="${showReportedWarning}">
+                        <c:import url="/WEB-INF/jsp/snippet/reportedWarning.jsp"/>
+                    </c:if>
+
                     <div class="flex-row flex-center flex-space-between">
                         <div class="snippet-text snippet-title detail-snippet-title">
                             <c:out value="${snippet.title}"/>

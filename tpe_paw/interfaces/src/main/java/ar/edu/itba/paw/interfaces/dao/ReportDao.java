@@ -7,7 +7,8 @@ import java.util.Optional;
 
 public interface ReportDao {
 
-    boolean reportSnippet(Long userId, Long snippetId, String reportDetail);
+    boolean reportSnippet(long userId, long snippetId, String reportDetail);
     Optional<Report> getReport(long userId, long snippetId);
-
+    boolean isReported(long snippetId);
+    void dismissReportsForSnippet(long snippetId);
 }

@@ -32,6 +32,12 @@
     color: lightcoral !important;
 }
 
+.reported-warning-icon {
+    color: lightcoral;
+    font-size: 70px !important;
+    margin: 5px 15px 5px 2px;
+}
+
 .warning-icon {
     color: red;
     font-size: 70px !important;

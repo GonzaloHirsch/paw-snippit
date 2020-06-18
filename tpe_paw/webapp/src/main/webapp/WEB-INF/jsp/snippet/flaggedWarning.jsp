@@ -4,7 +4,6 @@
 
 <html>
 <head>
-    <link href="<c:url value='/resources/css/icons.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/flaggedSnippet.css'/>" rel="stylesheet"/>
 </head>

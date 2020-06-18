@@ -55,11 +55,12 @@ public class ReportServiceImpl implements ReportService {
      */
     @Override
     public boolean showReportedWarning(Snippet snippet, User currentUser) {
-        boolean isReported = this.reportDao.isReported(snippet.getId());
+        boolean isReported = this.reportDao.isReportedAndNotDismissed(snippet.getId());
         return currentUser != null && currentUser.equals(snippet.getOwner()) && isReported && !snippet.isDeleted() && !snippet.isFlagged();
     }
 
     @Override
+    @Transactional
     public void dismissReportsForSnippet(long snippetId) {
         this.reportDao.dismissReportsForSnippet(snippetId);
     }

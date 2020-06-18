@@ -28,10 +28,10 @@ public class ReportJpaDaoImpl implements ReportDao {
     }
 
     @Override
-    public boolean isReported(long snippetId) {
+    public boolean isReportedAndNotDismissed(long snippetId) {
         final TypedQuery<Report> query = this.em.createQuery("from Report as r where r.snippet.id = :snippet_id", Report.class)
                 .setParameter("snippet_id",snippetId);
-        return query.getResultList().size() > 0;
+        return query.getResultList().stream().anyMatch(report -> !report.isOwnerDismissed());
     }
 
     @Override

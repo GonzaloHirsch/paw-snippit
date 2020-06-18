@@ -9,6 +9,6 @@ public interface ReportDao {
 
     boolean reportSnippet(long userId, long snippetId, String reportDetail);
     Optional<Report> getReport(long userId, long snippetId);
-    boolean isReported(long snippetId);
+    boolean isReportedAndNotDismissed(long snippetId);
     void dismissReportsForSnippet(long snippetId);
 }

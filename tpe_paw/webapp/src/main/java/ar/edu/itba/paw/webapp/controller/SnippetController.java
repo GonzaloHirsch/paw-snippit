@@ -49,6 +49,7 @@ public class SnippetController {
             @ModelAttribute("deleteForm") final DeleteForm deleteForm,
             @ModelAttribute("favForm") final FavoriteForm favForm,
             @ModelAttribute("voteForm") final VoteForm voteForm,
+            @ModelAttribute("dismissReportForm") final DeleteForm dismissReportForm,
             @ModelAttribute("reportForm") final ReportForm reportForm,
             final BindingResult errors
     ) {
@@ -91,9 +92,8 @@ public class SnippetController {
             mav.addObject("userRoles", Collections.emptyList());
         }
 
-        boolean todoDelete = this.reportService.showReportedWarning(snippet, currentUser);
         mav.addObject("snippet", snippet);
-        mav.addObject("showReportedWarning", todoDelete);
+        mav.addObject("showReportedWarning", this.reportService.showReportedWarning(snippet, currentUser));
         mav.addObject("showFavorite", showFavorite || !snippet.isDeleted());
         mav.addObject("voteCount", this.voteService.getVoteBalance(snippet.getId()));
         mav.addObject("searchContext","");
@@ -161,25 +161,23 @@ public class SnippetController {
             @ModelAttribute("deleteForm") final DeleteForm deleteForm,
             @ModelAttribute("favForm") final FavoriteForm favForm,
             @ModelAttribute("voteForm") final VoteForm voteForm,
+            @ModelAttribute("dismissReportForm") final DeleteForm dismissReportForm,
             @Valid @ModelAttribute("reportForm") final ReportForm reportForm,
             final BindingResult errors
     ) {
         if (errors.hasErrors()) {
-            return snippetDetail(id, searchForm, adminFlagForm, deleteForm, favForm, voteForm, reportForm, errors);
+            return snippetDetail(id, searchForm, adminFlagForm, deleteForm, favForm, voteForm, dismissReportForm, reportForm, errors);
         }
         // Getting the url of the server
         final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-
         Snippet snippet = this.getSnippet(id);
-
         User currentUser = this.loginAuthentication.getLoggedInUser();
+
         if (currentUser == null || currentUser.equals(snippet.getOwner())) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report.owner", null, LocaleContextHolder.getLocale()));
         } else if (!this.reportService.canReport(currentUser)) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report.reputation", null, LocaleContextHolder.getLocale()));
         }
-
-        final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
 
         try {
             reportService.reportSnippet(currentUser, snippet, reportForm.getReportDetail(), baseUrl);
@@ -188,7 +186,22 @@ public class SnippetController {
         }
         LOGGER.debug("User {} reported snippet {} with message {}", currentUser.getUsername(), id, reportForm.getReportDetail());
 
-        return mav;
+        return new ModelAndView("redirect:/snippet/" + id);
+    }
+
+    @RequestMapping(value="/snippet/{id}/report/dismiss", method={RequestMethod.POST})
+    public ModelAndView reportSnippet(
+            @ModelAttribute("snippetId") @PathVariable("id") long id,
+            @ModelAttribute("dismissReportForm") final DeleteForm dismissReportForm
+    ) {
+        User currentUser = loginAuthentication.getLoggedInUser();
+        Snippet snippet = this.getSnippet(id);
+
+        if (currentUser == null || !currentUser.equals(snippet.getOwner())) {
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report.dismiss", null, LocaleContextHolder.getLocale()));
+        }
+        this.reportService.dismissReportsForSnippet(id);
+        return new ModelAndView("redirect:/snippet/" + id);
     }
 
     @RequestMapping(value="/snippet/{id}/flag", method=RequestMethod.POST)
@@ -196,7 +209,6 @@ public class SnippetController {
             @ModelAttribute("snippetId") @PathVariable("id") long id,
             @ModelAttribute("adminFlagForm") final FlagSnippetForm adminFlagForm
     ) {
-        final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null || !roleService.isAdmin(currentUser.getId())) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.flag", null, LocaleContextHolder.getLocale()));
@@ -214,7 +226,7 @@ public class SnippetController {
             LOGGER.debug("Marked snippet {} as flagged by admin", id);
 
         }
-        return mav;
+        return new ModelAndView("redirect:/snippet/" + id);
     }
 
     private Snippet getSnippet(final long snippetId) {

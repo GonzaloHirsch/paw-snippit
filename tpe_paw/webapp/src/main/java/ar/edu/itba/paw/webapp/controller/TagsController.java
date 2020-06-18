@@ -157,7 +157,7 @@ public class TagsController {
         Collection<String> userRoles = Collections.emptyList();
 
         if (currentUser != null) {
-            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
+            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
             allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
             userRoles = this.roleService.getUserRoles(currentUser.getId());

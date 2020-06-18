@@ -71,7 +71,7 @@ public class SnippetController {
         mav.addObject("currentUser", currentUser);
         if (currentUser != null){
             Collection<Tag> allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-            Collection<Tag> userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
+            Collection<Tag> userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
             mav.addObject("userTags", userTags);
             mav.addObject("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
             mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));

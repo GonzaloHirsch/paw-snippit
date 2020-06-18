@@ -215,7 +215,7 @@ public class  UserController {
         Collection<Tag> allFollowedTags = Collections.emptyList();
 
         if (currentUser != null) {
-            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
+            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
             userRoles = this.roleService.getUserRoles(currentUser.getId());
             allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
         }

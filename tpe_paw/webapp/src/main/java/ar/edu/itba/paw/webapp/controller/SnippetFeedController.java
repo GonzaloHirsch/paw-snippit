@@ -85,15 +85,16 @@ public class SnippetFeedController {
 
         Collection<Snippet> snippets = this.snippetService.getAllFollowingSnippets(currentUser.getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllFollowingSnippetsCount(currentUser.getId());
-
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FOLLOWING);
 
-        for (Tag tag : currentUser.getFollowedTags()) {
+        /* Show up to 25 tags -> most popular + non empty */
+        Collection<Tag> followingTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.FOLLOWING_FEED_TAG_AMOUNT);
+        for (Tag tag : followingTags) {
             FollowForm followForm = new FollowForm();
-            followForm.setFollows(currentUser.getFollowedTags().contains(tag));
+            followForm.setFollows(true);
             mav.addObject("unfollowForm" + tag.getId().toString(), followForm);
         }
-        mav.addObject("followingTags", currentUser.getFollowedTags());
+        mav.addObject("followingTags", followingTags);
 
         return mav;
     }
@@ -143,7 +144,7 @@ public class SnippetFeedController {
         Collection<Tag> allFollowedTags = Collections.emptyList();
 
         if (currentUser != null) {
-            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
+            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
             userRoles = this.roleService.getUserRoles(currentUser.getId());
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
             allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());

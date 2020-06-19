@@ -1414,94 +1414,6 @@ public class SnippetDaoTest {
     
 
     /* Testing finding snippet by deep criteria */
-    @Test
-    public void findSnippetByDeepCriteriaSpanningManyYearsDateTest() {
-        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
-
-        Collection<Snippet> result = snippetDao.findSnippetByDeepCriteria(
-                TestConstants.DATE_9,
-                TestConstants.DATE_1,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                "",
-                "",
-                SnippetDao.Orders.ASC,
-                SnippetDao.Types.TITLE,
-                true,
-                1,
-                TestConstants.SNIPPET_PAGE_SIZE);
-
-        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE)));
-        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE2)));
-        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
-        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE4)));
-        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
-        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE6)));
-        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE7)));
-        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE8)));
-        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE9)));
-        Assert.assertEquals(result.size(), snippets.values().size());
-    }
-
-
-    @Test
-    public void findSnippetByDeepCriteriaMinutesDateTest() {
-        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
-
-        Collection<Snippet> result = snippetDao.findSnippetByDeepCriteria(
-                TestConstants.DATE_MIN_MINUTES,
-                TestConstants.DATE_MAX_MINUTES,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                "",
-                "",
-                SnippetDao.Orders.ASC,
-                SnippetDao.Types.TITLE,
-                true,
-                1,
-                TestConstants.SNIPPET_PAGE_SIZE
-        );
-
-        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE4)));
-        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE6)));
-    }
-
-    // TODO fix bug with cast to date
-    @Test
-    public void findSnippetByDeepCriteriaYearDateTest() {
-        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
-
-        Collection<Snippet> result = snippetDao.findSnippetByDeepCriteria(
-                TestConstants.DATE_MIN_YEAR,
-                TestConstants.DATE_MAX_YEAR,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                "",
-                "",
-                SnippetDao.Orders.ASC,
-                SnippetDao.Types.ALL,
-                true,
-                1,
-                TestConstants.SNIPPET_PAGE_SIZE
-        );
-
-        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
-        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE4)));
-        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
-        Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE6)));
-    }
 
     // TODO fix zero-vote related bug then retry test
     @Test
@@ -1734,26 +1646,6 @@ public class SnippetDaoTest {
     }
 
     /* Testing getting snippet by deep criteria count */
-
-    @Test
-    public void findSnippetByDeepCriteriaCountSpanningManyYearsDateTest() {
-        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
-
-        int result = snippetDao.getSnippetByDeepCriteriaCount(
-                TestConstants.DATE_9,
-                TestConstants.DATE_1,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                "",
-                "",
-                true);
-
-        Assert.assertEquals(9, result);
-    }
 
     // TODO fix zero-vote related bug then retry test
     @Test

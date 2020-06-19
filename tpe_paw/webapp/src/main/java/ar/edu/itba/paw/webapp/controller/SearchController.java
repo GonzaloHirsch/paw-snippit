@@ -200,58 +200,65 @@ public class SearchController {
             final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
     ) {
-        return this.searchOwnerProfileSnippets(id, Constants.USER_PROFILE_CONTEXT, profilePhotoForm, descriptionForm, searchForm, page, editing);
+        String searchContext = String.format("user/%d/", id);
+        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
+        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, id, null);
+
+        return this.profileSearch(id, descriptionForm, Constants.USER_PROFILE_CONTEXT, searchContext, snippets, totalSnippetCount, page, editing);
     }
 
-    @RequestMapping("/user/{id}/{context}/search")
-    public ModelAndView searchOwnerProfileSnippets(
+    @RequestMapping("/user/{id}/" + Constants.OWNER_DELETED_CONTEXT + "/search")
+    public ModelAndView searchOwnerProfileDeletedSnippets(
             final @PathVariable("id") long id,
-            @PathVariable("context") String context,
             @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
             @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
             @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
             final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
     ) {
+
+        String searchContext = String.format("user/%d/%s/", id, Constants.OWNER_DELETED_CONTEXT);
+        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.DELETED, searchForm.getSort(), id, null, page);
+        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.DELETED, id, null);
+
+        return this.profileSearch(id, descriptionForm, Constants.OWNER_DELETED_CONTEXT, searchContext, snippets, totalSnippetCount, page, editing);
+    }
+
+    @RequestMapping("/user/{id}/" + Constants.OWNER_ACTIVE_CONTEXT + "/search")
+    public ModelAndView searchOwnerProfileSnippets(
+            final @PathVariable("id") long id,
+            @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
+            @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
+            @Valid @ModelAttribute("searchForm") final SearchForm searchForm,
+            final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
+    ) {
+        String searchContext = String.format("user/%d/%s/", id, Constants.OWNER_ACTIVE_CONTEXT);
+        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
+        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, id, null);
+
+        return this.profileSearch(id, descriptionForm, Constants.OWNER_ACTIVE_CONTEXT, searchContext, snippets, totalSnippetCount, page, editing);
+    }
+
+    private ModelAndView profileSearch(long id, DescriptionForm descriptionForm, String context, String searchContext, Collection<Snippet> snippets, int totalSnippetCount, int page, boolean editing) {
         final ModelAndView mav = new ModelAndView("user/profile");
-        /* Set the current user and its following tags */
+        User profileUser = this.getUser(id, String.format("%s/search", searchContext));
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Optional<User> maybeUser = this.userService.findUserById(id);
-        if (!maybeUser.isPresent()) {
-            this.logAndThrow("/user/"+id+"/search");
-        }
-        User user = maybeUser.get();
-        descriptionForm.setDescription(user.getDescription());
+
+        descriptionForm.setDescription(profileUser.getDescription());
 
         //If context is "" but it is my profile, change it to active
-        if (currentUser != null && currentUser.equals(user) && context.equals(Constants.USER_PROFILE_CONTEXT)){
+        if (currentUser != null && currentUser.equals(profileUser) && context.equals(Constants.USER_PROFILE_CONTEXT)){
             context = Constants.OWNER_ACTIVE_CONTEXT;
+            searchContext = String.format("user/%d/%s/", id, context);
         }
-
-        // Getting the snippets for the search
-        Collection<Snippet> snippets;
-        int totalSnippetCount;
-        StringBuilder searchContext = new StringBuilder("user/").append(id).append("/");
-
-        if (context.equals(Constants.USER_PROFILE_CONTEXT) || context.equals(Constants.OWNER_ACTIVE_CONTEXT)) {
-            snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
-            totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, id, null);
-        } else if (context.equals(Constants.OWNER_DELETED_CONTEXT)) {
-            snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.DELETED, searchForm.getSort(), id, null, page);
-            totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.DELETED, id, null);
-        } else {
-            throw new InvalidUrlException();
-        }
-
-        searchContext.append(context);
-        if (!context.equals(Constants.USER_PROFILE_CONTEXT)) { searchContext.append("/"); }
 
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, USER + id + "/");
-        mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.getId()));
-        mav.addObject("snippetsCount", user.getCreatedSnippets().size());
+        mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(profileUser.getId()));
+        mav.addObject("snippetsCount", profileUser.getCreatedSnippets().size());
         mav.addObject("editing", editing);
         mav.addObject("isEdit", false);
-        mav.addObject("user", user);
+        mav.addObject("user", profileUser);
         mav.addObject("snippets", snippets);
         mav.addObject("tabContext", context);
         mav.addObject("searchContext", searchContext);
@@ -283,6 +290,14 @@ public class SearchController {
                 location,
                 userId,
                 resourceId);
+    }
+
+    private User getUser(final long id, String location) {
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (!maybeUser.isPresent()) {
+            this.logAndThrow(location);
+        }
+        return maybeUser.get();
     }
 
     private void logAndThrow(String location) {

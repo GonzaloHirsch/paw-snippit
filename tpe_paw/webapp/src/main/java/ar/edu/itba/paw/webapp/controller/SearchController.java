@@ -296,7 +296,6 @@ public class SearchController {
         mav.addObject("snippetList", snippets);
         mav.addObject("totalSnippetCount", snippetCount);
         mav.addObject("searchContext", searchContext);
-        mav.addObject("searching", true);
     }
 
     @ModelAttribute
@@ -317,5 +316,6 @@ public class SearchController {
         model.addAttribute("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
         model.addAttribute("searchForm", searchForm);
         model.addAttribute("userRoles", userRoles);
+        model.addAttribute("searching", true);
     }
 }

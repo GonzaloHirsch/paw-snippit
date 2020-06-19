@@ -241,6 +241,7 @@ public class  UserController {
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         model.addAttribute("searchForm", searchForm);
+        model.addAttribute("searching", false);
     }
 
 }

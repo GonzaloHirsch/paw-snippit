@@ -212,3 +212,7 @@ body {
 .transition {
     transition: 0.3s;
 }
+
+.element-result-amount {
+    margin: 8px 0px 0px 0px;
+}

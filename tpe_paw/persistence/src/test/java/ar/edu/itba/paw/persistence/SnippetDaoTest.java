@@ -1444,7 +1444,7 @@ public class SnippetDaoTest {
         Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE7)));
         Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE8)));
         Assert.assertTrue(result.contains(snippets.get(TestConstants.SNIPPET_TITLE9)));
-        
+        Assert.assertEquals(result.size(), snippets.values().size());
     }
 
 
@@ -1755,6 +1755,7 @@ public class SnippetDaoTest {
         Assert.assertEquals(9, result);
     }
 
+    // TODO fix zero-vote related bug then retry test
     @Test
     public void findSnippetByDeepCriteriaCountVotesNegativeTest() {
         Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
@@ -1765,6 +1766,28 @@ public class SnippetDaoTest {
                 null,
                 null,
                 TestConstants.VOTE_VALUE_NEG_1,
+                TestConstants.VOTE_VALUE_NEG_2,
+                null,
+                null,
+                "",
+                "",
+                true
+        );
+
+        Assert.assertEquals(1, result1);
+    }
+
+    // TODO fix zero-vote related bug then retry test
+    @Test
+    public void findSnippetByDeepCriteriaCountVotesNegativeUnboundedTest() {
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
+
+        int result1 = snippetDao.getSnippetByDeepCriteriaCount(
+                null,
+                null,
+                null,
+                null,
+                null,
                 TestConstants.VOTE_VALUE_NEG_2,
                 null,
                 null,
@@ -1807,6 +1830,25 @@ public class SnippetDaoTest {
                 null,
                 TestConstants.VOTE_VALUE_2,
                 TestConstants.VOTE_VALUE_3,
+                null,
+                null,
+                "",
+                "",
+                true
+        );
+        Assert.assertEquals(2, result2);
+    }
+
+    @Test
+    public void findSnippetByDeepCriteriaCountVotesPositiveUnboundedTest() {
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
+        int result2 = snippetDao.getSnippetByDeepCriteriaCount(
+                null,
+                null,
+                null,
+                null,
+                TestConstants.VOTE_VALUE_2,
+                null,
                 null,
                 null,
                 "",

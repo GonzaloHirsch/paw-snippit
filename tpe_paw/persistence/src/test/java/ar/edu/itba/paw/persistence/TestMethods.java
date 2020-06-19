@@ -272,6 +272,9 @@ public final class TestMethods {
         TestMethods.insertVote(em, owner, snip5, true);
 
         /* REPUTATION UPDATE */
+        // Note: this is here because hsql will not respond to update_reputation_trigger
+        // and the way reputations are obtained is irrelevant to these (SnippetDao) tests
+
         TestMethods.setUserReputation(em, user10, 5);
         TestMethods.setUserReputation(em, user2, -5);
         TestMethods.setUserReputation(em, user3, 0);

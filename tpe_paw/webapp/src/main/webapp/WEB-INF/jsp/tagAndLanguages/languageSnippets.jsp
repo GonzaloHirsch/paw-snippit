@@ -38,8 +38,15 @@
             <div class="flex-row flex-center element-snippets-top-container">
                 <div class="flex-row flex-center title-container">
 
-                    <div class="element-snippets-title fw-100">
-                        <c:out value="${languageTitle}"/>
+                    <div class="fw-100">
+                        <div class="element-snippets-title">
+                            <c:out value="${languageTitle}"/>
+                        </div>
+                        <c:set var="searching" value="${searching}" scope="request"/>
+                        <c:set var="itemType" value="snippet" scope="request"/>
+                        <c:set var="itemCount" value="${totalSnippetCount}" scope="request"/>
+                        <c:set var="alignment" value="flex-center" scope="request"/>
+                        <c:import url="/WEB-INF/jsp/navigation/itemCountDisplay.jsp"/>
                     </div>
                     <c:if test="${currentUser != null && userRoles.contains('ADMIN') && !language.deleted}">
                         <form:form action="${langDeleteUrl}" class="form-container" method="post" modelAttribute="deleteForm">

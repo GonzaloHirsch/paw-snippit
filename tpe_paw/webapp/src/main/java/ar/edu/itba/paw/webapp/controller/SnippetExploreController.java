@@ -65,7 +65,7 @@ public class SnippetExploreController {
         final ModelAndView mav = new ModelAndView("snippet/snippetExplore");
         Collection<Snippet> snippets = this.snippetService.getAllSnippets(page, SNIPPET_PAGE_SIZE);
         int snippetCount = this.snippetService.getAllSnippetsCount();
-        this.addModelAttributesHelper(mav, snippetCount, page, snippets, "explore/");
+        this.addModelAttributesHelper(mav, snippetCount, page, snippets, "explore/", false);
         return mav;
     }
 
@@ -97,7 +97,7 @@ public class SnippetExploreController {
                 exploreForm.getLanguage() == -1 ? null : exploreForm.getLanguage(), exploreForm.getTag() == -1 ? null : exploreForm.getTag(),
                 exploreForm.getTitle(), exploreForm.getUsername(),
                 exploreForm.getIncludeFlagged());
-        this.addModelAttributesHelper(mav, snippetCount, page, snippets, "explore/");
+        this.addModelAttributesHelper(mav, snippetCount, page, snippets, "explore/", true);
         return mav;
     }
 
@@ -121,11 +121,13 @@ public class SnippetExploreController {
         model.addAttribute("userRoles", userRoles);
     }
 
-    private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
+    private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext, boolean searching) {
         mav.addObject("pages", snippetCount / SNIPPET_PAGE_SIZE + (snippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("snippetList", snippets);
+        mav.addObject("totalSnippetCount", snippetCount);
         mav.addObject("searchContext", searchContext);
+        mav.addObject("searching", searching);
         mav.addObject("tagList", this.tagService.getAllTags());
         mav.addObject("languageList", this.languageService.getAllLanguages());
     }

@@ -293,7 +293,9 @@ public class SearchController {
         mav.addObject("pages", snippetCount / SNIPPET_PAGE_SIZE + (snippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("snippetList", snippets);
+        mav.addObject("totalSnippetCount", snippetCount);
         mav.addObject("searchContext", searchContext);
+        mav.addObject("searching", true);
     }
 
     @ModelAttribute

@@ -56,6 +56,8 @@ public class LanguagesController {
         mav.addObject("page", page);
         mav.addObject("searchContext","languages/");
         mav.addObject("languages", allLanguages);
+        mav.addObject("searching", false);
+        mav.addObject("totalLanguagesCount", languageCount);
         mav.addObject("itemSearchContext", "languages/");
         return mav;
     }
@@ -73,6 +75,8 @@ public class LanguagesController {
         mav.addObject("page", page);
         mav.addObject("searchContext","languages/");
         mav.addObject("languages", allLanguages);
+        mav.addObject("searching", true);
+        mav.addObject("totalLanguagesCount", languageCount);
         mav.addObject("itemSearchContext", "languages/");
         return mav;
     }
@@ -92,6 +96,8 @@ public class LanguagesController {
         mav.addObject("page", page);
         mav.addObject("language", language.get());
         mav.addObject("searchContext","languages/"+langId+"/");
+        mav.addObject("searching", false);
+        mav.addObject("totalSnippetCount", totalSnippetCount);
         mav.addObject("snippetList", snippetService.getSnippetsWithLanguage(langId, page, SNIPPET_PAGE_SIZE));
         return mav;
     }

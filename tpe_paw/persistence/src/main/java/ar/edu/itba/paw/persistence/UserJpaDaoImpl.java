@@ -21,7 +21,7 @@ public class UserJpaDaoImpl implements UserDao {
     private EntityManager em;
 
     @Override
-    public User createUser(String username, String password, String email, int reputation, Instant dateJoined, Locale locale) {
+    public User createUser(String username, String password, String email, Instant dateJoined, Locale locale) {
         final User user = new User(username, password, email, dateJoined, locale, false);
         this.em.persist(user);
         return user;

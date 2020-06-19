@@ -1575,7 +1575,7 @@ public class SnippetDaoTest {
     }
 
     @Test
-    public void findSnippetByDeepCriteriaReputationTest() {
+    public void findSnippetByDeepCriteriaReputationNegativeTest() {
         Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
         Collection<Snippet> result1 = snippetDao.findSnippetByDeepCriteria(
                 null,
@@ -1594,6 +1594,12 @@ public class SnippetDaoTest {
                 1,
                 TestConstants.SNIPPET_PAGE_SIZE
         );
+        Assert.assertTrue(result1.contains(snippets.get(TestConstants.SNIPPET_TITLE2)));
+    }
+
+    @Test
+    public void findSnippetByDeepCriteriaReputationNonnegativeTest() {
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
         Collection<Snippet> result2 = snippetDao.findSnippetByDeepCriteria(
                 null,
                 null, // Instant.now()
@@ -1611,6 +1617,15 @@ public class SnippetDaoTest {
                 1,
                 TestConstants.SNIPPET_PAGE_SIZE
         );
+        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE)));
+        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
+        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE4)));
+        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
+    }
+
+    @Test
+    public void findSnippetByDeepCriteriaReputationNoneTest() {
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
         Collection<Snippet> result3 = snippetDao.findSnippetByDeepCriteria(
                 null,
                 null, // Instant.now()
@@ -1628,12 +1643,6 @@ public class SnippetDaoTest {
                 1,
                 TestConstants.SNIPPET_PAGE_SIZE
         );
-        Assert.assertTrue(result1.contains(snippets.get(TestConstants.SNIPPET_TITLE2)));
-
-        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE)));
-        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
-        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE4)));
-        Assert.assertTrue(result2.contains(snippets.get(TestConstants.SNIPPET_TITLE5)));
 
         Assert.assertTrue(result3.isEmpty());
     }
@@ -1661,7 +1670,7 @@ public class SnippetDaoTest {
     }
 
     @Test
-    public void findSnippetByDeepCriteriaCountVotesTest() {
+    public void findSnippetByDeepCriteriaCountVotesZeroTest() {
         Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
 
         int result1 = snippetDao.getSnippetByDeepCriteriaCount(
@@ -1678,6 +1687,12 @@ public class SnippetDaoTest {
                 true
         );
 
+        Assert.assertEquals(4, result1);
+    }
+
+    @Test
+    public void findSnippetByDeepCriteriaCountVotesPositiveTest() {
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
         int result2 = snippetDao.getSnippetByDeepCriteriaCount(
                 null,
                 null,
@@ -1691,6 +1706,12 @@ public class SnippetDaoTest {
                 "",
                 true
         );
+        Assert.assertEquals(4, result2);
+    }
+
+    @Test
+    public void findSnippetByDeepCriteriaCountVotesNoneTest() {
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
 
         int result3 = snippetDao.getSnippetByDeepCriteriaCount(
                 null,
@@ -1706,14 +1727,11 @@ public class SnippetDaoTest {
                 true
         );
 
-        Assert.assertEquals(4, result1);
-        Assert.assertEquals(4, result2);
         Assert.assertEquals(0, result3);
-
     }
 
     @Test
-    public void findSnippetByDeepCriteriaCountReputationTest() {
+    public void findSnippetByDeepCriteriaCountReputationNegativeTest() {
         Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
         int result1 = snippetDao.getSnippetByDeepCriteriaCount(
                 null,
@@ -1728,6 +1746,12 @@ public class SnippetDaoTest {
                 "",
                 true
         );
+        Assert.assertEquals(1, result1);
+    }
+
+    @Test
+    public void findSnippetByDeepCriteriaCountReputationNonnegativeTest() {
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
         int result2 = snippetDao.getSnippetByDeepCriteriaCount(
                 null,
                 null, // Instant.now()
@@ -1741,6 +1765,12 @@ public class SnippetDaoTest {
                 "",
                 true
         );
+        Assert.assertEquals(4, result2);
+    }
+
+    @Test
+    public void findSnippetByDeepCriteriaCountReputationNoneTest() {
+        Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
         int result3 = snippetDao.getSnippetByDeepCriteriaCount(
                 null,
                 null, // Instant.now()
@@ -1754,9 +1784,6 @@ public class SnippetDaoTest {
                 "",
                 true
         );
-
-        Assert.assertEquals(1, result1);
-        Assert.assertEquals(4, result2);
         Assert.assertEquals(0, result3);
     }
 }

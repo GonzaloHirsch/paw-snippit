@@ -109,7 +109,7 @@ public final class TestConstants {
     static final int REP_VALUE_1 = -10;
     static final int REP_VALUE_2 = -1;
     static final int REP_VALUE_3 = 0;
-    static final int REP_VALUE_4 = 5;
+//    static final int REP_VALUE_4 = 5;
     static final int REP_VALUE_5 = 10;
     static final int REP_VALUE_6 = 10000000;
 

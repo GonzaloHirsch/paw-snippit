@@ -73,6 +73,11 @@ public final class TestMethods {
         em.persist(user);
     }
 
+    static void setUserReputation(EntityManager em, User user, int reputation) {
+        user.setReputation(reputation);
+        em.persist(user);
+    }
+
     static Map<String, Tag> tagsCreation(EntityManager em) {
         return tagsCreation(em, TestMethods.insertTag(em, TestConstants.TAG));
     }
@@ -265,6 +270,13 @@ public final class TestMethods {
         TestMethods.insertVote(em, user9, snip5, true);
         TestMethods.insertVote(em, user10, snip5, true);
         TestMethods.insertVote(em, owner, snip5, true);
+
+        /* REPUTATION UPDATE */
+        TestMethods.setUserReputation(em, user10, 5);
+        TestMethods.setUserReputation(em, user2, -5);
+        TestMethods.setUserReputation(em, user3, 0);
+        TestMethods.setUserReputation(em, user4, 0);
+        TestMethods.setUserReputation(em, user5, 10);
 
         return data;
     }

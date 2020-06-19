@@ -29,7 +29,7 @@
                 <c:set var="searching" value="${searching}" scope="request"/>
                 <c:set var="itemType" value="language" scope="request"/>
                 <c:set var="itemCount" value="${totalLanguagesCount}" scope="request"/>
-                <c:set var="alignment" value="flex-center" scope="request"/>
+                <c:set var="alignment" value="flex-center element-result-amount" scope="request"/>
                 <c:import url="/WEB-INF/jsp/navigation/itemCountDisplay.jsp"/>
             </div>
         </div>

@@ -113,15 +113,16 @@ public class SearchController {
 
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, searchForm.getSort(), currentUser.getId(), null, page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, currentUser.getId(), null);
+        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FOLLOWING);
 
-        for (Tag tag : currentUser.getFollowedTags()) {
+        Collection<Tag> followingTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.FOLLOWING_FEED_TAG_AMOUNT);
+        for (Tag tag : followingTags) {
             FollowForm followForm = new FollowForm();
             followForm.setFollows(currentUser.getFollowedTags().contains(tag));
             mav.addObject("unfollowForm" + tag.getId().toString(), followForm);
         }
-        mav.addObject("followingTags", currentUser.getFollowedTags());
+        mav.addObject("followingTags", followingTags);
 
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FOLLOWING);
         return mav;
     }
 

@@ -21,9 +21,16 @@
 <div class="wrapper">
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
-        <div class="flex-center">
-            <div class="fw-100 title-container">
+        <div class="flex-center flex-column">
+            <div class="fw-100 item-title-container">
+                <div class="item-title">
                 <spring:message code="menu.languages"/>
+                </div>
+                <c:set var="searching" value="${searching}" scope="request"/>
+                <c:set var="itemType" value="language" scope="request"/>
+                <c:set var="itemCount" value="${totalLanguagesCount}" scope="request"/>
+                <c:set var="alignment" value="flex-center element-result-amount" scope="request"/>
+                <c:import url="/WEB-INF/jsp/navigation/itemCountDisplay.jsp"/>
             </div>
         </div>
         <div>

@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TagServiceImpl implements TagService {
@@ -77,10 +74,10 @@ public class TagServiceImpl implements TagService {
     @Transactional
     @Override
     public Collection<Tag> addTagsToSnippet(Long snippetId, Collection<String> tagNameList){
-        ArrayList<Tag> tagList = new ArrayList<>();
-
         if(tagNameList == null)
-            return tagList;
+            return Collections.emptyList();
+
+        ArrayList<Tag> tagList = new ArrayList<>();
 
         for(String tagName : tagNameList) {
             Optional<Tag> tag = tagDao.findByName(tagName);

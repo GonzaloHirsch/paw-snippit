@@ -145,7 +145,7 @@ FROM (
                       sni.user_id               AS user_id,
                       sni.flagged               AS flag,
                       sni.deleted               AS deleted,
-                      SUM(CASE WHEN vf.is_positive THEN 1 ELSE -1 END) AS votes
+                      SUM(COALESCE(CASE WHEN vf.is_positive = true THEN 1 WHEN vf.is_positive = false THEN -1 END, 0)) AS votes
                FROM snippets AS sni
                         LEFT OUTER JOIN votes_for AS vf ON vf.snippet_id = sni.id
                GROUP BY sni.id) AS sn

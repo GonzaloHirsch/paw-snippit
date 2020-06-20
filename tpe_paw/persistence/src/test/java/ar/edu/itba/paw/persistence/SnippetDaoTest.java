@@ -1415,7 +1415,6 @@ public class SnippetDaoTest {
 
     /* Testing finding snippet by deep criteria */
 
-    // TODO fix zero-vote related bug then retry test
     @Test
     public void findSnippetByDeepCriteriaVotesNegativeTest() {
         Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
@@ -1441,7 +1440,6 @@ public class SnippetDaoTest {
         Assert.assertEquals(1, result1.size());
     }
 
-    // TODO fix zero-vote related bug then retry test
     @Test
     public void findSnippetByDeepCriteriaVotesNegativeUnboundedTest() {
         Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
@@ -1466,7 +1464,7 @@ public class SnippetDaoTest {
         Assert.assertTrue(result1.contains(snippets.get(TestConstants.SNIPPET_TITLE2)));
         Assert.assertEquals(1, result1.size());
     }
-    // TODO fix zero-vote related bug then retry test
+
     @Test
     public void findSnippetByDeepCriteriaVotesZeroTest() {
         Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
@@ -1490,6 +1488,11 @@ public class SnippetDaoTest {
         );
         Assert.assertTrue(result1.contains(snippets.get(TestConstants.SNIPPET_TITLE3)));
         Assert.assertTrue(result1.contains(snippets.get(TestConstants.SNIPPET_TITLE4)));
+        Assert.assertTrue(result1.contains(snippets.get(TestConstants.SNIPPET_TITLE6)));
+        Assert.assertTrue(result1.contains(snippets.get(TestConstants.SNIPPET_TITLE7)));
+        Assert.assertTrue(result1.contains(snippets.get(TestConstants.SNIPPET_TITLE8)));
+        Assert.assertTrue(result1.contains(snippets.get(TestConstants.SNIPPET_TITLE9)));
+        Assert.assertEquals(6, result1.size());
     }
 
     @Test
@@ -1647,7 +1650,6 @@ public class SnippetDaoTest {
 
     /* Testing getting snippet by deep criteria count */
 
-    // TODO fix zero-vote related bug then retry test
     @Test
     public void findSnippetByDeepCriteriaCountVotesNegativeTest() {
         Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
@@ -1669,7 +1671,6 @@ public class SnippetDaoTest {
         Assert.assertEquals(1, result1);
     }
 
-    // TODO fix zero-vote related bug then retry test
     @Test
     public void findSnippetByDeepCriteriaCountVotesNegativeUnboundedTest() {
         Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
@@ -1691,7 +1692,6 @@ public class SnippetDaoTest {
         Assert.assertEquals(1, result1);
     }
 
-    // TODO fix zero-vote related bug then retry test
     @Test
     public void findSnippetByDeepCriteriaCountVotesZeroTest() {
         Map<String, Snippet> snippets = TestMethods.dataForSearchByDeepCriteria(em, TestMethods.userCreationDeepSearch(em, owner), tag, language);
@@ -1709,7 +1709,7 @@ public class SnippetDaoTest {
                 "",
                 true
         );
-        Assert.assertEquals(4, result1);
+        Assert.assertEquals(6, result1);
     }
 
     @Test

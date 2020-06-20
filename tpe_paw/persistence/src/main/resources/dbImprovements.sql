@@ -124,7 +124,7 @@ FROM (
                       sni.user_id               AS user_id,
                       sni.flagged               AS flag,
                       sni.deleted               AS deleted,
-                      SUM(CASE WHEN vf.is_positive THEN 1 ELSE -1 END) AS votes
+                      SUM(COALESCE(CASE WHEN vf.is_positive = true THEN 1 WHEN vf.is_positive = false THEN -1 END, 0)) AS votes
                FROM snippets AS sni
                         LEFT OUTER JOIN votes_for AS vf ON vf.snippet_id = sni.id
                GROUP BY sni.id) AS sn
@@ -155,18 +155,18 @@ CREATE OR REPLACE FUNCTION update_reputation() RETURNS TRIGGER AS
                          WHERE u.id = uid);
         IF TG_OP = ''INSERT'' THEN
             IF NEW IS NOT null THEN
-                newReputation = newReputation + (CASE WHEN NEW.is_positive THEN 1 ELSE -1 END);
+                newReputation = newReputation + (COALESCE(CASE WHEN NEW.is_positive = true THEN 1 WHEN NEW.is_positive = false THEN -1 END, 0));
             END IF;
         ELSIF TG_OP = ''UPDATE'' THEN
             IF NEW IS NOT null THEN
-                newReputation = newReputation + (CASE WHEN NEW.is_positive THEN 1 ELSE -1 END);
+                newReputation = newReputation + (COALESCE(CASE WHEN NEW.is_positive = true THEN 1 WHEN NEW.is_positive = false THEN -1 END, 0));
             END IF;
             IF OLD IS NOT null THEN
-                newReputation = newReputation - (CASE WHEN OLD.is_positive THEN 1 ELSE -1 END);
+                newReputation = newReputation - (COALESCE(CASE WHEN OLD.is_positive = true THEN 1 WHEN OLD.is_positive = false THEN -1 END, 0));
             END IF;
         ELSIF TG_OP = ''DELETE'' THEN
             IF OLD IS NOT null THEN
-                newReputation = newReputation - (CASE WHEN OLD.is_positive THEN 1 ELSE -1 END);
+                newReputation = newReputation - (COALESCE(CASE WHEN OLD.is_positive = true THEN 1 WHEN OLD.is_positive = false THEN -1 END, 0));
             END IF;
         END IF;
         UPDATE users AS u

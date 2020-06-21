@@ -42,24 +42,32 @@ public class RoleDaoTest {
 
     @Test
     public void assignUserRoleTest(){
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
         Assert.assertTrue(roleDao.assignUserRole(defaultUser.getId()));
         Assert.assertTrue(defaultUser.getRoles().contains(userRole));
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
     }
 
     @Test
     public void assignUserRoleToInvalidUserTest(){
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
         Assert.assertFalse(roleDao.assignUserRole(TestConstants.USER_INVALID_ID));
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
     }
 
     @Test
     public void assignAdminRoleTest(){
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
         Assert.assertTrue(roleDao.assignAdminRole(defaultUser.getId()));
         Assert.assertTrue(defaultUser.getRoles().contains(adminRole));
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
     }
 
     @Test
     public void assignAdminRoleToInvalidUserTest(){
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
         Assert.assertFalse(roleDao.assignAdminRole(TestConstants.USER_INVALID_ID));
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
     }
 
     @Test

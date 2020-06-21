@@ -172,6 +172,47 @@ public class VoteDaoTest {
         Assert.assertEquals(0, voteDao.getVoteBalance(TestConstants.SNIPPET_INVALID_ID));
     }
 
+    @Test
+    public void testAddExistingVote() {
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        Snippet snip = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
+        TestMethods.insertVote(em, user, snip, true);
+        int beforeVote = TestMethods.countRows(em, TestConstants.VOTES_TABLE);
+
+        this.voteDao.addVote(snip.getId(), user.getId(), true);
+
+        Assert.assertEquals(1, beforeVote);
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.VOTES_TABLE));
+    }
+
+    @Test
+    public void testUpdateVote() {
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        Snippet snip = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
+        TestMethods.insertVote(em, user, snip, false);
+        int beforeVote = TestMethods.countRows(em, TestConstants.VOTES_TABLE);
+
+        this.voteDao.addVote(snip.getId(), user.getId(), true);
+
+        Assert.assertEquals(1, beforeVote);
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.VOTES_TABLE));
+    }
+
+    @Test
+    public void testWithdrawVote() {
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        Snippet snip = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
+        int beforeVote = TestMethods.countRows(em, TestConstants.VOTES_TABLE);
+
+        this.voteDao.withdrawVote(snip.getId(), user.getId());
+
+        Assert.assertEquals(0, beforeVote);
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.VOTES_TABLE));
+    }
+
 }
 
 

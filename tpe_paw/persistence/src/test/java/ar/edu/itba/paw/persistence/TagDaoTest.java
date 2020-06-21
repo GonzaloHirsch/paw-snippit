@@ -35,12 +35,6 @@ public class TagDaoTest {
     public void setUp() {
     }
 
-//    @After
-//    public void resetDatabase(){
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate, TestConstants.SNIPPET_TABLE, TestConstants.USER_TABLE, TestConstants.FOLLOWING_TABLE,
-//                TestConstants.FAVORITES_TABLE, TestConstants.REPORTED_TABLE, TestConstants.VOTES_TABLE, TestConstants.LANGUAGE_TABLE);
-//    }
-
     @Test
     public void testAddTag(){
         int beforeAddCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);

@@ -73,24 +73,6 @@ public class TagServiceImpl implements TagService {
 
     @Transactional
     @Override
-    public Collection<Tag> addTagsToSnippet(Long snippetId, Collection<String> tagNameList){
-        if(tagNameList == null)
-            return Collections.emptyList();
-
-        ArrayList<Tag> tagList = new ArrayList<>();
-
-        for(String tagName : tagNameList) {
-            Optional<Tag> tag = tagDao.findByName(tagName);
-            if(tag.isPresent()) {
-                tagDao.addSnippetTag(snippetId, tag.get().getId());
-                tagList.add(tag.get());
-            }
-        }
-        return tagList;
-    }
-
-    @Transactional
-    @Override
     public void addTags(List<String> tags) {
         this.tagDao.addTags(tags);
     }

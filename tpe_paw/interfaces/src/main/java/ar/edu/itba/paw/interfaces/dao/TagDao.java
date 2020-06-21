@@ -27,8 +27,6 @@ public interface TagDao {
 
     Collection<Tag> findTagsByName(String name, boolean showEmpty, boolean showOnlyFollowing, Long userId, int page, int pageSize);
 
-    void addSnippetTag(final long snippetId, final long tagId);
-
     void addTags(final List<String> tags);
 
     void removeTag(final long tagId);

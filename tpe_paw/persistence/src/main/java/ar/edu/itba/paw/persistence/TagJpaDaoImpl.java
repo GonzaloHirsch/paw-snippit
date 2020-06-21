@@ -50,19 +50,6 @@ public class TagJpaDaoImpl implements TagDao {
     }
 
     @Override
-    public void addSnippetTag(long snippetId, long tagId) {
-        Snippet snippet = this.em.find(Snippet.class, snippetId);
-        Tag tag = this.em.find(Tag.class, tagId);
-
-        if (snippet != null && tag != null) {
-            snippet.getTags().add(tag);
-            tag.getSnippetsUsing().add(snippet);
-            this.em.persist(snippet);
-            this.em.persist(tag);
-        }
-    }
-
-    @Override
     public void addTags(List<String> tags) {
         if (tags != null) {
             for (String name : tags) {

@@ -28,8 +28,6 @@ public interface TagService {
 
     Optional<Tag> findTagById(long tagId);
 
-    Collection<Tag> addTagsToSnippet(Long snippetId, Collection<String> tagList);
-
     void addTags(List<String> tags);
 
     boolean tagExists(final String tag);

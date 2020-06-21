@@ -1,5 +1,7 @@
 drop view if exists complete_snippets;
--- drop table if exists reported;
+drop table if exists reported;
+
+ALTER TABLE snippets ALTER COLUMN code TYPE VARCHAR (30000) ;
 
 DO '
     BEGIN
@@ -21,8 +23,6 @@ DO '
         END;
     END;
 ' language plpgsql;
-
--- UPDATE languages SET deleted = FALSE;
 
 DO '
     BEGIN

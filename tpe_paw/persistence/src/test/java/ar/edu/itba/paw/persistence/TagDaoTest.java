@@ -39,19 +39,27 @@ public class TagDaoTest {
 
     @Test
     public void testAddTag(){
+        int beforeAddCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
         Tag tag = tagDao.addTag(TestConstants.TAG);
+        int afterAddCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
 
         Assert.assertNotNull(tag);
         Assert.assertEquals(TestConstants.TAG, tag.getName());
+        Assert.assertEquals(beforeAddCount, 0);
+        Assert.assertEquals(afterAddCount, 1);
     }
 
     @Test
     public void testAddRepeatedTag(){
         Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
+        int beforeAddCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
         Tag tagRepeated = tagDao.addTag(TestConstants.TAG);
+        int afterAddCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
 
         Assert.assertNotNull(tag);
         Assert.assertEquals(tag, tagRepeated);
+        Assert.assertEquals(beforeAddCount, 1);
+        Assert.assertEquals(afterAddCount, 1);
     }
 
     @Test
@@ -92,6 +100,24 @@ public class TagDaoTest {
         Optional<Tag> maybeTag = tagDao.findByName(TestConstants.TAG2);
 
         Assert.assertFalse(maybeTag.isPresent());
+    }
+
+    @Test
+    public void testAddTags() {
+        int beforeAddCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
+        this.tagDao.addTags(Arrays.asList(TestConstants.TAG, TestConstants.TAG2, TestConstants.TAG3));
+        int afterAddCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
+        Assert.assertEquals(beforeAddCount, 0);
+        Assert.assertEquals(afterAddCount, 3);
+    }
+
+    @Test
+    public void testAddRepeatedTags() {
+        int beforeAddCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
+        this.tagDao.addTags(Arrays.asList(TestConstants.TAG, TestConstants.TAG, TestConstants.TAG3));
+        int afterAddCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
+        Assert.assertEquals(beforeAddCount, 0);
+        Assert.assertEquals(afterAddCount, 2);
     }
 
     @Test
@@ -165,9 +191,8 @@ public class TagDaoTest {
 
         Assert.assertNotNull(collection);
         Assert.assertEquals(2,collection.size());
-        List<Long> idCol = collection.stream().mapToLong(Tag::getId).boxed().collect(Collectors.toList());
-        Assert.assertTrue(idCol.contains(tag.getId()));
-        Assert.assertTrue(idCol.contains(tag2.getId()));
+        Assert.assertTrue(collection.contains(tag));
+        Assert.assertTrue(collection.contains(tag2));
     }
 
     @Test

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,13 +53,10 @@ public class FavoriteDaoTest {
     @Test
     public void removeFromFavoritesRegularTest () {
         Snippet regularSnip = TestMethods.insertSnippet(em, verifiedUser, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, defaultLang, Collections.emptyList(), false, false);
-        // Needed to be able to perform removal
+
         List<Snippet> newList = new ArrayList<>();
         newList.add(regularSnip);
         TestMethods.setUserFavoriteSnippets(em, verifiedUser, newList);
-        // Not part of the Unit testing flow but needed to make sure snippet
-        // has been inserted and test is not passing just because list had
-        // been empty all the time
         Assert.assertEquals(1, verifiedUser.getFavorites().size());
 
         favoriteDao.removeFromFavorites(verifiedUser.getId(), regularSnip.getId());
@@ -74,9 +72,7 @@ public class FavoriteDaoTest {
         List<Snippet> newList = new ArrayList<>();
         newList.add(deletedSnippet);
         TestMethods.setUserFavoriteSnippets(em, verifiedUser, newList);
-        // Not part of the Unit testing flow but needed to make sure snippet
-        // has been inserted and test is not passing just because list had
-        // been empty all the time
+
         Assert.assertEquals(1, verifiedUser.getFavorites().size());
 
         favoriteDao.removeFromFavorites(verifiedUser.getId(), deletedSnippet.getId());
@@ -92,9 +88,7 @@ public class FavoriteDaoTest {
         List<Snippet> newList = new ArrayList<>();
         newList.add(flaggedSnippet);
         TestMethods.setUserFavoriteSnippets(em, verifiedUser, newList);
-        // Not part of the Unit testing flow but needed to make sure snippet
-        // has been inserted and test is not passing just because list had
-        // been empty all the time
+
         Assert.assertEquals(1, verifiedUser.getFavorites().size());
 
         favoriteDao.removeFromFavorites(verifiedUser.getId(), flaggedSnippet.getId());

@@ -5,6 +5,15 @@ import java.util.Locale;
 
 public final class TestConstants {
 
+    static final String SNIPPET_TABLE = "snippets";
+    static final String USER_TABLE = "users";
+    static final String LANGUAGE_TABLE = "languages";
+    static final String TAG_TABLE = "tags";
+    static final String FAVORITES_TABLE = "favorites";
+    static final String REPORTED_TABLE = "reported";
+    static final String FOLLOWING_TABLE = "follows";
+    static final String VOTES_TABLE = "votes_for";
+
     static final String USER_PASSWORD = "Password";
     static final String USER_USERNAME = "Username";
     static final String USER_USERNAME2 = "Username2";

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.models.*;
 
 import javax.persistence.EntityManager;
+import java.math.BigInteger;
 import java.time.Instant;
 import java.util.*;
 
@@ -51,6 +52,10 @@ public final class TestMethods {
         Vote vote = new Vote(user, snippet, isPositive);
         em.persist(vote);
         return vote;
+    }
+
+    static int countRows(EntityManager em, String tableName) {
+        return ((BigInteger) em.createNativeQuery("SELECT COUNT(*) FROM " + tableName).getSingleResult()).intValue();
     }
 
     static void setUserFollowingTags(EntityManager em, User user, Collection<Tag> tags) {

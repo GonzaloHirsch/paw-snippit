@@ -42,7 +42,13 @@ public final class TestConstants {
     static final Locale LOCALE_ES = new Locale("es","ES");
     static final Instant USER_DATE = Instant.now();
     static final boolean USER_VERIFIED = true;
+    static final String USER_NEW_PASSWORD = "newpassword";
+    static final String USER_NEW_DESCRIPTION = "newDescription";
+    static final int USER_NEW_REPUTATION = 10;
+
     static final long USER_INVALID_ID = 100;
+    static final String USER_INVALID_USERNAME = "NOT A USERNAME";
+    static final String USER_INVALID_EMAIL = "emailFake@gmail.com";
 
     static final String SNIPPET_TITLE = "Snippet Title";
     static final String SNIPPET_TITLE2 = "Snippet Title 2";

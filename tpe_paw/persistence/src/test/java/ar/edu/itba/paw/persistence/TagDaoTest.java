@@ -177,9 +177,7 @@ public class TagDaoTest {
         TestMethods.insertTag(em, TestConstants.TAG);
         TestMethods.insertTag(em, TestConstants.TAG2);
 
-        int res = tagDao.getAllTagsCountByName("Not a tag name-xxxxx", true, false, null);
-
-        Assert.assertEquals(0,res);
+        Assert.assertEquals(0,tagDao.getAllTagsCountByName(TestConstants.TAG4, true, false, null));
     }
 
     @Test
@@ -204,7 +202,7 @@ public class TagDaoTest {
         Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
         Tag tag2 = TestMethods.insertTag(em, TestConstants.TAG2);
 
-        Collection<Tag> collection = tagDao.findTagsByName("tag", true, false, null, 1,TestConstants.TAG_PAGE_SIZE);
+        Collection<Tag> collection = tagDao.findTagsByName(TestConstants.TAG_TERM, true, false, null, 1,TestConstants.TAG_PAGE_SIZE);
 
         Assert.assertNotNull(collection);
         Assert.assertEquals(2,collection.size());
@@ -217,7 +215,7 @@ public class TagDaoTest {
         Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
         Tag tag2 = TestMethods.insertTag(em, TestConstants.TAG2);
 
-        Collection<Tag> collection = tagDao.findTagsByName("tag", false, false, null,1,TestConstants.TAG_PAGE_SIZE);
+        Collection<Tag> collection = tagDao.findTagsByName(TestConstants.TAG_TERM, false, false, null,1,TestConstants.TAG_PAGE_SIZE);
 
         Assert.assertNotNull(collection);
         Assert.assertEquals(0,collection.size());
@@ -228,7 +226,7 @@ public class TagDaoTest {
         Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
         Tag tag2 = TestMethods.insertTag(em, TestConstants.TAG2);
 
-        Collection<Tag> collection = tagDao.findTagsByName("notatagname-xxxx", true, false, null, 1,TestConstants.TAG_PAGE_SIZE);
+        Collection<Tag> collection = tagDao.findTagsByName(TestConstants.TAG4, true, false, null, 1,TestConstants.TAG_PAGE_SIZE);
 
         Assert.assertNotNull(collection);
         Assert.assertEquals(0,collection.size());

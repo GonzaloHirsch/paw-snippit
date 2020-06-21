@@ -65,7 +65,7 @@ public class UserDaoTest {
     public void testFindUserByIdEmpty(){
         User expectedUser = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL,Instant.now(), TestConstants.LOCALE_EN,false);
 
-        Optional<User> maybeUser = userDao.findUserById(expectedUser.getId()+10);
+        Optional<User> maybeUser = userDao.findUserById(TestConstants.USER_INVALID_ID);
 
         Assert.assertFalse(maybeUser.isPresent());
     }
@@ -87,7 +87,7 @@ public class UserDaoTest {
     public void testFindUserByUsernameEmpty(){
         TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL,Instant.now(), TestConstants.LOCALE_EN,false);
 
-        Optional<User> maybeUser = userDao.findUserByUsername("NOT AN USERNAME");
+        Optional<User> maybeUser = userDao.findUserByUsername(TestConstants.USER_INVALID_USERNAME);
 
         Assert.assertFalse(maybeUser.isPresent());
     }
@@ -109,7 +109,7 @@ public class UserDaoTest {
     public void testFindUserByEmailEmpty(){
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL,Instant.now(), TestConstants.LOCALE_EN,false);
 
-        Optional<User> maybeUser = userDao.findUserByEmail("NOT AN EMAIL");
+        Optional<User> maybeUser = userDao.findUserByEmail(TestConstants.USER_INVALID_EMAIL);
 
         Assert.assertFalse(maybeUser.isPresent());
     }
@@ -135,11 +135,10 @@ public class UserDaoTest {
     @Test
     public void testUpdateDescription(){
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL,Instant.now(), TestConstants.LOCALE_EN,false);
-        String newDescription = "New Description";
 
-        userDao.changeDescription(user.getId(),newDescription);
+        userDao.changeDescription(user.getId(), TestConstants.USER_NEW_DESCRIPTION);
 
-        Assert.assertEquals(newDescription, user.getDescription());
+        Assert.assertEquals(TestConstants.USER_NEW_DESCRIPTION, user.getDescription());
         Assert.assertEquals(user.getId(),user.getId());
     }
 
@@ -147,22 +146,19 @@ public class UserDaoTest {
     public void testChangePassword(){
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL,Instant.now(), TestConstants.LOCALE_EN,false);
 
-        String newPassword = "newpassword";
+        userDao.changePassword(user.getEmail(), TestConstants.USER_NEW_PASSWORD);
 
-        userDao.changePassword(user.getEmail(),newPassword);
-
-        Assert.assertEquals(newPassword, user.getPassword());
+        Assert.assertEquals(TestConstants.USER_NEW_PASSWORD, user.getPassword());
         Assert.assertEquals(user.getId(),user.getId());
     }
 
     @Test
     public void testChangeDescription(){
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL,Instant.now(), TestConstants.LOCALE_EN,false);
-        String newDescription = "new description";
 
-        userDao.changeDescription(user.getId(),newDescription);
+        userDao.changeDescription(user.getId(), TestConstants.USER_NEW_DESCRIPTION);
 
-        Assert.assertEquals(newDescription, user.getDescription());
+        Assert.assertEquals(TestConstants.USER_NEW_DESCRIPTION, user.getDescription());
         Assert.assertEquals(user.getId(), user.getId());
     }
 
@@ -170,9 +166,9 @@ public class UserDaoTest {
     public void testChangeReputation(){
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL,Instant.now(), TestConstants.LOCALE_EN,false);
 
-        userDao.changeReputation(user.getId(),10);
+        userDao.changeReputation(user.getId(),TestConstants.USER_NEW_REPUTATION);
 
-        Assert.assertEquals(10, user.getReputation());
+        Assert.assertEquals(TestConstants.USER_NEW_REPUTATION, user.getReputation());
     }
 
     
@@ -180,7 +176,7 @@ public class UserDaoTest {
     public void testChangeReputationEmpty(){
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL,Instant.now(), TestConstants.LOCALE_EN,false);
 
-        userDao.changeReputation(user.getId()+10,10);
+        userDao.changeReputation(TestConstants.USER_INVALID_ID,TestConstants.USER_NEW_REPUTATION);
 
         Assert.assertEquals(0,user.getReputation());
     }
@@ -232,7 +228,7 @@ public class UserDaoTest {
     public void testUpdateLocaleRegionEmpty(){
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL,Instant.now(), TestConstants.LOCALE_EN,false);
 
-        userDao.updateLocale(user.getId()+10, TestConstants.LOCALE_ES);
+        userDao.updateLocale(TestConstants.USER_INVALID_ID, TestConstants.LOCALE_ES);
 
         Assert.assertEquals(TestConstants.LOCALE_EN.getCountry(),user.getRegion());
     }
@@ -242,7 +238,7 @@ public class UserDaoTest {
     public void testUpdateLocaleLanguageEmpty(){
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL,Instant.now(), TestConstants.LOCALE_EN,false);
 
-        userDao.updateLocale(user.getId()+10, TestConstants.LOCALE_ES);
+        userDao.updateLocale(TestConstants.USER_INVALID_ID, TestConstants.LOCALE_ES);
 
         Assert.assertEquals(TestConstants.LOCALE_EN.getCountry().toUpperCase(),user.getLang().toUpperCase());
     }
@@ -262,7 +258,7 @@ public class UserDaoTest {
     public void testGetLocaleLanguageEmpty(){
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL,Instant.now(), TestConstants.LOCALE_EN,false);
 
-        String loc = userDao.getLocaleLanguage(user.getId()+10);
+        String loc = userDao.getLocaleLanguage(TestConstants.USER_INVALID_ID);
         Assert.assertEquals(loc, "");
     }
 
@@ -311,7 +307,7 @@ public class UserDaoTest {
     public void testVerifyUserEmailEmpty(){
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL,Instant.now(), TestConstants.LOCALE_EN,false);
 
-        userDao.verifyUserEmail(user.getId()+10);
+        userDao.verifyUserEmail(TestConstants.USER_INVALID_ID);
 
         Assert.assertFalse(user.isVerified());
     }

@@ -61,23 +61,39 @@ public class ReportDaoTest {
 
     @Test
     public void testNewReportSnippet() {
+        int beforeReport = TestMethods.countRows(em, TestConstants.REPORTED_TABLE);
         Assert.assertTrue(this.reportDao.reportSnippet(reporter.getId(), snippet.getId(), TestConstants.REPORT_DETAIL));
+        int afterReport = TestMethods.countRows(em, TestConstants.REPORTED_TABLE);
+        Assert.assertEquals(0, beforeReport);
+        Assert.assertEquals(1, afterReport);
     }
 
     @Test
     public void testExistingReportSnippet() {
         TestMethods.insertReport(em, reporter, snippet, TestConstants.REPORT_DETAIL, false);
+        int beforeReport = TestMethods.countRows(em, TestConstants.REPORTED_TABLE);
         Assert.assertFalse(this.reportDao.reportSnippet(reporter.getId(), snippet.getId(), TestConstants.REPORT_DETAIL));
+        int afterReport = TestMethods.countRows(em, TestConstants.REPORTED_TABLE);
+        Assert.assertEquals(1, beforeReport);
+        Assert.assertEquals(1, afterReport);
     }
 
     @Test
     public void testReportSnippetInvalidReporter() {
+        int beforeReport = TestMethods.countRows(em, TestConstants.REPORTED_TABLE);
         Assert.assertFalse(this.reportDao.reportSnippet(TestConstants.USER_INVALID_ID, snippet.getId(), TestConstants.REPORT_DETAIL));
+        int afterReport = TestMethods.countRows(em, TestConstants.REPORTED_TABLE);
+        Assert.assertEquals(0, beforeReport);
+        Assert.assertEquals(0, afterReport);
     }
 
     @Test
     public void testExistingReportSnippetInvlaidSnippet() {
+        int beforeReport = TestMethods.countRows(em, TestConstants.REPORTED_TABLE);
         Assert.assertFalse(this.reportDao.reportSnippet(reporter.getId(), TestConstants.SNIPPET_INVALID_ID, TestConstants.REPORT_DETAIL));
+        int afterReport = TestMethods.countRows(em, TestConstants.REPORTED_TABLE);
+        Assert.assertEquals(0, beforeReport);
+        Assert.assertEquals(0, afterReport);
     }
 
     @Test

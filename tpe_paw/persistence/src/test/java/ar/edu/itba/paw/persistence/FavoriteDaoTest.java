@@ -45,7 +45,7 @@ public class FavoriteDaoTest {
         Snippet regularSnip = TestMethods.insertSnippet(em, verifiedUser, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, defaultLang, Collections.emptyList(), false, false);
 
         favoriteDao.addToFavorites(verifiedUser.getId(), regularSnip.getId());
-
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.FAVORITES_TABLE));
         Assert.assertEquals(1, regularSnip.getUserFavorites().size());
         Assert.assertEquals(1, verifiedUser.getFavorites().size());
     }
@@ -58,10 +58,11 @@ public class FavoriteDaoTest {
         newList.add(regularSnip);
         TestMethods.setUserFavoriteSnippets(em, verifiedUser, newList);
         Assert.assertEquals(1, verifiedUser.getFavorites().size());
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.FAVORITES_TABLE));
 
         favoriteDao.removeFromFavorites(verifiedUser.getId(), regularSnip.getId());
 
-        Assert.assertEquals(0, regularSnip.getUserFavorites().size());
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.FAVORITES_TABLE));
         Assert.assertEquals(0, verifiedUser.getFavorites().size());
     }
 
@@ -74,9 +75,11 @@ public class FavoriteDaoTest {
         TestMethods.setUserFavoriteSnippets(em, verifiedUser, newList);
 
         Assert.assertEquals(1, verifiedUser.getFavorites().size());
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.FAVORITES_TABLE));
 
         favoriteDao.removeFromFavorites(verifiedUser.getId(), deletedSnippet.getId());
 
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.FAVORITES_TABLE));
         Assert.assertEquals(0, deletedSnippet.getUserFavorites().size());
         Assert.assertEquals(0, verifiedUser.getFavorites().size());
     }
@@ -90,9 +93,11 @@ public class FavoriteDaoTest {
         TestMethods.setUserFavoriteSnippets(em, verifiedUser, newList);
 
         Assert.assertEquals(1, verifiedUser.getFavorites().size());
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.FAVORITES_TABLE));
 
         favoriteDao.removeFromFavorites(verifiedUser.getId(), flaggedSnippet.getId());
 
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.FAVORITES_TABLE));
         Assert.assertEquals(0, flaggedSnippet.getUserFavorites().size());
         Assert.assertEquals(0, verifiedUser.getFavorites().size());
     }

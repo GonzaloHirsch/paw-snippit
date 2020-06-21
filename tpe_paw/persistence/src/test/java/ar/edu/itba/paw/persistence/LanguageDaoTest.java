@@ -38,7 +38,11 @@ public class LanguageDaoTest {
 
     @Test
     public void addLanguageTest(){
+        int beforeAddCount = TestMethods.countRows(em, TestConstants.LANGUAGE_TABLE);
         Language language = this.languageDao.addLanguage(TestConstants.LANGUAGE);
+
+        Assert.assertEquals(0, beforeAddCount);
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.LANGUAGE_TABLE));
         Assert.assertTrue(language.getId() > 0);
         Assert.assertEquals(TestConstants.LANGUAGE, language.getName());
     }
@@ -47,8 +51,11 @@ public class LanguageDaoTest {
     public void addDeletedLanguageTest(){
         Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
         language.setDeleted(true);
+        int beforeAddCount = TestMethods.countRows(em, TestConstants.LANGUAGE_TABLE);
         Language language2 = this.languageDao.addLanguage(TestConstants.LANGUAGE);
 
+        Assert.assertEquals(1, beforeAddCount);
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.LANGUAGE_TABLE));
         Assert.assertFalse(language2.isDeleted());
         Assert.assertEquals(language, language2);
     }
@@ -56,10 +63,58 @@ public class LanguageDaoTest {
     @Test
     public void addRepeatedLanguageTest(){
         Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        int beforeAddCount = TestMethods.countRows(em, TestConstants.LANGUAGE_TABLE);
         Language language2 = this.languageDao.addLanguage(TestConstants.LANGUAGE);
 
+        Assert.assertEquals(1, beforeAddCount);
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.LANGUAGE_TABLE));
         Assert.assertFalse(language2.isDeleted());
         Assert.assertEquals(language, language2);
+    }
+
+    @Test
+    public void addLanguagesDistinctTest() {
+        int beforeAddCount = TestMethods.countRows(em, TestConstants.LANGUAGE_TABLE);
+        this.languageDao.addLanguages(Arrays.asList(TestConstants.LANGUAGE, TestConstants.LANGUAGE2, TestConstants.LANGUAGE3));
+
+        Assert.assertEquals(0, beforeAddCount);
+        Assert.assertEquals(3, TestMethods.countRows(em, TestConstants.LANGUAGE_TABLE));
+    }
+
+    @Test
+    public void addLanguagesRepeatedTest() {
+        int beforeAddCount = TestMethods.countRows(em, TestConstants.LANGUAGE_TABLE);
+        this.languageDao.addLanguages(Arrays.asList(TestConstants.LANGUAGE, TestConstants.LANGUAGE, TestConstants.LANGUAGE));
+
+        Assert.assertEquals(0, beforeAddCount);
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.LANGUAGE_TABLE));
+    }
+
+    @Test
+    public void addLanguagesNullTest() {
+        int beforeAddCount = TestMethods.countRows(em, TestConstants.LANGUAGE_TABLE);
+        this.languageDao.addLanguages(null);
+
+        Assert.assertEquals(0, beforeAddCount);
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.LANGUAGE_TABLE));
+    }
+
+    @Test
+    public void removeExistingLanguageTest() {
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        int beforeRemoveCount = TestMethods.countRows(em, TestConstants.LANGUAGE_TABLE);
+        this.languageDao.removeLanguage(language.getId());
+
+        Assert.assertEquals(1, beforeRemoveCount);
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.LANGUAGE_TABLE));
+        Assert.assertTrue(language.isDeleted());
+    }
+
+    @Test
+    public void removeLanguageEmptyTest(){
+        Language lang = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        languageDao.removeLanguage(TestConstants.INVALID_LANGUAGE_ID);
+        Assert.assertFalse(lang.isDeleted());
     }
 
     @Test
@@ -167,20 +222,6 @@ public class LanguageDaoTest {
         Collection<Language> collection = languageDao.findAllLanguagesByName(TestConstants.INVALID_LANGUAGE_NAME_SEARCH, true,1, 20);
         Assert.assertNotNull(collection);
         Assert.assertTrue(collection.isEmpty());
-    }
-
-    @Test
-    public void removeLanguageTest(){
-        Language lang = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
-        languageDao.removeLanguage(lang.getId());
-        Assert.assertTrue(lang.isDeleted());
-    }
-
-    @Test
-    public void removeLanguageEmptyTest(){
-        Language lang = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
-        languageDao.removeLanguage(TestConstants.INVALID_LANGUAGE_ID);
-        Assert.assertFalse(lang.isDeleted());
     }
 
     @Test

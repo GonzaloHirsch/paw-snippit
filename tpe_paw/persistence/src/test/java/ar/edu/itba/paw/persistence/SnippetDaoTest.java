@@ -43,6 +43,7 @@ public class SnippetDaoTest {
 
     @Test
     public void testCreate() {
+        int beforeCreation = TestMethods.countRows(em, TestConstants.SNIPPET_TABLE);
         final long snippetId = snippetDao.createSnippet(
                 owner.getId(),
                 TestConstants.SNIPPET_TITLE,
@@ -52,7 +53,10 @@ public class SnippetDaoTest {
                 language.getId(),
                 Collections.emptyList()
         );
+        int afterCreation = TestMethods.countRows(em, TestConstants.SNIPPET_TABLE);
         Assert.assertTrue(snippetId >= 0);
+        Assert.assertEquals(0, beforeCreation);
+        Assert.assertEquals(1, afterCreation);
     }
 
     @Test
@@ -328,18 +332,6 @@ public class SnippetDaoTest {
         toBeDeletedSnippet.setDeleted(true);
         Assert.assertEquals(1, snippetDao.getAllUpvotedSnippetsCount(user.getId()));
     }
-
-    // TODO CHECK! FALLA!
-//    @Test
-//    public void getNewSnippetsForTagsCountTest() {
-//        Instant firstSince = Instant.now();
-//        Tag tag2 = TestMethods.insertTag(em, TestConstants.TAG2);
-//
-//        TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE2, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), language, Collections.singletonList(tag), false, false);
-//        TestMethods.insertSnippet(em, owner, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), language, Collections.singletonList(tag), false, false);
-//        TestMethods.setUserFollowingTags(em, owner, Collections.singletonList(tag));
-//        assertEquals(2, snippetDao.getNewSnippetsForTagsCount(firstSince, Collections.singletonList(tag), owner.getId()));
-//    }
 
     @Test
     public void getAllSnippetsTest() {

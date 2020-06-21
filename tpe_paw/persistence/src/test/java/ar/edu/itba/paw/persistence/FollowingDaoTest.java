@@ -154,9 +154,12 @@ public class FollowingDaoTest {
     @Test
     public void followTagTest(){
         Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
+        int before = TestMethods.countRows(em, TestConstants.FOLLOWING_TABLE);
 
         followingDao.followTag(defaultUser.getId(), tag.getId());
 
+        Assert.assertEquals(0, before);
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.FOLLOWING_TABLE));
         Assert.assertTrue(tag.getFollowingUsers().contains(defaultUser));
         Assert.assertTrue(defaultUser.getFollowedTags().contains(tag));
     }
@@ -165,6 +168,7 @@ public class FollowingDaoTest {
     public void followTagEmptyTest(){
         followingDao.followTag(defaultUser.getId(),  -1);
         Assert.assertTrue(defaultUser.getFollowedTags().isEmpty());
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.FOLLOWING_TABLE));
     }
 
     @Test
@@ -178,8 +182,12 @@ public class FollowingDaoTest {
         );
         tag.setFollowingUsers(new LinkedList<>(Collections.singletonList(defaultUser)));
 
+        int beforeCount = TestMethods.countRows(em, TestConstants.FOLLOWING_TABLE);
+
         followingDao.unfollowTag(defaultUser.getId(), tag.getId());
 
+        Assert.assertEquals(1, beforeCount);
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.FOLLOWING_TABLE));
         Assert.assertFalse(tag.getFollowingUsers().contains(defaultUser));
         Assert.assertFalse(defaultUser.getFollowedTags().contains(tag));
     }
@@ -194,8 +202,12 @@ public class FollowingDaoTest {
         );
         tag.setFollowingUsers(new LinkedList<>(Collections.singletonList(defaultUser)));
 
+        int beforeCount = TestMethods.countRows(em, TestConstants.FOLLOWING_TABLE);
+
         followingDao.unfollowTag(defaultUser.getId(), -1);
 
+        Assert.assertEquals(1, beforeCount);
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.FOLLOWING_TABLE));
         Assert.assertTrue(tag.getFollowingUsers().contains(defaultUser));
         Assert.assertTrue(defaultUser.getFollowedTags().contains(tag));
     }

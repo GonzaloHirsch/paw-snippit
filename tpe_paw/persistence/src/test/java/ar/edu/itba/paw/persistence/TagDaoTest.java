@@ -27,15 +27,21 @@ import java.util.stream.Collectors;
 @Transactional
 public class TagDaoTest {
 
-    @Autowired private TagDao tagDao;
-
     @PersistenceContext
     private EntityManager em;
+
+    @Autowired
+    private TagDao tagDao;
 
     @Before
     public void setUp() {
     }
 
+//    @After
+//    public void resetDatabase(){
+//        JdbcTestUtils.deleteFromTables(jdbcTemplate, TestConstants.SNIPPET_TABLE, TestConstants.USER_TABLE, TestConstants.FOLLOWING_TABLE,
+//                TestConstants.FAVORITES_TABLE, TestConstants.REPORTED_TABLE, TestConstants.VOTES_TABLE, TestConstants.LANGUAGE_TABLE);
+//    }
 
     @Test
     public void testAddTag(){
@@ -45,8 +51,8 @@ public class TagDaoTest {
 
         Assert.assertNotNull(tag);
         Assert.assertEquals(TestConstants.TAG, tag.getName());
-        Assert.assertEquals(beforeAddCount, 0);
-        Assert.assertEquals(afterAddCount, 1);
+        Assert.assertEquals(0, beforeAddCount);
+        Assert.assertEquals( 1, afterAddCount);
     }
 
     @Test
@@ -58,8 +64,8 @@ public class TagDaoTest {
 
         Assert.assertNotNull(tag);
         Assert.assertEquals(tag, tagRepeated);
-        Assert.assertEquals(beforeAddCount, 1);
-        Assert.assertEquals(afterAddCount, 1);
+        Assert.assertEquals(1, beforeAddCount);
+        Assert.assertEquals( 1, afterAddCount);
     }
 
     @Test
@@ -107,8 +113,8 @@ public class TagDaoTest {
         int beforeAddCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
         this.tagDao.addTags(Arrays.asList(TestConstants.TAG, TestConstants.TAG2, TestConstants.TAG3));
         int afterAddCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
-        Assert.assertEquals(beforeAddCount, 0);
-        Assert.assertEquals(afterAddCount, 3);
+        Assert.assertEquals(0, beforeAddCount);
+        Assert.assertEquals(3, afterAddCount);
     }
 
     @Test
@@ -116,8 +122,27 @@ public class TagDaoTest {
         int beforeAddCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
         this.tagDao.addTags(Arrays.asList(TestConstants.TAG, TestConstants.TAG, TestConstants.TAG3));
         int afterAddCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
-        Assert.assertEquals(beforeAddCount, 0);
-        Assert.assertEquals(afterAddCount, 2);
+        Assert.assertEquals(0, beforeAddCount);
+        Assert.assertEquals(2, afterAddCount);
+    }
+
+    @Test
+    public void testRemoveExistingTag() {
+        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
+        int beforeRemovalCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
+        this.tagDao.removeTag(tag.getId());
+        int afterRemovalCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
+        Assert.assertEquals(beforeRemovalCount, 1);
+        Assert.assertEquals(afterRemovalCount, 0);
+    }
+
+    @Test
+    public void testRemoveNonExistingTag() {
+        int beforeRemovalCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
+        this.tagDao.removeTag(TestConstants.INVALID_TAG_ID);
+        int afterRemovalCount = TestMethods.countRows(em, TestConstants.TAG_TABLE);
+        Assert.assertEquals(beforeRemovalCount, 0);
+        Assert.assertEquals(afterRemovalCount, 0);
     }
 
     @Test

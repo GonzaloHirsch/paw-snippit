@@ -39,7 +39,7 @@ public class UserDaoTest {
     
     @Test
     public void testCreateUser() {
-        final User user = userDao.createUser(USER_USERNAME, USER_PASSWORD, USER_EMAIL, 0, Instant.now(),new Locale("en"));
+        final User user = userDao.createUser(USER_USERNAME, USER_PASSWORD, USER_EMAIL, Instant.now(),new Locale("en"));
 
         assertTrue(user.getId()>0);
     }

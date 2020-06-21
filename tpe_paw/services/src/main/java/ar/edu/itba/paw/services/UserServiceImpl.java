@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User register(String username, String password, String email, Instant dateJoined, Locale locale) {
-        User user = this.userDao.createUser(username, password, email, 0, dateJoined, locale);
+        User user = this.userDao.createUser(username, password, email, dateJoined, locale);
         this.roleService.assignUserRole(user.getId());
         return user;
     }

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.dao.FollowingDao;
-import ar.edu.itba.paw.interfaces.dao.RoleDao;
 import ar.edu.itba.paw.models.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -51,16 +50,20 @@ public class FollowingDaoTest {
 
     @Test
     public void getMostPopularFollowedTagsForUserEmptyTagTest() {
-        Map<String, Object> data = TestMethods.populateData(em);
+        Map<String, Tag> tags = TestMethods.tagsCreation(em);
+        Map<String, Language> languages = TestMethods.languageCreation(em);
+        Map<String, User> users = TestMethods.userCreation(em);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+
         Tag unpopularTag = TestMethods.insertTag(em, TestConstants.TAG4);
 
         TestMethods.setUserFollowingTags(
                 em,
                 defaultUser,
                 Arrays.asList(
-                        (Tag) data.get(TestConstants.TAG),
-                        (Tag) data.get(TestConstants.TAG2),
-                        (Tag) data.get(TestConstants.TAG3),
+                        tags.get(TestConstants.TAG),
+                        tags.get(TestConstants.TAG2),
+                        tags.get(TestConstants.TAG3),
                         unpopularTag
                 )
         );
@@ -73,19 +76,22 @@ public class FollowingDaoTest {
 
     @Test
     public void getMostPopularFollowedTagsForUserTagWithDeletedSnippetTest() {
-        Map<String, Object> data = TestMethods.populateData(em);
-
+        Map<String, Tag> tags = TestMethods.tagsCreation(em);
+        Map<String, Language> languages = TestMethods.languageCreation(em);
+        Map<String, User> users = TestMethods.userCreation(em);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+        
         /* Only contains a deleted snippet */
         Tag unpopularTag = TestMethods.insertTag(em, TestConstants.TAG4);
-        TestMethods.insertSnippet(em, defaultUser, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), (Language) data.get(TestConstants.LANGUAGE), Collections.singletonList(unpopularTag), false, TestConstants.SNIPPET_DELETED);
+        TestMethods.insertSnippet(em, defaultUser, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), languages.get(TestConstants.LANGUAGE), Collections.singletonList(unpopularTag), false, TestConstants.SNIPPET_DELETED);
 
         TestMethods.setUserFollowingTags(
                 em,
                 defaultUser,
                 Arrays.asList(
-                        (Tag) data.get(TestConstants.TAG),
-                        (Tag) data.get(TestConstants.TAG2),
-                        (Tag) data.get(TestConstants.TAG3),
+                        tags.get(TestConstants.TAG),
+                        tags.get(TestConstants.TAG2),
+                        tags.get(TestConstants.TAG3),
                         unpopularTag
                 )
         );
@@ -98,19 +104,22 @@ public class FollowingDaoTest {
 
     @Test
     public void getMostPopularFollowedTagsForUserTooManyTagTest() {
-        Map<String, Object> data = TestMethods.populateData(em);
-
+        Map<String, Tag> tags = TestMethods.tagsCreation(em);
+        Map<String, Language> languages = TestMethods.languageCreation(em);
+        Map<String, User> users = TestMethods.userCreation(em);
+        Map<String, Snippet> snippets = TestMethods.snippetCreation(em, tags, languages, users);
+        
         /* Only contains a deleted snippet */
         Tag unpopularTag = TestMethods.insertTag(em, TestConstants.TAG4);
-        TestMethods.insertSnippet(em, defaultUser, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), (Language) data.get(TestConstants.LANGUAGE), Collections.singletonList(unpopularTag), false, TestConstants.SNIPPET_DELETED);
+        TestMethods.insertSnippet(em, defaultUser, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, Instant.now(), languages.get(TestConstants.LANGUAGE), Collections.singletonList(unpopularTag), false, TestConstants.SNIPPET_DELETED);
 
         TestMethods.setUserFollowingTags(
                 em,
                 defaultUser,
                 Arrays.asList(
-                        (Tag) data.get(TestConstants.TAG),
-                        (Tag) data.get(TestConstants.TAG2),
-                        (Tag) data.get(TestConstants.TAG3),
+                        tags.get(TestConstants.TAG),
+                        tags.get(TestConstants.TAG2),
+                        tags.get(TestConstants.TAG3),
                         unpopularTag
                 )
         );
@@ -120,7 +129,7 @@ public class FollowingDaoTest {
         Assert.assertNotNull(followingTags);
         Assert.assertEquals(2, followingTags.size());
         Assert.assertFalse(followingTags.contains(unpopularTag));
-        Assert.assertFalse(followingTags.contains(data.get(TestConstants.TAG)));
+        Assert.assertFalse(followingTags.contains(snippets.get(TestConstants.TAG)));
     }
 
     @Test

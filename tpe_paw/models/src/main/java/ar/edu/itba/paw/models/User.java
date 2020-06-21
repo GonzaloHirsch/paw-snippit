@@ -94,6 +94,20 @@ public class User {
         this.verified = verified;
     }
 
+    /* Constructors for Service Tests */
+    public User(Long id, String username, String password, String email, Instant dateJoined, Locale locale, boolean verified) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.description = "";
+        this.reputation = 0;
+        this.dateJoined = dateJoined;
+        this.lang = locale.getLanguage();
+        this.region = locale.getCountry();
+        this.verified = verified;
+    }
+
     public Long getId() { return id; }
 
     public String getUsername() {

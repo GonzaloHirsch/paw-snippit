@@ -73,6 +73,20 @@ public class Snippet {
         this.deleted = deleted;
     }
 
+    /* Constructors for service tests */
+    public Snippet(Long id, User owner, String code, String title, String description, Instant dateCreated, Language language, Collection<Tag> tags, boolean flagged, boolean deleted) {
+        this.id = id;
+        this.owner = owner;
+        this.code = code;
+        this.title = title;
+        this.description = description;
+        this.dateCreated = dateCreated;
+        this.language = language;
+        this.tags = tags;
+        this.flagged = flagged;
+        this.deleted = deleted;
+    }
+
     /**
      * Returns the string representation of the creation date
      * @return

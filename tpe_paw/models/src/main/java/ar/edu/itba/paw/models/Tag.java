@@ -28,7 +28,7 @@ public class Tag {
         this.name = name;
     }
 
-    @Deprecated
+    /* Constructor for Service Tests */
     public Tag(long id, String name) {
         this.id = id;
         this.name = name;

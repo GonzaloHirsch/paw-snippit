@@ -14,6 +14,7 @@ public final class TestConstants {
     static final String FOLLOWING_TABLE = "follows";
     static final String VOTES_TABLE = "votes_for";
     static final String USER_ROLES_TABLE = "user_roles";
+    static final String SNIPPET_TAGS_TABLE = "snippet_tags";
 
     static final String USER_PASSWORD = "Password";
     static final String USER_USERNAME = "Username";

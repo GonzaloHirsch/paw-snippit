@@ -39,10 +39,19 @@ public class TagDaoTest {
 
     @Test
     public void testAddTag(){
-        Tag maybeTag = tagDao.addTag(TestConstants.TAG);
+        Tag tag = tagDao.addTag(TestConstants.TAG);
 
-        Assert.assertNotNull(maybeTag);
-        Assert.assertEquals(TestConstants.TAG, maybeTag.getName());
+        Assert.assertNotNull(tag);
+        Assert.assertEquals(TestConstants.TAG, tag.getName());
+    }
+
+    @Test
+    public void testAddRepeatedTag(){
+        Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
+        Tag tagRepeated = tagDao.addTag(TestConstants.TAG);
+
+        Assert.assertNotNull(tag);
+        Assert.assertEquals(tag, tagRepeated);
     }
 
     @Test
@@ -60,7 +69,7 @@ public class TagDaoTest {
     public void testFindByIdEmpty(){
         Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
 
-        Optional<Tag> maybeTag = tagDao.findById(-1);
+        Optional<Tag> maybeTag = tagDao.findById(TestConstants.INVALID_TAG_ID);
 
         Assert.assertFalse(maybeTag.isPresent());
     }
@@ -90,21 +99,21 @@ public class TagDaoTest {
         Tag tag = TestMethods.insertTag(em, TestConstants.TAG);
         Tag tag2 = TestMethods.insertTag(em, TestConstants.TAG2);
 
-        Collection<Tag> maybeTags = tagDao.getAllTags();
+        Collection<Tag> tags = tagDao.getAllTags();
 
-        Assert.assertNotNull(maybeTags);
-        Assert.assertEquals(2,maybeTags.size());
-        List<Long> maybeList = maybeTags.stream().mapToLong(Tag::getId).boxed().collect(Collectors.toList());
+        Assert.assertNotNull(tags);
+        Assert.assertEquals(2,tags.size());
+        List<Long> maybeList = tags.stream().mapToLong(Tag::getId).boxed().collect(Collectors.toList());
         Assert.assertTrue(maybeList.contains(tag.getId()));
         Assert.assertTrue(maybeList.contains(tag2.getId()));
     }
 
     @Test
     public void testGetAllTagsEmpty() {
-        Collection<Tag> maybeTags = tagDao.getAllTags();
+        Collection<Tag> tags = tagDao.getAllTags();
 
-        Assert.assertNotNull(maybeTags);
-        Assert.assertEquals(0, maybeTags.size());
+        Assert.assertNotNull(tags);
+        Assert.assertEquals(0, tags.size());
     }
 
 

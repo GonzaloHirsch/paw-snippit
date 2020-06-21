@@ -20,8 +20,14 @@
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content flex-column">
         <div class="flex-row title-section">
-            <div class="flex-column fw-100 flex-grow page-title">
-                <spring:message code="menu.following"> </spring:message>
+            <div class="flex-column fw-100 flex-grow">
+                <div class="fw-100 flex-grow page-title">
+                    <spring:message code="menu.following"> </spring:message>
+                </div>
+                <c:set var="searching" value="${searching}" scope="request"/>
+                <c:set var="itemType" value="snippet" scope="request"/>
+                <c:set var="itemCount" value="${totalSnippetCount}" scope="request"/>
+                <c:import url="/WEB-INF/jsp/navigation/itemCountDisplay.jsp"/>
             </div>
             <div class="flex-column flex-center">
                 <c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>
@@ -31,12 +37,12 @@
             <c:if test="${followingTags.size() > 0}">
                 <div class="chip-list-wrapper">
                     <div class="flex-column chip-list-container">
-                    <c:set var="followingTags" value="${requestScope.followingTags}"/>
+                        <c:set var="followingTags" value="${requestScope.followingTags}"/>
 
-                    <c:forEach var="tag" items="${followingTags}">
-                        <c:set var="tag" value="${tag}" scope="request"/>
-                        <c:import url="/WEB-INF/jsp/tagAndLanguages/tagChip.jsp"/>
-                    </c:forEach>
+                        <c:forEach var="tag" items="${followingTags}">
+                            <c:set var="tag" value="${tag}" scope="request"/>
+                            <c:import url="/WEB-INF/jsp/tagAndLanguages/tagChip.jsp"/>
+                        </c:forEach>
                     </div>
                 </div>
             </c:if>

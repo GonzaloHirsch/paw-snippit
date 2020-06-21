@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.*;
+import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
@@ -166,5 +167,15 @@ public class SnippetServiceImpl implements SnippetService {
         this.emailService.sendFlaggedEmail(baseUrl + "/snippet/" + snippet.getId(), snippet.getTitle(), owner.getEmail(), owner.getUsername(), isFlagged, owner.getLocale());
     }
 
+    @Override
+    public void analizeSnippetsUsing(Tag tag) {
+        int amount = this.snippetDao.getAllSnippetsByTagCount(tag.getId());
+        tag.setSnippetsUsingIsEmpty(amount == 0);
+    }
 
+    @Override
+    public void analizeSnippetsUsing(Language language) {
+        int amount = this.snippetDao.getAllSnippetsByLanguageCount(language.getId());
+        language.setSnippetsUsingIsEmpty(amount == 0);
+    }
 }

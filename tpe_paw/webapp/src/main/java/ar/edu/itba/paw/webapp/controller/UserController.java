@@ -82,7 +82,7 @@ public class  UserController {
     ) {
         User user = this.getUserWithId(id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null || !user.equals(currentUser)) {
+        if (currentUser == null || !currentUser.equals(user)) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));
         }
 
@@ -215,7 +215,7 @@ public class  UserController {
         Collection<Tag> allFollowedTags = Collections.emptyList();
 
         if (currentUser != null) {
-            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
+            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
             userRoles = this.roleService.getUserRoles(currentUser.getId());
             allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
         }
@@ -241,6 +241,7 @@ public class  UserController {
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         model.addAttribute("searchForm", searchForm);
+        model.addAttribute("searching", false);
     }
 
 }

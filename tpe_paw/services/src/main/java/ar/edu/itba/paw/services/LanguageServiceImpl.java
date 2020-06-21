@@ -16,7 +16,6 @@ import java.util.Optional;
 public class LanguageServiceImpl implements LanguageService {
 
     @Autowired private LanguageDao languageDao;
-    @Autowired private SnippetService snippetService;
 
     @Override
     public Optional<Language> findById(long id) {
@@ -70,11 +69,5 @@ public class LanguageServiceImpl implements LanguageService {
     @Override
     public void removeLanguage(final long langId) {
         this.languageDao.removeLanguage(langId);
-    }
-
-    @Override
-    public void analizeSnippetsUsing(Language language) {
-        int amount = this.snippetService.getAllSnippetsByLanguageCount(language.getId());
-        language.setSnippetsUsingIsEmpty(amount == 0);
     }
 }

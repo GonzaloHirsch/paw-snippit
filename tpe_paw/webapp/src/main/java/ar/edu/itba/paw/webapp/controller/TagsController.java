@@ -54,7 +54,7 @@ public class TagsController {
         User currentUser = loginAuthentication.getLoggedInUser();
         Collection<Tag> allTags = tagService.getAllTags(searchForm.isShowEmpty(), searchForm.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null, page, TAG_PAGE_SIZE);
         int tagCount = this.tagService.getAllTagsCount(searchForm.isShowEmpty(), searchForm.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null);
-        return this.setTagsWithPage(mav, allTags, currentUser, tagCount, page);
+        return this.setTagsWithPage(mav, allTags, currentUser, tagCount, page, false);
     }
 
     @RequestMapping("/tags/search")
@@ -63,16 +63,18 @@ public class TagsController {
         User currentUser = loginAuthentication.getLoggedInUser();
         Collection<Tag> allTags = this.tagService.findTagsByName(searchForm.getName(), searchForm.isShowEmpty(), searchForm.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null, page, TAG_PAGE_SIZE);
         int tagCount = this.tagService.getAllTagsCountByName(searchForm.getName(), searchForm.isShowEmpty(), searchForm.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null);
-        return this.setTagsWithPage(mav, allTags, currentUser, tagCount, page);
+        return this.setTagsWithPage(mav, allTags, currentUser, tagCount, page, true);
     }
 
-    private ModelAndView setTagsWithPage(ModelAndView mav, Collection<Tag> allTags, User currentUser, int tagCount, int page) {
+    private ModelAndView setTagsWithPage(ModelAndView mav, Collection<Tag> allTags, User currentUser, int tagCount, int page, boolean searching) {
         mav.addObject("pages", (tagCount/TAG_PAGE_SIZE) + (tagCount % TAG_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("searchContext","tags/");
         mav.addObject("tags", allTags);
         mav.addObject("itemSearchContext", "tags/");
         mav.addObject("loggedUser", currentUser);
+        mav.addObject("searching", searching);
+        mav.addObject("totalTagsCount", tagCount);
 
         for (Tag tag : allTags) {
             if (currentUser != null) {
@@ -82,7 +84,7 @@ public class TagsController {
                 mav.addObject("followIconForm" + tag.getId().toString(), followForm);
                 /* Tag snippet amount count */
             }
-            this.tagService.analizeSnippetsUsing(tag);
+            this.snippetService.analizeSnippetsUsing(tag);
         }
         this.addAttributes(mav);
         return mav;
@@ -112,6 +114,8 @@ public class TagsController {
         mav.addObject("pages", totalSnippetCount/SNIPPET_PAGE_SIZE + (totalSnippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("tag", tag.get());
+        mav.addObject("searching", false);
+        mav.addObject("totalSnippetCount", totalSnippetCount);
         mav.addObject("searchContext","tags/"+tagId+"/");
         mav.addObject("snippetList", snippetService.findSnippetsForTag(tagId, page, SNIPPET_PAGE_SIZE));
         this.addAttributes(mav);
@@ -157,7 +161,7 @@ public class TagsController {
         Collection<String> userRoles = Collections.emptyList();
 
         if (currentUser != null) {
-            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
+            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
             allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
             userRoles = this.roleService.getUserRoles(currentUser.getId());

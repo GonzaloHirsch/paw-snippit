@@ -187,11 +187,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
 
-        // Si ponen esto en prod, hay tabla!!!
-        // TODO: BORRAR ESTO
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("format_sql", "true");
-
         factoryBean.setJpaProperties(properties);
 
         return factoryBean;

@@ -226,7 +226,7 @@ public class RegistrationController {
     }
 
     private void addUserAttributes(User currentUser, ModelAndView mav){
-        Collection<Tag> userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
+        Collection<Tag> userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
         Collection<Tag> allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
         this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         mav.addObject("currentUser", currentUser);

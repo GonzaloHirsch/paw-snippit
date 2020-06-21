@@ -64,7 +64,7 @@ public class SnippetCreateController {
         } else if (this.roleService.isAdmin(currentUser.getId())) {
             throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.admin.snippet.create", null, LocaleContextHolder.getLocale()));
         }
-        Collection<Tag> userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
+        Collection<Tag> userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
         Collection<Tag> allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);

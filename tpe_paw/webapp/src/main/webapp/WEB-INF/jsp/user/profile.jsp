@@ -178,6 +178,11 @@
             </div>
         </c:if>
         <hr class="divider"/>
+        <c:set var="searching" value="${searching}" scope="request"/>
+        <c:set var="itemType" value="snippet" scope="request"/>
+        <c:set var="itemCount" value="${snippets.size()}" scope="request"/>
+        <c:set var="alignment" value="flex-center element-result-amount" scope="request"/>
+        <c:import url="/WEB-INF/jsp/navigation/itemCountDisplay.jsp"/>
         <div class="feed-background-color">
             <c:if test="${snippets.size() == 0}">
                 <div class="profile-no-snippet flex-center fw-100">

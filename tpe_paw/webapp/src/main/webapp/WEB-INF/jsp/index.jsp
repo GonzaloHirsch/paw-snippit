@@ -36,7 +36,8 @@
     <c:import url="/WEB-INF/jsp/navigation/navigationBar.jsp"/>
     <div class="main-content">
         <div class="flex-row title-section">
-            <div class="flex-column fw-100 flex-grow page-title">
+            <div class="flex-column fw-100 flex-grow">
+                <div class="fw-100 flex-grow page-title">
                 <c:choose>
                     <c:when test="${searchContext == ''}">
                         <spring:message code="menu.home"/>
@@ -54,6 +55,11 @@
                         <spring:message code="menu.upvoted"/>
                     </c:when>
                 </c:choose>
+                </div>
+                <c:set var="searching" value="${searching}" scope="request"/>
+                <c:set var="itemType" value="snippet" scope="request"/>
+                <c:set var="itemCount" value="${totalSnippetCount}" scope="request"/>
+                <c:import url="/WEB-INF/jsp/navigation/itemCountDisplay.jsp"/>
             </div>
             <div class="flex-column flex-center">
                 <c:import url="/WEB-INF/jsp/navigation/navigationPage.jsp"/>

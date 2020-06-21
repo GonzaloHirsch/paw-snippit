@@ -5,7 +5,8 @@ public final class Constants {
     public static final int TAG_PAGE_SIZE = 20;
     public static final int LANGUAGE_PAGE_SIZE = 15;
     public static final int MAX_SEARCH_QUERY_SIZE = 1024;
-    public static final int MENU_FOLLOWING_TAGS_AMOUNT = 7;
+    public static final int MENU_FOLLOWING_TAG_AMOUNT = 7;
+    public static final int FOLLOWING_FEED_TAG_AMOUNT = 25;
 
     public static final String REFERER = "Referer";
     public static final String HOME = "/";

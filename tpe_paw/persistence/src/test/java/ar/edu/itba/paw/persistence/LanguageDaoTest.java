@@ -38,24 +38,28 @@ public class LanguageDaoTest {
 
     @Test
     public void addLanguageTest(){
-        Language language = TestMethods.insertLanguage(this.em, TestConstants.LANGUAGE);
+        Language language = this.languageDao.addLanguage(TestConstants.LANGUAGE);
         Assert.assertTrue(language.getId() > 0);
+        Assert.assertEquals(TestConstants.LANGUAGE, language.getName());
     }
 
     @Test
-    public void addLanguagesTest(){
-        List<String> languages = Arrays.asList(TestConstants.LANGUAGE, TestConstants.LANGUAGE2, TestConstants.LANGUAGE3);
-        this.languageDao.addLanguages(languages);
+    public void addDeletedLanguageTest(){
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        language.setDeleted(true);
+        Language language2 = this.languageDao.addLanguage(TestConstants.LANGUAGE);
 
-        // TODO: VER COMO HACER
+        Assert.assertFalse(language2.isDeleted());
+        Assert.assertEquals(language, language2);
     }
 
     @Test
-    public void addLanguagesEmptyTest(){
-        List<String> stringList = Collections.emptyList();
-        this.languageDao.addLanguages(stringList);
+    public void addRepeatedLanguageTest(){
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
+        Language language2 = this.languageDao.addLanguage(TestConstants.LANGUAGE);
 
-        // TODO: VER COMO HACER
+        Assert.assertFalse(language2.isDeleted());
+        Assert.assertEquals(language, language2);
     }
 
     @Test
@@ -166,7 +170,7 @@ public class LanguageDaoTest {
     }
 
     @Test
-    public void RemoveLanguageTest(){
+    public void removeLanguageTest(){
         Language lang = TestMethods.insertLanguage(em, TestConstants.LANGUAGE);
         languageDao.removeLanguage(lang.getId());
         Assert.assertTrue(lang.isDeleted());

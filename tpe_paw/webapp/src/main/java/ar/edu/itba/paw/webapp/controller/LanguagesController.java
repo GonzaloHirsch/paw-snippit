@@ -49,13 +49,15 @@ public class LanguagesController {
         Collection<Language> allLanguages = this.languageService.getAllLanguages(searchForm.isShowEmpty(), page, LANGUAGE_PAGE_SIZE);
 
         for (Language language : allLanguages) {
-            this.languageService.analizeSnippetsUsing(language);
+            this.snippetService.analizeSnippetsUsing(language);
         }
         int languageCount = this.languageService.getAllLanguagesCount(searchForm.isShowEmpty());
         mav.addObject("pages", (languageCount/ LANGUAGE_PAGE_SIZE) + (languageCount % LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("searchContext","languages/");
         mav.addObject("languages", allLanguages);
+        mav.addObject("searching", false);
+        mav.addObject("totalLanguagesCount", languageCount);
         mav.addObject("itemSearchContext", "languages/");
         return mav;
     }
@@ -67,12 +69,14 @@ public class LanguagesController {
         int languageCount = this.languageService.getAllLanguagesCountByName(searchForm.getName(), searchForm.isShowEmpty());
 
         for (Language language : allLanguages) {
-            this.languageService.analizeSnippetsUsing(language);
+            this.snippetService.analizeSnippetsUsing(language);
         }
         mav.addObject("pages", (languageCount/ LANGUAGE_PAGE_SIZE) + (languageCount % LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("searchContext","languages/");
         mav.addObject("languages", allLanguages);
+        mav.addObject("searching", true);
+        mav.addObject("totalLanguagesCount", languageCount);
         mav.addObject("itemSearchContext", "languages/");
         return mav;
     }
@@ -92,6 +96,8 @@ public class LanguagesController {
         mav.addObject("page", page);
         mav.addObject("language", language.get());
         mav.addObject("searchContext","languages/"+langId+"/");
+        mav.addObject("searching", false);
+        mav.addObject("totalSnippetCount", totalSnippetCount);
         mav.addObject("snippetList", snippetService.getSnippetsWithLanguage(langId, page, SNIPPET_PAGE_SIZE));
         return mav;
     }
@@ -118,7 +124,7 @@ public class LanguagesController {
         Collection<Tag> allFollowedTags = Collections.emptyList();
 
         if (currentUser != null) {
-            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAGS_AMOUNT);
+            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
             allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
             userRoles = this.roleService.getUserRoles(currentUser.getId());
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.User;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.MailException;
@@ -86,7 +87,7 @@ public class EmailServiceImpl implements EmailService {
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("snippetUrl", snippetUrl);
         data.put("username", username);
-        data.put("title", snippetTitle);
+        data.put("title", StringEscapeUtils.escapeXml(snippetTitle));
         String body;
         if (isFlagged){
             body = this.templateService.merge("/templates/flaggedSnippet.vm", data, locale);
@@ -134,8 +135,8 @@ public class EmailServiceImpl implements EmailService {
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("snippetUrl", snippetUrl);
         data.put("username", username);
-        data.put("snippetTitle", snippetTitle);
-        data.put("reportDetail", reportDetail);
+        data.put("snippetTitle", StringEscapeUtils.escapeXml(snippetTitle));    // Escaping snippet title to avoid injection
+        data.put("reportDetail", StringEscapeUtils.escapeXml(reportDetail));    // Escaping report
         data.put("reportingUserName", reportingUserName);
         String body;
         body = this.templateService.merge("/templates/reportedSnippet.vm", data, locale);

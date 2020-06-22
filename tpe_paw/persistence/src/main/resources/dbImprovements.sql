@@ -192,8 +192,8 @@ CREATE OR REPLACE FUNCTION update_reputation() RETURNS TRIGGER AS
 DROP TRIGGER IF EXISTS update_reputation_trigger ON votes_for;
 
 -- Notation uses PROCEDURE instead of FUNCTION to make it backwards compatible
-CREATE TRIGGER update_reputation_trigger
-    AFTER INSERT OR UPDATE OR DELETE
-    ON votes_for
-    FOR EACH ROW
-EXECUTE PROCEDURE update_reputation();
+--CREATE TRIGGER update_reputation_trigger
+--    AFTER INSERT OR UPDATE OR DELETE
+--    ON votes_for
+--    FOR EACH ROW
+-- EXECUTE PROCEDURE update_reputation();

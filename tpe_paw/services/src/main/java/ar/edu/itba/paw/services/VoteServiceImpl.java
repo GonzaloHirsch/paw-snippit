@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.dao.VoteDao;
+import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.interfaces.service.VoteService;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Vote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,9 @@ public class VoteServiceImpl implements VoteService {
 
     @Autowired
     private VoteDao voteDao;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public Collection<Vote> getUserVotes(final long userId) {
@@ -35,10 +40,29 @@ public class VoteServiceImpl implements VoteService {
     @Transactional
     @Override
     public void performVote(final long userId, final long snippetId, final int voteType, final int oldVoteType) {
+        boolean newIsPositive = voteType == 1;
+        Optional<User> maybeUser = this.userService.findUserById(userId);
+        if (maybeUser.isPresent()){
+            User user = maybeUser.get();
+            int newReputation = user.getReputation();
+            // Removing a vote
+            if (oldVoteType == voteType){
+                newReputation -= voteType;
+            }
+            // Adding a vote, the new type will always be != 0
+            else if (oldVoteType == 0){
+                newReputation += voteType;
+            }
+            // Updating a vote
+            else {
+                newReputation += voteType - oldVoteType;
+            }
+            this.userService.changeReputation(userId, newReputation);
+        }
         if (oldVoteType == voteType){
             this.withdrawVote(userId, snippetId);
         } else {
-            this.addVote(userId, snippetId, voteType == 1);
+            this.addVote(userId, snippetId, newIsPositive);
         }
     }
 

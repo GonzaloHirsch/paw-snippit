@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.form.ExploreForm;
+import ar.edu.itba.paw.webapp.form.FavoriteForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -130,5 +131,15 @@ public class SnippetExploreController {
         mav.addObject("searching", searching);
         mav.addObject("tagList", this.tagService.getAllTags());
         mav.addObject("languageList", this.languageService.getAllLanguages());
+
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        for (Snippet snippet : snippets) {
+            if (currentUser != null) {
+                /* Fav form quick action */
+                FavoriteForm favForm = new FavoriteForm();
+                favForm.setFavorite(currentUser.getFavorites().contains(snippet));
+                mav.addObject("favoriteForm" + snippet.getId().toString(), favForm);
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Language;
+import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
@@ -9,6 +10,7 @@ import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.LanguageNotFoundException;
 import ar.edu.itba.paw.webapp.form.DeleteForm;
+import ar.edu.itba.paw.webapp.form.FavoriteForm;
 import ar.edu.itba.paw.webapp.form.ItemSearchForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
@@ -91,14 +93,17 @@ public class LanguagesController {
             LOGGER.warn("No language found with id {}", langId);
             throw new LanguageNotFoundException(messageSource.getMessage("error.404.language", new Object[]{langId}, LocaleContextHolder.getLocale()));
         }
+        Collection<Snippet> snippets = snippetService.getSnippetsWithLanguage(langId, page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllSnippetsByLanguageCount(langId);
+
         mav.addObject("pages", totalSnippetCount/SNIPPET_PAGE_SIZE + (totalSnippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("language", language.get());
         mav.addObject("searchContext","languages/"+langId+"/");
         mav.addObject("searching", false);
         mav.addObject("totalSnippetCount", totalSnippetCount);
-        mav.addObject("snippetList", snippetService.getSnippetsWithLanguage(langId, page, SNIPPET_PAGE_SIZE));
+        mav.addObject("snippetList", snippets);
+        this.addSnippetCardFavHelper(mav, this.loginAuthentication.getLoggedInUser(), snippets);
         return mav;
     }
 
@@ -134,5 +139,16 @@ public class LanguagesController {
         model.addAttribute("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
         model.addAttribute("searchForm", searchForm);
         model.addAttribute("userRoles", userRoles);
+    }
+
+    private void addSnippetCardFavHelper(ModelAndView mav, User currentUser, Collection<Snippet> snippets) {
+        for (Snippet snippet : snippets) {
+            if (currentUser != null) {
+                /* Fav form quick action */
+                FavoriteForm favForm = new FavoriteForm();
+                favForm.setFavorite(currentUser.getFavorites().contains(snippet));
+                mav.addObject("favoriteForm" + snippet.getId().toString(), favForm);
+            }
+        }
     }
 }

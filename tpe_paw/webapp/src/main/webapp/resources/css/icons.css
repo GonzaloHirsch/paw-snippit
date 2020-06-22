@@ -54,14 +54,18 @@
     color: red;
     font-size: 30px !important;
     height: 30px;
-    margin: 0px 15px 0px 0px;
+    margin: 0px 10px 0px 0px;
 }
 
 .card-fav-icon {
     font-size: 30px !important;
     cursor: pointer;
     height: 30px;
-    margin: 0px 15px 0px 0px;
+    margin: 0px 11px 0px 0px;
+}
+
+.card-fav-icon:hover {
+    font-size: 31px !important;
 }
 
 .delete-element-icon {

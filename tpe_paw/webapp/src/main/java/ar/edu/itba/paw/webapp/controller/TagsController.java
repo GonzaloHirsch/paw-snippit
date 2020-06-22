@@ -12,10 +12,7 @@ import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.TagNotFoundException;
-import ar.edu.itba.paw.webapp.form.DeleteForm;
-import ar.edu.itba.paw.webapp.form.FollowForm;
-import ar.edu.itba.paw.webapp.form.ItemSearchForm;
-import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,6 +107,7 @@ public class TagsController {
             followForm.setFollows(this.tagService.userFollowsTag(currentUser.getId(), tagId));
         }
 
+        Collection<Snippet> snippets = snippetService.findSnippetsForTag(tagId, page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllSnippetsByTagCount(tag.get().getId());
         mav.addObject("pages", totalSnippetCount/SNIPPET_PAGE_SIZE + (totalSnippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
@@ -117,8 +115,9 @@ public class TagsController {
         mav.addObject("searching", false);
         mav.addObject("totalSnippetCount", totalSnippetCount);
         mav.addObject("searchContext","tags/"+tagId+"/");
-        mav.addObject("snippetList", snippetService.findSnippetsForTag(tagId, page, SNIPPET_PAGE_SIZE));
+        mav.addObject("snippetList", snippets);
         this.addAttributes(mav);
+        this.addSnippetCardFavHelper(mav, currentUser, snippets);
         return mav;
     }
 
@@ -151,6 +150,17 @@ public class TagsController {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.admin", null, LocaleContextHolder.getLocale()));
         }
         return new ModelAndView("redirect:/tags");
+    }
+
+    private void addSnippetCardFavHelper(ModelAndView mav, User currentUser, Collection<Snippet> snippets) {
+        for (Snippet snippet : snippets) {
+            if (currentUser != null) {
+                /* Fav form quick action */
+                FavoriteForm favForm = new FavoriteForm();
+                favForm.setFavorite(currentUser.getFavorites().contains(snippet));
+                mav.addObject("favoriteForm" + snippet.getId().toString(), favForm);
+            }
+        }
     }
 
     /* Are not in the @ModelAttribute method because I do not want the values in the URL */

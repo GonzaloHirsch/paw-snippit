@@ -47,14 +47,14 @@ public class SignUpAuthentication {
                 return savedRequest.getRedirectUrl();
             }
         }
-        return request.getContextPath() + "/";
+        return request.getContextPath() + Constants.HOME;
     }
 
     public String redirectionAuthenticationSuccess(HttpServletRequest request) {
         HttpSession session = request.getSession();
         if (session != null) {
             String redirectUrl = this.getSavedRequestRedirectUrl(request);
-            if (redirectUrl.compareTo(request.getContextPath() + "/") != 0) {
+            if (redirectUrl.compareTo(request.getContextPath() + Constants.HOME) != 0) {
                 return redirectUrl;
             }
             redirectUrl = (String) session.getAttribute(Constants.REDIRECT_ATTRIBUTE);

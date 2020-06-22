@@ -32,7 +32,7 @@ public class RefererRedirectionAuthenticationSuccessHandler
                 return savedRequest.getRedirectUrl();
             }
         }
-        return request.getContextPath() + "/";
+        return request.getContextPath() + Constants.HOME;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class RefererRedirectionAuthenticationSuccessHandler
         HttpSession session = request.getSession();
         if (session != null) {
             String redirectUrl = this.getRedirectUrl(request);
-            if (redirectUrl.compareTo(request.getContextPath() + "/") == 0) {
+            if (redirectUrl.compareTo(request.getContextPath() + Constants.HOME) == 0) {
 
                 redirectUrl = (String) session.getAttribute(Constants.REDIRECT_ATTRIBUTE);
                 if (redirectUrl != null) {

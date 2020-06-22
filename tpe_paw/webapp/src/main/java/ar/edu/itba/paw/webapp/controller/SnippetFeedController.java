@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.constants.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
+import ar.edu.itba.paw.webapp.form.FavoriteForm;
 import ar.edu.itba.paw.webapp.form.FollowForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
@@ -53,10 +54,11 @@ public class SnippetFeedController {
     public ModelAndView getHomeSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
 
+        User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Snippet> snippets = this.snippetService.getAllSnippets(page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllSnippetsCount();
 
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, HOME);
+        this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, HOME);
 
         return mav;
     }
@@ -71,7 +73,7 @@ public class SnippetFeedController {
         Collection<Snippet> snippets = this.snippetService.getAllFavoriteSnippets(currentUser.getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllFavoriteSnippetsCount(currentUser.getId());
 
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FAVORITES);
+        this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, FAVORITES);
 
         return mav;
     }
@@ -85,7 +87,7 @@ public class SnippetFeedController {
 
         Collection<Snippet> snippets = this.snippetService.getAllFollowingSnippets(currentUser.getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllFollowingSnippetsCount(currentUser.getId());
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FOLLOWING);
+        this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, FOLLOWING);
 
         /* Show up to 25 tags -> most popular + non empty */
         Collection<Tag> followingTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.FOLLOWING_FEED_TAG_AMOUNT);
@@ -109,7 +111,7 @@ public class SnippetFeedController {
         Collection<Snippet> snippets = this.snippetService.getAllUpVotedSnippets(currentUser.getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllUpvotedSnippetsCount(currentUser.getId());
 
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, UPVOTED);
+        this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, UPVOTED);
 
         return mav;
     }
@@ -124,18 +126,27 @@ public class SnippetFeedController {
         Collection<Snippet> snippets = this.snippetService.getAllFlaggedSnippets(page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllFlaggedSnippetsCount();
 
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FLAGGED);
+        this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, FLAGGED);
 
         return mav;
     }
 
-    private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
+    private void addModelAttributesHelper(ModelAndView mav, User currentUser, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
         mav.addObject("pages", snippetCount/SNIPPET_PAGE_SIZE + (snippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("snippetList", snippets);
         mav.addObject("totalSnippetCount", snippetCount);
         mav.addObject("searchContext",searchContext);
         mav.addObject("searching", false);
+
+        for (Snippet snippet : snippets) {
+            if (currentUser != null) {
+                /* Fav form quick action */
+                FavoriteForm favForm = new FavoriteForm();
+                favForm.setFavorite(currentUser.getFavorites().contains(snippet));
+                mav.addObject("favoriteForm" + snippet.getId().toString(), favForm);
+            }
+        }
     }
 
     @ModelAttribute

@@ -13,6 +13,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.0/highlight.min.js"></script>
     <script charset="UTF-8"
             src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.0/languages/go.min.js"></script>
+    <script src="<c:url value='/resources/js/form.js'/>"></script>
 </head>
 <body>
 <c:set var="snippetList" value="${requestScope.snippetList}"/>

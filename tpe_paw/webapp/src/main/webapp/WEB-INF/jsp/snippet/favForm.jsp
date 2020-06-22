@@ -10,7 +10,9 @@
 <body>
 <div class="flex-column">
     <c:set var="snippetId" value="${requestScope.snippetId}"/>
-    <form:form class="form-container flex-center" action="${snippetId}/fav" method="post" modelAttribute="favForm">
+    <c:url var="snippetFavUrl" value="/snippet/${snippet.id}/fav"/>
+
+    <form:form class="form-container flex-center" action="${snippetFavUrl}" method="post" modelAttribute="favForm">
         <form:checkbox class="hidden" id="fav-button" path="favorite" value="true" onclick="updateForm(this)"/>
         <label for="fav-button" class="no-margin">
             <c:choose>

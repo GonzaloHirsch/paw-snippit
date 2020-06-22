@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Collections;
@@ -140,9 +141,9 @@ public class SnippetController {
     @RequestMapping(value="/snippet/{id}/fav", method=RequestMethod.POST)
     public ModelAndView favSnippet(
             @ModelAttribute("snippetId") @PathVariable("id") long id,
-            @ModelAttribute("favForm") final FavoriteForm favForm
+            @ModelAttribute("favForm") final FavoriteForm favForm,
+            HttpServletRequest request
     ) {
-        final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.fav", null, LocaleContextHolder.getLocale()));
@@ -150,7 +151,9 @@ public class SnippetController {
             this.favService.updateFavorites(currentUser.getId(), id, favForm.getFavorite());
             LOGGER.debug("User {} updated favorite on snippet {}", currentUser.getUsername(), id);
         }
-        return mav;
+        String referer = request.getHeader(Constants.REFERER);
+        String redirect = referer != null ? referer : ("/snippet/" + id);
+        return new ModelAndView("redirect:" + redirect);
     }
 
     @RequestMapping(value="/snippet/{id}/report", method={RequestMethod.POST})

@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -91,24 +92,24 @@ public class LanguageJpaDaoImpl implements LanguageDao {
     public int getAllLanguagesCountByName(String name, boolean showEmpty) {
         Query nativeQuery;
         if (showEmpty){
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id FROM languages WHERE deleted = FALSE AND LOWER(name) LIKE LOWER(:name)")
+            nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM languages WHERE deleted = FALSE AND LOWER(name) LIKE LOWER(:name)")
                     .setParameter("name", "%"+name+"%");
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT s.language_id FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND l.deleted = FALSE AND LOWER(l.name) LIKE LOWER(:name)")
+            nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT s.language_id) FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND l.deleted = FALSE AND LOWER(l.name) LIKE LOWER(:name)")
                     .setParameter("name", "%"+name+"%");
         }
-        return nativeQuery.getResultList().size();
+        return ((BigInteger) nativeQuery.getSingleResult()).intValue();
     }
 
     @Override
     public int getAllLanguagesCount(boolean showEmpty) {
         Query nativeQuery;
         if (showEmpty){
-            nativeQuery = this.em.createNativeQuery("SELECT id FROM languages WHERE deleted = FALSE");
+            nativeQuery = this.em.createNativeQuery("SELECT COUNT(id) FROM languages WHERE deleted = FALSE");
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT s.language_id FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND l.deleted = FALSE");
+            nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT s.language_id) FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND l.deleted = FALSE");
         }
-        return nativeQuery.getResultList().size();
+        return ((BigInteger) nativeQuery.getSingleResult()).intValue();
     }
 
     @Override

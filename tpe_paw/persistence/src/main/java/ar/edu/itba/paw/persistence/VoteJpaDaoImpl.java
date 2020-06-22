@@ -81,7 +81,6 @@ public class VoteJpaDaoImpl implements VoteDao {
             int result = votes.stream().mapToInt(Vote::getVoteWeight).sum();
             return result;
         }
-
         return 0;
     }
 }

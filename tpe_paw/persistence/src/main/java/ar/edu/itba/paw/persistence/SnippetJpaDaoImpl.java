@@ -178,62 +178,63 @@ public class SnippetJpaDaoImpl implements SnippetDao {
 
     @Override
     public int getAllSnippetsCount() {
-        Query nativeQuery = this.em.createNativeQuery("SELECT id FROM snippets WHERE deleted = FALSE");
-        return nativeQuery.getResultList().size();
+        return ((BigInteger) this.em.createNativeQuery("SELECT COUNT(id) FROM snippets WHERE deleted = FALSE").getSingleResult()).intValue();
     }
 
     @Override
     public int getAllFavoriteSnippetsCount(long userId) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT fav.snippet_id FROM favorites AS fav WHERE fav.user_id = :id");
-        nativeQuery.setParameter("id", userId);
-        return nativeQuery.getResultList().size();
+        return ((BigInteger) this.em.createNativeQuery("SELECT COUNT(DISTINCT fav.snippet_id) FROM favorites AS fav WHERE fav.user_id = :id")
+                .setParameter("id", userId)
+                .getSingleResult()).intValue();
+
     }
 
     @Override
     public int getAllFollowingSnippetsCount(long userId) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = sn.id LEFT OUTER JOIN follows AS fol ON fol.tag_id = st.tag_id WHERE sn.deleted = FALSE AND fol.user_id = :id");
-        nativeQuery.setParameter("id", userId);
-        return nativeQuery.getResultList().size();
+        return ((BigInteger) this.em.createNativeQuery("SELECT COUNT(DISTINCT sn.id) FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON st.snippet_id = sn.id LEFT OUTER JOIN follows AS fol ON fol.tag_id = st.tag_id WHERE sn.deleted = FALSE AND fol.user_id = :id")
+                .setParameter("id", userId)
+                .getSingleResult()).intValue();
     }
 
     @Override
     public int getAllUpvotedSnippetsCount(long userId) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT vf.snippet_id FROM votes_for AS vf LEFT OUTER JOIN snippets AS sn ON vf.snippet_id = sn.id WHERE vf.user_id = :id AND vf.is_positive = TRUE AND sn.deleted = FALSE ORDER BY vf.snippet_id DESC");
-        nativeQuery.setParameter("id", userId);
-        return nativeQuery.getResultList().size();
+        return ((BigInteger) this.em.createNativeQuery("SELECT COUNT(DISTINCT vf.snippet_id) FROM votes_for AS vf LEFT OUTER JOIN snippets AS sn ON vf.snippet_id = sn.id WHERE vf.user_id = :id AND vf.is_positive = TRUE AND sn.deleted = FALSE")
+                .setParameter("id", userId)
+                .getSingleResult()).intValue();
     }
 
     @Override
     public int getAllFlaggedSnippetsCount() {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.flagged = TRUE");
-        return nativeQuery.getResultList().size();
+        return ((BigInteger) this.em.createNativeQuery("SELECT COUNT(DISTINCT sn.id) FROM snippets AS sn WHERE sn.flagged = TRUE")
+                .getSingleResult()).intValue();
     }
 
     @Override
     public int getAllSnippetsByOwnerCount(long userId) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.deleted = FALSE AND sn.user_id = :id");
-        nativeQuery.setParameter("id", userId);
-        return nativeQuery.getResultList().size();
+        return ((BigInteger) this.em.createNativeQuery("SELECT COUNT(DISTINCT sn.id) FROM snippets AS sn WHERE sn.deleted = FALSE AND sn.user_id = :id")
+                .setParameter("id", userId)
+                .getSingleResult()).intValue();
     }
 
     @Override
     public int getAllDeletedSnippetsByOwnerCount(long userId) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.deleted = TRUE AND sn.user_id = :id");
-        nativeQuery.setParameter("id", userId);
-        return nativeQuery.getResultList().size();    }
+        return ((BigInteger) this.em.createNativeQuery("SELECT COUNT(DISTINCT sn.id) FROM snippets AS sn WHERE sn.deleted = TRUE AND sn.user_id = :id")
+                .setParameter("id", userId)
+                .getSingleResult()).intValue();
+    }
 
     @Override
     public int getAllSnippetsByTagCount(long tagId) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON sn.id = st.snippet_id WHERE sn.deleted = FALSE AND st.tag_id = :id ORDER BY sn.id");
-        nativeQuery.setParameter("id", tagId);
-        return nativeQuery.getResultList().size();
+        return ((BigInteger) this.em.createNativeQuery("SELECT COUNT(DISTINCT sn.id) FROM snippets AS sn LEFT OUTER JOIN snippet_tags AS st ON sn.id = st.snippet_id WHERE sn.deleted = FALSE AND st.tag_id = :id")
+                .setParameter("id", tagId)
+                .getSingleResult()).intValue();
     }
 
     @Override
     public int getAllSnippetsByLanguageCount(long langId) {
-        Query nativeQuery = this.em.createNativeQuery("SELECT DISTINCT sn.id FROM snippets AS sn WHERE sn.deleted = FALSE AND sn.language_id = :id");
-        nativeQuery.setParameter("id", langId);
-        return nativeQuery.getResultList().size();
+        return ((BigInteger) this.em.createNativeQuery("SELECT COUNT(DISTINCT sn.id) FROM snippets AS sn WHERE sn.deleted = FALSE AND sn.language_id = :id")
+                .setParameter("id", langId)
+                .getSingleResult()).intValue();
     }
 
     @Override

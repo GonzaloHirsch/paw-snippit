@@ -11,7 +11,7 @@ import javax.persistence.TypedQuery;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.swing.text.html.Option;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -130,7 +130,7 @@ public class TagJpaDaoImpl implements TagDao {
                         .setParameter("term", "%"+name+"%");
             }
         }
-        return ((Number) nativeQuery.getSingleResult()).intValue();
+        return ((BigInteger) nativeQuery.getSingleResult()).intValue();
     }
 
     @Override
@@ -138,20 +138,20 @@ public class TagJpaDaoImpl implements TagDao {
         Query nativeQuery;
         if (showEmpty){
             if (showOnlyFollowing){
-                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT tag_id FROM follows WHERE user_id = :id");
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT tag_id) FROM follows WHERE user_id = :id");
                 nativeQuery.setParameter("id", userId);
             } else {
-                nativeQuery = this.em.createNativeQuery("SELECT id FROM tags");
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(id) FROM tags");
             }
         } else {
             if (showOnlyFollowing){
-                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT tag_id FROM follows AS f LEFT OUTER JOIN snippet_tags AS st ON f.tag_id = st.tag_id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE sn.deleted = FALSE AND f.user_id = :id");
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT tag_id) FROM follows AS f LEFT OUTER JOIN snippet_tags AS st ON f.tag_id = st.tag_id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE sn.deleted = FALSE AND f.user_id = :id");
                 nativeQuery.setParameter("id", userId);
             } else {
-                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT tag_id FROM snippet_tags AS st INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE sn.deleted = FALSE");
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT tag_id) FROM snippet_tags AS st INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE sn.deleted = FALSE");
             }
         }
-        return nativeQuery.getResultList().size();
+        return ((BigInteger) nativeQuery.getSingleResult()).intValue();
     }
 
     @Override

@@ -24,6 +24,11 @@
                         <spring:message code="feed.count.results.many" arguments="${itemCount}"/>
                         </div>
                     </c:when>
+                    <c:otherwise>
+                        <div class="fw-100 ${alignment} flex-grow">
+                        <spring:message code="feed.count.results.none"/>
+                        </div>
+                    </c:otherwise>
                 </c:choose>
             </c:when>
             <c:otherwise>

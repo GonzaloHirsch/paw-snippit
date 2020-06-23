@@ -190,17 +190,21 @@
             <c:if test="${userTags.size() > 0}">
                 <spring:message code="menu.following.others.1" var="followingOthers1"/>
                 <spring:message code="menu.following.others.many" arguments="${userTagsCount}" var="followingMany"/>
+                <c:url value = "/tags/search" var = "followingTagsUrl">
+                    <c:param name = "name" value = ""/>
+                    <c:param name = "showOnlyFollowing" value = "true"/>
+                </c:url>
                 <hr/>
                 <span class="fw-100 section-title"><c:out value="${menuFollowing}"/></span>
                 <c:forEach var="tag" items="${userTags}">
-                    <a class="fw-100 tag-section" href="<c:url value="${'/tags/'}${tag.id}"/>">${tag.name}</a>
+                    <a class="fw-100 tag-section" href="<c:url value="${'/tags/'}${tag.id}"/>"><c:out value="${tag.name}"/></a>
                 </c:forEach>
                 <c:choose>
                     <c:when test="${userTagsCount == 1}">
-                        <a class="fw-100 tag-section" href="<c:url value="/following"/>"><c:out value="${followingOthers1}"/></a>
+                        <a class="fw-100 tag-section" href="${followingTagsUrl}"><c:out value="${followingOthers1}"/></a>
                     </c:when>
                     <c:when test="${userTagsCount > 1}">
-                        <a class="fw-100 tag-section" href="<c:url value="/following"/>"><c:out value="${followingMany}"/></a>
+                        <a class="fw-100 tag-section" href="${followingTagsUrl}"><c:out value="${followingMany}"/></a>
                     </c:when>
                 </c:choose>
             </c:if>

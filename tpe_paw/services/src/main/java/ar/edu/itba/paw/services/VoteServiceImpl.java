@@ -21,7 +21,6 @@ public class VoteServiceImpl implements VoteService {
     private VoteDao voteDao;
     @Autowired
     private SnippetService snippetService;
-
     @Autowired
     private UserService userService;
 

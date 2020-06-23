@@ -5,6 +5,7 @@ import java.util.Locale;
 
 public final class TestConstants {
 
+    /* TABLE NAMES */
     static final String SNIPPET_TABLE = "snippets";
     static final String USER_TABLE = "users";
     static final String LANGUAGE_TABLE = "languages";
@@ -16,6 +17,7 @@ public final class TestConstants {
     static final String USER_ROLES_TABLE = "user_roles";
     static final String SNIPPET_TAGS_TABLE = "snippet_tags";
 
+    /* USER CONSTANTS */
     static final String USER_PASSWORD = "Password";
     static final String USER_USERNAME = "Username";
     static final String USER_USERNAME2 = "Username2";
@@ -51,6 +53,7 @@ public final class TestConstants {
     static final String USER_INVALID_USERNAME = "NOT A USERNAME";
     static final String USER_INVALID_EMAIL = "emailFake@gmail.com";
 
+    /* SNIPPET CONSTANTS */
     static final String SNIPPET_TITLE = "Snippet Title";
     static final String SNIPPET_TITLE2 = "Snippet Title 2";
     static final String SNIPPET_TITLE3 = "Snippet Title 3";
@@ -68,6 +71,7 @@ public final class TestConstants {
     static final boolean SNIPPET_DELETED = true;
     static final long SNIPPET_INVALID_ID = 100;
 
+    /* LANGUAGE CONSTANTS */
     static final String LANGUAGE = "Language 1";
     static final String LANGUAGE2 = "Language 2";
     static final String LANGUAGE3 = "Language 3";
@@ -76,6 +80,7 @@ public final class TestConstants {
     static final String VALID_LANGUAGE_NAME_SEARCH = "Language";
     static final String INVALID_LANGUAGE_NAME_SEARCH = "XXXX";
 
+    /* TAG CONSTANTS */
     static final String TAG = "tag1";
     static final String TAG2 = "tag2";
     static final String TAG3 = "tag3";
@@ -87,6 +92,7 @@ public final class TestConstants {
     static final String ADMIN_ROLE = "ADMIN";
     static final String USER_ROLE = "USER";
 
+    /* PAGE SIZE */
     static final int SNIPPET_PAGE_SIZE = 6;
     static final int TAG_PAGE_SIZE = 20;
     static final int LANGUAGE_PAGE_SIZE = 20;
@@ -118,10 +124,6 @@ public final class TestConstants {
     static final Instant DATE_7 = Instant.parse("2013-11-30T18:35:24.00Z");
     static final Instant DATE_8 = Instant.parse("2012-11-30T18:35:24.00Z");
     static final Instant DATE_9 = Instant.parse("2011-11-30T18:35:24.00Z");
-    static final Instant DATE_MIN_MINUTES = Instant.parse("2016-12-30T18:30:00.00Z");
-    static final Instant DATE_MAX_MINUTES = Instant.parse("2016-12-30T18:40:00.00Z");
-    static final Instant DATE_MIN_YEAR = Instant.parse("2016-01-01T00:00:00.00Z");
-    static final Instant DATE_MAX_YEAR = Instant.parse("2017-01-01T00:00:00.00Z");
 
     static final int REP_VALUE_1 = -10;
     static final int REP_VALUE_2 = -1;
@@ -136,6 +138,8 @@ public final class TestConstants {
     static final int VOTE_VALUE_2 = 5;
     static final int VOTE_VALUE_3 = 10;
     static final int VOTE_VALUE_4 = 10000000;
+    static final int VOTE_POSITIVE_WEIGHT = 1;
+    static final int VOTE_NEGATIVE_WEIGHT = -1;
 
     private TestConstants() {
         throw new AssertionError();

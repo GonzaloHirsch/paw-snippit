@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Vote;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,11 +32,6 @@ public class VoteDaoTest {
 
     @PersistenceContext
     private EntityManager em;
-
-    @Before
-    public void setUp() {
-
-    }
 
     @Test
     public void testGetVotePositiveExists(){
@@ -130,21 +126,36 @@ public class VoteDaoTest {
         TestMethods.insertVote(em, user, snip, true);
         int beforeVote = TestMethods.countRows(em, TestConstants.VOTES_TABLE);
 
-        this.voteDao.addVote(snip.getId(), user.getId(), true, 1, -1);
+        int repChange = this.voteDao.addVote(snip.getId(), user.getId(), true, TestConstants.VOTE_POSITIVE_WEIGHT, TestConstants.VOTE_NEGATIVE_WEIGHT);
 
+        Assert.assertEquals(0, repChange);
         Assert.assertEquals(1, beforeVote);
         Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.VOTES_TABLE));
     }
 
     @Test
-    public void testUpdateVote() {
+    public void testUpdateDownToUpVote() {
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
         Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
         Snippet snip = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
-        TestMethods.insertVote(em, user, snip, false);
         int beforeVote = TestMethods.countRows(em, TestConstants.VOTES_TABLE);
 
-        this.voteDao.addVote(snip.getId(), user.getId(), true, 1, -1);
+        TestMethods.insertVote(em, user, snip, false);
+        this.voteDao.addVote(snip.getId(), user.getId(), true, TestConstants.VOTE_POSITIVE_WEIGHT, TestConstants.VOTE_NEGATIVE_WEIGHT);
+
+        Assert.assertEquals(0, beforeVote);
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.VOTES_TABLE));
+    }
+
+    @Test
+    public void testUpdateUpToDownVote() {
+        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
+        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
+        Snippet snip = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
+        TestMethods.insertVote(em, user, snip, true);
+        int beforeVote = TestMethods.countRows(em, TestConstants.VOTES_TABLE);
+
+        this.voteDao.addVote(snip.getId(), user.getId(), false, TestConstants.VOTE_POSITIVE_WEIGHT, TestConstants.VOTE_NEGATIVE_WEIGHT);
 
         Assert.assertEquals(1, beforeVote);
         Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.VOTES_TABLE));

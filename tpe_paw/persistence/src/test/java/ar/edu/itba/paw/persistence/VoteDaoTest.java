@@ -123,56 +123,6 @@ public class VoteDaoTest {
     }
 
     @Test
-    public void testGetVoteBalance(){
-        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
-        User user2 = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
-        User user3 = TestMethods.insertUser(em, TestConstants.USER_USERNAME3, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL3, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
-        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
-        Snippet snip1 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
-
-        Vote vote1 = TestMethods.insertVote(em, user, snip1, true);
-        Vote vote2 = TestMethods.insertVote(em, user2, snip1, false);
-        Vote vote3 = TestMethods.insertVote(em, user3, snip1, false);
-        snip1.setVotes(Arrays.asList(vote1, vote2, vote3));
-
-        int voteBalance = voteDao.getVoteBalance(snip1.getId());
-
-        Assert.assertEquals(-1, voteBalance);
-    }
-
-    @Test
-    public void testGetVotePositiveBalance(){
-        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
-        User user2 = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
-        User user3 = TestMethods.insertUser(em, TestConstants.USER_USERNAME3, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL3, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
-        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
-        Snippet snip1 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
-
-        Vote vote1 = TestMethods.insertVote(em, user, snip1, true);
-        Vote vote2 = TestMethods.insertVote(em, user2, snip1, true);
-        Vote vote3 = TestMethods.insertVote(em, user3, snip1, true);
-        snip1.setVotes(Arrays.asList(vote1, vote2, vote3));
-
-        int voteBalance = voteDao.getVoteBalance(snip1.getId());
-
-        Assert.assertEquals(3, voteBalance);
-    }
-
-    @Test
-    public void testGetVoteBalanceNoVotes() {
-        User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
-        Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
-        Snippet snip1 = TestMethods.insertSnippet(em, user, TestConstants.SNIPPET_TITLE, TestConstants.SNIPPET_DESCR, TestConstants.SNIPPET_CODE, TestConstants.DATE_1, language, Collections.emptyList(), false, false);
-        
-        Assert.assertEquals(0, voteDao.getVoteBalance(snip1.getId()));
-    }
-
-    @Test
-    public void testGetVoteBalanceNoneExistingSnippet() {
-        Assert.assertEquals(0, voteDao.getVoteBalance(TestConstants.SNIPPET_INVALID_ID));
-    }
-
-    @Test
     public void testAddExistingVote() {
         User user = TestMethods.insertUser(em, TestConstants.USER_USERNAME2, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL2, TestConstants.USER_DATE, TestConstants.LOCALE_ES, TestConstants.USER_VERIFIED);
         Language language = TestMethods.insertLanguage(em, TestConstants.LANGUAGE2);
@@ -180,7 +130,7 @@ public class VoteDaoTest {
         TestMethods.insertVote(em, user, snip, true);
         int beforeVote = TestMethods.countRows(em, TestConstants.VOTES_TABLE);
 
-        this.voteDao.addVote(snip.getId(), user.getId(), true);
+        this.voteDao.addVote(snip.getId(), user.getId(), true, 1, -1);
 
         Assert.assertEquals(1, beforeVote);
         Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.VOTES_TABLE));
@@ -194,7 +144,7 @@ public class VoteDaoTest {
         TestMethods.insertVote(em, user, snip, false);
         int beforeVote = TestMethods.countRows(em, TestConstants.VOTES_TABLE);
 
-        this.voteDao.addVote(snip.getId(), user.getId(), true);
+        this.voteDao.addVote(snip.getId(), user.getId(), true, 1, -1);
 
         Assert.assertEquals(1, beforeVote);
         Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.VOTES_TABLE));

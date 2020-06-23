@@ -58,10 +58,6 @@ public class Vote {
     public void setPositive(boolean positive) {
         isPositive = positive;
     }
-
-    public int getVoteWeight() {
-        return isPositive ? 1 : -1;
-    }
     
 
     /**

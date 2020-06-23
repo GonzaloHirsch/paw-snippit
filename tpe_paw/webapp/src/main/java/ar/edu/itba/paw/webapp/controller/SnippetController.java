@@ -49,7 +49,8 @@ public class SnippetController {
             @ModelAttribute("adminFlagForm") final FlagSnippetForm adminFlagForm,
             @ModelAttribute("deleteForm") final DeleteForm deleteForm,
             @ModelAttribute("favForm") final FavoriteForm favForm,
-            @ModelAttribute("voteForm") final VoteForm voteForm,
+            @ModelAttribute("positiveVoteForm") final VoteForm positiveVoteForm,
+            @ModelAttribute("negativeVoteForm") final VoteForm negativeVoteForm,
             @ModelAttribute("dismissReportForm") final DeleteForm dismissReportForm,
             @ModelAttribute("reportForm") final ReportForm reportForm,
             final BindingResult errors
@@ -69,10 +70,9 @@ public class SnippetController {
             mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
 
             // Vote
-            int voteType = this.voteService.getVoteWeight(currentUser.getId(), snippet.getId());
-
-            voteForm.setType(voteType);
-            voteForm.setOldType(voteType);
+            Optional<Vote> vote = this.voteService.getVote(currentUser.getId(), snippet.getId());
+            negativeVoteForm.setVoteSelected(vote.isPresent() && !vote.get().isPositive());
+            positiveVoteForm.setVoteSelected(vote.isPresent() && vote.get().isPositive());
 
             // Fav
             showFavorite = currentUser.getFavorites().contains(snippet);
@@ -123,10 +123,10 @@ public class SnippetController {
         return new ModelAndView("redirect:/snippet/" + id);
     }
 
-    @RequestMapping(value="/snippet/{id}/vote", method=RequestMethod.POST)
-    public ModelAndView voteFor(
+    @RequestMapping(value="/snippet/{id}/vote/positive", method=RequestMethod.POST)
+    public ModelAndView votePositive(
             @ModelAttribute("snippetId") @PathVariable("id") long id,
-            @ModelAttribute("voteForm") final VoteForm voteForm
+            @ModelAttribute("positiveVoteForm") final VoteForm positiveVoteForm
     ) {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
@@ -134,7 +134,23 @@ public class SnippetController {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.vote", null, LocaleContextHolder.getLocale()));
         } else {
             Snippet snippet = this.getSnippet(id);
-            this.voteService.performVote(snippet.getOwner().getId(), currentUser.getId(), id, voteForm.getType(), voteForm.getOldType());
+            this.voteService.performVote(snippet.getOwner().getId(), currentUser.getId(), id, positiveVoteForm.isVoteSelected(), true);
+        }
+        return mav;
+    }
+
+    @RequestMapping(value="/snippet/{id}/vote/negative", method=RequestMethod.POST)
+    public ModelAndView voteNegative(
+            @ModelAttribute("snippetId") @PathVariable("id") long id,
+            @ModelAttribute("negativeVoteForm") final VoteForm negativeVoteForm
+    ) {
+        final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser == null) {
+            throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.vote", null, LocaleContextHolder.getLocale()));
+        } else {
+            Snippet snippet = this.getSnippet(id);
+            this.voteService.performVote(snippet.getOwner().getId(), currentUser.getId(), id, negativeVoteForm.isVoteSelected(), false);
         }
         return mav;
     }
@@ -164,13 +180,14 @@ public class SnippetController {
             @ModelAttribute("adminFlagForm") final FlagSnippetForm adminFlagForm,
             @ModelAttribute("deleteForm") final DeleteForm deleteForm,
             @ModelAttribute("favForm") final FavoriteForm favForm,
-            @ModelAttribute("voteForm") final VoteForm voteForm,
+            @ModelAttribute("positiveVoteForm") final VoteForm positiveVoteForm,
+            @ModelAttribute("negativeVoteForm") final VoteForm negativeVoteForm,
             @ModelAttribute("dismissReportForm") final DeleteForm dismissReportForm,
             @Valid @ModelAttribute("reportForm") final ReportForm reportForm,
             final BindingResult errors
     ) {
         if (errors.hasErrors()) {
-            return snippetDetail(id, searchForm, adminFlagForm, deleteForm, favForm, voteForm, dismissReportForm, reportForm, errors);
+            return snippetDetail(id, searchForm, adminFlagForm, deleteForm, favForm, positiveVoteForm, negativeVoteForm, dismissReportForm, reportForm, errors);
         }
         // Getting the url of the server
         final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();

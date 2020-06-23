@@ -121,8 +121,12 @@
                         <c:set var="votes" value="${voteCount}" scope="request"/>
                         <!-- VOTE -->
                         <c:if test="${!snippet.deleted}">
-                            <div class="snippet-vote-container flex-column flex-center detail-snippet-block border-radius form-shadow">
-                                <c:import url="/WEB-INF/jsp/snippet/voteForm.jsp"/>
+                            <div class="snippet-vote-container flex-row flex-center detail-snippet-block border-radius form-shadow">
+                                <c:import url="/WEB-INF/jsp/snippet/positiveVoteForm.jsp"/>
+                                <div class="flex-center no-margin vote-count">
+                                    <c:out value="${votes}"/>
+                                </div>
+                                <c:import url="/WEB-INF/jsp/snippet/negativeVoteForm.jsp"/>
                             </div>
                         </c:if>
 

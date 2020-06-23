@@ -103,14 +103,6 @@ public class Snippet {
         return this.language.getName();
     }
 
-    /**
-     * Calculates the vote count for the snippet
-     * @return
-     */
-    public int getVoteCount(){
-        return this.votes.stream().mapToInt(Vote::getVoteWeight).sum();
-    }
-
     public boolean isFlagged() {
         return flagged;
     }

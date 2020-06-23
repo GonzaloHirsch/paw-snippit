@@ -133,7 +133,8 @@ public class SnippetController {
         if (currentUser == null) {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.vote", null, LocaleContextHolder.getLocale()));
         } else {
-            this.voteService.performVote(currentUser.getId(), id, voteForm.getType(), voteForm.getOldType());
+            Snippet snippet = this.getSnippet(id);
+            this.voteService.performVote(snippet.getOwner().getId(), currentUser.getId(), id, voteForm.getType(), voteForm.getOldType());
         }
         return mav;
     }

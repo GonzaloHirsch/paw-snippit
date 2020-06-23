@@ -39,12 +39,12 @@ public class VoteServiceImpl implements VoteService {
 
     @Transactional
     @Override
-    public void performVote(final long userId, final long snippetId, final int voteType, final int oldVoteType) {
+    public void performVote(final long ownerId, final long userId, final long snippetId, final int voteType, final int oldVoteType) {
         boolean newIsPositive = voteType == 1;
-        Optional<User> maybeUser = this.userService.findUserById(userId);
-        if (maybeUser.isPresent()){
-            User user = maybeUser.get();
-            int newReputation = user.getReputation();
+        Optional<User> owner = this.userService.findUserById(ownerId);
+        Optional<User> currentUser = this.userService.findUserById(userId);
+        if (owner.isPresent() && currentUser.isPresent()){
+            int newReputation = owner.get().getReputation();
             // Removing a vote
             if (oldVoteType == voteType){
                 newReputation -= voteType;
@@ -57,7 +57,7 @@ public class VoteServiceImpl implements VoteService {
             else {
                 newReputation += voteType - oldVoteType;
             }
-            this.userService.changeReputation(userId, newReputation);
+            this.userService.changeReputation(ownerId, newReputation);
         }
         if (oldVoteType == voteType){
             this.withdrawVote(userId, snippetId);

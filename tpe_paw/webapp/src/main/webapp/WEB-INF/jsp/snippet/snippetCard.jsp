@@ -36,7 +36,7 @@
                 <c:set var="favForm" value="favoriteForm${snippet.id}"/>
                 <c:url var="snippetFavUrl" value="/snippet/${snippet.id}/fav"/>
 
-                <c:if test="${currentUser != null}">
+                <c:if test="${currentUser != null && !snippet.deleted}">
                     <form:form class="form-container flex-center" action="${snippetFavUrl}" method="post" modelAttribute="${favForm}">
                         <form:checkbox class="hidden" id="fav-button-${snippet.id}" path="favorite" value="true" onclick="updateForm(this)"/>
                         <label for="fav-button-${snippet.id}" class="no-margin">
@@ -62,24 +62,22 @@
         </div>
 
         <!-- Bottom part of the card with the title, description and code -->
-<%--        <a href="<c:url value='/snippet/${snippet.id}'/>">--%>
-            <div class="flex-row snippet-title-container">
-                <div class="snippet-text snippet-title"><c:out value="${snippet.title}"/></div>
+        <div class="flex-row snippet-title-container">
+            <div class="snippet-text snippet-title"><c:out value="${snippet.title}"/></div>
+        </div>
+        <c:if test="${!StringUtils.isEmpty(snippet.description)}">
+            <div class="card-snippet-block card-snippet-descr-block">
+                <div class="snippet-text justify-text"><c:out value="${snippet.description}"/></div>
+                <p class="card-snippet-fade-out card-snippet-fade-out-descr hidden"></p>
             </div>
-            <c:if test="${!StringUtils.isEmpty(snippet.description)}">
-                <div class="card-snippet-block card-snippet-descr-block">
-                    <div class="snippet-text justify-text"><c:out value="${snippet.description}"/></div>
-                    <p class="card-snippet-fade-out card-snippet-fade-out-descr hidden"></p>
-                </div>
-            </c:if>
+        </c:if>
 
-            <div class="flex-column snippet-code-container border-radius">
-                <div class="card-snippet-block">
-                    <pre><code class="code-element ${snippet.language.name}"><c:out value="${snippet.code}"/></code></pre>
-                    <p class="card-snippet-fade-out card-snippet-fade-out-code hidden"></p>
-                </div>
+        <div class="flex-column snippet-code-container border-radius">
+            <div class="card-snippet-block">
+                <pre><code class="code-element ${snippet.language.name}"><c:out value="${snippet.code}"/></code></pre>
+                <p class="card-snippet-fade-out card-snippet-fade-out-code hidden"></p>
             </div>
-<%--        </a>--%>
+        </div>
     </div>
 </a>
 </body>

@@ -5,8 +5,9 @@ import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.constants.Constants;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.utility.MavHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,19 +74,7 @@ public class ErrorController {
     @ModelAttribute
     public void addAttributes(Model model, HttpServletRequest request) {
         User currentUser = this.loginAuthentication.getLoggedInUser(request);
-        Collection<Tag> userTags =  Collections.emptyList();
-        Collection<String> userRoles = Collections.emptyList();
-        Collection<Tag> allFollowedTags = Collections.emptyList();
-
-        if (currentUser != null) {
-            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
-            userRoles = this.roleService.getUserRoles(currentUser.getId());
-            allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-        }
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("userTags", userTags);
-        model.addAttribute("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
-        model.addAttribute("userRoles", userRoles);
+        MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
         model.addAttribute("searchContext", "error/");
         LOGGER.error("Unknown error for user {}", currentUser != null ? currentUser.getId() : "-");
     }

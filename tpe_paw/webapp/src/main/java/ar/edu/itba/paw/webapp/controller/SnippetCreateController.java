@@ -7,7 +7,7 @@ import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.constants.Constants;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.FormErrorException;
 import ar.edu.itba.paw.webapp.form.SearchForm;
@@ -26,13 +26,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Locale;
 
 @Controller
 public class SnippetCreateController {
@@ -85,7 +80,6 @@ public class SnippetCreateController {
         if (errors.hasErrors()) {
             return snippetCreateDetail(snippetCreateForm);
         }
-//        String dateCreated = DATE.format(Instant.now());
         Instant dateCreated = Instant.now();
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {

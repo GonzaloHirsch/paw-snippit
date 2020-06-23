@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.constants;
+package ar.edu.itba.paw.webapp.utility;
 
 public final class Constants {
     public static final int SNIPPET_PAGE_SIZE = 6;

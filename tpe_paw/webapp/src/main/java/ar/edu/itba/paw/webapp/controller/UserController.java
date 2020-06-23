@@ -5,13 +5,14 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.constants.Constants;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.InvalidUrlException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.DescriptionForm;
 import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.utility.MavHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +27,12 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
+import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
 
 @Controller
 public class  UserController {
@@ -209,20 +209,7 @@ public class  UserController {
     private ModelAndView profileMav(long id, User currentUser, User user, String searchContext, DescriptionForm descriptionForm, String tabContext, Collection<Snippet> snippets, final int totalSnippetCount, final int totalUserSnippetCount, final int page, final boolean editing) {
         final ModelAndView mav = new ModelAndView("user/profile");
 
-        /* Set the current user and its following tags */
-        Collection<Tag> userTags =  Collections.emptyList();
-        Collection<String> userRoles = Collections.emptyList();
-        Collection<Tag> allFollowedTags = Collections.emptyList();
-
-        if (currentUser != null) {
-            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
-            userRoles = this.roleService.getUserRoles(currentUser.getId());
-            allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-        }
-        mav.addObject("currentUser", currentUser);
-        mav.addObject("userTags", userTags);
-        mav.addObject("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
-        mav.addObject("userRoles", userRoles);
+        MavHelper.addSnippetCardFavFormAttributes(mav, this.loginAuthentication.getLoggedInUser(), snippets);
 
         descriptionForm.setDescription(user.getDescription());
         mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.getId()));
@@ -240,6 +227,11 @@ public class  UserController {
 
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
+        if (currentUser != null) {
+            this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
+        }
         model.addAttribute("searchForm", searchForm);
         model.addAttribute("searching", false);
     }

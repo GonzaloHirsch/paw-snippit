@@ -5,7 +5,7 @@ import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.constants.Constants;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.exception.*;
 import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;

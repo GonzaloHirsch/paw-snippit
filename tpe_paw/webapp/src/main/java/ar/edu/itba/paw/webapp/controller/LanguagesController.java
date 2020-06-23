@@ -6,13 +6,14 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.constants.Constants;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.LanguageNotFoundException;
 import ar.edu.itba.paw.webapp.form.DeleteForm;
 import ar.edu.itba.paw.webapp.form.FavoriteForm;
 import ar.edu.itba.paw.webapp.form.ItemSearchForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.utility.MavHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.webapp.constants.Constants.LANGUAGE_PAGE_SIZE;
-import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
+import static ar.edu.itba.paw.webapp.utility.Constants.LANGUAGE_PAGE_SIZE;
+import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
 
 @Controller
 public class LanguagesController {
@@ -103,7 +103,7 @@ public class LanguagesController {
         mav.addObject("searching", false);
         mav.addObject("totalSnippetCount", totalSnippetCount);
         mav.addObject("snippetList", snippets);
-        this.addSnippetCardFavHelper(mav, this.loginAuthentication.getLoggedInUser(), snippets);
+        MavHelper.addSnippetCardFavFormAttributes(mav, this.loginAuthentication.getLoggedInUser(), snippets);
         return mav;
     }
 
@@ -124,31 +124,7 @@ public class LanguagesController {
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags =  Collections.emptyList();
-        Collection<String> userRoles = Collections.emptyList();
-        Collection<Tag> allFollowedTags = Collections.emptyList();
-
-        if (currentUser != null) {
-            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
-            allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-            userRoles = this.roleService.getUserRoles(currentUser.getId());
-            this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
-        }
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("userTags", userTags);
-        model.addAttribute("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
+        MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
         model.addAttribute("searchForm", searchForm);
-        model.addAttribute("userRoles", userRoles);
-    }
-
-    private void addSnippetCardFavHelper(ModelAndView mav, User currentUser, Collection<Snippet> snippets) {
-        for (Snippet snippet : snippets) {
-            if (currentUser != null) {
-                /* Fav form quick action */
-                FavoriteForm favForm = new FavoriteForm();
-                favForm.setFavorite(currentUser.getFavorites().contains(snippet));
-                mav.addObject("favoriteForm" + snippet.getId().toString(), favForm);
-            }
-        }
     }
 }

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.service.RoleService;
-import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
@@ -9,10 +8,11 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.constants.Constants;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.TagNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
+import ar.edu.itba.paw.webapp.utility.MavHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +25,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
-import static ar.edu.itba.paw.webapp.constants.Constants.TAG_PAGE_SIZE;
+import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
+import static ar.edu.itba.paw.webapp.utility.Constants.TAG_PAGE_SIZE;
 
 @Controller
 public class TagsController {
@@ -117,7 +116,7 @@ public class TagsController {
         mav.addObject("searchContext","tags/"+tagId+"/");
         mav.addObject("snippetList", snippets);
         this.addAttributes(mav);
-        this.addSnippetCardFavHelper(mav, currentUser, snippets);
+        MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
         return mav;
     }
 
@@ -150,17 +149,6 @@ public class TagsController {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.admin", null, LocaleContextHolder.getLocale()));
         }
         return new ModelAndView("redirect:/tags");
-    }
-
-    private void addSnippetCardFavHelper(ModelAndView mav, User currentUser, Collection<Snippet> snippets) {
-        for (Snippet snippet : snippets) {
-            if (currentUser != null) {
-                /* Fav form quick action */
-                FavoriteForm favForm = new FavoriteForm();
-                favForm.setFavorite(currentUser.getFavorites().contains(snippet));
-                mav.addObject("favoriteForm" + snippet.getId().toString(), favForm);
-            }
-        }
     }
 
     /* Are not in the @ModelAttribute method because I do not want the values in the URL */

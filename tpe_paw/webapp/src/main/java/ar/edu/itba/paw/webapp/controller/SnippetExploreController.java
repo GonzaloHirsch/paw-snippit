@@ -6,12 +6,12 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.constants.Constants;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.form.ExploreForm;
 import ar.edu.itba.paw.webapp.form.FavoriteForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.utility.MavHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,14 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.*;
 
-import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
+import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
 
 @Controller
 public class SnippetExploreController {
@@ -104,22 +100,11 @@ public class SnippetExploreController {
 
     @ModelAttribute
     public void addAttributes(Model model) {
-
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags =  Collections.emptyList();
-        Collection<String> userRoles = Collections.emptyList();
-        Collection<Tag> allFollowedTags = Collections.emptyList();
-
+        MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
         if (currentUser != null) {
-            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
-            allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-            userRoles = this.roleService.getUserRoles(currentUser.getId());
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         }
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("userTags", userTags);
-        model.addAttribute("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
-        model.addAttribute("userRoles", userRoles);
     }
 
     private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext, boolean searching) {
@@ -133,13 +118,6 @@ public class SnippetExploreController {
         mav.addObject("languageList", this.languageService.getAllLanguages());
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        for (Snippet snippet : snippets) {
-            if (currentUser != null) {
-                /* Fav form quick action */
-                FavoriteForm favForm = new FavoriteForm();
-                favForm.setFavorite(currentUser.getFavorites().contains(snippet));
-                mav.addObject("favoriteForm" + snippet.getId().toString(), favForm);
-            }
-        }
+        MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
     }
 }

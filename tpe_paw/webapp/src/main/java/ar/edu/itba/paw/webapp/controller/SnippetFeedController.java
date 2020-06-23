@@ -8,11 +8,12 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.constants.Constants;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.form.FavoriteForm;
 import ar.edu.itba.paw.webapp.form.FollowForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.utility.MavHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.ServletContext;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
+import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
 
 @Controller
 public class SnippetFeedController {
@@ -90,14 +89,7 @@ public class SnippetFeedController {
         this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, FOLLOWING);
 
         /* Show up to 25 tags -> most popular + non empty */
-        Collection<Tag> followingTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.FOLLOWING_FEED_TAG_AMOUNT);
-        for (Tag tag : followingTags) {
-            FollowForm followForm = new FollowForm();
-            followForm.setFollows(true);
-            mav.addObject("unfollowForm" + tag.getId().toString(), followForm);
-        }
-        mav.addObject("followingTags", followingTags);
-
+        MavHelper.addTagChipUnfollowFormAttributes(mav, this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.FOLLOWING_FEED_TAG_AMOUNT));
         return mav;
     }
 
@@ -139,34 +131,18 @@ public class SnippetFeedController {
         mav.addObject("searchContext",searchContext);
         mav.addObject("searching", false);
 
-        for (Snippet snippet : snippets) {
-            if (currentUser != null) {
-                /* Fav form quick action */
-                FavoriteForm favForm = new FavoriteForm();
-                favForm.setFavorite(currentUser.getFavorites().contains(snippet));
-                mav.addObject("favoriteForm" + snippet.getId().toString(), favForm);
-            }
-        }
+        MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
     }
 
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags =  Collections.emptyList();
-        Collection<String> userRoles = Collections.emptyList();
-        Collection<Tag> allFollowedTags = Collections.emptyList();
 
         if (currentUser != null) {
-            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
-            userRoles = this.roleService.getUserRoles(currentUser.getId());
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
-            allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
         }
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("userTags", userTags);
-        model.addAttribute("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size() );
+        MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
         model.addAttribute("searchForm", searchForm);
-        model.addAttribute("userRoles", userRoles);
     }
 
     private void logAndThrow(String location) {

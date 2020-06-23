@@ -6,10 +6,11 @@ import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.constants.Constants;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.exception.*;
 import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.utility.MavHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.*;
 
-import static ar.edu.itba.paw.webapp.constants.Constants.MAX_SEARCH_QUERY_SIZE;
-import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
+import static ar.edu.itba.paw.webapp.utility.Constants.MAX_SEARCH_QUERY_SIZE;
+import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
 
 @Controller
 public class SearchController {
@@ -89,7 +90,7 @@ public class SearchController {
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, null, null);
 
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, HOME);
-        this.addSnippetCardFavHelper(mav, this.loginAuthentication.getLoggedInUser(), snippets);
+        MavHelper.addSnippetCardFavFormAttributes(mav, this.loginAuthentication.getLoggedInUser(), snippets);
 
         return mav;
     }
@@ -104,7 +105,7 @@ public class SearchController {
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, currentUser.getId(), null);
 
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FAVORITES);
-        this.addSnippetCardFavHelper(mav, currentUser, snippets);
+        MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
         return mav;
     }
 
@@ -118,14 +119,8 @@ public class SearchController {
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, currentUser.getId(), null);
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FOLLOWING);
 
-        Collection<Tag> followingTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.FOLLOWING_FEED_TAG_AMOUNT);
-        for (Tag tag : followingTags) {
-            FollowForm followForm = new FollowForm();
-            followForm.setFollows(currentUser.getFollowedTags().contains(tag));
-            mav.addObject("unfollowForm" + tag.getId().toString(), followForm);
-        }
-        mav.addObject("followingTags", followingTags);
-        this.addSnippetCardFavHelper(mav, currentUser, snippets);
+        MavHelper.addTagChipUnfollowFormAttributes(mav, this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.FOLLOWING_FEED_TAG_AMOUNT));
+        MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
 
         return mav;
     }
@@ -139,7 +134,7 @@ public class SearchController {
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.UPVOTED, searchForm.getSort(), currentUser.getId(), null, page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.UPVOTED, currentUser.getId(), null);
 
-        this.addSnippetCardFavHelper(mav, currentUser, snippets);
+        MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, UPVOTED);
         return mav;
     }
@@ -153,7 +148,7 @@ public class SearchController {
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FLAGGED, searchForm.getSort(), null, null, page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FLAGGED, null, null);
 
-        this.addSnippetCardFavHelper(mav, currentUser, snippets);
+        MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FLAGGED);
         return mav;
     }
@@ -170,7 +165,7 @@ public class SearchController {
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.LANGUAGES, searchForm.getSort(), null, langId, page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.LANGUAGES, null, langId);
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, LANGUAGES + langId + "/");
-        this.addSnippetCardFavHelper(mav, this.loginAuthentication.getLoggedInUser(), snippets);
+        MavHelper.addSnippetCardFavFormAttributes(mav, this.loginAuthentication.getLoggedInUser(), snippets);
         mav.addObject("language", language.get());
         return mav;
     }
@@ -194,7 +189,7 @@ public class SearchController {
         Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.TAGS, searchForm.getSort(), null, tagId, page);
         int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.TAGS, null, tagId);
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, TAGS + tagId + "/");
-        this.addSnippetCardFavHelper(mav, currentUser, snippets);
+        MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
         mav.addObject("tag", tag.get());
         return mav;
     }
@@ -262,7 +257,7 @@ public class SearchController {
         }
 
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, USER + id + "/");
-        this.addSnippetCardFavHelper(mav, currentUser, snippets);
+        MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
         mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(profileUser.getId()));
         mav.addObject("snippetsCount", profileUser.getCreatedSnippets().size());
         mav.addObject("editing", editing);
@@ -314,17 +309,6 @@ public class SearchController {
         throw new ForbiddenAccessException(messageSource.getMessage("error.403", new Object[]{location}, LocaleContextHolder.getLocale()));
     }
 
-    private void addSnippetCardFavHelper(ModelAndView mav, User currentUser, Collection<Snippet> snippets) {
-        for (Snippet snippet : snippets) {
-            if (currentUser != null) {
-                /* Fav form quick action */
-                FavoriteForm favForm = new FavoriteForm();
-                favForm.setFavorite(currentUser.getFavorites().contains(snippet));
-                mav.addObject("favoriteForm" + snippet.getId().toString(), favForm);
-            }
-        }
-    }
-
     private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
         mav.addObject("pages", snippetCount / SNIPPET_PAGE_SIZE + (snippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
@@ -336,21 +320,11 @@ public class SearchController {
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags =  Collections.emptyList();
-        Collection<String> userRoles = Collections.emptyList();
-        Collection<Tag> allFollowedTags = Collections.emptyList();
-
+        MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
         if (currentUser != null) {
-            userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
-            userRoles = this.roleService.getUserRoles(currentUser.getId());
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
-            allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
         }
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("userTags", userTags);
-        model.addAttribute("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
         model.addAttribute("searchForm", searchForm);
-        model.addAttribute("userRoles", userRoles);
         model.addAttribute("searching", true);
     }
 }

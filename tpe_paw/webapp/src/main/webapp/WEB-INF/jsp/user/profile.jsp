@@ -70,7 +70,7 @@
                                   onclick="submitImageForm(this)">
                                 <spring:message code="profile.edit.save"/>
                             </span>
-                                <a id="image-discard" class="image-discard-button hidden-button" href="<c:url value="${ownerProfile}"/>">
+                                <a id="image-discard" class="image-discard-button hidden-button" href="${ownerProfile}">
                                     <spring:message code="profile.edit.discard"/>
                                 </a>
                             </div>

@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Optional;
 
 @Controller
@@ -113,10 +114,12 @@ public class SnippetController {
             logAndThrow(id);
         }
         if (currentUser == null || currentUser.getUsername().compareTo(snippet.get().getOwner().getUsername()) != 0) {
+            LOGGER.error(messageSource.getMessage("error.403.snippet.delete", null, Locale.ENGLISH));
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.delete", null, LocaleContextHolder.getLocale()));
         } else {
             if (!this.snippetService.deleteOrRestoreSnippet(snippet.get(), currentUser.getId(), deleteForm.isDelete())) {
                 /* Operation was unsuccessful */
+                LOGGER.error(messageSource.getMessage("error.409.deletion.snippet", null, Locale.ENGLISH));
                 throw new ElementDeletionException(messageSource.getMessage("error.409.deletion.snippet", null, LocaleContextHolder.getLocale()));
             }
         }
@@ -131,6 +134,7 @@ public class SnippetController {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
+            LOGGER.error(messageSource.getMessage("error.403.snippet.vote", null, Locale.ENGLISH));
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.vote", null, LocaleContextHolder.getLocale()));
         } else {
             Snippet snippet = this.getSnippet(id);
@@ -147,6 +151,7 @@ public class SnippetController {
         final ModelAndView mav = new ModelAndView("redirect:/snippet/" + id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
+            LOGGER.error(messageSource.getMessage("error.403.snippet.vote", null, Locale.ENGLISH));
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.vote", null, LocaleContextHolder.getLocale()));
         } else {
             Snippet snippet = this.getSnippet(id);
@@ -163,6 +168,7 @@ public class SnippetController {
     ) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
+            LOGGER.error(messageSource.getMessage("error.403.snippet.fav", null, Locale.ENGLISH));
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.fav", null, LocaleContextHolder.getLocale()));
         } else {
             this.favService.updateFavorites(currentUser.getId(), id, favForm.getFavorite());
@@ -195,8 +201,10 @@ public class SnippetController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
 
         if (currentUser == null || currentUser.equals(snippet.getOwner())) {
+            LOGGER.error(messageSource.getMessage("error.403.snippet.report.owner", null, Locale.ENGLISH));
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report.owner", null, LocaleContextHolder.getLocale()));
         } else if (!this.reportService.canReport(currentUser)) {
+            LOGGER.error(messageSource.getMessage("error.403.snippet.report.reputation", null, Locale.ENGLISH));
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report.reputation", null, LocaleContextHolder.getLocale()));
         }
 
@@ -219,6 +227,7 @@ public class SnippetController {
         Snippet snippet = this.getSnippet(id);
 
         if (currentUser == null || !currentUser.equals(snippet.getOwner())) {
+            LOGGER.error(messageSource.getMessage("error.403.snippet.report.dismiss", null, Locale.ENGLISH));
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.report.dismiss", null, LocaleContextHolder.getLocale()));
         }
         this.reportService.dismissReportsForSnippet(id);
@@ -232,6 +241,7 @@ public class SnippetController {
     ) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null || !roleService.isAdmin(currentUser.getId())) {
+            LOGGER.error(messageSource.getMessage("error.403.snippet.flag", null, Locale.ENGLISH));
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.snippet.flag", null, LocaleContextHolder.getLocale()));
         } else {
             Snippet snippet = this.getSnippet(id);
@@ -259,7 +269,7 @@ public class SnippetController {
     }
 
     private void logAndThrow(final long snippetId) {
-        LOGGER.warn("No snippet found for id {}", snippetId);
+        LOGGER.error("No snippet found for id {}", snippetId);
         throw new SnippetNotFoundException(messageSource.getMessage("error.404.snippet", new Object[]{snippetId}, LocaleContextHolder.getLocale()));
     }
 }

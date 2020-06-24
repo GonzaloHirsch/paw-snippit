@@ -90,7 +90,7 @@ public class LanguagesController {
         /* Retrieve the tag */
         Optional<Language> language = languageService.findById(langId);
         if (!language.isPresent()) {
-            LOGGER.warn("No language found with id {}", langId);
+            LOGGER.error("No language found with id {}", langId);
             throw new LanguageNotFoundException(messageSource.getMessage("error.404.language", new Object[]{langId}, LocaleContextHolder.getLocale()));
         }
         Collection<Snippet> snippets = snippetService.getSnippetsWithLanguage(langId, page, SNIPPET_PAGE_SIZE);

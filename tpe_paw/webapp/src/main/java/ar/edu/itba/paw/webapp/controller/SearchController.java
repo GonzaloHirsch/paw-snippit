@@ -270,8 +270,10 @@ public class SearchController {
     }
 
     private Collection<Snippet> findByCriteria(String type, String query, SnippetDao.Locations location, String sort, Long userId, Long resourceId, int page) {
-        if (query.length() > MAX_SEARCH_QUERY_SIZE)
+        if (query.length() > MAX_SEARCH_QUERY_SIZE) {
+            LOGGER.error(messageSource.getMessage("error.414.search", null, Locale.ENGLISH));
             throw new URITooLongException(messageSource.getMessage("error.414.search", null, LocaleContextHolder.getLocale()));
+        }
         if (!typesMap.containsKey(type) || !ordersMap.containsKey(sort)) {
             return Collections.emptyList();
         } else {
@@ -305,7 +307,7 @@ public class SearchController {
     }
 
     private void logAndThrow(String location) {
-        LOGGER.warn("User not found when searching profile {}", location);
+        LOGGER.error("User not found when searching profile {}", location);
         throw new ForbiddenAccessException(messageSource.getMessage("error.403", new Object[]{location}, LocaleContextHolder.getLocale()));
     }
 

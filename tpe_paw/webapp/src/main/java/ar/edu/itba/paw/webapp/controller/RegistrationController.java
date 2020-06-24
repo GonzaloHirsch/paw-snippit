@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Optional;
 
 @Controller
@@ -170,6 +171,7 @@ public class RegistrationController {
         }
         User user = this.userService.findUserByEmail(recoveryForm.getEmail()).orElse(null);
         if (user == null) {
+            LOGGER.error(messageSource.getMessage("error.404.user", new Object[]{recoveryForm.getEmail()}, Locale.ENGLISH));
             throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{recoveryForm.getEmail()}, LocaleContextHolder.getLocale()));
         }
         // Getting the URL for the server
@@ -189,6 +191,7 @@ public class RegistrationController {
         this.throwIfUserIsLoggedIn();
         Optional<User> userOpt = userService.findUserById(id);
         if(!userOpt.isPresent()) {
+            LOGGER.error(messageSource.getMessage("error.404.user", new Object[]{id}, Locale.ENGLISH));
             throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{id}, LocaleContextHolder.getLocale()));
         }
         User user = userOpt.get();

@@ -64,6 +64,7 @@ public class  UserController {
         User user = this.getUserWithId(id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null || !user.equals(currentUser)) {
+            LOGGER.error(messageSource.getMessage("error.403.profile.owner", null, Locale.ENGLISH));
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));
         }
 
@@ -83,6 +84,7 @@ public class  UserController {
         User user = this.getUserWithId(id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null || !currentUser.equals(user)) {
+            LOGGER.error(messageSource.getMessage("error.403.profile.owner", null, Locale.ENGLISH));
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));
         }
 
@@ -129,6 +131,7 @@ public class  UserController {
         possibleContexts.add(Constants.USER_PROFILE_CONTEXT);
 
         if (!possibleContexts.contains(context)) {
+            LOGGER.warn("Invalid URL in profile. Context = {}", context);
             throw new InvalidUrlException();
         }
         if (errors.hasErrors()){
@@ -176,6 +179,7 @@ public class  UserController {
             final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
     ) {
         if (!(context.equals(Constants.OWNER_DELETED_CONTEXT) || context.equals(Constants.OWNER_ACTIVE_CONTEXT) || context.equals(Constants.USER_PROFILE_CONTEXT))) {
+            LOGGER.warn("Invalid URL in profile. Context = {}", context);
             throw new InvalidUrlException();
         }
         if (errors.hasErrors()) {
@@ -188,6 +192,7 @@ public class  UserController {
         if (currentUser != null && currentUser.equals(user)) {
             this.userService.changeDescription(id, descriptionForm.getDescription());
         } else {
+            LOGGER.error(messageSource.getMessage("error.403.profile.owner", null, Locale.ENGLISH));
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));
         }
         return new ModelAndView("redirect:/user/" + id + "/" + context);

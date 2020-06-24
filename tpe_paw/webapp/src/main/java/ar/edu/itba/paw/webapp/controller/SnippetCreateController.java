@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Locale;
 
 @Controller
 public class SnippetCreateController {
@@ -55,8 +56,10 @@ public class SnippetCreateController {
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
+            LOGGER.error(messageSource.getMessage("error.403.snippet.create", null, Locale.ENGLISH));
             throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.snippet.create", null, LocaleContextHolder.getLocale()));
         } else if (this.roleService.isAdmin(currentUser.getId())) {
+            LOGGER.error(messageSource.getMessage("error.403.admin.snippet.create", null, Locale.ENGLISH));
             throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.admin.snippet.create", null, LocaleContextHolder.getLocale()));
         }
         Collection<Tag> userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);

@@ -24,6 +24,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Locale;
+
 @ControllerAdvice
 public class ExceptionController {
 
@@ -49,7 +51,7 @@ public class ExceptionController {
 
         String errorMessage = messageSource.getMessage("error.404", null, LocaleContextHolder.getLocale());
         String errorName = messageSource.getMessage("error.404.name", null, LocaleContextHolder.getLocale());
-        LOGGER.error(e.getMessage());
+        LOGGER.error("[PageNotFound] " + e.getMessage());
         return this.createErrorModel(request, errorName, errorMessage, 404);
     }
 
@@ -66,7 +68,6 @@ public class ExceptionController {
     @ExceptionHandler({UserNotFoundException.class, LanguageNotFoundException.class, TagNotFoundException.class, SnippetNotFoundException.class})
     public ModelAndView elementNotFound(Exception ex, HttpServletRequest request) {
         String errorName = messageSource.getMessage("error.404.name", null, LocaleContextHolder.getLocale());
-        LOGGER.error(ex.getMessage());
         return this.createErrorModel(request, errorName, ex.getMessage(), 404);
     }
 
@@ -74,7 +75,7 @@ public class ExceptionController {
     @ExceptionHandler(FormErrorException.class)
     public ModelAndView formError(Exception ex, HttpServletRequest request) {
         String errorName = messageSource.getMessage("error.404.name", null, LocaleContextHolder.getLocale());
-        LOGGER.error(ex.getMessage());
+        LOGGER.error(messageSource.getMessage("error.404.form", null, Locale.ENGLISH));
         return this.createErrorModel(request, errorName, ex.getMessage(), 404);
     }
 
@@ -82,7 +83,6 @@ public class ExceptionController {
     @ExceptionHandler(ForbiddenAccessException.class)
     public ModelAndView forbiddenAccess(Exception ex, HttpServletRequest request) {
         String errorName = messageSource.getMessage("error.403.name", null, LocaleContextHolder.getLocale());
-        LOGGER.error(ex.getMessage());
         return this.createErrorModel(request, errorName, ex.getMessage(), 403);
     }
 
@@ -90,7 +90,6 @@ public class ExceptionController {
     @ExceptionHandler({ElementDeletionException.class})
     public ModelAndView cannotRemoveLanguage(ElementDeletionException ex, HttpServletRequest request) {
         String errorName = messageSource.getMessage("error.409.name", null, LocaleContextHolder.getLocale());
-        LOGGER.error(ex.getMessage());
         return this.createErrorModel(request, errorName, ex.getMessage(), 409);
     }
 
@@ -98,7 +97,6 @@ public class ExceptionController {
     @ExceptionHandler(URITooLongException.class)
     public ModelAndView uriTooLong(URITooLongException ex, HttpServletRequest request) {
         String errorName = messageSource.getMessage("error.414.name", null, LocaleContextHolder.getLocale());
-        LOGGER.error(ex.getMessage());
         return this.createErrorModel(request, errorName, ex.getMessage(), 414);
     }
 

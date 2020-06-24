@@ -27,6 +27,7 @@
 .snippet-title {
     font-size: 33px;
     margin: 0px 5px;
+    max-width: 100%;
 }
 
 .snippet-text {

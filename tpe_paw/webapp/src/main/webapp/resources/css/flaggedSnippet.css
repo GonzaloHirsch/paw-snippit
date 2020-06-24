@@ -41,6 +41,7 @@
     left: 22px;
     top: -6px;
     color: #DCDCDC;
+    cursor: pointer;
 }
 
 .reported-dismiss-icon:hover {

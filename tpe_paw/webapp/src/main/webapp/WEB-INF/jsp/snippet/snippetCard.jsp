@@ -61,7 +61,7 @@
             </div>
         </div>
 
-        <!-- Bottom part of the card with the title, description and code -->
+        <!-- Bottom   part of the card with the title, description and code -->
         <div class="flex-row snippet-title-container">
             <div class="snippet-text snippet-title"><c:out value="${snippet.title}"/></div>
         </div>

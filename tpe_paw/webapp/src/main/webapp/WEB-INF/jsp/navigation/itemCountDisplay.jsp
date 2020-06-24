@@ -71,6 +71,25 @@
                             </c:when>
                         </c:choose>
                     </c:when>
+                    <c:otherwise>
+                        <c:choose>
+                            <c:when test="${itemType == 'snippet'}">
+                                <div class="fw-100 ${alignment} flex-grow">
+                                <spring:message code="feed.count.snippets.none"/>
+                                </div>
+                            </c:when>
+                            <c:when test="${itemType == 'tag'}">
+                                <div class="fw-100 ${alignment} flex-grow">
+                                <spring:message code="feed.count.tags.none"/>
+                                </div>
+                            </c:when>
+                            <c:when test="${itemType == 'language'}">
+                                <div class="fw-100 ${alignment} flex-grow">
+                                <spring:message code="feed.count.languages.none"/>
+                                </div>
+                            </c:when>
+                        </c:choose>
+                    </c:otherwise>
                 </c:choose>
             </c:otherwise>
         </c:choose>

@@ -57,6 +57,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public Collection<Tag> getSomeOrderedFollowedTagsForUser(long userId, int amount) {
+        return this.followingDao.getSomeOrderedFollowedTagsForUser(userId, amount);
+    }
+
+    @Override
     public Optional<Tag> findTagById(long tagId) {
         return this.tagDao.findById(tagId);
     }

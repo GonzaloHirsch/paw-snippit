@@ -89,7 +89,7 @@ public class SnippetFeedController {
         this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, FOLLOWING);
 
         /* Show up to 25 tags -> most popular + non empty */
-        MavHelper.addTagChipUnfollowFormAttributes(mav, this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.FOLLOWING_FEED_TAG_AMOUNT));
+        MavHelper.addTagChipUnfollowFormAttributes(mav, this.tagService.getSomeOrderedFollowedTagsForUser(currentUser.getId(), Constants.FOLLOWING_FEED_TAG_AMOUNT), currentUser.getFollowedTags().size());
         return mav;
     }
 

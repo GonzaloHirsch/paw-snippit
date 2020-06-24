@@ -26,13 +26,15 @@ public final class MavHelper {
         }
     }
 
-    public static void addTagChipUnfollowFormAttributes(ModelAndView mav, Collection<Tag> followingTags) {
+    public static void addTagChipUnfollowFormAttributes(ModelAndView mav, Collection<Tag> followingTags, int followingAmount) {
         for (Tag tag : followingTags) {
             FollowForm followForm = new FollowForm();
             followForm.setFollows(true);
             mav.addObject("unfollowForm" + tag.getId().toString(), followForm);
         }
         mav.addObject("followingTags", followingTags);
+        mav.addObject("maxChipAmount", Constants.FOLLOWING_FEED_TAG_AMOUNT);
+        mav.addObject("followingAmount", followingAmount);
     }
 
     /*

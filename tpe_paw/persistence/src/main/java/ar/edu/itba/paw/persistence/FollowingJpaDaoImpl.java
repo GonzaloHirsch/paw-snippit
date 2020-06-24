@@ -52,6 +52,25 @@ public class FollowingJpaDaoImpl implements FollowingDao {
     }
 
     @Override
+    public Collection<Tag> getSomeOrderedFollowedTagsForUser(long userId, int amount) {
+        Query nativeQuery = this.em.createNativeQuery(
+                "SELECT DISTINCT f.tag_id, t.name FROM follows AS f INNER JOIN tags AS t ON t.id = f.tag_id WHERE f.user_id = :userId ORDER BY t.name ASC"
+        )
+                .setParameter("userId", userId)
+                .setFirstResult(0)
+                .setMaxResults(amount);
+
+        List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())
+                .stream().map(i -> ((Number) i[0]).longValue()).collect(Collectors.toList());
+        if (filteredIds.size() > 0) {
+            final TypedQuery<Tag> query = this.em.createQuery("from Tag where id IN :filteredIds ORDER BY name ASC", Tag.class);
+            query.setParameter("filteredIds", filteredIds);
+            return query.getResultList();
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
     public void followTag(long userId, long tagId) {
         Optional<User> user = Optional.ofNullable(this.em.find(User.class, userId));
         Optional<Tag> tag = Optional.ofNullable(this.em.find(Tag.class, tagId));

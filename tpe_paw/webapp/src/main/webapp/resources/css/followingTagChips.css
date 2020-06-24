@@ -43,3 +43,12 @@
 .chip-delete-icon:hover {
     color: #999999;
 }
+
+.chip-others-button {
+    background-color: #5E35B1;
+    color: white !important;
+}
+
+.chip-others-button:hover {
+    background-color: rebeccapurple !important;
+}

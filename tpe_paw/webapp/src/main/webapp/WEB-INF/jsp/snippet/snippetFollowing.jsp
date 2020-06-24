@@ -38,11 +38,22 @@
                 <div class="chip-list-wrapper">
                     <div class="flex-column chip-list-container">
                         <c:set var="followingTags" value="${requestScope.followingTags}"/>
+                        <c:set var="followingAmount" value="${requestScope.followingAmount}"/>
+                        <c:set var="maxChipAmount" value="${requestScope.maxChipAmount}"/>
 
                         <c:forEach var="tag" items="${followingTags}">
                             <c:set var="tag" value="${tag}" scope="request"/>
                             <c:import url="/WEB-INF/jsp/tagAndLanguages/tagChip.jsp"/>
                         </c:forEach>
+
+                        <c:if test="${followingAmount > maxChipAmount}">
+                            <spring:message code="chip.following.others" var="viewAll"/>
+                            <c:url value = "/tags/search" var = "followingTagsUrl">
+                                <c:param name = "name" value = ""/>
+                                <c:param name = "showOnlyFollowing" value = "true"/>
+                            </c:url>
+                            <a class="flex-center no-text-decoration chip-container chip-others-button transition" href="${followingTagsUrl}"><c:out value="${viewAll}"/></a>
+                        </c:if>
                     </div>
                 </div>
             </c:if>

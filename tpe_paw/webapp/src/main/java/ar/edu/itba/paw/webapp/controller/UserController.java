@@ -220,6 +220,7 @@ public class  UserController {
         mav.addObject("user", user);
         mav.addObject("snippets", snippets);
         mav.addObject("snippetsCount", totalUserSnippetCount);
+        mav.addObject("tabSnippetCount", totalSnippetCount);
         mav.addObject("searchContext", searchContext);
         mav.addObject("tabContext", tabContext);
         return mav;

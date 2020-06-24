@@ -95,8 +95,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public DatabasePopulator databasePopulator(){
-        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        return populator;
+        return new ResourceDatabasePopulator();
     }
 
     @Bean

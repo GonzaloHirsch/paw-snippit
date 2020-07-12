@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.*;
+import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -17,13 +20,11 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Autowired private SnippetDao snippetDao;
     @Autowired private UserService userService;
-    @Autowired private TagService tagService;
-    @Autowired private VoteService voteService;
     @Autowired private EmailService emailService;
 
     @Override
     public Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, Long resourceId, int page, int pageSize) {
-        return this.snippetDao.findSnippetByCriteria(SnippetDao.QueryTypes.SEARCH, type, term, location, order, userId, resourceId, page, pageSize);
+        return this.snippetDao.findSnippetByCriteria(type, term, location, order, userId, resourceId, page, pageSize);
     }
 
     @Override
@@ -32,48 +33,40 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
-    public int getNewSnippetsForTagsCount(String dateMin, Collection<Tag> tags, long userId) {
+    public int getNewSnippetsForTagsCount(Instant dateMin, Collection<Tag> tags, long userId) {
         return this.snippetDao.getNewSnippetsForTagsCount(dateMin, tags, userId);
     }
 
     @Override
-    public Collection<Snippet> findSnippetByDeepCriteria(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged, int page, int pageSize) {
-        return this.snippetDao.findSnippetByDeepCriteria(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, includeFlagged, page, pageSize);
+    public Collection<Snippet> findSnippetByDeepCriteria(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, SnippetDao.Orders order, SnippetDao.Types type, Boolean includeFlagged, int page, int pageSize) {
+        return this.snippetDao.findSnippetByDeepCriteria(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, type, includeFlagged, page, pageSize);
     }
 
     @Override
-    public Collection<Snippet> findSnippetsWithLanguage(long langId, int page, int pageSize) {
-        return this.snippetDao.findSnippetsWithLanguage(langId, page, pageSize);
+    public Collection<Snippet> getSnippetsWithLanguage(long langId, int page, int pageSize) {
+        return this.snippetDao.getSnippetsWithLanguage(langId, page, pageSize);
     }
 
+    @Transactional
     @Override
-    public int getReputationImportanceBalance(Snippet snippet) {
-        int voteBalance = (-1) * this.voteService.getVoteBalance(snippet.getId()).orElse(0);
-        voteBalance += this.isFlaggedByAdmin(snippet) ? FLAGGED_SNIPPET_REP_VALUE : 0;
-        return voteBalance;
-    }
-
-    @Override
-    public boolean isFlaggedByAdmin(final Snippet snippet) {
-        return snippet.isFlagged();
-    }
-
-    @Override
-    public boolean deleteSnippet(Snippet snippet, long userId) {
-        int voteBalance = this.getReputationImportanceBalance(snippet);
-        boolean success = snippetDao.deleteSnippetById(snippet.getId());
-        if (success) {
-            this.userService.changeReputation(userId, voteBalance);
+    public boolean deleteOrRestoreSnippet(Snippet snippet, long userId, boolean delete) {
+        if (delete) {
+            return snippetDao.deleteSnippetById(snippet.getId());
         }
-        return success;
+        return snippetDao.restoreSnippetById(snippet.getId());
     }
 
     @Override
     public Optional<Snippet> findSnippetById(long id) { return this.snippetDao.findSnippetById(id);}
 
     @Override
-    public Collection<Snippet> findAllSnippetsByOwner(final long userId, int page, int pageSize) {
-        return this.snippetDao.findAllSnippetsByOwner(userId, page, pageSize);
+    public Collection<Snippet> getAllSnippetsByOwner(final long userId, int page, int pageSize) {
+        return this.snippetDao.getAllSnippetsByOwner(userId, page, pageSize);
+    }
+
+    @Override
+    public Collection<Snippet> getAllDeletedSnippetsByOwner(long userId, int page, int pageSize) {
+        return this.snippetDao.getAllDeletedSnippetsByOwner(userId, page, pageSize);
     }
 
     @Override
@@ -110,6 +103,11 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
+    public int getAllDeletedSnippetsByOwnerCount(long userId) {
+        return this.snippetDao.getAllDeletedSnippetsByOwnerCount(userId);
+    }
+
+    @Override
     public int getAllSnippetsByTagCount(long tagId) {
         return this.snippetDao.getAllSnippetsByTagCount(tagId);
     }
@@ -121,12 +119,12 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Override
     public int getSnippetByCriteriaCount(SnippetDao.Types type, String term, SnippetDao.Locations location, Long userId, Long resourceId) {
-        return this.snippetDao.getSnippetByCriteriaCount(SnippetDao.QueryTypes.COUNT, type, term, location, userId, resourceId);
+        return this.snippetDao.getSnippetByCriteriaCount(type, term, location, userId, resourceId);
     }
 
     @Override
-    public int getSnippetByDeepCriteriaCount(String dateMin, String dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, String order, String sort, Boolean includeFlagged) {
-        return this.snippetDao.getSnippetByDeepCriteriaCount(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, order, sort, includeFlagged);
+    public int getSnippetByDeepCriteriaCount(Instant dateMin, Instant dateMax, Integer repMin, Integer repMax, Integer voteMin, Integer voteMax, Long languageId, Long tagId, String title, String username, Boolean includeFlagged) {
+        return this.snippetDao.getSnippetByDeepCriteriaCount(dateMin, dateMax, repMin, repMax, voteMin, voteMax, languageId, tagId, title, username, includeFlagged);
     }
 
     @Override
@@ -151,12 +149,8 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Transactional
     @Override
-    public Long createSnippet(User owner, String title, String description, String code, String dateCreated, Long language, Collection<String> tags) {
-        Long snippetId =  snippetDao.createSnippet(owner.getId(),title,description,code,dateCreated,language);
-        if(snippetId != null) {
-            this.tagService.addTagsToSnippet(snippetId, tags);
-        }
-        return snippetId;
+    public Long createSnippet(User owner, String title, String description, String code, Instant dateCreated, Long language, Collection<String> tags) {
+        return snippetDao.createSnippet(owner.getId(), title.trim(), description.trim(), code, dateCreated, language, tags);
     }
 
     @Transactional
@@ -164,13 +158,24 @@ public class SnippetServiceImpl implements SnippetService {
     public void updateFlagged(final Snippet snippet, final User owner, boolean isFlagged, final String baseUrl) {
         if (isFlagged) {
             this.snippetDao.flagSnippet(snippet.getId());
-            this.userService.changeReputation(owner.getId(), FLAGGED_SNIPPET_REP_VALUE * (-1));
+            this.userService.changeReputation(owner.getId(), owner.getReputation() + (FLAGGED_SNIPPET_REP_VALUE * (-1)));
         } else {
             this.snippetDao.unflagSnippet(snippet.getId());
-            this.userService.changeReputation(owner.getId(), FLAGGED_SNIPPET_REP_VALUE);
+            this.userService.changeReputation(owner.getId(), owner.getReputation() + FLAGGED_SNIPPET_REP_VALUE);
         }
         // Getting the url of the server
         this.emailService.sendFlaggedEmail(baseUrl + "/snippet/" + snippet.getId(), snippet.getTitle(), owner.getEmail(), owner.getUsername(), isFlagged, owner.getLocale());
+    }
 
+    @Override
+    public void analizeSnippetsUsing(Tag tag) {
+        int amount = this.snippetDao.getAllSnippetsByTagCount(tag.getId());
+        tag.setSnippetsUsingIsEmpty(amount == 0);
+    }
+
+    @Override
+    public void analizeSnippetsUsing(Language language) {
+        int amount = this.snippetDao.getAllSnippetsByLanguageCount(language.getId());
+        language.setSnippetsUsingIsEmpty(amount == 0);
     }
 }

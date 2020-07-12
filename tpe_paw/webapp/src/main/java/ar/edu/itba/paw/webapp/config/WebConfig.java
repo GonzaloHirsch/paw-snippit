@@ -17,6 +17,10 @@ import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -34,6 +38,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -50,12 +55,16 @@ import java.util.concurrent.TimeUnit;
 @EnableTransactionManagement
 public class WebConfig extends WebMvcConfigurerAdapter {
 
+    /* PostgreSQL Scripts used throughout the project development
     @Value("classpath:schema.sql")
     private Resource schemaSql;
     @Value("classpath:populate.sql")
     private Resource populatorSql;
     @Value("classpath:populateRole.sql")
     private Resource populatorRoleSql;
+    @Value("classpath:dbImprovements.sql")
+    private Resource dbImprovementsSql;
+    */
 
     @Bean
     public ViewResolver viewResolver() {
@@ -89,16 +98,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public DatabasePopulator databasePopulator(){
-        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-//        populator.addScript(schemaSql);
-//        populator.addScript(populatorSql);
-//        populator.addScript(populatorRoleSql);
-        return populator;
-    }
-
-    @Bean
-    public PlatformTransactionManager transactionManager(){
-        return new DataSourceTransactionManager(dataSource());
+        return new ResourceDatabasePopulator();
     }
 
     @Bean
@@ -139,6 +139,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
+        mailSender.setDefaultEncoding("UTF-8");
 
         mailSender.setUsername("snippit.website@gmail.com");
         mailSender.setPassword("PAWAdmin..2020");
@@ -168,4 +169,30 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         velocityEngineFactory.setVelocityProperties(props);
         return velocityEngineFactory.createVelocityEngine();
     }
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
+
+        factoryBean.setPackagesToScan("ar.edu.itba.paw.models");
+        factoryBean.setDataSource(dataSource());
+
+        final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        factoryBean.setJpaVendorAdapter(vendorAdapter);
+
+        final Properties properties = new Properties();
+        // We use UPDATE to have the best effort to update the database in order to match the model
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
+
+        factoryBean.setJpaProperties(properties);
+
+        return factoryBean;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(final EntityManagerFactory emf){
+        return new JpaTransactionManager(emf);
+    }
+
 }

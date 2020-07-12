@@ -147,4 +147,5 @@ public class ExploreForm {
     public void setMaxVotes(Integer maxVotes) {
         this.maxVotes = maxVotes;
     }
+
 }

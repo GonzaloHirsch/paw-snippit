@@ -10,7 +10,7 @@ drop view if exists complete_snippets;
 
 CREATE TABLE IF NOT EXISTS users
 (
-    id          INTEGER IDENTITY PRIMARY KEY,
+    id          BIGINT IDENTITY PRIMARY KEY,
     username    VARCHAR(30) UNIQUE,
     password    VARCHAR(60) NOT NULL,
     email       VARCHAR(60) UNIQUE,
@@ -20,73 +20,84 @@ CREATE TABLE IF NOT EXISTS users
     icon        BINARY,
     lang        VARCHAR(5) DEFAULT 'en',
     region      VARCHAR(5) DEFAULT 'US',
-    verified    INT DEFAULT 0
+    verified    BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS languages
 (
-    id   INTEGER IDENTITY PRIMARY KEY,
-    name VARCHAR(30) UNIQUE
+    id      BIGINT IDENTITY PRIMARY KEY,
+    name    VARCHAR(30) UNIQUE,
+    deleted BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS tags
 (
-    id   INTEGER IDENTITY PRIMARY KEY,
+    id   BIGINT IDENTITY PRIMARY KEY,
     name VARCHAR(30) UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS snippets
 (
-    id           INTEGER IDENTITY PRIMARY KEY,
+    id           BIGINT IDENTITY PRIMARY KEY,
     user_id      INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL,
     title        VARCHAR(50),
     description  VARCHAR(500),
     code         VARCHAR(6000),
     date_created TIMESTAMP,
-    flagged      INT DEFAULT 0,
+    flagged      BOOLEAN DEFAULT FALSE,
+    deleted      BOOLEAN DEFAULT FALSE,
     language_id  INT REFERENCES languages (id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS votes_for
 (
-    user_id    INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL,
-    snippet_id INT REFERENCES snippets (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    type       INT CHECK (type IN (-1, 1)),
+    user_id     BIGINT REFERENCES users (id) ON UPDATE CASCADE ON DELETE SET NULL,
+    snippet_id  BIGINT REFERENCES snippets (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    is_positive BOOLEAN,
     CONSTRAINT one_snippet_one_vote PRIMARY KEY (user_id, snippet_id)
 );
 
 CREATE TABLE IF NOT EXISTS favorites
 (
-    snippet_id INT REFERENCES snippets (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    user_id    INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    snippet_id BIGINT REFERENCES snippets (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    user_id    BIGINT REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
     PRIMARY KEY (snippet_id, user_id)
 );
 
 CREATE TABLE IF NOT EXISTS follows
 (
-    user_id INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    tag_id  INT REFERENCES tags (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    user_id BIGINT REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    tag_id  BIGINT REFERENCES tags (id) ON UPDATE CASCADE ON DELETE CASCADE,
     PRIMARY KEY (user_id, tag_id)
 );
 
 CREATE TABLE IF NOT EXISTS snippet_tags
 (
-    snippet_id INT REFERENCES snippets (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    tag_id     INT REFERENCES tags (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    snippet_id BIGINT REFERENCES snippets (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    tag_id     BIGINT REFERENCES tags (id) ON UPDATE CASCADE ON DELETE CASCADE,
     PRIMARY KEY (snippet_id, tag_id)
 );
 
 CREATE TABLE IF NOT EXISTS roles
 (
-    id  INTEGER IDENTITY PRIMARY KEY,
+    id  BIGINT IDENTITY PRIMARY KEY,
     role VARCHAR(20) UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS user_roles
 (
-    user_id INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    role_id INT REFERENCES roles (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    user_id BIGINT REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    role_id BIGINT REFERENCES roles (id) ON UPDATE CASCADE ON DELETE CASCADE,
     PRIMARY KEY (user_id, role_id)
+);
+
+CREATE TABLE IF NOT EXISTS reported
+(
+    snippet_id      INT REFERENCES snippets (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    reporter_id     INT REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    detail          VARCHAR(310),
+    owner_dismissed BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (snippet_id, reporter_id)
 );
 
 
@@ -106,7 +117,8 @@ SELECT aux.sn_id   AS id,
        l.name      AS language,
        aux.icon    AS icon,
        aux.votes   AS votes,
-       aux.flag    AS flagged
+       aux.flag    AS flagged,
+       aux.deleted AS deleted
 FROM (
          SELECT sn.id           AS sn_id,
                 sn.code         AS code,
@@ -122,7 +134,8 @@ FROM (
                 u.region        AS reg,
                 u.verified      AS ver,
                 sn.votes        AS votes,
-                sn.flag         AS flag
+                sn.flag         AS flag,
+                sn.deleted      AS deleted
          FROM (SELECT sni.id                    AS id,
                       sni.code                  AS code,
                       sni.title                 AS title,
@@ -131,7 +144,8 @@ FROM (
                       sni.date_created          AS date_created,
                       sni.user_id               AS user_id,
                       sni.flagged               AS flag,
-                      SUM(COALESCE(vf.type, 0)) AS votes
+                      sni.deleted               AS deleted,
+                      SUM(COALESCE(CASE WHEN vf.is_positive = true THEN 1 WHEN vf.is_positive = false THEN -1 END, 0)) AS votes
                FROM snippets AS sni
                         LEFT OUTER JOIN votes_for AS vf ON vf.snippet_id = sni.id
                GROUP BY sni.id) AS sn

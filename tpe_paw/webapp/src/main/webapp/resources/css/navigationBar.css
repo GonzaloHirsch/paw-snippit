@@ -105,7 +105,7 @@
 
 .sidenav img{
     border-radius: 50%;
-    object-fit: fill;
+    object-fit: cover;
     height: 20px;
     width: 20px;
     margin-right: 5px;
@@ -163,19 +163,20 @@
 }
 
 .navtop .navtop-button {
-    background-color: white;
-    border: none;
-    cursor: pointer;
+    background-color: #ddd;
     height: 40px;
     font-size: 15px;
     margin: 5px 3px;
     min-width: 71px;
-    text-align: center;
-    text-decoration: none;
+    transition: 0.3s;
 }
 
-/*
-.navtop .app-name:hover{*/
+.navtop .navtop-button:hover {
+    background-color: white;
+}
+
+    /*
+    .navtop .app-name:hover{*/
 /*    background: #ccc;*/
 /*}
 */
@@ -245,6 +246,7 @@
     border: none;
     cursor: pointer;
     border-radius: 0px 5px 5px 0px;
+    transition: 0.3s;
 }
 
 .navtop-register-buttons {

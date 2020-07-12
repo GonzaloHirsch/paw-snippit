@@ -6,8 +6,10 @@ import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.form.AdminAddForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.utility.MavHelper;
 import ar.edu.itba.paw.webapp.validations.ValidatorHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 
 @Controller
@@ -48,11 +47,11 @@ public class AdminController {
     @RequestMapping(value="/admin/add", method= RequestMethod.POST)
     public ModelAndView adminAdd(@Valid @ModelAttribute("adminAddForm") final AdminAddForm adminAddForm, final BindingResult errors) {
         /* Language List */
-        List<String> languages = adminAddForm.getLanguages() != null ? adminAddForm.getLanguages() : new ArrayList<>();
+        List<String> languages = adminAddForm.getLanguages() != null ? adminAddForm.getLanguages() : Collections.emptyList();
         languages.removeAll(Arrays.asList("", null));
 
         /* Tag List */
-        List<String> tags = adminAddForm.getTags() != null ? adminAddForm.getTags() : new ArrayList<>();
+        List<String> tags = adminAddForm.getTags() != null ? adminAddForm.getTags() : Collections.emptyList();
         tags.removeAll(Arrays.asList("", null));
 
         validator.validateAdminAdd(languages, tags, errors, LocaleContextHolder.getLocale());
@@ -79,11 +78,7 @@ public class AdminController {
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
-        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("userTags", userTags);
+        MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
         model.addAttribute("searchForm", searchForm);
-        model.addAttribute("userRoles", userRoles);
     }
 }

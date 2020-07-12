@@ -11,12 +11,11 @@ public interface LanguageDao {
     Optional<Language> findById(long id);
     Optional<Language> findByName(String name);
     Collection<Language> getAllLanguages();
-    Collection<Language> getAllLanguages(int page, int pageSize);
-    Collection<Language> findAllLanguagesByName(String name, int page, int pageSize);
-    int getAllLanguagesCountByName(String name);
-    int getAllLanguagesCount();
+    Collection<Language> getAllLanguages(boolean showEmpty, int page, int pageSize);
+    Collection<Language> findAllLanguagesByName(String name, boolean showEmpty, int page, int pageSize);
+    int getAllLanguagesCountByName(String name, boolean showEmpty);
+    int getAllLanguagesCount(boolean showEmpty);
     Language addLanguage(String lang);
     void addLanguages(List<String> languages);
     void removeLanguage(final long langId);
-    boolean languageInUse(final long langId);
 }

@@ -4,17 +4,20 @@
 
 <html>
 <head>
-    <link href="<c:url value='/resources/css/icons.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/errorPages.css'/>" rel="stylesheet"/>
     <link href="<c:url value='/resources/css/flaggedSnippet.css'/>" rel="stylesheet"/>
 </head>
 <body>
-    <div class="flex-row flex-center flagged-container border-radius">
-        <i class="flagged-warning-icon material-icons">warning</i>
-        <div class="flex-column flagged-message-container">
-            <h3 class="form-error"><spring:message code="flagged.warning"/></h3>
-            <p class="form-error"><spring:message code="flagged.warning.message.1"/></p>
-            <p class="form-error"><spring:message code="flagged.warning.message.2"/></p>
+<spring:message code="flagged.warning" var="flaggedWarn"/>
+<spring:message code="flagged.warning.message.1" var="flaggedMsg1"/>
+<spring:message code="flagged.warning.message.2" var="flaggedMsg2"/>
+
+    <div class="flex-row flex-align warning-container border-radius">
+        <i class="warning-icon material-icons transition">warning</i>
+        <div class="flex-column warning-message-container">
+            <h3 class="form-error"><c:out value="${flaggedWarn}"/></h3>
+            <p class="form-error"><c:out value="${flaggedMsg1}"/></p>
+            <p class="form-error"><c:out value="${flaggedMsg2}"/></p>
         </div>
     </div>
 

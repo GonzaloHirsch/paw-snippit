@@ -1,0 +1,54 @@
+
+.chip-list-container {
+    align-items: center;
+    border: 3px solid white;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 30px 0px 20px 30px;
+}
+
+.chip-list-wrapper {
+    max-height: 100%;
+}
+
+.chip-container {
+    border: 2px solid rebeccapurple;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    margin: 5px;
+    height: 40px;
+    width: 183px;
+}
+
+.chip-container:hover {
+    background-color: white;
+}
+
+.chip-name {
+    align-items: center;
+    display: flex;
+    margin: 0px 14px;
+    width: 122px;
+}
+
+.chip-delete-icon {
+    color: #DCDCDC;
+    font-size: 44px !important;
+    left: 189px;
+    margin: -22px 0px 0px 0px;
+    position: absolute;
+}
+
+.chip-delete-icon:hover {
+    color: #999999;
+}
+
+.chip-others-button {
+    background-color: #5E35B1;
+    color: white !important;
+}
+
+.chip-others-button:hover {
+    background-color: rebeccapurple !important;
+}

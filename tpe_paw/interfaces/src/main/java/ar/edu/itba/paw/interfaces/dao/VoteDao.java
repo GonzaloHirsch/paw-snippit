@@ -8,7 +8,6 @@ import java.util.Optional;
 public interface VoteDao {
     Collection<Vote> getUserVotes(final long userId);
     Optional<Vote> getVote(final long userId, final long snippetId);
-    void addVote(final long userId, final long snippetId, final int voteType);
+    int addVote(final long userId, final long snippetId, boolean isPositive, int positiveVoteWeight, int negativeVoteWeight);
     void withdrawVote(final long userId, final long snippetId);
-    Optional<Integer> getVoteBalance(final long snippetId);
 }

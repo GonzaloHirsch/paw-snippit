@@ -9,9 +9,11 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 
-public class WebappCrypto {
+public final class WebappCrypto {
 
     private static final int DURATION = 300;
+
+    private WebappCrypto(){}
 
     private static byte[] hexStringToBytes(String s) {
         int len = s.length();

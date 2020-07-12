@@ -2,21 +2,21 @@ package ar.edu.itba.paw.interfaces.dao;
 
 import ar.edu.itba.paw.models.User;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
 
 public interface UserDao {
 
-    long createUser(String username, String password, String email, String description, int reputation, String dateJoined, Locale locale);
+    User createUser(String username, String password, String email, Instant dateJoined, Locale locale);
 
     Optional<User> findUserByUsername(String username);
 
-    Optional<User> findUserById(final long id);
+    Optional<User> findUserById(final Long id);
 
     Optional<User> findUserByEmail(String email);
-
-    void updateDescription(String username, String newDescription);
 
     void changePassword(String email, String password);
 

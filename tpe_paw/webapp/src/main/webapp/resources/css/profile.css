@@ -1,5 +1,5 @@
 .detail-user {
-    margin: 0px 15px 10px;
+    margin: 0px 15px 5px;
     min-height: 94px;
     min-width: 94px;
 }
@@ -40,7 +40,7 @@
     border: black solid 2px;
     height: 200px;
     width: 200px;
-    object-fit: fill;
+    object-fit: cover;
     margin: 25px;
     transition: 0.3s;
 }
@@ -129,6 +129,7 @@
 .profile-no-snippet {
     font-size: 30px;
     padding: 50px;
+    width: 100%;
 }
 
 .edit-button {
@@ -170,4 +171,37 @@
     height: 80px;
     justify-content: center;
     padding: 0px 5px;
+}
+
+.general-info {
+    margin: 20px 0px 0px 0px;
+}
+
+.tabs-container {
+    height: 50px;
+    margin: 0px 100px;
+}
+
+.tabs-item-container {
+    width: 50%;
+    height: 100%;
+    border: #5E35B1 solid;
+    color: #503499 !important;
+    text-decoration: none !important;
+}
+.tabs-item-selected {
+    background-color: rgba(196, 196, 196, 0.65);
+}
+.tabs-item-container:hover {
+    background-color: rgba(196, 196, 196, 0.65);
+}
+
+.tabs-first-item {
+    border-radius: 8px 0px 0px 8px;
+    border-width: 2px 1px 2px 2px;
+}
+
+.tabs-second-item {
+    border-radius: 0px 8px 8px 0px;
+    border-width: 2px 2px 2px 1px;
 }

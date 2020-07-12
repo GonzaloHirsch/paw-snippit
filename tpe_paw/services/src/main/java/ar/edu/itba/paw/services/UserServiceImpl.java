@@ -10,6 +10,8 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
@@ -22,16 +24,16 @@ public class UserServiceImpl implements UserService {
     @Autowired private EmailService emailService;
 
     @Override
-    public long createUser(String username, String password, String email, String description, int reputation, String dateJoined, Locale locale) {
-        return this.userDao.createUser(username, password, email, description, reputation, dateJoined, locale);
+    @Transactional
+    public User register(String username, String password, String email, Instant dateJoined, Locale locale) {
+        User user = this.userDao.createUser(username, password, email, dateJoined, locale);
+        this.roleService.assignUserRole(user.getId());
+        return user;
     }
 
     @Override
-    public long register(String username, String password, String email, String dateJoined, Locale locale) {
-        long userId = createUser(username, password, email, "", 0, dateJoined, locale);
-        this.roleService.assignUserRole(userId);
-        this.emailService.sendRegistrationEmail(email, username, LocaleContextHolder.getLocale());
-        return userId;
+    public void registerFollowUp(User user) {
+        this.emailService.sendRegistrationEmail(user.getEmail(), user.getUsername(), LocaleContextHolder.getLocale());
     }
 
     @Override
@@ -49,11 +51,7 @@ public class UserServiceImpl implements UserService {
         return this.userDao.findUserByEmail(email);
     }
 
-    @Override
-    public void updateDescription(String username, String newDescription) {
-        userDao.updateDescription(username, newDescription);
-    }
-
+    @Transactional
     @Override
     public void changePassword(String email, String password) {
         this.userDao.changePassword(email, password);
@@ -74,17 +72,19 @@ public class UserServiceImpl implements UserService {
         return this.userDao.findUserByEmail(email).isPresent();
     }
 
+    @Transactional
     @Override
     public void changeProfilePhoto(long userId, byte[] photo) {
         this.userDao.changeProfilePhoto(userId, photo);
     }
 
+    @Transactional
     @Override
     public void changeDescription(final long userId, final String description) {
-        this.userDao.changeDescription(userId, description);
+        this.userDao.changeDescription(userId, description.trim());
     }
 
-
+    @Transactional
     @Override
     public void changeReputation(long userId, int amount) {
         this.userDao.changeReputation(userId, amount);
@@ -116,6 +116,7 @@ public class UserServiceImpl implements UserService {
         return this.userDao.userEmailIsVerified(userId);
     }
 
+    @Transactional
     @Override
     public void verifyUserEmail(long userId) {
         this.userDao.verifyUserEmail(userId);

@@ -14,6 +14,7 @@
 .tag-snippets-button {
     background: white;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.2);
+    font-size: 18px;
     margin: 0px 0px 0px 40px;
     min-height: 45px;
     padding: 10px;
@@ -23,4 +24,13 @@
 .tag-snippets-button:hover {
     box-shadow: 0 8px 8px 0 rgba(0,0,0,0.2);
     cursor: pointer;
+}
+
+.element-list-warning-container {
+    margin: 15px 0px -20px;
+    width: 100%;
+}
+
+.element-snippets-title {
+    text-align: center;
 }

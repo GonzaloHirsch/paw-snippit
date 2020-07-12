@@ -5,7 +5,9 @@ import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.utility.MavHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,23 +36,29 @@ public class ErrorController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorController.class);
 
-    private final Set<Integer> supportedErrorPages = new HashSet<Integer>(){{
-        add(404);
-        add(413);
-        add(414);
-        add(500);
-    }};
+    private final static Set<Integer> supportedErrorPages;
+    static {
+        final Set<Integer> errorSet = new HashSet<Integer>();
+        errorSet.add(404);
+        errorSet.add(413);
+        errorSet.add(414);
+        errorSet.add(500);
+        supportedErrorPages = Collections.unmodifiableSet(errorSet);
+    }
 
     @RequestMapping("/error")
     public ModelAndView customError(HttpServletRequest request, @ModelAttribute("searchForm") SearchForm searchForm) {
         int errorCode = this.getErrorCode(request);
         ModelAndView mav = new ModelAndView("errors/default");
-        String message = messageSource.getMessage("error.unknown",null, LocaleContextHolder.getLocale());
-        String errorName = messageSource.getMessage("error.unknown.name",null, LocaleContextHolder.getLocale());
+        String message;
+        String errorName;
 
-        if (this.supportedErrorPages.contains(errorCode)){
+        if (supportedErrorPages.contains(errorCode)){
             message =  messageSource.getMessage("error." + String.valueOf(errorCode),null, LocaleContextHolder.getLocale());
             errorName = messageSource.getMessage("error." + String.valueOf(errorCode) +".name",null, LocaleContextHolder.getLocale());
+        } else {
+            message = messageSource.getMessage("error.unknown",null, LocaleContextHolder.getLocale());
+            errorName = messageSource.getMessage("error.unknown.name",null, LocaleContextHolder.getLocale());
         }
         mav.addObject("err", errorCode);
         mav.addObject("errName", errorName);
@@ -66,11 +74,7 @@ public class ErrorController {
     @ModelAttribute
     public void addAttributes(Model model, HttpServletRequest request) {
         User currentUser = this.loginAuthentication.getLoggedInUser(request);
-        Collection<Tag> userTags = currentUser != null ? this.tagService.getFollowedTagsForUser(currentUser.getId()) : new ArrayList<>();
-        Collection<String> userRoles = currentUser != null ? this.roleService.getUserRoles(currentUser.getId()) : new ArrayList<>();
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("userTags", userTags);
-        model.addAttribute("userRoles", userRoles);
+        MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
         model.addAttribute("searchContext", "error/");
         LOGGER.error("Unknown error for user {}", currentUser != null ? currentUser.getId() : "-");
     }

@@ -35,6 +35,7 @@ public class ValidatorHelper {
 
     private void validateAddedTags (List<String> tags, BindingResult errors, Locale locale){
         StringBuilder error = new StringBuilder();
+        Set<String> duplicateChecker = new HashSet<>();
         int maxLength = 25;
         int errorAmount = 0;
         boolean trailingSpaces = false;
@@ -42,14 +43,20 @@ public class ValidatorHelper {
 
         for (String tag : tags) {
             if (!tag.isEmpty()) {
-                if (tag.charAt(0) == ' ' || tag.charAt(tag.length() - 1) == ' ') {
-                    trailingSpaces = true;
-                } else if (tag.length() > maxLength) {
-                    tooLong = true;
+                // If dupicate than don't want to check it all again
+                if (!duplicateChecker.add(tag)) {
+                    FieldError dupFound = new FieldError("addAdminForm", "tags", messageSource.getMessage("admin.add.duplicates.error", null, locale));
+                    errors.addError(dupFound);
                 } else {
-                    if (tagService.tagExists(tag)) {
-                        error.append(tag).append(", ");
-                        errorAmount++;
+                    if (tag.charAt(0) == ' ' || tag.charAt(tag.length() - 1) == ' ') {
+                        trailingSpaces = true;
+                    } else if (tag.length() > maxLength) {
+                        tooLong = true;
+                    } else {
+                        if (tagService.tagExists(tag)) {
+                            error.append(tag).append(", ");
+                            errorAmount++;
+                        }
                     }
                 }
             }
@@ -69,11 +76,11 @@ public class ValidatorHelper {
             FieldError tooLongError = new FieldError("addAdminForm", "tags", messageSource.getMessage("admin.add.tag.length.error", new Object[]{maxLength}, locale));
             errors.addError(tooLongError);
         }
-        this.checkForDuplicated(tags, "tags", errors, locale);
     }
 
     private void validateAddedLanguages (List<String> languages, BindingResult errors, Locale locale){
         StringBuilder error = new StringBuilder();
+        Set<String> duplicateChecker = new HashSet<>();
         int maxLength = 20;
         int errorAmount = 0;
         boolean trailingSpaces = false;
@@ -81,15 +88,20 @@ public class ValidatorHelper {
 
         for (String lang : languages) {
             if (!lang.isEmpty()) {
-                if (lang.charAt(0) == ' ' || lang.charAt(lang.length() - 1) == ' ') {
-                    trailingSpaces = true;
-                } else if (lang.length() > maxLength) {
-                    tooLong = true;
-                }
-                else {
-                    if (languageService.languageExists(lang)) {
-                        error.append(lang).append(", ");
-                        errorAmount++;
+                // If dupicate than don't want to check it all again
+                if (!duplicateChecker.add(lang)) {
+                    FieldError dupFound = new FieldError("addAdminForm", "languages", messageSource.getMessage("admin.add.duplicates.error", null, locale));
+                    errors.addError(dupFound);
+                } else {
+                    if (lang.charAt(0) == ' ' || lang.charAt(lang.length() - 1) == ' ') {
+                        trailingSpaces = true;
+                    } else if (lang.length() > maxLength) {
+                        tooLong = true;
+                    } else {
+                        if (languageService.languageExists(lang)) {
+                            error.append(lang).append(", ");
+                            errorAmount++;
+                        }
                     }
                 }
             }
@@ -108,20 +120,6 @@ public class ValidatorHelper {
             FieldError tooLongError = new FieldError("addAdminForm", "languages", messageSource.getMessage("admin.add.lang.length.error", new Object[]{maxLength}, locale));
             errors.addError(tooLongError);
         }
-        this.checkForDuplicated(languages, "languages", errors, locale);
-    }
-
-    private void checkForDuplicated(List<String> list, String field, BindingResult errors, Locale locale) {
-        Set<String> set = new HashSet<>();
-
-        for (String element : list) {
-            if (!set.add(element)) {
-                FieldError dupFound = new FieldError("addAdminForm", field, messageSource.getMessage("admin.add.duplicates.error", null, locale));
-                errors.addError(dupFound);
-                return;
-            }
-        }
-
     }
 
     public void validateTagsExists(Collection<String> tags, BindingResult errors, Locale locale) {

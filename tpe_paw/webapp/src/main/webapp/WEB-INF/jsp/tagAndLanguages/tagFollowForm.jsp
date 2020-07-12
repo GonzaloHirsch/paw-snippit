@@ -9,20 +9,24 @@
 </head>
 
 <body>
+<spring:message var="unfollow" code="tags.unfollow"/>
+<spring:message var="follow" code="tags.follow"/>
+
 <div class="flex-column">
     <c:set var="tagtId" value="${requestScope.tagId}"/>
-    <form:form class="form-container flex-center" action="${tagId}/follow" method="post" modelAttribute="followForm">
+    <c:url var="tagFollowUrl" value="/tags/${tagId}/follow"/>
+    <form:form class="form-container flex-center" action="${tagFollowUrl}" method="post" modelAttribute="followForm">
         <form:checkbox class="hidden" id="follow-button" path="follows" value="true" onclick="updateForm(this)"/>
-        <label for="follow-button">
+        <label class="no-margin" for="follow-button">
             <c:choose>
                 <c:when test="${followForm.follows}">
-                    <div class="tag-snippets-button border-radius flex-center no-text-decoration">
-                        <spring:message code="tags.unfollow"/>
+                    <div class="text-center tag-snippets-button border-radius flex-center no-text-decoration">
+                        <c:out value="${unfollow}"/>
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <div class="tag-snippets-button border-radius flex-center no-text-decoration">
-                        <spring:message code="tags.follow"/>
+                    <div class="text-center tag-snippets-button border-radius flex-center no-text-decoration">
+                        <c:out value="${follow}"/>
                     </div>
                 </c:otherwise>
             </c:choose>

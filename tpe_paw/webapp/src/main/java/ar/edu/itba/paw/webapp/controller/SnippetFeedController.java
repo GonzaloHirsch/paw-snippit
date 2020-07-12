@@ -8,8 +8,12 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
+import ar.edu.itba.paw.webapp.form.FavoriteForm;
+import ar.edu.itba.paw.webapp.form.FollowForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.utility.MavHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +26,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.ServletContext;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
-import static ar.edu.itba.paw.webapp.constants.Constants.SNIPPET_PAGE_SIZE;
+import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
 
 @Controller
 public class SnippetFeedController {
@@ -50,10 +53,11 @@ public class SnippetFeedController {
     public ModelAndView getHomeSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
 
+        User currentUser = this.loginAuthentication.getLoggedInUser();
         Collection<Snippet> snippets = this.snippetService.getAllSnippets(page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllSnippetsCount();
 
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, HOME);
+        this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, HOME);
 
         return mav;
     }
@@ -68,23 +72,24 @@ public class SnippetFeedController {
         Collection<Snippet> snippets = this.snippetService.getAllFavoriteSnippets(currentUser.getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllFavoriteSnippetsCount(currentUser.getId());
 
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FAVORITES);
+        this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, FAVORITES);
 
         return mav;
     }
 
     @RequestMapping("/following")
     public ModelAndView getFollowingSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
-        final ModelAndView mav = new ModelAndView("index");
+        final ModelAndView mav = new ModelAndView("snippet/snippetFollowing");
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) this.logAndThrow(FOLLOWING);
 
         Collection<Snippet> snippets = this.snippetService.getAllFollowingSnippets(currentUser.getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllFollowingSnippetsCount(currentUser.getId());
+        this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, FOLLOWING);
 
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FOLLOWING);
-
+        /* Show up to 25 tags -> most popular + non empty */
+        MavHelper.addTagChipUnfollowFormAttributes(mav, this.tagService.getSomeOrderedFollowedTagsForUser(currentUser.getId(), Constants.FOLLOWING_FEED_TAG_AMOUNT), currentUser.getFollowedTags().size());
         return mav;
     }
 
@@ -98,7 +103,7 @@ public class SnippetFeedController {
         Collection<Snippet> snippets = this.snippetService.getAllUpVotedSnippets(currentUser.getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllUpvotedSnippetsCount(currentUser.getId());
 
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, UPVOTED);
+        this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, UPVOTED);
 
         return mav;
     }
@@ -113,33 +118,31 @@ public class SnippetFeedController {
         Collection<Snippet> snippets = this.snippetService.getAllFlaggedSnippets(page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllFlaggedSnippetsCount();
 
-        this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FLAGGED);
+        this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, FLAGGED);
 
         return mav;
     }
 
-    private void addModelAttributesHelper(ModelAndView mav, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
+    private void addModelAttributesHelper(ModelAndView mav, User currentUser, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
         mav.addObject("pages", snippetCount/SNIPPET_PAGE_SIZE + (snippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("snippetList", snippets);
+        mav.addObject("totalSnippetCount", snippetCount);
         mav.addObject("searchContext",searchContext);
+        mav.addObject("searching", false);
+
+        MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
     }
 
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        Collection<Tag> userTags = new ArrayList<>();
-        Collection<String> userRoles = new ArrayList<>();
 
         if (currentUser != null) {
-            userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-            userRoles = this.roleService.getUserRoles(currentUser.getId());
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         }
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("userTags", userTags);
+        MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
         model.addAttribute("searchForm", searchForm);
-        model.addAttribute("userRoles", userRoles);
     }
 
     private void logAndThrow(String location) {

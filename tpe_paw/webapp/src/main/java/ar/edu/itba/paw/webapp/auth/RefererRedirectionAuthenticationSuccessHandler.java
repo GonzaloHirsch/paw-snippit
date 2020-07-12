@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.SavedRequest;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Locale;
 
 public class RefererRedirectionAuthenticationSuccessHandler
         extends SavedRequestAwareAuthenticationSuccessHandler {
@@ -26,12 +24,12 @@ public class RefererRedirectionAuthenticationSuccessHandler
     private String getRedirectUrl(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if(session != null) {
-            SavedRequest savedRequest = (SavedRequest)session.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
+            SavedRequest savedRequest = (SavedRequest)session.getAttribute(Constants.SAVED_REQUEST_ATTRIBUTE);
             if(savedRequest != null) {
                 return savedRequest.getRedirectUrl();
             }
         }
-        return request.getContextPath() + "/";
+        return request.getContextPath() + Constants.HOME;
     }
 
     @Override
@@ -39,15 +37,15 @@ public class RefererRedirectionAuthenticationSuccessHandler
         HttpSession session = request.getSession();
         if (session != null) {
             String redirectUrl = this.getRedirectUrl(request);
-            if (redirectUrl.compareTo(request.getContextPath() + "/") == 0) {
+            if (redirectUrl.compareTo(request.getContextPath() + Constants.HOME) == 0) {
 
-                redirectUrl = (String) session.getAttribute("url_prior_login");
+                redirectUrl = (String) session.getAttribute(Constants.REDIRECT_ATTRIBUTE);
                 if (redirectUrl != null) {
                     /* Remove the attribute from the session */
-                    session.removeAttribute("url_prior_login");
+                    session.removeAttribute(Constants.REDIRECT_ATTRIBUTE);
 
                     /* Don't want to redirect to any of these urls */
-                    if (!(redirectUrl.contains("login") || redirectUrl.contains("signup") || redirectUrl.contains("goodbye") || redirectUrl.contains("reset-password") || redirectUrl.contains("recover-password"))) {
+                    if (!(redirectUrl.contains(Constants.LOGIN) || redirectUrl.contains(Constants.SIGNUP) || redirectUrl.contains(Constants.GOODBYE) || redirectUrl.contains(Constants.RESET_PASSWORD) || redirectUrl.contains(Constants.RECOVER_PASSWORD))) {
                         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
                         return;
                     }

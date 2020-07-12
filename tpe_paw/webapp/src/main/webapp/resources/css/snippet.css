@@ -7,7 +7,7 @@
     margin: 0px 0px 5px 0px;
     width: 100%;
     outline: dimgray;
-    padding: 15px 20px;
+    padding: 16px 20px;
     position: relative;
 }
 
@@ -17,6 +17,7 @@
     height: 45px;
     justify-content: center;
     padding: 10px;
+    text-decoration: none !important;
 }
 
 .snippet-title-container {
@@ -26,6 +27,7 @@
 .snippet-title {
     font-size: 33px;
     margin: 0px 5px;
+    max-width: 100%;
 }
 
 .snippet-text {
@@ -53,22 +55,51 @@
     cursor: pointer;
 }
 
+.snippet-icon:hover {
+    font-size: 62px !important;
+}
+
+.snippet-icon-no-pointer {
+    font-size: 60px !important;
+}
+
+.snippet-vote-container {
+    min-width: 184px;
+}
+
+.report-detail-input{
+    margin-top: 5px;
+    padding: 10px 0 0 10px;
+    line-height: 19px;
+    font-size: 17px;
+    border-radius: 4px;
+    border-width:thin;
+    border-color: #5E35B1;
+}
+
+.report-subtitle{
+    margin: 5px 0 12px 0;
+    font-size: 17px;
+}
+
 pre {
-    white-space: pre-wrap;
-    white-space: -moz-pre-wrap;
-    white-space: -o-pre-wrap;
-    word-wrap: break-word;
+    white-space: pre-wrap !important;
+    white-space: -moz-pre-wrap !important;
+    white-space: -o-pre-wrap !important;
+    word-wrap: break-word !important;
     margin: 0px !important;
 }
 
 code {
     font-family: "Roboto Mono", 'New Courier', monospace;
     font-size: 13px !important;
+    padding: 0px !important;
+    overflow: hidden !important;
 }
 
 img {
     border-radius: 50%;
-    object-fit: fill;
+    object-fit: cover;
     height: 45px;
     width: 45px;
 }

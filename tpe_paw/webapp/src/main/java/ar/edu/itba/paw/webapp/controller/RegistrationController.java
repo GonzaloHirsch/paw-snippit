@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.auth.SignUpAuthentication;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
@@ -18,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,9 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
@@ -52,15 +49,12 @@ public class RegistrationController {
     @Autowired private ValidatorHelper validatorHelper;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
-    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withLocale(Locale.UK)
-            .withZone(ZoneId.systemDefault());
 
-    @RequestMapping(value = "/login")
+    @RequestMapping(value = Constants.LOGIN)
     public ModelAndView login(HttpServletRequest request) {
         this.throwIfUserIsLoggedIn();
 
-        String referrer = request.getHeader("Referer");
-        request.getSession().setAttribute("url_prior_login", referrer);
+        loginAuthentication.setLoginRedirect(request);
 
         final ModelAndView mav = new ModelAndView("user/login");
         mav.addObject("error", false);
@@ -74,29 +68,29 @@ public class RegistrationController {
         return mav;
     }
 
-    @RequestMapping(value = "/goodbye")
+    @RequestMapping(value = Constants.GOODBYE)
     public ModelAndView logout() {
         return new ModelAndView("user/logout");
     }
 
-    @RequestMapping(value = "/signup", method = {RequestMethod.GET})
+    @RequestMapping(value = Constants.SIGNUP, method = {RequestMethod.GET})
     public ModelAndView signUpForm(HttpServletRequest request, @ModelAttribute("registerForm") final RegisterForm form) {
         this.throwIfUserIsLoggedIn();
 
-        String referrer = request.getHeader("Referer");
-        request.getSession().setAttribute("url_prior_login", referrer);
+        signUpAuthentication.setRegisterRedirect(request);
 
         return new ModelAndView("user/signUpForm");
     }
 
-    @RequestMapping(value = "/signup", method = {RequestMethod.POST})
+    @RequestMapping(value = Constants.SIGNUP, method = {RequestMethod.POST})
     public ModelAndView signUp(@Valid @ModelAttribute("registerForm") final RegisterForm registerForm, final BindingResult errors, HttpServletRequest request, HttpServletResponse response) {
         if (errors.hasErrors()) {
             return signUpForm(request, registerForm);
         }
 
+        User user = this.userService.register(registerForm.getUsername(), this.passwordEncoder.encode(registerForm.getPassword()), registerForm.getEmail(), Instant.now(), LocaleContextHolder.getLocale());
         try {
-            this.userService.register(registerForm.getUsername(), this.passwordEncoder.encode(registerForm.getPassword()), registerForm.getEmail(), DATE.format(Instant.now()), LocaleContextHolder.getLocale());
+            this.userService.registerFollowUp(user);
         } catch (Exception e) {
             LOGGER.error(e.getMessage() + "Failed to send registration email to user {}", registerForm.getUsername());
         }
@@ -164,19 +158,20 @@ public class RegistrationController {
         return mav;
     }
 
-    @RequestMapping(value = "/recover-password")
+    @RequestMapping(value = Constants.RECOVER_PASSWORD)
     public ModelAndView recoverPassword(@ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
         this.throwIfUserIsLoggedIn();
         return new ModelAndView("user/recoverPassword");
     }
 
-    @RequestMapping(value = "/recover-password", method = RequestMethod.POST)
-    public ModelAndView sendEmail(@Valid @ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
+    @RequestMapping(value = Constants.RECOVER_PASSWORD, method = RequestMethod.POST)
+    public ModelAndView sendRecoveryMail(@Valid @ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
         if (errors.hasErrors()){
             return recoverPassword(recoveryForm, errors);
         }
         User user = this.userService.findUserByEmail(recoveryForm.getEmail()).orElse(null);
         if (user == null) {
+            LOGGER.error(messageSource.getMessage("error.404.user", new Object[]{recoveryForm.getEmail()}, Locale.ENGLISH));
             throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{recoveryForm.getEmail()}, LocaleContextHolder.getLocale()));
         }
         // Getting the URL for the server
@@ -189,13 +184,14 @@ public class RegistrationController {
         return new ModelAndView("user/emailSent");
     }
 
-    @RequestMapping(value = "/reset-password", method = RequestMethod.GET)
+    @RequestMapping(value = Constants.RESET_PASSWORD, method = RequestMethod.GET)
     public ModelAndView resetPassword(final @RequestParam(value="id") long id,
                                       final @RequestParam(value="token") String token,
                                       @ModelAttribute("resetPasswordForm") final ResetPasswordForm resetPasswordForm) {
         this.throwIfUserIsLoggedIn();
         Optional<User> userOpt = userService.findUserById(id);
         if(!userOpt.isPresent()) {
+            LOGGER.error(messageSource.getMessage("error.404.user", new Object[]{id}, Locale.ENGLISH));
             throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{id}, LocaleContextHolder.getLocale()));
         }
         User user = userOpt.get();
@@ -209,7 +205,7 @@ public class RegistrationController {
         return new ModelAndView("user/resetPassword");
     }
 
-    @RequestMapping(value = "/reset-password", method = RequestMethod.POST)
+    @RequestMapping(value = Constants.RESET_PASSWORD, method = RequestMethod.POST)
     public ModelAndView endResetPassword (final @RequestParam(value="id") long id,
                                           final @RequestParam(value="token") String token,
                                           @ModelAttribute("resetPasswordForm") @Valid final ResetPasswordForm resetPasswordForm,
@@ -227,12 +223,13 @@ public class RegistrationController {
     }
 
     private void addUserAttributes(User currentUser, ModelAndView mav){
-        Collection<Tag> userTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
-        Collection<String> userRoles = this.roleService.getUserRoles(currentUser.getId());
+        Collection<Tag> userTags = this.tagService.getMostPopularFollowedTagsForUser(currentUser.getId(), Constants.MENU_FOLLOWING_TAG_AMOUNT);
+        Collection<Tag> allFollowedTags = this.tagService.getFollowedTagsForUser(currentUser.getId());
         this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         mav.addObject("currentUser", currentUser);
         mav.addObject("userTags", userTags);
-        mav.addObject("userRoles", userRoles);
+        mav.addObject("userTagsCount", userTags.isEmpty() ? 0 : allFollowedTags.size() - userTags.size());
+        mav.addObject("userRoles", this.roleService.getUserRoles(currentUser.getId()));
         mav.addObject("searchContext", "");
     }
 

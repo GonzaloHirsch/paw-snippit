@@ -11,7 +11,7 @@
         <c:set var="pages" value="${requestScope.pages}"/>
         <c:set var="page" value="${requestScope.page}"/>
         <c:set var="qs" value="${pageContext.request.queryString}"/>
-        <c:if test="${pages > 1}">
+        <c:if test="${pages > 1 && page <= pages}">
             <div class="navigation-page-container search-container flex-center flex-row">
             <c:if test="${page > 2}">
                 <c:url var="prevUrl" value="">
@@ -22,7 +22,7 @@
                     </c:forEach>
                     <c:param name="page" value="${1}"/>
                 </c:url>
-                <a class="navigation-page" href="${prevUrl}"><span class="material-icons">
+                <a class="navigation-page transition" href="${prevUrl}"><span class="material-icons">
                 first_page </span></a>
             </c:if>
             <c:if test="${page != 1}">
@@ -34,10 +34,10 @@
                     </c:forEach>
                     <c:param name="page" value="${page - 1}"/>
                 </c:url>
-                <a class="navigation-page" href="${prevUrl}"><span class="material-icons">
+                <a class="navigation-page transition" href="${prevUrl}"><span class="material-icons">
                 chevron_left </span></a>
             </c:if>
-            <c:forEach begin="${page - 1 > 0 ? page - 1 : 1}" end="${pages > page + 1 ? page + 1 : pages}"
+            <c:forEach begin="${page - 2 > 0 ? page - 2 : 1}" end="${pages > page + 2 ? page + 2 : pages}"
                        varStatus="pageIndex">
                 <c:url var="actUrl" value="">
                     <c:forEach items="${param}" var="entry">
@@ -49,10 +49,10 @@
                 </c:url>
                 <c:choose>
                     <c:when test="${page == pageIndex.index}">
-                        <a class="navigation-page navigation-page-selected" href="${actUrl}">${pageIndex.index}</a>
+                        <a class="navigation-page navigation-page-selected" href="${actUrl}"><c:out value="${pageIndex.index}"/></a>
                     </c:when>
                     <c:otherwise>
-                        <a class="navigation-page" href="${actUrl}">${pageIndex.index}</a>
+                        <a class="navigation-page transition" href="${actUrl}"><c:out value="${pageIndex.index}"/></a>
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
@@ -65,10 +65,10 @@
                     </c:forEach>
                     <c:param name="page" value="${page + 1}"/>
                 </c:url>
-                <a class="navigation-page" href="${nextUrl}"><span class="material-icons">
+                <a class="navigation-page transition" href="${nextUrl}"><span class="material-icons">
                 chevron_right </span></a>
             </c:if>
-            <c:if test="${page < pages - 1}">
+            <c:if test="${page < pages - 2}">
                 <c:url var="nextUrl" value="">
                     <c:forEach items="${param}" var="entry">
                         <c:if test="${entry.key != 'page'}">
@@ -77,7 +77,7 @@
                     </c:forEach>
                     <c:param name="page" value="${pages}"/>
                 </c:url>
-                <a class="navigation-page" href="${nextUrl}"><span class="material-icons">
+                <a class="navigation-page transition" href="${nextUrl}"><span class="material-icons">
                 last_page </span></a>
             </c:if>
             </div>

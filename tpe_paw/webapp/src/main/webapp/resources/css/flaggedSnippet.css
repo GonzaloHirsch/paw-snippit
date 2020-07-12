@@ -1,21 +1,49 @@
-.flagged-container {
+.warning-container {
     border: solid red 2px;
     margin: 0px 0px 17px 0px;
-    padding: 12px;
+    padding: 10px 20px;
 }
 
-.flagged-message-container {
-    height: 80px;
+.warning-message-container {
     justify-content: center;
     padding: 0px 5px;
 }
 
-.flagged-message-container h3 {
-    padding: 0px;
-    margin: 0px
-}
-
-.flagged-message-container p {
+.warning-message-container h3 {
     padding: 0px;
     margin: 0px;
+    font-size: 19px;
+}
+
+.warning-message-container p {
+    padding: 0px;
+    margin: 0px;
+}
+
+.reported-container {
+    border: solid lightcoral 2px;
+    margin: 0px 0px 17px 0px;
+    padding: 10px 20px;
+}
+
+.reported-text {
+    color:lightcoral;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.reported-msg-margin {
+    margin: 5px 0px 0px 0px !important;
+}
+
+.reported-dismiss-icon {
+    position: relative;
+    left: 22px;
+    top: -6px;
+    color: #DCDCDC;
+    cursor: pointer;
+}
+
+.reported-dismiss-icon:hover {
+    color: lightcoral;
 }

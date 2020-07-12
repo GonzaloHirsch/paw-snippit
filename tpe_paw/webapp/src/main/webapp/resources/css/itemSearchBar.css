@@ -5,6 +5,7 @@
     border: #5E35B1 2px solid;
     margin: 0 30px 0 30px;
     border-radius: 5px;
+    height: 44px;
 }
 
 .item-nav-container {
@@ -56,4 +57,30 @@
     border: none;
     cursor: pointer;
     border-radius: 0px 5px 5px 0px;
+    transition: 0.3s;
+}
+
+.side-button{
+    border: 2px #5E35B1 solid;
+    font-size: 17px;
+    border-radius: 5px;
+    padding: 6px;
+    color: #5E35B1 !important;
+    height: 44px;
+    min-width: 110px;
+}
+
+.side-button:hover {
+    background-color: #DCDCDC;
+    color: initial;
+    text-decoration: none;
+}
+
+.visibility-label {
+    cursor: pointer;
+}
+
+.following-visibility-label {
+    cursor: pointer;
+    margin-left: 10px;
 }

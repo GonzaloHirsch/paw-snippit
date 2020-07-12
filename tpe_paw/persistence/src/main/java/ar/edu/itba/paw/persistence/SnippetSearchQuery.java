@@ -15,81 +15,92 @@ public class SnippetSearchQuery {
     /**
      * Parameters to be used in the query, in order
      */
-    private Object[] params;
+    private Map<String, Object> params;
 
     public String getQuery(){ return this.query; }
 
-    public Object[] getParams(){ return this.params; }
+    public Map<String, Object> getParams(){ return this.params; }
 
     /**
      * Private constructor to follow the builder patter
      * @param query Query to be used in the database
      * @param params List with the parameters in order
      */
-    private SnippetSearchQuery(String query, List<Object> params){
+    private SnippetSearchQuery(String query, Map<String, Object> params){
         this.query = query;
-        this.params = params.toArray();
+        this.params = params;
     }
 
     /**
      * Inner, static Builder class to implement the builder pattern
      */
     public static class Builder {
+        private final static String ALL_FIELDS = "DISTINCT sn.id, sn.title, sn.code, sn.user_id, sn.username, sn.language";
+
         /**
          * Map used to map types of search to the corresponding queries they translate to
          */
-        private final Map<SnippetDao.Types, String> typeMap = new HashMap<SnippetDao.Types, String>(){{
-            put(SnippetDao.Types.ALL, " AS s LEFT OUTER JOIN snippet_tags AS ts ON s.id = ts.snippet_id LEFT OUTER JOIN tags AS t ON t.id = ts.tag_id WHERE lower(t.name) LIKE lower(?) OR lower(s.title) LIKE lower(?) OR lower(s.code) LIKE lower(?) OR lower(s.username) LIKE lower(?) OR lower(s.language) LIKE lower(?)");
-            put(SnippetDao.Types.TAG, " AS s INNER JOIN snippet_tags AS ts ON s.id = ts.snippet_id INNER JOIN tags AS t ON t.id = ts.tag_id WHERE lower(t.name) LIKE lower(?)");
-            put(SnippetDao.Types.TITLE, " AS s WHERE lower(s.title) LIKE lower(?)");
-            put(SnippetDao.Types.CONTENT, " AS s WHERE lower(s.code) LIKE lower(?)");
-            put(SnippetDao.Types.USER, " AS s WHERE lower(s.username) LIKE lower(?)");
-            put(SnippetDao.Types.LANGUAGE, " AS s WHERE lower(s.language) LIKE lower(?)");
-        }};
+        private final static Map<SnippetDao.Types, String> typeMap;
+        static {
+            final Map<SnippetDao.Types, String> types = new HashMap<>();
+            types.put(SnippetDao.Types.ALL, " AS s LEFT OUTER JOIN snippet_tags AS ts ON s.id = ts.snippet_id LEFT OUTER JOIN tags AS t ON t.id = ts.tag_id WHERE lower(t.name) LIKE lower(:term) OR lower(s.title) LIKE lower(:term) OR lower(s.code) LIKE lower(:term) OR lower(s.username) LIKE lower(:term) OR lower(s.language) LIKE lower(:term)");
+            types.put(SnippetDao.Types.TAG, " AS s INNER JOIN snippet_tags AS ts ON s.id = ts.snippet_id INNER JOIN tags AS t ON t.id = ts.tag_id WHERE lower(t.name) LIKE lower(:term)");
+            types.put(SnippetDao.Types.TITLE, " AS s WHERE lower(s.title) LIKE lower(:term)");
+            types.put(SnippetDao.Types.CONTENT, " AS s WHERE lower(s.code) LIKE lower(:term)");
+            types.put(SnippetDao.Types.USER, " AS s WHERE lower(s.username) LIKE lower(:term)");
+            types.put(SnippetDao.Types.LANGUAGE, " AS s WHERE lower(s.language) LIKE lower(:term)");
+            typeMap = Collections.unmodifiableMap(types);
+        }
+
         /**
          * Map used to map the locations or sources of snippets to be searched among to the corresponding queries they translate to
          */
-        private final String allFields = "sn.id, sn.user_id, sn.username, sn.reputation, sn.lang, sn.region, sn.verified, sn.code, sn.title, sn.description, sn.language, sn.date_created, sn.icon, sn.flagged, sn.votes";
-        private Map<SnippetDao.Locations, String> locationsMap = new HashMap<SnippetDao.Locations, String>(){{
-            put(SnippetDao.Locations.HOME, "(SELECT * FROM complete_snippets)");
-            put(SnippetDao.Locations.USER, "(SELECT DISTINCT " + allFields + " FROM complete_snippets AS sn WHERE sn.user_id = ?)");
-            put(SnippetDao.Locations.LANGUAGES, "(SELECT DISTINCT " + allFields + " FROM complete_snippets AS sn WHERE sn.language_id = ?)");
-            put(SnippetDao.Locations.TAGS, "(SELECT DISTINCT " + allFields + " FROM complete_snippets AS sn JOIN snippet_tags AS st ON st.snippet_id = sn.id WHERE st.tag_id = ?)");
-            put(SnippetDao.Locations.FAVORITES, "(SELECT DISTINCT " + allFields + " FROM complete_snippets AS sn JOIN favorites AS fav ON fav.snippet_id = sn.id WHERE fav.user_id = ?)");
-            put(SnippetDao.Locations.FOLLOWING, "(SELECT DISTINCT " + allFields + " FROM complete_snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id INNER JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = ?)");
-            put(SnippetDao.Locations.UPVOTED, "(SELECT DISTINCT " + allFields + " FROM complete_snippets AS sn JOIN votes_for AS vf ON vf.snippet_id = sn.id WHERE vf.user_id = ? AND vf.type = 1)");
-            put(SnippetDao.Locations.FLAGGED, "(SELECT DISTINCT " + allFields + " FROM complete_snippets AS sn WHERE sn.flagged = 1)");
-        }};
+        private final static Map<SnippetDao.Locations, String> locationsMap;
+        static {
+            final Map<SnippetDao.Locations, String> locations = new HashMap<>();
+            locations.put(SnippetDao.Locations.HOME, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn WHERE sn.deleted = FALSE)");
+            locations.put(SnippetDao.Locations.USER, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn WHERE sn.user_id = :userId AND sn.deleted = FALSE)");
+            locations.put(SnippetDao.Locations.DELETED, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn WHERE sn.user_id = :userId AND sn.deleted = TRUE)");
+            locations.put(SnippetDao.Locations.LANGUAGES, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn WHERE sn.language_id = :resourceId AND sn.deleted = FALSE)");
+            locations.put(SnippetDao.Locations.TAGS, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id WHERE st.tag_id = :resourceId AND sn.deleted = FALSE)");
+            locations.put(SnippetDao.Locations.FAVORITES, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn INNER JOIN favorites AS fav ON fav.snippet_id = sn.id WHERE fav.user_id = :userId)");
+            locations.put(SnippetDao.Locations.FOLLOWING, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn INNER JOIN snippet_tags AS st ON st.snippet_id = sn.id INNER JOIN follows AS fol ON st.tag_id = fol.tag_id WHERE fol.user_id = :userId AND sn.deleted = FALSE)");
+            locations.put(SnippetDao.Locations.UPVOTED, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn INNER JOIN votes_for AS vf ON vf.snippet_id = sn.id WHERE vf.user_id = :userId AND vf.is_positive = TRUE AND sn.deleted = FALSE)");
+            locations.put(SnippetDao.Locations.FLAGGED, "(SELECT " + ALL_FIELDS + " FROM complete_snippets AS sn WHERE sn.flagged = TRUE)");
+            locationsMap = Collections.unmodifiableMap(locations);
+        }
         /**
          * Map used to translate the given enum for order types into their query equivalent
          */
-        private final Map<SnippetDao.Orders, String> ordersMap = new HashMap<SnippetDao.Orders, String>(){{
-            put(SnippetDao.Orders.ASC, "ASC");
-            put(SnippetDao.Orders.DESC, "DESC");
-        }};
+        private final static Map<SnippetDao.Orders, String> ordersMap;
+        static {
+            final Map<SnippetDao.Orders, String> orders = new HashMap<>();
+            orders.put(SnippetDao.Orders.ASC, "ASC");
+            orders.put(SnippetDao.Orders.DESC, "DESC");
+            ordersMap = Collections.unmodifiableMap(orders);
+        }
         /**
          * Map used to translate the types over which the order is done into their SQL equivalents
          */
-        private final Map<SnippetDao.Types, String> orderTypesMap = new HashMap<SnippetDao.Types, String>(){{
-            put(SnippetDao.Types.ALL, " s.title ");
-            put(SnippetDao.Types.TAG, " s.title ");
-            put(SnippetDao.Types.TITLE, " s.title ");
-            put(SnippetDao.Types.CONTENT, " s.code ");
-            put(SnippetDao.Types.USER, " s.username ");
-            put(SnippetDao.Types.LANGUAGE, " s.language ");
-        }};
-        private final Map<SnippetDao.QueryTypes, String> queryTypesMap = new HashMap<SnippetDao.QueryTypes, String>(){{
-            put(SnippetDao.QueryTypes.COUNT, "SELECT COUNT(DISTINCT s.id) FROM ");
-            put(SnippetDao.QueryTypes.SEARCH, "SELECT DISTINCT s.id, s.user_id, s.username, s.reputation, s.lang, s.region, s.verified, s.code, s.title, s.description, s.language, s.date_created, s.icon, s.flagged, s.votes FROM ");
-        }};
+        private final static Map<SnippetDao.Types, String> orderTypesMap;
+        static {
+            final Map<SnippetDao.Types, String> orderTypes = new HashMap<>();
+            orderTypes.put(SnippetDao.Types.ALL, " s.title ");
+            orderTypes.put(SnippetDao.Types.TAG, " s.title ");
+            orderTypes.put(SnippetDao.Types.TITLE, " s.title ");
+            orderTypes.put(SnippetDao.Types.CONTENT, " s.code ");
+            orderTypes.put(SnippetDao.Types.USER, " s.username ");
+            orderTypes.put(SnippetDao.Types.LANGUAGE, " s.language ");
+            orderTypesMap = Collections.unmodifiableMap(orderTypes);
+        }
         /**
          * StringBuilder in order to make the building of the query more performant
          */
         private final StringBuilder query = new StringBuilder();
         /**
-         * List of parameters to be used in the query
+         * Named parameter map for query
          */
-        private final List<Object> params = new ArrayList<>();
+        private final Map<String, Object> params = new HashMap<>();
 
         /**
          * Constructor for the Builder inner class
@@ -98,20 +109,14 @@ public class SnippetSearchQuery {
          * @param type Type of search, over which parameter the search is going to be performed
          * @param term Term to be used for the search
          */
-        public Builder(SnippetDao.QueryTypes queryType, SnippetDao.Locations location, Long userId, SnippetDao.Types type, String term, Long resourceId){
+        public Builder(SnippetDao.Locations location, Long userId, SnippetDao.Types type, String term, Long resourceId){
             this.query
-                    .append(this.queryTypesMap.get(queryType))
-                    .append(this.locationsMap.get(location));
-            if (userId != null){ params.add(userId); }
-            if (resourceId != null) { params.add(resourceId); }
-            this.query.append(this.typeMap.get(type));
-            params.add("%" + term + "%");
-            if (type.equals(SnippetDao.Types.ALL)){
-                params.add("%" + term + "%");
-                params.add("%" + term + "%");
-                params.add("%" + term + "%");
-                params.add("%" + term + "%");
-            }
+                    .append("SELECT DISTINCT s.id, s.title, s.code, s.user_id, s.username, s.language FROM ")
+                    .append(locationsMap.get(location));
+            if (userId != null){ params.put("userId", userId); }
+            if (resourceId != null) { params.put("resourceId", resourceId);}
+            this.query.append(typeMap.get(type));
+            params.put("term", "%" + term + "%");
         }
 
         /**
@@ -123,16 +128,9 @@ public class SnippetSearchQuery {
         public Builder setOrder(SnippetDao.Orders order, SnippetDao.Types type){
             if (!order.equals(SnippetDao.Orders.NO)){
                 this.query.append(" ORDER BY")
-                        .append(this.orderTypesMap.get(type))
-                        .append(this.ordersMap.get(order));
+                        .append(orderTypesMap.get(type))
+                        .append(ordersMap.get(order));
             }
-            return this;
-        }
-
-        public Builder setPaging(int page, int pageSize){
-            this.query.append(" LIMIT ? OFFSET ?");
-            params.add(pageSize);
-            params.add(pageSize * (page - 1));
             return this;
         }
 

@@ -1,97 +1,119 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.dao.RoleDao;
+import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.Arrays;
 import java.util.Collection;
-
-import static ar.edu.itba.paw.persistence.TestHelper.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.Collections;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
+@Transactional
 public class RoleDaoTest {
-    @Autowired
-    private DataSource ds;
 
+    @PersistenceContext
+    private EntityManager em;
+
+    @Autowired
     private RoleDao roleDao;
 
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsertUserRole;
-
-    private long adminRoleId;
-    private long userRoleId;
+    private Role adminRole;
+    private Role userRole;
     private User defaultUser;
 
     @Before
     public void setup(){
-        jdbcTemplate = new JdbcTemplate(ds);
-        roleDao = new RoleDaoImpl(ds);
-
-        SimpleJdbcInsert jdbcInsertRole = new SimpleJdbcInsert(ds).withTableName(ROLES_TABLE).usingGeneratedKeyColumns("id");
-        jdbcInsertUserRole = new SimpleJdbcInsert(ds).withTableName(ROLES_USER_TABLE);
-
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,USERS_TABLE);
-        SimpleJdbcInsert jdbcInsertUser = new SimpleJdbcInsert(ds).withTableName(USERS_TABLE).usingGeneratedKeyColumns("id");
-        defaultUser = insertUserIntoDb(jdbcInsertUser,USERNAME,PASSWORD,EMAIL,DESCR,LOCALE_EN);
-
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,ROLES_TABLE);
-        adminRoleId = insertRoleIntoDb(jdbcInsertRole,ADMIN_ROLE);
-        userRoleId = insertRoleIntoDb(jdbcInsertRole,USER_ROLE);
+        adminRole = TestMethods.insertRole(em, TestConstants.ADMIN_ROLE);
+        userRole = TestMethods.insertRole(em, TestConstants.USER_ROLE);
+        defaultUser = TestMethods.insertUser(em, TestConstants.USER_USERNAME, TestConstants.USER_PASSWORD, TestConstants.USER_EMAIL, TestConstants.USER_DATE, TestConstants.LOCALE_EN, TestConstants.USER_VERIFIED);
     }
 
     @Test
-    public void testAssignUserRole(){
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,ROLES_USER_TABLE);
-
-        roleDao.assignUserRole(defaultUser.getId());
-
-        assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,ROLES_USER_TABLE));
-        long maybeRoleId = jdbcTemplate.queryForObject("SELECT role_id FROM user_roles",Long.class);
-        assertEquals(userRoleId,maybeRoleId);
+    public void assignUserRoleTest(){
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
+        Assert.assertTrue(roleDao.assignUserRole(defaultUser.getId()));
+        Assert.assertTrue(defaultUser.getRoles().contains(userRole));
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
     }
 
     @Test
-    public void testAssignAdminRole(){
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,ROLES_USER_TABLE);
-
-        roleDao.assignAdminRole(defaultUser.getId());
-
-        assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate,ROLES_USER_TABLE));
-        long maybeRoleId = jdbcTemplate.queryForObject("SELECT role_id FROM user_roles",Long.class);
-        assertEquals(adminRoleId,maybeRoleId);
+    public void assignUserRoleToInvalidUserTest(){
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
+        Assert.assertFalse(roleDao.assignUserRole(TestConstants.USER_INVALID_ID));
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
     }
 
     @Test
-    public void testGetUserRoles(){
-        JdbcTestUtils.deleteFromTables(jdbcTemplate,ROLES_USER_TABLE);
-        insertUserRoleIntoDb(jdbcInsertUserRole,adminRoleId,defaultUser.getId());
-        insertUserRoleIntoDb(jdbcInsertUserRole,userRoleId,defaultUser.getId());
-
-        Collection<String> maybeRoles = roleDao.getUserRoles(defaultUser.getId());
-
-        assertEquals(2,maybeRoles.size());
-        assertTrue(maybeRoles.contains(ADMIN_ROLE));
-        assertTrue(maybeRoles.contains(USER_ROLE));
+    public void assignAdminRoleTest(){
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
+        Assert.assertTrue(roleDao.assignAdminRole(defaultUser.getId()));
+        Assert.assertTrue(defaultUser.getRoles().contains(adminRole));
+        Assert.assertEquals(1, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
     }
+
     @Test
-    public void testGetUserRolesEmpty(){
-        Collection<String> maybeRoles = roleDao.getUserRoles(defaultUser.getId()+10);
-
-        assertEquals(0,maybeRoles.size());
+    public void assignAdminRoleToInvalidUserTest(){
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
+        Assert.assertFalse(roleDao.assignAdminRole(TestConstants.USER_INVALID_ID));
+        Assert.assertEquals(0, TestMethods.countRows(em, TestConstants.USER_ROLES_TABLE));
     }
 
+    @Test
+    public void getAllRolesTest() {
+        Collection<Role> roles = roleDao.getAllRoles();
+        Assert.assertNotNull(roles);
+        Assert.assertEquals(2, roles.size());
+        Assert.assertTrue(roles.contains(userRole));
+        Assert.assertTrue(roles.contains(adminRole));
+    }
 
+    @Test
+    public void getUserRolesEmptyTest() {
+        Collection<String > roles = roleDao.getUserRoles(defaultUser.getId());
+        Assert.assertNotNull(roles);
+        Assert.assertTrue(roles.isEmpty());
+    }
 
+    @Test
+    public void getUserRolesAllRolesTest() {
+        TestMethods.setUserRoles(em, defaultUser, Arrays.asList(userRole, adminRole));
+
+        Collection<String > roles = roleDao.getUserRoles(defaultUser.getId());
+        Assert.assertNotNull(roles);
+        Assert.assertEquals(2, roles.size());
+        Assert.assertTrue(roles.contains(TestConstants.ADMIN_ROLE));
+        Assert.assertTrue(roles.contains(TestConstants.USER_ROLE));
+    }
+
+    @Test
+    public void getUserRolesOnlyUserTest() {
+        TestMethods.setUserRoles(em, defaultUser, Collections.singletonList(userRole));
+
+        Collection<String > roles = roleDao.getUserRoles(defaultUser.getId());
+        Assert.assertNotNull(roles);
+        Assert.assertEquals(1, roles.size());
+        Assert.assertTrue(roles.contains(TestConstants.USER_ROLE));
+    }
+
+    @Test
+    public void getUserRolesOnlyAdminTest() {
+        TestMethods.setUserRoles(em, defaultUser, Arrays.asList(adminRole));
+
+        Collection<String > roles = roleDao.getUserRoles(defaultUser.getId());
+        Assert.assertNotNull(roles);
+        Assert.assertEquals(1, roles.size());
+        Assert.assertTrue(roles.contains(TestConstants.ADMIN_ROLE));
+    }
 }

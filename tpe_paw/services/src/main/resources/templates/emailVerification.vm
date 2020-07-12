@@ -4,13 +4,13 @@
     <title>Welcome to Snippit!</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        * {
+        body * {
             font-family: Roboto, "sans-serif";
             box-sizing: border-box;
         }
 
         body {
-            background-color: #eeedf2;
+            background-color: transparent;
             width: 100%;
         }
 
@@ -22,12 +22,6 @@
         li {
             margin: 5px;
             list-style-type: none;
-        }
-
-        body {
-            background-color: #5E35B1;
-            margin: 0;
-            line-height: inherit !important;
         }
 
         .mid-container {
@@ -111,30 +105,29 @@
         }
     </style>
 </head>
-<body>
-<div class="full-width">
-    <div class="fw-100 mid-container">
-        <div class="center white-text fw-300 title-container">
-            <span class="fw-500">#msg("email.app.title")</span>
+<body style="background-color: transparent;width: 100%;">
+<div class="full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;">
+    <div class="fw-100 mid-container" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;background-color: #eeedf2;border-bottom-left-radius: 30px;border-bottom-right-radius: 30px;padding-bottom: 20px;width: 100%;font-weight: 100;">
+        <div class="center white-text fw-300 title-container" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-weight: 300;padding: 10px 0 10px 0;border-bottom-left-radius: 15px;border-bottom-right-radius: 15px;background: #5E35B1;align-items: center;justify-content: center;text-align: center;color: white !important;font-size: 30px !important;">
+            <span class="fw-500" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-weight: 500;">#msg("email.app.title")</span>
         </div>
-        <div class="mid-container-info">
-            <h1 class="left black-text greeting">
+        <div class="mid-container-info" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;padding: 20px;">
+            <h1 class="left black-text greeting" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;margin-top: 30px;margin-bottom: 30px;font-size: 25px;color: black !important;">
                 #msgArgs("email.verification.greeting", [${username}])
             </h1>
-            <p class="left black-text info full-width">
+            <p class="left black-text info full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-size: medium;color: black !important;">
                 #msg("email.verification.description")
             </p>
-            <p class="left black-text info full-width">
+            <p class="left black-text info full-width" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;font-size: medium;color: black !important;">
                 ${code}
             </p>
         </div>
     </div>
 </div>
-<div class="bottom-container fw-100 center disclaimer">
+<div class="bottom-container fw-100 center disclaimer" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;color: grey;font-size: 12px;font-weight: 100;max-height: 100px;padding: 10px;width: 100%;align-items: center;justify-content: center;text-align: center;">
     #msgArgs("email.verification.disclaimer", [${userEmail}])
 </div>
-<div class="bottom-container fw-100 center disclaimer">
+<div class="bottom-container fw-100 center disclaimer" style="font-family: Roboto, 'sans-serif';box-sizing: border-box;color: grey;font-size: 12px;font-weight: 100;max-height: 100px;padding: 10px;width: 100%;align-items: center;justify-content: center;text-align: center;">
     #msg("email.end")
 </div>
 </body>
-</html>

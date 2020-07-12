@@ -6,6 +6,8 @@
 <head>
     <link href="<c:url value='/resources/css/form.css'/>" rel="stylesheet"/>
     <script src="<c:url value='/resources/js/form.js'/>"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
 </head>
 <body>
 
@@ -16,10 +18,10 @@
         <label for="flag-button">
             <c:choose>
                 <c:when test="${adminFlagForm.flagged}">
-                    <i class="selected-red-icon material-icons snippet-icon">flag</i>
+                    <i class="selected-red-icon material-icons snippet-icon transition">flag</i>
                 </c:when>
                 <c:otherwise>
-                    <i class="unselected-red-icon material-icons snippet-icon">outlined_flag</i>
+                    <i class="unselected-red-icon material-icons snippet-icon transition">outlined_flag</i>
                 </c:otherwise>
             </c:choose>
         </label>

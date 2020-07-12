@@ -10,23 +10,38 @@
 
 .unselected-red-icon {
     color: gray !important;
-    transition: 0.3s;
 }
 
 .delete-snippet-icon {
     color: gray !important;
-    transition: 0.3s;
 }
 
 .delete-snippet-icon:hover {
     color: black !important;
 }
 
-.flagged-warning-icon {
+.unselected-coral-icon {
+    color: gray !important;
+}
+
+.unselected-coral-icon:hover {
+    color: lightcoral !important;
+}
+
+.selected-coral-icon {
+    color: lightcoral !important;
+}
+
+.reported-warning-icon {
+    color: lightcoral;
+    font-size: 70px !important;
+    margin: 5px 15px 5px 2px;
+}
+
+.warning-icon {
     color: red;
     font-size: 70px !important;
-    margin: 5px 15px 5px 0px;
-    transition: 0.3s;
+    margin: 5px 15px 5px 2px;
 }
 
 .verify-email-icon {
@@ -35,11 +50,22 @@
     margin: 5px 15px 5px 0px;
 }
 
-.card-flagged-warning-icon {
+.card-warning-icon {
     color: red;
     font-size: 30px !important;
     height: 30px;
-    margin: 0px 15px 0px 0px;
+    margin: 0px 10px 0px 0px;
+}
+
+.card-fav-icon {
+    font-size: 30px !important;
+    cursor: pointer;
+    height: 30px;
+    margin: 0px 11px 0px 0px;
+}
+
+.card-fav-icon:hover {
+    font-size: 31px !important;
 }
 
 .delete-element-icon {
@@ -49,10 +75,19 @@
     font-size: 40px !important;
     margin: 0px 0px 0px 30px;
     padding: 5px;
-    transition: 0.3s;
 }
 
 .delete-element-icon:hover {
     border: black solid;
     color: black;
+}
+
+.element-icon {
+    color: #DCDCDC;
+    font-size: 20px !important;
+    padding: 0px 10px 0px 0px;
+}
+
+.element-icon:hover {
+    color: gray;
 }

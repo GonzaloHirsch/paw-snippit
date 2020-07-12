@@ -54,9 +54,14 @@
 
 .form-error {
     color:red;
-    text-wrap: normal;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
 }
 
 .error-extra-margins {
     margin: 8px 10px 10px 0px;
+}
+
+.error-report-modal {
+    font-size: 17px;
 }

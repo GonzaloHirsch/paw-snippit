@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.utility.Constants.*;
 
-//@Controller
 @Component
 @Path("users")
 public class UserController {
@@ -40,13 +39,6 @@ public class UserController {
     private SnippetService snippetService;
     @Autowired
     private LoginAuthentication loginAuthentication;
-    //    @Autowired
-    private TagService tagService;
-
-    //    @Autowired
-    private RoleService roleService;
-    //    @Autowired
-    private MessageSource messageSource;
 
     @Context
     private UriInfo uriInfo;

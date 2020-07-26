@@ -23,24 +23,27 @@ public final class ResponseHelper {
      * @param totalPages Total number of pages
      */
     public static void AddLinkAttributes(Response.ResponseBuilder builder, UriInfo uriInfo, int currentPage, int totalPages){
-        // Adding the FIRST page
-        if(currentPage > 1){
-            builder.link(uriInfo.getAbsolutePathBuilder().queryParam(QUERY_PARAM_PAGE, 1).build(), LINK_FIRST);
-        }
+        // Check if page is valid, if not invalid pages will be given
+        if (currentPage <= totalPages){
+            // Adding the FIRST page
+            if(currentPage > 1){
+                builder.link(uriInfo.getAbsolutePathBuilder().queryParam(QUERY_PARAM_PAGE, 1).build(), LINK_FIRST);
+            }
 
-        // Adding the PREV page
-        if (currentPage > 2){
-            builder.link(uriInfo.getAbsolutePathBuilder().queryParam(QUERY_PARAM_PAGE, currentPage - 1).build(), LINK_PREV);
-        }
+            // Adding the PREV page
+            if (currentPage > 2){
+                builder.link(uriInfo.getAbsolutePathBuilder().queryParam(QUERY_PARAM_PAGE, currentPage - 1).build(), LINK_PREV);
+            }
 
-        // Adding the NEXT page
-        if (currentPage < totalPages - 1){
-            builder.link(uriInfo.getAbsolutePathBuilder().queryParam(QUERY_PARAM_PAGE, currentPage + 1).build(), LINK_NEXT);
-        }
+            // Adding the NEXT page
+            if (currentPage < totalPages - 1){
+                builder.link(uriInfo.getAbsolutePathBuilder().queryParam(QUERY_PARAM_PAGE, currentPage + 1).build(), LINK_NEXT);
+            }
 
-        // Adding the LAST page
-        if (currentPage < totalPages){
-            builder.link(uriInfo.getAbsolutePathBuilder().queryParam(QUERY_PARAM_PAGE, totalPages).build(), LINK_LAST);
+            // Adding the LAST page
+            if (currentPage < totalPages){
+                builder.link(uriInfo.getAbsolutePathBuilder().queryParam(QUERY_PARAM_PAGE, totalPages).build(), LINK_LAST);
+            }
         }
     }
 }

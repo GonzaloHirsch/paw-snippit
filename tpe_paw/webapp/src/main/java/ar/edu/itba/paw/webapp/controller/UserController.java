@@ -154,42 +154,25 @@ public class UserController {
         }
     }
 
-    /*@RequestMapping(value = "/user/{id}/{context}", method = {RequestMethod.POST})
-    public ModelAndView endEditPhoto(
-            final @PathVariable("id") long id,
-            final @PathVariable("context") String context,
-            @ModelAttribute("profilePhotoForm") @Valid final ProfilePhotoForm profilePhotoForm,
-            final BindingResult errors,
-            @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm
-    ){
-        List<String> possibleContexts = new ArrayList<>();
-        possibleContexts.add(Constants.OWNER_DELETED_CONTEXT);
-        possibleContexts.add(Constants.OWNER_ACTIVE_CONTEXT);
-        possibleContexts.add(Constants.USER_PROFILE_CONTEXT);
-
-        if (!possibleContexts.contains(context)) {
-            LOGGER.warn("Invalid URL in profile. Context = {}", context);
-            throw new InvalidUrlException();
-        }
-        if (errors.hasErrors()){
-            return userProfile(id, profilePhotoForm, descriptionForm, 1, false);
-        }
-
-        User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser != null && currentUser.getId() == id) {
-            try {
-                this.userService.changeProfilePhoto(id, profilePhotoForm.getFile().getBytes());
-                LOGGER.debug("User {} changed their profile picture", id);
-            } catch (IOException e) {
-                LOGGER.error("Exception changing profile photo for user {}", id);
-                FieldError photoError = new FieldError("profilePhotoForm","file" , messageSource.getMessage("profile.photo.error", null, LocaleContextHolder.getLocale()));
-                errors.addError(photoError);
-                return userProfile(id, profilePhotoForm, descriptionForm, 1, false);
+    @POST
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response changeUserDescription(final @PathParam(PATH_PARAM_ID) long id, final UserDto userDto){
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (maybeUser.isPresent()) {
+            final User user = maybeUser.get();
+            final User loggedUser = this.loginAuthentication.getLoggedInUser();
+            if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
+                this.userService.changeDescription(id, userDto.getDescription());
+                return Response.noContent().build();
+            } else {
+                return Response.status(Response.Status.FORBIDDEN).build();
             }
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return new ModelAndView("redirect:/user/" + id + "/" + context);
     }
-
+/*
     @RequestMapping(value = "/user/{id}/{context}/edit", method = {RequestMethod.POST})
     public ModelAndView endEditUserProfile(
             final @PathVariable("id") long id,
@@ -218,21 +201,21 @@ public class UserController {
             throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));
         }
         return new ModelAndView("redirect:/user/" + id + "/" + context);
-    }
+    }*/
 
-    private void logAndThrow(long id) {
+    /*private void logAndThrow(long id) {
         LOGGER.warn("User with id {} doesn't exist", id);
         throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{id}, LocaleContextHolder.getLocale()));
-    }
+    }*/
 
-    private User getUserWithId(final long id) {
+    /*private User getUserWithId(final long id) {
         Optional<User> user = this.userService.findUserById(id);
         if (!user.isPresent() || this.roleService.isAdmin(user.get().getId())) {
             this.logAndThrow(id);
         }
         return user.get();
-    }
-
+    }*/
+/*
     private ModelAndView profileMav(long id, User currentUser, User user, String searchContext, DescriptionForm descriptionForm, String tabContext, Collection<Snippet> snippets, final int totalSnippetCount, final int totalUserSnippetCount, final int page, final boolean editing) {
         final ModelAndView mav = new ModelAndView("user/profile");
 
@@ -251,9 +234,9 @@ public class UserController {
         mav.addObject("searchContext", searchContext);
         mav.addObject("tabContext", tabContext);
         return mav;
-    }
+    }*/
 
-    @ModelAttribute
+    /*@ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);

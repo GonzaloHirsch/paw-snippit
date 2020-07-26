@@ -11,6 +11,7 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>ar.edu.itba.paw.webapp.controller</param-value>
         </init-param>
+        <!--Configuration to register Jerseys multi part handling-->
         <init-param>
             <param-name>jersey.config.server.provider.classnames</param-name>
             <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>

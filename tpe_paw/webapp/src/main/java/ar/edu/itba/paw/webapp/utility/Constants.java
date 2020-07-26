@@ -23,6 +23,13 @@ public final class Constants {
     public static final String RESET_PASSWORD = "/reset-password";
     public static final String RECOVER_PASSWORD = "/recover-password";
 
+    public static final String QUERY_PARAM_PAGE = "page";
+
+    public static final String LINK_FIRST = "first";
+    public static final String LINK_LAST = "last";
+    public static final String LINK_PREV = "prev";
+    public static final String LINK_NEXT = "next";
+
     /*
      * "The AssertionError isn’t strictly required, but it provides insurance in case the
      *  constructor is accidentally invoked from within the class" - Page 19, Effective Java

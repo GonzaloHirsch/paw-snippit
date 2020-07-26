@@ -33,15 +33,22 @@ import java.util.Optional;
 import static ar.edu.itba.paw.webapp.utility.Constants.LANGUAGE_PAGE_SIZE;
 import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
 
-@Controller
+//@Controller
 public class LanguagesController {
-    @Autowired private LanguageService languageService;
-    @Autowired private SnippetService snippetService;
-    @Autowired private LoginAuthentication loginAuthentication;
-    @Autowired private TagService tagService;
-    @Autowired private RoleService roleService;
-    @Autowired private UserService userService;
-    @Autowired private MessageSource messageSource;
+//    @Autowired
+    private LanguageService languageService;
+//    @Autowired
+    private SnippetService snippetService;
+//    @Autowired
+    private LoginAuthentication loginAuthentication;
+//    @Autowired
+    private TagService tagService;
+//    @Autowired
+    private RoleService roleService;
+//    @Autowired
+    private UserService userService;
+//    @Autowired
+    private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LanguagesController.class);
 

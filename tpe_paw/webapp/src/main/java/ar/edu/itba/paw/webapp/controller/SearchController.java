@@ -33,7 +33,7 @@ import java.util.*;
 import static ar.edu.itba.paw.webapp.utility.Constants.MAX_SEARCH_QUERY_SIZE;
 import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
 
-@Controller
+//@Controller
 public class SearchController {
 
     private final static Map<String, SnippetDao.Types> typesMap;
@@ -58,19 +58,19 @@ public class SearchController {
         ordersMap = Collections.unmodifiableMap(orders);
     }
 
-    @Autowired
+//    @Autowired
     private SnippetService snippetService;
-    @Autowired
+//    @Autowired
     private LoginAuthentication loginAuthentication;
-    @Autowired
+//    @Autowired
     private TagService tagService;
-    @Autowired
+//    @Autowired
     private RoleService roleService;
-    @Autowired
+//    @Autowired
     private MessageSource messageSource;
-    @Autowired
+//    @Autowired
     private LanguageService languageService;
-    @Autowired
+//    @Autowired
     private UserService userService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);

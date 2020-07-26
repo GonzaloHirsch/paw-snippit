@@ -34,19 +34,29 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
 
-@Controller
+//@Controller
 public class RegistrationController {
 
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private UserService userService;
-    @Autowired private EmailService emailService;
-    @Autowired private SignUpAuthentication signUpAuthentication;
-    @Autowired private LoginAuthentication loginAuthentication;
-    @Autowired private RoleService roleService;
-    @Autowired private CryptoService cryptoService;
-    @Autowired private MessageSource messageSource;
-    @Autowired private TagService tagService;
-    @Autowired private ValidatorHelper validatorHelper;
+//    @Autowired
+    private PasswordEncoder passwordEncoder;
+//    @Autowired
+    private UserService userService;
+//    @Autowired
+    private EmailService emailService;
+//    @Autowired
+    private SignUpAuthentication signUpAuthentication;
+//    @Autowired
+    private LoginAuthentication loginAuthentication;
+//    @Autowired
+    private RoleService roleService;
+//    @Autowired
+    private CryptoService cryptoService;
+//    @Autowired
+    private MessageSource messageSource;
+//    @Autowired
+    private TagService tagService;
+//    @Autowired
+    private ValidatorHelper validatorHelper;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
 

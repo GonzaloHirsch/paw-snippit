@@ -34,21 +34,21 @@ import java.util.concurrent.TimeUnit;
 
 import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
 
-@Controller
+//@Controller
 public class  UserController {
     
-    @Autowired
+//    @Autowired
     private UserService userService;
-    @Autowired
+//    @Autowired
     private SnippetService snippetService;
-    @Autowired
+//    @Autowired
     private LoginAuthentication loginAuthentication;
-    @Autowired
+//    @Autowired
     private TagService tagService;
 
-    @Autowired
+//    @Autowired
     private RoleService roleService;
-    @Autowired
+//    @Autowired
     private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);

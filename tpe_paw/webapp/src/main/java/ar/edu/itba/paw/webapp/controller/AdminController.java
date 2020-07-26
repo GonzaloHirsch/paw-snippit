@@ -27,14 +27,19 @@ import javax.validation.Valid;
 import java.util.*;
 
 
-@Controller
+//@Controller
 public class AdminController {
 
-    @Autowired private LoginAuthentication loginAuthentication;
-    @Autowired private LanguageService languageService;
-    @Autowired private TagService tagService;
-    @Autowired private ValidatorHelper validator;
-    @Autowired private RoleService roleService;
+//    @Autowired
+    private LoginAuthentication loginAuthentication;
+//    @Autowired
+    private LanguageService languageService;
+//    @Autowired
+    private TagService tagService;
+//    @Autowired
+    private ValidatorHelper validator;
+//    @Autowired
+    private RoleService roleService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
 

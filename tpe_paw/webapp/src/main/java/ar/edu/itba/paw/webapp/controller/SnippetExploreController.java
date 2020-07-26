@@ -27,15 +27,21 @@ import java.util.*;
 
 import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
 
-@Controller
+//@Controller
 public class SnippetExploreController {
 
-    @Autowired private SnippetService snippetService;
-    @Autowired private LoginAuthentication loginAuthentication;
-    @Autowired private TagService tagService;
-    @Autowired private LanguageService languageService;
-    @Autowired private RoleService roleService;
-    @Autowired private UserService userService;
+//    @Autowired
+    private SnippetService snippetService;
+//    @Autowired
+    private LoginAuthentication loginAuthentication;
+//    @Autowired
+    private TagService tagService;
+//    @Autowired
+    private LanguageService languageService;
+//    @Autowired
+    private RoleService roleService;
+//    @Autowired
+    private UserService userService;
 
     private final static Map<String, SnippetDao.Types> typesMap;
     static {

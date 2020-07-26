@@ -29,17 +29,25 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Optional;
 
-@Controller
+//@Controller
 public class SnippetController {
 
-    @Autowired private RoleService roleService;
-    @Autowired private SnippetService snippetService;
-    @Autowired private VoteService voteService;
-    @Autowired private FavoriteService favService;
-    @Autowired private LoginAuthentication loginAuthentication;
-    @Autowired private TagService tagService;
-    @Autowired private MessageSource messageSource;
-    @Autowired private ReportService reportService;
+//    @Autowired
+    private RoleService roleService;
+//    @Autowired
+    private SnippetService snippetService;
+//    @Autowired
+    private VoteService voteService;
+//    @Autowired
+    private FavoriteService favService;
+//    @Autowired
+    private LoginAuthentication loginAuthentication;
+//    @Autowired
+    private TagService tagService;
+//    @Autowired
+    private MessageSource messageSource;
+//    @Autowired
+    private ReportService reportService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetController.class);
 

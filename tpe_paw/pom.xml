@@ -274,6 +274,12 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <!-- JERSEY IMAGE UPLOAD -->
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-multipart</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
             <!-- JERSEY JSON -->
             <dependency>
                 <groupId>org.glassfish.jersey.media</groupId>

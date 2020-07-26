@@ -1,43 +1,32 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.service.*;
-import ar.edu.itba.paw.models.Snippet;
-import ar.edu.itba.paw.models.Tag;
+import ar.edu.itba.paw.interfaces.service.RoleService;
+import ar.edu.itba.paw.interfaces.service.SnippetService;
+import ar.edu.itba.paw.interfaces.service.TagService;
+import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
-import ar.edu.itba.paw.webapp.utility.Constants;
-import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
-import ar.edu.itba.paw.webapp.exception.InvalidUrlException;
-import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
-import ar.edu.itba.paw.webapp.form.DescriptionForm;
-import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
-import ar.edu.itba.paw.webapp.form.SearchForm;
-import ar.edu.itba.paw.webapp.utility.MavHelper;
 import ar.edu.itba.paw.webapp.utility.PagingHelper;
 import ar.edu.itba.paw.webapp.utility.ResponseHelper;
+import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.http.CacheControl;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
+import javax.imageio.ImageIO;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.utility.Constants.*;
@@ -46,19 +35,19 @@ import static ar.edu.itba.paw.webapp.utility.Constants.*;
 @Component
 @Path("users")
 public class UserController {
-    
+
     @Autowired
     private UserService userService;
     @Autowired
     private SnippetService snippetService;
-//    @Autowired
+    @Autowired
     private LoginAuthentication loginAuthentication;
-//    @Autowired
+    //    @Autowired
     private TagService tagService;
 
-//    @Autowired
+    //    @Autowired
     private RoleService roleService;
-//    @Autowired
+    //    @Autowired
     private MessageSource messageSource;
 
     @Context
@@ -66,70 +55,16 @@ public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    /*@RequestMapping(value = "/user/{id}/active", method = {RequestMethod.GET})
-    public ModelAndView activeSnippetUserProfile(
-            final @PathVariable("id") long id,
-            @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
-            @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
-            final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-            final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
-    ) {
-        User user = this.getUserWithId(id);
-        User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null || !user.equals(currentUser)) {
-            LOGGER.error(messageSource.getMessage("error.403.profile.owner", null, Locale.ENGLISH));
-            throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));
-        }
-
-        Collection<Snippet> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE);
-        int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
-        return profileMav(id, currentUser, user, "user/"+id+"/active/", descriptionForm, Constants.OWNER_ACTIVE_CONTEXT, snippets, totalSnippetCount, totalSnippetCount, page, editing);
-    }
-
-    @RequestMapping(value = "/user/{id}/deleted", method = {RequestMethod.GET})
-    public ModelAndView deletedSnippetUserProfile(
-            final @PathVariable("id") long id,
-            @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
-            @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
-            final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-            final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
-    ) {
-        User user = this.getUserWithId(id);
-        User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null || !currentUser.equals(user)) {
-            LOGGER.error(messageSource.getMessage("error.403.profile.owner", null, Locale.ENGLISH));
-            throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));
-        }
-
-        Collection<Snippet> snippets = this.snippetService.getAllDeletedSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE);
-        int totalSnippetCount = this.snippetService.getAllDeletedSnippetsByOwnerCount(user.getId());
-        int userTotalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
-        return profileMav(id, currentUser, user, "user/"+id+"/deleted/", descriptionForm, Constants.OWNER_DELETED_CONTEXT, snippets, totalSnippetCount, userTotalSnippetCount, page, editing);
-    }*/
-
     @GET
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getById(final @PathParam(PATH_PARAM_ID) long id) {
         Optional<User> maybeUser = this.userService.findUserById(id);
-        if (maybeUser.isPresent()){
+        if (maybeUser.isPresent()) {
             return Response.ok(UserDto.fromUser(maybeUser.get(), this.uriInfo)).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        /*User user = this.getUserWithId(id);
-        User currentUser = this.loginAuthentication.getLoggedInUser();
-        StringBuilder searchContext = new StringBuilder("user/").append(id).append("/");
-        String tabContext = "";
-
-        //The context is "" but it is my profile --> change it to active
-        if (currentUser != null && currentUser.equals(user)){
-            searchContext.append(Constants.OWNER_ACTIVE_CONTEXT).append("/");
-            tabContext = Constants.OWNER_ACTIVE_CONTEXT;
-        }
-        Collection<Snippet> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE);
-        int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
-        return profileMav(id, currentUser, user, searchContext.toString(), descriptionForm, tabContext, snippets, totalSnippetCount, totalSnippetCount, page, editing);*/
     }
 
     @GET
@@ -137,7 +72,7 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getActiveSnippetsForUser(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
         Optional<User> maybeUser = this.userService.findUserById(id);
-        if (maybeUser.isPresent()){
+        if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
 
             final List<SnippetDto> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
@@ -150,19 +85,73 @@ public class UserController {
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        /*User user = this.getUserWithId(id);
-        User currentUser = this.loginAuthentication.getLoggedInUser();
-        StringBuilder searchContext = new StringBuilder("user/").append(id).append("/");
-        String tabContext = "";
+    }
 
-        //The context is "" but it is my profile --> change it to active
-        if (currentUser != null && currentUser.equals(user)){
-            searchContext.append(Constants.OWNER_ACTIVE_CONTEXT).append("/");
-            tabContext = Constants.OWNER_ACTIVE_CONTEXT;
+    @GET
+    @Path("/{id}/deleted_snippets")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getDeletedSnippetsForUser(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (maybeUser.isPresent()) {
+            final User user = maybeUser.get();
+            final User loggedUser = this.loginAuthentication.getLoggedInUser();
+            if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
+                final List<SnippetDto> snippets = this.snippetService.getAllDeletedSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+                final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllDeletedSnippetsByOwnerCount(user.getId()), SNIPPET_PAGE_SIZE);
+
+                Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+                });
+                ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+                return builder.build();
+            } else {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        Collection<Snippet> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE);
-        int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
-        return profileMav(id, currentUser, user, searchContext.toString(), descriptionForm, tabContext, snippets, totalSnippetCount, totalSnippetCount, page, editing);*/
+    }
+
+    @GET
+    @Path("/{id}/profile_photo")
+    @Produces("image/png")
+    public Response getUserProfilePhoto(final @PathParam(PATH_PARAM_ID) long id) {
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (maybeUser.isPresent()) {
+            final User user = maybeUser.get();
+            CacheControl cc = new CacheControl();
+            cc.setMustRevalidate(true);
+            cc.setNoTransform(true);
+            cc.setSMaxAge(60 * 60 * 24);
+            return Response.ok(user.getIcon()).cacheControl(cc).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @PUT
+    @Path("/{id}/profile_photo")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response changeProfilePhoto(final @PathParam(PATH_PARAM_ID) long id, @FormDataParam("file") InputStream inputStream,
+                                       @FormDataParam("file") FormDataContentDisposition contentDisposition) {
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (maybeUser.isPresent()) {
+            final User user = maybeUser.get();
+            final User loggedUser = this.loginAuthentication.getLoggedInUser();
+            if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
+                try {
+                    byte[] data = IOUtils.toByteArray(inputStream);
+                    this.userService.changeProfilePhoto(id, data);
+                    return Response.noContent().build();
+                } catch (IOException e) {
+                    LOGGER.error("Exception when changing profile photo for user id {}", id);
+                    return Response.serverError().build();
+                }
+            } else {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 
     /*@RequestMapping(value = "/user/{id}/{context}", method = {RequestMethod.POST})
@@ -199,21 +188,6 @@ public class UserController {
             }
         }
         return new ModelAndView("redirect:/user/" + id + "/" + context);
-    }
-
-    @RequestMapping(value = "/user/{id}/image", produces = "image/jpeg")
-    @ResponseBody
-    public ResponseEntity<byte[]> getUserImage(final @PathVariable("id") long id) {
-        Optional<User> user = this.userService.findUserById(id);
-        if (!user.isPresent()) {
-            this.logAndThrow(id);
-        }
-        CacheControl cacheControl = CacheControl.maxAge(60, TimeUnit.SECONDS)
-                .noTransform()
-                .mustRevalidate();
-        return ResponseEntity.ok()
-                .cacheControl(cacheControl)
-                .body(user.map(User::getIcon).orElse(null));
     }
 
     @RequestMapping(value = "/user/{id}/{context}/edit", method = {RequestMethod.POST})

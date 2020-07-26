@@ -15,18 +15,32 @@ public final class ResponseHelper {
         throw new AssertionError();
     }
 
+    /**
+     * Adds the links to the FIRST, LAST, NEXT and PREV pages, depending on the total amount of pages and the current page
+     * @param builder ResponseBuilder to be returned by the controller
+     * @param uriInfo UriInfo holding the context of the request
+     * @param currentPage Number of the current page
+     * @param totalPages Total number of pages
+     */
     public static void AddLinkAttributes(Response.ResponseBuilder builder, UriInfo uriInfo, int currentPage, int totalPages){
-        // Adding the FIRST and LAST pages
-        builder.link(uriInfo.getAbsolutePathBuilder().queryParam(QUERY_PARAM_PAGE, 1).build(), LINK_FIRST).link(uriInfo.getAbsolutePathBuilder().queryParam(QUERY_PARAM_PAGE, totalPages).build(), LINK_LAST);
+        // Adding the FIRST page
+        if(currentPage > 1){
+            builder.link(uriInfo.getAbsolutePathBuilder().queryParam(QUERY_PARAM_PAGE, 1).build(), LINK_FIRST);
+        }
 
-        // Adding the PREV page if possible
-        if (currentPage > 1){
+        // Adding the PREV page
+        if (currentPage > 2){
             builder.link(uriInfo.getAbsolutePathBuilder().queryParam(QUERY_PARAM_PAGE, currentPage - 1).build(), LINK_PREV);
         }
 
-        // Adding the NEXT page if possible
-        if (currentPage < totalPages){
+        // Adding the NEXT page
+        if (currentPage < totalPages - 1){
             builder.link(uriInfo.getAbsolutePathBuilder().queryParam(QUERY_PARAM_PAGE, currentPage + 1).build(), LINK_NEXT);
+        }
+
+        // Adding the LAST page
+        if (currentPage < totalPages){
+            builder.link(uriInfo.getAbsolutePathBuilder().queryParam(QUERY_PARAM_PAGE, totalPages).build(), LINK_LAST);
         }
     }
 }

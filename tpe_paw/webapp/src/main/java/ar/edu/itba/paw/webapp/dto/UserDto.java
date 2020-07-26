@@ -14,6 +14,8 @@ public class UserDto {
     private int reputation;
     private URI activeSnippets;
     private URI deletedSnippets;
+    private String password;
+    private String email;
 
     public static UserDto fromUser(User user, UriInfo uriInfo) {
         final UserDto dto = new UserDto();
@@ -25,6 +27,8 @@ public class UserDto {
         dto.reputation = user.getReputation();
         dto.activeSnippets = uriInfo.getAbsolutePathBuilder().path("active_snippets").build();
         dto.deletedSnippets = uriInfo.getAbsolutePathBuilder().path("deleted_snippets").build();
+        // DO NOT SET PASSWORD -> Sensitive
+        // DO NOT SET EMAIL -> Sensitive
 
         return dto;
     }
@@ -83,5 +87,21 @@ public class UserDto {
 
     public void setDeletedSnippets(URI deletedSnippets) {
         this.deletedSnippets = deletedSnippets;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

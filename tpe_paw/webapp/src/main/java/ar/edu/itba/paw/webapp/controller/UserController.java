@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.dto.SnippetDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
@@ -14,6 +15,8 @@ import ar.edu.itba.paw.webapp.form.DescriptionForm;
 import ar.edu.itba.paw.webapp.form.ProfilePhotoForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.utility.MavHelper;
+import ar.edu.itba.paw.webapp.utility.PagingHelper;
+import ar.edu.itba.paw.webapp.utility.ResponseHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,20 +33,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.utility.Constants.PATH_PARAM_ID;
-import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
+import static ar.edu.itba.paw.webapp.utility.Constants.*;
 
 //@Controller
 @Component
@@ -52,7 +49,7 @@ public class UserController {
     
     @Autowired
     private UserService userService;
-//    @Autowired
+    @Autowired
     private SnippetService snippetService;
 //    @Autowired
     private LoginAuthentication loginAuthentication;
@@ -117,6 +114,39 @@ public class UserController {
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()){
             return Response.ok(UserDto.fromUser(maybeUser.get(), this.uriInfo)).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        /*User user = this.getUserWithId(id);
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        StringBuilder searchContext = new StringBuilder("user/").append(id).append("/");
+        String tabContext = "";
+
+        //The context is "" but it is my profile --> change it to active
+        if (currentUser != null && currentUser.equals(user)){
+            searchContext.append(Constants.OWNER_ACTIVE_CONTEXT).append("/");
+            tabContext = Constants.OWNER_ACTIVE_CONTEXT;
+        }
+        Collection<Snippet> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE);
+        int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
+        return profileMav(id, currentUser, user, searchContext.toString(), descriptionForm, tabContext, snippets, totalSnippetCount, totalSnippetCount, page, editing);*/
+    }
+
+    @GET
+    @Path("/{id}/active_snippets")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getActiveSnippetsForUser(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (maybeUser.isPresent()){
+            final User user = maybeUser.get();
+
+            final List<SnippetDto> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+            final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllSnippetsByOwnerCount(user.getId()), SNIPPET_PAGE_SIZE);
+
+            Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+            });
+            ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            return builder.build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

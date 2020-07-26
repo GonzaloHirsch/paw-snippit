@@ -24,6 +24,7 @@ public final class Constants {
     public static final String RECOVER_PASSWORD = "/recover-password";
 
     public static final String QUERY_PARAM_PAGE = "page";
+    public static final String PATH_PARAM_ID = "id";
 
     public static final String LINK_FIRST = "first";
     public static final String LINK_LAST = "last";

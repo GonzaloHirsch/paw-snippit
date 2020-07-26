@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
+import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.InvalidUrlException;
@@ -20,6 +21,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,16 +30,27 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static ar.edu.itba.paw.webapp.utility.Constants.PATH_PARAM_ID;
 import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
 
 //@Controller
-public class  UserController {
+@Component
+@Path("users")
+public class UserController {
     
-//    @Autowired
+    @Autowired
     private UserService userService;
 //    @Autowired
     private SnippetService snippetService;
@@ -51,9 +64,12 @@ public class  UserController {
 //    @Autowired
     private MessageSource messageSource;
 
+    @Context
+    private UriInfo uriInfo;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    @RequestMapping(value = "/user/{id}/active", method = {RequestMethod.GET})
+    /*@RequestMapping(value = "/user/{id}/active", method = {RequestMethod.GET})
     public ModelAndView activeSnippetUserProfile(
             final @PathVariable("id") long id,
             @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
@@ -92,17 +108,19 @@ public class  UserController {
         int totalSnippetCount = this.snippetService.getAllDeletedSnippetsByOwnerCount(user.getId());
         int userTotalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
         return profileMav(id, currentUser, user, "user/"+id+"/deleted/", descriptionForm, Constants.OWNER_DELETED_CONTEXT, snippets, totalSnippetCount, userTotalSnippetCount, page, editing);
-    }
+    }*/
 
-    @RequestMapping(value = "/user/{id}", method = {RequestMethod.GET})
-    public ModelAndView userProfile(
-            final @PathVariable("id") long id,
-            @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
-            @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
-            final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-            final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
-    ) {
-        User user = this.getUserWithId(id);
+    @GET
+    @Path("/{id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getById(final @PathParam(PATH_PARAM_ID) long id) {
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (maybeUser.isPresent()){
+            return Response.ok(UserDto.fromUser(maybeUser.get(), this.uriInfo)).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        /*User user = this.getUserWithId(id);
         User currentUser = this.loginAuthentication.getLoggedInUser();
         StringBuilder searchContext = new StringBuilder("user/").append(id).append("/");
         String tabContext = "";
@@ -114,10 +132,10 @@ public class  UserController {
         }
         Collection<Snippet> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
-        return profileMav(id, currentUser, user, searchContext.toString(), descriptionForm, tabContext, snippets, totalSnippetCount, totalSnippetCount, page, editing);
+        return profileMav(id, currentUser, user, searchContext.toString(), descriptionForm, tabContext, snippets, totalSnippetCount, totalSnippetCount, page, editing);*/
     }
 
-    @RequestMapping(value = "/user/{id}/{context}", method = {RequestMethod.POST})
+    /*@RequestMapping(value = "/user/{id}/{context}", method = {RequestMethod.POST})
     public ModelAndView endEditPhoto(
             final @PathVariable("id") long id,
             final @PathVariable("context") String context,
@@ -240,6 +258,6 @@ public class  UserController {
         }
         model.addAttribute("searchForm", searchForm);
         model.addAttribute("searching", false);
-    }
+    }*/
 
 }

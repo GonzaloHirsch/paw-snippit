@@ -12,6 +12,8 @@ public class SnippetDto {
     private String title;
     private String description;
     private URI creator;
+    private boolean isFlagged;
+    private boolean isDeleted;
 
     public static SnippetDto fromSnippet(Snippet snippet, UriInfo uriInfo) {
         final SnippetDto dto = new SnippetDto();
@@ -20,6 +22,8 @@ public class SnippetDto {
         dto.code = snippet.getCode();
         dto.title = snippet.getTitle();
         dto.description = snippet.getDescription();
+        dto.isFlagged = snippet.isFlagged();
+        dto.isDeleted = snippet.isDeleted();
         dto.creator = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(snippet.getOwner().getId())).build();
 
         return dto;
@@ -63,5 +67,21 @@ public class SnippetDto {
 
     public void setCreator(URI creator) {
         this.creator = creator;
+    }
+
+    public boolean isFlagged() {
+        return isFlagged;
+    }
+
+    public void setFlagged(boolean flagged) {
+        isFlagged = flagged;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }

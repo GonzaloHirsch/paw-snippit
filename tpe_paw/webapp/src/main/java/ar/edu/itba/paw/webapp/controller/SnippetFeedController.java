@@ -78,7 +78,6 @@ public class SnippetFeedController {
         return builder.build();
     }
 
-
     /*@RequestMapping("/favorites")
     public ModelAndView getFavoritesSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");

@@ -111,7 +111,7 @@ public class TagsController {
         Optional<Tag> maybeTag = this.tagService.findTagById(id);
         if (maybeTag.isPresent()) {
             final List<SnippetDto> snippets = this.snippetService.findSnippetsForTag(id, page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
-            int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllSnippetsByTagCount(id), TAG_PAGE_SIZE);
+            int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllSnippetsByTagCount(id), SNIPPET_PAGE_SIZE);
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });

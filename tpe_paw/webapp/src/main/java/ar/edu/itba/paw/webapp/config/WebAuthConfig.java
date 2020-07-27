@@ -1,11 +1,12 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.webapp.auth.JwtLoginProcessingFilter;
+import ar.edu.itba.paw.webapp.auth.JwtTokenHandlerService;
 import ar.edu.itba.paw.webapp.auth.RefererRedirectionAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +20,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
@@ -33,9 +36,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     // Api prefix for all requests
     private static final String API_PREFIX = "/api/v1/";
 
-    // Name for the authorization token header
-    public static final String JWT_TOKEN_HEADER_NAME = "X-Authorization";
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -43,6 +43,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetails;
+    @Autowired
+    private JwtTokenHandlerService tokenHandlerService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -73,7 +75,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(API_PREFIX + "/**").authenticated();
 
         http
-                .addFilterBefore(new StatelessLogin)
+                .addFilterBefore(new JwtLoginProcessingFilter(new AntPathRequestMatcher(API_PREFIX + "login"), this.tokenHandlerService, this.userDetails), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore()
     }
 
     @Override

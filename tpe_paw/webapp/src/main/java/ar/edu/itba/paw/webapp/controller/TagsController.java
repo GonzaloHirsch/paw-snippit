@@ -107,6 +107,21 @@ public class TagsController {
     @GET
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getTag(final @PathParam(PATH_PARAM_ID) long id){
+        Optional<Tag> maybeTag = this.tagService.findTagById(id);
+        if (maybeTag.isPresent()) {
+            TagDto tagDto = TagDto.fromTag(maybeTag.get(), uriInfo);
+            Response.ResponseBuilder builder = Response.ok(new GenericEntity<TagDto>(tagDto) {
+            });
+            return builder.build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/snippets")
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getSnippetsForTag(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page){
         Optional<Tag> maybeTag = this.tagService.findTagById(id);
         if (maybeTag.isPresent()) {
@@ -156,7 +171,7 @@ public class TagsController {
     }*/
 
     @POST
-    @Path("/{id}")
+    @Path("/{id}/follow")
     public Response followTag(final @PathParam(PATH_PARAM_ID) long id){
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser != null) {

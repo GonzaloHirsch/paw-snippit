@@ -12,6 +12,7 @@ public class SnippetDto {
     private String title;
     private String description;
     private URI creator;
+    private URI language;
     private boolean isFlagged;
     private boolean isDeleted;
 
@@ -25,6 +26,7 @@ public class SnippetDto {
         dto.isFlagged = snippet.isFlagged();
         dto.isDeleted = snippet.isDeleted();
         dto.creator = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(snippet.getOwner().getId())).build();
+        dto.language = uriInfo.getBaseUriBuilder().path("languages").path(String.valueOf(snippet.getLanguage().getId())).build();
 
         return dto;
     }
@@ -83,5 +85,13 @@ public class SnippetDto {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public URI getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(URI language) {
+        this.language = language;
     }
 }

@@ -79,6 +79,21 @@ public class LanguagesController {
     @GET
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getTag(final @PathParam(PATH_PARAM_ID) long id){
+        Optional<Language> maybeLang = this.languageService.findById(id);
+        if (maybeLang.isPresent()) {
+            LanguageDto langDto = LanguageDto.fromLanguage(maybeLang.get(), uriInfo);
+            Response.ResponseBuilder builder = Response.ok(new GenericEntity<LanguageDto>(langDto) {
+            });
+            return builder.build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/snippets")
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getSnippetsForLanguage(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page){
         Optional<Language> lang = this.languageService.findById(id);
         if (lang.isPresent()) {

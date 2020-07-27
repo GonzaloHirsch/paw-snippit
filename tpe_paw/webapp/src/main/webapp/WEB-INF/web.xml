@@ -18,55 +18,12 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
+
+    <!--Mapping all endpoints to /api/v{version}-->
     <servlet-mapping>
         <servlet-name>jersey-servlet</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/api/v1/*</url-pattern>
     </servlet-mapping>
-
-    <error-page>
-        <error-code>414</error-code>
-        <location>/error</location>
-    </error-page>
-
-    <error-page>
-        <error-code>413</error-code>
-        <location>/error</location>
-    </error-page>
-
-    <error-page>
-        <error-code>405</error-code>
-        <location>/error</location>
-    </error-page>
-
-    <error-page>
-        <error-code>404</error-code>
-        <location>/error</location>
-    </error-page>
-
-    <error-page>
-        <error-code>403</error-code>
-        <location>/error</location>
-    </error-page>
-
-    <error-page>
-        <error-code>402</error-code>
-        <location>/error</location>
-    </error-page>
-
-    <error-page>
-        <error-code>401</error-code>
-        <location>/error</location>
-    </error-page>
-
-    <error-page>
-        <error-code>400</error-code>
-        <location>/error</location>
-    </error-page>
-
-    <error-page>
-        <error-code>500</error-code>
-        <location>/error</location>
-    </error-page>
 
     <servlet-mapping>
         <servlet-name>default</servlet-name>

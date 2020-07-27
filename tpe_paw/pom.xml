@@ -32,6 +32,7 @@
         <org.hibernate.version>5.1.0.Final</org.hibernate.version>
         <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
         <jersey.version>3.0-SNAPSHOT</jersey.version>
+        <jwt.version>0.9.1</jwt.version>
     </properties>
 
     <dependencyManagement>
@@ -303,6 +304,13 @@
                 <groupId>org.glassfish.jersey.media</groupId>
                 <artifactId>jersey-media-jaxb</artifactId>
                 <version>${jersey.version}</version>
+            </dependency>
+
+            <!--JWT Dependency-->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jwt.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

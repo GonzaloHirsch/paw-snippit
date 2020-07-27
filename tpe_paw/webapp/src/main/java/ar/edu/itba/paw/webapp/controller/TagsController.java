@@ -58,6 +58,8 @@ public class TagsController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TagsController.class);
 
+    // TODO: ADD CREATE TAG
+
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getAllTags(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page, final @QueryParam(QUERY_PARAM_SHOW_EMPTY) @DefaultValue("true") boolean showEmpty, final @QueryParam(QUERY_PARAM_SHOW_ONLY_FOLLOWING) @DefaultValue("false") boolean showOnlyFollowing) {

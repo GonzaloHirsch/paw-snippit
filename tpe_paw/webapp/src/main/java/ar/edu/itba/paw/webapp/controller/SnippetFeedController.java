@@ -46,15 +46,15 @@ public class SnippetFeedController {
 
     @Autowired
     private SnippetService snippetService;
-//    @Autowired
+    //    @Autowired
     private LoginAuthentication loginAuthentication;
-//    @Autowired
+    //    @Autowired
     private TagService tagService;
-//    @Autowired
+    //    @Autowired
     private RoleService roleService;
-//    @Autowired
+    //    @Autowired
     private UserService userService;
-//    @Autowired
+    //    @Autowired
     private MessageSource messageSource;
 
     @Context
@@ -71,7 +71,6 @@ public class SnippetFeedController {
     public Response getHomeSnippetFeed(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
         final List<SnippetDto> snippets = this.snippetService.getAllSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
         final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllSnippetsCount(), SNIPPET_PAGE_SIZE);
-
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);

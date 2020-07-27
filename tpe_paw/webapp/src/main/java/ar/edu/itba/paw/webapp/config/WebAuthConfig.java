@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +30,12 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
+    // Api prefix for all requests
+    private static final String API_PREFIX = "/api/v1/";
+
+    // Name for the authorization token header
+    public static final String JWT_TOKEN_HEADER_NAME = "X-Authorization";
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -40,6 +48,32 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetails)
                 .passwordEncoder(passwordEncoder());
+    }
+
+    @Override
+    protected void configure(final HttpSecurity http) throws Exception {
+        // CSRF is not needed
+        http.csrf().disable();
+
+        // Setting the session management to stateless
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        // Setting authorized requests
+        http.authorizeRequests()
+                // Adding USERS controller authorizations
+                .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/deleted_snippets").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.PUT, API_PREFIX + "users/*/profile_photo").hasRole("USER")
+                .antMatchers(HttpMethod.POST, API_PREFIX + "users/*").hasRole("USER")
+                .antMatchers(HttpMethod.GET, API_PREFIX + "users/**").permitAll()
+                // Adding TAGS controller authorizations
+                .antMatchers(HttpMethod.POST, API_PREFIX + "tags/*/").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.DELETE, API_PREFIX + "tags/*/").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, API_PREFIX + "tags/**").permitAll()
+                // Adding default policy, must be authenticated
+                .antMatchers(API_PREFIX + "/**").authenticated();
+
+        http
+                .addFilterBefore(new StatelessLogin)
     }
 
     @Override

@@ -79,7 +79,7 @@ public class LanguagesController {
     @GET
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getTag(final @PathParam(PATH_PARAM_ID) long id){
+    public Response getLanguageById(final @PathParam(PATH_PARAM_ID) long id){
         Optional<Language> maybeLang = this.languageService.findById(id);
         if (maybeLang.isPresent()) {
             LanguageDto langDto = LanguageDto.fromLanguage(maybeLang.get(), uriInfo);

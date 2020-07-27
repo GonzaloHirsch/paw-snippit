@@ -107,7 +107,7 @@ public class TagsController {
     @GET
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getTag(final @PathParam(PATH_PARAM_ID) long id){
+    public Response getTagById(final @PathParam(PATH_PARAM_ID) long id){
         Optional<Tag> maybeTag = this.tagService.findTagById(id);
         if (maybeTag.isPresent()) {
             TagDto tagDto = TagDto.fromTag(maybeTag.get(), uriInfo);

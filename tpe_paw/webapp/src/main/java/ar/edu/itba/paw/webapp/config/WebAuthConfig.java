@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,6 +26,8 @@ import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 @EnableWebSecurity
@@ -34,6 +37,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     // Api prefix for all requests
     private static final String API_PREFIX = "/api/v1/";
+
+    @Autowired
+    private JwtAuthenticationProvider authenticationProvider;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -76,11 +82,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, API_PREFIX + "tags/**").permitAll()
                 // Adding LOGIN policy
                 .antMatchers(HttpMethod.GET, API_PREFIX + "login").permitAll()
+                // Adding SNIPPETS policy
+                .antMatchers(HttpMethod.GET, API_PREFIX + "snippets/**").permitAll()
                 // Adding default policy, must be authenticated
                 .antMatchers(API_PREFIX + "/**").authenticated();
 
         http
-                .addFilterBefore(new JwtLoginProcessingFilter(API_PREFIX + "auth/login", this.successHandler, this.failureHandler, new ObjectMapper()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtLoginProcessingFilter(API_PREFIX + "auth/login", this.successHandler, this.failureHandler, new ObjectMapper(), this.authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtTokenAuthenticationProcessingFilter(this.tokenExtractor, this.userDetails), UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -129,10 +137,20 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/src/main/resources/css/**", "/src/main/resources/js/**", "/src/main/resources/img/**", "/favicon.ico", "/403");
     }
 
+    /*
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+    */
+
+    /**
+     * Bean created based on https://stackoverflow.com/questions/51986766/spring-security-getauthenticationmanager-returns-null-within-custom-filter/51988966
+     */
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        return new ProviderManager(Collections.singletonList(authenticationProvider));
     }
 
     private String getRememberMeKey() {

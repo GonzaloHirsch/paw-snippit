@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -34,11 +35,12 @@ public class JwtLoginProcessingFilter extends AbstractAuthenticationProcessingFi
     private final ObjectMapper objectMapper;
 
     public JwtLoginProcessingFilter(String defaultProcessUrl, AuthenticationSuccessHandler successHandler,
-                                    AuthenticationFailureHandler failureHandler, ObjectMapper mapper) {
+                                    AuthenticationFailureHandler failureHandler, ObjectMapper mapper, AuthenticationManager authenticationManager) {
         super(defaultProcessUrl);
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;
         this.objectMapper = mapper;
+        this.setAuthenticationManager(authenticationManager);
     }
 
     @Override
@@ -63,7 +65,7 @@ public class JwtLoginProcessingFilter extends AbstractAuthenticationProcessingFi
         // Generating the token
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
 
-        return getAuthenticationManager().authenticate(token);
+        return this.getAuthenticationManager().authenticate(token);
     }
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,

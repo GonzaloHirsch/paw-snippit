@@ -34,12 +34,12 @@ public class JwtTokenFactory {
     // Time of expiration for the token
     private final static int DAYS_TO_EXPIRE_REFRESH = 7;
 
-    public String createAccessJwtToken(LoginDto loginDto) {
-        if (StringUtils.isBlank(loginDto.getUsername()))
+    public String createAccessJwtToken(UserContext context) {
+        if (StringUtils.isBlank(context.getUsername()))
             throw new IllegalArgumentException("Cannot create JWT Token without username");
 
         // Adding username as subject
-        Claims claims = Jwts.claims().setSubject(loginDto.getUsername());
+        Claims claims = Jwts.claims().setSubject(context.getUsername());
 
         // Variable for the now part of the token
         Instant now = Instant.now();
@@ -56,12 +56,12 @@ public class JwtTokenFactory {
                 .compact();
     }
 
-    public String createRefreshToken(LoginDto loginDto) {
-        if (StringUtils.isBlank(loginDto.getUsername()))
+    public String createRefreshToken(UserContext context) {
+        if (StringUtils.isBlank(context.getUsername()))
             throw new IllegalArgumentException("Cannot create JWT Token without username");
 
         // Adding username as subject
-        Claims claims = Jwts.claims().setSubject(loginDto.getUsername());
+        Claims claims = Jwts.claims().setSubject(context.getUsername());
 
         // Variable for the now part of the token
         Instant now = Instant.now();

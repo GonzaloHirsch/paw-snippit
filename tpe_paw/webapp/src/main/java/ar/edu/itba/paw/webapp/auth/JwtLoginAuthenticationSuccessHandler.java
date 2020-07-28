@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.webapp.dto.LoginDto;
+import ar.edu.itba.paw.webapp.utility.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,14 +36,17 @@ public class JwtLoginAuthenticationSuccessHandler implements AuthenticationSucce
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        LoginDto loginDto = (LoginDto) authentication.getPrincipal();
+        // Getting the user context
+        UserContext context = (UserContext) authentication.getPrincipal();
 
-        String accessToken = tokenFactory.createAccessJwtToken(loginDto);
-        String refreshToken = tokenFactory.createRefreshToken(loginDto);
+        // Creating the TOKEN and REFRESH TOKEN
+        String accessToken = tokenFactory.createAccessJwtToken(context);
+        String refreshToken = tokenFactory.createRefreshToken(context);
 
+        // Adding the token to the response
         Map<String, String> tokenMap = new HashMap<>();
-        tokenMap.put("token", accessToken);
-        tokenMap.put("refreshToken", refreshToken);
+        tokenMap.put("token", JwtUtil.PrepareTokenForUsage(accessToken));
+        tokenMap.put("refreshToken", JwtUtil.PrepareTokenForUsage(refreshToken));
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         mapper.writeValue(response.getWriter(), tokenMap);

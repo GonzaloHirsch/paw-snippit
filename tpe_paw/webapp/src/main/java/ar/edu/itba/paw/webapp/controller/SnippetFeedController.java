@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
@@ -9,14 +10,12 @@ import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
-import ar.edu.itba.paw.webapp.utility.Constants;
+import ar.edu.itba.paw.webapp.dto.form.SearchFormDto;
+import ar.edu.itba.paw.webapp.utility.*;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.form.FavoriteForm;
 import ar.edu.itba.paw.webapp.form.FollowForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
-import ar.edu.itba.paw.webapp.utility.MavHelper;
-import ar.edu.itba.paw.webapp.utility.PagingHelper;
-import ar.edu.itba.paw.webapp.utility.ResponseHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +70,25 @@ public class SnippetFeedController {
     public Response getHomeSnippetFeed(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
         final List<SnippetDto> snippets = this.snippetService.getAllSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
         final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllSnippetsCount(), SNIPPET_PAGE_SIZE);
+
+        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+        });
+        ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        return builder.build();
+    }
+
+    @GET
+    @Path("/search")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response searchInHome(@BeanParam SearchFormDto searchForm, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+
+        final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, searchForm.getSort(), null, null, page)
+                .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+
+        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, null, null);
+        final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
+
+        //TODO Previously added the heart attributes
 
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
         });

@@ -36,28 +36,6 @@ import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
 //@Controller
 public class SearchController {
 
-    private final static Map<String, SnippetDao.Types> typesMap;
-    static {
-        final Map<String, SnippetDao.Types> types = new HashMap<>();
-        types.put(null, SnippetDao.Types.ALL);
-        types.put("all", SnippetDao.Types.ALL);
-        types.put("tag", SnippetDao.Types.TAG);
-        types.put("title", SnippetDao.Types.TITLE);
-        types.put("content", SnippetDao.Types.CONTENT);
-        types.put("username", SnippetDao.Types.USER);
-        types.put("language", SnippetDao.Types.LANGUAGE);
-        typesMap = Collections.unmodifiableMap(types);
-    }
-
-    private final static Map<String, SnippetDao.Orders> ordersMap;
-    static {
-        final Map<String, SnippetDao.Orders> orders = new HashMap<>();
-        orders.put("asc", SnippetDao.Orders.ASC);
-        orders.put("desc", SnippetDao.Orders.DESC);
-        orders.put("no", SnippetDao.Orders.NO);
-        ordersMap = Collections.unmodifiableMap(orders);
-    }
-
 //    @Autowired
     private SnippetService snippetService;
 //    @Autowired
@@ -83,6 +61,7 @@ public class SearchController {
     private static final String TAGS = "tags/";
     private static final String USER = "user/";
 
+    /*
     @RequestMapping("/search")
     public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
@@ -94,6 +73,7 @@ public class SearchController {
 
         return mav;
     }
+    *//*
 
     @RequestMapping("/favorites/search")
     public ModelAndView searchInFavorites(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
@@ -269,6 +249,7 @@ public class SearchController {
         return mav;
     }
 
+    /*
     private Collection<Snippet> findByCriteria(String type, String query, SnippetDao.Locations location, String sort, Long userId, Long resourceId, int page) {
         if (query.length() > MAX_SEARCH_QUERY_SIZE) {
             LOGGER.error(messageSource.getMessage("error.414.search", null, Locale.ENGLISH));
@@ -297,6 +278,7 @@ public class SearchController {
                 userId,
                 resourceId);
     }
+    */
 
     private User getUser(final long id, String location) {
         Optional<User> maybeUser = this.userService.findUserById(id);

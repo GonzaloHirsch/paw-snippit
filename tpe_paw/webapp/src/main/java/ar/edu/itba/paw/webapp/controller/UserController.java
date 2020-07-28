@@ -1,16 +1,15 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
-import ar.edu.itba.paw.interfaces.service.RoleService;
-import ar.edu.itba.paw.interfaces.service.SnippetService;
-import ar.edu.itba.paw.interfaces.service.TagService;
-import ar.edu.itba.paw.interfaces.service.UserService;
+import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
 import ar.edu.itba.paw.webapp.dto.TagDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
+import ar.edu.itba.paw.webapp.dto.form.EmailVerificationFormDto;
+import ar.edu.itba.paw.webapp.dto.form.RegisterFormDto;
 import ar.edu.itba.paw.webapp.dto.form.SearchFormDto;
 import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.utility.PagingHelper;
@@ -24,12 +23,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,11 +51,37 @@ public class UserController {
     private TagService tagService;
     @Autowired
     private LoginAuthentication loginAuthentication;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private CryptoService cryptoService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Context
     private UriInfo uriInfo;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response register(final RegisterFormDto registerFormDto) {
+        User registeredUser = this.userService.register(registerFormDto.getUsername(), this.passwordEncoder.encode(registerFormDto.getPassword()), registerFormDto.getEmail(), Instant.now(), LocaleContextHolder.getLocale());
+        try {
+            this.userService.registerFollowUp(registeredUser);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage() + "Failed to send registration email to user {}", registerFormDto.getUsername());
+        }
+
+        final URI userUri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(registeredUser.getId())).build();
+        return Response.created(userUri).build();
+
+        /* TODO How to do this?
+        this.signUpAuthentication.authWithAuthManager(request, registerForm.getUsername(), registerForm.getPassword());
+        String redirectUrl = this.signUpAuthentication.redirectionAuthenticationSuccess(request);
+        */
+    }
 
     @GET
     @Path("/{id}")
@@ -163,6 +192,49 @@ public class UserController {
                     LOGGER.error("Exception when changing profile photo for user id {}", id);
                     return Response.serverError().build();
                 }
+            } else {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @POST
+    @Path("/{id}/send_verify_email")
+    public Response verifyUserEmailSendEmail(final @PathParam(PATH_PARAM_ID) long id) {
+        //TODO Must be logged in
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (maybeUser.isPresent()) {
+            final User user = maybeUser.get();
+            final User loggedUser = this.loginAuthentication.getLoggedInUser();
+            if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
+                try {
+                    this.emailService.sendVerificationEmail(user);
+                } catch (Exception e) {
+                    LOGGER.error(e.getMessage() + "Failed to send verification email to user {}", user.getUsername());
+                }
+                return Response.noContent().build();
+            } else {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    @POST
+    @Path("/{id}/verify_email")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response verifyUserEmailCode(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam EmailVerificationFormDto verificationFormDto){
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (maybeUser.isPresent()) {
+            final User user = maybeUser.get();
+            final User loggedUser = this.loginAuthentication.getLoggedInUser();
+            if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
+                if (!this.cryptoService.checkValidTOTP(user, verificationFormDto.getCode())) {
+                    //ERROR - WRONG CODE
+                }
+                return Response.noContent().build();
             } else {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }

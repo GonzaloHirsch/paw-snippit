@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.auth.SignUpAuthentication;
+import ar.edu.itba.paw.webapp.dto.form.RegisterFormDto;
 import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,12 +31,18 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
 
-//@Controller
+//@Component
 public class RegistrationController {
 
 //    @Autowired
@@ -60,6 +68,7 @@ public class RegistrationController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
 
+    /*
     @RequestMapping(value = Constants.LOGIN)
     public ModelAndView login(HttpServletRequest request) {
         this.throwIfUserIsLoggedIn();
@@ -82,7 +91,9 @@ public class RegistrationController {
     public ModelAndView logout() {
         return new ModelAndView("user/logout");
     }
+    */
 
+    /*
     @RequestMapping(value = Constants.SIGNUP, method = {RequestMethod.GET})
     public ModelAndView signUpForm(HttpServletRequest request, @ModelAttribute("registerForm") final RegisterForm form) {
         this.throwIfUserIsLoggedIn();
@@ -109,7 +120,9 @@ public class RegistrationController {
         String redirectUrl = this.signUpAuthentication.redirectionAuthenticationSuccess(request);
         return new ModelAndView("redirect:" + redirectUrl);
     }
+     */
 
+    // TODO Moved to userController
     @RequestMapping(value = "/verify-email")
     public ModelAndView verifyEmail(final @RequestParam(value="id") long id, @ModelAttribute("verificationForm") final EmailVerificationForm verificationForm, @ModelAttribute("searchForm") final SearchForm searchForm) {
         ModelAndView mav = new ModelAndView("user/verifyEmail");

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
@@ -10,13 +11,11 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
 import ar.edu.itba.paw.webapp.dto.TagDto;
-import ar.edu.itba.paw.webapp.utility.Constants;
+import ar.edu.itba.paw.webapp.dto.form.SearchFormDto;
+import ar.edu.itba.paw.webapp.utility.*;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.TagNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
-import ar.edu.itba.paw.webapp.utility.MavHelper;
-import ar.edu.itba.paw.webapp.utility.PagingHelper;
-import ar.edu.itba.paw.webapp.utility.ResponseHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,6 +126,29 @@ public class TagsController {
         if (maybeTag.isPresent()) {
             final List<SnippetDto> snippets = this.snippetService.findSnippetsForTag(id, page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
             int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllSnippetsByTagCount(id), SNIPPET_PAGE_SIZE);
+
+            Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+            });
+            ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            return builder.build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/snippets/search")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getSnippetsForLanguage(final @PathParam(PATH_PARAM_ID) long id,
+                                           final @BeanParam SearchFormDto searchFormDto,
+                                           final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page){
+        Optional<Tag> maybeTag = this.tagService.findTagById(id);
+        if (maybeTag.isPresent()) {
+            final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchFormDto.getType(), searchFormDto.getQuery(), SnippetDao.Locations.TAGS, searchFormDto.getSort(), null, id, page)
+                    .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+
+            int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchFormDto.getType(), searchFormDto.getQuery(), SnippetDao.Locations.TAGS, null, id);
+            final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });

@@ -61,7 +61,7 @@ public class SearchController {
     private static final String TAGS = "tags/";
     private static final String USER = "user/";
 
-    /*
+    /* TODO DONE!
     @RequestMapping("/search")
     public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
@@ -74,7 +74,7 @@ public class SearchController {
         return mav;
     }
     */
-    /*
+    /* TODO DONE!
     @RequestMapping("/favorites/search")
     public ModelAndView searchInFavorites(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
@@ -89,7 +89,7 @@ public class SearchController {
         return mav;
     }
     */
-    /*
+    /* TODO DONE!
     @RequestMapping("/following/search")
     public ModelAndView searchInFollowing(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("snippet/snippetFollowing");
@@ -105,7 +105,7 @@ public class SearchController {
 
         return mav;
     }
-
+     TODO DONE!
     @RequestMapping("/upvoted/search")
     public ModelAndView searchInUpvoted(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");

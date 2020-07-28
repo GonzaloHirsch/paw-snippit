@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
@@ -8,16 +9,14 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.LanguageDto;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
-import ar.edu.itba.paw.webapp.utility.Constants;
+import ar.edu.itba.paw.webapp.dto.form.SearchFormDto;
+import ar.edu.itba.paw.webapp.utility.*;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.LanguageNotFoundException;
 import ar.edu.itba.paw.webapp.form.DeleteForm;
 import ar.edu.itba.paw.webapp.form.FavoriteForm;
 import ar.edu.itba.paw.webapp.form.ItemSearchForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
-import ar.edu.itba.paw.webapp.utility.MavHelper;
-import ar.edu.itba.paw.webapp.utility.PagingHelper;
-import ar.edu.itba.paw.webapp.utility.ResponseHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,6 +105,29 @@ public class LanguagesController {
             return builder.build();
         } else {
             LOGGER.error("No language found with id {}", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/snippets/search")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getSnippetsForLanguage(final @PathParam(PATH_PARAM_ID) long id,
+                                           final @BeanParam SearchFormDto searchFormDto,
+                                           final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page){
+        Optional<Language> maybeLang = this.languageService.findById(id);
+        if (maybeLang.isPresent()) {
+            final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchFormDto.getType(), searchFormDto.getQuery(), SnippetDao.Locations.LANGUAGES, searchFormDto.getSort(), null, id, page)
+                    .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+
+            int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchFormDto.getType(), searchFormDto.getQuery(), SnippetDao.Locations.LANGUAGES, null, id);
+            final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
+
+            Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+            });
+            ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            return builder.build();
+        } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }

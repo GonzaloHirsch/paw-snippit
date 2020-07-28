@@ -133,7 +133,7 @@ public class SearchController {
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FLAGGED);
         return mav;
     }
-
+    TODO DONE!
     @RequestMapping("/languages/{langId}/search")
     public ModelAndView searchInLanguages(@PathVariable("langId") long langId, @Valid @ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("deleteForm") final DeleteForm deleteForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("tagAndLanguages/languageSnippets");
@@ -150,7 +150,7 @@ public class SearchController {
         mav.addObject("language", language.get());
         return mav;
     }
-
+    TODO DONE!
     @RequestMapping("/tags/{tagId}/search")
     public ModelAndView searchInTags(@PathVariable("tagId") long tagId, @Valid @ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("followForm") final FollowForm followForm,
                                      @ModelAttribute("deleteForm") final DeleteForm deleteForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
@@ -190,7 +190,7 @@ public class SearchController {
 
         return this.profileSearch(id, descriptionForm, Constants.USER_PROFILE_CONTEXT, searchContext, snippets, totalSnippetCount, page, editing);
     }
-
+    TODO DONE!
     @RequestMapping("/user/{id}/" + Constants.OWNER_DELETED_CONTEXT + "/search")
     public ModelAndView searchOwnerProfileDeletedSnippets(
             final @PathVariable("id") long id,
@@ -207,7 +207,7 @@ public class SearchController {
 
         return this.profileSearch(id, descriptionForm, Constants.OWNER_DELETED_CONTEXT, searchContext, snippets, totalSnippetCount, page, editing);
     }
-
+    TODO DONE!
     @RequestMapping("/user/{id}/" + Constants.OWNER_ACTIVE_CONTEXT + "/search")
     public ModelAndView searchOwnerProfileSnippets(
             final @PathVariable("id") long id,
@@ -250,7 +250,7 @@ public class SearchController {
         return mav;
     }
 
-    /*
+    /* TODO DONE!
     private Collection<Snippet> findByCriteria(String type, String query, SnippetDao.Locations location, String sort, Long userId, Long resourceId, int page) {
         if (query.length() > MAX_SEARCH_QUERY_SIZE) {
             LOGGER.error(messageSource.getMessage("error.414.search", null, Locale.ENGLISH));
@@ -270,7 +270,7 @@ public class SearchController {
                     SNIPPET_PAGE_SIZE);
         }
     }
-
+    TODO DONE!
     private int getSnippetByCriteriaCount(String type, String query, SnippetDao.Locations location, Long userId, Long resourceId) {
         return this.snippetService.getSnippetByCriteriaCount(
                 typesMap.get(type),

@@ -10,7 +10,9 @@ import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
+import ar.edu.itba.paw.webapp.dto.form.ExploreFormDto;
 import ar.edu.itba.paw.webapp.dto.form.SearchFormDto;
+import ar.edu.itba.paw.webapp.form.ExploreForm;
 import ar.edu.itba.paw.webapp.utility.*;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.form.FavoriteForm;
@@ -24,6 +26,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,9 +35,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.time.Instant;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.utility.Constants.*;
@@ -64,6 +66,26 @@ public class SnippetFeedController {
     private static final String FAVORITES = "favorites/";
     private static final String UPVOTED = "upvoted/";
     private static final String FLAGGED = "flagged/";
+
+    private final static Map<String, SnippetDao.Types> typesMap;
+    static {
+        final Map<String, SnippetDao.Types> types = new HashMap<>();
+        types.put(null, SnippetDao.Types.TITLE);
+        types.put("reputation", SnippetDao.Types.REPUTATION);
+        types.put("votes", SnippetDao.Types.VOTES);
+        types.put("date", SnippetDao.Types.DATE);
+        types.put("title", SnippetDao.Types.TITLE);
+        typesMap = Collections.unmodifiableMap(types);
+    }
+
+    private final static Map<String, SnippetDao.Orders> ordersMap;
+    static {
+        final Map<String, SnippetDao.Orders> orders = new HashMap<>();
+        orders.put("asc", SnippetDao.Orders.ASC);
+        orders.put("desc", SnippetDao.Orders.DESC);
+        orders.put("no", SnippetDao.Orders.NO);
+        ordersMap = Collections.unmodifiableMap(orders);
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -95,6 +117,44 @@ public class SnippetFeedController {
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
         return builder.build();
     }
+
+    @GET
+    @Path("/explore/search")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response exploreSearch(final @BeanParam ExploreFormDto exploreFormDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+
+        Instant minDate = null;
+        Instant maxDate = null;
+        if (exploreFormDto.getMinDate() != null){
+            minDate = exploreFormDto.getMinDate().toInstant();
+        }
+        if (exploreFormDto.getMaxDate() != null){
+            maxDate = exploreFormDto.getMaxDate().toInstant();
+        }
+        Collection<Snippet> snippetsCollection = this.snippetService.findSnippetByDeepCriteria(
+                minDate, maxDate,
+                exploreFormDto.getMinRep(), exploreFormDto.getMaxRep(),
+                exploreFormDto.getMinVotes(), exploreFormDto.getMaxVotes(),
+                exploreFormDto.getLanguage() == -1 ? null : exploreFormDto.getLanguage(), exploreFormDto.getTag() == -1 ? null : exploreFormDto.getTag(),
+                exploreFormDto.getTitle(), exploreFormDto.getUsername(),
+                ordersMap.get(exploreFormDto.getSort()), typesMap.get(exploreFormDto.getField()), exploreFormDto.getIncludeFlagged(), page, SNIPPET_PAGE_SIZE);
+        int snippetCount =  this.snippetService.getSnippetByDeepCriteriaCount(
+                minDate, maxDate,
+                exploreFormDto.getMinRep(), exploreFormDto.getMaxRep(),
+                exploreFormDto.getMinVotes(), exploreFormDto.getMaxVotes(),
+                exploreFormDto.getLanguage() == -1 ? null : exploreFormDto.getLanguage(), exploreFormDto.getTag() == -1 ? null : exploreFormDto.getTag(),
+                exploreFormDto.getTitle(), exploreFormDto.getUsername(),
+                exploreFormDto.getIncludeFlagged());
+
+        final List<SnippetDto> snippets = snippetsCollection.stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+        final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
+
+        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+        });
+        ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        return builder.build();
+    }
+
 
     // TODO Favorites moved to UserController
     /*@RequestMapping("/favorites")

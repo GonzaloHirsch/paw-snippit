@@ -78,6 +78,7 @@ public class SnippetFeedController {
         return builder.build();
     }
 
+    // TODO Favorites moved to UserController
     /*@RequestMapping("/favorites")
     public ModelAndView getFavoritesSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
@@ -93,6 +94,7 @@ public class SnippetFeedController {
         return mav;
     }*/
 
+    // TODO Following moved to UserController
     /*@RequestMapping("/following")
     public ModelAndView getFollowingSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("snippet/snippetFollowing");
@@ -109,6 +111,7 @@ public class SnippetFeedController {
         return mav;
     }*/
 
+    // TODO Upvoted moved to UserController
     /*@RequestMapping("/upvoted")
     public ModelAndView getUpVotedSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");

@@ -7,7 +7,9 @@ import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
+import ar.edu.itba.paw.webapp.dto.TagDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.utility.PagingHelper;
 import ar.edu.itba.paw.webapp.utility.ResponseHelper;
 import org.apache.commons.io.IOUtils;
@@ -37,6 +39,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private SnippetService snippetService;
+    @Autowired
+    private TagService tagService;
     @Autowired
     private LoginAuthentication loginAuthentication;
 
@@ -162,6 +166,84 @@ public class UserController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
+
+    @GET
+    @Path("/{id}/favorite_snippets")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getFavoriteSnippetsForUser(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (maybeUser.isPresent()) {
+            final User user = maybeUser.get();
+
+            final List<SnippetDto> snippets = this.snippetService.getAllFavoriteSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+            final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllFavoriteSnippetsCount(user.getId()), SNIPPET_PAGE_SIZE);
+
+            Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+            });
+            ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            return builder.build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/following_snippets")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getFollowingSnippetsForUser(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (maybeUser.isPresent()) {
+            final User user = maybeUser.get();
+
+            final List<SnippetDto> snippets = this.snippetService.getAllFollowingSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+            final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllFollowingSnippetsCount(user.getId()), SNIPPET_PAGE_SIZE);
+
+            Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+            });
+            ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            return builder.build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/following_tags")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getFollowingTagsForUser(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (maybeUser.isPresent()) {
+            final User user = maybeUser.get();
+            final List<TagDto> followedTags = this.tagService.getSomeOrderedFollowedTagsForUser(user.getId(), Integer.MAX_VALUE).stream().map(s -> TagDto.fromTag(s, uriInfo)).collect(Collectors.toList());
+
+            Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<TagDto>>(followedTags) {
+            });
+            return builder.build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/upvoted_snippets")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getUpvotedSnippetsForUser(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (maybeUser.isPresent()) {
+            final User user = maybeUser.get();
+
+            final List<SnippetDto> snippets = this.snippetService.getAllUpVotedSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+            final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllUpvotedSnippetsCount(user.getId()), SNIPPET_PAGE_SIZE);
+
+            Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+            });
+            ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            return builder.build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
 /*
     @RequestMapping(value = "/user/{id}/{context}/edit", method = {RequestMethod.POST})
     public ModelAndView endEditUserProfile(

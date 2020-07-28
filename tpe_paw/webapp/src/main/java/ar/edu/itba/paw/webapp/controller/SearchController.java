@@ -73,8 +73,8 @@ public class SearchController {
 
         return mav;
     }
-    *//*
-
+    */
+    /*
     @RequestMapping("/favorites/search")
     public ModelAndView searchInFavorites(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
@@ -88,7 +88,8 @@ public class SearchController {
         MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
         return mav;
     }
-
+    */
+    /*
     @RequestMapping("/following/search")
     public ModelAndView searchInFollowing(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("snippet/snippetFollowing");

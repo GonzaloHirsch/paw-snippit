@@ -80,7 +80,7 @@ public class SnippetFeedController {
     @GET
     @Path("/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response searchInHome(@BeanParam SearchFormDto searchForm, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+    public Response searchInHome(final @BeanParam SearchFormDto searchForm, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
 
         final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, searchForm.getSort(), null, null, page)
                 .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());

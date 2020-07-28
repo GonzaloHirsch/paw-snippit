@@ -1,17 +1,21 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
 import ar.edu.itba.paw.interfaces.service.UserService;
+import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
 import ar.edu.itba.paw.webapp.dto.TagDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
+import ar.edu.itba.paw.webapp.dto.form.SearchFormDto;
 import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.utility.PagingHelper;
 import ar.edu.itba.paw.webapp.utility.ResponseHelper;
+import ar.edu.itba.paw.webapp.utility.SearchHelper;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -19,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -65,6 +70,8 @@ public class UserController {
     @Path("/{id}/active_snippets")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getActiveSnippetsForUser(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        //TODO only owner can be here
+
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
@@ -82,9 +89,18 @@ public class UserController {
     }
 
     @GET
+    @Path("/{id}/active_snippets/search")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getActiveSnippetsForUserSearch(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam SearchFormDto searchFormDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        return this.userContextSearch(id, SnippetDao.Locations.USER, searchFormDto, page);
+    }
+
+    @GET
     @Path("/{id}/deleted_snippets")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getDeletedSnippetsForUser(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        //TODO only owner can be here
+
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
@@ -103,6 +119,13 @@ public class UserController {
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
+
+    @GET
+    @Path("/{id}/deleted_snippets/search")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getDeletedSnippetsForUserSearch(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam SearchFormDto searchFormDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        return this.userContextSearch(id, SnippetDao.Locations.DELETED, searchFormDto, page);
     }
 
     @GET
@@ -171,6 +194,8 @@ public class UserController {
     @Path("/{id}/favorite_snippets")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getFavoriteSnippetsForUser(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        //TODO only owner can be here
+
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
@@ -185,6 +210,13 @@ public class UserController {
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
+
+    @GET
+    @Path("/{id}/favorite_snippets/search")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getFavoriteSnippetsForUserSearch(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam SearchFormDto searchFormDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        return this.userContextSearch(id, SnippetDao.Locations.FAVORITES, searchFormDto, page);
     }
 
     @GET
@@ -205,6 +237,13 @@ public class UserController {
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
+
+    @GET
+    @Path("/{id}/following_snippets/search")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getFollowingSnippetsForUserSearch(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam SearchFormDto searchFormDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        return this.userContextSearch(id, SnippetDao.Locations.FOLLOWING, searchFormDto, page);
     }
 
     @GET
@@ -234,6 +273,34 @@ public class UserController {
 
             final List<SnippetDto> snippets = this.snippetService.getAllUpVotedSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
             final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllUpvotedSnippetsCount(user.getId()), SNIPPET_PAGE_SIZE);
+
+            Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+            });
+            ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            return builder.build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/upvoted_snippets/search")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getUpvotedSnippetsForUserSearch(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam SearchFormDto searchFormDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        return this.userContextSearch(id, SnippetDao.Locations.UPVOTED, searchFormDto, page);
+    }
+
+    private Response userContextSearch(final long id, SnippetDao.Locations location, SearchFormDto searchFormDto, int page) {
+        //TODO only owner can be here
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (maybeUser.isPresent()) {
+            final User user = maybeUser.get();
+
+            final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchFormDto.getType(), searchFormDto.getQuery(), location, searchFormDto.getSort(), user.getId(), null, page)
+                    .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+
+            int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchFormDto.getType(), searchFormDto.getQuery(), location, user.getId(), null);
+            final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });

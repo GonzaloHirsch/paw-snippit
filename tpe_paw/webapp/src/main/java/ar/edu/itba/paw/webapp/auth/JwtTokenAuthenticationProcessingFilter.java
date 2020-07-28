@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -17,33 +18,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class JwtStatelessAuthenticationFilter extends GenericFilterBean {
+public class JwtTokenAuthenticationProcessingFilter extends GenericFilterBean {
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
-    }
-
-    private final JwtTokenHandlerService tokenHandlerService;
+    private final JwtTokenExtractor tokenExtractor;
     private final UserDetailsService userDetailsService;
 
-    public JwtLoginProcessingFilter(RequestMatcher matcher, JwtTokenHandlerService tokenHandlerService, UserDetailsService userDetailsService) {
-        super(matcher);
-        this.tokenHandlerService = tokenHandlerService;
+    public JwtTokenAuthenticationProcessingFilter(JwtTokenExtractor tokenHandlerService, UserDetailsService userDetailsService) {
+        this.tokenExtractor = tokenHandlerService;
         this.userDetailsService = userDetailsService;
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         // Extracting the token from the request
-        final String token = this.tokenHandlerService.extractTokenPayload(request);
+        final String token = this.tokenExtractor.extractTokenPayload((HttpServletRequest) request);
 
         // Authentication variable to be used
         Authentication auth = null;
 
         if (token != null) {
             // Extracting the username from the token
-            final String username = this.tokenHandlerService.getUsernameFromToken(token);
+            final String username = this.tokenExtractor.getUsernameFromToken(token);
 
             if (username != null) {
                 // Getting user details given the username
@@ -54,18 +49,10 @@ public class JwtStatelessAuthenticationFilter extends GenericFilterBean {
             }
         }
 
-        return auth;
-    }
+        // Adding the auth to the current context
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        // Getting the details based on the authentication
-        final UserDetails userDetails = this.userDetailsService.loadUserByUsername(authResult.getName());
-
-        // Adding the token to the response
-        this.tokenHandlerService.addAuthenticationToken(response, userDetails);
-
-        // Adding auth to the context
-        SecurityContextHolder.getContext().setAuthentication(authResult);
+        // Continuing the filter chain
+        chain.doFilter(request, response);
     }
 }

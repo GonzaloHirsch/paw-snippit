@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
-import ar.edu.itba.paw.webapp.auth.JwtLoginProcessingFilter;
-import ar.edu.itba.paw.webapp.auth.JwtTokenHandlerService;
-import ar.edu.itba.paw.webapp.auth.RefererRedirectionAuthenticationSuccessHandler;
+import ar.edu.itba.paw.webapp.auth.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -44,7 +43,11 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetails;
     @Autowired
-    private JwtTokenHandlerService tokenHandlerService;
+    private JwtTokenExtractor tokenExtractor;
+    @Autowired
+    private JwtLoginAuthenticationSuccessHandler successHandler;
+    @Autowired
+    private JwtLoginAuthenticationFailureHandler failureHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -71,52 +74,54 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, API_PREFIX + "tags/*/").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.DELETE, API_PREFIX + "tags/*/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, API_PREFIX + "tags/**").permitAll()
+                // Adding LOGIN policy
+                .antMatchers(HttpMethod.GET, API_PREFIX + "login").permitAll()
                 // Adding default policy, must be authenticated
                 .antMatchers(API_PREFIX + "/**").authenticated();
 
         http
-                .addFilterBefore(new JwtLoginProcessingFilter(new AntPathRequestMatcher(API_PREFIX + "login"), this.tokenHandlerService, this.userDetails), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore()
+                .addFilterBefore(new JwtLoginProcessingFilter(API_PREFIX + "auth/login", this.successHandler, this.failureHandler, new ObjectMapper()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtTokenAuthenticationProcessingFilter(this.tokenExtractor, this.userDetails), UsernamePasswordAuthenticationFilter.class);
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement()
-                .invalidSessionUrl("/")
-            .and().authorizeRequests()
-//                .antMatchers("/goodbye", "/login", "/login_error", "/signup").anonymous()
-//                .antMatchers("/recover-password", "/reset-password").anonymous()
-//                .antMatchers("/verify-email", "/resend-email-verification").hasAnyRole("USER", "ADMIN")
-//                .antMatchers("/admin/add").hasRole("ADMIN")
-//                .antMatchers("/flagged/**", "/snippet/**/flag").hasRole("ADMIN")
-//                .antMatchers("/favorites/**", "/following/**", "/upvoted/**").hasAnyRole("USER", "ADMIN")
-//                .antMatchers("/snippet/**/vote/positive", "/snippet/**/vote/negative", "/snippet/**/fav").hasAnyRole("USER", "ADMIN")
-//                .antMatchers("/snippet/create", "/snippet/**/delete", "/snippet/**/report", "/snippet/**/report/dismiss"). hasRole("USER")
-//                .antMatchers("/user/**/active", "/user/**/deleted", "user/**/active/edit", "user/**/deleted/edit"). hasRole("USER")
-//                .antMatchers("/tags/**/follow").hasAnyRole("USER", "ADMIN")
-//                .antMatchers("/tags/**/delete", "/languages/**/delete").hasRole("ADMIN")
-                .antMatchers("/**").permitAll()
-            .and().formLogin()
-                .loginPage("/login")
-                .failureUrl("/login_error")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .successHandler(new RefererRedirectionAuthenticationSuccessHandler())
-                //.defaultSuccessUrl("/", false)
-            .and().rememberMe()
-                .rememberMeParameter("rememberme")
-                .userDetailsService(userDetails)
-                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
-                .key(getRememberMeKey())
-            .and().logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/goodbye")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-            .and().exceptionHandling()
-                .accessDeniedPage("/403")
-            .and().csrf().disable();
-    }
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http.sessionManagement()
+//                .invalidSessionUrl("/")
+//            .and().authorizeRequests()
+////                .antMatchers("/goodbye", "/login", "/login_error", "/signup").anonymous()
+////                .antMatchers("/recover-password", "/reset-password").anonymous()
+////                .antMatchers("/verify-email", "/resend-email-verification").hasAnyRole("USER", "ADMIN")
+////                .antMatchers("/admin/add").hasRole("ADMIN")
+////                .antMatchers("/flagged/**", "/snippet/**/flag").hasRole("ADMIN")
+////                .antMatchers("/favorites/**", "/following/**", "/upvoted/**").hasAnyRole("USER", "ADMIN")
+////                .antMatchers("/snippet/**/vote/positive", "/snippet/**/vote/negative", "/snippet/**/fav").hasAnyRole("USER", "ADMIN")
+////                .antMatchers("/snippet/create", "/snippet/**/delete", "/snippet/**/report", "/snippet/**/report/dismiss"). hasRole("USER")
+////                .antMatchers("/user/**/active", "/user/**/deleted", "user/**/active/edit", "user/**/deleted/edit"). hasRole("USER")
+////                .antMatchers("/tags/**/follow").hasAnyRole("USER", "ADMIN")
+////                .antMatchers("/tags/**/delete", "/languages/**/delete").hasRole("ADMIN")
+//                .antMatchers("/**").permitAll()
+//            .and().formLogin()
+//                .loginPage("/login")
+//                .failureUrl("/login_error")
+//                .usernameParameter("username")
+//                .passwordParameter("password")
+//                .successHandler(new RefererRedirectionAuthenticationSuccessHandler())
+//                //.defaultSuccessUrl("/", false)
+//            .and().rememberMe()
+//                .rememberMeParameter("rememberme")
+//                .userDetailsService(userDetails)
+//                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
+//                .key(getRememberMeKey())
+//            .and().logout()
+//                .logoutUrl("/logout")
+//                .logoutSuccessUrl("/goodbye")
+//                .invalidateHttpSession(true)
+//                .deleteCookies("JSESSIONID")
+//            .and().exceptionHandling()
+//                .accessDeniedPage("/403")
+//            .and().csrf().disable();
+//    }
 
     @Override
     public void configure(final WebSecurity web) throws Exception {

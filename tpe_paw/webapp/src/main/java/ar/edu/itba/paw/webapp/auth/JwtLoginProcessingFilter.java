@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.webapp.dto.LoginDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +24,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 
 public class JwtLoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtLoginProcessingFilter.class);
-
-    // Name for the authorization token header
-    public static final String JWT_TOKEN_HEADER_NAME = "X-Authorization";
 
     private final AuthenticationSuccessHandler successHandler;
     private final AuthenticationFailureHandler failureHandler;
@@ -45,18 +44,26 @@ public class JwtLoginProcessingFilter extends AbstractAuthenticationProcessingFi
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
-        if (!HttpMethod.POST.name().equals(request.getMethod()) || !WebUtil.isAjax(request)) {
-            LOGGER.debug("Authentication method not supported. Request method: {}", request.getMethod());
-            throw new AuthMethodNotSupportedException("Authentication method not supported");
+        // Check if the method used is valid
+        if (!HttpMethod.POST.name().equals(request.getMethod())) {
+            /*LOGGER.debug("Authentication method not supported. Request method: {}", request.getMethod());
+            throw new AuthMethodNotSupportedException("Authentication method not supported");*/
+            // THROW ERROR
         }
 
-        LoginRequest loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
+        // Map the data from the request into a login DTO
+        LoginDto loginDto = objectMapper.readValue(request.getReader(), LoginDto.class);
 
-        if (StringUtils.isBlank(loginRequest.getUsername()) || StringUtils.isBlank(loginRequest.getPassword())) {
-            throw new AuthenticationServiceException("Username or Password not provided");
+        // Verify there is information
+        if ((loginDto.getUsername() == null || loginDto.getUsername().isEmpty()) || (loginDto.getPassword() == null || loginDto.getPassword().isEmpty())) {
+//            throw new AuthenticationServiceException("Username or Password not provided");
+            // THROW ERROR
         }
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
-        return this.getAuthenticationManager().authenticate(token);
+
+        // Generating the token
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+
+        return getAuthenticationManager().authenticate(token);
     }
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,

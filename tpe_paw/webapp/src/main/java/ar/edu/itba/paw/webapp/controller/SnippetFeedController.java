@@ -1,23 +1,18 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
-import ar.edu.itba.paw.interfaces.service.RoleService;
-import ar.edu.itba.paw.interfaces.service.SnippetService;
-import ar.edu.itba.paw.interfaces.service.TagService;
-import ar.edu.itba.paw.interfaces.service.UserService;
+import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
+import ar.edu.itba.paw.webapp.dto.SnippetWithVoteDto;
 import ar.edu.itba.paw.webapp.dto.form.ExploreFormDto;
 import ar.edu.itba.paw.webapp.dto.form.SearchFormDto;
 import ar.edu.itba.paw.webapp.dto.form.SnippetCreateFormDto;
-import ar.edu.itba.paw.webapp.form.ExploreForm;
 import ar.edu.itba.paw.webapp.utility.*;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
-import ar.edu.itba.paw.webapp.form.FavoriteForm;
-import ar.edu.itba.paw.webapp.form.FollowForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,6 +44,8 @@ public class SnippetFeedController {
     private SnippetService snippetService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private VoteService voteService;
 //    @Autowired
     private LoginAuthentication loginAuthentication;
 //    @Autowired
@@ -186,6 +181,61 @@ public class SnippetFeedController {
         final URI snippetUri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(snippetId)).build();
         return Response.created(snippetUri).build();
+    }
+
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response snippetDetail(final @PathParam(PATH_PARAM_ID) long id) {
+        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
+
+        if (retrievedSnippet.isPresent()) {
+            Snippet snippet = retrievedSnippet.get();
+            int voteCount = this.voteService.getVoteBalance(snippet.getId());
+            return Response.ok(SnippetWithVoteDto.fromSnippetAndVote(snippet, voteCount, this.uriInfo)).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    @PUT //TODO ---> o es un DELETE esto????
+    @Path("/{id}/delete")
+    public Response deleteSnippet(final @PathParam(PATH_PARAM_ID) long id){
+        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
+
+        if (retrievedSnippet.isPresent()) {
+            Snippet snippet = retrievedSnippet.get();
+            User loggedInUser = this.loginAuthentication.getLoggedInUser();
+            if (loggedInUser != null && loggedInUser.equals(snippet.getOwner())) {
+                if (this.snippetService.deleteOrRestoreSnippet(snippet, true)) {
+                    return Response.noContent().build();
+                }
+            } else {
+                LOGGER.warn("No user logged in or logged in user not admin but attempting to delete tag {}", id);
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    @PUT
+    @Path("/{id}/restore")
+    public Response restoreSnippet(final @PathParam(PATH_PARAM_ID) long id){
+        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
+
+        if (retrievedSnippet.isPresent()) {
+            Snippet snippet = retrievedSnippet.get();
+            User loggedInUser = this.loginAuthentication.getLoggedInUser();
+            if (loggedInUser != null && loggedInUser.equals(snippet.getOwner())) {
+                if (this.snippetService.deleteOrRestoreSnippet(snippet, false)) {
+                    return Response.noContent().build();
+                }
+            } else {
+                LOGGER.warn("No user logged in or logged in user not admin but attempting to delete tag {}", id);
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     /////////////////////////////////////////// OLD ////////////////////////////////////////////

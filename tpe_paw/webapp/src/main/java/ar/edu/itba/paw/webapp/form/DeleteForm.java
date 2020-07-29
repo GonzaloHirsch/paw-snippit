@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+@Deprecated
 public class DeleteForm {
     private boolean delete;
 

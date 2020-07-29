@@ -12,6 +12,7 @@ import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
 import ar.edu.itba.paw.webapp.dto.form.ExploreFormDto;
 import ar.edu.itba.paw.webapp.dto.form.SearchFormDto;
+import ar.edu.itba.paw.webapp.dto.form.SnippetCreateFormDto;
 import ar.edu.itba.paw.webapp.form.ExploreForm;
 import ar.edu.itba.paw.webapp.utility.*;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
@@ -35,6 +36,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -47,14 +49,14 @@ public class SnippetFeedController {
 
     @Autowired
     private SnippetService snippetService;
+    @Autowired
+    private UserService userService;
 //    @Autowired
     private LoginAuthentication loginAuthentication;
 //    @Autowired
     private TagService tagService;
 //    @Autowired
     private RoleService roleService;
-//    @Autowired
-    private UserService userService;
 //    @Autowired
     private MessageSource messageSource;
 
@@ -155,9 +157,42 @@ public class SnippetFeedController {
         return builder.build();
     }
 
+    @POST
+    @Path("/create")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response snippetCreate(@Valid SnippetCreateFormDto createDto) {
+        // TODO --> JWT Tokens
+        User loggedInUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedInUser == null) {
+            LOGGER.error(messageSource.getMessage("error.403.snippet.create", null, Locale.ENGLISH));
+            return Response.status(Response.Status.FORBIDDEN).build();
+            // throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.snippet.create", null, LocaleContextHolder.getLocale()));
+        } else if (this.roleService.isAdmin(loggedInUser.getId())) {
+            LOGGER.error(messageSource.getMessage("error.403.admin.snippet.create", null, Locale.ENGLISH));
+            return Response.status(Response.Status.FORBIDDEN).build();
+            // throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.admin.snippet.create", null, LocaleContextHolder.getLocale()));
+        }
+        /* Extra validation
+        this.validator.validateTagsExists(snippetCreateForm.getTags(), errors, LocaleContextHolder.getLocale()); */
 
-    // TODO Favorites moved to UserController
-    /*@RequestMapping("/favorites")
+        Instant dateCreated = Instant.now();
+        Long snippetId = this.snippetService.createSnippet(loggedInUser, createDto.getTitle(), createDto.getDescription(), createDto.getCode(), dateCreated, createDto.getLanguage(), createDto.getTags());
+
+        if (snippetId == null) {
+            LOGGER.error("Snippet creation was unsuccessful. Return id was null.");
+            // throw new FormErrorException(this.messageSource.getMessage("error.404.form", null, LocaleContextHolder.getLocale()));
+        }
+
+        final URI snippetUri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(snippetId)).build();
+        return Response.created(snippetUri).build();
+    }
+
+    /////////////////////////////////////////// OLD ////////////////////////////////////////////
+
+    // Moved to UserController
+    @Deprecated
+    @RequestMapping("/favorites")
     public ModelAndView getFavoritesSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
 
@@ -170,10 +205,11 @@ public class SnippetFeedController {
         this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, FAVORITES);
 
         return mav;
-    }*/
+    }
 
-    // TODO Following moved to UserController
-    /*@RequestMapping("/following")
+    // Moved to UserController
+    @Deprecated
+    @RequestMapping("/following")
     public ModelAndView getFollowingSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("snippet/snippetFollowing");
 
@@ -184,13 +220,13 @@ public class SnippetFeedController {
         int totalSnippetCount = this.snippetService.getAllFollowingSnippetsCount(currentUser.getId());
         this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, FOLLOWING);
 
-        *//* Show up to 25 tags -> most popular + non empty *//*
+        /* Show up to 25 tags -> most popular + non empty */
         MavHelper.addTagChipUnfollowFormAttributes(mav, this.tagService.getSomeOrderedFollowedTagsForUser(currentUser.getId(), Constants.FOLLOWING_FEED_TAG_AMOUNT), currentUser.getFollowedTags().size());
         return mav;
-    }*/
+    }
 
-    // TODO Upvoted moved to UserController
-    /*@RequestMapping("/upvoted")
+    @Deprecated // Moved to UserController
+    @RequestMapping("/upvoted")
     public ModelAndView getUpVotedSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
 
@@ -203,9 +239,10 @@ public class SnippetFeedController {
         this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, UPVOTED);
 
         return mav;
-    }*/
+    }
 
-   /* @RequestMapping("/flagged")
+    /* TODO --> Missing Coversion
+    @RequestMapping("/flagged")
     public ModelAndView getFlaggedSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
 
@@ -220,7 +257,8 @@ public class SnippetFeedController {
         return mav;
     }*/
 
-    /*private void addModelAttributesHelper(ModelAndView mav, User currentUser, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
+    @Deprecated
+    private void addModelAttributesHelper(ModelAndView mav, User currentUser, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
         mav.addObject("pages", snippetCount / SNIPPET_PAGE_SIZE + (snippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
         mav.addObject("page", page);
         mav.addObject("snippetList", snippets);
@@ -230,8 +268,8 @@ public class SnippetFeedController {
 
         MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
     }
-*/
-    /*@ModelAttribute
+
+    @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
 
@@ -240,10 +278,11 @@ public class SnippetFeedController {
         }
         MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
         model.addAttribute("searchForm", searchForm);
-    }*/
+    }
 
-  /*  private void logAndThrow(String location) {
+    @Deprecated
+    private void logAndThrow(String location) {
         LOGGER.warn("Inside {} with no logged in user", location);
         throw new ForbiddenAccessException(messageSource.getMessage("error.403", new Object[]{location}, LocaleContextHolder.getLocale()));
-    }*/
+    }
 }

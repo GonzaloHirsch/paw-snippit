@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+@Deprecated
 @FieldMatch(first = "password", second = "repeatPassword", message = "{FieldMatch.registerForm.passwords}")
 public class RegisterForm {
 

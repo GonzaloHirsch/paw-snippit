@@ -10,6 +10,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
+@Deprecated
 @DateOrder(min = "minDate", max = "maxDate", message = "{DateOrder.exploreForm.dates}")
 @IntegerOrder(min = "minRep", max = "maxRep", message = "{IntegerOrder.exploreForm.order}")
 @IntegerOrder(min = "minVotes", max = "maxVotes", message = "{IntegerOrder.exploreForm.order}")

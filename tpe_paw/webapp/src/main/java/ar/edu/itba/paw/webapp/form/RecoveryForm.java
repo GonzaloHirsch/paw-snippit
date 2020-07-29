@@ -4,6 +4,7 @@ import ar.edu.itba.paw.webapp.validations.FieldExists;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
+@Deprecated
 public class RecoveryForm {
     @Email
     @NotBlank

@@ -27,7 +27,7 @@ import java.util.*;
 
 import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
 
-//@Controller
+@Deprecated
 public class SnippetExploreController {
 
 //    @Autowired
@@ -63,7 +63,7 @@ public class SnippetExploreController {
         ordersMap = Collections.unmodifiableMap(orders);
     }
 
-    /* TODO - Moved to SnippetFeed
+    // Moved to SnippetFeed
     @RequestMapping("/explore")
     public ModelAndView explore(@ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("exploreForm") final ExploreForm exploreForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("snippet/snippetExplore");
@@ -127,5 +127,5 @@ public class SnippetExploreController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
     }
-     */
+
 }

@@ -13,12 +13,11 @@ import ar.edu.itba.paw.webapp.dto.form.RecoveryFormDto;
 import ar.edu.itba.paw.webapp.dto.form.RegisterFormDto;
 import ar.edu.itba.paw.webapp.dto.form.SearchFormDto;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
+import ar.edu.itba.paw.webapp.form.DescriptionForm;
 import ar.edu.itba.paw.webapp.form.RecoveryForm;
 import ar.edu.itba.paw.webapp.form.ResetPasswordForm;
-import ar.edu.itba.paw.webapp.utility.Constants;
-import ar.edu.itba.paw.webapp.utility.PagingHelper;
-import ar.edu.itba.paw.webapp.utility.ResponseHelper;
-import ar.edu.itba.paw.webapp.utility.SearchHelper;
+import ar.edu.itba.paw.webapp.form.SearchForm;
+import ar.edu.itba.paw.webapp.utility.*;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -28,14 +27,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -404,7 +408,9 @@ public class UserController {
         }
     }
 
-/*
+    ///////////////////////////////////////////////// OLD ///////////////////////////////////////////////////////
+
+/* TODO --> NEEDS CONVERTING
     @RequestMapping(value = "/user/{id}/{context}/edit", method = {RequestMethod.POST})
     public ModelAndView endEditUserProfile(
             final @PathVariable("id") long id,
@@ -435,19 +441,13 @@ public class UserController {
         return new ModelAndView("redirect:/user/" + id + "/" + context);
     }*/
 
-    /*private void logAndThrow(long id) {
+    @Deprecated
+    private void logAndThrow(long id) {
         LOGGER.warn("User with id {} doesn't exist", id);
-        throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{id}, LocaleContextHolder.getLocale()));
-    }*/
+        // throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{id}, LocaleContextHolder.getLocale()));
+    }
 
-    /*private User getUserWithId(final long id) {
-        Optional<User> user = this.userService.findUserById(id);
-        if (!user.isPresent() || this.roleService.isAdmin(user.get().getId())) {
-            this.logAndThrow(id);
-        }
-        return user.get();
-    }*/
-/*
+    @Deprecated
     private ModelAndView profileMav(long id, User currentUser, User user, String searchContext, DescriptionForm descriptionForm, String tabContext, Collection<Snippet> snippets, final int totalSnippetCount, final int totalUserSnippetCount, final int page, final boolean editing) {
         final ModelAndView mav = new ModelAndView("user/profile");
 
@@ -466,17 +466,18 @@ public class UserController {
         mav.addObject("searchContext", searchContext);
         mav.addObject("tabContext", tabContext);
         return mav;
-    }*/
+    }
 
-    /*@ModelAttribute
+    @Deprecated
+    @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
+        // MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
         if (currentUser != null) {
             this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
         }
         model.addAttribute("searchForm", searchForm);
         model.addAttribute("searching", false);
-    }*/
+    }
 
 }

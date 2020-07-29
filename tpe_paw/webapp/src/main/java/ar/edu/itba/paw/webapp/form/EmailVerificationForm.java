@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+@Deprecated
 public class EmailVerificationForm {
 
     @Pattern(regexp = "^[0-9]{6}$", message = "{Pattern.verification.code}")

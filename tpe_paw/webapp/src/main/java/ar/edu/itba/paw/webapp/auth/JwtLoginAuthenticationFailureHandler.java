@@ -16,15 +16,8 @@ import java.io.IOException;
 
 @Component
 public class JwtLoginAuthenticationFailureHandler implements AuthenticationFailureHandler {
-//    @Autowired
-    private ObjectMapper mapper = new ObjectMapper();
-
-    public JwtLoginAuthenticationFailureHandler(){}
-
-//    @Autowired
-    public JwtLoginAuthenticationFailureHandler(ObjectMapper mapper) {
-        this.mapper = mapper;
-    }
+    @Autowired
+    private ObjectMapper mapper;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,

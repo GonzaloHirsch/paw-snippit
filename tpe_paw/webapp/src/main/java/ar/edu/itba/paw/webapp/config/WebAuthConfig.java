@@ -41,6 +41,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationProvider authenticationProvider;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -88,7 +91,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(API_PREFIX + "/**").authenticated();
 
         http
-                .addFilterBefore(new JwtLoginProcessingFilter(API_PREFIX + "auth/login", this.successHandler, this.failureHandler, new ObjectMapper(), this.authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtLoginProcessingFilter(API_PREFIX + "auth/login", this.successHandler, this.failureHandler, this.objectMapper, this.authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtTokenAuthenticationProcessingFilter(this.tokenExtractor, this.userDetails), UsernamePasswordAuthenticationFilter.class);
     }
 

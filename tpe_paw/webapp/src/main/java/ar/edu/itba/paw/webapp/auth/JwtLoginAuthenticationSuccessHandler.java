@@ -21,17 +21,11 @@ import java.util.Map;
 
 @Component
 public class JwtLoginAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-    private ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper mapper;
+
     @Autowired
     private JwtTokenFactory tokenFactory;
-
-    public JwtLoginAuthenticationSuccessHandler(){}
-
-//    @Autowired
-    public JwtLoginAuthenticationSuccessHandler(final ObjectMapper mapper, final JwtTokenFactory tokenFactory) {
-        this.mapper = mapper;
-        this.tokenFactory = tokenFactory;
-    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,

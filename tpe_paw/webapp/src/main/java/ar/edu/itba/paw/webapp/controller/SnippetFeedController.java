@@ -184,6 +184,51 @@ public class SnippetFeedController {
         return Response.created(snippetUri).build();
     }
 
+    @GET
+    @Path("/flagged")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getFlaggedSnippetFeed(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+
+        User loggedInUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedInUser == null || !roleService.isAdmin(loggedInUser.getId())) {
+            LOGGER.warn("Only Admin can see flagged snippet feed");
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        final List<SnippetDto> snippets = this.snippetService.getAllFlaggedSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+        final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllFlaggedSnippetsCount(), SNIPPET_PAGE_SIZE);
+
+        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+        });
+        ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        return builder.build();
+    }
+
+    @GET
+    @Path("/flagged/search")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getFlaggedSnippetFeedSearch(final @BeanParam SearchFormDto searchForm, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+
+        User loggedInUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedInUser == null || !roleService.isAdmin(loggedInUser.getId())) {
+            LOGGER.warn("Only Admin can see flagged snippet feed");
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FLAGGED, searchForm.getSort(), null, null, page)
+                .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+
+        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FLAGGED, null, null);
+        final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
+
+        //TODO Previously added the heart attributes
+
+        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+        });
+        ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        return builder.build();
+    }
+
 
     @GET
     @Path("/{id}")
@@ -219,6 +264,7 @@ public class SnippetFeedController {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
+    // TODO --> Merge with delete?
     @POST
     @Path("/{id}/restore")
     public Response restoreSnippet(final @PathParam(PATH_PARAM_ID) long id){
@@ -324,9 +370,9 @@ public class SnippetFeedController {
         return mav;
     }
 
-    /* TODO --> Missing Coversion
+    @Deprecated
     @RequestMapping("/flagged")
-    public ModelAndView getFlaggedSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+    public ModelAndView getFlaggedSnippetFeedDep(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
@@ -338,7 +384,7 @@ public class SnippetFeedController {
         this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, FLAGGED);
 
         return mav;
-    }*/
+    }
 
     @Deprecated
     private void addModelAttributesHelper(ModelAndView mav, User currentUser, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
@@ -352,6 +398,7 @@ public class SnippetFeedController {
         MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
     }
 
+    @Deprecated
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();

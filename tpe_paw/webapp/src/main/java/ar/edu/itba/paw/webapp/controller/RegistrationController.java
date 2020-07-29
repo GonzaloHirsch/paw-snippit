@@ -93,7 +93,7 @@ public class RegistrationController {
     }
     */
 
-    /*
+    /* TODO - Moved to UserController
     @RequestMapping(value = Constants.SIGNUP, method = {RequestMethod.GET})
     public ModelAndView signUpForm(HttpServletRequest request, @ModelAttribute("registerForm") final RegisterForm form) {
         this.throwIfUserIsLoggedIn();
@@ -122,7 +122,7 @@ public class RegistrationController {
     }
      */
 
-    // TODO Moved to userController
+    /* TODO Moved to userController
     @RequestMapping(value = "/verify-email")
     public ModelAndView verifyEmail(final @RequestParam(value="id") long id, @ModelAttribute("verificationForm") final EmailVerificationForm verificationForm, @ModelAttribute("searchForm") final SearchForm searchForm) {
         ModelAndView mav = new ModelAndView("user/verifyEmail");
@@ -161,7 +161,9 @@ public class RegistrationController {
         this.userService.verifyUserEmail(currentUser.getId());
         return mav;
     }
+    */
 
+    /* TODO --> This is a copy of verify-email!!
     @RequestMapping(value = "/resend-email-verification", method = RequestMethod.POST)
     public ModelAndView resendVerificationEmail(final @RequestParam(value="id") long id, @ModelAttribute("verificationForm") final EmailVerificationForm verificationForm, @ModelAttribute("searchForm") final SearchForm searchForm) {
         ModelAndView mav = new ModelAndView("user/verifyEmail");
@@ -180,6 +182,7 @@ public class RegistrationController {
         this.addUserAttributes(currentUser, mav);
         return mav;
     }
+     */
 
     @RequestMapping(value = Constants.RECOVER_PASSWORD)
     public ModelAndView recoverPassword(@ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
@@ -207,6 +210,7 @@ public class RegistrationController {
         return new ModelAndView("user/emailSent");
     }
 
+    // TODO - NO CLUE HOW TO DO THIS PART!
     @RequestMapping(value = Constants.RESET_PASSWORD, method = RequestMethod.GET)
     public ModelAndView resetPassword(final @RequestParam(value="id") long id,
                                       final @RequestParam(value="token") String token,

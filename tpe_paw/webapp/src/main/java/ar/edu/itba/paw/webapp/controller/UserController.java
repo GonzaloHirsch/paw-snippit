@@ -9,8 +9,12 @@ import ar.edu.itba.paw.webapp.dto.SnippetDto;
 import ar.edu.itba.paw.webapp.dto.TagDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.dto.form.EmailVerificationFormDto;
+import ar.edu.itba.paw.webapp.dto.form.RecoveryFormDto;
 import ar.edu.itba.paw.webapp.dto.form.RegisterFormDto;
 import ar.edu.itba.paw.webapp.dto.form.SearchFormDto;
+import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
+import ar.edu.itba.paw.webapp.form.RecoveryForm;
+import ar.edu.itba.paw.webapp.form.ResetPasswordForm;
 import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.utility.PagingHelper;
 import ar.edu.itba.paw.webapp.utility.ResponseHelper;
@@ -21,11 +25,10 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -241,6 +244,24 @@ public class UserController {
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
+
+    @POST
+    @Path("/" + Constants.RECOVER_PASSWORD)
+    public Response recoverPasswordSendEmail(final RecoveryFormDto recoveryDto) { //TODO VALIDATE
+        // TODO --> cannot be logged in in this method!
+        User user = this.userService.findUserByEmail(recoveryDto.getEmail()).orElse(null);
+        if (user == null) {
+            return Response.status(Response.Status.NOT_FOUND).build(); // UserNotFound
+        }
+        // Getting the URL for the server
+        final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        try {
+            this.emailService.sendRecoveryEmail(user, baseUrl);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage() + "Failed to send recovery email to user {}", recoveryDto.getEmail());
+        }
+        return Response.noContent().build();
     }
 
     @POST

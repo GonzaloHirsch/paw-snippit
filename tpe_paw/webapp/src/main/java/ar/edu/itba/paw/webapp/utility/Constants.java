@@ -20,8 +20,8 @@ public final class Constants {
     public static final String LOGIN = "/login";
     public static final String SIGNUP = "/signup";
     public static final String GOODBYE = "/goodbye";
-    public static final String RESET_PASSWORD = "/reset-password";
-    public static final String RECOVER_PASSWORD = "/recover-password";
+    public static final String RESET_PASSWORD = "/reset_password";
+    public static final String RECOVER_PASSWORD = "/recover_password";
 
     public static final String QUERY_PARAM_PAGE = "page";
     public static final String QUERY_PARAM_SHOW_ONLY_FOLLOWING = "show_only_following";

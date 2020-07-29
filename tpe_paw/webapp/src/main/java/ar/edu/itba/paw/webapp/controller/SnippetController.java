@@ -136,6 +136,7 @@ public class SnippetController {
         return new ModelAndView("redirect:/snippet/" + id);
     }
 
+    @Deprecated
     @RequestMapping(value="/snippet/{id}/vote/positive", method=RequestMethod.POST)
     public ModelAndView votePositive(
             @ModelAttribute("snippetId") @PathVariable("id") long id,
@@ -153,6 +154,7 @@ public class SnippetController {
         return mav;
     }
 
+    @Deprecated
     @RequestMapping(value="/snippet/{id}/vote/negative", method=RequestMethod.POST)
     public ModelAndView voteNegative(
             @ModelAttribute("snippetId") @PathVariable("id") long id,

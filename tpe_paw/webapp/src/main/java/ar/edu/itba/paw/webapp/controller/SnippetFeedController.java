@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
 import ar.edu.itba.paw.webapp.dto.SnippetWithVoteDto;
+import ar.edu.itba.paw.webapp.dto.VoteFormDto;
 import ar.edu.itba.paw.webapp.dto.form.ExploreFormDto;
 import ar.edu.itba.paw.webapp.dto.form.SearchFormDto;
 import ar.edu.itba.paw.webapp.dto.form.SnippetCreateFormDto;
@@ -198,7 +199,7 @@ public class SnippetFeedController {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    @PUT //TODO ---> o es un DELETE esto????
+    @POST //TODO ---> o es un DELETE esto????
     @Path("/{id}/delete")
     public Response deleteSnippet(final @PathParam(PATH_PARAM_ID) long id){
         Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
@@ -211,14 +212,14 @@ public class SnippetFeedController {
                     return Response.noContent().build();
                 }
             } else {
-                LOGGER.warn("No user logged in or logged in user not admin but attempting to delete tag {}", id);
+                LOGGER.warn("User not logged in or owner of snippet {} attempting it's deletion", id);
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    @PUT
+    @POST
     @Path("/{id}/restore")
     public Response restoreSnippet(final @PathParam(PATH_PARAM_ID) long id){
         Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
@@ -237,6 +238,38 @@ public class SnippetFeedController {
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
+
+    @POST
+    @Path("/{id}/vote_positive")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response votePositiveSnippet(final @PathParam(PATH_PARAM_ID) long id, final VoteFormDto voteDto) {
+        return performVote(id, voteDto, true);
+    }
+
+    @POST
+    @Path("/{id}/vote_negative")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response voteNegativeSnippet(final @PathParam(PATH_PARAM_ID) long id, final VoteFormDto voteDto) {
+        return performVote(id, voteDto, false);
+    }
+
+    private Response performVote(long id, final VoteFormDto voteDto, boolean isPositive) {
+        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
+
+        if (retrievedSnippet.isPresent()) {
+            Snippet snippet = retrievedSnippet.get();
+            User loggedInUser = this.loginAuthentication.getLoggedInUser();
+            if (loggedInUser != null) {
+                this.voteService.performVote(snippet.getOwner().getId(), loggedInUser.getId(), id, voteDto.isVoteSelected(), isPositive);
+                return Response.noContent().build();
+            } else {
+                LOGGER.error(messageSource.getMessage("error.403.snippet.vote", null, Locale.ENGLISH));
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
 
     /////////////////////////////////////////// OLD ////////////////////////////////////////////
 

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.*;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -76,6 +77,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 // Adding USERS controller authorizations
                 .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/deleted_snippets").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.POST, API_PREFIX + "users/" + Constants.RECOVER_PASSWORD).anonymous()
                 .antMatchers(HttpMethod.PUT, API_PREFIX + "users/*/profile_photo").hasRole("USER")
                 .antMatchers(HttpMethod.POST, API_PREFIX + "users/*").hasRole("USER")
                 .antMatchers(HttpMethod.GET, API_PREFIX + "users/**").permitAll()

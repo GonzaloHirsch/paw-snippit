@@ -248,15 +248,15 @@ public class UserController {
     }
 
     @POST
-    @Path("/" + Constants.RECOVER_PASSWORD)
-    public Response recoverPasswordSendEmail(final RecoveryDto recoveryDto) { //TODO VALIDATE
-        // TODO --> cannot be logged in in this method!
+    @Path("/recover_password")
+    public Response recoverPasswordSendEmail(final @Valid RecoveryDto recoveryDto) {
         User user = this.userService.findUserByEmail(recoveryDto.getEmail()).orElse(null);
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build(); // UserNotFound
         }
         // Getting the URL for the server
-        final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        // TODO --> FIX depending on how we change Reset password
+        final String baseUrl = this.uriInfo.getBaseUri().toString();
         try {
             this.emailService.sendRecoveryEmail(user, baseUrl);
         } catch (Exception e) {

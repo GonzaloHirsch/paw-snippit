@@ -118,16 +118,16 @@ public class SnippetFeedController {
     @GET
     @Path("/explore/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response exploreSearch(final @BeanParam ExploreDto exploreDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+    public Response exploreSearch(final @Valid @BeanParam ExploreDto exploreDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
 
         Instant minDate = null;
         Instant maxDate = null;
-        if (exploreDto.getMinDate() != null){
-            minDate = exploreDto.getMinDate().toInstant();
-        }
-        if (exploreDto.getMaxDate() != null){
-            maxDate = exploreDto.getMaxDate().toInstant();
-        }
+//        if (exploreDto.getMinDate() != null){
+//            minDate = exploreDto.getMinDate().toInstant();
+//        }
+//        if (exploreDto.getMaxDate() != null){
+//            maxDate = exploreDto.getMaxDate().toInstant();
+//        }
         Collection<Snippet> snippetsCollection = this.snippetService.findSnippetByDeepCriteria(
                 minDate, maxDate,
                 exploreDto.getMinRep(), exploreDto.getMaxRep(),

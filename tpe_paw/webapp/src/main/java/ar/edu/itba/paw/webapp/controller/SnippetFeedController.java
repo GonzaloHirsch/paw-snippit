@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
 import ar.edu.itba.paw.webapp.dto.SnippetWithVoteDto;
+import ar.edu.itba.paw.webapp.dto.VoteFormDto;
 import ar.edu.itba.paw.webapp.dto.form.ExploreFormDto;
 import ar.edu.itba.paw.webapp.dto.form.SearchFormDto;
 import ar.edu.itba.paw.webapp.dto.form.SnippetCreateFormDto;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -183,6 +185,51 @@ public class SnippetFeedController {
         return Response.created(snippetUri).build();
     }
 
+    @GET
+    @Path("/flagged")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getFlaggedSnippetFeed(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+
+        User loggedInUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedInUser == null || !roleService.isAdmin(loggedInUser.getId())) {
+            LOGGER.warn("Only Admin can see flagged snippet feed");
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        final List<SnippetDto> snippets = this.snippetService.getAllFlaggedSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+        final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllFlaggedSnippetsCount(), SNIPPET_PAGE_SIZE);
+
+        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+        });
+        ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        return builder.build();
+    }
+
+    @GET
+    @Path("/flagged/search")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getFlaggedSnippetFeedSearch(final @BeanParam SearchFormDto searchForm, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+
+        User loggedInUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedInUser == null || !roleService.isAdmin(loggedInUser.getId())) {
+            LOGGER.warn("Only Admin can see flagged snippet feed");
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FLAGGED, searchForm.getSort(), null, null, page)
+                .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+
+        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FLAGGED, null, null);
+        final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
+
+        //TODO Previously added the heart attributes
+
+        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+        });
+        ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        return builder.build();
+    }
+
 
     @GET
     @Path("/{id}")
@@ -198,7 +245,7 @@ public class SnippetFeedController {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    @PUT //TODO ---> o es un DELETE esto????
+    @POST //TODO ---> o es un DELETE esto????
     @Path("/{id}/delete")
     public Response deleteSnippet(final @PathParam(PATH_PARAM_ID) long id){
         Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
@@ -211,14 +258,15 @@ public class SnippetFeedController {
                     return Response.noContent().build();
                 }
             } else {
-                LOGGER.warn("No user logged in or logged in user not admin but attempting to delete tag {}", id);
+                LOGGER.warn("User not logged in or owner of snippet {} attempting it's deletion", id);
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    @PUT
+    // TODO --> Merge with delete?
+    @POST
     @Path("/{id}/restore")
     public Response restoreSnippet(final @PathParam(PATH_PARAM_ID) long id){
         Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
@@ -237,6 +285,77 @@ public class SnippetFeedController {
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
+
+    @POST
+    @Path("/{id}/vote_positive")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response votePositiveSnippet(final @PathParam(PATH_PARAM_ID) long id, final VoteFormDto voteDto) {
+        return performVote(id, voteDto, true);
+    }
+
+    @POST
+    @Path("/{id}/vote_negative")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response voteNegativeSnippet(final @PathParam(PATH_PARAM_ID) long id, final VoteFormDto voteDto) {
+        return performVote(id, voteDto, false);
+    }
+
+    private Response performVote(long id, final VoteFormDto voteDto, boolean isPositive) {
+        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
+
+        if (retrievedSnippet.isPresent()) {
+            Snippet snippet = retrievedSnippet.get();
+            User loggedInUser = this.loginAuthentication.getLoggedInUser();
+            if (loggedInUser != null) {
+                this.voteService.performVote(snippet.getOwner().getId(), loggedInUser.getId(), id, voteDto.isVoteSelected(), isPositive);
+                return Response.noContent().build();
+            } else {
+                LOGGER.error(messageSource.getMessage("error.403.snippet.vote", null, Locale.ENGLISH));
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    @POST
+    @Path("/{id}/flag")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response flagSnippet(final @PathParam(PATH_PARAM_ID) long id) {
+        return this.addOrRemoveSnippetFlag(id, true);
+    }
+
+    @POST
+    @Path("/{id}/unflag")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response unflagSnippet(final @PathParam(PATH_PARAM_ID) long id) {
+        return this.addOrRemoveSnippetFlag(id, false);
+    }
+
+    private Response addOrRemoveSnippetFlag(final long id, final boolean flag) {
+        User loggedInUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedInUser == null || !roleService.isAdmin(loggedInUser.getId())) {
+            LOGGER.error(messageSource.getMessage("error.403.snippet.flag", null, Locale.ENGLISH));
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
+        if (retrievedSnippet.isPresent()) {
+            Snippet snippet = retrievedSnippet.get();
+
+            // Getting the url of the server
+            final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+            try {
+                // Updating the flagged variable of snippet
+                this.snippetService.updateFlagged(snippet, snippet.getOwner(), flag, baseUrl);
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage() + "Failed to flag snippet {}", snippet.getId());
+            }
+            LOGGER.debug("Marked snippet {} as flagged by admin", id);
+            return Response.noContent().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
 
     /////////////////////////////////////////// OLD ////////////////////////////////////////////
 
@@ -291,9 +410,9 @@ public class SnippetFeedController {
         return mav;
     }
 
-    /* TODO --> Missing Coversion
+    @Deprecated
     @RequestMapping("/flagged")
-    public ModelAndView getFlaggedSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+    public ModelAndView getFlaggedSnippetFeedDep(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
@@ -305,7 +424,7 @@ public class SnippetFeedController {
         this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, FLAGGED);
 
         return mav;
-    }*/
+    }
 
     @Deprecated
     private void addModelAttributesHelper(ModelAndView mav, User currentUser, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
@@ -319,6 +438,7 @@ public class SnippetFeedController {
         MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
     }
 
+    @Deprecated
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();

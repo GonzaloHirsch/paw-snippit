@@ -1,11 +1,7 @@
-package ar.edu.itba.paw.webapp.form;
+package ar.edu.itba.paw.webapp.dto;
 
-@Deprecated
-public class VoteForm {
+public class VoteFormDto {
     private boolean voteSelected;
-
-    public VoteForm() {
-    }
 
     public boolean isVoteSelected() {
         return voteSelected;

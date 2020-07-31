@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+@Deprecated
 public class FlagSnippetForm {
     private boolean flagged;
 

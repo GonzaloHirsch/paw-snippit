@@ -132,7 +132,7 @@ public class LanguagesController {
         }
     }
 
-    @DELETE
+    @DELETE  // TODO --> esto deberia ser un post al ser borrado logico?
     @Path("/{id}")
     public Response deleteLanguage(final @PathParam(PATH_PARAM_ID) long id){
         User currentUser = this.loginAuthentication.getLoggedInUser();
@@ -146,7 +146,9 @@ public class LanguagesController {
         }
     }
 
-    /*
+    ////////////////////////////////////////// OLD ///////////////////////////////////////////////
+
+    @Deprecated
     @RequestMapping("/languages")
     public ModelAndView showAllLanguages(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         ModelAndView mav = new ModelAndView("tagAndLanguages/languages");
@@ -166,6 +168,7 @@ public class LanguagesController {
         return mav;
     }
 
+    @Deprecated
     @RequestMapping("/languages/search")
     public ModelAndView searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         final ModelAndView mav = new ModelAndView("tagAndLanguages/languages");
@@ -185,6 +188,7 @@ public class LanguagesController {
         return mav;
     }
 
+    @Deprecated
     @RequestMapping("/languages/{langId}")
     public ModelAndView showSnippetsForLang(@PathVariable("langId") long langId, @ModelAttribute("deleteForm") final DeleteForm deleteForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         ModelAndView mav = new ModelAndView("tagAndLanguages/languageSnippets");
@@ -193,7 +197,7 @@ public class LanguagesController {
         Optional<Language> language = languageService.findById(langId);
         if (!language.isPresent()) {
             LOGGER.error("No language found with id {}", langId);
-            throw new LanguageNotFoundException(messageSource.getMessage("error.404.language", new Object[]{langId}, LocaleContextHolder.getLocale()));
+//            throw new LanguageNotFoundException(messageSource.getMessage("error.404.language", new Object[]{langId}, LocaleContextHolder.getLocale()));
         }
         Collection<Snippet> snippets = snippetService.getSnippetsWithLanguage(langId, page, SNIPPET_PAGE_SIZE);
         int totalSnippetCount = this.snippetService.getAllSnippetsByLanguageCount(langId);
@@ -209,6 +213,7 @@ public class LanguagesController {
         return mav;
     }
 
+    @Deprecated
     @Transactional
     @RequestMapping("/languages/{langId}/delete")
     public ModelAndView deleteLanguage (@PathVariable("langId") long langId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
@@ -218,16 +223,16 @@ public class LanguagesController {
             LOGGER.debug("Admin removed language with id {}", langId);
         } else {
             LOGGER.error("No user logged in or logged in user not admin but language {} is trying to be deleted", langId);
-            throw new ForbiddenAccessException(messageSource.getMessage("error.403.admin.delete", null, LocaleContextHolder.getLocale()));
+//            throw new ForbiddenAccessException(messageSource.getMessage("error.403.admin.delete", null, LocaleContextHolder.getLocale()));
         }
         return new ModelAndView("redirect:/languages/" + langId);
     }
 
+    @Deprecated
     @ModelAttribute
     public void addAttributes(Model model, @Valid final SearchForm searchForm) {
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
+//        MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
         model.addAttribute("searchForm", searchForm);
     }
-    */
 }

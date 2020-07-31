@@ -72,7 +72,7 @@ public class UserController {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response register(final RegisterFormDto registerFormDto) {
+    public Response register(final @Valid RegisterFormDto registerFormDto) {
         User registeredUser = this.userService.register(registerFormDto.getUsername(), this.passwordEncoder.encode(registerFormDto.getPassword()), registerFormDto.getEmail(), Instant.now(), LocaleContextHolder.getLocale());
         try {
             this.userService.registerFollowUp(registeredUser);

@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto.form;
+package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.webapp.validations.BeforeToday;
 import ar.edu.itba.paw.webapp.validations.DateOrder;
@@ -14,7 +14,7 @@ import java.util.Date;
 @DateOrder(min = "minDate", max = "maxDate", message = "{DateOrder.exploreForm.dates}")
 @IntegerOrder(min = "minRep", max = "maxRep", message = "{IntegerOrder.exploreForm.order}")
 @IntegerOrder(min = "minVotes", max = "maxVotes", message = "{IntegerOrder.exploreForm.order}")
-public class ExploreFormDto {
+public class ExploreDto {
 
     // TODO - Solve the Date parsing issues
     @DateTimeFormat(pattern = "dd/MM/yyyy")

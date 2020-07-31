@@ -8,14 +8,11 @@ import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
 import ar.edu.itba.paw.webapp.dto.TagDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
-import ar.edu.itba.paw.webapp.dto.form.EmailVerificationFormDto;
-import ar.edu.itba.paw.webapp.dto.form.RecoveryFormDto;
-import ar.edu.itba.paw.webapp.dto.form.RegisterFormDto;
-import ar.edu.itba.paw.webapp.dto.form.SearchFormDto;
-import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
+import ar.edu.itba.paw.webapp.dto.EmailVerificationDto;
+import ar.edu.itba.paw.webapp.dto.RecoveryDto;
+import ar.edu.itba.paw.webapp.dto.RegisterDto;
+import ar.edu.itba.paw.webapp.dto.SearchDto;
 import ar.edu.itba.paw.webapp.form.DescriptionForm;
-import ar.edu.itba.paw.webapp.form.RecoveryForm;
-import ar.edu.itba.paw.webapp.form.ResetPasswordForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.utility.*;
 import org.apache.commons.io.IOUtils;
@@ -72,12 +69,12 @@ public class UserController {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response register(final @Valid RegisterFormDto registerFormDto) {
-        User registeredUser = this.userService.register(registerFormDto.getUsername(), this.passwordEncoder.encode(registerFormDto.getPassword()), registerFormDto.getEmail(), Instant.now(), LocaleContextHolder.getLocale());
+    public Response register(final @Valid RegisterDto registerDto) {
+        User registeredUser = this.userService.register(registerDto.getUsername(), this.passwordEncoder.encode(registerDto.getPassword()), registerDto.getEmail(), Instant.now(), LocaleContextHolder.getLocale());
         try {
             this.userService.registerFollowUp(registeredUser);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage() + "Failed to send registration email to user {}", registerFormDto.getUsername());
+            LOGGER.error(e.getMessage() + "Failed to send registration email to user {}", registerDto.getUsername());
         }
 
         final URI userUri = uriInfo.getAbsolutePathBuilder()
@@ -127,8 +124,8 @@ public class UserController {
     @GET
     @Path("/{id}/active_snippets/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getActiveSnippetsForUserSearch(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam SearchFormDto searchFormDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
-        return this.userContextSearch(id, SnippetDao.Locations.USER, searchFormDto, page);
+    public Response getActiveSnippetsForUserSearch(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam SearchDto searchDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        return this.userContextSearch(id, SnippetDao.Locations.USER, searchDto, page);
     }
 
     @GET
@@ -160,8 +157,8 @@ public class UserController {
     @GET
     @Path("/{id}/deleted_snippets/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getDeletedSnippetsForUserSearch(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam SearchFormDto searchFormDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
-        return this.userContextSearch(id, SnippetDao.Locations.DELETED, searchFormDto, page);
+    public Response getDeletedSnippetsForUserSearch(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam SearchDto searchDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        return this.userContextSearch(id, SnippetDao.Locations.DELETED, searchDto, page);
     }
 
     @GET
@@ -232,7 +229,7 @@ public class UserController {
     @POST
     @Path("/{id}/verify_email")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response verifyUserEmailCode(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam EmailVerificationFormDto verificationFormDto){
+    public Response verifyUserEmailCode(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam EmailVerificationDto verificationFormDto){
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
@@ -252,7 +249,7 @@ public class UserController {
 
     @POST
     @Path("/" + Constants.RECOVER_PASSWORD)
-    public Response recoverPasswordSendEmail(final RecoveryFormDto recoveryDto) { //TODO VALIDATE
+    public Response recoverPasswordSendEmail(final RecoveryDto recoveryDto) { //TODO VALIDATE
         // TODO --> cannot be logged in in this method!
         User user = this.userService.findUserByEmail(recoveryDto.getEmail()).orElse(null);
         if (user == null) {
@@ -312,8 +309,8 @@ public class UserController {
     @GET
     @Path("/{id}/favorite_snippets/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getFavoriteSnippetsForUserSearch(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam SearchFormDto searchFormDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
-        return this.userContextSearch(id, SnippetDao.Locations.FAVORITES, searchFormDto, page);
+    public Response getFavoriteSnippetsForUserSearch(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam SearchDto searchDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        return this.userContextSearch(id, SnippetDao.Locations.FAVORITES, searchDto, page);
     }
 
     @GET
@@ -339,8 +336,8 @@ public class UserController {
     @GET
     @Path("/{id}/following_snippets/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getFollowingSnippetsForUserSearch(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam SearchFormDto searchFormDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
-        return this.userContextSearch(id, SnippetDao.Locations.FOLLOWING, searchFormDto, page);
+    public Response getFollowingSnippetsForUserSearch(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam SearchDto searchDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        return this.userContextSearch(id, SnippetDao.Locations.FOLLOWING, searchDto, page);
     }
 
     @GET
@@ -383,20 +380,20 @@ public class UserController {
     @GET
     @Path("/{id}/upvoted_snippets/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getUpvotedSnippetsForUserSearch(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam SearchFormDto searchFormDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
-        return this.userContextSearch(id, SnippetDao.Locations.UPVOTED, searchFormDto, page);
+    public Response getUpvotedSnippetsForUserSearch(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam SearchDto searchDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+        return this.userContextSearch(id, SnippetDao.Locations.UPVOTED, searchDto, page);
     }
 
-    private Response userContextSearch(final long id, SnippetDao.Locations location, SearchFormDto searchFormDto, int page) {
+    private Response userContextSearch(final long id, SnippetDao.Locations location, SearchDto searchDto, int page) {
         //TODO only owner can be here
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
 
-            final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchFormDto.getType(), searchFormDto.getQuery(), location, searchFormDto.getSort(), user.getId(), null, page)
+            final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), location, searchDto.getSort(), user.getId(), null, page)
                     .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
 
-            int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchFormDto.getType(), searchFormDto.getQuery(), location, user.getId(), null);
+            int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), location, user.getId(), null);
             final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {

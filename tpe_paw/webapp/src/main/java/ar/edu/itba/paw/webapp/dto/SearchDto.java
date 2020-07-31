@@ -1,8 +1,8 @@
-package ar.edu.itba.paw.webapp.dto.form;
+package ar.edu.itba.paw.webapp.dto;
 
 import javax.ws.rs.QueryParam;
 
-public class SearchFormDto {
+public class SearchDto {
 
     @QueryParam("query")
     private String query;

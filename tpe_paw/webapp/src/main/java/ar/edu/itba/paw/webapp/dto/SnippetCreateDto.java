@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto.form;
+package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.webapp.validations.FieldExists;
 import ar.edu.itba.paw.webapp.validations.NotBlankWithSpaces;
@@ -7,7 +7,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 
-public class SnippetCreateFormDto {
+public class SnippetCreateDto {
     @Size(min=5, max=50)
     @NotBlankWithSpaces
     private String title;

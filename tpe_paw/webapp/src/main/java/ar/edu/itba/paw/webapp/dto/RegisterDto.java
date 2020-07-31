@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto.form;
+package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.webapp.validations.FieldMatch;
 import ar.edu.itba.paw.webapp.validations.UniqueEmail;
@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 import javax.ws.rs.FormParam;
 
 @FieldMatch(first = "password", second = "repeatPassword", message = "{FieldMatch.registerForm.passwords}")
-public class RegisterFormDto {
+public class RegisterDto {
 
     @Size(min=6, max=50)
     @Pattern(regexp = "^[a-zA-Z0-9-_.]+$")

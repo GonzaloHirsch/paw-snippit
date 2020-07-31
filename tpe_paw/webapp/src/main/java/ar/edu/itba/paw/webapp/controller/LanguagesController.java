@@ -4,26 +4,19 @@ import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
-import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.LanguageDto;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
-import ar.edu.itba.paw.webapp.dto.form.SearchFormDto;
+import ar.edu.itba.paw.webapp.dto.SearchDto;
 import ar.edu.itba.paw.webapp.utility.*;
-import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
-import ar.edu.itba.paw.webapp.exception.LanguageNotFoundException;
 import ar.edu.itba.paw.webapp.form.DeleteForm;
-import ar.edu.itba.paw.webapp.form.FavoriteForm;
 import ar.edu.itba.paw.webapp.form.ItemSearchForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +26,6 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -113,14 +105,14 @@ public class LanguagesController {
     @Path("/{id}/snippets/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getSnippetsForLanguage(final @PathParam(PATH_PARAM_ID) long id,
-                                           final @BeanParam SearchFormDto searchFormDto,
+                                           final @BeanParam SearchDto searchDto,
                                            final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page){
         Optional<Language> maybeLang = this.languageService.findById(id);
         if (maybeLang.isPresent()) {
-            final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchFormDto.getType(), searchFormDto.getQuery(), SnippetDao.Locations.LANGUAGES, searchFormDto.getSort(), null, id, page)
+            final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.LANGUAGES, searchDto.getSort(), null, id, page)
                     .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
 
-            int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchFormDto.getType(), searchFormDto.getQuery(), SnippetDao.Locations.LANGUAGES, null, id);
+            int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.LANGUAGES, null, id);
             final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {

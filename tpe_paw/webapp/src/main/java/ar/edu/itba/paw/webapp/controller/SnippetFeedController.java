@@ -3,15 +3,14 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Snippet;
-import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
 import ar.edu.itba.paw.webapp.dto.SnippetWithVoteDto;
 import ar.edu.itba.paw.webapp.dto.VoteFormDto;
-import ar.edu.itba.paw.webapp.dto.form.ExploreFormDto;
-import ar.edu.itba.paw.webapp.dto.form.SearchFormDto;
-import ar.edu.itba.paw.webapp.dto.form.SnippetCreateFormDto;
+import ar.edu.itba.paw.webapp.dto.ExploreDto;
+import ar.edu.itba.paw.webapp.dto.SearchDto;
+import ar.edu.itba.paw.webapp.dto.SnippetCreateDto;
 import ar.edu.itba.paw.webapp.utility.*;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.form.SearchForm;
@@ -100,7 +99,7 @@ public class SnippetFeedController {
     @GET
     @Path("/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response searchInHome(final @BeanParam SearchFormDto searchForm, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+    public Response searchInHome(final @BeanParam SearchDto searchForm, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
 
         final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, searchForm.getSort(), null, null, page)
                 .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
@@ -119,30 +118,30 @@ public class SnippetFeedController {
     @GET
     @Path("/explore/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response exploreSearch(final @BeanParam ExploreFormDto exploreFormDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+    public Response exploreSearch(final @BeanParam ExploreDto exploreDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
 
         Instant minDate = null;
         Instant maxDate = null;
-        if (exploreFormDto.getMinDate() != null){
-            minDate = exploreFormDto.getMinDate().toInstant();
+        if (exploreDto.getMinDate() != null){
+            minDate = exploreDto.getMinDate().toInstant();
         }
-        if (exploreFormDto.getMaxDate() != null){
-            maxDate = exploreFormDto.getMaxDate().toInstant();
+        if (exploreDto.getMaxDate() != null){
+            maxDate = exploreDto.getMaxDate().toInstant();
         }
         Collection<Snippet> snippetsCollection = this.snippetService.findSnippetByDeepCriteria(
                 minDate, maxDate,
-                exploreFormDto.getMinRep(), exploreFormDto.getMaxRep(),
-                exploreFormDto.getMinVotes(), exploreFormDto.getMaxVotes(),
-                exploreFormDto.getLanguage() == -1 ? null : exploreFormDto.getLanguage(), exploreFormDto.getTag() == -1 ? null : exploreFormDto.getTag(),
-                exploreFormDto.getTitle(), exploreFormDto.getUsername(),
-                ordersMap.get(exploreFormDto.getSort()), typesMap.get(exploreFormDto.getField()), exploreFormDto.getIncludeFlagged(), page, SNIPPET_PAGE_SIZE);
+                exploreDto.getMinRep(), exploreDto.getMaxRep(),
+                exploreDto.getMinVotes(), exploreDto.getMaxVotes(),
+                exploreDto.getLanguage() == -1 ? null : exploreDto.getLanguage(), exploreDto.getTag() == -1 ? null : exploreDto.getTag(),
+                exploreDto.getTitle(), exploreDto.getUsername(),
+                ordersMap.get(exploreDto.getSort()), typesMap.get(exploreDto.getField()), exploreDto.getIncludeFlagged(), page, SNIPPET_PAGE_SIZE);
         int snippetCount =  this.snippetService.getSnippetByDeepCriteriaCount(
                 minDate, maxDate,
-                exploreFormDto.getMinRep(), exploreFormDto.getMaxRep(),
-                exploreFormDto.getMinVotes(), exploreFormDto.getMaxVotes(),
-                exploreFormDto.getLanguage() == -1 ? null : exploreFormDto.getLanguage(), exploreFormDto.getTag() == -1 ? null : exploreFormDto.getTag(),
-                exploreFormDto.getTitle(), exploreFormDto.getUsername(),
-                exploreFormDto.getIncludeFlagged());
+                exploreDto.getMinRep(), exploreDto.getMaxRep(),
+                exploreDto.getMinVotes(), exploreDto.getMaxVotes(),
+                exploreDto.getLanguage() == -1 ? null : exploreDto.getLanguage(), exploreDto.getTag() == -1 ? null : exploreDto.getTag(),
+                exploreDto.getTitle(), exploreDto.getUsername(),
+                exploreDto.getIncludeFlagged());
 
         final List<SnippetDto> snippets = snippetsCollection.stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
         final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
@@ -156,7 +155,7 @@ public class SnippetFeedController {
     @POST
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response snippetCreate(@Valid SnippetCreateFormDto createDto) {
+    public Response snippetCreate(@Valid SnippetCreateDto createDto) {
         // TODO --> JWT Tokens
         User loggedInUser = this.loginAuthentication.getLoggedInUser();
         if (loggedInUser == null) {
@@ -207,7 +206,7 @@ public class SnippetFeedController {
     @GET
     @Path("/flagged/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getFlaggedSnippetFeedSearch(final @BeanParam SearchFormDto searchForm, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+    public Response getFlaggedSnippetFeedSearch(final @BeanParam SearchDto searchForm, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
 
         User loggedInUser = this.loginAuthentication.getLoggedInUser();
         if (loggedInUser == null || !roleService.isAdmin(loggedInUser.getId())) {

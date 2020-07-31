@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.auth.SignUpAuthentication;
+import ar.edu.itba.paw.webapp.dto.form.RegisterFormDto;
 import ar.edu.itba.paw.webapp.utility.Constants;
 import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,12 +31,18 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
 
-//@Controller
+//@Component
 public class RegistrationController {
 
 //    @Autowired
@@ -60,6 +68,7 @@ public class RegistrationController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
 
+    /*
     @RequestMapping(value = Constants.LOGIN)
     public ModelAndView login(HttpServletRequest request) {
         this.throwIfUserIsLoggedIn();
@@ -82,7 +91,10 @@ public class RegistrationController {
     public ModelAndView logout() {
         return new ModelAndView("user/logout");
     }
+    */
 
+    // TODO - Moved to UserController
+    @Deprecated
     @RequestMapping(value = Constants.SIGNUP, method = {RequestMethod.GET})
     public ModelAndView signUpForm(HttpServletRequest request, @ModelAttribute("registerForm") final RegisterForm form) {
         this.throwIfUserIsLoggedIn();
@@ -92,6 +104,7 @@ public class RegistrationController {
         return new ModelAndView("user/signUpForm");
     }
 
+    @Deprecated
     @RequestMapping(value = Constants.SIGNUP, method = {RequestMethod.POST})
     public ModelAndView signUp(@Valid @ModelAttribute("registerForm") final RegisterForm registerForm, final BindingResult errors, HttpServletRequest request, HttpServletResponse response) {
         if (errors.hasErrors()) {
@@ -110,6 +123,8 @@ public class RegistrationController {
         return new ModelAndView("redirect:" + redirectUrl);
     }
 
+    // TODO Moved to userController
+    @Deprecated
     @RequestMapping(value = "/verify-email")
     public ModelAndView verifyEmail(final @RequestParam(value="id") long id, @ModelAttribute("verificationForm") final EmailVerificationForm verificationForm, @ModelAttribute("searchForm") final SearchForm searchForm) {
         ModelAndView mav = new ModelAndView("user/verifyEmail");
@@ -127,7 +142,8 @@ public class RegistrationController {
         this.addUserAttributes(currentUser, mav);
         return mav;
     }
-
+    // TODO Moved to userController
+    @Deprecated
     @RequestMapping(value = "/verify-email", method = RequestMethod.POST)
     public ModelAndView completeVerifyEmail(final @RequestParam(value="id") long id, @Valid @ModelAttribute("verificationForm") final EmailVerificationForm verificationForm, BindingResult errors, @ModelAttribute("searchForm") final SearchForm searchForm) {
         ModelAndView mav = new ModelAndView("redirect:/user/" + id);
@@ -149,6 +165,8 @@ public class RegistrationController {
         return mav;
     }
 
+
+    /* TODO --> This is a copy of verify-email!!
     @RequestMapping(value = "/resend-email-verification", method = RequestMethod.POST)
     public ModelAndView resendVerificationEmail(final @RequestParam(value="id") long id, @ModelAttribute("verificationForm") final EmailVerificationForm verificationForm, @ModelAttribute("searchForm") final SearchForm searchForm) {
         ModelAndView mav = new ModelAndView("user/verifyEmail");
@@ -167,13 +185,16 @@ public class RegistrationController {
         this.addUserAttributes(currentUser, mav);
         return mav;
     }
+     */
 
+    @Deprecated
     @RequestMapping(value = Constants.RECOVER_PASSWORD)
     public ModelAndView recoverPassword(@ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
         this.throwIfUserIsLoggedIn();
         return new ModelAndView("user/recoverPassword");
     }
 
+    @Deprecated
     @RequestMapping(value = Constants.RECOVER_PASSWORD, method = RequestMethod.POST)
     public ModelAndView sendRecoveryMail(@Valid @ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
         if (errors.hasErrors()){
@@ -194,6 +215,7 @@ public class RegistrationController {
         return new ModelAndView("user/emailSent");
     }
 
+    // TODO - NO CLUE HOW TO DO THIS PART!
     @RequestMapping(value = Constants.RESET_PASSWORD, method = RequestMethod.GET)
     public ModelAndView resetPassword(final @RequestParam(value="id") long id,
                                       final @RequestParam(value="token") String token,

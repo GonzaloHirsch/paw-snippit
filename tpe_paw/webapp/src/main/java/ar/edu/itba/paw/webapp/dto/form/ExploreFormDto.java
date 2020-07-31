@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.form;
+package ar.edu.itba.paw.webapp.dto.form;
 
 import ar.edu.itba.paw.webapp.validations.BeforeToday;
 import ar.edu.itba.paw.webapp.validations.DateOrder;
@@ -8,41 +8,68 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import javax.ws.rs.QueryParam;
 import java.util.Date;
 
-@Deprecated
 @DateOrder(min = "minDate", max = "maxDate", message = "{DateOrder.exploreForm.dates}")
 @IntegerOrder(min = "minRep", max = "maxRep", message = "{IntegerOrder.exploreForm.order}")
 @IntegerOrder(min = "minVotes", max = "maxVotes", message = "{IntegerOrder.exploreForm.order}")
-public class ExploreForm {
+public class ExploreFormDto {
+
+    // TODO - Solve the Date parsing issues
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @BeforeToday(message = "{BeforeToday.exploreForm.date}")
+    @QueryParam("minDate")
     private Date minDate;
+
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @BeforeToday(message = "{BeforeToday.exploreForm.date}")
+    @QueryParam("maxDate")
     private Date maxDate;
+
     @Max(value = Integer.MAX_VALUE, message = "{Integer.maxValue}")
     @Min(value = Integer.MIN_VALUE, message = "{Integer.minValue}")
+    @QueryParam("minRep")
     private Integer minRep;
+
     @Max(value = Integer.MAX_VALUE, message = "{Integer.maxValue}")
     @Min(value = Integer.MIN_VALUE, message = "{Integer.minValue}")
+    @QueryParam("maxRep")
     private Integer maxRep;
+
     @Max(value = Integer.MAX_VALUE, message = "{Integer.maxValue}")
     @Min(value = Integer.MIN_VALUE, message = "{Integer.minValue}")
+    @QueryParam("minVotes")
     private Integer minVotes;
+
     @Max(value = Integer.MAX_VALUE, message = "{Integer.maxValue}")
     @Min(value = Integer.MIN_VALUE, message = "{Integer.minValue}")
+    @QueryParam("maxVotes")
     private Integer maxVotes;
+
     @Min(value=-1)
+    @QueryParam("language")
     private Long language;
+
     @Min(value=-1)
+    @QueryParam("tag")
     private Long tag;
+
     @Size(max=50)
+    @QueryParam("username")
     private String username;
+
     @Size(max=50)
+    @QueryParam("title")
     private String title;
+
+    @QueryParam("sort")
     private String sort;
+
+    @QueryParam("field")
     private String field;
+
+    @QueryParam("includeFlagged")
     private boolean includeFlagged;
 
     public boolean getIncludeFlagged() {

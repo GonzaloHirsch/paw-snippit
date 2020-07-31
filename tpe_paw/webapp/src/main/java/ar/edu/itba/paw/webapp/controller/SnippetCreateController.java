@@ -26,11 +26,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import javax.ws.rs.DELETE;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Locale;
 
-//@Controller
+@Deprecated
 public class SnippetCreateController {
 
 //    @Autowired

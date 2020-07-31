@@ -1,13 +1,12 @@
-package ar.edu.itba.paw.webapp.form;
+package ar.edu.itba.paw.webapp.dto.form;
 
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.ws.rs.FormParam;
 
-@Deprecated
-public class EmailVerificationForm {
-
+public class EmailVerificationFormDto {
+    @FormParam("code")
     @Pattern(regexp = "^[0-9]{6}$", message = "{Pattern.verification.code}")
     @NotBlank(message = "{NotBlank.verification.code}")
     private String code;

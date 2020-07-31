@@ -1,10 +1,19 @@
-package ar.edu.itba.paw.webapp.form;
+package ar.edu.itba.paw.webapp.dto.form;
 
-@Deprecated
-public class SearchForm {
+import javax.ws.rs.QueryParam;
+
+public class SearchFormDto {
+
+    @QueryParam("query")
     private String query;
+
+    @QueryParam("type")
     private String type;
+
+    @QueryParam("userId")
     private String userId;
+
+    @QueryParam("sort")
     private String sort;
 
     public void setSort(String sort) {

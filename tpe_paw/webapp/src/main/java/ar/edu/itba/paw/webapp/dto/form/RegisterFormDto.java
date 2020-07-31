@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.form;
+package ar.edu.itba.paw.webapp.dto.form;
 
 import ar.edu.itba.paw.webapp.validations.FieldMatch;
 import ar.edu.itba.paw.webapp.validations.UniqueEmail;
@@ -8,10 +8,10 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.ws.rs.FormParam;
 
-@Deprecated
 @FieldMatch(first = "password", second = "repeatPassword", message = "{FieldMatch.registerForm.passwords}")
-public class RegisterForm {
+public class RegisterFormDto {
 
     @Size(min=6, max=50)
     @Pattern(regexp = "^[a-zA-Z0-9-_.]+$")

@@ -5,7 +5,7 @@ import ar.edu.itba.paw.models.Snippet;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
-public class SnippetDto {
+public class SnippetWithVoteDto {
 
     private Long id;
     private String code;
@@ -13,11 +13,12 @@ public class SnippetDto {
     private String description;
     private URI creator;
     private URI language;
+    private int voteCount;
     private boolean isFlagged;
     private boolean isDeleted;
 
-    public static SnippetDto fromSnippet(Snippet snippet, UriInfo uriInfo) {
-        final SnippetDto dto = new SnippetDto();
+    public static SnippetWithVoteDto fromSnippetAndVote(Snippet snippet, int voteCount, UriInfo uriInfo) {
+        final SnippetWithVoteDto dto = new SnippetWithVoteDto();
 
         dto.id = snippet.getId();
         dto.code = snippet.getCode();
@@ -25,6 +26,7 @@ public class SnippetDto {
         dto.description = snippet.getDescription();
         dto.isFlagged = snippet.isFlagged();
         dto.isDeleted = snippet.isDeleted();
+        dto.voteCount = voteCount;
         dto.creator = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(snippet.getOwner().getId())).build();
         dto.language = uriInfo.getBaseUriBuilder().path("languages").path(String.valueOf(snippet.getLanguage().getId())).build();
 
@@ -93,5 +95,13 @@ public class SnippetDto {
 
     public void setLanguage(URI language) {
         this.language = language;
+    }
+
+    public int getVoteCount() {
+        return voteCount;
+    }
+
+    public void setVoteCount(int voteCount) {
+        this.voteCount = voteCount;
     }
 }

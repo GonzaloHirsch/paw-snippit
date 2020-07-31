@@ -93,7 +93,8 @@ public class RegistrationController {
     }
     */
 
-    /* TODO - Moved to UserController
+    // TODO - Moved to UserController
+    @Deprecated
     @RequestMapping(value = Constants.SIGNUP, method = {RequestMethod.GET})
     public ModelAndView signUpForm(HttpServletRequest request, @ModelAttribute("registerForm") final RegisterForm form) {
         this.throwIfUserIsLoggedIn();
@@ -103,6 +104,7 @@ public class RegistrationController {
         return new ModelAndView("user/signUpForm");
     }
 
+    @Deprecated
     @RequestMapping(value = Constants.SIGNUP, method = {RequestMethod.POST})
     public ModelAndView signUp(@Valid @ModelAttribute("registerForm") final RegisterForm registerForm, final BindingResult errors, HttpServletRequest request, HttpServletResponse response) {
         if (errors.hasErrors()) {
@@ -120,9 +122,9 @@ public class RegistrationController {
         String redirectUrl = this.signUpAuthentication.redirectionAuthenticationSuccess(request);
         return new ModelAndView("redirect:" + redirectUrl);
     }
-     */
 
-    /* TODO Moved to userController
+    // TODO Moved to userController
+    @Deprecated
     @RequestMapping(value = "/verify-email")
     public ModelAndView verifyEmail(final @RequestParam(value="id") long id, @ModelAttribute("verificationForm") final EmailVerificationForm verificationForm, @ModelAttribute("searchForm") final SearchForm searchForm) {
         ModelAndView mav = new ModelAndView("user/verifyEmail");
@@ -140,7 +142,8 @@ public class RegistrationController {
         this.addUserAttributes(currentUser, mav);
         return mav;
     }
-
+    // TODO Moved to userController
+    @Deprecated
     @RequestMapping(value = "/verify-email", method = RequestMethod.POST)
     public ModelAndView completeVerifyEmail(final @RequestParam(value="id") long id, @Valid @ModelAttribute("verificationForm") final EmailVerificationForm verificationForm, BindingResult errors, @ModelAttribute("searchForm") final SearchForm searchForm) {
         ModelAndView mav = new ModelAndView("redirect:/user/" + id);
@@ -161,7 +164,7 @@ public class RegistrationController {
         this.userService.verifyUserEmail(currentUser.getId());
         return mav;
     }
-    */
+
 
     /* TODO --> This is a copy of verify-email!!
     @RequestMapping(value = "/resend-email-verification", method = RequestMethod.POST)
@@ -184,12 +187,14 @@ public class RegistrationController {
     }
      */
 
+    @Deprecated
     @RequestMapping(value = Constants.RECOVER_PASSWORD)
     public ModelAndView recoverPassword(@ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
         this.throwIfUserIsLoggedIn();
         return new ModelAndView("user/recoverPassword");
     }
 
+    @Deprecated
     @RequestMapping(value = Constants.RECOVER_PASSWORD, method = RequestMethod.POST)
     public ModelAndView sendRecoveryMail(@Valid @ModelAttribute("recoveryForm") final RecoveryForm recoveryForm, BindingResult errors) {
         if (errors.hasErrors()){

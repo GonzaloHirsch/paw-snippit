@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -312,6 +313,45 @@ public class SnippetFeedController {
                 LOGGER.error(messageSource.getMessage("error.403.snippet.vote", null, Locale.ENGLISH));
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    @POST
+    @Path("/{id}/flag")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response flagSnippet(final @PathParam(PATH_PARAM_ID) long id) {
+        return this.addOrRemoveSnippetFlag(id, true);
+    }
+
+    @POST
+    @Path("/{id}/unflag")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response unflagSnippet(final @PathParam(PATH_PARAM_ID) long id) {
+        return this.addOrRemoveSnippetFlag(id, false);
+    }
+
+    private Response addOrRemoveSnippetFlag(final long id, final boolean flag) {
+        User loggedInUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedInUser == null || !roleService.isAdmin(loggedInUser.getId())) {
+            LOGGER.error(messageSource.getMessage("error.403.snippet.flag", null, Locale.ENGLISH));
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
+        if (retrievedSnippet.isPresent()) {
+            Snippet snippet = retrievedSnippet.get();
+
+            // Getting the url of the server
+            final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+            try {
+                // Updating the flagged variable of snippet
+                this.snippetService.updateFlagged(snippet, snippet.getOwner(), flag, baseUrl);
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage() + "Failed to flag snippet {}", snippet.getId());
+            }
+            LOGGER.debug("Marked snippet {} as flagged by admin", id);
+            return Response.noContent().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }

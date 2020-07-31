@@ -246,6 +246,7 @@ public class SnippetController {
         return new ModelAndView("redirect:/snippet/" + id);
     }
 
+    @Deprecated
     @RequestMapping(value="/snippet/{id}/flag", method=RequestMethod.POST)
     public ModelAndView flagSnippet(
             @ModelAttribute("snippetId") @PathVariable("id") long id,

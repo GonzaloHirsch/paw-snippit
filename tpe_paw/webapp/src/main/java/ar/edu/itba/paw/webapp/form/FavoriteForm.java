@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+@Deprecated
 public class FavoriteForm {
     private boolean favorite;
 

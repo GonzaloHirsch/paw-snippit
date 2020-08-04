@@ -120,7 +120,7 @@ public class SearchController {
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, UPVOTED);
         return mav;
     }
-    // Moved to SnippetController
+    // Moved to NewSnippetController
     @RequestMapping("/flagged/search")
     public ModelAndView searchInFlagged(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");

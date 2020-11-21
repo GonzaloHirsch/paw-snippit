@@ -86,7 +86,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, API_PREFIX + "tags/*/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, API_PREFIX + "tags/**").permitAll()
                 // Adding LOGIN policy
-                .antMatchers(HttpMethod.GET, API_PREFIX + "login").permitAll()
+                .antMatchers(HttpMethod.POST, API_PREFIX + "login").permitAll()
                 // Adding SNIPPETS policy
                 .antMatchers(HttpMethod.GET, API_PREFIX + "snippets/**").permitAll()
                 // Adding default policy, must be authenticated

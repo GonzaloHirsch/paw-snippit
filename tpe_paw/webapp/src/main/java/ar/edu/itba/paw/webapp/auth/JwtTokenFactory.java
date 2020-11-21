@@ -28,6 +28,17 @@ public class JwtTokenFactory {
     @Value("classpath:authKey.key")
     private Resource resourceFile;
 
+   /*private byte[] secret = null;
+
+    @Autowired
+    public JwtTokenFactory(){
+        try {
+            this.secret = IOUtils.toByteArray(this.resourceFile.getInputStream());
+        } catch (IOException e) {
+            this.secret = null;
+        }
+    }*/
+
     // Time of expiration for the token
     private final static int DAYS_TO_EXPIRE = 1;
 

@@ -12,8 +12,12 @@ class SnippetCard extends Component {
           <div className="row">
             <img src="/userIcon.jpg" alt="User Icon" />
             <div className="col ml-2">
-              <div className="row text-primary" style={{ fontSize: "18px" }}>ghirsch</div>
-              <div className="row text-muted" style={{ fontSize: "12px" }}>10/10/2020</div>
+              <div className="row text-primary" style={{ fontSize: "18px" }}>
+                ghirsch
+              </div>
+              <div className="row text-muted" style={{ fontSize: "12px" }}>
+                10/10/2020
+              </div>
             </div>
             <div className="col-md-auto"></div>
             <div className="col col-lg-2" style={{ fontSize: "30px" }}>

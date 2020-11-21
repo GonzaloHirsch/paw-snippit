@@ -1,0 +1,85 @@
+/*
+ * CSS for the snippet's card --> snippetCard.jsp
+ */
+
+ .card-snippet-container {
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    color: inherit;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.card-snippet-container:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    text-decoration: none;
+    color: initial;
+}
+
+.card-snippet-content {
+    padding: 20px;
+}
+
+.card-snippet-block {
+    max-height: 200px;
+    overflow: hidden;
+    position: relative;
+    text-align: justify;
+}
+
+.card-snippet-descr-block {
+    margin: 15px 5px;
+}
+
+.card-snippet-icon {
+    height: 40px;
+}
+
+.card-snippet-fade-out {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 40px 0;
+}
+
+.card-snippet-date {
+    color: darkgrey;
+    font-size: 13px;
+}
+
+/*.card-item {*/
+/*    display: inline-block;*/
+/*    vertical-align: top;*/
+/*    margin-bottom: 20px;*/
+/*    background: white;*/
+/*    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);*/
+/*    -webkit-box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);*/
+/*    -moz-box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);*/
+/*    color: inherit;*/
+/*    text-decoration: none;*/
+/*    transition: 0.3s;*/
+/*    width: 100%*/
+/*}*/
+
+/*.card-item:hover {*/
+/*    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);*/
+/*    -webkit-box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);  !* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ *!*/
+/*    -moz-box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);*/
+/*    text-decoration: none;*/
+/*    color: initial;*/
+/*}*/
+
+.card-snippet-fade-out-code {
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.001) 0%, #DCDCDC);
+    background-image: -webkit-linear-gradient(top, rgba(220, 220, 220,0.001) 0%, #DCDCDC);
+    background-image: -moz-linear-gradient(top, rgba(255,255,255,0.001) 0%, #DCDCDC);
+}
+
+.card-snippet-fade-out-descr {
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.001) 0%, #FFFFFF);
+    background-image: -webkit-linear-gradient(top, rgba(255,255,255,0.001) 0%, #FFFFFF);
+    background-image: -moz-linear-gradient(top, rgba(255,255,255,0.001) 0%, #FFFFFF);
+}

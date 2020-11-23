@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import i18n from '../../i18n';
 
 // Component -> https://getbootstrap.com/docs/4.5/components/navbar/
 class NavBar extends Component {
@@ -7,6 +8,7 @@ class NavBar extends Component {
         return ( 
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <a className="navbar-brand" href="#">Snippit</a>
+            {i18n.t('test')}
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
             </button>

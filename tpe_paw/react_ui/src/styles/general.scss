@@ -1,21 +1,21 @@
 pre {
-    white-space: pre-wrap !important;
-    white-space: -moz-pre-wrap !important;
-    white-space: -o-pre-wrap !important;
-    word-wrap: break-word !important;
-    margin: 0px !important;
+  white-space: pre-wrap !important;
+  white-space: -moz-pre-wrap !important;
+  white-space: -o-pre-wrap !important;
+  word-wrap: break-word !important;
+  margin: 0px !important;
 }
 
 code {
-    font-family: "Roboto Mono", 'New Courier', monospace;
-    font-size: 13px !important;
-    padding: 0px !important;
-    overflow: hidden !important;
+  font-family: "Roboto Mono", "New Courier", monospace;
+  font-size: 13px !important;
+  padding: 0px !important;
+  overflow: hidden !important;
 }
 
 img {
-    border-radius: 50%;
-    object-fit: cover;
-    height: 45px;
-    width: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  height: 45px;
+  width: 45px;
 }

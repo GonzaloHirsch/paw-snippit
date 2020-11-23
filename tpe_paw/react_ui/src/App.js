@@ -1,6 +1,6 @@
 import React from 'react';
 import logo from './logo.svg';
-import './App.css';
+import './App.scss';
 import NavBar from './components/navigation/navbar';
 import SnippetCard from './components/snippets/snippet_card'
 

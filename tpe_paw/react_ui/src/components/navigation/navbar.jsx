@@ -1,5 +1,13 @@
 import React, { Component } from "react";
+
+// Routing
+// We need to enclose each of the links inside the Link object
+import { Link } from "react-router-dom";
+
+// i18n
 import i18n from "../../i18n";
+
+// Icons
 import Icon from "@mdi/react";
 import { mdiClose, mdiMenu } from "@mdi/js";
 
@@ -32,10 +40,12 @@ class NavBar extends Component {
     return (
       <div>
         <div id="mySidenav" className="sidenav">
-          <a href="#">About</a>
-          <a href="#">Services</a>
-          <a href="#">Clients</a>
-          <a href="#">Contact</a>
+          <Link to="/login">
+            <span>Login</span>
+          </Link>
+          <Link to="/login">
+            <span>About</span>
+          </Link>
         </div>
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
           <button

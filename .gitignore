@@ -42,3 +42,13 @@ hs_err_pid*
 infer-out/
 
 *.infer-orig
+
+tpe_paw/react_ui/build/
+
+tpe_paw/react_ui/.eslintcache
+
+tpe_paw/react_ui/node_modules/.bin/
+
+tpe_paw/react_ui/node_modules/.cache/babel-loader/
+
+tpe_paw/react_ui/node_modules/

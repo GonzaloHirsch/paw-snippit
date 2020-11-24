@@ -1,5 +1,6 @@
-import React from "react";
+import React, {Suspense} from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import routes from "./routes";
 import logo from "./logo.svg";
 
 // Styles
@@ -17,16 +18,27 @@ function App() {
     // The Switch is used in order to avoid multiple component rendering
     // The "exact" keyword makes sure that the path is exactly matched
     <React.Fragment>
-      <Router>
-        <NavBar/>
-        <Switch>
-          <Route path="/" exact />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Router>
+          <NavBar />
+          <Switch>
+            {/* <Route path="/" exact />
           <Route path="/login" component={Login} />
           <Route path="/snippet" exact component={SnippetDetail} />
-          <Route path="/snippet/:id" component={SnippetDetail} />
-        </Switch>
-        <SnippetCard/>
-      </Router>
+          <Route path="/snippet/:id" component={SnippetDetail} /> */}
+
+            {routes.map((route) => (
+              <Route
+                key={route.name}
+                path={route.path}
+                component={route.component}
+                exact={route.exact}
+              />
+            ))}
+          </Switch>
+          <SnippetCard />
+        </Router>
+      </Suspense>
     </React.Fragment>
   );
 }

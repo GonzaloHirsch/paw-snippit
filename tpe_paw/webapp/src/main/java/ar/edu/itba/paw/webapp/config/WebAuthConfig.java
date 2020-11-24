@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.*;
 import ar.edu.itba.paw.webapp.utility.Constants;
+import ar.edu.itba.paw.webapp.utility.CorsFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StreamUtils;
@@ -32,7 +34,7 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 @EnableWebSecurity
-@ComponentScan({ "ar.edu.itba.paw.webapp.auth"})
+@ComponentScan({ "ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.utility"})
 @Configuration
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
@@ -44,6 +46,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private CorsFilter corsFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -67,6 +72,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
+        // Adding a CORS filter
+        http.addFilterBefore(this.corsFilter, ChannelProcessingFilter.class);
+
         // CSRF is not needed
         http.csrf().disable();
 

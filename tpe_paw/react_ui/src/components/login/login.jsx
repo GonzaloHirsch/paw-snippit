@@ -3,6 +3,9 @@ import store from "../../store";
 import { loginSuccess } from "../../redux/actions/actionCreators";
 import { Link } from "react-router-dom";
 
+import AuthClient from "../../api/implementations/AuthClient";
+import TOKEN_HEADER from "../../api/Client";
+
 // i18n
 import i18n from "../../i18n";
 
@@ -11,15 +14,40 @@ import Icon from "@mdi/react";
 import { mdiCodeTags, mdiAccount, mdiLock } from "@mdi/js";
 
 class Login extends Component {
-  state = {};
-  render() {
-    // To get the state
-    store.getState();
+  state = {
+    user: "",
+    pass: "",
+    remember: false,
+  };
 
-    // To dispatch, the param is the token inside the function
-    store.dispatch(loginSuccess({}));
+  handleLogin() {
+    // Get an instance of the cliente
+    const authClient = new AuthClient();
+
+    // Call the auth method
+    authClient
+      .login(this.state.user, this.state.pass)
+      .then((res) => {
+        // Get the token from the response
+        const token = res.headers[TOKEN_HEADER];
+
+        console.log(token)
+
+        // Dispatch the login event
+        store.dispatch(loginSuccess({ token }));
+
+        // Push to home
+        this.props.history.push("/");
+      })
+      .catch((e) => {});
+  }
+
+  render() {
     return (
-      <form className="form-signin rounded-lg">
+      <form
+        className="form-signin rounded-lg"
+        onSubmit={() => this.handleLogin()}
+      >
         <span
           className="mx-auto text-white login-title"
           style={{ display: "block", textAlign: "center" }}
@@ -31,7 +59,7 @@ class Login extends Component {
           </span>
         </span>
         <div className="m-4 p-5 inner-square shadow rounded-lg">
-          <label for="inputEmail" className="sr-only">
+          <label htmlFor="inputEmail" className="sr-only">
             {i18n.t("login.form.user")}
           </label>
           <div className="input-group mb-3">
@@ -41,15 +69,16 @@ class Login extends Component {
               </span>
             </div>
             <input
-              type="email"
-              id="inputEmail"
+              type="text"
+              id="inputUsername"
               className="form-control m-0"
               placeholder={i18n.t("login.form.user")}
               required
-              autofocus
+              autoFocus
+              onChange={(e) => this.setState({ user: e.target.value })}
             />{" "}
           </div>
-          <label for="inputPassword" className="sr-only">
+          <label htmlFor="inputPassword" className="sr-only">
             {i18n.t("login.form.pass")}
           </label>
           <div className="input-group mb-3">
@@ -64,11 +93,25 @@ class Login extends Component {
               className="form-control m-0"
               placeholder={i18n.t("login.form.pass")}
               required
+              onChange={(e) => this.setState({ pass: e.target.value })}
             />
           </div>
+
+          {/*  <div className="checkbox mb-3">
+            <label className="flex-row checkbox-container">
+              <input type="checkbox" value="remember-me" />{" "}
+              <span className="checkbox-checkmark"></span>
+              {i18n.t("login.form.remember")}
+            </label>
+          </div> */}
+
           <div className="checkbox mb-3">
             <label>
-              <input type="checkbox" value="remember-me" />{" "}
+              <input
+                type="checkbox"
+                value="remember-me"
+                onChange={(e) => this.setState({ remember: e.target.value })}
+              />{" "}
               {i18n.t("login.form.remember")}
             </label>
           </div>

@@ -38,7 +38,7 @@ class NavBar extends Component {
 
   render() {
     return (
-      <div className="mb-3">
+      <div className="mb-3 text-white">
         <div id="mySidenav" className="sidenav">
           <Link to="/login">
             <span>Login</span>
@@ -47,9 +47,9 @@ class NavBar extends Component {
             <span>About</span>
           </Link>
         </div>
-        <nav className="navbar navbar-expand-lg navbar-light bg-light rounded-bottom">
+        <nav className="navbar navbar-expand-lg navbar-dark rounded-bottom">
           <button
-            className="btn btn-sm"
+            className="btn btn-sm text-white"
             type="button"
             data-toggle="collapse"
             aria-expanded="false"

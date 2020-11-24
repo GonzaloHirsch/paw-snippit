@@ -38,7 +38,7 @@ class NavBar extends Component {
 
   render() {
     return (
-      <div>
+      <div className="mb-3">
         <div id="mySidenav" className="sidenav">
           <Link to="/login">
             <span>Login</span>
@@ -47,7 +47,7 @@ class NavBar extends Component {
             <span>About</span>
           </Link>
         </div>
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <nav className="navbar navbar-expand-lg navbar-light bg-light rounded-bottom">
           <button
             className="btn btn-sm"
             type="button"
@@ -61,7 +61,6 @@ class NavBar extends Component {
           <a className="navbar-brand" href="#">
             Snippit
           </a>
-          {i18n.t("test")}
           <button
             className="navbar-toggler"
             type="button"

@@ -22,11 +22,6 @@ function App() {
         <Router>
           <NavBar />
           <Switch>
-            {/* <Route path="/" exact />
-          <Route path="/login" component={Login} />
-          <Route path="/snippet" exact component={SnippetDetail} />
-          <Route path="/snippet/:id" component={SnippetDetail} /> */}
-
             {routes.map((route) => (
               <Route
                 key={route.name}
@@ -36,7 +31,6 @@ function App() {
               />
             ))}
           </Switch>
-          <SnippetCard />
         </Router>
       </Suspense>
     </React.Fragment>

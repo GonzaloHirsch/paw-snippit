@@ -26,13 +26,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
 
-@ControllerAdvice
+//@ControllerAdvice
 public class ExceptionController {
 
-    @Autowired private MessageSource messageSource;
-    @Autowired private LoginAuthentication loginAuthentication;
-    @Autowired private TagService tagService;
-    @Autowired private RoleService roleService;
+//    @Autowired
+    private MessageSource messageSource;
+//    @Autowired
+    private LoginAuthentication loginAuthentication;
+//    @Autowired
+    private TagService tagService;
+//    @Autowired
+    private RoleService roleService;
 
     public static final String DEFAULT_ERROR_VIEW = "errors/default";
     private static final String ERROR_CONTEXT = "error/";

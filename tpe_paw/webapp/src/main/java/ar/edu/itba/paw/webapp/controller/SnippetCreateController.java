@@ -26,26 +26,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import javax.ws.rs.DELETE;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Locale;
 
-@Controller
+@Deprecated
 public class SnippetCreateController {
 
-    @Autowired
+//    @Autowired
     private SnippetService snippetService;
-    @Autowired
+//    @Autowired
     private TagService tagService;
-    @Autowired
+//    @Autowired
     private LanguageService languageService;
-    @Autowired
+//    @Autowired
     private LoginAuthentication loginAuthentication;
-    @Autowired
+//    @Autowired
     private RoleService roleService;
-    @Autowired
+//    @Autowired
     private MessageSource messageSource;
-    @Autowired
+//    @Autowired
     private ValidatorHelper validator;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnippetCreateController.class);

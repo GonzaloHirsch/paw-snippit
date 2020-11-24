@@ -11,6 +11,7 @@ import ar.edu.itba.paw.webapp.exception.*;
 import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.utility.MavHelper;
+import ar.edu.itba.paw.webapp.utility.SearchHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,44 +34,22 @@ import java.util.*;
 import static ar.edu.itba.paw.webapp.utility.Constants.MAX_SEARCH_QUERY_SIZE;
 import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
 
-@Controller
+@Deprecated
 public class SearchController {
 
-    private final static Map<String, SnippetDao.Types> typesMap;
-    static {
-        final Map<String, SnippetDao.Types> types = new HashMap<>();
-        types.put(null, SnippetDao.Types.ALL);
-        types.put("all", SnippetDao.Types.ALL);
-        types.put("tag", SnippetDao.Types.TAG);
-        types.put("title", SnippetDao.Types.TITLE);
-        types.put("content", SnippetDao.Types.CONTENT);
-        types.put("username", SnippetDao.Types.USER);
-        types.put("language", SnippetDao.Types.LANGUAGE);
-        typesMap = Collections.unmodifiableMap(types);
-    }
-
-    private final static Map<String, SnippetDao.Orders> ordersMap;
-    static {
-        final Map<String, SnippetDao.Orders> orders = new HashMap<>();
-        orders.put("asc", SnippetDao.Orders.ASC);
-        orders.put("desc", SnippetDao.Orders.DESC);
-        orders.put("no", SnippetDao.Orders.NO);
-        ordersMap = Collections.unmodifiableMap(orders);
-    }
-
-    @Autowired
+//    @Autowired
     private SnippetService snippetService;
-    @Autowired
+//    @Autowired
     private LoginAuthentication loginAuthentication;
-    @Autowired
+//    @Autowired
     private TagService tagService;
-    @Autowired
+//    @Autowired
     private RoleService roleService;
-    @Autowired
+//    @Autowired
     private MessageSource messageSource;
-    @Autowired
+//    @Autowired
     private LanguageService languageService;
-    @Autowired
+//    @Autowired
     private UserService userService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
@@ -83,11 +62,12 @@ public class SearchController {
     private static final String TAGS = "tags/";
     private static final String USER = "user/";
 
+    // Moved to SNippetController
     @RequestMapping("/search")
     public ModelAndView searchInHome(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, searchForm.getSort(), null, null, page);
-        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, null, null);
+        Collection<Snippet> snippets = SearchHelper.FindByCriteria(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, searchForm.getSort(), null, null, page);
+        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.HOME, null, null);
 
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, HOME);
         MavHelper.addSnippetCardFavFormAttributes(mav, this.loginAuthentication.getLoggedInUser(), snippets);
@@ -95,28 +75,30 @@ public class SearchController {
         return mav;
     }
 
+    // Moved to UserController
     @RequestMapping("/favorites/search")
     public ModelAndView searchInFavorites(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) this.logAndThrow(FAVORITES);
 
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, searchForm.getSort(), currentUser.getId(), null, page);
-        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, currentUser.getId(), null);
+        Collection<Snippet> snippets = SearchHelper.FindByCriteria(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, searchForm.getSort(), currentUser.getId(), null, page);
+        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FAVORITES, currentUser.getId(), null);
 
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FAVORITES);
         MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
         return mav;
     }
 
+    // Moved to UserController
     @RequestMapping("/following/search")
     public ModelAndView searchInFollowing(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("snippet/snippetFollowing");
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) this.logAndThrow(FOLLOWING);
 
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, searchForm.getSort(), currentUser.getId(), null, page);
-        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, currentUser.getId(), null);
+        Collection<Snippet> snippets = SearchHelper.FindByCriteria(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, searchForm.getSort(), currentUser.getId(), null, page);
+        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FOLLOWING, currentUser.getId(), null);
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FOLLOWING);
 
         MavHelper.addTagChipUnfollowFormAttributes(mav, this.tagService.getSomeOrderedFollowedTagsForUser(currentUser.getId(), Constants.FOLLOWING_FEED_TAG_AMOUNT), currentUser.getFollowedTags().size());
@@ -124,35 +106,35 @@ public class SearchController {
 
         return mav;
     }
-
+    // Moved to UserController
     @RequestMapping("/upvoted/search")
     public ModelAndView searchInUpvoted(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) this.logAndThrow(UPVOTED);
 
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.UPVOTED, searchForm.getSort(), currentUser.getId(), null, page);
-        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.UPVOTED, currentUser.getId(), null);
+        Collection<Snippet> snippets = SearchHelper.FindByCriteria(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.UPVOTED, searchForm.getSort(), currentUser.getId(), null, page);
+        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.UPVOTED, currentUser.getId(), null);
 
         MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, UPVOTED);
         return mav;
     }
-
+    // Moved to NewSnippetController
     @RequestMapping("/flagged/search")
     public ModelAndView searchInFlagged(@Valid @ModelAttribute("searchForm") final SearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("index");
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) this.logAndThrow(FLAGGED);
 
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FLAGGED, searchForm.getSort(), null, null, page);
-        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FLAGGED, null, null);
+        Collection<Snippet> snippets = SearchHelper.FindByCriteria(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FLAGGED, searchForm.getSort(), null, null, page);
+        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.FLAGGED, null, null);
 
         MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, FLAGGED);
         return mav;
     }
-
+    // Moved to LanguageController
     @RequestMapping("/languages/{langId}/search")
     public ModelAndView searchInLanguages(@PathVariable("langId") long langId, @Valid @ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("deleteForm") final DeleteForm deleteForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("tagAndLanguages/languageSnippets");
@@ -162,14 +144,14 @@ public class SearchController {
             LOGGER.error("No language found with id {}", langId);
             throw new LanguageNotFoundException(messageSource.getMessage("error.404.language", new Object[]{langId}, LocaleContextHolder.getLocale()));
         }
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.LANGUAGES, searchForm.getSort(), null, langId, page);
-        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.LANGUAGES, null, langId);
+        Collection<Snippet> snippets = SearchHelper.FindByCriteria(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.LANGUAGES, searchForm.getSort(), null, langId, page);
+        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.LANGUAGES, null, langId);
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, LANGUAGES + langId + "/");
         MavHelper.addSnippetCardFavFormAttributes(mav, this.loginAuthentication.getLoggedInUser(), snippets);
         mav.addObject("language", language.get());
         return mav;
     }
-
+    // Moved to TagController
     @RequestMapping("/tags/{tagId}/search")
     public ModelAndView searchInTags(@PathVariable("tagId") long tagId, @Valid @ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("followForm") final FollowForm followForm,
                                      @ModelAttribute("deleteForm") final DeleteForm deleteForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
@@ -186,14 +168,14 @@ public class SearchController {
             followForm.setFollows(this.tagService.userFollowsTag(currentUser.getId(), tagId));
         }
 
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.TAGS, searchForm.getSort(), null, tagId, page);
-        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.TAGS, null, tagId);
+        Collection<Snippet> snippets = SearchHelper.FindByCriteria(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.TAGS, searchForm.getSort(), null, tagId, page);
+        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.TAGS, null, tagId);
         this.addModelAttributesHelper(mav, totalSnippetCount, page, snippets, TAGS + tagId + "/");
         MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
         mav.addObject("tag", tag.get());
         return mav;
     }
-
+    // Moved to UserController
     @RequestMapping("/user/{id}/search")
     public ModelAndView searchUserProfileSnippets(
             final @PathVariable("id") long id,
@@ -204,12 +186,12 @@ public class SearchController {
             final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
     ) {
         String searchContext = String.format("user/%d/", id);
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
-        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, id, null);
+        Collection<Snippet> snippets = SearchHelper.FindByCriteria(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
+        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, id, null);
 
         return this.profileSearch(id, descriptionForm, Constants.USER_PROFILE_CONTEXT, searchContext, snippets, totalSnippetCount, page, editing);
     }
-
+    // Moved to UserController
     @RequestMapping("/user/{id}/" + Constants.OWNER_DELETED_CONTEXT + "/search")
     public ModelAndView searchOwnerProfileDeletedSnippets(
             final @PathVariable("id") long id,
@@ -221,12 +203,12 @@ public class SearchController {
     ) {
 
         String searchContext = String.format("user/%d/%s/", id, Constants.OWNER_DELETED_CONTEXT);
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.DELETED, searchForm.getSort(), id, null, page);
-        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.DELETED, id, null);
+        Collection<Snippet> snippets = SearchHelper.FindByCriteria(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.DELETED, searchForm.getSort(), id, null, page);
+        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.DELETED, id, null);
 
         return this.profileSearch(id, descriptionForm, Constants.OWNER_DELETED_CONTEXT, searchContext, snippets, totalSnippetCount, page, editing);
     }
-
+    // Moved to UserController
     @RequestMapping("/user/{id}/" + Constants.OWNER_ACTIVE_CONTEXT + "/search")
     public ModelAndView searchOwnerProfileSnippets(
             final @PathVariable("id") long id,
@@ -237,8 +219,8 @@ public class SearchController {
             final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
     ) {
         String searchContext = String.format("user/%d/%s/", id, Constants.OWNER_ACTIVE_CONTEXT);
-        Collection<Snippet> snippets = this.findByCriteria(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
-        int totalSnippetCount = this.getSnippetByCriteriaCount(searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, id, null);
+        Collection<Snippet> snippets = SearchHelper.FindByCriteria(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, searchForm.getSort(), id, null, page);
+        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchForm.getType(), searchForm.getQuery(), SnippetDao.Locations.USER, id, null);
 
         return this.profileSearch(id, descriptionForm, Constants.OWNER_ACTIVE_CONTEXT, searchContext, snippets, totalSnippetCount, page, editing);
     }
@@ -269,7 +251,8 @@ public class SearchController {
         return mav;
     }
 
-    private Collection<Snippet> findByCriteria(String type, String query, SnippetDao.Locations location, String sort, Long userId, Long resourceId, int page) {
+    // Moved to SearchHelper
+    /*private Collection<Snippet> findByCriteria(String type, String query, SnippetDao.Locations location, String sort, Long userId, Long resourceId, int page) {
         if (query.length() > MAX_SEARCH_QUERY_SIZE) {
             LOGGER.error(messageSource.getMessage("error.414.search", null, Locale.ENGLISH));
             throw new URITooLongException(messageSource.getMessage("error.414.search", null, LocaleContextHolder.getLocale()));
@@ -288,7 +271,7 @@ public class SearchController {
                     SNIPPET_PAGE_SIZE);
         }
     }
-
+    // Moved to SearchHelper
     private int getSnippetByCriteriaCount(String type, String query, SnippetDao.Locations location, Long userId, Long resourceId) {
         return this.snippetService.getSnippetByCriteriaCount(
                 typesMap.get(type),
@@ -297,6 +280,8 @@ public class SearchController {
                 userId,
                 resourceId);
     }
+     */
+
 
     private User getUser(final long id, String location) {
         Optional<User> maybeUser = this.userService.findUserById(id);

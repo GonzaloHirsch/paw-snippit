@@ -27,15 +27,21 @@ import java.util.*;
 
 import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
 
-@Controller
+@Deprecated
 public class SnippetExploreController {
 
-    @Autowired private SnippetService snippetService;
-    @Autowired private LoginAuthentication loginAuthentication;
-    @Autowired private TagService tagService;
-    @Autowired private LanguageService languageService;
-    @Autowired private RoleService roleService;
-    @Autowired private UserService userService;
+//    @Autowired
+    private SnippetService snippetService;
+//    @Autowired
+    private LoginAuthentication loginAuthentication;
+//    @Autowired
+    private TagService tagService;
+//    @Autowired
+    private LanguageService languageService;
+//    @Autowired
+    private RoleService roleService;
+//    @Autowired
+    private UserService userService;
 
     private final static Map<String, SnippetDao.Types> typesMap;
     static {
@@ -57,6 +63,7 @@ public class SnippetExploreController {
         ordersMap = Collections.unmodifiableMap(orders);
     }
 
+    // Moved to SnippetFeed
     @RequestMapping("/explore")
     public ModelAndView explore(@ModelAttribute("searchForm") final SearchForm searchForm, @ModelAttribute("exploreForm") final ExploreForm exploreForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         final ModelAndView mav = new ModelAndView("snippet/snippetExplore");
@@ -120,4 +127,5 @@ public class SnippetExploreController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
     }
+
 }

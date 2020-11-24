@@ -1,6 +1,9 @@
 
 package ar.edu.itba.paw.webapp.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
 import org.springframework.beans.factory.annotation.Value;
@@ -193,6 +196,17 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public PlatformTransactionManager transactionManager(final EntityManagerFactory emf){
         return new JpaTransactionManager(emf);
+    }
+
+    @Bean
+    public ObjectMapper objectMapper(){
+        ObjectMapper mapper = new ObjectMapper();
+
+        // Configuring in case someone sends something extra to the DTO
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
+
+        return mapper;
     }
 
 }

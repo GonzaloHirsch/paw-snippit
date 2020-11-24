@@ -40,3 +40,7 @@ target/
 hs_err_pid*
 
 tpe_paw/react_ui/.eslintcache
+
+infer-out/
+
+*.infer-orig

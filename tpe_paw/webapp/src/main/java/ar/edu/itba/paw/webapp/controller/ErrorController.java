@@ -22,16 +22,16 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
-@Controller
+//@Controller
 public class ErrorController {
 
-    @Autowired
+//    @Autowired
     private MessageSource messageSource;
-    @Autowired
+//    @Autowired
     private LoginAuthentication loginAuthentication;
-    @Autowired
+//    @Autowired
     private TagService tagService;
-    @Autowired
+//    @Autowired
     private RoleService roleService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorController.class);

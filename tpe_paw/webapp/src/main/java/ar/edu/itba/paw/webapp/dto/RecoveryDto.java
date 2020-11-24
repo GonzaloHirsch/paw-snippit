@@ -1,11 +1,10 @@
-package ar.edu.itba.paw.webapp.form;
+package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.webapp.validations.FieldExists;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
-@Deprecated
-public class RecoveryForm {
+public class RecoveryDto {
     @Email
     @NotBlank
     @FieldExists(fieldName = "Email")

@@ -20,8 +20,18 @@ public final class Constants {
     public static final String LOGIN = "/login";
     public static final String SIGNUP = "/signup";
     public static final String GOODBYE = "/goodbye";
-    public static final String RESET_PASSWORD = "/reset-password";
-    public static final String RECOVER_PASSWORD = "/recover-password";
+    public static final String RESET_PASSWORD = "/reset_password";
+    public static final String RECOVER_PASSWORD = "/recover_password";
+
+    public static final String QUERY_PARAM_PAGE = "page";
+    public static final String QUERY_PARAM_SHOW_ONLY_FOLLOWING = "show_only_following";
+    public static final String QUERY_PARAM_SHOW_EMPTY = "show_empty";
+    public static final String PATH_PARAM_ID = "id";
+
+    public static final String LINK_FIRST = "first";
+    public static final String LINK_LAST = "last";
+    public static final String LINK_PREV = "prev";
+    public static final String LINK_NEXT = "next";
 
     /*
      * "The AssertionError isn’t strictly required, but it provides insurance in case the

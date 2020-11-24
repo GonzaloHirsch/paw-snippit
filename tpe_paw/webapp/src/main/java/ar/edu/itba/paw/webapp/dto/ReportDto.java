@@ -1,29 +1,13 @@
-package ar.edu.itba.paw.webapp.form;
+package ar.edu.itba.paw.webapp.dto;
 
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
 
-@Deprecated
-public class ReportForm {
-
-    private boolean reported;
-
+public class ReportDto {
     @NotBlank
     @Size(max=300)
     private String reportDetail;
-
-    public ReportForm (){
-
-    }
-
-    public boolean getReported() {
-        return reported;
-    }
-
-    public void setReported(boolean reported) {
-        this.reported = reported;
-    }
 
     public String getReportDetail() {
         return reportDetail;

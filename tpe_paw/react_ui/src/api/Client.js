@@ -26,7 +26,7 @@ class Client {
 
     // Define the headers, if no token is present, it will be ignored or error
     const headers = {
-      TOKEN_HEADER: token,
+      "Authorization": token,
     };
 
     // Getting axios instance
@@ -40,5 +40,5 @@ class Client {
   }
 }
 
-export const TOKEN_HEADER = "X-AUTH-TOKEN";
+export const TOKEN_HEADER = "Authorization";
 export default Client;

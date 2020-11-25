@@ -1,4 +1,5 @@
 import * as actions from "../actions/actionTypes";
+import jwt_decode from 'jwt-decode'
 
 // Initial state for Redux, it is only important to hold the authentication status
 const initialState = {
@@ -14,18 +15,19 @@ export default function reducer(state, action) {
   switch (action.type) {
     case actions.LOGIN_SUCCESS: {
       // Store the payload, which is the token
-      const { token } = action.payload;
+      const {token} = action.payload.token;
+      // Extract the pure token
+      const pureToken = token.replace("Bearer ", "");
       // We have to decode the token
-      // TODO: DECODE TOKEN
+      let content = jwt_decode(pureToken);
       // Store the updated store
-      // TODO: UPDATE PARAMS
       return {
         ...state,
         auth: {
           status: actions.LOGIN_SUCCESS,
-          token: null,
-          info: null,
-          roles: [],
+          token: token,
+          info: content,
+          roles: [],  // TODO: CHECK ROLES
         },
       };
     }

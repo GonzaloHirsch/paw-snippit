@@ -3,9 +3,9 @@ import querystring from "querystring";
 
 export default class AuthClient extends Client {
   login(user, pass) {
-    return this.instance.post(
-      "auth/login",
-      querystring.stringify({ username: user, password: pass })
-    );
+    return this.instance.post("auth/login", {
+      username: user,
+      password: pass,
+    });
   }
 }

@@ -29,9 +29,8 @@ class Login extends Component {
       .login(this.state.user, this.state.pass)
       .then((res) => {
         // Get the token from the response
-        const token = res.headers[TOKEN_HEADER];
-
-        console.log(token)
+        // TODO: DETERMINE IF WE STORE THE REFRESH TOKEN
+        const token = res.data.token;
 
         // Dispatch the login event
         store.dispatch(loginSuccess({ token }));

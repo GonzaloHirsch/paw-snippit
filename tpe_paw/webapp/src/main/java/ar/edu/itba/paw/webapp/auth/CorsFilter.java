@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.utility;
+package ar.edu.itba.paw.webapp.auth;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
@@ -19,11 +19,20 @@ public class CorsFilter extends GenericFilterBean {
         HttpServletResponse res = (HttpServletResponse) response;
         HttpServletRequest req = (HttpServletRequest) request;
 
+        // Setting CORS headers
         res.setHeader("Access-Control-Allow-Origin", "*");
-        res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
-        res.setHeader("Access-Control-Allow-Headers", "X-AUTH-TOKEN, Content-Type");
-        res.setHeader("Access-Control-Expose-Headers", "X-AUTH-TOKEN");
+        res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, HEAD");
+        res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+        res.setHeader("Access-Control-Expose-Headers", "Authorization");
         res.setHeader("Access-Control-Max-Age", "3600");
+
+        // If the request is OPTIONS, we need to give it an OK for preflight response
+        if (req.getMethod().toUpperCase().trim().equals("OPTIONS")) {
+            res.setStatus(HttpServletResponse.SC_OK);
+            res.getWriter().flush();
+            res.getWriter().close();
+            return;
+        }
 
         chain.doFilter(req, res);
     }

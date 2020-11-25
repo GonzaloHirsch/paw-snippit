@@ -6,15 +6,9 @@ class SnippetFeed extends Component {
   render() {
     return (
       <div class="card-columns mx-3">
-        <SnippetCard />
-        <SnippetCard />
-        <SnippetCard />
-        <SnippetCard />
-        <SnippetCard />
-        <SnippetCard />
-        <SnippetCard />
-        <SnippetCard />
-        <SnippetCard />
+        {this.props.snippets.map((snippet) => (
+          <SnippetCard snippet={snippet} />
+        ))}
       </div>
     );
   }

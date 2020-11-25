@@ -3,6 +3,8 @@ import React, { Component } from "react";
 class SnippetCard extends Component {
   state = {};
   render() {
+    const { snippet } = this.props;
+
     return (
       <div
         className="card mb-3 bg-light shadow bg-white rounded"

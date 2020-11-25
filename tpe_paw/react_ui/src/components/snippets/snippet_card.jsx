@@ -5,11 +5,11 @@ class SnippetCard extends Component {
   render() {
     return (
       <div
-        className="card bg-light m-4 shadow mb-5 bg-white rounded"
+        className="card mb-3 bg-light shadow bg-white rounded"
         style={{ maxWidth: "40rem" }}
       >
         <div className="card-header px-4" style={{ fontSize: "20px" }}>
-          <div className="row">
+          <div className="row align-items-center">
             <img src="/userIcon.jpg" alt="User Icon" />
             <div className="col ml-2">
               <div className="row text-primary" style={{ fontSize: "18px" }}>
@@ -19,9 +19,11 @@ class SnippetCard extends Component {
                 10/10/2020
               </div>
             </div>
-            <div className="col-md-auto"></div>
-            <div className="col col-lg-2" style={{ fontSize: "30px" }}>
-              <span className="badge badge-pill badge-primary">Java</span>
+            <div
+              className="badge badge-pill badge-primary"
+              style={{ fontSize: "20px" }}
+            >
+              Java
             </div>
           </div>
         </div>

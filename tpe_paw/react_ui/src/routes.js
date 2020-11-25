@@ -5,8 +5,11 @@ import i18n from "./i18n";
 const SnippetDetail = React.lazy(() =>
   import("./components/snippets/snippet_detail")
 );
+const SnippetFeed = React.lazy(() =>
+  import("./components/snippets/snippet_feed")
+);
 const Login = React.lazy(() => import("./components/login/login"));
-const Home = React.lazy(() => import("./components/snippets/snippet_feed"));
+const Home = React.lazy(() => import("./components/pages/home"));
 
 // We also take into account i18n in the naming of the routes
 const routes = [
@@ -21,7 +24,7 @@ const routes = [
     path: "/snippets",
     exact: true,
     name: i18n.t("nav.snippets"),
-    component: SnippetDetail,
+    component: SnippetFeed,
   },
   {
     path: "/snippets/:id",

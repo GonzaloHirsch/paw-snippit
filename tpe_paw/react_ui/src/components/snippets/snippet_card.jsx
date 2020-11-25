@@ -30,9 +30,9 @@ class SnippetCard extends Component {
           </div>
         </div>
         <div className="card-body p-3">
-          <h4 className="card-title">MergeSort</h4>
+          <h4 className="card-title">{snippet.title}</h4>
           <h6 className="card-subtitle mb-2 text-muted">
-            This is an algorithm to sort by merging
+            {snippet.description}
           </h6>
           <div
             className="card-text"
@@ -53,16 +53,7 @@ class SnippetCard extends Component {
                 whiteSpace: "pre-wrap",
               }}
             >
-              <code>
-                # First we have a List that contains duplicates: mylist = ["a",
-                "b", "a", "c", "c"] # Create a dictionary, using the List items
-                as keys. This will automatically remove any # duplicates because
-                dictionaries cannot have duplicate keys. # Then, convert the
-                dictionary back into a list: mylist =
-                list(dict.fromkeys(mylist)) # Now we have a List without any
-                duplicates, and it has the same order as the original List. #
-                Print the List to demonstrate the result print(mylist)
-              </code>
+              <code>{snippet.code}</code>
             </pre>
             <p className="card-snippet-fade-out card-snippet-fade-out-code hidden"></p>
           </div>

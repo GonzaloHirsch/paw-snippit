@@ -20,7 +20,13 @@ img {
   width: 45px;
 }
 
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Text Properties */
 * {
-    font-family: Roboto, "sans-serif";
+  font-family: Roboto, "sans-serif";
 }

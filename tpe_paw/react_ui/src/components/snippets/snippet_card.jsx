@@ -22,7 +22,7 @@ class SnippetCard extends Component {
               </div>
             </div>
             <div
-              className="badge badge-pill badge-primary"
+              className="language-snippet-tag p-2 flex-center rounded mr-1"
               style={{ fontSize: "20px" }}
             >
               Java

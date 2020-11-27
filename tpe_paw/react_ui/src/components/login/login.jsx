@@ -13,6 +13,7 @@ import i18n from "../../i18n";
 import Icon from "@mdi/react";
 import { mdiCodeTags, mdiAccount, mdiLock } from "@mdi/js";
 import TextInputFieldWithIcon from "./text_input_field_with_icon";
+import LoginForm from "./login_form";
 
 class Login extends Component {
   state = {
@@ -44,21 +45,12 @@ class Login extends Component {
 
   render() {
     return (
-      <form
-        className="form-signin rounded-lg"
-        onSubmit={() => this.handleLogin()}
-      >
-        <span
-          className="mx-auto text-white login-title"
-          style={{ display: "block", textAlign: "center" }}
+      <div className="form-signin rounded-lg">
+        <LoginForm
+          title={i18n.t("login.title")}
+          action={i18n.t("login.form.action")}
+          onSubmit={() => this.handleLogin()}
         >
-          <Icon path={mdiCodeTags} size={2} />
-          <span className="ml-2">
-            {i18n.t("login.title")}
-            <strong>{i18n.t("app")}</strong>
-          </span>
-        </span>
-        <div className="m-4 p-5 inner-square shadow rounded-lg">
           <TextInputFieldWithIcon
             id={"inputUsername"}
             htmlFor={"inputEmail"}
@@ -67,6 +59,7 @@ class Login extends Component {
             iconPath={mdiAccount}
             onChange={(e) => this.setState({ user: e.target.value })}
           />
+
           <TextInputFieldWithIcon
             id={"inputPassword"}
             htmlFor={"inputPassword"}
@@ -75,14 +68,6 @@ class Login extends Component {
             iconPath={mdiLock}
             onChange={(e) => this.setState({ pass: e.target.value })}
           />
-
-          {/*  <div className="checkbox mb-3">
-            <label className="flex-row checkbox-container">
-              <input type="checkbox" value="remember-me" />{" "}
-              <span className="checkbox-checkmark"></span>
-              {i18n.t("login.form.remember")}
-            </label>
-          </div> */}
 
           <div className="checkbox mb-3">
             <label>
@@ -94,13 +79,16 @@ class Login extends Component {
               {i18n.t("login.form.remember")}
             </label>
           </div>
-          <button
-            className="btn btn-lg btn-primary btn-block mb-3 rounded-lg"
-            type="submit"
-          >
-            {i18n.t("login.form.action")}
-          </button>
-        </div>
+        </LoginForm>
+
+        {/*  <div className="checkbox mb-3">
+            <label className="flex-row checkbox-container">
+              <input type="checkbox" value="remember-me" />{" "}
+              <span className="checkbox-checkmark"></span>
+              {i18n.t("login.form.remember")}
+            </label>
+          </div> */}
+
         <div
           className="my-2 text-white mx-auto"
           style={{ display: "block", textAlign: "center" }}
@@ -123,7 +111,7 @@ class Login extends Component {
             </Link>
           </span>
         </div>
-      </form>
+      </div>
     );
   }
 }

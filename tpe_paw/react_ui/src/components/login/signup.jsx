@@ -11,9 +11,9 @@ import TOKEN_HEADER from "../../api/Client";
 import i18n from "../../i18n";
 
 // Icons
-import Icon from "@mdi/react";
-import { mdiCodeTags, mdiAccount, mdiLock } from "@mdi/js";
+import { mdiEmail, mdiAccount, mdiLock } from "@mdi/js";
 import TextInputFieldWithIcon from "./text_input_field_with_icon";
+import LoginForm from "./login_form";
 
 class SignUp extends Component {
   state = {
@@ -27,21 +27,12 @@ class SignUp extends Component {
 
   render() {
     return (
-      <form
-        className="form-signin rounded-lg"
-        onSubmit={() => this.handleLogin()} //Fix me!!
-      >
-        <span
-          className="mx-auto text-white login-title"
-          style={{ display: "block", textAlign: "center" }}
+      <div className="form-signin rounded-lg">
+        <LoginForm
+          title={i18n.t("signup.title")}
+          action={i18n.t("signup.form.action")}
+          onSubmit={() => this.handleLogin()}
         >
-          <Icon path={mdiCodeTags} size={2} />
-          <span className="ml-2">
-            {i18n.t("signup.title")}
-            <strong>{i18n.t("app")}</strong>
-          </span>
-        </span>
-        <div className="m-4 p-5 inner-square shadow rounded-lg">
           <TextInputFieldWithIcon
             id={"inputUsername"}
             htmlFor={"inputEmail"}
@@ -56,7 +47,7 @@ class SignUp extends Component {
             htmlFor={"inputEmail"}
             type={"text"}
             placeholder={i18n.t("signup.form.email")}
-            iconPath={mdiAccount}
+            iconPath={mdiEmail}
             onChange={(e) => this.setState({ email: e.target.value })}
           />
 
@@ -77,14 +68,8 @@ class SignUp extends Component {
             iconPath={mdiLock}
             onChange={(e) => this.setState({ repeatedPass: e.target.value })}
           />
+        </LoginForm>
 
-          <button
-            className="btn btn-lg btn-primary btn-block mb-3 rounded-lg"
-            type="submit"
-          >
-            {i18n.t("signup.form.action")}
-          </button>
-        </div>
         <div
           className="my-2 text-white mx-auto"
           style={{ display: "block", textAlign: "center" }}
@@ -96,7 +81,7 @@ class SignUp extends Component {
             </Link>
           </span>
         </div>
-      </form>
+      </div>
     );
   }
 }

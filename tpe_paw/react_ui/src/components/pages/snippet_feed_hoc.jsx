@@ -3,7 +3,9 @@ import SnippetFeed from "../snippets/snippet_feed";
 import SnippetFeedClient from "../../api/implementations/SnippetFeedClient";
 import extractLinkHeaders from "../../js/api_utils";
 
-function SnippetFeedHOC(WrappedComponent, context, getSnippets) {
+// Higher Order Component to reuse the repeated behaviour of the pages that contain Snippet Feed
+
+function SnippetFeedHOC(WrappedComponent, getSnippets) {
   return class extends React.Component {
     snippetFeedClient;
 
@@ -54,7 +56,6 @@ function SnippetFeedHOC(WrappedComponent, context, getSnippets) {
       return (
         <div>
           <WrappedComponent
-            context={context}
             onPageTransition={this.onPageTransition}
             {...this.state}
           ></WrappedComponent>

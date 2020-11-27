@@ -12,6 +12,7 @@ import i18n from "../../i18n";
 // Icons
 import Icon from "@mdi/react";
 import { mdiCodeTags, mdiAccount, mdiLock } from "@mdi/js";
+import TextInputFieldWithIcon from "./text_input_field_with_icon";
 
 class Login extends Component {
   state = {
@@ -58,43 +59,22 @@ class Login extends Component {
           </span>
         </span>
         <div className="m-4 p-5 inner-square shadow rounded-lg">
-          <label htmlFor="inputEmail" className="sr-only">
-            {i18n.t("login.form.user")}
-          </label>
-          <div className="input-group mb-3">
-            <div className="input-group-prepend">
-              <span className="input-group-text input-icon">
-                <Icon path={mdiAccount} size={1} />
-              </span>
-            </div>
-            <input
-              type="text"
-              id="inputUsername"
-              className="form-control m-0"
-              placeholder={i18n.t("login.form.user")}
-              required
-              autoFocus
-              onChange={(e) => this.setState({ user: e.target.value })}
-            />{" "}
-          </div>
-          <label htmlFor="inputPassword" className="sr-only">
-            {i18n.t("login.form.pass")}
-          </label>
-          <div className="input-group mb-3">
-            <div className="input-group-prepend">
-              <span className="input-group-text input-icon">
-                <Icon path={mdiLock} size={1} />
-              </span>
-            </div>
-            <input
-              type="password"
-              id="inputPassword"
-              className="form-control m-0"
-              placeholder={i18n.t("login.form.pass")}
-              required
-              onChange={(e) => this.setState({ pass: e.target.value })}
-            />
-          </div>
+          <TextInputFieldWithIcon
+            id={"inputUsername"}
+            htmlFor={"inputEmail"}
+            type={"text"}
+            placeholder={i18n.t("login.form.user")}
+            iconPath={mdiAccount}
+            onChange={(e) => this.setState({ user: e.target.value })}
+          />
+          <TextInputFieldWithIcon
+            id={"inputPassword"}
+            htmlFor={"inputPassword"}
+            type={"password"}
+            placeholder={i18n.t("login.form.pass")}
+            iconPath={mdiLock}
+            onChange={(e) => this.setState({ pass: e.target.value })}
+          />
 
           {/*  <div className="checkbox mb-3">
             <label className="flex-row checkbox-container">

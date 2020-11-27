@@ -9,8 +9,8 @@ const SnippetFeed = React.lazy(() =>
   import("./components/snippets/snippet_feed")
 );
 const Login = React.lazy(() => import("./components/login/login"));
+const SignUp = React.lazy(() => import("./components/login/signup"));
 const Home = React.lazy(() => import("./components/pages/home"));
-const Favorites = React.lazy(() => import("./components/pages/favorites"));
 
 // We also take into account i18n in the naming of the routes
 const routes = [
@@ -21,6 +21,12 @@ const routes = [
     component: Home,
   },
   { path: "/login", exact: true, name: i18n.t("nav.login"), component: Login },
+  {
+    path: "/signup",
+    exact: true,
+    name: i18n.t("nav.signup"),
+    component: SignUp,
+  },
   {
     path: "/snippets",
     exact: true,

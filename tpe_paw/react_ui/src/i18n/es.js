@@ -3,7 +3,8 @@ export default {
   nav: {
     home: "Página Principal",
     login: "Iniciar Sesión",
+    signup: "Registrese", //FIXME!
     snippets: "Snippets",
-    snippets_detail: "Detalle de Snippets"
-}
-}
+    snippets_detail: "Detalle de Snippets",
+  },
+};

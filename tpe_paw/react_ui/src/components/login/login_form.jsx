@@ -5,9 +5,7 @@ import Icon from "@mdi/react";
 
 const LoginForm = (props) => {
   return (
-    <form
-      onSubmit={props.onSubmit} //Fix me!!
-    >
+    <form onSubmit={props.onSubmit}>
       <span
         className="mx-auto text-white login-title"
         style={{ display: "block", textAlign: "center" }}

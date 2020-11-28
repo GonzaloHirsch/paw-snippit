@@ -32,7 +32,11 @@ class SnippetOverview extends Component {
   }
 
   render() {
-    return <SnippetDetail {...this.state} />;
+    return (
+      <div className="flex-center">
+        <SnippetDetail {...this.state} />
+      </div>
+    );
   }
 }
 

@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import SnippetFeed from "../snippets/snippet_feed";
+import React from "react";
 import SnippetFeedClient from "../../api/implementations/SnippetFeedClient";
 import extractLinkHeaders from "../../js/api_utils";
 

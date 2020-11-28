@@ -1,11 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
 
-class SnippetDetail extends Component {
-  state = {};
-  render() {
-    const snippetId = this.props.match.params.id;
-    return <h1>{"MY SNIPPET IS " + snippetId}</h1>;
-  }
-}
+const SnippetDetail = (props) => {
+  const { id, title, description, code, isFlagged, isDeleted } = props.snippet;
+  return (
+    <React.Fragment>
+      <h1>{"MY SNIPPET IS " + id}</h1>;<h1>{"MY SNIPPET TITLE IS " + title}</h1>
+    </React.Fragment>
+  );
+};
 
 export default SnippetDetail;

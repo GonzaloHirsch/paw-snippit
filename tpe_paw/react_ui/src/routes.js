@@ -2,8 +2,8 @@ import React from "react";
 import i18n from "./i18n";
 
 // Lazy loading the components https://reactjs.org/docs/code-splitting.html and https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
-const SnippetDetail = React.lazy(() =>
-  import("./components/snippets/snippet_detail")
+const SnippetOverview = React.lazy(() =>
+  import("./components/pages/snippet_overview")
 );
 const SnippetFeed = React.lazy(() =>
   import("./components/snippets/snippet_feed")
@@ -37,7 +37,7 @@ const routes = [
     path: "/snippets/:id",
     exact: true,
     name: i18n.t("nav.snippetsDetail"),
-    component: SnippetDetail,
+    component: SnippetOverview,
   },
 ];
 

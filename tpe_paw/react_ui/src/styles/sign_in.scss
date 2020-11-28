@@ -2,7 +2,7 @@
 
 .form-signin {
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
   padding: 15px;
   margin: auto;
   background-color: $primary-color;
@@ -32,23 +32,23 @@
 }
 
 .form-signin .inner-square {
-    background-color: white;
+  background-color: white;
 }
 
 .form-signin button {
-    background-color: $primary-color;
-    border-color: $primary-color;
+  background-color: $primary-color;
+  border-color: $primary-color;
 }
 
 .form-signin button:hover {
-    background-color: $primary-color-dark;
-    border-color: $primary-color;
+  background-color: $primary-color-dark;
+  border-color: $primary-color;
 }
 
 .form-signin .login-title {
-    font-size: 2rem;
+  font-size: 2rem;
 }
 
 .form-signin .input-icon {
-    color: $primary-color;
+  color: $primary-color;
 }

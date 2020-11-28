@@ -5,6 +5,6 @@ export default {
     login: "Iniciar Sesión",
     signup: "Registrese", //FIXME!
     snippets: "Snippets",
-    snippets_detail: "Detalle de Snippets",
+    snippetsDetail: "Detalle de Snippets",
   },
 };

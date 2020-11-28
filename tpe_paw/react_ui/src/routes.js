@@ -36,7 +36,7 @@ const routes = [
   {
     path: "/snippets/:id",
     exact: true,
-    name: i18n.t("nav.snippets_detail"),
+    name: i18n.t("nav.snippetsDetail"),
     component: SnippetDetail,
   },
 ];

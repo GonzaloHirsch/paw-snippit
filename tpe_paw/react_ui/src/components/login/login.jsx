@@ -96,7 +96,7 @@ class Login extends Component {
           <span>
             {i18n.t("login.signup")}
             <Link to="/signup">
-              <strong>{i18n.t("login.signup_call")}</strong>
+              <strong>{i18n.t("login.signupCall")}</strong>
             </Link>
           </span>
         </div>
@@ -107,7 +107,7 @@ class Login extends Component {
           <span>
             {i18n.t("login.recover")}
             <Link to="/recover">
-              <strong>{i18n.t("login.recover_call")}</strong>
+              <strong>{i18n.t("login.recoverCall")}</strong>
             </Link>
           </span>
         </div>

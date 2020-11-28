@@ -6,15 +6,15 @@ export default {
     login: "Login",
     signup: "Sign Up",
     snippets: "Snippets",
-    snippets_detail: "Snippets Detail",
+    snippetsDetail: "Snippets Detail",
   },
   login: {
     title: "Welcome back to ",
     message: "Please Log In",
     signup: "Don't have an account? ",
-    signup_call: "Sign Up Here!",
+    signupCall: "Sign Up Here!",
     recover: "Forgot your password? ",
-    recover_call: "Recover it Here!",
+    recoverCall: "Recover it Here!",
     form: {
       remember: "Remember Me",
       user: "Username",

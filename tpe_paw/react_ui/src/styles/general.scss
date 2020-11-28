@@ -4,6 +4,7 @@ pre {
   white-space: -o-pre-wrap !important;
   word-wrap: break-word !important;
   margin: 0px !important;
+  overflow: hidden !important;
 }
 
 code {
@@ -18,6 +19,16 @@ img {
   object-fit: cover;
   height: 45px;
   width: 45px;
+}
+
+.no-decoration {
+  text-decoration: none;
+  color: inherit;
+}
+
+.no-decoration:hover {
+  text-decoration: none;
+  color: inherit;
 }
 
 .flex-center {

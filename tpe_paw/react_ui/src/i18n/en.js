@@ -9,7 +9,14 @@ export default {
     snippets: "Snippets",
     snippetsDetail: "Snippets Detail",
     searchHint: "Search...",
-    favorites: "Favorites"
+    favorites: "Favorites",
+    tags: "Tags",
+    languages: "Languages",
+    explore: "Explore",
+    profile: "Profile",
+    following: "Following",
+    upvoted: "Upvoted",
+    logout: "Log Out"
   },
   login: {
     title: "Welcome back to ",

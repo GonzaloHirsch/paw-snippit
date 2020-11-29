@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Sidenav from "./sidenav";
 
 // Routing
 // We need to enclose each of the links inside the Link object
@@ -22,7 +23,7 @@ class NavBar extends Component {
     if (isNavOpen === true) {
       document.getElementById("mySidenav").style.width = "0";
     } else {
-      document.getElementById("mySidenav").style.width = "180px";
+      document.getElementById("mySidenav").style.width = "200px";
     }
     this.setState({ navIsOpen: !isNavOpen });
   };
@@ -39,14 +40,7 @@ class NavBar extends Component {
   render() {
     return (
       <div className="mb-1 text-white nav-parent">
-        <div id="mySidenav" className="sidenav">
-          <Link to="/login">
-            <span>Login</span>
-          </Link>
-          <Link to="/login">
-            <span>About</span>
-          </Link>
-        </div>
+        <Sidenav />
         <nav className="navbar navbar-expand-lg navbar-dark fixed-top row row-cols-3">
           <button
             className="btn btn-sm text-white col-1"
@@ -161,16 +155,16 @@ class NavBar extends Component {
               </button> */}
             </form>
             <div className="col-4">
-            <Link to="/login" className="mx-1">
-              <button type="button" className="btn btn-light">
-                {i18n.t("nav.login")}
-              </button>
-            </Link>
-            <Link to="/signup" className="mx-1">
-              <button type="button" className="btn btn-light">
-                {i18n.t("nav.signup")}
-              </button>
-            </Link>
+              <Link to="/login" className="mx-1">
+                <button type="button" className="btn btn-light">
+                  {i18n.t("nav.login")}
+                </button>
+              </Link>
+              <Link to="/signup" className="mx-1">
+                <button type="button" className="btn btn-light">
+                  {i18n.t("nav.signup")}
+                </button>
+              </Link>
             </div>
           </div>
         </nav>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import SnippetDetail from "../snippets/snippet_detail";
-import SnippetClient from "../../api/implementations/SnippetClient";
+import SnippetClient from "../../api/implementations/SnippetOverviewClient";
 import UserClient from "../../api/implementations/UserClient";
 import LanguageClient from "../../api/implementations/LanguageClient";
 

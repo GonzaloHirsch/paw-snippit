@@ -160,6 +160,18 @@ class NavBar extends Component {
                 Search
               </button> */}
             </form>
+            <div className="col-4">
+            <Link to="/login" className="mx-1">
+              <button type="button" class="btn btn-light">
+                {i18n.t("nav.login")}
+              </button>
+            </Link>
+            <Link to="/signup" className="mx-1">
+              <button type="button" class="btn btn-light">
+                {i18n.t("nav.signup")}
+              </button>
+            </Link>
+            </div>
           </div>
         </nav>
       </div>

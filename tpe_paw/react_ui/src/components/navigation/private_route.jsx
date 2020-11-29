@@ -16,7 +16,8 @@ function checkIfRolesAreOk(okRoles, currentRoles) {
   return isOk;
 }
 
-export const PrivateRoute = ({...rest }) => {
+// This functional component wraps a Route component in order to provide the functionality to redirect a user if it does not have permissions
+export const PrivateRoute = ({ ...rest }) => {
   // Roles that can access the path
   const okRoles = rest.roles;
   // Current user roles

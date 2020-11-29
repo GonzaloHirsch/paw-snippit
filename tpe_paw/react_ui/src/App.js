@@ -34,7 +34,9 @@ function App() {
   );
 }
 
+// Function to determine the route component based on if the route is role protected or not
 function getRouteComponent(route) {
+  // We check if the roles for the route are empty, in that case it is NOT role protected
   if (route.roles.length > 0) {
     return (
       <PrivateRoute

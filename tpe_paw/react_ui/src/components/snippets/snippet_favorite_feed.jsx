@@ -5,7 +5,6 @@ import i18n from "../../i18n";
 // Stateless Functional Component
 
 const SnippetFavoriteFeed = (props) => {
-  // FIXME -> snippet count
   return (
     <React.Fragment>
       <div className="mx-3 mb-3">

@@ -1,6 +1,10 @@
 import React from "react";
 import i18n from "./i18n";
 
+// Roles in the system
+const ROLE_USER = "USER";
+const ROLE_ADMIN = "ADMIN";
+
 // Lazy loading the components https://reactjs.org/docs/code-splitting.html and https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const SnippetOverview = React.lazy(() =>
   import("./components/pages/snippet_overview")
@@ -14,6 +18,11 @@ const Home = React.lazy(() => import("./components/pages/home"));
 const Favorites = React.lazy(() => import("./components/pages/favorites"));
 
 // We also take into account i18n in the naming of the routes
+/*
+ Each route must have a "roles" attribute, if the route is available for anyone, 
+ the "roles" attribute must be empty([]). In case a user does not have the role for the page,
+ the app redirects the user either to the login or to the home feed
+*/
 const routes = [
   {
     path: "/",
@@ -34,28 +43,28 @@ const routes = [
     exact: true,
     name: i18n.t("nav.signup"),
     component: SignUp,
-    roles: []
+    roles: [],
   },
   {
     path: "/snippets",
     exact: true,
     name: i18n.t("nav.snippets"),
     component: SnippetFeed,
-    roles: []
+    roles: [],
   },
   {
     path: "/snippets/:id",
     exact: true,
     name: i18n.t("nav.snippetsDetail"),
     component: SnippetOverview,
-    roles: []
+    roles: [],
   },
   {
     path: "/favorites",
     exact: true,
     name: i18n.t("nav.favorites"),
     component: Favorites,
-    roles: ["USER"]
+    roles: ["USER"],
   },
 ];
 

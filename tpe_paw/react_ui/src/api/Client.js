@@ -40,5 +40,4 @@ class Client {
   }
 }
 
-export const TOKEN_HEADER = "Authorization";
 export default Client;

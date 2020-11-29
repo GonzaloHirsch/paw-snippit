@@ -47,4 +47,13 @@ public final class ResponseHelper {
             }
         }
     }
+
+    /**
+     * Adds a header to account for all the present items
+     * @param builder ResponseBuilder to be returned by the controller
+     * @param totalItems Number of items to be put
+     */
+    public static void AddTotalItemsAttribute(Response.ResponseBuilder builder, int totalItems){
+        builder.header(HEADER_ALL_ITEMS, totalItems);
+    }
 }

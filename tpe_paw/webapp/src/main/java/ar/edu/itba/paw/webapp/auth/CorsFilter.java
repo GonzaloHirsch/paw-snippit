@@ -23,7 +23,7 @@ public class CorsFilter extends GenericFilterBean {
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, HEAD");
         res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
-        res.setHeader("Access-Control-Expose-Headers", "Authorization, Link");
+        res.setHeader("Access-Control-Expose-Headers", "Authorization, Link, X-ALL-ITEMS");
         res.setHeader("Access-Control-Max-Age", "3600");
 
         // If the request is OPTIONS, we need to give it an OK for preflight response

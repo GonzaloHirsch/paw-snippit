@@ -4,7 +4,6 @@ import { loginSuccess } from "../../redux/actions/actionCreators";
 import { Link } from "react-router-dom";
 
 import AuthClient from "../../api/implementations/AuthClient";
-import TOKEN_HEADER from "../../api/Client";
 
 // i18n
 import i18n from "../../i18n";

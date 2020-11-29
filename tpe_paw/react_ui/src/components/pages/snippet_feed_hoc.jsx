@@ -1,6 +1,6 @@
 import React from "react";
 import SnippetFeedClient from "../../api/implementations/SnippetFeedClient";
-import extractLinkHeaders from "../../js/api_utils";
+import { extractLinkHeaders, extractItemCountHeader } from "../../js/api_utils";
 
 // Higher Order Component to reuse the repeated behaviour of the pages that contain Snippet Feed
 
@@ -15,6 +15,7 @@ function SnippetFeedHOC(WrappedComponent, getSnippets) {
       this.state = {
         snippets: [],
         currentPage: 1,
+        totalSnippets: 0,
         links: {},
       };
     }
@@ -23,11 +24,13 @@ function SnippetFeedHOC(WrappedComponent, getSnippets) {
       getSnippets(this.snippetFeedClient, this.state.page)
         .then((res) => {
           // Extracting the other pages headers
-          const newLinks = extractLinkHeaders(res.headers["link"]);
-          this.setState({ links: newLinks, snippets: res.data });
-          console.log(res.data);
-          console.log(this.state.snippets);
-          console.log(this.state.links);
+          const newLinks = extractLinkHeaders(res.headers);
+          const itemCount = extractItemCountHeader(res.headers);
+          this.setState({
+            links: newLinks,
+            snippets: res.data,
+            totalSnippets: itemCount,
+          });
         })
         .catch((e) => {});
     }
@@ -41,11 +44,14 @@ function SnippetFeedHOC(WrappedComponent, getSnippets) {
         .getSnippetFeedWithUrl(this.state.links[moveTo].url)
         .then((res) => {
           // Extracting the other pages headers
-          const newLinks = extractLinkHeaders(res.headers["link"]);
+          const newLinks = extractLinkHeaders(res.headers);
+          const itemCount = extractItemCountHeader(res.headers);
+
           this.setState({
             links: newLinks,
             snippets: res.data,
             currentPage: this.state.links[moveTo].page,
+            totalSnippets: itemCount,
           });
         })
         .catch((e) => {});

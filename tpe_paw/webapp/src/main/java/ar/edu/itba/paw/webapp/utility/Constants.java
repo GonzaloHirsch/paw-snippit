@@ -33,6 +33,8 @@ public final class Constants {
     public static final String LINK_PREV = "prev";
     public static final String LINK_NEXT = "next";
 
+    public static final String HEADER_ALL_ITEMS = "X-ALL-ITEMS";
+
     /*
      * "The AssertionError isn’t strictly required, but it provides insurance in case the
      *  constructor is accidentally invoked from within the class" - Page 19, Effective Java

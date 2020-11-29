@@ -89,10 +89,12 @@ public class SnippetController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getHomeSnippetFeed(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
         final List<SnippetDto> snippets = this.snippetService.getAllSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
-        final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllSnippetsCount(), SNIPPET_PAGE_SIZE);
+        final int numberOfSnippets = this.snippetService.getAllSnippetsCount();
+        final int pageCount = PagingHelper.CalculateTotalPages(numberOfSnippets, SNIPPET_PAGE_SIZE);
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        ResponseHelper.AddTotalItemsAttribute(builder, numberOfSnippets);
         return builder.build();
     }
 
@@ -112,6 +114,7 @@ public class SnippetController {
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        ResponseHelper.AddTotalItemsAttribute(builder, totalSnippetCount);
         return builder.build();
     }
 
@@ -149,6 +152,7 @@ public class SnippetController {
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
         return builder.build();
     }
 
@@ -195,11 +199,13 @@ public class SnippetController {
         }
 
         final List<SnippetDto> snippets = this.snippetService.getAllFlaggedSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
-        final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllFlaggedSnippetsCount(), SNIPPET_PAGE_SIZE);
+        final int snippetCount = this.snippetService.getAllFlaggedSnippetsCount();
+        final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
         return builder.build();
     }
 
@@ -225,6 +231,7 @@ public class SnippetController {
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        ResponseHelper.AddTotalItemsAttribute(builder, totalSnippetCount);
         return builder.build();
     }
 

@@ -1,5 +1,6 @@
-function extractLinkHeaders(headers) {
-  const links = headers.split(",");
+export function extractLinkHeaders(headers) {
+  const linkHeader = headers["link"];
+  const links = linkHeader.split(",");
   let newLinks = {};
   links.forEach((h) => {
     const parts = h
@@ -17,4 +18,7 @@ function extractLinkHeaders(headers) {
   return newLinks;
 }
 
-export default extractLinkHeaders;
+export function extractItemCountHeader(headers) {
+  const value = headers["x-all-items"];
+  return value;
+}

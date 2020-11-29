@@ -9,7 +9,7 @@ const SnippetHomeFeed = (props) => {
     <React.Fragment>
       <div className="mx-3 mb-3">
         <h1>Home</h1>
-        <h5>({props.snippets.length} snippets)</h5>
+        <h5>({props.totalSnippets} snippets)</h5>
       </div>
       <SnippetFeed
         snippets={props.snippets}

@@ -110,11 +110,13 @@ public class UserController {
             final User user = maybeUser.get();
 
             final List<SnippetDto> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
-            final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllSnippetsByOwnerCount(user.getId()), SNIPPET_PAGE_SIZE);
+            final int snippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
+            final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });
             ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
             return builder.build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -140,11 +142,13 @@ public class UserController {
             final User loggedUser = this.loginAuthentication.getLoggedInUser();
             if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
                 final List<SnippetDto> snippets = this.snippetService.getAllDeletedSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
-                final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllDeletedSnippetsByOwnerCount(user.getId()), SNIPPET_PAGE_SIZE);
+                final int snippetCount = this.snippetService.getAllDeletedSnippetsByOwnerCount(user.getId());
+                final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
                 Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
                 });
                 ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+                ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
                 return builder.build();
             } else {
                 return Response.status(Response.Status.FORBIDDEN).build();
@@ -295,11 +299,13 @@ public class UserController {
             final User user = maybeUser.get();
 
             final List<SnippetDto> snippets = this.snippetService.getAllFavoriteSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
-            final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllFavoriteSnippetsCount(user.getId()), SNIPPET_PAGE_SIZE);
+            final int snippetCount = this.snippetService.getAllFavoriteSnippetsCount(user.getId());
+            final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });
             ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
             return builder.build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -322,11 +328,13 @@ public class UserController {
             final User user = maybeUser.get();
 
             final List<SnippetDto> snippets = this.snippetService.getAllFollowingSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
-            final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllFollowingSnippetsCount(user.getId()), SNIPPET_PAGE_SIZE);
+            final int snippetCount = this.snippetService.getAllFollowingSnippetsCount(user.getId());
+            final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });
             ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
             return builder.build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -366,11 +374,13 @@ public class UserController {
             final User user = maybeUser.get();
 
             final List<SnippetDto> snippets = this.snippetService.getAllUpVotedSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
-            final int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllUpvotedSnippetsCount(user.getId()), SNIPPET_PAGE_SIZE);
+            final int snippetCount = this.snippetService.getAllUpvotedSnippetsCount(user.getId());
+            final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });
             ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
             return builder.build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -399,6 +409,7 @@ public class UserController {
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });
             ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            ResponseHelper.AddTotalItemsAttribute(builder, totalSnippetCount);
             return builder.build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();

@@ -1,7 +1,13 @@
-import React, {Suspense} from "react";
-import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import React, { Component, Suspense } from "react";
+import {
+  HashRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import routes from "./routes";
 import logo from "./logo.svg";
+import {PrivateRoute} from "./components/navigation/private_route";
 
 // Styles
 import "./App.scss";
@@ -20,21 +26,35 @@ function App() {
     <React.Fragment>
       <Suspense fallback={<div>Loading...</div>}>
         <Router>
-          <NavBar className="nav-spacing"/>
-          <Switch>
-            {routes.map((route) => (
-              <Route
-                key={route.name}
-                path={route.path}
-                component={route.component}
-                exact={route.exact}
-              />
-            ))}
-          </Switch>
+          <NavBar className="nav-spacing" />
+          <Switch>{routes.map((route) => getRouteComponent(route))}</Switch>
         </Router>
       </Suspense>
     </React.Fragment>
   );
+}
+
+function getRouteComponent(route) {
+  if (route.roles.length > 0) {
+    return (
+      <PrivateRoute
+        key={route.name}
+        path={route.path}
+        exact={route.exact}
+        roles={route.roles}
+        component={route.component}
+      ></PrivateRoute>
+    );
+  } else {
+    return (
+      <Route
+        key={route.name}
+        path={route.path}
+        component={route.component}
+        exact={route.exact}
+      />
+    );
+  }
 }
 
 export default App;

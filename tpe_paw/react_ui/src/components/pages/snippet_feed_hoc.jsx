@@ -1,6 +1,7 @@
 import React from "react";
 import SnippetFeedClient from "../../api/implementations/SnippetFeedClient";
 import { extractLinkHeaders, extractItemCountHeader } from "../../js/api_utils";
+import store from "../../store";
 
 // Higher Order Component to reuse the repeated behaviour of the pages that contain Snippet Feed
 
@@ -10,7 +11,13 @@ function SnippetFeedHOC(WrappedComponent, getSnippets) {
 
     constructor(props) {
       super(props);
-      this.snippetFeedClient = new SnippetFeedClient();
+      const state = store.getState();
+      if (state.auth.token === null || state.auth.token === undefined) {
+        this.snippetFeedClient = new SnippetFeedClient();
+      } else {
+        this.snippetFeedClient = new SnippetFeedClient(state.auth.token);
+      }
+
       this.onPageTransition = this.onPageTransition.bind(this);
       this.state = {
         snippets: [],

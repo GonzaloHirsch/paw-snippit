@@ -23,6 +23,8 @@ public class JwtTokenFactory {
 
     // Property for the issuer of the token
     private static final String TOKEN_ISSUER = "snippit.paw.itba";
+    private static final String TOKEN_UID = "uid";
+    private static final String TOKEN_AUTHORITIES = "auth";
 
     // TODO: check how to avoid making the stream every time
     @Value("classpath:authKey.key")
@@ -60,6 +62,8 @@ public class JwtTokenFactory {
         // Generating the token
         return Jwts.builder()
                 .setClaims(claims)
+                .claim(TOKEN_UID, context.getId())
+                .claim(TOKEN_AUTHORITIES, context.getAuthorities())
                 .setIssuer(TOKEN_ISSUER)
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(now.plus(DAYS_TO_EXPIRE, ChronoUnit.DAYS)))

@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import SnippetFeedHOC from "./snippet_feed_hoc";
+import SnippetFeedClient from "../../api/implementations/SnippetFeedClient";
+import SnippetFavoriteFeed from "../snippets/snippet_favorite_feed";
+import store from "../../store";
 
-/* TODO
+const userId = store.getState().auth.info.uid;
+
 const Favorites = SnippetFeedHOC(
-  SnippetFeedWithContext,
-  (SnippetFeedClient, page) => SnippetFeedClient.getFavoritesSnippetFeed(page)
+  SnippetFavoriteFeed,
+  (SnippetFeedClient, page) =>
+    SnippetFeedClient.getFavoritesSnippetFeed(page, userId)
 );
 
 export default Favorites;
-*/

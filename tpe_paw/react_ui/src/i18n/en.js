@@ -1,13 +1,15 @@
 export default {
   test: "My test in ENGLISH",
   app: "Snippit",
+  snippets: "Snippets",
   nav: {
     home: "Home",
     login: "Login",
     signup: "Sign Up",
     snippets: "Snippets",
     snippetsDetail: "Snippets Detail",
-    searchHint: "Search..."
+    searchHint: "Search...",
+    favorites: "Favorites"
   },
   login: {
     title: "Welcome back to ",
@@ -36,4 +38,10 @@ export default {
       action: "Sign Up!",
     },
   },
+  home: {
+    name: "Home"
+  },
+  favorites: {
+    name: "Favorites"
+  }
 };

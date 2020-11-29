@@ -7,9 +7,9 @@ export default class SnippetFeedClient extends Client {
     return this.instance.get("snippets", params);
   }
 
-  getFavoritesSnippetFeed(page) {
+  getFavoritesSnippetFeed(page, userId) {
     const params = new URLSearchParams([["page", page]]);
-    return this.instance.get("snippets/favorites", params);
+    return this.instance.get("users/" + userId + "/favorite_snippets", params);
   }
 
   getUpvotedSnippetFeed(page) {

@@ -11,7 +11,7 @@ const initialState = {
   },
 };
 
-export default function reducer(state, action) {
+export default function reducer(state = initialState, action) {
   switch (action.type) {
     case actions.LOGIN_SUCCESS: {
       // Store the payload, which is the token
@@ -20,6 +20,7 @@ export default function reducer(state, action) {
       const pureToken = token.replace("Bearer ", "");
       // We have to decode the token
       let content = jwt_decode(pureToken);
+      console.log(content)
       // Store the updated store
       return {
         ...state,
@@ -27,7 +28,7 @@ export default function reducer(state, action) {
           status: actions.LOGIN_SUCCESS,
           token: token,
           info: content,
-          roles: [],  // TODO: CHECK ROLES
+          roles: content.auth.map(elem => elem.authority),  // TODO: CHECK ROLES
         },
       };
     }

@@ -4,13 +4,13 @@ import i18n from "../../i18n";
 
 // Stateless Functional Component
 
-const SnippetHomeFeed = (props) => {
+const SnippetFavoriteFeed = (props) => {
   // FIXME -> snippet count
   return (
     <React.Fragment>
-      <div className="mx-3 mb-3 fw-100">
-        <h1 className="fw-300">{i18n.t("home.name")}</h1>
-        <h5 className="fw-100">({props.totalSnippets} snippets)</h5>
+      <div className="mx-3 mb-3">
+        <h1 className="fw-300">{i18n.t("favorites.name")}</h1>
+        <h5 className="fw-100">({props.totalSnippets} {i18n.t("snippets")})</h5>
       </div>
       <SnippetFeed
         snippets={props.snippets}
@@ -22,4 +22,4 @@ const SnippetHomeFeed = (props) => {
   );
 };
 
-export default SnippetHomeFeed;
+export default SnippetFavoriteFeed;

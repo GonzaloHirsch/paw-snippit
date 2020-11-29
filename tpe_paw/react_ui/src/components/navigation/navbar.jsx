@@ -9,7 +9,7 @@ import i18n from "../../i18n";
 
 // Icons
 import Icon from "@mdi/react";
-import { mdiClose, mdiMenu } from "@mdi/js";
+import { mdiClose, mdiMenu, mdiCodeTags } from "@mdi/js";
 
 // Component -> https://getbootstrap.com/docs/4.5/components/navbar/
 class NavBar extends Component {
@@ -38,7 +38,7 @@ class NavBar extends Component {
 
   render() {
     return (
-      <div className="mb-3 text-white">
+      <div className="mb-1 text-white nav-parent">
         <div id="mySidenav" className="sidenav">
           <Link to="/login">
             <span>Login</span>
@@ -47,94 +47,101 @@ class NavBar extends Component {
             <span>About</span>
           </Link>
         </div>
-        <nav className="navbar navbar-expand-lg navbar-dark rounded-bottom">
-          <button
-            className="btn btn-sm text-white"
-            type="button"
-            data-toggle="collapse"
-            aria-expanded="false"
-            aria-label="Toggle side navigation"
-            onClick={() => this.navInteract(this.state.navIsOpen)}
-          >
-            {this.getNavIcon(this.state.navIsOpen)}
-          </button>
-          <a className="navbar-brand" href="#">
-            Snippit
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item active">
-                <a className="nav-link" href="#">
-                  Home <span className="sr-only">(current)</span>
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Link
-                </a>
-              </li>
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  id="navbarDropdown"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
+        <nav className="navbar navbar-expand-lg navbar-dark fixed-top">
+            <button
+              className="btn btn-sm text-white"
+              type="button"
+              data-toggle="collapse"
+              aria-expanded="false"
+              aria-label="Toggle side navigation"
+              onClick={() => this.navInteract(this.state.navIsOpen)}
+            >
+              {this.getNavIcon(this.state.navIsOpen)}
+            </button>
+            <Link to="/" className="app-link text-white ml-4">
+              <Icon path={mdiCodeTags} size={2} />
+              <span className="ml-1">{i18n.t("app")}</span>
+            </Link>
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div
+              className="collapse navbar-collapse"
+              id="navbarSupportedContent"
+            >
+              <ul className="navbar-nav mr-auto">
+                <li className="nav-item active">
+                  <a className="nav-link" href="#">
+                    Home <span className="sr-only">(current)</span>
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#">
+                    Link
+                  </a>
+                </li>
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle"
+                    href="#"
+                    id="navbarDropdown"
+                    role="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    Dropdown
+                  </a>
+                  <div
+                    className="dropdown-menu"
+                    aria-labelledby="navbarDropdown"
+                  >
+                    <a className="dropdown-item" href="#">
+                      Action
+                    </a>
+                    <a className="dropdown-item" href="#">
+                      Another action
+                    </a>
+                    <div className="dropdown-divider"></div>
+                    <a className="dropdown-item" href="#">
+                      Something else here
+                    </a>
+                  </div>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link disabled"
+                    href="#"
+                    tabIndex="-1"
+                    aria-disabled="true"
+                  >
+                    Disabled
+                  </a>
+                </li>
+              </ul>
+              <form className="form-inline my-2 my-lg-0">
+                <input
+                  className="form-control mr-sm-2"
+                  type="search"
+                  placeholder="Search"
+                  aria-label="Search"
+                />
+                <button
+                  className="btn btn-outline-success my-2 my-sm-0"
+                  type="submit"
                 >
-                  Dropdown
-                </a>
-                <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a className="dropdown-item" href="#">
-                    Action
-                  </a>
-                  <a className="dropdown-item" href="#">
-                    Another action
-                  </a>
-                  <div className="dropdown-divider"></div>
-                  <a className="dropdown-item" href="#">
-                    Something else here
-                  </a>
-                </div>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link disabled"
-                  href="#"
-                  tabIndex="-1"
-                  aria-disabled="true"
-                >
-                  Disabled
-                </a>
-              </li>
-            </ul>
-            <form className="form-inline my-2 my-lg-0">
-              <input
-                className="form-control mr-sm-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button
-                className="btn btn-outline-success my-2 my-sm-0"
-                type="submit"
-              >
-                Search
-              </button>
-            </form>
-          </div>
+                  Search
+                </button>
+              </form>
+            </div>
         </nav>
       </div>
     );

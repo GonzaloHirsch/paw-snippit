@@ -1,0 +1,24 @@
+.app-link {
+  cursor: pointer;
+  font-size: 30px;
+}
+
+/* unvisited link */
+.app-link:link {
+  text-decoration: none;
+}
+
+/* visited link */
+.app-link:visited {
+  text-decoration: none;
+}
+
+/* mouse over link */
+.app-link:hover {
+  text-decoration: none;
+}
+
+/* selected link */
+.app-link:active {
+  text-decoration: none;
+}

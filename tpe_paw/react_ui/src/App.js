@@ -20,7 +20,7 @@ function App() {
     <React.Fragment>
       <Suspense fallback={<div>Loading...</div>}>
         <Router>
-          <NavBar />
+          <NavBar className="nav-spacing"/>
           <Switch>
             {routes.map((route) => (
               <Route

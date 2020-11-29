@@ -7,6 +7,7 @@ export default {
     signup: "Sign Up",
     snippets: "Snippets",
     snippetsDetail: "Snippets Detail",
+    searchHint: "Search..."
   },
   login: {
     title: "Welcome back to ",

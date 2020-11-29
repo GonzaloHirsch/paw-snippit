@@ -9,7 +9,7 @@ import i18n from "../../i18n";
 
 // Icons
 import Icon from "@mdi/react";
-import { mdiClose, mdiMenu, mdiCodeTags } from "@mdi/js";
+import { mdiClose, mdiMenu, mdiCodeTags, mdiMagnify } from "@mdi/js";
 
 // Component -> https://getbootstrap.com/docs/4.5/components/navbar/
 class NavBar extends Component {
@@ -47,37 +47,37 @@ class NavBar extends Component {
             <span>About</span>
           </Link>
         </div>
-        <nav className="navbar navbar-expand-lg navbar-dark fixed-top">
-            <button
-              className="btn btn-sm text-white"
-              type="button"
-              data-toggle="collapse"
-              aria-expanded="false"
-              aria-label="Toggle side navigation"
-              onClick={() => this.navInteract(this.state.navIsOpen)}
-            >
-              {this.getNavIcon(this.state.navIsOpen)}
-            </button>
-            <Link to="/" className="app-link text-white ml-4">
-              <Icon path={mdiCodeTags} size={2} />
-              <span className="ml-1">{i18n.t("app")}</span>
-            </Link>
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            <div
-              className="collapse navbar-collapse"
-              id="navbarSupportedContent"
-            >
-              <ul className="navbar-nav mr-auto">
+        <nav className="navbar navbar-expand-lg navbar-dark fixed-top row row-cols-3">
+          <button
+            className="btn btn-sm text-white col-1"
+            type="button"
+            data-toggle="collapse"
+            aria-expanded="false"
+            aria-label="Toggle side navigation"
+            onClick={() => this.navInteract(this.state.navIsOpen)}
+          >
+            {this.getNavIcon(this.state.navIsOpen)}
+          </button>
+          <Link to="/" className="app-link text-white col-2">
+            <Icon path={mdiCodeTags} size={2} />
+            <span className="ml-1">{i18n.t("app")}</span>
+          </Link>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div
+            className="collapse navbar-collapse col-9"
+            id="navbarSupportedContent"
+          >
+            {/* <ul className="navbar-nav mr-auto">
                 <li className="nav-item active">
                   <a className="nav-link" href="#">
                     Home <span className="sr-only">(current)</span>
@@ -126,22 +126,41 @@ class NavBar extends Component {
                     Disabled
                   </a>
                 </li>
-              </ul>
-              <form className="form-inline my-2 my-lg-0">
+              </ul> */}
+            <form className="form-inline my-auto my-lg-0 col-8">
+              <div className="input-group mr-sm-2 search-box">
                 <input
-                  className="form-control mr-sm-2"
-                  type="search"
-                  placeholder="Search"
-                  aria-label="Search"
+                  type="text"
+                  className="form-control"
+                  placeholder={i18n.t("nav.searchHint")}
+                  aria-label={i18n.t("nav.searchHint")}
+                  aria-describedby="button-addon2"
                 />
-                <button
-                  className="btn btn-outline-success my-2 my-sm-0"
-                  type="submit"
-                >
-                  Search
-                </button>
-              </form>
-            </div>
+                <div className="input-group-append">
+                  <button
+                    className="btn btn-outline-secondary"
+                    type="submit"
+                    id="button-addon2"
+                  >
+                    <Icon path={mdiMagnify} size={1} />
+                  </button>
+                </div>
+              </div>
+              {/* 
+              <input
+                className="form-control mr-sm-2"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+              />
+              <button
+                className="btn btn-outline-success my-2 my-sm-0"
+                type="submit"
+              >
+                Search
+              </button> */}
+            </form>
+          </div>
         </nav>
       </div>
     );

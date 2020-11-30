@@ -16,7 +16,8 @@ export default {
     profile: "Profile",
     following: "Following",
     upvoted: "Upvoted",
-    logout: "Log Out"
+    logout: "Log Out",
+    flagged: "Flagged"
   },
   login: {
     title: "Welcome back to ",

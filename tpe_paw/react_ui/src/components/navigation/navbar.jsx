@@ -1,26 +1,29 @@
 import React, { Component } from "react";
 import Sidenav from "./sidenav";
 import store from "../../store";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import i18n from "../../i18n";
 import Icon from "@mdi/react";
 import { mdiClose, mdiMenu, mdiCodeTags, mdiMagnify } from "@mdi/js";
+import { logOut } from "../../redux/actions/actionCreators";
 import { LOGIN_SUCCESS } from "../../redux/actions/actionTypes";
 
 // Component -> https://getbootstrap.com/docs/4.5/components/navbar/
 class NavBar extends Component {
   authUnsubscribe;
+  state = {
+    navIsOpen: false,
+    userIsLogged: false,
+    username: "",
+    roles: [],
+  };
 
-  constructor(props) {
+  constructor(props){
     super(props);
-    
-    // Setting the initial state
-    this.state = {
-      navIsOpen: false,
-      userIsLogged: false,
-      username: "",
-    };
+    this.handleLogOut = this.handleLogOut.bind(this);
+  }
 
+  componentDidMount() {
     // Subscribing to changes in the auth status, if the user logs in, it is marked as logged in
     this.authUnsubscribe = store.subscribe(() => {
       const storedState = store.getState();
@@ -28,11 +31,13 @@ class NavBar extends Component {
         this.setState({
           userIsLogged: true,
           username: storedState.auth.info.sub,
+          roles: storedState.auth.roles,
         });
       } else {
         this.setState({
           userIsLogged: false,
           username: "",
+          roles: [],
         });
       }
     });
@@ -62,10 +67,23 @@ class NavBar extends Component {
     }
   };
 
+  // Method to handle the log out event
+  handleLogOut() {
+    // Dispatch the login event
+    store.dispatch(logOut());
+
+    // Push to home
+    this.props.history.push("/");
+  };
+
   render() {
     return (
       <div className="mb-1 text-white nav-parent">
-        <Sidenav isLogged={this.state.userIsLogged} />
+        <Sidenav
+          isLogged={this.state.userIsLogged}
+          roles={this.state.roles}
+          onLogOut={this.handleLogOut}
+        />
         <nav className="navbar navbar-expand-lg navbar-dark fixed-top row row-cols-3">
           <button
             className="btn btn-sm text-white col-1"
@@ -198,4 +216,4 @@ class NavBar extends Component {
   }
 }
 
-export default NavBar;
+export default withRouter(NavBar);

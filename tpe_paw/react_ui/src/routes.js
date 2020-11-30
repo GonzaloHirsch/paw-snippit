@@ -1,9 +1,6 @@
 import React from "react";
 import i18n from "./i18n";
-
-// Roles in the system
-const ROLE_USER = "USER";
-const ROLE_ADMIN = "ADMIN";
+import { ROLE_USER, ROLE_ADMIN } from "./js/security_utils";
 
 // Lazy loading the components https://reactjs.org/docs/code-splitting.html and https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const SnippetOverview = React.lazy(() =>
@@ -64,7 +61,7 @@ const routes = [
     exact: true,
     name: i18n.t("nav.favorites"),
     component: Favorites,
-    roles: ["USER"],
+    roles: [ROLE_USER],
   },
 ];
 

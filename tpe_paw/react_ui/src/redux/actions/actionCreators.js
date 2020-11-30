@@ -6,3 +6,8 @@ export const loginSuccess = (token) => ({
     token: token,
   },
 });
+
+export const logOut = () => ({
+  type: actions.LOGOUT,
+  payload: {},
+});

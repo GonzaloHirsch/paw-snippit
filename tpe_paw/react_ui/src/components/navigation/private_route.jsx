@@ -6,7 +6,7 @@ import store from "../../store";
 function checkIfRolesAreOk(okRoles, currentRoles) {
   var isOk = false;
   for (var i = 0; i < currentRoles.length; i++) {
-    for (var j = 0; i < okRoles.length; j++) {
+    for (var j = 0; j < okRoles.length; j++) {
       if (currentRoles[i] === okRoles[j]) {
         isOk = true;
         break;

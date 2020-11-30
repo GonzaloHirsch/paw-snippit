@@ -28,7 +28,19 @@ export default function reducer(state = initialState, action) {
           status: actions.LOGIN_SUCCESS,
           token: token,
           info: content,
-          roles: content.auth.map(elem => elem.authority),  // TODO: CHECK ROLES
+          roles: content.auth.map(elem => elem.authority),
+        },
+      };
+    }
+    case actions.LOGOUT: {
+      // Store the updated store
+      return {
+        ...state,
+        auth: {
+          status: actions.LOGOUT,
+          token: null,
+          info: null,
+          roles: [],
         },
       };
     }

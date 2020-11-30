@@ -1,35 +1,96 @@
 import React, { Component } from "react";
-import { mdiHome, mdiMagnify, mdiTag, mdiMonitor } from "@mdi/js";
+import {
+  mdiHome,
+  mdiMagnify,
+  mdiTag,
+  mdiMonitor,
+  mdiTagHeart,
+  mdiHeart,
+  mdiFlag,
+  mdiAccount,
+  mdiPower,
+  mdiThumbUp,
+} from "@mdi/js";
 import i18n from "../../i18n";
-import { SidenavItem } from "./sidenav_item";
+import { SidenavLinkItem } from "./sidenav_link_item";
+import { SidenavButtonItem } from "./sidenav_button_item";
+import { isAdmin } from "../../js/security_utils";
 
 class Sidenav extends Component {
   state = {};
 
+  getSidenavRoleItems(roles) {
+    return (
+      <React.Fragment>
+        <div className="dropdown-divider menu-divider"></div>
+        <ul className="menu-list">
+          {!isAdmin(roles) ? (
+            <SidenavLinkItem
+              icon={mdiAccount}
+              route="/"
+              text={i18n.t("nav.profile")}
+            />
+          ) : (
+            <SidenavLinkItem
+              icon={mdiFlag}
+              route="/"
+              text={i18n.t("nav.flagged")}
+            />
+          )}
+          <SidenavLinkItem
+            icon={mdiTagHeart}
+            route="/tags"
+            text={i18n.t("nav.following")}
+          />
+          <SidenavLinkItem
+            icon={mdiHeart}
+            route="/languages"
+            text={i18n.t("nav.favorites")}
+          />
+          <SidenavLinkItem
+            icon={mdiThumbUp}
+            route="/explore"
+            text={i18n.t("nav.upvoted")}
+          />
+        </ul>
+      </React.Fragment>
+    );
+  }
+
   render() {
-    const isLogged = this.props.isLogged;
+    const { isLogged, roles, onLogOut } = this.props;
     return (
       <div id="mySidenav" className="sidenav">
         <ul className="menu-list">
-          <SidenavItem icon={mdiHome} route="/" text={i18n.t("nav.home")} />
-          <SidenavItem
-            icon={mdiMonitor}
+          <SidenavLinkItem icon={mdiHome} route="/" text={i18n.t("nav.home")} />
+          <SidenavLinkItem
+            icon={mdiTag}
             route="/tags"
             text={i18n.t("nav.tags")}
           />
-          <SidenavItem
-            icon={mdiHome}
+          <SidenavLinkItem
+            icon={mdiMonitor}
             route="/languages"
             text={i18n.t("nav.languages")}
           />
-          <SidenavItem
+          <SidenavLinkItem
             icon={mdiMagnify}
             route="/explore"
             text={i18n.t("nav.explore")}
           />
         </ul>
+        {isLogged && this.getSidenavRoleItems(roles)}
         {isLogged && (
-            <h1>HEY</h1>
+          <React.Fragment>
+            <div className="dropdown-divider menu-divider"></div>
+            <ul className="menu-list">
+              <SidenavButtonItem
+                icon={mdiPower}
+                onEvent={onLogOut}
+                text={i18n.t("nav.logout")}
+              />
+            </ul>
+          </React.Fragment>
         )}
       </div>
     );

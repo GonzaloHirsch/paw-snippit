@@ -1,22 +1,14 @@
 import React, { Component, Suspense } from "react";
-import {
-  HashRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
+import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import routes from "./routes";
 import logo from "./logo.svg";
-import {PrivateRoute} from "./components/navigation/private_route";
+import { PrivateRoute } from "./components/navigation/private_route";
 
 // Styles
 import "./App.scss";
 
 // Components
 import NavBar from "./components/navigation/navbar";
-import SnippetCard from "./components/snippets/snippet_card";
-import Login from "./components/login/login";
-import SnippetDetail from "./components/snippets/snippet_detail";
 
 function App() {
   return (

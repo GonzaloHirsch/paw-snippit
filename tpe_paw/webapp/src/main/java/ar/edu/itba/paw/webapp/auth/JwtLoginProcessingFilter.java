@@ -48,6 +48,7 @@ public class JwtLoginProcessingFilter extends AbstractAuthenticationProcessingFi
             throws AuthenticationException, IOException, ServletException {
         // Check if the method used is valid
         if (!HttpMethod.POST.name().equals(request.getMethod())) {
+            // FIXME: TIRAR EL ERROR
             /*LOGGER.debug("Authentication method not supported. Request method: {}", request.getMethod());
             throw new AuthMethodNotSupportedException("Authentication method not supported");*/
             // THROW ERROR
@@ -60,6 +61,7 @@ public class JwtLoginProcessingFilter extends AbstractAuthenticationProcessingFi
         if ((loginDto.getUsername() == null || loginDto.getUsername().isEmpty()) || (loginDto.getPassword() == null || loginDto.getPassword().isEmpty())) {
 //            throw new AuthenticationServiceException("Username or Password not provided");
             // THROW ERROR
+            // FIXME: TIRAR EL ERROR
         }
 
         // Generating the token

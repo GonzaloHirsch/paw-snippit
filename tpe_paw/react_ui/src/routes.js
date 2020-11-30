@@ -61,7 +61,7 @@ const routes = [
     exact: true,
     name: i18n.t("nav.favorites"),
     component: Favorites,
-    roles: [ROLE_USER],
+    roles: [ROLE_USER, ROLE_ADMIN],
   },
 ];
 

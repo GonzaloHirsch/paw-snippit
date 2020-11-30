@@ -36,6 +36,7 @@ class Login extends Component {
         // Dispatch the login event
         store.dispatch(loginSuccess({ token }));
 
+        console.log(this.props.history)
         // Push to home
         this.props.history.push("/");
       })

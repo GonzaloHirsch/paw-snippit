@@ -11,14 +11,16 @@ import { LOGIN_SUCCESS } from "../../redux/actions/actionTypes";
 class NavBar extends Component {
   authUnsubscribe;
 
-  state = {
-    navIsOpen: false,
-    userIsLogged: false,
-    username: "",
-  };
-
   constructor(props) {
     super(props);
+    
+    // Setting the initial state
+    this.state = {
+      navIsOpen: false,
+      userIsLogged: false,
+      username: "",
+    };
+
     // Subscribing to changes in the auth status, if the user logs in, it is marked as logged in
     this.authUnsubscribe = store.subscribe(() => {
       const storedState = store.getState();

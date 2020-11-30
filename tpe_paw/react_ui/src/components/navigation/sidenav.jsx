@@ -11,20 +11,20 @@ class Sidenav extends Component {
     return (
       <div id="mySidenav" className="sidenav">
         <ul className="menu-list">
-          <SidenavItem icon={mdiHome} path="/" text={i18n.t("nav.home")} />
+          <SidenavItem icon={mdiHome} route="/" text={i18n.t("nav.home")} />
           <SidenavItem
             icon={mdiMonitor}
-            path="/tags"
+            route="/tags"
             text={i18n.t("nav.tags")}
           />
           <SidenavItem
             icon={mdiHome}
-            path="/languages"
+            route="/languages"
             text={i18n.t("nav.languages")}
           />
           <SidenavItem
             icon={mdiMagnify}
-            path="/explore"
+            route="/explore"
             text={i18n.t("nav.explore")}
           />
         </ul>

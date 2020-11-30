@@ -28,7 +28,7 @@ export const PrivateRoute = ({ ...rest }) => {
       {...rest}
       render={({ location }) =>
         checkIfRolesAreOk(okRoles, currentRoles) ? (
-          <rest.component />
+          <rest.comp />
         ) : (
           <Redirect
             to={{

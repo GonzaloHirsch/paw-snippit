@@ -36,7 +36,7 @@ function getRouteComponent(route) {
         path={route.path}
         exact={route.exact}
         roles={route.roles}
-        component={route.component}
+        comp={route.component}
       ></PrivateRoute>
     );
   } else {

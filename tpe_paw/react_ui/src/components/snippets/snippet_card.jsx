@@ -3,6 +3,13 @@ import { Link } from "react-router-dom";
 
 class SnippetCard extends Component {
   state = {};
+
+  getUserProfilePicUrl(creator){
+    if (creator.picture !== null || creator.picture !== undefined){
+      return creator.picture;
+    }
+    return "/userIcon.jpg";
+  }
   render() {
     const { snippet } = this.props;
     const snippetLink = `/snippets/${snippet.id}`;
@@ -15,20 +22,20 @@ class SnippetCard extends Component {
         >
           <div className="card-header px-4" style={{ fontSize: "20px" }}>
             <div className="row align-items-center">
-              <img src="/userIcon.jpg" alt="User Icon" />
+              <img src={this.getUserProfilePicUrl(snippet.creator)} alt="User Icon" />
               <div className="col ml-2">
                 <div className="row text-primary" style={{ fontSize: "18px" }}>
-                  ghirsch
+                  {snippet.creator.username}
                 </div>
                 <div className="row text-muted" style={{ fontSize: "12px" }}>
-                  10/10/2020
+                {snippet.createdDate}
                 </div>
               </div>
               <div
                 className="language-snippet-tag p-2 flex-center rounded mr-1"
                 style={{ fontSize: "20px" }}
               >
-                Java
+                {snippet.language.name}
               </div>
             </div>
           </div>

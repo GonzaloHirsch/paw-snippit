@@ -16,6 +16,7 @@ import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -88,7 +89,7 @@ public class TagsController {
     public Response getSnippetsForTag(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page){
         Optional<Tag> maybeTag = this.tagService.findTagById(id);
         if (maybeTag.isPresent()) {
-            final List<SnippetDto> snippets = this.snippetService.findSnippetsForTag(id, page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+            final List<SnippetDto> snippets = this.snippetService.findSnippetsForTag(id, page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
             int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllSnippetsByTagCount(id), SNIPPET_PAGE_SIZE);
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
@@ -109,7 +110,7 @@ public class TagsController {
         Optional<Tag> maybeTag = this.tagService.findTagById(id);
         if (maybeTag.isPresent()) {
             final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.TAGS, searchDto.getSort(), null, id, page)
-                    .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+                    .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
 
             int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.TAGS, null, id);
             final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);

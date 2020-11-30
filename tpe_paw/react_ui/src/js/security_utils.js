@@ -1,7 +1,7 @@
 // Function to determine if the given user is a USER or not
 export function isUser(roles) {
-  for (var i = 0; i < roles.length; i++) {
-    if (roles[i] === ROLE_USER) {
+  for (var j = 0; j < roles.length; j++) {
+    if (roles[j] === ROLE_USER) {
       return true;
     }
   }
@@ -10,8 +10,8 @@ export function isUser(roles) {
 
 // Function to determine if the given user is an ADMIN or not
 export function isAdmin(roles) {
-  for (var i = 0; i < roles.length; i++) {
-    if (roles[i] === ROLE_ADMIN) {
+  for (var j = 0; j < roles.length; j++) {
+    if (roles[j] === ROLE_ADMIN) {
       return true;
     }
   }

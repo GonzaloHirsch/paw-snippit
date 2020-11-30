@@ -88,7 +88,7 @@ public class SnippetController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getHomeSnippetFeed(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
-        final List<SnippetDto> snippets = this.snippetService.getAllSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+        final List<SnippetDto> snippets = this.snippetService.getAllSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
         final int numberOfSnippets = this.snippetService.getAllSnippetsCount();
         final int pageCount = PagingHelper.CalculateTotalPages(numberOfSnippets, SNIPPET_PAGE_SIZE);
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
@@ -104,7 +104,7 @@ public class SnippetController {
     public Response searchInHome(final @BeanParam SearchDto searchDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
 
         final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.HOME, searchDto.getSort(), null, null, page)
-                .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+                .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
 
         int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.HOME, null, null);
         final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
@@ -146,7 +146,7 @@ public class SnippetController {
                 exploreDto.getTitle(), exploreDto.getUsername(),
                 exploreDto.getIncludeFlagged());
 
-        final List<SnippetDto> snippets = snippetsCollection.stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+        final List<SnippetDto> snippets = snippetsCollection.stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
         final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
@@ -198,7 +198,7 @@ public class SnippetController {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
-        final List<SnippetDto> snippets = this.snippetService.getAllFlaggedSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+        final List<SnippetDto> snippets = this.snippetService.getAllFlaggedSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
         final int snippetCount = this.snippetService.getAllFlaggedSnippetsCount();
         final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
@@ -221,7 +221,7 @@ public class SnippetController {
         }
 
         final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.FLAGGED, searchDto.getSort(), null, null, page)
-                .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+                .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
 
         int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.FLAGGED, null, null);
         final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);

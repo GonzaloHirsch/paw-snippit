@@ -3,16 +3,19 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Language;
 
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 public class LanguageDto {
     private String name;
     private Long id;
+    private URI url;
 
-    public static LanguageDto fromLanguage(Language language, UriInfo uriInfo){
+    public static LanguageDto fromLanguage(Language language, UriInfo uriInfo) {
         final LanguageDto dto = new LanguageDto();
 
         dto.id = language.getId();
         dto.name = language.getName();
+        dto.url = uriInfo.getBaseUriBuilder().path("languages").path(String.valueOf(language.getId())).build();
 
         return dto;
     }
@@ -31,5 +34,13 @@ public class LanguageDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public URI getUrl() {
+        return url;
+    }
+
+    public void setUrl(URI url) {
+        this.url = url;
     }
 }

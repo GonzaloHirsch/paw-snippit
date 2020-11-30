@@ -33,6 +33,7 @@
         <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
         <jersey.version>3.0-SNAPSHOT</jersey.version>
         <jwt.version>0.9.1</jwt.version>
+        <maven.frontend.plugin.version>1.6</maven.frontend.plugin.version>
     </properties>
 
     <dependencyManagement>

@@ -32,30 +32,11 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
         <url-pattern>/api/v1/*</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.css</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.js</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.jpg</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.ico</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.png</url-pattern>
-    </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>
+            /index.html
+        </welcome-file>
+    </welcome-file-list>
 
     <filter>
         <filter-name>encoding-filter</filter-name>

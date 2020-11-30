@@ -16,6 +16,7 @@ import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -88,7 +89,7 @@ public class LanguagesController {
     public Response getSnippetsForLanguage(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page){
         Optional<Language> lang = this.languageService.findById(id);
         if (lang.isPresent()) {
-            final List<SnippetDto> snippets = this.snippetService.getSnippetsWithLanguage(id, page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+            final List<SnippetDto> snippets = this.snippetService.getSnippetsWithLanguage(id, page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
             int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllSnippetsByLanguageCount(id), SNIPPET_PAGE_SIZE);
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
@@ -110,7 +111,7 @@ public class LanguagesController {
         Optional<Language> maybeLang = this.languageService.findById(id);
         if (maybeLang.isPresent()) {
             final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.LANGUAGES, searchDto.getSort(), null, id, page)
-                    .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo)).collect(Collectors.toList());
+                    .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
 
             int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.LANGUAGES, null, id);
             final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);

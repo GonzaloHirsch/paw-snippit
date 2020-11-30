@@ -1,22 +1,28 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Snippet;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.web.servlet.LocaleResolver;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.util.Locale;
 
 public class SnippetDto {
-
     private Long id;
     private String code;
     private String title;
     private String description;
-    private URI creator;
-    private URI language;
+    private SnippetUserInfoDto creator;
+    private LanguageDto language;
+    private String createdDate;
     private boolean isFlagged;
     private boolean isDeleted;
 
-    public static SnippetDto fromSnippet(Snippet snippet, UriInfo uriInfo) {
+    public static SnippetDto fromSnippet(Snippet snippet, UriInfo uriInfo, Locale locale) {
         final SnippetDto dto = new SnippetDto();
 
         dto.id = snippet.getId();
@@ -25,8 +31,9 @@ public class SnippetDto {
         dto.description = snippet.getDescription();
         dto.isFlagged = snippet.isFlagged();
         dto.isDeleted = snippet.isDeleted();
-        dto.creator = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(snippet.getOwner().getId())).build();
-        dto.language = uriInfo.getBaseUriBuilder().path("languages").path(String.valueOf(snippet.getLanguage().getId())).build();
+        dto.creator = SnippetUserInfoDto.fromUser(snippet.getOwner(), uriInfo);
+        dto.language = LanguageDto.fromLanguage(snippet.getLanguage(), uriInfo);
+        dto.createdDate = DateFormat.getDateInstance(DateFormat.SHORT, locale).format(Date.from(snippet.getDateCreated()));
 
         return dto;
     }
@@ -63,11 +70,11 @@ public class SnippetDto {
         this.description = description;
     }
 
-    public URI getCreator() {
+    public SnippetUserInfoDto getCreator() {
         return creator;
     }
 
-    public void setCreator(URI creator) {
+    public void setCreator(SnippetUserInfoDto creator) {
         this.creator = creator;
     }
 
@@ -87,11 +94,19 @@ public class SnippetDto {
         isDeleted = deleted;
     }
 
-    public URI getLanguage() {
+    public LanguageDto getLanguage() {
         return language;
     }
 
-    public void setLanguage(URI language) {
+    public void setLanguage(LanguageDto language) {
         this.language = language;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 }

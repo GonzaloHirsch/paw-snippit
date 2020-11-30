@@ -1,22 +1,45 @@
 import React, { Component } from "react";
 import Sidenav from "./sidenav";
-
-// Routing
-// We need to enclose each of the links inside the Link object
+import store from "../../store";
 import { Link } from "react-router-dom";
-
-// i18n
 import i18n from "../../i18n";
-
-// Icons
 import Icon from "@mdi/react";
 import { mdiClose, mdiMenu, mdiCodeTags, mdiMagnify } from "@mdi/js";
+import { LOGIN_SUCCESS } from "../../redux/actions/actionTypes";
 
 // Component -> https://getbootstrap.com/docs/4.5/components/navbar/
 class NavBar extends Component {
+  authUnsubscribe;
+
   state = {
     navIsOpen: false,
+    userIsLogged: false,
+    username: "",
   };
+
+  constructor(props) {
+    super(props);
+    // Subscribing to changes in the auth status, if the user logs in, it is marked as logged in
+    this.authUnsubscribe = store.subscribe(() => {
+      const storedState = store.getState();
+      if (storedState.auth.status === LOGIN_SUCCESS) {
+        this.setState({
+          userIsLogged: true,
+          username: storedState.auth.info.sub,
+        });
+      } else {
+        this.setState({
+          userIsLogged: false,
+          username: "",
+        });
+      }
+    });
+  }
+
+  // We unsubscribe after the component will be unmounted
+  componentWillUnmount() {
+    this.authUnsubscribe();
+  }
 
   // Change status of the nav variable
   navInteract = (isNavOpen) => {
@@ -40,7 +63,7 @@ class NavBar extends Component {
   render() {
     return (
       <div className="mb-1 text-white nav-parent">
-        <Sidenav />
+        <Sidenav isLogged={this.state.userIsLogged} />
         <nav className="navbar navbar-expand-lg navbar-dark fixed-top row row-cols-3">
           <button
             className="btn btn-sm text-white col-1"

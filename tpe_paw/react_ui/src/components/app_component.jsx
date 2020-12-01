@@ -27,7 +27,12 @@ class AppComponent extends Component {
       );
     } else {
       return (
-        <Route key={route.name} path={route.path} exact={route.exact} component={route.component}/>
+        <Route
+          key={route.name}
+          path={route.path}
+          exact={route.exact}
+          component={route.component}
+        />
       );
     }
   }

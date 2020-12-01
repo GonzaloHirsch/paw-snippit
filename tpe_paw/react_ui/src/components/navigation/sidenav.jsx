@@ -27,29 +27,29 @@ class Sidenav extends Component {
           {!isAdmin(roles) ? (
             <SidenavLinkItem
               icon={mdiAccount}
-              route="/"
+              route="/profile"
               text={i18n.t("nav.profile")}
             />
           ) : (
             <SidenavLinkItem
               icon={mdiFlag}
-              route="/"
+              route="/flagged"
               text={i18n.t("nav.flagged")}
             />
           )}
           <SidenavLinkItem
             icon={mdiTagHeart}
-            route="/tags"
+            route="/following"
             text={i18n.t("nav.following")}
           />
           <SidenavLinkItem
             icon={mdiHeart}
-            route="/languages"
+            route="/favorites"
             text={i18n.t("nav.favorites")}
           />
           <SidenavLinkItem
             icon={mdiThumbUp}
-            route="/explore"
+            route="/upvoted"
             text={i18n.t("nav.upvoted")}
           />
         </ul>

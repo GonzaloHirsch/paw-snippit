@@ -2,7 +2,9 @@ import React from "react";
 import SnippetFeedClient from "../../api/implementations/SnippetFeedClient";
 import { extractLinkHeaders, extractItemCountHeader } from "../../js/api_utils";
 import store from "../../store";
-import { withRouter } from "react-router-dom";
+import { withRouter, matchPath } from "react-router-dom";
+import shallowCompare from "react-addons-shallow-compare";
+import { areEqualShallow } from "../../js/comparison";
 
 // Higher Order Component to reuse the repeated behaviour of the pages that contain Snippet Feed
 
@@ -21,16 +23,23 @@ function SnippetFeedHOC(WrappedComponent, getSnippets, searchSnippets) {
         }
 
         this.onPageTransition = this.onPageTransition.bind(this);
+
+        // Keeping track of the search
+        const search = this.getSearchFromUrl();
+
+        // Initial state
         this.state = {
           snippets: [],
           currentPage: 1,
           totalSnippets: 0,
           links: {},
+          currentSearch: search,
         };
       }
 
+      // Loading data
+
       loadSnippets(page) {
-        console.log(page, "PGEEEE");
         getSnippets(this.snippetFeedClient, page)
           .then((res) => {
             // Extracting the other pages headers
@@ -45,28 +54,99 @@ function SnippetFeedHOC(WrappedComponent, getSnippets, searchSnippets) {
           .catch((e) => {});
       }
 
-      componentDidMount() {
-        const params = new URLSearchParams(this.props.location.search);
-        let pageParam = parseInt(params.get("page"), 10);
-        if (
-          pageParam !== null &&
-          pageParam !== undefined &&
-          pageParam > 0 &&
-          pageParam !== this.state.currentPage
-        ) {
-          this.setState({ currentPage: pageParam });
-        } else {
-          pageParam = this.state.currentPage;
-        }
-        // Retrieving the page param
-        this.loadSnippets(pageParam);
+      loadSearchedSnippets(page, search) {
+        searchSnippets(this.snippetFeedClient, page, search)
+          .then((res) => {
+            // Extracting the other pages headers
+            console.log("CHA");
+            const newLinks = extractLinkHeaders(res.headers);
+            console.log("CHE");
+            const itemCount = extractItemCountHeader(res.headers);
+            console.log("CHi");
+            this.setState(
+              {
+                links: newLinks,
+                snippets: res.data,
+                totalSnippets: itemCount,
+              },
+              () => {
+                console.log(this.state);
+              }
+            );
+          })
+          .catch((e) => {});
       }
 
+      // Recover data from the URL
+
+      getPageFromUrl() {
+        const params = new URLSearchParams(this.props.location.search);
+        let pageParam = params.get("page");
+        console.log(pageParam);
+        if (pageParam === null || pageParam === undefined || pageParam === 0) {
+          return 1;
+        }
+        return parseInt(pageParam, 10);
+      }
+
+      getSearchFromUrl() {
+        const params = new URLSearchParams(this.props.location.search);
+        let search = {};
+        search.query = params.get("query");
+        search.type = params.get("type");
+        search.sort = params.get("sort");
+        return search;
+      }
+
+      // Lifecycle hooks
+
+      componentDidMount() {
+        console.log("MOUNT");
+        const isSearching = !!matchPath(
+          this.props.location.pathname,
+          "**/search"
+        );
+        if (isSearching) {
+          const search = this.getSearchFromUrl();
+          console.log(search, "SEARCJ");
+          this.loadSearchedSnippets(this.state.currentPage, search);
+        } else {
+          this.loadSnippets(this.state.currentPage);
+        }
+      }
+
+      componentDidUpdate() {
+        console.log("UPDATEEEE");
+        this.checkIfLoadSnippets();
+
+        // Fetching the new snippets
+        // this.snippetFeedClient
+        //   .getSnippetFeedWithUrl(this.state.links[moveTo].url)
+        //   .then((res) => {
+        //     // Extracting the other pages headers
+        //     const newLinks = extractLinkHeaders(res.headers);
+        //     const itemCount = extractItemCountHeader(res.headers);
+
+        //     this.setState({
+        //       links: newLinks,
+        //       snippets: res.data,
+        //       currentPage: this.state.links[moveTo].page,
+        //       totalSnippets: itemCount,
+        //     });
+        //   })
+        //   .catch((e) => {});
+      }
+
+      // Events
+
       onPageTransition = (moveTo) => {
-        console.log("TRANS")
-        const pageToMove = parseInt(new URLSearchParams(
-          this.state.links[moveTo].url.split("?")[1]
-        ).get("page"), 10);
+        console.log("TRANS");
+        const pageToMove = parseInt(
+          new URLSearchParams(this.state.links[moveTo].url.split("?")[1]).get(
+            "page"
+          ),
+          10
+        );
         // Adding the params to not lose the existing ones
         let params = new URLSearchParams(this.props.location.search);
         params.set("page", pageToMove);
@@ -76,24 +156,58 @@ function SnippetFeedHOC(WrappedComponent, getSnippets, searchSnippets) {
           pathname: this.props.location.pathname,
           search: "?" + params.toString(),
         });
-
-        // Fetching the new snippets
-        this.snippetFeedClient
-          .getSnippetFeedWithUrl(this.state.links[moveTo].url)
-          .then((res) => {
-            // Extracting the other pages headers
-            const newLinks = extractLinkHeaders(res.headers);
-            const itemCount = extractItemCountHeader(res.headers);
-
-            this.setState({
-              links: newLinks,
-              snippets: res.data,
-              currentPage: this.state.links[moveTo].page,
-              totalSnippets: itemCount,
-            });
-          })
-          .catch((e) => {});
       };
+
+      checkIfLoadSnippets() {
+        let pageParam = this.getPageFromUrl();
+        console.log(this.state.currentPage, pageParam, "DATA");
+        const isSearching = !!matchPath(
+          this.props.location.pathname,
+          "**/search"
+        );
+
+        let reload = false;
+        let search = {};
+
+        if (isSearching) {
+          search = this.getSearchFromUrl();
+          console.log(
+            areEqualShallow(search, this.state.currentSearch),
+            search,
+            this.state.currentSearch,
+            "INFO"
+          );
+          if (!areEqualShallow(search, this.state.currentSearch)) {
+            reload = true;
+          } else if (pageParam !== this.state.currentPage) {
+            reload = true;
+          }
+        } else {
+          if (pageParam !== this.state.currentPage) {
+            reload = true;
+          }
+        }
+
+        console.log(reload, isSearching, "MY DATA BABE");
+
+        if (reload) {
+          if (isSearching) {
+            this.setState(
+              { currentPage: pageParam, currentSearch: search },
+              () => {
+                // Retrieving the page param
+                console.log(search, pageParam, "SEARCJ");
+                this.loadSearchedSnippets(pageParam, search);
+              }
+            );
+          } else {
+            this.setState({ currentPage: pageParam }, () => {
+              // Retrieving the page param
+              this.loadSnippets(pageParam);
+            });
+          }
+        }
+      }
 
       render() {
         return (

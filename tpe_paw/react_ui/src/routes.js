@@ -65,7 +65,7 @@ const routes = [
   },
   {
     path: "/favorites",
-    exact: true,
+    exact: false,
     name: i18n.t("nav.favorites"),
     component: Favorites,
     roles: [ROLE_USER, ROLE_ADMIN],

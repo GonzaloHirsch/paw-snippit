@@ -9,7 +9,9 @@ const userId = store.getState().auth.info.uid;
 const Favorites = SnippetFeedHOC(
   SnippetFavoriteFeed,
   (SnippetFeedClient, page) =>
-    SnippetFeedClient.getFavoritesSnippetFeed(page, userId)
+    SnippetFeedClient.getFavoritesSnippetFeed(page, userId),
+  (SnippetFeedClient, page, search) =>
+    SnippetFeedClient.searchFavoritesSnippetFeed(page, userId, search)
 );
 
 export default Favorites;

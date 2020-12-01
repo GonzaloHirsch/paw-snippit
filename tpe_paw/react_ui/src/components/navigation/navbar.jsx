@@ -25,8 +25,8 @@ class NavBar extends Component {
     roles: [],
     search: {
       query: "",
-      filter: "",
-      order: "",
+      type: "all",
+      sort: "asc",
     },
   };
 
@@ -60,8 +60,8 @@ class NavBar extends Component {
       this.setState({
         search: {
           query: params.get("query"),
-          filter: params.get("filter"),
-          order: params.get("order"),
+          type: params.get("type"),
+          sort: params.get("sort"),
         },
       });
     }
@@ -107,7 +107,17 @@ class NavBar extends Component {
     if (isSearching) {
       route = this.props.location.pathname;
     } else {
-      route = this.props.location.pathname + "search";
+      let toAdd = "search";
+      if (
+        !(
+          this.props.location.pathname.charAt(
+            this.props.location.pathname.length - 1
+          ) === "/"
+        )
+      ) {
+        toAdd = "/search";
+      }
+      route = this.props.location.pathname + toAdd;
     }
 
     // Adding the params to not lose the existing ones
@@ -115,11 +125,11 @@ class NavBar extends Component {
     if (search.query !== null && search.query !== undefined) {
       params.set("query", search.query);
     }
-    if (search.filter !== null && search.filter !== undefined) {
-      params.set("filter", search.filter);
+    if (search.type !== null && search.type !== undefined) {
+      params.set("type", search.type);
     }
-    if (search.order !== null && search.order !== undefined) {
-      params.set("order", search.order);
+    if (search.sort !== null && search.sort !== undefined) {
+      params.set("sort", search.sort);
     }
 
     // Pushing the route
@@ -182,14 +192,59 @@ class NavBar extends Component {
                     this.setState({
                       search: {
                         query: e.target.value,
-                        filter: this.state.search.filter,
-                        order: this.state.search.order,
+                        type: this.state.search.type,
+                        sort: this.state.search.sort,
                       },
                     })
                   }
                   value={this.state.search.query}
                 />
                 <div className="input-group-append">
+                  <select
+                    className="custom-select form-control"
+                    id="inputGroupSelect02"
+                    onChange={(e) =>
+                      this.setState({
+                        search: {
+                          query: this.state.search.query,
+                          type: e.target.value,
+                          sort: this.state.search.sort,
+                        },
+                      })
+                    }
+                    value={this.state.search.type}
+                  >
+                    <option defaultValue value="all">
+                      Choose...
+                    </option>
+                    <option value="all">all</option>
+                    <option value="tag">tag</option>
+                    <option value="title">title</option>
+                    <option value="content">content</option>
+                    <option value="username">username</option>
+                    <option value="language">language</option>
+                  </select>
+                  <select
+                    className="custom-select form-control"
+                    id="inputGroupSelect03"
+                    onChange={(e) =>
+                      this.setState({
+                        search: {
+                          query: this.state.search.query,
+                          type: this.state.search.type,
+                          sort: e.target.value,
+                        },
+                      })
+                    }
+                    value={this.state.search.sort}
+                  >
+                    <option defaultValue value="asc">
+                      Choose...
+                    </option>
+                    <option value="asc">asc</option>
+                    <option value="desc">desc</option>
+                    <option value="no">no</option>
+                  </select>
                   <button
                     className="btn btn-outline-secondary"
                     type="submit"
@@ -200,26 +255,8 @@ class NavBar extends Component {
                 </div>
               </div>
 
-              <div className="input-group mb-3">
-                <select
-                  className="custom-select form-control"
-                  id="inputGroupSelect02"
-                  onChange={(e) =>
-                    this.setState({
-                      search: {
-                        query: this.state.search.query,
-                        filter: e.target.value,
-                        order: this.state.search.order,
-                      },
-                    })
-                  }
-                  value={this.state.search.filter}
-                >
-                  <option defaultValue>Choose...</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
+              {/* <div className="input-group mb-3">
+                
                 <div className="input-group-append">
                   <span
                     className="input-group-text"
@@ -231,25 +268,7 @@ class NavBar extends Component {
               </div>
 
               <div className="input-group mb-3">
-                <select
-                  className="custom-select form-control"
-                  id="inputGroupSelect03"
-                  onChange={(e) =>
-                    this.setState({
-                      search: {
-                        query: this.state.search.query,
-                        filter: this.state.search.filter,
-                        order: e.target.value,
-                      },
-                    })
-                  }
-                  value={this.state.search.order}
-                >
-                  <option defaultValue>Choose...</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
+                
                 <div className="input-group-append">
                   <span
                     className="input-group-text"
@@ -258,7 +277,7 @@ class NavBar extends Component {
                     <Icon path={mdiSortAlphabeticalVariant} size={1} />
                   </span>
                 </div>
-              </div>
+              </div> */}
               {/* 
               <input
                 className="form-control mr-sm-2"

@@ -1,6 +1,10 @@
 export function extractLinkHeaders(headers) {
+  if (!("link" in headers)) {
+    return {};
+  }
   const linkHeader = headers["link"];
   const links = linkHeader.split(",");
+  console.log(links);
   let newLinks = {};
   links.forEach((h) => {
     const parts = h

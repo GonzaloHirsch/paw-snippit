@@ -60,11 +60,13 @@ public class LanguagesController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getAllLanguages(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page, final @QueryParam(QUERY_PARAM_SHOW_EMPTY) @DefaultValue("true") boolean showEmpty) {
         final List<LanguageDto> languages = languageService.getAllLanguages(showEmpty, page, TAG_PAGE_SIZE).stream().map(l -> LanguageDto.fromLanguage(l, uriInfo)).collect(Collectors.toList());
-        int pageCount = PagingHelper.CalculateTotalPages(this.languageService.getAllLanguagesCount(showEmpty), LANGUAGE_PAGE_SIZE);
+        final int languagesCount = this.languageService.getAllLanguagesCount(showEmpty);
+        int pageCount = PagingHelper.CalculateTotalPages(languagesCount, LANGUAGE_PAGE_SIZE);
 
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<LanguageDto>>(languages) {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        ResponseHelper.AddTotalItemsAttribute(builder, languagesCount);
         return builder.build();
     }
 
@@ -90,11 +92,13 @@ public class LanguagesController {
         Optional<Language> lang = this.languageService.findById(id);
         if (lang.isPresent()) {
             final List<SnippetDto> snippets = this.snippetService.getSnippetsWithLanguage(id, page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
-            int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllSnippetsByLanguageCount(id), SNIPPET_PAGE_SIZE);
+            final int snippetCount = this.snippetService.getAllSnippetsByLanguageCount(id);
+            int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });
             ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
             return builder.build();
         } else {
             LOGGER.error("No language found with id {}", id);
@@ -119,6 +123,7 @@ public class LanguagesController {
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });
             ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            ResponseHelper.AddTotalItemsAttribute(builder, totalSnippetCount);
             return builder.build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();

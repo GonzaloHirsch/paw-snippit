@@ -59,11 +59,13 @@ public class TagsController {
     public Response getAllTags(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page, final @QueryParam(QUERY_PARAM_SHOW_EMPTY) @DefaultValue("true") boolean showEmpty, final @QueryParam(QUERY_PARAM_SHOW_ONLY_FOLLOWING) @DefaultValue("false") boolean showOnlyFollowing) {
         User currentUser = loginAuthentication.getLoggedInUser();
         final List<TagDto> tags = tagService.getAllTags(showEmpty, showOnlyFollowing, currentUser != null ? currentUser.getId() : null, page, TAG_PAGE_SIZE).stream().map(t -> TagDto.fromTag(t, uriInfo)).collect(Collectors.toList());
-        int pageCount = PagingHelper.CalculateTotalPages(this.tagService.getAllTagsCount(showEmpty, showOnlyFollowing, currentUser != null ? currentUser.getId() : null), TAG_PAGE_SIZE);
+        final int tagCount = this.tagService.getAllTagsCount(showEmpty, showOnlyFollowing, currentUser != null ? currentUser.getId() : null);
+        int pageCount = PagingHelper.CalculateTotalPages(tagCount, TAG_PAGE_SIZE);
 
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<TagDto>>(tags) {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        ResponseHelper.AddTotalItemsAttribute(builder, tagCount);
         return builder.build();
     }
 
@@ -90,11 +92,13 @@ public class TagsController {
         Optional<Tag> maybeTag = this.tagService.findTagById(id);
         if (maybeTag.isPresent()) {
             final List<SnippetDto> snippets = this.snippetService.findSnippetsForTag(id, page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
-            int pageCount = PagingHelper.CalculateTotalPages(this.snippetService.getAllSnippetsByTagCount(id), SNIPPET_PAGE_SIZE);
+            final int snippetCount = this.snippetService.getAllSnippetsByTagCount(id);
+            int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });
             ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
             return builder.build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -118,6 +122,7 @@ public class TagsController {
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });
             ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            ResponseHelper.AddTotalItemsAttribute(builder, totalSnippetCount);
             return builder.build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();

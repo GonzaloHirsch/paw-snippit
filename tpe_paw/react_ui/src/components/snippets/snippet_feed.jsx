@@ -5,7 +5,7 @@ import Pagination from "../navigation/pagination";
 // Stateless Functional Component
 
 const SnippetFeed = (props) => {
-  const { snippets, page, links, onPageTransition } = props;
+  const { snippets, currentPage, links, onPageTransition } = props;
   return (
     <React.Fragment>
       <div className="card-columns mx-3">
@@ -15,7 +15,7 @@ const SnippetFeed = (props) => {
       </div>
       <div className="flex-center">
         <Pagination
-          currentPage={page}
+          currentPage={currentPage}
           links={links}
           onPageTransition={onPageTransition}
           className="mx-auto"

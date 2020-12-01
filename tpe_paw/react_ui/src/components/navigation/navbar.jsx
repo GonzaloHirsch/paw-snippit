@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Sidenav from "./sidenav";
 import store from "../../store";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, matchPath } from "react-router-dom";
 import i18n from "../../i18n";
 import Icon from "@mdi/react";
 import {
@@ -23,9 +23,11 @@ class NavBar extends Component {
     userIsLogged: false,
     username: "",
     roles: [],
-    query: "",
-    filter: "",
-    order: "",
+    search: {
+      query: "",
+      filter: "",
+      order: "",
+    },
   };
 
   constructor(props) {
@@ -51,6 +53,18 @@ class NavBar extends Component {
         });
       }
     });
+
+    const isSearching = !!matchPath(this.props.location.pathname, "**/search");
+    if (isSearching) {
+      const params = new URLSearchParams(this.props.location.search);
+      this.setState({
+        search: {
+          query: params.get("query"),
+          filter: params.get("filter"),
+          order: params.get("order"),
+        },
+      });
+    }
   }
 
   // We unsubscribe after the component will be unmounted
@@ -86,8 +100,36 @@ class NavBar extends Component {
     this.props.history.push("/");
   }
 
+  handleSearch(search) {
+    // Determine if we add the "search" to the route
+    const isSearching = !!matchPath(this.props.location.pathname, "**/search");
+    let route;
+    if (isSearching) {
+      route = this.props.location.pathname;
+    } else {
+      route = this.props.location.pathname + "search";
+    }
+
+    // Adding the params to not lose the existing ones
+    let params = new URLSearchParams(this.props.location.search);
+    if (search.query !== null && search.query !== undefined) {
+      params.set("query", search.query);
+    }
+    if (search.filter !== null && search.filter !== undefined) {
+      params.set("filter", search.filter);
+    }
+    if (search.order !== null && search.order !== undefined) {
+      params.set("order", search.order);
+    }
+
+    // Pushing the route
+    this.props.history.push({
+      pathname: route,
+      search: "?" + params.toString(),
+    });
+  }
+
   render() {
-    const { onSearch } = this.props;
     return (
       <div className="mb-1 text-white nav-parent">
         <Sidenav
@@ -127,7 +169,7 @@ class NavBar extends Component {
           >
             <form
               className="form-inline my-auto my-lg-0 col-8"
-              onSubmit={() => onSearch(this.state.query, this.state.filter, this.state.order)}
+              onSubmit={() => this.handleSearch(this.state.search)}
             >
               <div className="input-group mr-sm-2 search-box">
                 <input
@@ -136,7 +178,16 @@ class NavBar extends Component {
                   placeholder={i18n.t("nav.searchHint")}
                   aria-label={i18n.t("nav.searchHint")}
                   aria-describedby="button-addon2"
-                  onChange={(e) => this.setState({ query: e.target.value })}
+                  onChange={(e) =>
+                    this.setState({
+                      search: {
+                        query: e.target.value,
+                        filter: this.state.search.filter,
+                        order: this.state.search.order,
+                      },
+                    })
+                  }
+                  value={this.state.search.query}
                 />
                 <div className="input-group-append">
                   <button
@@ -153,15 +204,27 @@ class NavBar extends Component {
                 <select
                   className="custom-select form-control"
                   id="inputGroupSelect02"
-                  onChange={(e) => this.setState({ filter: e.target.value })}
+                  onChange={(e) =>
+                    this.setState({
+                      search: {
+                        query: this.state.search.query,
+                        filter: e.target.value,
+                        order: this.state.search.order,
+                      },
+                    })
+                  }
+                  value={this.state.search.filter}
                 >
-                  <option selected>Choose...</option>
+                  <option defaultValue>Choose...</option>
                   <option value="1">One</option>
                   <option value="2">Two</option>
                   <option value="3">Three</option>
                 </select>
                 <div className="input-group-append">
-                  <span className="input-group-text" for="inputGroupSelect02">
+                  <span
+                    className="input-group-text"
+                    htmlFor="inputGroupSelect02"
+                  >
                     <Icon path={mdiFilterVariant} size={1} />
                   </span>
                 </div>
@@ -171,15 +234,27 @@ class NavBar extends Component {
                 <select
                   className="custom-select form-control"
                   id="inputGroupSelect03"
-                  onChange={(e) => this.setState({ order: e.target.value })}
+                  onChange={(e) =>
+                    this.setState({
+                      search: {
+                        query: this.state.search.query,
+                        filter: this.state.search.filter,
+                        order: e.target.value,
+                      },
+                    })
+                  }
+                  value={this.state.search.order}
                 >
-                  <option selected>Choose...</option>
+                  <option defaultValue>Choose...</option>
                   <option value="1">One</option>
                   <option value="2">Two</option>
                   <option value="3">Three</option>
                 </select>
                 <div className="input-group-append">
-                  <span className="input-group-text" for="inputGroupSelect03">
+                  <span
+                    className="input-group-text"
+                    htmlFor="inputGroupSelect03"
+                  >
                     <Icon path={mdiSortAlphabeticalVariant} size={1} />
                   </span>
                 </div>

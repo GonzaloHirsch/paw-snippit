@@ -14,7 +14,7 @@ const SnippetFavoriteFeed = (props) => {
       <SnippetFeed
         snippets={props.snippets}
         links={props.links}
-        page={props.currentPage}
+        currentPage={props.currentPage}
         onPageTransition={props.onPageTransition}
       />
     </React.Fragment>

@@ -29,6 +29,13 @@ const routes = [
     roles: [],
   },
   {
+    path: "/search",
+    exact: true,
+    name: i18n.t("nav.homeSearch"),
+    component: Home,
+    roles: [],
+  },
+  {
     path: "/login",
     exact: true,
     name: i18n.t("nav.login"),

@@ -4,6 +4,7 @@ export default {
   snippets: "Snippets",
   nav: {
     home: "Home",
+    homeSearch: "Home Search",
     login: "Login",
     signup: "Sign Up",
     snippets: "Snippets",

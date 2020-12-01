@@ -5,7 +5,7 @@ class SnippetCard extends Component {
   state = {};
 
   getUserProfilePicUrl(creator){
-    if (creator.picture !== null || creator.picture !== undefined){
+    if (creator.hasPicture){
       return creator.picture;
     }
     return "/userIcon.jpg";

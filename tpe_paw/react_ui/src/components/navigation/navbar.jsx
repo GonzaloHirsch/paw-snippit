@@ -11,6 +11,8 @@ import {
   mdiMagnify,
   mdiFilterVariant,
   mdiSortAlphabeticalVariant,
+  mdiPlus,
+  mdiPlusCircleOutline,
 } from "@mdi/js";
 import { logOut } from "../../redux/actions/actionCreators";
 import { LOGIN_SUCCESS } from "../../redux/actions/actionTypes";
@@ -35,24 +37,32 @@ class NavBar extends Component {
     this.handleLogOut = this.handleLogOut.bind(this);
   }
 
+  handleReduxUpdate(storedState) {
+    if (storedState.auth.status === LOGIN_SUCCESS) {
+      this.setState({
+        userIsLogged: true,
+        username: storedState.auth.info.sub,
+        roles: storedState.auth.roles,
+      });
+    } else {
+      this.setState({
+        userIsLogged: false,
+        username: "",
+        roles: [],
+      });
+    }
+  }
+
   componentDidMount() {
     // Subscribing to changes in the auth status, if the user logs in, it is marked as logged in
     this.authUnsubscribe = store.subscribe(() => {
       const storedState = store.getState();
-      if (storedState.auth.status === LOGIN_SUCCESS) {
-        this.setState({
-          userIsLogged: true,
-          username: storedState.auth.info.sub,
-          roles: storedState.auth.roles,
-        });
-      } else {
-        this.setState({
-          userIsLogged: false,
-          username: "",
-          roles: [],
-        });
-      }
+      this.handleReduxUpdate(storedState);
     });
+
+    // Initial state loading in case it comes from localstorage
+    const storedState = store.getState();
+    this.handleReduxUpdate(storedState);
 
     const isSearching = !!matchPath(this.props.location.pathname, "**/search");
     if (isSearching) {
@@ -137,6 +147,38 @@ class NavBar extends Component {
       pathname: route,
       search: "?" + params.toString(),
     });
+  }
+
+  getTopRightNavItems() {
+    if (this.state.userIsLogged) {
+      return (
+        <div className="col-4">
+          <Link to="/create" className="mx-1 text-white">
+            <Icon path={mdiPlusCircleOutline} size={1} />
+          </Link>
+          <Link to="/profile" className="mx-1 text-white">
+            <em className="ml-1">
+              {i18n.t("nav.greeting", { user: store.getState().auth.info.sub })}
+            </em>
+          </Link>
+        </div>
+      );
+    } else {
+      return (
+        <div className="col-4">
+          <Link to="/login" className="mx-1">
+            <button type="button" className="btn btn-light">
+              {i18n.t("nav.login")}
+            </button>
+          </Link>
+          <Link to="/signup" className="mx-1">
+            <button type="button" className="btn btn-light">
+              {i18n.t("nav.signup")}
+            </button>
+          </Link>
+        </div>
+      );
+    }
   }
 
   render() {
@@ -254,56 +296,8 @@ class NavBar extends Component {
                   </button>
                 </div>
               </div>
-
-              {/* <div className="input-group mb-3">
-                
-                <div className="input-group-append">
-                  <span
-                    className="input-group-text"
-                    htmlFor="inputGroupSelect02"
-                  >
-                    <Icon path={mdiFilterVariant} size={1} />
-                  </span>
-                </div>
-              </div>
-
-              <div className="input-group mb-3">
-                
-                <div className="input-group-append">
-                  <span
-                    className="input-group-text"
-                    htmlFor="inputGroupSelect03"
-                  >
-                    <Icon path={mdiSortAlphabeticalVariant} size={1} />
-                  </span>
-                </div>
-              </div> */}
-              {/* 
-              <input
-                className="form-control mr-sm-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button
-                className="btn btn-outline-success my-2 my-sm-0"
-                type="submit"
-              >
-                Search
-              </button> */}
             </form>
-            <div className="col-4">
-              <Link to="/login" className="mx-1">
-                <button type="button" className="btn btn-light">
-                  {i18n.t("nav.login")}
-                </button>
-              </Link>
-              <Link to="/signup" className="mx-1">
-                <button type="button" className="btn btn-light">
-                  {i18n.t("nav.signup")}
-                </button>
-              </Link>
-            </div>
+            {this.getTopRightNavItems()}
           </div>
         </nav>
       </div>

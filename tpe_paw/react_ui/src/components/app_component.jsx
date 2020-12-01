@@ -39,7 +39,13 @@ class AppComponent extends Component {
 
   render() {
     return (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense
+        fallback={
+          <div className="pt-1 text-center mt-5">
+            Snippit is Loading...
+          </div>
+        }
+      >
         <Router>
           <NavBar className="nav-spacing" />
           <Switch>

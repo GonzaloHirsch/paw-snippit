@@ -18,7 +18,8 @@ export default {
     following: "Following",
     upvoted: "Upvoted",
     logout: "Log Out",
-    flagged: "Flagged"
+    flagged: "Flagged",
+    greeting: "Hello, {{user}}!"
   },
   login: {
     title: "Welcome back to ",

@@ -4,7 +4,14 @@ import store from "../../store";
 import { Link, withRouter } from "react-router-dom";
 import i18n from "../../i18n";
 import Icon from "@mdi/react";
-import { mdiClose, mdiMenu, mdiCodeTags, mdiMagnify } from "@mdi/js";
+import {
+  mdiClose,
+  mdiMenu,
+  mdiCodeTags,
+  mdiMagnify,
+  mdiFilterVariant,
+  mdiSortAlphabeticalVariant,
+} from "@mdi/js";
 import { logOut } from "../../redux/actions/actionCreators";
 import { LOGIN_SUCCESS } from "../../redux/actions/actionTypes";
 
@@ -16,9 +23,12 @@ class NavBar extends Component {
     userIsLogged: false,
     username: "",
     roles: [],
+    query: "",
+    filter: "",
+    order: "",
   };
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.handleLogOut = this.handleLogOut.bind(this);
   }
@@ -74,9 +84,10 @@ class NavBar extends Component {
 
     // Push to home
     this.props.history.push("/");
-  };
+  }
 
   render() {
+    const { onSearch } = this.props;
     return (
       <div className="mb-1 text-white nav-parent">
         <Sidenav
@@ -114,57 +125,10 @@ class NavBar extends Component {
             className="collapse navbar-collapse col-9"
             id="navbarSupportedContent"
           >
-            {/* <ul className="navbar-nav mr-auto">
-                <li className="nav-item active">
-                  <a className="nav-link" href="#">
-                    Home <span className="sr-only">(current)</span>
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Link
-                  </a>
-                </li>
-                <li className="nav-item dropdown">
-                  <a
-                    className="nav-link dropdown-toggle"
-                    href="#"
-                    id="navbarDropdown"
-                    role="button"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    Dropdown
-                  </a>
-                  <div
-                    className="dropdown-menu"
-                    aria-labelledby="navbarDropdown"
-                  >
-                    <a className="dropdown-item" href="#">
-                      Action
-                    </a>
-                    <a className="dropdown-item" href="#">
-                      Another action
-                    </a>
-                    <div className="dropdown-divider"></div>
-                    <a className="dropdown-item" href="#">
-                      Something else here
-                    </a>
-                  </div>
-                </li>
-                <li className="nav-item">
-                  <a
-                    className="nav-link disabled"
-                    href="#"
-                    tabIndex="-1"
-                    aria-disabled="true"
-                  >
-                    Disabled
-                  </a>
-                </li>
-              </ul> */}
-            <form className="form-inline my-auto my-lg-0 col-8">
+            <form
+              className="form-inline my-auto my-lg-0 col-8"
+              onSubmit={() => onSearch(this.state.query, this.state.filter, this.state.order)}
+            >
               <div className="input-group mr-sm-2 search-box">
                 <input
                   type="text"
@@ -172,6 +136,7 @@ class NavBar extends Component {
                   placeholder={i18n.t("nav.searchHint")}
                   aria-label={i18n.t("nav.searchHint")}
                   aria-describedby="button-addon2"
+                  onChange={(e) => this.setState({ query: e.target.value })}
                 />
                 <div className="input-group-append">
                   <button
@@ -181,6 +146,42 @@ class NavBar extends Component {
                   >
                     <Icon path={mdiMagnify} size={1} />
                   </button>
+                </div>
+              </div>
+
+              <div className="input-group mb-3">
+                <select
+                  className="custom-select form-control"
+                  id="inputGroupSelect02"
+                  onChange={(e) => this.setState({ filter: e.target.value })}
+                >
+                  <option selected>Choose...</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+                <div className="input-group-append">
+                  <span className="input-group-text" for="inputGroupSelect02">
+                    <Icon path={mdiFilterVariant} size={1} />
+                  </span>
+                </div>
+              </div>
+
+              <div className="input-group mb-3">
+                <select
+                  className="custom-select form-control"
+                  id="inputGroupSelect03"
+                  onChange={(e) => this.setState({ order: e.target.value })}
+                >
+                  <option selected>Choose...</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+                <div className="input-group-append">
+                  <span className="input-group-text" for="inputGroupSelect03">
+                    <Icon path={mdiSortAlphabeticalVariant} size={1} />
+                  </span>
                 </div>
               </div>
               {/* 

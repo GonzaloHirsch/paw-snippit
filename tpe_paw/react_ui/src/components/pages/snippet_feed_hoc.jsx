@@ -46,6 +46,11 @@ function SnippetFeedHOC(WrappedComponent, getSnippets) {
       this.loadSnippets();
     }
 
+    componentDidUpdate(oldProps){
+      console.log("OLD", oldProps)
+      console.log("NEW", this.props)
+    }
+
     onPageTransition = (moveTo) => {
       this.snippetFeedClient
         .getSnippetFeedWithUrl(this.state.links[moveTo].url)

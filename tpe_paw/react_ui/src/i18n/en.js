@@ -5,7 +5,7 @@ export default {
   errors: {
     serverError: "Error in server, please try again later",
     unknownError: "Uknown error, please try again later",
-    noConnection: "Connection to server lost, please try again later"
+    noConnection: "Connection to server lost, please try again later",
   },
   nav: {
     home: "Home",
@@ -25,21 +25,21 @@ export default {
     logout: "Log Out",
     flagged: "Flagged",
     greeting: "Hello, {{user}}!",
-    filter:{
+    filter: {
       hint: "Search By",
       all: "All",
       tag: "Tag",
       title: "Title",
       content: "Content",
       username: "Username",
-      language: "Language"
+      language: "Language",
     },
     order: {
       hint: "Sort By",
       ascending: "Ascending",
       descending: "Descending",
-      no: "No Order"
-    }
+      no: "No Order",
+    },
   },
   login: {
     title: "Welcome back to ",
@@ -61,8 +61,8 @@ export default {
         invalidUser: "Invalid username",
         emptyPass: "Password is required",
         smallPass: "Password must be at least 8 characters long",
-        invalidPass: "Invalid password"
-      }
+        invalidPass: "Invalid password",
+      },
     },
   },
   signup: {
@@ -78,10 +78,5 @@ export default {
       action: "Sign Up!",
     },
   },
-  home: {
-    name: "Home"
-  },
-  favorites: {
-    name: "Favorites"
-  }
+  explore: {},
 };

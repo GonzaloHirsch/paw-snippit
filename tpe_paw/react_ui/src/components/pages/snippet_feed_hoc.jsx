@@ -3,12 +3,16 @@ import SnippetFeedClient from "../../api/implementations/SnippetFeedClient";
 import { extractLinkHeaders, extractItemCountHeader } from "../../js/api_utils";
 import store from "../../store";
 import { withRouter, matchPath } from "react-router-dom";
-import shallowCompare from "react-addons-shallow-compare";
 import { areEqualShallow } from "../../js/comparison";
 
 // Higher Order Component to reuse the repeated behaviour of the pages that contain Snippet Feed
 
-function SnippetFeedHOC(WrappedComponent, getSnippets, searchSnippets) {
+function SnippetFeedHOC(
+  WrappedComponent,
+  getSnippets,
+  searchSnippets,
+  searchFromUrl
+) {
   return withRouter(
     class extends React.Component {
       snippetFeedClient;
@@ -25,7 +29,7 @@ function SnippetFeedHOC(WrappedComponent, getSnippets, searchSnippets) {
         this.onPageTransition = this.onPageTransition.bind(this);
 
         // Keeping track of the search
-        const search = this.getSearchFromUrl();
+        const search = searchFromUrl(this.props.location.search);
 
         // Initial state
         this.state = {
@@ -60,13 +64,11 @@ function SnippetFeedHOC(WrappedComponent, getSnippets, searchSnippets) {
             // Extracting the other pages headers
             const newLinks = extractLinkHeaders(res.headers);
             const itemCount = extractItemCountHeader(res.headers);
-            this.setState(
-              {
-                links: newLinks,
-                snippets: res.data,
-                totalSnippets: itemCount,
-              }
-            );
+            this.setState({
+              links: newLinks,
+              snippets: res.data,
+              totalSnippets: itemCount,
+            });
           })
           .catch((e) => {});
       }
@@ -82,15 +84,6 @@ function SnippetFeedHOC(WrappedComponent, getSnippets, searchSnippets) {
         return parseInt(pageParam, 10);
       }
 
-      getSearchFromUrl() {
-        const params = new URLSearchParams(this.props.location.search);
-        let search = {};
-        search.query = params.get("query");
-        search.type = params.get("type");
-        search.sort = params.get("sort");
-        return search;
-      }
-
       // Lifecycle hooks
 
       componentDidMount() {
@@ -99,7 +92,7 @@ function SnippetFeedHOC(WrappedComponent, getSnippets, searchSnippets) {
           "**/search"
         );
         if (isSearching) {
-          const search = this.getSearchFromUrl();
+          const search = searchFromUrl(this.props.location.search);
           this.loadSearchedSnippets(this.state.currentPage, search);
         } else {
           this.loadSnippets(this.state.currentPage);
@@ -141,10 +134,10 @@ function SnippetFeedHOC(WrappedComponent, getSnippets, searchSnippets) {
         let search = {};
 
         if (isSearching) {
-          search = this.getSearchFromUrl();
+          search = searchFromUrl(this.props.location.search);
           if (!areEqualShallow(search, this.state.currentSearch)) {
             reload = true;
-          } 
+          }
         }
         if (pageParam !== this.state.currentPage) {
           reload = true;

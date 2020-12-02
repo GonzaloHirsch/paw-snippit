@@ -8,8 +8,10 @@ const SnippetFavoriteFeed = (props) => {
   return (
     <React.Fragment>
       <div className="mx-3 mb-3">
-        <h1 className="fw-300">{i18n.t("favorites.name")}</h1>
-        <h5 className="fw-100">({props.totalSnippets} {i18n.t("snippets")})</h5>
+        <h1 className="fw-300">{i18n.t("nav.favorites")}</h1>
+        <h5 className="fw-100">
+          ({props.totalSnippets} {i18n.t("snippets")})
+        </h5>
       </div>
       <SnippetFeed
         snippets={props.snippets}

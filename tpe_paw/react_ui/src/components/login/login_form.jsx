@@ -5,7 +5,7 @@ import Icon from "@mdi/react";
 
 const LoginForm = (props) => {
   return (
-    <form onSubmit={props.onSubmit}>
+    <form noValidate onSubmit={props.onSubmit}>
       <span
         className="mx-auto text-white login-title"
         style={{ display: "block", textAlign: "center" }}
@@ -20,12 +20,14 @@ const LoginForm = (props) => {
       <div className="m-4 p-5 inner-square shadow rounded-lg">
         {props.children}
 
+        {props.generalError && <span className="text-danger">{props.generalError}</span>}
         <button
           className="btn btn-lg btn-primary btn-block mb-3 rounded-lg"
           type="submit"
         >
           {props.action}
         </button>
+        
       </div>
     </form>
   );

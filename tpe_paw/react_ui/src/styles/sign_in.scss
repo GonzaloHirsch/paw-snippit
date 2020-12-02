@@ -31,14 +31,15 @@
   border-top-right-radius: 0;
 }
 
-.form-signin button {
-  background-color: $primary-color;
-  border-color: $primary-color;
+.form-signin button, button:active {
+  background-color: $primary-color !important;
+  border-color: $primary-color !important;
 }
 
-.form-signin button:hover {
-  background-color: $primary-color-dark;
-  border-color: $primary-color;
+.form-signin button:hover,
+button:focus {
+  background-color: $primary-color-dark !important;
+  border-color: $primary-color !important;
 }
 
 .form-signin .login-title {

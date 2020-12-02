@@ -5,7 +5,7 @@ export const SidenavButtonItem = ({ onEvent, icon, text }) => {
   return (
     <a
       onClick={onEvent}
-      className="align-items-vertical"
+      className="align-items-vertical sidenav-link-item"
       style={{ cursor: "pointer" }}
     >
       <Icon path={icon} size={1} />

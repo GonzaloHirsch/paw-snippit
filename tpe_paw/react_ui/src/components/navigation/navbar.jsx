@@ -16,6 +16,7 @@ import {
 } from "@mdi/js";
 import { logOut } from "../../redux/actions/actionCreators";
 import { LOGIN_SUCCESS } from "../../redux/actions/actionTypes";
+import { CONTEXT } from "../../js/constants";
 
 // Component -> https://getbootstrap.com/docs/4.5/components/navbar/
 class NavBar extends Component {
@@ -30,11 +31,13 @@ class NavBar extends Component {
       type: "all",
       sort: "asc",
     },
+    currentContext: CONTEXT.HOME,
   };
 
   constructor(props) {
     super(props);
     this.handleLogOut = this.handleLogOut.bind(this);
+    this.handleNavigationChange = this.handleNavigationChange.bind(this);
   }
 
   handleReduxUpdate(storedState) {
@@ -53,7 +56,28 @@ class NavBar extends Component {
     }
   }
 
+  testForContext(test, ctx) {
+    const isCtx = !!matchPath(this.props.location.pathname, test);
+    if (isCtx && this.state.currentContext !== ctx) {
+      this.setState({ currentContext: ctx });
+    }
+    return isCtx;
+  }
+
+  determineCurrentContext() {
+    if (this.testForContext("**/tags", CONTEXT.TAGS)) return;
+    if (this.testForContext("**/languages", CONTEXT.LANGUAGES)) return;
+    if (this.testForContext("**/explore", CONTEXT.EXPLORE)) return;
+    if (this.testForContext("**/profile", CONTEXT.PROFILE)) return;
+    if (this.testForContext("**/following", CONTEXT.FOLLOWING)) return;
+    if (this.testForContext("**/favorites", CONTEXT.FAVORITES)) return;
+    if (this.testForContext("**/upvoted", CONTEXT.UPVOTED)) return;
+    if (this.testForContext("**/flagged", CONTEXT.FLAGGED)) return;
+    if (this.testForContext("**/", CONTEXT.HOME)) return;
+  }
+
   componentDidMount() {
+    console.log(this.props, "PROPS");
     // Subscribing to changes in the auth status, if the user logs in, it is marked as logged in
     this.authUnsubscribe = store.subscribe(() => {
       const storedState = store.getState();
@@ -75,11 +99,17 @@ class NavBar extends Component {
         },
       });
     }
+
+    this.determineCurrentContext();
   }
 
   // We unsubscribe after the component will be unmounted
   componentWillUnmount() {
     this.authUnsubscribe();
+  }
+
+  componentDidUpdate(){
+    this.determineCurrentContext();
   }
 
   // Change status of the nav variable
@@ -181,6 +211,10 @@ class NavBar extends Component {
     }
   }
 
+  handleNavigationChange(newCtx) {
+    this.setState({ currentContext: newCtx });
+  }
+
   render() {
     return (
       <div className="mb-1 text-white nav-parent">
@@ -188,6 +222,8 @@ class NavBar extends Component {
           isLogged={this.state.userIsLogged}
           roles={this.state.roles}
           onLogOut={this.handleLogOut}
+          currentContext={this.state.currentContext}
+          onNavigationChange={this.handleNavigationChange}
         />
         <nav className="navbar navbar-expand-lg navbar-dark fixed-top row row-cols-3">
           <button
@@ -200,7 +236,11 @@ class NavBar extends Component {
           >
             {this.getNavIcon(this.state.navIsOpen)}
           </button>
-          <Link to="/" className="app-link text-white col-2">
+          <Link
+            to="/"
+            className="app-link text-white col-2"
+            onClick={() => this.handleNavigationChange(CONTEXT.HOME)}
+          >
             <Icon path={mdiCodeTags} size={2} />
             <span className="ml-1">{i18n.t("app")}</span>
           </Link>

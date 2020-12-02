@@ -1,6 +1,7 @@
 @import "variables";
 
 /* The side navigation menu */
+
 .sidenav {
   height: 100%; /* 100% Full-height */
   width: 0; /* 0 width - change this with JavaScript */
@@ -20,9 +21,15 @@
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 25px;
-  color: #818181;
+  color: #f1f1f1;
   display: block;
-  transition: 0.3s;
+  transition: 0.15s;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+.sidenav .sidenav-link-item {
+  text-decoration: none;
 }
 
 .sidenav span {
@@ -31,7 +38,15 @@
 
 /* When you mouse over the navigation links, change their color */
 .sidenav a:hover {
+  background-color: $primary-color-light;
   color: #f1f1f1;
+}
+
+.sidenav .selected {
+  background-color: $primary-color-light;
+  color: #f1f1f1;
+  border: $primary-color solid;
+  border-width: 0 7px 0 0;
 }
 
 /* Position and style the close button (top right corner) */
@@ -41,6 +56,10 @@
   right: 25px;
   font-size: 36px;
   margin-left: 50px;
+}
+
+.sidenav ul {
+  padding-left: 20px;
 }
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
@@ -58,6 +77,16 @@
     font-size: 18px;
   }
 }
+
+.menu-list {
+  padding: 0px;
+}
+
+.menu-divider {
+  margin-left: 10px !important;
+}
+
+/* Main navigation bar */
 
 .navbar {
   background-color: $primary-color !important;
@@ -98,12 +127,4 @@
 /* selected link */
 .app-link:active {
   text-decoration: none;
-}
-
-.menu-list {
-  padding: 0px;
-}
-
-.menu-divider {
-  margin-left: 10px !important;
 }

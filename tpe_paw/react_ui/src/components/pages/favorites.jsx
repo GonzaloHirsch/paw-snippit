@@ -1,6 +1,4 @@
-import React, { Component } from "react";
 import SnippetFeedHOC from "./snippet_feed_hoc";
-import SnippetFeedClient from "../../api/implementations/SnippetFeedClient";
 import SnippetFavoriteFeed from "../snippets/snippet_favorite_feed";
 import store from "../../store";
 

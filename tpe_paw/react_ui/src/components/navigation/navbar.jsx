@@ -106,7 +106,7 @@ class NavBar extends Component {
   }
 
   componentDidUpdate() {
-    console.log("UPDATE")
+    console.log("UPDATE");
     this.determineCurrentContext();
   }
 
@@ -184,7 +184,7 @@ class NavBar extends Component {
       params.set("sort", "no");
     }
 
-    this.setState({search: search})
+    this.setState({ search: search });
 
     // Pushing the route
     this.props.history.push({
@@ -196,7 +196,7 @@ class NavBar extends Component {
   getTopRightNavItems() {
     if (this.state.userIsLogged) {
       return (
-        <div className="col-4">
+        <React.Fragment>
           <Link to="/create" className="mx-1 text-white">
             <Icon path={mdiPlusCircleOutline} size={1} />
           </Link>
@@ -205,11 +205,11 @@ class NavBar extends Component {
               {i18n.t("nav.greeting", { user: store.getState().auth.info.sub })}
             </em>
           </Link>
-        </div>
+        </React.Fragment>
       );
     } else {
       return (
-        <div className="col-4">
+        <React.Fragment>
           <Link to="/login" className="mx-1">
             <button type="button" className="btn btn-light">
               {i18n.t("nav.login")}
@@ -220,7 +220,7 @@ class NavBar extends Component {
               {i18n.t("nav.signup")}
             </button>
           </Link>
-        </div>
+        </React.Fragment>
       );
     }
   }
@@ -241,10 +241,8 @@ class NavBar extends Component {
         />
         <nav className="navbar navbar-expand-lg navbar-dark fixed-top row row-cols-3">
           <button
-            className="btn btn-sm text-white col-1"
+            className="btn btn-sm text-white col-2 col-sm-1 no-focus"
             type="button"
-            data-toggle="collapse"
-            aria-expanded="false"
             aria-label="Toggle side navigation"
             onClick={() => this.navInteract(this.state.navIsOpen)}
           >
@@ -252,14 +250,14 @@ class NavBar extends Component {
           </button>
           <Link
             to="/"
-            className="app-link text-white col-2"
+            className="app-link text-white col-7 col-lg-2 align-items-horizontal-center"
             onClick={() => this.handleNavigationChange(CONTEXT.HOME)}
           >
-            <Icon path={mdiCodeTags} size={2} />
+            <Icon path={mdiCodeTags} size={2}></Icon>
             <span className="ml-1">{i18n.t("app")}</span>
           </Link>
           <button
-            className="navbar-toggler"
+            className="navbar-toggler btn btn-sm text-white col-2 col-sm-1 no-focus"
             type="button"
             data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -270,7 +268,7 @@ class NavBar extends Component {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div
-            className="collapse navbar-collapse col-9"
+            className="collapse navbar-collapse col-2 col-lg-9"
             id="navbarSupportedContent"
           >
             <form
@@ -310,9 +308,7 @@ class NavBar extends Component {
                     }
                     value={this.state.search.type}
                   >
-                    <option value="0">
-                      {i18n.t("nav.filter.hint")}
-                    </option>
+                    <option value="0">{i18n.t("nav.filter.hint")}</option>
                     <option value="all">{i18n.t("nav.filter.all")}</option>
                     <option value="tag">{i18n.t("nav.filter.tag")}</option>
                     <option value="title">{i18n.t("nav.filter.title")}</option>
@@ -340,9 +336,7 @@ class NavBar extends Component {
                     }
                     value={this.state.search.sort}
                   >
-                    <option value="0">
-                      {i18n.t("nav.order.hint")}
-                    </option>
+                    <option value="0">{i18n.t("nav.order.hint")}</option>
                     <option value="asc">{i18n.t("nav.order.ascending")}</option>
                     <option value="desc">
                       {i18n.t("nav.order.descending")}
@@ -359,7 +353,9 @@ class NavBar extends Component {
                 </div>
               </div>
             </form>
-            {this.getTopRightNavItems()}
+            <div class="nav-item col-4 align-items-horizontal-right">
+              {this.getTopRightNavItems()}
+            </div>
           </div>
         </nav>
       </div>

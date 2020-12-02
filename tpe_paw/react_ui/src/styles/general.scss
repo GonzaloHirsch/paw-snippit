@@ -69,3 +69,15 @@ img {
   display: flex !important;
   align-items: center;
 }
+
+.align-items-horizontal-right {
+  text-align: end;
+}
+
+.align-items-horizontal-center {
+  text-align: center;
+}
+
+.no-focus:focus{
+  outline: none !important;
+}

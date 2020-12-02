@@ -40,9 +40,21 @@ export default class SnippetFeedClient extends Client {
     return this.instance.get("/explore/search?" + params.toString());
   }
 
-  getUpvotedSnippetFeed(page) {
+  getUpvotedSnippetFeed(page, userId) {
     const params = new URLSearchParams({ page: page });
-    return this.instance.get("snippets/upvoted?" + params.toString());
+    return this.instance.get(
+      "users/" + userId + "/upvoted_snippets?" + params.toString()
+    );
+  }
+
+  searchUpvotedSnippetFeed(page, userId, search) {
+    const params = new URLSearchParams({ page: page });
+    for (let key in search) {
+      params.set(key, search[key]);
+    }
+    return this.instance.get(
+      "users/" + userId + "/upvoted_snippets/search?" + params.toString()
+    );
   }
 
   getFollowingSnippetFeed(page) {

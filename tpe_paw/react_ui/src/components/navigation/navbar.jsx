@@ -226,7 +226,8 @@ class NavBar extends Component {
   }
 
   handleNavigationChange(newCtx) {
-    this.setState({ currentContext: newCtx });
+    this.navInteract(true)
+    this.setState({ currentContext: newCtx});
   }
 
   render() {

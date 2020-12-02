@@ -24,7 +24,22 @@ export default {
     upvoted: "Upvoted",
     logout: "Log Out",
     flagged: "Flagged",
-    greeting: "Hello, {{user}}!"
+    greeting: "Hello, {{user}}!",
+    filter:{
+      hint: "Search By",
+      all: "All",
+      tag: "Tag",
+      title: "Title",
+      content: "Content",
+      username: "Username",
+      language: "Language"
+    },
+    order: {
+      hint: "Sort By",
+      ascending: "Ascending",
+      descending: "Descending",
+      no: "No Order"
+    }
   },
   login: {
     title: "Welcome back to ",

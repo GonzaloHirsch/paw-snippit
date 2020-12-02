@@ -9,9 +9,6 @@ import {
   mdiMenu,
   mdiCodeTags,
   mdiMagnify,
-  mdiFilterVariant,
-  mdiSortAlphabeticalVariant,
-  mdiPlus,
   mdiPlusCircleOutline,
 } from "@mdi/js";
 import { logOut } from "../../redux/actions/actionCreators";
@@ -28,8 +25,8 @@ class NavBar extends Component {
     roles: [],
     search: {
       query: "",
-      type: "all",
-      sort: "asc",
+      type: "0",
+      sort: "0",
     },
     currentContext: CONTEXT.HOME,
   };
@@ -108,7 +105,8 @@ class NavBar extends Component {
     this.authUnsubscribe();
   }
 
-  componentDidUpdate(){
+  componentDidUpdate() {
+    console.log("UPDATE")
     this.determineCurrentContext();
   }
 
@@ -164,13 +162,29 @@ class NavBar extends Component {
     let params = new URLSearchParams(this.props.location.search);
     if (search.query !== null && search.query !== undefined) {
       params.set("query", search.query);
+    } else {
+      params.set("query", "");
     }
-    if (search.type !== null && search.type !== undefined) {
+    if (
+      search.type !== null &&
+      search.type !== undefined &&
+      search.type !== "0"
+    ) {
       params.set("type", search.type);
+    } else {
+      params.set("type", "all");
     }
-    if (search.sort !== null && search.sort !== undefined) {
+    if (
+      search.sort !== null &&
+      search.sort !== undefined &&
+      search.sort !== "0"
+    ) {
       params.set("sort", search.sort);
+    } else {
+      params.set("sort", "no");
     }
+
+    this.setState({search: search})
 
     // Pushing the route
     this.props.history.push({
@@ -296,15 +310,21 @@ class NavBar extends Component {
                     }
                     value={this.state.search.type}
                   >
-                    <option defaultValue value="all">
-                      Choose...
+                    <option value="0">
+                      {i18n.t("nav.filter.hint")}
                     </option>
-                    <option value="all">all</option>
-                    <option value="tag">tag</option>
-                    <option value="title">title</option>
-                    <option value="content">content</option>
-                    <option value="username">username</option>
-                    <option value="language">language</option>
+                    <option value="all">{i18n.t("nav.filter.all")}</option>
+                    <option value="tag">{i18n.t("nav.filter.tag")}</option>
+                    <option value="title">{i18n.t("nav.filter.title")}</option>
+                    <option value="content">
+                      {i18n.t("nav.filter.content")}
+                    </option>
+                    <option value="username">
+                      {i18n.t("nav.filter.username")}
+                    </option>
+                    <option value="language">
+                      {i18n.t("nav.filter.language")}
+                    </option>
                   </select>
                   <select
                     className="custom-select form-control"
@@ -320,12 +340,14 @@ class NavBar extends Component {
                     }
                     value={this.state.search.sort}
                   >
-                    <option defaultValue value="asc">
-                      Choose...
+                    <option value="0">
+                      {i18n.t("nav.order.hint")}
                     </option>
-                    <option value="asc">asc</option>
-                    <option value="desc">desc</option>
-                    <option value="no">no</option>
+                    <option value="asc">{i18n.t("nav.order.ascending")}</option>
+                    <option value="desc">
+                      {i18n.t("nav.order.descending")}
+                    </option>
+                    <option value="no">{i18n.t("nav.order.no")}</option>
                   </select>
                   <button
                     className="btn btn-outline-secondary"

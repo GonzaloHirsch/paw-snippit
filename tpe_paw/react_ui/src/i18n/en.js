@@ -25,6 +25,7 @@ export default {
     logout: "Log Out",
     flagged: "Flagged",
     greeting: "Hello, {{user}}!",
+    recover: "Recover",
     filter: {
       hint: "Search By",
       all: "All",
@@ -76,6 +77,22 @@ export default {
       pass: "Password",
       repeatPass: "Repeat Password",
       action: "Sign Up!",
+    },
+  },
+  recover: {
+    title: "Recover Password",
+    message:
+      "Enter your account's email so that we can send you a link to reset your password",
+    afterMessage:
+      "A link has been sent to your email to complete the password recovery process",
+    form: {
+      email: "Insert your email here",
+      action: "Send Recovery Email",
+      afterAction: "Go Home",
+      errors: {
+        emptyEmail: "Email is required",
+        invalidEmail: "Invalid email",
+      },
     },
   },
   explore: {},

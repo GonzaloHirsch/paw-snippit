@@ -131,6 +131,9 @@ class NavBar extends Component {
 
   // Method to handle the log out event
   handleLogOut() {
+    // Closing the sidebar
+    this.navInteract(true)
+
     // Dispatch the login event
     store.dispatch(logOut());
 
@@ -226,6 +229,7 @@ class NavBar extends Component {
   }
 
   handleNavigationChange(newCtx) {
+    // Closing the sidebar
     this.navInteract(true)
     this.setState({ currentContext: newCtx});
   }
@@ -354,7 +358,7 @@ class NavBar extends Component {
                 </div>
               </div>
             </form>
-            <div class="nav-item col-4 align-items-horizontal-right">
+            <div className="nav-item col-4 align-items-horizontal-right">
               {this.getTopRightNavItems()}
             </div>
           </div>

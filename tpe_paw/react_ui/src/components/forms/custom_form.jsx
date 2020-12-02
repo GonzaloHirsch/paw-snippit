@@ -3,17 +3,17 @@ import i18n from "../../i18n";
 import { mdiCodeTags } from "@mdi/js";
 import Icon from "@mdi/react";
 
-const LoginForm = (props) => {
+const CustomForm = (props) => {
   return (
     <form noValidate onSubmit={props.onSubmit}>
       <span
         className="mx-auto text-white login-title"
-        style={{ display: "block", textAlign: "center" }}
+        style={{ display: "flex", justifyContent: "center" }}
       >
         <Icon path={mdiCodeTags} size={2} />
         <span className="ml-2">
           {props.title}
-          <strong>{i18n.t("app")}</strong>
+          {props.includeAppName && <strong>{i18n.t("app")}</strong>}
         </span>
       </span>
 
@@ -33,4 +33,4 @@ const LoginForm = (props) => {
   );
 };
 
-export default LoginForm;
+export default CustomForm;

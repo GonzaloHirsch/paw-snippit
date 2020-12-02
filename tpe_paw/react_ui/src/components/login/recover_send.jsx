@@ -4,6 +4,8 @@ import i18n from "../../i18n";
 import { mdiEmail } from "@mdi/js";
 import TextInputFieldWithIcon from "./text_input_field_with_icon";
 import CustomForm from "../forms/custom_form";
+import { mdiCodeTags } from "@mdi/js";
+import Icon from "@mdi/react";
 import {
   RECOVER_SEND_VALIDATIONS,
   handleChange,
@@ -93,20 +95,33 @@ class RecoverSend extends Component {
   getDisplayForm() {
     if (this.state.sentEmail) {
       return (
-        <CustomForm
-          title=""
-          action={i18n.t("recover.form.afterAction")}
-          onSubmit={() => this.handleGoHome()}
-          generalError={this.state.responseErrors}
-          includeAppName={true}
-        >
+        <React.Fragment>
           <span
-            className="mb-2 align-items-horizontal-center fw-500"
-            style={{ display: "flex", textAlign: "center", fontSize: "20px" }}
+            className="mx-auto text-white login-title"
+            style={{ display: "flex", justifyContent: "center" }}
           >
-            {i18n.t("recover.afterMessage")}
+            <Icon path={mdiCodeTags} size={2} />
+            <span className="ml-2">
+              <strong>{i18n.t("app")}</strong>
+            </span>
           </span>
-        </CustomForm>
+
+          <div className="m-4 p-5 inner-square shadow rounded-lg">
+            <span
+              className="mb-2 align-items-horizontal-center fw-500"
+              style={{ display: "flex", textAlign: "center", fontSize: "20px" }}
+            >
+              {i18n.t("recover.afterMessage")}
+            </span>
+            <button
+              className="btn btn-lg btn-primary btn-block mb-3 rounded-lg"
+              type="submit"
+              onClick={() => this.handleGoHome()}
+            >
+              {i18n.t("recover.form.afterAction")}
+            </button>
+          </div>
+        </React.Fragment>
       );
     } else {
       return (

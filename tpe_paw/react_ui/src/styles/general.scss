@@ -1,3 +1,5 @@
+@import "variables";
+
 pre {
   white-space: pre-wrap !important;
   white-space: -moz-pre-wrap !important;
@@ -19,6 +21,10 @@ img {
   object-fit: cover;
   height: 45px;
   width: 45px;
+}
+
+body{
+  background-color: $app-background-color !important;
 }
 
 .no-decoration {

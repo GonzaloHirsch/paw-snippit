@@ -96,4 +96,10 @@ export default {
     },
   },
   explore: {},
+  snippet: {
+    flagged: {
+      title: "Beware!",
+      message: "The following snippet was marked as incorrect by the administrator. It may not work or be unsafe to use."
+    }
+  }
 };

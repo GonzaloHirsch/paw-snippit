@@ -1,4 +1,5 @@
 import React from "react";
+import SnippetDangerMessage from "./snippet_danger_message";
 
 const SnippetDetail = (props) => {
   const {
@@ -7,11 +8,12 @@ const SnippetDetail = (props) => {
     description,
     code,
     voteCount,
-    isFlagged,
+    flagged,
     isDeleted,
   } = props.snippet;
   return (
     <div className="flex-column detail-container mx-5 my-4 p-5 inner-square shadow rounded-lg">
+      { flagged && <SnippetDangerMessage/>}
       <h1>{"MY SNIPPET IS " + id}</h1>
       <h1>{"MY SNIPPET TITLE IS " + title}</h1>
       <h3>{"MY SNIPPET LANGUAGE IS " + props.language.name}</h3>

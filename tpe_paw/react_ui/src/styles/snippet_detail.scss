@@ -1,3 +1,9 @@
 .detail-container {
   max-width: 1000px;
 }
+
+.danger-message {
+  border: red solid 2px;
+  color: red;
+  border-radius: 10px;
+}

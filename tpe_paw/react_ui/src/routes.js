@@ -81,17 +81,17 @@ const routes = [
     roles: [ROLE_USER, ROLE_ADMIN],
   },
   {
-<<<<<<< HEAD
     path: "/explore",
     exact: false,
     name: i18n.t("nav.explore"),
     component: Explore,
-=======
+    roles: [],
+  },
+  {
     path: "/recover",
     exact: true,
     name: i18n.t("nav.recover"),
     component: RecoverSend,
->>>>>>> react_ui
     roles: [],
   },
 ];

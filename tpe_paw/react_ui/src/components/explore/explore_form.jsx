@@ -170,7 +170,7 @@ class ExploreForm extends Component {
 
   render() {
     return (
-      <form onSubmit={() => this.handleSearch()}>
+      <form className="flex-column" onSubmit={() => this.handleSearch()}>
         <TextInputField
           value={this.state.title}
           placeholder={"PLACEHOLDER"}

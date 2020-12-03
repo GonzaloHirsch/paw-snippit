@@ -14,14 +14,21 @@ const SnippetExplore = (props) => {
           ({props.totalSnippets} {i18n.t("snippets")})
         </h5>
       </div>
-      <div className="d-flex">
-        <ExploreForm />
-        <SnippetFeed
-          snippets={props.snippets}
-          links={props.links}
-          currentPage={props.currentPage}
-          onPageTransition={props.onPageTransition}
-        />
+      <div className="row">
+        <div className="col-2 explore-margin p-0">
+          <div className="p-3 rounded explore-border">
+            <ExploreForm />
+          </div>
+        </div>
+
+        <div className="col-9">
+          <SnippetFeed
+            snippets={props.snippets}
+            links={props.links}
+            currentPage={props.currentPage}
+            onPageTransition={props.onPageTransition}
+          />
+        </div>
       </div>
     </React.Fragment>
   );

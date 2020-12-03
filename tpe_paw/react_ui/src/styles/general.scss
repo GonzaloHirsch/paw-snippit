@@ -47,6 +47,14 @@ body{
   align-items: center;
 }
 
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
 /* Text Properties */
 * {
   font-family: Roboto, "sans-serif";
@@ -82,8 +90,25 @@ body{
 
 .align-items-horizontal-center {
   text-align: center;
+  justify-content: center;
 }
 
 .no-focus:focus{
   outline: none !important;
+}
+
+.no-margin {
+  margin: 0px !important;
+}
+
+.no-padding {
+  padding: 0px !important;
+}
+
+.shadow {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.primary-text {
+  color: $primary-color;
 }

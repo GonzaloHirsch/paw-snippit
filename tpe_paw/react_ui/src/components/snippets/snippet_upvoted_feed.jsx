@@ -9,7 +9,9 @@ const SnippetUpvotedFeed = (props) => {
     <React.Fragment>
       <div className="mx-3 mb-3">
         <h1 className="fw-300">{i18n.t("nav.upvoted")}</h1>
-        <h5 className="fw-100">({props.totalSnippets} {i18n.t("snippets")})</h5>
+        <h5 className="fw-100">
+          ({i18n.t("snippetWithNumber", { count: props.totalSnippets })})
+        </h5>
       </div>
       <SnippetFeed
         snippets={props.snippets}

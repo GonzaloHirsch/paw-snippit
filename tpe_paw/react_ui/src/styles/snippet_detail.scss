@@ -7,3 +7,26 @@
   color: red;
   border-radius: 10px;
 }
+
+.snippet-divider{
+  border: black solid 2px;
+}
+
+.boxed-content {
+  @extend .align-items-vertical;
+  border: 2px $primary-color solid;
+  border-radius: 8px;
+  min-width: 100px;
+  min-height: 100px;
+  display: inline-block;
+
+  &-link{
+    @extend .boxed-content;
+    text-decoration: none;
+  }
+
+  &-link:hover{
+    @extend .boxed-content;
+    text-decoration: none;
+  }
+}

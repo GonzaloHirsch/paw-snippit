@@ -23,5 +23,5 @@ export function extractLinkHeaders(headers) {
 
 export function extractItemCountHeader(headers) {
   const value = headers["x-all-items"];
-  return value;
+  return parseInt(value, 10);
 }

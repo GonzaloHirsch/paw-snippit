@@ -1,7 +1,10 @@
 export default {
   test: "My test in ENGLISH",
   app: "Snippit",
-  snippets: "Snippets",
+  snippet: "Snippet",
+  snippet_plural: "Snippets",
+  snippetWithNumber: "{{count}} Snippet",
+  snippetWithNumber_plural: "{{count}} Snippets",
   errors: {
     serverError: "Error in server, please try again later",
     unknownError: "Uknown error, please try again later",
@@ -96,7 +99,7 @@ export default {
     },
   },
   explore: {},
-  snippet: {
+  snippetDetail: {
     flagged: {
       title: "Beware!",
       message: "The following snippet was marked as incorrect by the administrator. It may not work or be unsafe to use."

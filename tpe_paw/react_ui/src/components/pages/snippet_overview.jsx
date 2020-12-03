@@ -17,9 +17,25 @@ class SnippetOverview extends Component {
     this.userClient = new UserClient();
     this.languageClient = new LanguageClient();
     this.state = {
-      snippet: "",
-      creator: "",
-      language: "",
+      snippet: {
+        id: 0,
+        title: "TITLE",
+        description: "DESCRIPTION",
+        code: "CODE",
+        flagged: false,
+        createdDate: "10/10/10"
+      },
+      creator: {
+        username: "USERNAME",
+        id: 0,
+        picture: "/userIcon.jpg",
+        hasPicture: false,
+        reputation: 0
+      },
+      language: {
+        name: "LANGUAGE",
+        id: 0
+      },
     };
   }
 
@@ -30,7 +46,7 @@ class SnippetOverview extends Component {
       .getSnippetWithId(snippetId)
       .then((res) => {
         this.setState({ snippet: res.data });
-        console.log(this.state.snippet);
+        console.log(this.state.snippet, "CHEE");
 
         // If snippet was found, obtain the creator
         this.userClient

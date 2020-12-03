@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import SnippetFeed from "./snippet_feed";
+import SnippetFeed from "../snippets/snippet_feed";
 import i18n from "../../i18n";
+import ExploreForm from "./explore_form";
 
 // Stateless Functional Component
 
 const SnippetExplore = (props) => {
-  // FIXME -> snippet count
   return (
     <React.Fragment>
       <div className="mx-3 mb-3 fw-100">
@@ -14,8 +14,8 @@ const SnippetExplore = (props) => {
           ({props.totalSnippets} {i18n.t("snippets")})
         </h5>
       </div>
-      <div>
-        <form></form>
+      <div className="d-flex">
+        <ExploreForm />
         <SnippetFeed
           snippets={props.snippets}
           links={props.links}

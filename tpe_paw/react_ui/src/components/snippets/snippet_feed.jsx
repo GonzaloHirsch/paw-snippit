@@ -7,7 +7,7 @@ import Pagination from "../navigation/pagination";
 const SnippetFeed = (props) => {
   const { snippets, currentPage, links, onPageTransition } = props;
   return (
-    <React.Fragment>
+    <div className="flex-column">
       <div className="card-columns mx-3">
         {snippets.map((snippet) => (
           <SnippetCard key={snippet.id} snippet={snippet} />
@@ -21,7 +21,7 @@ const SnippetFeed = (props) => {
           className="mx-auto"
         />
       </div>
-    </React.Fragment>
+    </div>
   );
 };
 

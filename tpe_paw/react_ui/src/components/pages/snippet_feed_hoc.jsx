@@ -135,6 +135,8 @@ function SnippetFeedHOC(
 
         if (isSearching) {
           search = searchFromUrl(this.props.location.search);
+          console.log(search);
+          console.log(this.state.currentSearch);
           if (!areEqualShallow(search, this.state.currentSearch)) {
             reload = true;
           }
@@ -143,6 +145,7 @@ function SnippetFeedHOC(
           reload = true;
         }
 
+        console.log(reload);
         if (reload) {
           if (isSearching) {
             this.setState(

@@ -37,7 +37,7 @@ export default class SnippetFeedClient extends Client {
     for (let key in search) {
       params.set(key, search[key]);
     }
-    return this.instance.get("/explore/search?" + params.toString());
+    return this.instance.get("snippets/explore/search?" + params.toString());
   }
 
   getUpvotedSnippetFeed(page, userId) {

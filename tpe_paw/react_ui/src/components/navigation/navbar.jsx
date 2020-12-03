@@ -226,8 +226,8 @@ class NavBar extends Component {
   }
 
   handleNavigationChange(newCtx) {
-    this.navInteract(true)
-    this.setState({ currentContext: newCtx});
+    this.navInteract(true);
+    this.setState({ currentContext: newCtx });
   }
 
   render() {
@@ -354,7 +354,7 @@ class NavBar extends Component {
                 </div>
               </div>
             </form>
-            <div class="nav-item col-4 align-items-horizontal-right">
+            <div className="nav-item col-4 align-items-horizontal-right">
               {this.getTopRightNavItems()}
             </div>
           </div>

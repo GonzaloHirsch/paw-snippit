@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { mdiAlert } from "@mdi/js";
+import Icon from "@mdi/react";
 
 class SnippetCard extends Component {
   state = {};
 
-  getUserProfilePicUrl(creator){
-    if (creator.hasPicture){
+  getUserProfilePicUrl(creator) {
+    if (creator.hasPicture) {
       return creator.picture;
     }
     return "/userIcon.jpg";
@@ -13,7 +15,6 @@ class SnippetCard extends Component {
   render() {
     const { snippet } = this.props;
     const snippetLink = `/snippets/${snippet.id}`;
-
     return (
       <Link to={snippetLink} className="no-decoration">
         <div
@@ -22,20 +23,24 @@ class SnippetCard extends Component {
         >
           <div className="card-header px-4" style={{ fontSize: "20px" }}>
             <div className="row align-items-center">
-              <img src={this.getUserProfilePicUrl(snippet.creator)} alt="User Icon" />
+              <img
+                src={this.getUserProfilePicUrl(snippet.creator)}
+                alt="User Icon"
+              />
               <div className="col ml-2">
                 <div className="row text-primary" style={{ fontSize: "18px" }}>
                   {snippet.creator.username}
                 </div>
                 <div className="row text-muted" style={{ fontSize: "12px" }}>
-                {snippet.createdDate}
+                  {snippet.createdDate}
                 </div>
               </div>
+              {snippet.flagged && <Icon className="mr-1 icon-danger icon-size-2" path={mdiAlert} size={2} />}
               <div
                 className="language-snippet-tag p-2 flex-center rounded mr-1"
                 style={{ fontSize: "20px" }}
               >
-                {snippet.language.name}
+                {snippet.language.name.toUpperCase()}
               </div>
             </div>
           </div>

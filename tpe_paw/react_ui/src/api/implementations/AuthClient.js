@@ -7,4 +7,10 @@ export default class AuthClient extends Client {
       password: pass,
     });
   }
+
+  sendRecoveryEmail(email){
+    return this.instance.post("users/recover_password", {
+      email: email,
+    });
+  }
 }

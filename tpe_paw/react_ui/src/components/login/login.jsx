@@ -2,43 +2,14 @@ import React, { Component } from "react";
 import store from "../../store";
 import { loginSuccess } from "../../redux/actions/actionCreators";
 import { Link } from "react-router-dom";
-
 import AuthClient from "../../api/implementations/AuthClient";
-
-// i18n
 import i18n from "../../i18n";
-
-// Icons
-import Icon from "@mdi/react";
-import { mdiCodeTags, mdiAccount, mdiLock } from "@mdi/js";
+import { mdiAccount, mdiLock } from "@mdi/js";
 import TextInputFieldWithIcon from "./text_input_field_with_icon";
-import LoginForm from "./login_form";
+import CustomForm from "../forms/custom_form";
+import {LOGIN_VALIDATIONS} from "../../js/validations"
 
 class Login extends Component {
-  validations = {
-    user: (val) => {
-      return (
-        (!val && i18n.t("login.form.errors.emptyUser")) ||
-        (val.length < 6 && i18n.t("login.form.errors.smallUser")) ||
-        (val.length > 50 && i18n.t("login.form.errors.bigUser")) ||
-        (!RegExp("^[a-zA-Z0-9-_.]+$").test(val) &&
-          i18n.t("login.form.errors.invalidUser")) ||
-        null
-      );
-    },
-    pass: (val) => {
-      return (
-        (!val && i18n.t("login.form.errors.emptyPass")) ||
-        (val.length < 8 && i18n.t("login.form.errors.smallPass")) ||
-        (RegExp("\\s").test(val) && i18n.t("login.form.errors.invalidPass")) ||
-        null
-      );
-    },
-    remember: (val) => {
-      return null;
-    },
-  };
-
   state = {
     fields: {
       user: "",
@@ -49,7 +20,7 @@ class Login extends Component {
       user: null,
       pass: null,
     },
-    responseErrors: null
+    responseErrors: null,
   };
 
   handleLogin() {
@@ -77,17 +48,19 @@ class Login extends Component {
         .catch((e) => {
           if (e.response) {
             // client received an error response (5xx, 4xx)
-            if (e.response.status === 401){
-              this.setState({responseErrors: i18n.t("login.form.errors.invalidGeneral")})
-            } else if (e.response.status === 500){
-              this.setState({responseErrors: i18n.t("errors.serverError")})
+            if (e.response.status === 401) {
+              this.setState({
+                responseErrors: i18n.t("login.form.errors.invalidGeneral"),
+              });
+            } else if (e.response.status === 500) {
+              this.setState({ responseErrors: i18n.t("errors.serverError") });
             }
           } else if (e.request) {
             // client never received a response, or request never left
-            this.setState({responseErrors: i18n.t("errors.noConnection")})
+            this.setState({ responseErrors: i18n.t("errors.noConnection") });
           } else {
             // anything else
-            this.setState({responseErrors: i18n.t("errors.unknownError")})
+            this.setState({ responseErrors: i18n.t("errors.unknownError") });
           }
         });
     }
@@ -98,7 +71,7 @@ class Login extends Component {
     let fields = this.state.fields;
     fields[name] = e.target.value;
     let errors = this.state.errors;
-    errors[name] = this.validations[name](fields[name]);
+    errors[name] = LOGIN_VALIDATIONS[name](fields[name]);
     this.setState({ fields: fields, errors: errors });
   }
 
@@ -107,7 +80,7 @@ class Login extends Component {
     const fields = this.state.fields;
     let errors = {};
     for (let key in fields) {
-      errors[key] = this.validations[key](fields[key]);
+      errors[key] = LOGIN_VALIDATIONS[key](fields[key]);
     }
 
     let hasErrors = false;
@@ -123,11 +96,12 @@ class Login extends Component {
   render() {
     return (
       <div className="form-signin rounded-lg">
-        <LoginForm
+        <CustomForm
           title={i18n.t("login.title")}
           action={i18n.t("login.form.action")}
           onSubmit={() => this.handleLogin()}
           generalError={this.state.responseErrors}
+          includeAppName={true}
         >
           <TextInputFieldWithIcon
             id={"inputUsername"}
@@ -159,15 +133,7 @@ class Login extends Component {
               {i18n.t("login.form.remember")}
             </label>
           </div>
-        </LoginForm>
-
-        {/*  <div className="checkbox mb-3">
-            <label className="flex-row checkbox-container">
-              <input type="checkbox" value="remember-me" />{" "}
-              <span className="checkbox-checkmark"></span>
-              {i18n.t("login.form.remember")}
-            </label>
-          </div> */}
+        </CustomForm>
 
         <div
           className="my-2 text-white mx-auto"

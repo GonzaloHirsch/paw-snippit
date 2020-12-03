@@ -15,6 +15,7 @@ const Home = React.lazy(() => import("./components/pages/home"));
 const Favorites = React.lazy(() => import("./components/pages/favorites"));
 const Upvoted = React.lazy(() => import("./components/pages/upvoted"));
 const Explore = React.lazy(() => import("./components/pages/explore"));
+const RecoverSend = React.lazy(() => import("./components/login/recover_send"));
 
 // We also take into account i18n in the naming of the routes
 /*
@@ -80,10 +81,17 @@ const routes = [
     roles: [ROLE_USER, ROLE_ADMIN],
   },
   {
+<<<<<<< HEAD
     path: "/explore",
     exact: false,
     name: i18n.t("nav.explore"),
     component: Explore,
+=======
+    path: "/recover",
+    exact: true,
+    name: i18n.t("nav.recover"),
+    component: RecoverSend,
+>>>>>>> react_ui
     roles: [],
   },
 ];

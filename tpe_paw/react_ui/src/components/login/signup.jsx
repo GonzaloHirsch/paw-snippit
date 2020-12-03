@@ -13,7 +13,7 @@ import i18n from "../../i18n";
 // Icons
 import { mdiEmail, mdiAccount, mdiLock } from "@mdi/js";
 import TextInputFieldWithIcon from "./text_input_field_with_icon";
-import LoginForm from "./login_form";
+import CustomForm from "../forms/custom_form";
 
 class SignUp extends Component {
   state = {
@@ -28,10 +28,11 @@ class SignUp extends Component {
   render() {
     return (
       <div className="form-signin rounded-lg">
-        <LoginForm
+        <CustomForm
           title={i18n.t("signup.title")}
           action={i18n.t("signup.form.action")}
           onSubmit={() => this.handleLogin()}
+          includeAppName={true}
         >
           <TextInputFieldWithIcon
             id={"inputUsername"}
@@ -68,7 +69,7 @@ class SignUp extends Component {
             iconPath={mdiLock}
             onChange={(e) => this.setState({ repeatedPass: e.target.value })}
           />
-        </LoginForm>
+        </CustomForm>
 
         <div
           className="my-2 text-white mx-auto"

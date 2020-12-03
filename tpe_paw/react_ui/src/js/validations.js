@@ -62,3 +62,22 @@ export const RECOVER_SEND_VALIDATIONS = {
     );
   },
 };
+
+export const CHANGE_PASS_VALIDATIONS = {
+  newPassword: (val) => {
+    return (
+      (!val && i18n.t("login.form.errors.emptyPass")) ||
+      (val.length < 8 && i18n.t("login.form.errors.smallPass")) ||
+      (RegExp("\\s").test(val) && i18n.t("login.form.errors.invalidPass")) ||
+      null
+    );
+  },
+  repeatNewPassword: (val) => {
+    return (
+      (!val && i18n.t("login.form.errors.emptyPass")) ||
+      (val.length < 8 && i18n.t("login.form.errors.smallPass")) ||
+      (RegExp("\\s").test(val) && i18n.t("login.form.errors.invalidPass")) ||
+      null
+    );
+  },
+};

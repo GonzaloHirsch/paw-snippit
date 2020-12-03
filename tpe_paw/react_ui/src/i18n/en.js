@@ -29,6 +29,7 @@ export default {
     flagged: "Flagged",
     greeting: "Hello, {{user}}!",
     recover: "Recover",
+    resetPassword: "Reset Password",
     filter: {
       hint: "Search By",
       all: "All",
@@ -97,6 +98,26 @@ export default {
         invalidEmail: "Invalid email",
       },
     },
+  },
+  changePassword:{
+    invalidLink:{
+      message: "The link has expired",
+      action: "Go to Recover Password"
+    },
+    changeForm:{
+      title: "Change Password",
+      password: "Password",
+      repeatPassword: "Repeat password",
+      action: "Change Password",
+      errors: {
+        differentPasswords: "Passwords don't match"
+      }
+    },
+    changeSuccess:{
+      message: "Password has been successfully reset",
+      actionGoLogin: "Go Login",
+      actionGoHome: "Go Home"
+    }
   },
   explore: {},
   snippetDetail: {

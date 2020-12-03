@@ -15,6 +15,7 @@ const Home = React.lazy(() => import("./components/pages/home"));
 const Favorites = React.lazy(() => import("./components/pages/favorites"));
 const Upvoted = React.lazy(() => import("./components/pages/upvoted"));
 const RecoverSend = React.lazy(() => import("./components/login/recover_send"));
+const ChangePassword = React.lazy(() => import("./components/login/change_password"));
 
 // We also take into account i18n in the naming of the routes
 /*
@@ -84,6 +85,13 @@ const routes = [
     exact: true,
     name: i18n.t("nav.recover"),
     component: RecoverSend,
+    roles: [],
+  },
+  {
+    path: "/reset-password",
+    exact: false,
+    name: i18n.t("nav.resetPassword"),
+    component: ChangePassword,
     roles: [],
   },
 ];

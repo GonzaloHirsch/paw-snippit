@@ -115,7 +115,6 @@ class RecoverSend extends Component {
             </span>
             <button
               className="btn btn-lg btn-primary btn-block mb-3 rounded-lg"
-              type="submit"
               onClick={() => this.handleGoHome()}
             >
               {i18n.t("recover.form.afterAction")}

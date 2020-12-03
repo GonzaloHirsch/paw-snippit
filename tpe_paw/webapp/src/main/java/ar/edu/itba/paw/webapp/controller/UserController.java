@@ -5,13 +5,8 @@ import ar.edu.itba.paw.interfaces.service.*;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.dto.SnippetDto;
-import ar.edu.itba.paw.webapp.dto.TagDto;
-import ar.edu.itba.paw.webapp.dto.UserDto;
-import ar.edu.itba.paw.webapp.dto.EmailVerificationDto;
-import ar.edu.itba.paw.webapp.dto.RecoveryDto;
-import ar.edu.itba.paw.webapp.dto.RegisterDto;
-import ar.edu.itba.paw.webapp.dto.SearchDto;
+import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.DescriptionForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.utility.*;
@@ -38,6 +33,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -233,7 +229,7 @@ public class UserController {
     @POST
     @Path("/{id}/verify_email")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response verifyUserEmailCode(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam EmailVerificationDto verificationFormDto){
+    public Response verifyUserEmailCode(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam EmailVerificationDto verificationFormDto) {
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
@@ -260,7 +256,8 @@ public class UserController {
         }
         // Getting the URL for the server
         // TODO --> FIX depending on how we change Reset password
-        final String baseUrl = this.uriInfo.getBaseUri().toString();
+        // We remove the API prefix and add the required #/ for the hashrouter of the client
+        final String baseUrl = this.uriInfo.getBaseUri().toString().replace(Constants.API_PREFIX, "/#");
         try {
             this.emailService.sendRecoveryEmail(user, baseUrl);
         } catch (Exception e) {
@@ -270,9 +267,43 @@ public class UserController {
     }
 
     @POST
+    @Path("/{id}/valid_token")
+    public Response isRecoverPasswordTokenValid(final @PathParam(PATH_PARAM_ID) long id, final @Valid TokenDto tokenDto) {
+        /// Get the user
+        Optional<User> maybeUser = userService.findUserById(id);
+
+        // Test the token
+        Optional<Response> maybeResponse = this.isResetPasswordTokenValid(maybeUser, tokenDto.getToken());
+
+        // If present, return the error response, if not returns a 204 (NoContent), indicating the token is valid
+        return maybeResponse.orElseGet(() -> Response.noContent().build());
+    }
+
+    @POST
+    @Path("/{id}/change_password")
+    public Response changePasswordWithToken(final @PathParam(PATH_PARAM_ID) long id, final @Valid ResetPasswordDto resetPasswordDto) {
+        // Get the user
+        Optional<User> maybeUser = userService.findUserById(id);
+
+        // Test the token
+        Optional<Response> maybeResponse = this.isResetPasswordTokenValid(maybeUser, resetPasswordDto.getToken());
+
+        // If present, return the error response
+        if (maybeResponse.isPresent()){
+            return maybeResponse.get();
+        }
+
+        //noinspection OptionalGetWithoutIsPresent
+        userService.changePassword(maybeUser.get().getEmail(), passwordEncoder.encode(resetPasswordDto.getNewPassword()));
+
+        // Returns a 204 (NoContent), indicating the operation success
+        return Response.noContent().build();
+    }
+
+    @POST
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response changeUserDescription(final @PathParam(PATH_PARAM_ID) long id, final UserDto userDto){
+    public Response changeUserDescription(final @PathParam(PATH_PARAM_ID) long id, final UserDto userDto) {
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
@@ -414,6 +445,29 @@ public class UserController {
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
+
+    /**
+     * Determines if given a user Id and a token, the token for the user is valid
+     * @param maybeUser Optional with maybe a user
+     * @param token Token given in the request
+     * @return An Optional with a possible response, empty if valid token
+     */
+    private Optional<Response> isResetPasswordTokenValid(Optional<User> maybeUser, String token){
+        // Find the user by the given id
+        if (!maybeUser.isPresent()) {
+            return Optional.of(Response.status(Response.Status.NOT_FOUND).build()); // UserNotFound
+        }
+
+        // Check if the token is valid
+        User user = maybeUser.get();
+        boolean pass = this.cryptoService.checkValidRecoverToken(user, token);
+
+        /* If link is no longer valid */
+        if (!pass) {
+            return Optional.of(Response.status(Response.Status.FORBIDDEN).build()); // Forbidden
+        }
+        return Optional.empty();
     }
 
     ///////////////////////////////////////////////// OLD ///////////////////////////////////////////////////////

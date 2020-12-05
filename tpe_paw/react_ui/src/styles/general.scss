@@ -78,6 +78,10 @@ img {
   text-align: center;
 }
 
-.no-focus:focus{
+.no-focus:focus {
   outline: none !important;
+}
+
+.rounded-border {
+  border-radius: 8px !important;
 }

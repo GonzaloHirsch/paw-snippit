@@ -7,7 +7,7 @@ import i18n from "../../i18n";
 import { mdiAccount, mdiLock } from "@mdi/js";
 import TextInputFieldWithIcon from "./text_input_field_with_icon";
 import CustomForm from "../forms/custom_form";
-import {LOGIN_VALIDATIONS} from "../../js/validations"
+import { LOGIN_VALIDATIONS } from "../../js/validations";
 
 class Login extends Component {
   state = {
@@ -95,7 +95,7 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="form-signin rounded-lg">
+      <div className="form-signin rounded-border">
         <CustomForm
           title={i18n.t("login.title")}
           action={i18n.t("login.form.action")}

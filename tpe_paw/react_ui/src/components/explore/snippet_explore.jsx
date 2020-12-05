@@ -16,7 +16,7 @@ const SnippetExplore = (props) => {
       </div>
       <div className="row">
         <div className="col-2 explore-margin p-0">
-          <div className="p-3 rounded explore-border">
+          <div className="p-3 rounded-border explore-border">
             <ExploreForm />
           </div>
         </div>

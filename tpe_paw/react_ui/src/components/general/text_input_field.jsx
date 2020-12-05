@@ -4,7 +4,7 @@ const TextInputField = (props) => {
   return (
     <input
       type="text"
-      className="form-control"
+      className="form-control rounded-border"
       placeholder={props.placeholder}
       aria-label={props.placeholder}
       aria-describedby="button-addon2"

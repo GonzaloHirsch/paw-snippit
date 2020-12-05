@@ -17,17 +17,18 @@ const CustomForm = (props) => {
         </span>
       </span>
 
-      <div className="m-4 p-5 inner-square shadow rounded-lg">
+      <div className="m-4 p-5 inner-square shadow rounded-border ">
         {props.children}
 
-        {props.generalError && <span className="text-danger">{props.generalError}</span>}
+        {props.generalError && (
+          <span className="text-danger">{props.generalError}</span>
+        )}
         <button
-          className="btn btn-lg btn-primary btn-block mb-3 rounded-lg"
+          className="btn btn-lg btn-primary btn-block mb-3 rounded-border "
           type="submit"
         >
           {props.action}
         </button>
-        
       </div>
     </form>
   );

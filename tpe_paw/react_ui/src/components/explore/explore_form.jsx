@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { matchPath, withRouter } from "react-router-dom";
 import TextInputField from "../general/text_input_field";
+import i18n from "../../i18n";
+import { EXPLORE } from "../../js/constants";
 
 {
   /* <form
@@ -118,25 +120,25 @@ class ExploreForm extends Component {
 
     // Adding the params to not lose the existing ones
     const queryFields = [
-      "title",
-      "username",
-      "minRep",
-      "maxRep",
-      // "minDate",
-      // "maxDate",
-      "minVotes",
-      "maxVotes",
+      EXPLORE.TITLE,
+      EXPLORE.USERNAME,
+      EXPLORE.MINREP,
+      EXPLORE.MAXREP,
+      // EXPLORE.MINDATE,
+      // EXPLORE.MAXDATE,
+      EXPLORE.MINVOTES,
+      EXPLORE.MAXVOTES,
     ];
     let params = new URLSearchParams(this.props.location.search);
     queryFields.forEach((field) => {
       this.setQueryParam(params, field);
     });
 
-    this.setParamWithDefault(params, "field", "date");
-    this.setParamWithDefault(params, "sort", "asc");
-    this.setParamWithDefault(params, "includeFlagged", true); // FIXME!
-    this.setParamWithDefault(params, "language", -1);
-    this.setParamWithDefault(params, "tag", -1);
+    this.setParamWithDefault(params, EXPLORE.FIELD, "date");
+    this.setParamWithDefault(params, EXPLORE.SORT, "asc");
+    this.setParamWithDefault(params, EXPLORE.FLAGGED, true); // FIXME!
+    this.setParamWithDefault(params, EXPLORE.LANGUAGE, -1); // TODO: Ver que con el value != "0" ande bien
+    this.setParamWithDefault(params, EXPLORE.TAG, -1);
 
     // Pushing the route
     this.props.history.push({
@@ -171,16 +173,20 @@ class ExploreForm extends Component {
   render() {
     return (
       <form className="flex-column" onSubmit={() => this.handleSearch()}>
+        <h5>{i18n.t("explore.form.title.header")}</h5>
         <TextInputField
           value={this.state.title}
-          placeholder={"PLACEHOLDER"}
-          onChange={(e) => this.onChange("title", e)}
+          placeholder={i18n.t("explore.form.title.placeholder")}
+          onChange={(e) => this.onChange(EXPLORE.TITLE, e)}
         />
+        <hr />
+        <h5>{i18n.t("explore.form.user.username")}</h5>
         <TextInputField
           value={this.state.username}
-          placeholder={"USER"}
-          onChange={(e) => this.onChange("username", e)}
+          placeholder={i18n.t("explore.form.user.username")}
+          onChange={(e) => this.onChange(EXPLORE.USERNAME, e)}
         />
+        <hr />
         <button type="submit">SUBMIT</button>
       </form>
     );

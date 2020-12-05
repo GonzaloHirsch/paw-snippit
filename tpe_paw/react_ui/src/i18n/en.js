@@ -95,5 +95,51 @@ export default {
       },
     },
   },
-  explore: {},
+  explore: {
+    form: {
+      orderBy: {
+        header: "Order",
+        placeholder: "Order By",
+        all: "All",
+        tag: "Tag",
+        language: "Language",
+        title: "Title",
+        content: "Content",
+        username: "Username",
+        language: "Language",
+      },
+      sort: {
+        placeholder: "Sort",
+        asc: "Ascending",
+        desc: "Descending",
+        none: "None",
+      },
+      flagged: {
+        header: "Flagged Snippets",
+        placeholder: "Include Flagged Snippets",
+      },
+      title: {
+        header: "Title",
+        placeholder: "Snippet Title",
+      },
+      language: {
+        header: "Language",
+        placeholder: "Select a language",
+      },
+      tags: {
+        header: "Tags",
+        placeholder: "Select tags",
+      },
+      user: {
+        username: "Username",
+        reputation: "User Reputation",
+      },
+      votes: "Snippet Votes",
+      date: "Date Uploaded",
+      placeholder: {
+        from: "From",
+        to: "To",
+      },
+    },
+  },
 };

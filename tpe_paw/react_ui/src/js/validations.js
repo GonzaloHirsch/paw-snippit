@@ -81,3 +81,14 @@ export const CHANGE_PASS_VALIDATIONS = {
     );
   },
 };
+
+export const VERIFY_EMAIL_VALIDATIONS = {
+  code: (val) => {
+    return (
+      (!val && i18n.t("verifyEmail.form.errors.emptyCode")) ||
+      (val.length !== 6 && i18n.t("verifyEmail.form.errors.invalidCodeLength")) ||
+      (!RegExp("^\\d{6}$").test(val) && i18n.t("verifyEmail.form.errors.invalidFormat")) ||
+      null
+    );
+  },
+};

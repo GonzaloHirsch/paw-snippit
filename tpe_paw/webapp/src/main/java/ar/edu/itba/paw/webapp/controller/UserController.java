@@ -229,14 +229,14 @@ public class UserController {
     @POST
     @Path("/{id}/verify_email")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response verifyUserEmailCode(final @PathParam(PATH_PARAM_ID) long id, final @BeanParam EmailVerificationDto verificationFormDto) {
+    public Response verifyUserEmailCode(final @PathParam(PATH_PARAM_ID) long id, final @Valid EmailVerificationDto verificationFormDto) {
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
             final User loggedUser = this.loginAuthentication.getLoggedInUser();
             if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
                 if (!this.cryptoService.checkValidTOTP(user, verificationFormDto.getCode())) {
-                    //ERROR - WRONG CODE
+                    return Response.status(Response.Status.BAD_REQUEST).build();
                 }
                 return Response.noContent().build();
             } else {

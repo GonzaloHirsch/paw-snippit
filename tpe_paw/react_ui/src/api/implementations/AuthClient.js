@@ -14,6 +14,16 @@ export default class AuthClient extends Client {
     });
   }
 
+  sendVerifyEmail(id) {
+    return this.instance.post("users/" + id + "/send_verify_email");
+  }
+
+  verifyEmail(id, code){
+    return this.instance.post("users/" + id + "/verify_email", {
+      code: code
+    });
+  }
+
   isTokenValid(id, token) {
     return this.instance.post("users/" + id + "/valid_token", {
       token: token,

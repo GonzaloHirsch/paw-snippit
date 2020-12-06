@@ -1,5 +1,11 @@
+@import "variables";
+
 .icon-danger {
     color: red !important;
+}
+
+.icon-primary {
+    color: $primary-color !important;
 }
 
 .icon-size-2 {

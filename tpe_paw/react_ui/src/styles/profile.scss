@@ -1,0 +1,12 @@
+@import "variables";
+
+.verify-message {
+  border: $primary-color solid 2px;
+  color: $primary-color;
+  border-radius: 10px;
+}
+
+.verify-message h3,
+.verify-message span {
+  color: black;
+}

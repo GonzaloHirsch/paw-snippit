@@ -112,3 +112,12 @@ body{
 .primary-text {
   color: $primary-color;
 }
+
+.link-text {
+  cursor: pointer;
+  color: $primary-color !important;
+}
+
+.link-text:hover {
+  text-decoration: underline;
+}

@@ -25,3 +25,7 @@ export const EXPLORE = {
   MINVOTES: "minVotes",
   MAXVOTES: "maxVotes",
 };
+
+export const EXPLORE_ORDERBY = ["date", "reputation", "votes", "title"];
+
+export const SORT = ["asc", "desc"];

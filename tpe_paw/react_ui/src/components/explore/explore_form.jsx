@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { matchPath, withRouter } from "react-router-dom";
 import TextInputField from "../general/text_input_field";
 import i18n from "../../i18n";
-import { EXPLORE } from "../../js/constants";
+import { EXPLORE, EXPLORE_ORDERBY, SORT } from "../../js/constants";
+import DropdownMenu from "../general/dropdown_menu";
 
 {
   /* <form
@@ -83,8 +84,8 @@ import { EXPLORE } from "../../js/constants";
 
 class ExploreForm extends Component {
   state = {
-    field: "date",
-    sort: "no",
+    field: "",
+    sort: "",
     includeFlagged: false,
     title: "",
     language: -1,
@@ -164,6 +165,42 @@ class ExploreForm extends Component {
     }
   }
 
+  getOrderByOptions() {
+    const options = [];
+    const prefix = "explore.form.orderBy.";
+    options.push({
+      id: "",
+      name: i18n.t(prefix + "placeholder"),
+    });
+
+    EXPLORE_ORDERBY.forEach((item) => {
+      const optionName = prefix + item;
+      options.push({
+        id: item,
+        name: i18n.t(optionName),
+      });
+    });
+    return options;
+  }
+
+  getSortingOptions() {
+    const options = [];
+    const prefix = "explore.form.sort.";
+    options.push({
+      id: "",
+      name: i18n.t(prefix + "placeholder"),
+    });
+
+    SORT.forEach((item) => {
+      const optionName = prefix + item;
+      options.push({
+        id: item,
+        name: i18n.t(optionName),
+      });
+    });
+    return options;
+  }
+
   onChange = (key, e) => {
     let o = {};
     o[key] = e.target.value;
@@ -173,14 +210,30 @@ class ExploreForm extends Component {
   render() {
     return (
       <form className="flex-column" onSubmit={() => this.handleSearch()}>
-        <h5>{i18n.t("explore.form.title.header")}</h5>
+        <div className="d-flex flex-row">
+          <DropdownMenu
+            id={"exploreOrderByMenu"}
+            value={this.state.field}
+            options={this.getOrderByOptions()}
+            onChange={(e) => this.onChange(EXPLORE.FIELD, e)}
+          />
+          <div className="m-2"></div>
+          <DropdownMenu
+            id={"exploreSortMenu"}
+            value={this.state.sort}
+            options={this.getSortingOptions()}
+            onChange={(e) => this.onChange(EXPLORE.SORT, e)}
+          />
+        </div>
+        <hr />
+        <h6>{i18n.t("explore.form.title.header")}</h6>
         <TextInputField
           value={this.state.title}
           placeholder={i18n.t("explore.form.title.placeholder")}
           onChange={(e) => this.onChange(EXPLORE.TITLE, e)}
         />
         <hr />
-        <h5>{i18n.t("explore.form.user.username")}</h5>
+        <h6>{i18n.t("explore.form.user.username")}</h6>
         <TextInputField
           value={this.state.username}
           placeholder={i18n.t("explore.form.user.username")}

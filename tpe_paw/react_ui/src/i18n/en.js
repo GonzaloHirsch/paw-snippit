@@ -100,19 +100,15 @@ export default {
       orderBy: {
         header: "Order",
         placeholder: "Order By",
-        all: "All",
-        tag: "Tag",
-        language: "Language",
-        title: "Title",
-        content: "Content",
-        username: "Username",
-        language: "Language",
+        reputation: "User Reputation",
+        votes: "Snippet Votes",
+        title: "Snippet Title",
+        date: "Date Uploaded",
       },
       sort: {
         placeholder: "Sort",
         asc: "Ascending",
         desc: "Descending",
-        none: "None",
       },
       flagged: {
         header: "Flagged Snippets",

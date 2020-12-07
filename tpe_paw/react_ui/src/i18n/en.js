@@ -144,6 +144,11 @@ export default {
         to: "To",
       },
       submit: "Search",
+      errors: {
+        range: "From value must be smaller than To value",
+        min: "Values must be larger than {{min}}",
+        max: "Values must be smaller than {{max}}",
+      },
     },
   },
   changePassword: {

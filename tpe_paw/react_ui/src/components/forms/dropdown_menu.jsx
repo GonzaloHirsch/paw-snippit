@@ -1,6 +1,7 @@
 import React from "react";
 
 // Item with id "" is the hint and should be disabled and hidden
+// FIXME Find a separator for the dropdown instead of <hr />
 const DropdownMenu = (props) => {
   return (
     <select
@@ -12,7 +13,6 @@ const DropdownMenu = (props) => {
       <option key={""} value={props.defaultValue}>
         {props.description}
       </option>
-      <hr />
       {props.options.map((item, index) => (
         <option key={item.id} value={item.id}>
           {item.name}

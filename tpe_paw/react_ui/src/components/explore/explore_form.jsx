@@ -2,7 +2,13 @@ import React, { Component } from "react";
 import { matchPath, withRouter } from "react-router-dom";
 import InputField from "../forms/input_field";
 import i18n from "../../i18n";
-import { EXPLORE, EXPLORE_ORDERBY, SORT } from "../../js/constants";
+import {
+  EXPLORE,
+  EXPLORE_ORDERBY,
+  SORT,
+  MIN_INTEGER,
+  MAX_INTEGER,
+} from "../../js/constants";
 import DropdownMenu from "../forms/dropdown_menu";
 import CustomCheckbox from "../forms/custom_checkbox";
 
@@ -26,19 +32,34 @@ class ExploreForm extends Component {
     } = this.props.urlSearch;
 
     this.state = {
-      field: field,
-      sort: sort,
-      includeFlagged: includeFlagged,
-      title: title,
-      language: language,
-      tag: tag,
-      username: username,
-      minRep: minRep,
-      maxRep: maxRep,
-      minDate: minDate,
-      maxDate: maxDate,
-      minVotes: minVotes,
-      maxVotes: maxVotes,
+      fields: {
+        field: field == null ? "" : field,
+        sort: sort == null ? "" : sort,
+        includeFlagged: includeFlagged == null ? false : includeFlagged,
+        title: title == null ? "" : title,
+        language: language == null ? -1 : language,
+        tag: tag == null ? -1 : tag,
+        username: username == null ? "" : username,
+        minRep: minRep == null ? "" : minRep,
+        maxRep: maxRep == null ? "" : maxRep,
+        minDate: minDate == null ? "" : minDate,
+        maxDate: maxDate == null ? "" : maxDate,
+        minVotes: minVotes == null ? "" : minVotes,
+        maxVotes: maxVotes == null ? "" : maxVotes,
+      },
+      errors: {
+        userReputation: {
+          range: null,
+          min: null,
+          max: null,
+        },
+        snippetVotes: {
+          range: null,
+          min: null,
+          max: null,
+        },
+        dateUploaded: null,
+      },
     };
   }
 
@@ -75,14 +96,14 @@ class ExploreForm extends Component {
     ];
     let params = new URLSearchParams(this.props.location.search);
     queryFields.forEach((field) => {
-      this.setQueryParam(params, field);
+      this._setQueryParam(params, field);
     });
 
-    this.setParamWithDefault(params, EXPLORE.FIELD, "date");
-    this.setParamWithDefault(params, EXPLORE.SORT, "asc");
-    this.setParamWithDefault(params, EXPLORE.FLAGGED, true); // FIXME!
-    this.setParamWithDefault(params, EXPLORE.LANGUAGE, -1); // TODO: Ver que con el value != "0" ande bien
-    this.setParamWithDefault(params, EXPLORE.TAG, -1);
+    this._setParamWithDefault(params, EXPLORE.FIELD, "date");
+    this._setParamWithDefault(params, EXPLORE.SORT, "desc");
+    this._setParamWithDefault(params, EXPLORE.FLAGGED, true); // FIXME!
+    this._setParamWithDefault(params, EXPLORE.LANGUAGE, -1); // TODO: Ver que con el value != "0" ande bien
+    this._setParamWithDefault(params, EXPLORE.TAG, -1);
 
     // Pushing the route
     this.props.history.push({
@@ -91,16 +112,16 @@ class ExploreForm extends Component {
     });
   }
 
-  setQueryParam(params, name) {
-    const value = this.state[name];
+  _setQueryParam(params, name) {
+    const value = this.state.fields[name];
     if (value !== null && value !== undefined) {
       params.set(name, value);
     } else {
       params.set(name, "");
     }
   }
-  setParamWithDefault(params, name, defaultValue) {
-    const value = this.state[name];
+  _setParamWithDefault(params, name, defaultValue) {
+    const value = this.state.fields[name];
     if (value !== null && value !== undefined && value != "") {
       params.set(name, value);
     } else {
@@ -108,7 +129,7 @@ class ExploreForm extends Component {
     }
   }
 
-  getOrderOptions(items, prefix) {
+  _getOrderOptions(items, prefix) {
     const options = [];
 
     items.forEach((item) => {
@@ -121,9 +142,45 @@ class ExploreForm extends Component {
   }
 
   onChange = (key, e) => {
-    let o = {};
-    o[key] = e.target.value;
-    this.setState(o);
+    let fields = this.state.fields;
+    fields[key] = e.target.value;
+    this.setState({ fields: fields });
+  };
+
+  onChangeMinValidation = (minFieldKey, maxFieldKey, errorKey, e) => {
+    this.onChange(minFieldKey, e);
+    this.validateIntervals(minFieldKey, maxFieldKey, errorKey);
+  };
+
+  onChangeMaxValidation = (minFieldKey, maxFieldKey, errorKey, e) => {
+    this.onChange(maxFieldKey, e);
+    this.validateIntervals(minFieldKey, maxFieldKey, errorKey);
+  };
+
+  validateIntervals = (minFieldKey, maxFieldKey, errorKey) => {
+    const errors = this.state.errors;
+    let fields = this.state.fields;
+
+    errors[errorKey].range =
+      fields[minFieldKey] > fields[maxFieldKey]
+        ? i18n.t("explore.form.errors.range")
+        : null;
+
+    errors[errorKey].min =
+      fields[minFieldKey] < MIN_INTEGER || fields[maxFieldKey] < MIN_INTEGER
+        ? (errors[errorKey].min = i18n.t("explore.form.errors.min", {
+            min: MIN_INTEGER,
+          }))
+        : null;
+
+    errors[errorKey].max =
+      fields[minFieldKey] > MAX_INTEGER || fields[maxFieldKey] > MAX_INTEGER
+        ? (errors[errorKey].max = i18n.t("explore.form.errors.max", {
+            max: MAX_INTEGER,
+          }))
+        : null;
+
+    this.setState({ errors: errors });
   };
 
   render() {
@@ -142,8 +199,8 @@ class ExploreForm extends Component {
         <div className="d-flex flex-row">
           <DropdownMenu
             id={"exploreOrderByMenu"}
-            value={this.state.field}
-            options={this.getOrderOptions(EXPLORE_ORDERBY, orderPrefix)}
+            value={this.state.fields.field}
+            options={this._getOrderOptions(EXPLORE_ORDERBY, orderPrefix)}
             defaultValue={""}
             description={i18n.t(orderPrefix + "placeholder")}
             onChange={(e) => this.onChange(EXPLORE.FIELD, e)}
@@ -151,17 +208,17 @@ class ExploreForm extends Component {
           <div className="m-2"></div>
           <DropdownMenu
             id={"exploreSortMenu"}
-            value={this.state.sort}
+            value={this.state.fields.sort}
             description={i18n.t(sortPrefix + "placeholder")}
             defaultValue={""}
-            options={this.getOrderOptions(SORT, sortPrefix)}
+            options={this._getOrderOptions(SORT, sortPrefix)}
             onChange={(e) => this.onChange(EXPLORE.SORT, e)}
           />
         </div>
         <hr />
         <h6>{i18n.t(titlePrefix + "header")}</h6>
         <InputField
-          value={this.state.title}
+          value={this.state.fields.title}
           placeholder={i18n.t(titlePrefix + "placeholder")}
           onChange={(e) => this.onChange(EXPLORE.TITLE, e)}
         />
@@ -171,7 +228,7 @@ class ExploreForm extends Component {
             <h6>{i18n.t(languagePrefix + "header")}</h6>
             <DropdownMenu
               id={"exploreLanguageMenu"}
-              value={this.state.language}
+              value={this.state.fields.language}
               description={i18n.t(languagePrefix + "placeholder")}
               defaultValue={-1}
               options={this.props.languages}
@@ -183,7 +240,7 @@ class ExploreForm extends Component {
             <h6>{i18n.t(tagPrefix + "header")}</h6>
             <DropdownMenu
               id={"exploreTagMenu"}
-              value={this.state.tag}
+              value={this.state.fields.tag}
               description={i18n.t(tagPrefix + "placeholder")}
               defaultValue={-1}
               options={this.props.tags}
@@ -194,7 +251,7 @@ class ExploreForm extends Component {
         <hr />
         <h6>{i18n.t(userPrefix + "username")}</h6>
         <InputField
-          value={this.state.username}
+          value={this.state.fields.username}
           placeholder={i18n.t(userPrefix + "username")}
           onChange={(e) => this.onChange(EXPLORE.USERNAME, e)}
         />
@@ -203,16 +260,30 @@ class ExploreForm extends Component {
         <div className="d-flex flex-row">
           <InputField
             type={"number"}
-            value={this.state.minRep}
+            value={this.state.fields.minRep}
             placeholder={i18n.t(placeholderPrefix + "from")}
-            onChange={(e) => this.onChange(EXPLORE.MINREP, e)}
+            onChange={(e) =>
+              this.onChangeMinValidation(
+                EXPLORE.MINREP,
+                EXPLORE.MAXREP,
+                "userReputation",
+                e
+              )
+            }
           />
           <div className="m-2"></div>
           <InputField
             type={"number"}
-            value={this.state.maxRep}
+            value={this.state.fields.maxRep}
             placeholder={i18n.t(placeholderPrefix + "to")}
-            onChange={(e) => this.onChange(EXPLORE.MAXREP, e)}
+            onChange={(e) =>
+              this.onChangeMaxValidation(
+                EXPLORE.MINREP,
+                EXPLORE.MAXREP,
+                "userReputation",
+                e
+              )
+            }
           />
         </div>
         <hr />
@@ -220,16 +291,30 @@ class ExploreForm extends Component {
         <div className="d-flex flex-row">
           <InputField
             type={"number"}
-            value={this.state.minVotes}
+            value={this.state.fields.minVotes}
             placeholder={i18n.t(placeholderPrefix + "from")}
-            onChange={(e) => this.onChange(EXPLORE.MINVOTES, e)}
+            onChange={(e) =>
+              this.onChangeMinValidation(
+                EXPLORE.MINVOTES,
+                EXPLORE.MAXVOTES,
+                "snippetVotes",
+                e
+              )
+            }
           />
           <div className="m-2"></div>
           <InputField
             type={"number"}
-            value={this.state.maxVotes}
+            value={this.state.fields.maxVotes}
             placeholder={i18n.t(placeholderPrefix + "to")}
-            onChange={(e) => this.onChange(EXPLORE.MAXVOTES, e)}
+            onChange={(e) =>
+              this.onChangeMaxValidation(
+                EXPLORE.MINVOTES,
+                EXPLORE.MAXVOTES,
+                "snippetVotes",
+                e
+              )
+            }
           />
         </div>
         <hr />
@@ -239,7 +324,7 @@ class ExploreForm extends Component {
         <div className="d-flex flex-row">
           <CustomCheckbox
             label={i18n.t(flaggedPrefix + "placeholder")}
-            value={this.state.includeFlagged} //FIXME!
+            value={this.state.fields.includeFlagged} //FIXME!
             onChange={(e) => this.onChange(EXPLORE.FLAGGED, e)}
           />
         </div>

@@ -115,6 +115,7 @@ export default {
         placeholder: "Sort",
         asc: "Ascending",
         desc: "Descending",
+        no: "No Order",
       },
       flagged: {
         header: "Flagged Snippets",

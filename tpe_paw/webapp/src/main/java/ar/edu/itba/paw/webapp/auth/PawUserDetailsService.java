@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Role;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.utility.Authorities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,11 +51,11 @@ public class PawUserDetailsService implements UserDetailsService {
         }
         
         if(roles.contains(this.roleService.getAdminRoleName())) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            authorities.add(new SimpleGrantedAuthority(Authorities.ADMIN.getValue()));
             LOGGER.debug("Granting authority ROLE_ADMIN to user {}", username);
         }
         else if (roles.contains(this.roleService.getUserRoleName())) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            authorities.add(new SimpleGrantedAuthority(Authorities.USER.getValue()));
             LOGGER.debug("Granting authority ROLE_USER to user {}", username);
         }
 

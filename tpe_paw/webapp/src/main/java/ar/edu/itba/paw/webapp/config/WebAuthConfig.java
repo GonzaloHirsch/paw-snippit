@@ -30,7 +30,7 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 
 @EnableWebSecurity
-@ComponentScan({ "ar.edu.itba.paw.webapp.auth"})
+@ComponentScan({"ar.edu.itba.paw.webapp.auth"})
 @Configuration
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
@@ -81,8 +81,14 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 // Adding USERS controller authorizations
                 .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/deleted_snippets").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/favorite_snippets").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/following_snippets").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/following_tags").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/upvoted_snippets").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.POST, API_PREFIX + "users/" + Constants.RECOVER_PASSWORD).anonymous()
                 .antMatchers(HttpMethod.PUT, API_PREFIX + "users/*/profile_photo").hasRole("USER")
+                .antMatchers(HttpMethod.POST, API_PREFIX + "users/*/send_verify_email").hasRole("USER")
+                .antMatchers(HttpMethod.POST, API_PREFIX + "users/*/verify_email").hasRole("USER")
                 .antMatchers(HttpMethod.POST, API_PREFIX + "users/*").hasRole("USER")
                 .antMatchers(HttpMethod.GET, API_PREFIX + "users/**").permitAll()
                 // Adding TAGS controller authorizations
@@ -98,6 +104,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .addFilterBefore(new JwtLoginProcessingFilter(API_PREFIX + "auth/login", this.successHandler, this.failureHandler, this.objectMapper, this.authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtRefreshProcessingFilter(API_PREFIX + "auth/refresh", this.successHandler, this.failureHandler, this.objectMapper, this.authenticationManager(), this.tokenExtractor, this.userDetails), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtTokenAuthenticationProcessingFilter(this.tokenExtractor, this.userDetails), UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -169,14 +176,4 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManager() {
         return new ProviderManager(Collections.singletonList(authenticationProvider));
     }
-
-    private String getRememberMeKey() {
-        ClassPathResource keyResource = new ClassPathResource("authKey.key");
-        try {
-            return StreamUtils.copyToString(keyResource.getInputStream(), Charset.defaultCharset());
-        } catch (IOException e) {
-            throw new RuntimeException("Remember me key threw IOException");
-        }
-    }
-
 }

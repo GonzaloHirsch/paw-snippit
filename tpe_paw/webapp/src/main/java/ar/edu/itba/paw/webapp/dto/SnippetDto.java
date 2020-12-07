@@ -34,7 +34,7 @@ public class SnippetDto {
         dto.creator = SnippetUserInfoDto.fromUser(snippet.getOwner(), uriInfo);
         dto.language = LanguageDto.fromLanguage(snippet.getLanguage(), uriInfo);
         dto.createdDate = DateFormat.getDateInstance(DateFormat.SHORT, locale).format(Date.from(snippet.getDateCreated()));
-
+        //snippet.getUserFavorites().stream().anyMatch(u -> u.getId().equals())
         return dto;
     }
 

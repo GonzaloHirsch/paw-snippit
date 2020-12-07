@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.webapp.dto.LoginDto;
+import ar.edu.itba.paw.webapp.utility.Authorities;
+import ar.edu.itba.paw.webapp.utility.Constants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,12 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.UUID;
 
 @Component
@@ -81,13 +85,12 @@ public class JwtTokenFactory {
         // Variable for the now part of the token
         Instant now = Instant.now();
 
-        // TODO: CHECK CLAIMS
-        //claims.put("scopes", Arrays.asList(Scopes.REFRESH_TOKEN.authority()));
-
         byte[] secret = this.getSecret();
 
         return Jwts.builder()
                 .setClaims(claims)
+                .claim(TOKEN_UID, context.getId())
+                .claim(TOKEN_AUTHORITIES, Collections.singleton(Constants.REFRESH_AUTHORITY))
                 .setIssuer(TOKEN_ISSUER)
                 .setId(UUID.randomUUID().toString().replace("-", ""))
                 .setIssuedAt(Date.from(now))
@@ -102,5 +105,9 @@ public class JwtTokenFactory {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    public static String getTokenAuthorities() {
+        return TOKEN_AUTHORITIES;
     }
 }

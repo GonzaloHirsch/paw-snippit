@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.webapp.utility;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 public final class Constants {
     public static final int SNIPPET_PAGE_SIZE = 6;
     public static final int TAG_PAGE_SIZE = 20;
@@ -36,6 +39,10 @@ public final class Constants {
     public static final String HEADER_ALL_ITEMS = "X-ALL-ITEMS";
 
     public static final String API_PREFIX = "/api/v1/";
+
+    // Refresh authority to check if the token contains
+    public static final GrantedAuthority REFRESH_AUTHORITY = new SimpleGrantedAuthority(Authorities.REFRESH.getValue());
+
 
     /*
      * "The AssertionError isn’t strictly required, but it provides insurance in case the

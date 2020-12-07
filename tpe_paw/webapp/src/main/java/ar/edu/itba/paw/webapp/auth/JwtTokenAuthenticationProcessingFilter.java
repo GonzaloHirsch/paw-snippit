@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.webapp.utility.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,6 +19,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 
 public class JwtTokenAuthenticationProcessingFilter extends GenericFilterBean {
 
@@ -38,14 +41,20 @@ public class JwtTokenAuthenticationProcessingFilter extends GenericFilterBean {
 
         if (token != null) {
             // Extracting the username from the token
-            final String username = this.tokenExtractor.getUsernameFromToken(token);
+            final Collection<GrantedAuthority> authorities = this.tokenExtractor.getAuthoritiesFromToken(token);
 
-            if (username != null) {
-                // Getting user details given the username
-                final UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            // Avoid requests with the refresh token as the token
+            if (authorities.stream().noneMatch(a -> a.getAuthority().equals(Constants.REFRESH_AUTHORITY.getAuthority()))) {
+                // Extracting the username from the token
+                final String username = this.tokenExtractor.getUsernameFromToken(token);
 
-                // Generating the authentication
-                auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+                if (username != null) {
+                    // Getting user details given the username
+                    final UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+
+                    // Generating the authentication
+                    auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+                }
             }
         }
 

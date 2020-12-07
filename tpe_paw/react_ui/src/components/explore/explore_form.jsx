@@ -6,99 +6,41 @@ import { EXPLORE, EXPLORE_ORDERBY, SORT } from "../../js/constants";
 import DropdownMenu from "../forms/dropdown_menu";
 import CustomCheckbox from "../forms/custom_checkbox";
 
-{
-  /* <form
-  className="form-inline my-auto my-lg-0 col-8"
-  onSubmit={() => this.handleSearch(this.state.search)}
->
-  <div className="input-group mr-sm-2 search-box">
-    <input
-      type="text"
-      className="form-control"
-      placeholder={i18n.t("nav.searchHint")}
-      aria-label={i18n.t("nav.searchHint")}
-      aria-describedby="button-addon2"
-      onChange={(e) =>
-        this.setState({
-          search: {
-            query: e.target.value,
-            type: this.state.search.type,
-            sort: this.state.search.sort,
-          },
-        })
-      }
-      value={this.state.search.query}
-    />
-    <div className="input-group-append">
-      <select
-        className="custom-select form-control"
-        id="inputGroupSelect02"
-        onChange={(e) =>
-          this.setState({
-            search: {
-              query: this.state.search.query,
-              type: e.target.value,
-              sort: this.state.search.sort,
-            },
-          })
-        }
-        value={this.state.search.type}
-      >
-        <option value="0">{i18n.t("nav.filter.hint")}</option>
-        <option value="all">{i18n.t("nav.filter.all")}</option>
-        <option value="tag">{i18n.t("nav.filter.tag")}</option>
-        <option value="title">{i18n.t("nav.filter.title")}</option>
-        <option value="content">{i18n.t("nav.filter.content")}</option>
-        <option value="username">{i18n.t("nav.filter.username")}</option>
-        <option value="language">{i18n.t("nav.filter.language")}</option>
-      </select>
-      <select
-        className="custom-select form-control"
-        id="inputGroupSelect03"
-        onChange={(e) =>
-          this.setState({
-            search: {
-              query: this.state.search.query,
-              type: this.state.search.type,
-              sort: e.target.value,
-            },
-          })
-        }
-        value={this.state.search.sort}
-      >
-        <option value="0">{i18n.t("nav.order.hint")}</option>
-        <option value="asc">{i18n.t("nav.order.ascending")}</option>
-        <option value="desc">{i18n.t("nav.order.descending")}</option>
-        <option value="no">{i18n.t("nav.order.no")}</option>
-      </select>
-      <button
-        className="btn btn-outline-secondary"
-        type="submit"
-        id="button-addon2"
-      >
-        <Icon path={mdiMagnify} size={1} />
-      </button>
-    </div>
-  </div>
-</form>; */
-}
-
 class ExploreForm extends Component {
-  state = {
-    field: "",
-    sort: "",
-    includeFlagged: false,
-    title: "",
-    language: -1,
-    tag: -1,
-    username: "",
-    minRep: "",
-    maxRep: "",
-    minDate: "",
-    maxDate: "",
-    minVotes: "",
-    maxVotes: "",
-  };
+  constructor(props) {
+    super(props);
+    const {
+      field,
+      sort,
+      includeFlagged,
+      title,
+      language,
+      tag,
+      username,
+      minRep,
+      maxRep,
+      minDate,
+      maxDate,
+      minVotes,
+      maxVotes,
+    } = this.props.urlSearch;
+
+    this.state = {
+      field: field,
+      sort: sort,
+      includeFlagged: includeFlagged,
+      title: title,
+      language: language,
+      tag: tag,
+      username: username,
+      minRep: minRep,
+      maxRep: maxRep,
+      minDate: minDate,
+      maxDate: maxDate,
+      minVotes: minVotes,
+      maxVotes: maxVotes,
+    };
+  }
 
   handleSearch() {
     // Determine if we add the "search" to the route
@@ -159,7 +101,7 @@ class ExploreForm extends Component {
   }
   setParamWithDefault(params, name, defaultValue) {
     const value = this.state[name];
-    if (value !== null && value !== undefined && value != "0") {
+    if (value !== null && value !== undefined && value != "") {
       params.set(name, value);
     } else {
       params.set(name, defaultValue);

@@ -61,7 +61,10 @@ class SnippetExplore extends Component {
         <div className="row">
           <div className="col-3 explore-margin p-0">
             <div className="p-3 rounded-border explore-border">
-              <ExploreForm {...this.state} />
+              <ExploreForm
+                {...this.state}
+                urlSearch={this.props.currentSearch}
+              />
             </div>
           </div>
 

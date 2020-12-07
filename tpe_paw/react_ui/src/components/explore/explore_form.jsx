@@ -150,6 +150,42 @@ class ExploreForm extends Component {
     return options;
   }
 
+  _resetFilters() {
+    const newState = {
+      fields: {
+        field: "",
+        sort: "",
+        includeFlagged: false,
+        title: "",
+        language: -1,
+        tag: -1,
+        username: "",
+        minRep: "",
+        maxRep: "",
+        minDate: "",
+        maxDate: "",
+        minVotes: "",
+        maxVotes: "",
+      },
+      errors: {
+        userReputation: {
+          range: null,
+          min: null,
+          max: null,
+        },
+        snippetVotes: {
+          range: null,
+          min: null,
+          max: null,
+        },
+        dateUploaded: null,
+        title: null,
+        username: null,
+      },
+    };
+    this.setState(newState);
+  }
+
   // Validations and error handling
   _rangeErrors(key) {
     let keyErrors = this.state.errors[key];
@@ -421,12 +457,22 @@ class ExploreForm extends Component {
           />
         </div>
         <hr />
-        <button
-          className="btn btn-lg btn-primary btn-block rounded-border form-button"
-          type="submit"
-        >
-          {i18n.t("explore.form.submit")}
-        </button>
+        <div className="d-flex flex-row">
+          <button
+            className="mt-2 btn btn-lg btn-primary btn-block rounded-border form-button"
+            onClick={() => this._resetFilters()}
+            style={{ width: "35%" }}
+          >
+            {i18n.t("explore.form.reset")}
+          </button>
+          <div className="m-2"></div>
+          <button
+            className="mt-2 btn btn-lg btn-primary btn-block rounded-border form-button"
+            type="submit"
+          >
+            {i18n.t("explore.form.submit")}
+          </button>
+        </div>
       </form>
     );
   }

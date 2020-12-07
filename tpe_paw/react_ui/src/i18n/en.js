@@ -144,6 +144,7 @@ export default {
         to: "To",
       },
       submit: "Search",
+      reset: "Reset",
       errors: {
         range: "From value must be smaller than To value",
         min: "Values must be larger than {{min}}",

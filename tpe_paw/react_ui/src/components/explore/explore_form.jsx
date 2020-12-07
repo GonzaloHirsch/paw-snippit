@@ -102,7 +102,7 @@ class ExploreForm extends Component {
     this._setParamWithDefault(params, EXPLORE.FIELD, "date");
     this._setParamWithDefault(params, EXPLORE.SORT, "desc");
     this._setParamWithDefault(params, EXPLORE.FLAGGED, true); // FIXME!
-    this._setParamWithDefault(params, EXPLORE.LANGUAGE, -1); // TODO: Ver que con el value != "0" ande bien
+    this._setParamWithDefault(params, EXPLORE.LANGUAGE, -1);
     this._setParamWithDefault(params, EXPLORE.TAG, -1);
 
     // Pushing the route
@@ -141,6 +141,26 @@ class ExploreForm extends Component {
     return options;
   }
 
+  _rangeErrors(key) {
+    let keyErrors = this.state.errors[key];
+    return (
+      <div className="d-flex flex-column mb-1">
+        {keyErrors.range && (
+          <span className="text-danger">{keyErrors.range}</span>
+        )}{" "}
+        {keyErrors.min && <span className="text-danger">{keyErrors.min}</span>}{" "}
+        {keyErrors.max && <span className="text-danger">{keyErrors.max}</span>}
+      </div>
+    );
+  }
+
+  _rangeHasErrors(key) {
+    let keyErrors = this.state.errors[key];
+    return (
+      keyErrors.range != null || keyErrors.min != null || keyErrors.max != null
+    );
+  }
+
   onChange = (key, e) => {
     let fields = this.state.fields;
     fields[key] = e.target.value;
@@ -160,26 +180,33 @@ class ExploreForm extends Component {
   validateIntervals = (minFieldKey, maxFieldKey, errorKey) => {
     const errors = this.state.errors;
     let fields = this.state.fields;
+    let minValue = parseInt(fields[minFieldKey]);
+    let maxValue = parseInt(fields[maxFieldKey]);
 
-    errors[errorKey].range =
-      fields[minFieldKey] > fields[maxFieldKey]
-        ? i18n.t("explore.form.errors.range")
-        : null;
+    if (
+      (minValue != "" || minValue == 0) &&
+      (maxValue != "" || maxValue == 0)
+    ) {
+      errors[errorKey].range =
+        minValue > maxValue ? i18n.t("explore.form.errors.range") : null;
+    } else {
+      errors[errorKey].range = null;
+    }
 
     errors[errorKey].min =
-      fields[minFieldKey] < MIN_INTEGER || fields[maxFieldKey] < MIN_INTEGER
+      minValue < MIN_INTEGER || maxValue < MIN_INTEGER
         ? (errors[errorKey].min = i18n.t("explore.form.errors.min", {
             min: MIN_INTEGER,
           }))
         : null;
 
     errors[errorKey].max =
-      fields[minFieldKey] > MAX_INTEGER || fields[maxFieldKey] > MAX_INTEGER
+      minValue > MAX_INTEGER || maxValue > MAX_INTEGER
         ? (errors[errorKey].max = i18n.t("explore.form.errors.max", {
             max: MAX_INTEGER,
           }))
         : null;
-
+    console.log(errors);
     this.setState({ errors: errors });
   };
 
@@ -192,6 +219,8 @@ class ExploreForm extends Component {
     const titlePrefix = "explore.form.title.";
     const placeholderPrefix = "explore.form.placeholder.";
     const flaggedPrefix = "explore.form.flagged.";
+    const repErrorKey = "userReputation";
+    const snippetErrorKey = "snippetVotes";
 
     return (
       <form className="flex-column" onSubmit={() => this.handleSearch()}>
@@ -257,65 +286,76 @@ class ExploreForm extends Component {
         />
         <hr />
         <h6>{i18n.t(userPrefix + "reputation")}</h6>
-        <div className="d-flex flex-row">
-          <InputField
-            type={"number"}
-            value={this.state.fields.minRep}
-            placeholder={i18n.t(placeholderPrefix + "from")}
-            onChange={(e) =>
-              this.onChangeMinValidation(
-                EXPLORE.MINREP,
-                EXPLORE.MAXREP,
-                "userReputation",
-                e
-              )
-            }
-          />
-          <div className="m-2"></div>
-          <InputField
-            type={"number"}
-            value={this.state.fields.maxRep}
-            placeholder={i18n.t(placeholderPrefix + "to")}
-            onChange={(e) =>
-              this.onChangeMaxValidation(
-                EXPLORE.MINREP,
-                EXPLORE.MAXREP,
-                "userReputation",
-                e
-              )
-            }
-          />
+        <div className="d-flex flex-column">
+          {this._rangeErrors(repErrorKey)}
+          <div className="d-flex flex-row">
+            <InputField
+              type={"number"}
+              value={this.state.fields.minRep}
+              placeholder={i18n.t(placeholderPrefix + "from")}
+              onChange={(e) =>
+                this.onChangeMinValidation(
+                  EXPLORE.MINREP,
+                  EXPLORE.MAXREP,
+                  repErrorKey,
+                  e
+                )
+              }
+              error={this._rangeHasErrors(repErrorKey)}
+            />
+            <div className="m-2"></div>
+            <InputField
+              type={"number"}
+              value={this.state.fields.maxRep}
+              placeholder={i18n.t(placeholderPrefix + "to")}
+              onChange={(e) =>
+                this.onChangeMaxValidation(
+                  EXPLORE.MINREP,
+                  EXPLORE.MAXREP,
+                  repErrorKey,
+                  e
+                )
+              }
+              error={this._rangeHasErrors(repErrorKey)}
+            />
+          </div>
         </div>
         <hr />
         <h6>{i18n.t("explore.form.votes")}</h6>
-        <div className="d-flex flex-row">
-          <InputField
-            type={"number"}
-            value={this.state.fields.minVotes}
-            placeholder={i18n.t(placeholderPrefix + "from")}
-            onChange={(e) =>
-              this.onChangeMinValidation(
-                EXPLORE.MINVOTES,
-                EXPLORE.MAXVOTES,
-                "snippetVotes",
-                e
-              )
-            }
-          />
-          <div className="m-2"></div>
-          <InputField
-            type={"number"}
-            value={this.state.fields.maxVotes}
-            placeholder={i18n.t(placeholderPrefix + "to")}
-            onChange={(e) =>
-              this.onChangeMaxValidation(
-                EXPLORE.MINVOTES,
-                EXPLORE.MAXVOTES,
-                "snippetVotes",
-                e
-              )
-            }
-          />
+        <div className="d-flex flex-column">
+          {this._rangeErrors(snippetErrorKey)}
+          <div className="d-flex flex-row">
+            {" "}
+            <InputField
+              type={"number"}
+              value={this.state.fields.minVotes}
+              placeholder={i18n.t(placeholderPrefix + "from")}
+              onChange={(e) =>
+                this.onChangeMinValidation(
+                  EXPLORE.MINVOTES,
+                  EXPLORE.MAXVOTES,
+                  snippetErrorKey,
+                  e
+                )
+              }
+              error={this._rangeHasErrors(snippetErrorKey)}
+            />
+            <div className="m-2"></div>
+            <InputField
+              type={"number"}
+              value={this.state.fields.maxVotes}
+              placeholder={i18n.t(placeholderPrefix + "to")}
+              onChange={(e) =>
+                this.onChangeMaxValidation(
+                  EXPLORE.MINVOTES,
+                  EXPLORE.MAXVOTES,
+                  snippetErrorKey,
+                  e
+                )
+              }
+              error={this._rangeHasErrors(snippetErrorKey)}
+            />
+          </div>
         </div>
         <hr />
         <h6>{i18n.t("explore.form.date")}</h6>

@@ -6,6 +6,8 @@ import DetailBox from "./detail_box";
 import LinkDetailBox from "./link_detail_box";
 import { getUserProfilePicUrl } from "../../js/snippet_utils";
 import { Helmet } from "react-helmet";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { googlecode } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 const SnippetDetail = (props) => {
   const { snippet, language, creator } = props;
@@ -32,10 +34,16 @@ const SnippetDetail = (props) => {
         <p>{snippet.description}</p>
       </div>
       <div className="dropdown-divider snippet-divider mb-4"></div>
-      <div className="d-flex card-text card-snippet-block rounded px-3 py-2">
-        <pre>
-          <code>{snippet.code}</code>
-        </pre>
+      <div className="d-flex card-text snippet-code-block rounded px-3 py-2">
+        <SyntaxHighlighter
+          wrapLongLines={true}
+          showInlineLineNumbers={false}
+          showLineNumbers={false}
+          language={language.name}
+          style={googlecode}
+        >
+          {snippet.code}
+        </SyntaxHighlighter>
         <p className="card-snippet-fade-out card-snippet-fade-out-code hidden"></p>
       </div>
       <div className="row align-items-horizontal-center flex-row mt-4 p-2">

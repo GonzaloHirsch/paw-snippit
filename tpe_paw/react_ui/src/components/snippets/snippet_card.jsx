@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { mdiAlert } from "@mdi/js";
 import Icon from "@mdi/react";
-import {getUserProfilePicUrl} from "../../js/snippet_utils";
+import { getUserProfilePicUrl } from "../../js/snippet_utils";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { googlecode } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 class SnippetCard extends Component {
   state = {};
@@ -30,7 +32,13 @@ class SnippetCard extends Component {
                   {snippet.createdDate}
                 </div>
               </div>
-              {snippet.flagged && <Icon className="mr-1 icon-danger icon-size-2" path={mdiAlert} size={2} />}
+              {snippet.flagged && (
+                <Icon
+                  className="mr-1 icon-danger icon-size-2"
+                  path={mdiAlert}
+                  size={2}
+                />
+              )}
               <div
                 className="language-snippet-tag p-2 flex-center rounded mr-1"
                 style={{ fontSize: "20px" }}
@@ -45,9 +53,15 @@ class SnippetCard extends Component {
               {snippet.description}
             </h6>
             <div className="d-flex card-text card-snippet-block rounded px-3 py-2">
-              <pre>
-                <code>{snippet.code}</code>
-              </pre>
+              <SyntaxHighlighter
+                wrapLongLines={true}
+                showInlineLineNumbers={false}
+                showLineNumbers={false}
+                language={snippet.language.name}
+                style={googlecode}
+              >
+                {snippet.code}
+              </SyntaxHighlighter>
               <p className="card-snippet-fade-out card-snippet-fade-out-code hidden"></p>
             </div>
           </div>

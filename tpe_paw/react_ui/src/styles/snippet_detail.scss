@@ -30,3 +30,8 @@
     text-decoration: none;
   }
 }
+
+.snippet-code-block {
+  background: $code-background-color;
+  overflow-y: auto;
+}

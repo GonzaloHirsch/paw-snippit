@@ -121,3 +121,9 @@ body{
 .link-text:hover {
   text-decoration: underline;
 }
+
+// Syntax highlighting
+.snippet-code-block pre, .card-snippet-block pre {
+  background: none !important;
+  width: 100% !important;
+}

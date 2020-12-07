@@ -8,6 +8,7 @@ const initialState = {
     token: null,
     info: null,
     roles: [],
+    remember: false
   },
 };
 
@@ -20,7 +21,7 @@ export default function reducer(state = initialState, action) {
       const pureToken = token.replace("Bearer ", "");
       // We have to decode the token
       let content = jwt_decode(pureToken);
-      console.log(content)
+      console.log(action.payload, "MY PAYLOAD")
       // Store the updated store
       return {
         ...state,
@@ -29,6 +30,7 @@ export default function reducer(state = initialState, action) {
           token: token,
           info: content,
           roles: content.auth.map(elem => elem.authority),
+          remember: action.payload.remember
         },
       };
     }
@@ -41,6 +43,7 @@ export default function reducer(state = initialState, action) {
           token: null,
           info: null,
           roles: [],
+          remember: false
         },
       };
     }

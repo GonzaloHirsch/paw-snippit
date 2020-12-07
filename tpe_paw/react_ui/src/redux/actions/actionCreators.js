@@ -1,9 +1,10 @@
 import * as actions from "./actionTypes";
 
-export const loginSuccess = (token) => ({
+export const loginSuccess = (token, remember) => ({
   type: actions.LOGIN_SUCCESS,
   payload: {
     token: token,
+    remember: remember
   },
 });
 

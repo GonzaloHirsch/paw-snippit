@@ -26,6 +26,8 @@ class Login extends Component {
   handleLogin() {
     const hasErrors = this.validateAll();
 
+    console.log(this.state)
+
     if (!hasErrors) {
       // Get an instance of the cliente
       const authClient = new AuthClient();
@@ -39,7 +41,7 @@ class Login extends Component {
           const token = res.data.token;
 
           // Dispatch the login event
-          store.dispatch(loginSuccess({ token }));
+          store.dispatch(loginSuccess({ token }, this.state.fields.remember));
 
           console.log(this.props.history);
           // Push to home
@@ -67,9 +69,9 @@ class Login extends Component {
   }
 
   // Handles the change in one field, validates that field
-  handleChange(e, name) {
+  handleChange(e, name, useChecked) {
     let fields = this.state.fields;
-    fields[name] = e.target.value;
+    fields[name] = useChecked ? e.target.checked : e.target.value;
     let errors = this.state.errors;
     errors[name] = LOGIN_VALIDATIONS[name](fields[name]);
     this.setState({ fields: fields, errors: errors });
@@ -109,7 +111,7 @@ class Login extends Component {
             type={"text"}
             placeholder={i18n.t("login.form.user")}
             iconPath={mdiAccount}
-            onChange={(e) => this.handleChange(e, "user")}
+            onChange={(e) => this.handleChange(e, "user", false)}
             errors={this.state.errors.user}
           />
 
@@ -119,7 +121,7 @@ class Login extends Component {
             type={"password"}
             placeholder={i18n.t("login.form.pass")}
             iconPath={mdiLock}
-            onChange={(e) => this.handleChange(e, "pass")}
+            onChange={(e) => this.handleChange(e, "pass", false)}
             errors={this.state.errors.pass}
           />
 
@@ -127,8 +129,7 @@ class Login extends Component {
             <label>
               <input
                 type="checkbox"
-                value="remember-me"
-                onChange={(e) => this.handleChange(e, "remember")}
+                onChange={(e) => this.handleChange(e, "remember", true)}
               />{" "}
               {i18n.t("login.form.remember")}
             </label>

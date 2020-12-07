@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import AuthClient from "../../api/implementations/AuthClient";
 import i18n from "../../i18n";
 import { mdiEmail } from "@mdi/js";
-import TextInputFieldWithIcon from "./text_input_field_with_icon";
+import TextInputFieldWithIcon from "../forms/text_input_field_with_icon";
 import CustomForm from "../forms/custom_form";
 import { mdiCodeTags } from "@mdi/js";
 import Icon from "@mdi/react";
@@ -115,7 +115,6 @@ class RecoverSend extends Component {
             </span>
             <button
               className="btn btn-lg btn-primary btn-block mb-3 rounded-border"
-              type="submit"
               onClick={() => this.handleGoHome()}
             >
               {i18n.t("recover.form.afterAction")}

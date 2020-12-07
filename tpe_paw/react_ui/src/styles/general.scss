@@ -1,3 +1,5 @@
+@import "variables";
+
 pre {
   white-space: pre-wrap !important;
   white-space: -moz-pre-wrap !important;
@@ -21,6 +23,10 @@ img {
   width: 45px;
 }
 
+body {
+  background-color: $app-background-color !important;
+}
+
 .no-decoration {
   text-decoration: none;
   color: inherit;
@@ -39,6 +45,14 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-col {
+  flex-direction: column;
 }
 
 /* Text Properties */
@@ -76,6 +90,7 @@ img {
 
 .align-items-horizontal-center {
   text-align: center;
+  justify-content: center;
 }
 
 .no-focus:focus {
@@ -84,4 +99,28 @@ img {
 
 .rounded-border {
   border-radius: 8px !important;
+}
+.no-margin {
+  margin: 0px !important;
+}
+
+.no-padding {
+  padding: 0px !important;
+}
+
+.shadow {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.primary-text {
+  color: $primary-color;
+}
+
+.link-text {
+  cursor: pointer;
+  color: $primary-color !important;
+}
+
+.link-text:hover {
+  text-decoration: underline;
 }

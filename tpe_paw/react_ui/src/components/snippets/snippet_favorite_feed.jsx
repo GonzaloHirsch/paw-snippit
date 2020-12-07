@@ -10,7 +10,7 @@ const SnippetFavoriteFeed = (props) => {
       <div className="mx-3 mb-3">
         <h1 className="fw-300">{i18n.t("nav.favorites")}</h1>
         <h5 className="fw-100">
-          ({props.totalSnippets} {i18n.t("snippets")})
+          ({i18n.t("snippetWithNumber", { count: props.totalSnippets })})
         </h5>
       </div>
       <SnippetFeed

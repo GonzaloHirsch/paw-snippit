@@ -12,7 +12,7 @@ import i18n from "../../i18n";
 
 // Icons
 import { mdiEmail, mdiAccount, mdiLock } from "@mdi/js";
-import TextInputFieldWithIcon from "./text_input_field_with_icon";
+import TextInputFieldWithIcon from "../forms/text_input_field_with_icon";
 import CustomForm from "../forms/custom_form";
 
 class SignUp extends Component {

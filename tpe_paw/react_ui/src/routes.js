@@ -16,6 +16,8 @@ const Favorites = React.lazy(() => import("./components/pages/favorites"));
 const Upvoted = React.lazy(() => import("./components/pages/upvoted"));
 const Explore = React.lazy(() => import("./components/pages/explore"));
 const RecoverSend = React.lazy(() => import("./components/login/recover_send"));
+const ChangePassword = React.lazy(() => import("./components/login/change_password"));
+const Verify = React.lazy(() => import("./components/profile/verify"));
 
 // We also take into account i18n in the naming of the routes
 /*
@@ -94,6 +96,20 @@ const routes = [
     component: RecoverSend,
     roles: [],
   },
+  {
+    path: "/reset-password",
+    exact: false,
+    name: i18n.t("nav.resetPassword"),
+    component: ChangePassword,
+    roles: [],
+  },
+  {
+    path: "/verify",
+    exact: false,
+    name: i18n.t("nav.verify"),
+    component: Verify,
+    roles: [ROLE_USER, ROLE_ADMIN],
+  }
 ];
 
 export default routes;

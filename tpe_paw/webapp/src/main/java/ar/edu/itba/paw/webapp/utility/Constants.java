@@ -35,6 +35,8 @@ public final class Constants {
 
     public static final String HEADER_ALL_ITEMS = "X-ALL-ITEMS";
 
+    public static final String API_PREFIX = "/api/v1/";
+
     /*
      * "The AssertionError isn’t strictly required, but it provides insurance in case the
      *  constructor is accidentally invoked from within the class" - Page 19, Effective Java

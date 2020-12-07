@@ -24,7 +24,7 @@ const CustomForm = (props) => {
           <span className="text-danger">{props.generalError}</span>
         )}
         <button
-          className="btn btn-lg btn-primary btn-block mb-3 rounded-border "
+          className="btn btn-lg btn-primary btn-block mb-3 rounded-border form-button"
           type="submit"
         >
           {props.action}

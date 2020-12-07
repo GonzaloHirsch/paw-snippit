@@ -5,4 +5,19 @@
   color: $primary-color;
   height: 40px;
   justify-content: center;
+
+  &-link {
+    @extend .language-snippet-tag;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+  }
+
+  &-link:hover {
+    @extend .language-snippet-tag;
+    border: 2px $primary-color solid;
+    background-color: $primary-color;
+    color: white;
+    text-decoration: none;
+  }
 }

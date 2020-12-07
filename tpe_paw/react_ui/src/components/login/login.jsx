@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import AuthClient from "../../api/implementations/AuthClient";
 import i18n from "../../i18n";
 import { mdiAccount, mdiLock } from "@mdi/js";
-import TextInputFieldWithIcon from "./text_input_field_with_icon";
+import TextInputFieldWithIcon from "../forms/text_input_field_with_icon";
 import CustomForm from "../forms/custom_form";
 import { LOGIN_VALIDATIONS } from "../../js/validations";
 

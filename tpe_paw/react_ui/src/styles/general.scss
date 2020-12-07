@@ -124,3 +124,10 @@ body {
 .link-text:hover {
   text-decoration: underline;
 }
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none !important;
+}

@@ -11,6 +11,7 @@ import {
 } from "../../js/constants";
 import DropdownMenu from "../forms/dropdown_menu";
 import CustomCheckbox from "../forms/custom_checkbox";
+import { EXPLORE_FORM_VALIDATIONS } from "../../js/validations";
 
 class ExploreForm extends Component {
   constructor(props) {
@@ -59,6 +60,8 @@ class ExploreForm extends Component {
           max: null,
         },
         dateUploaded: null,
+        title: null,
+        username: null,
       },
     };
   }
@@ -144,7 +147,7 @@ class ExploreForm extends Component {
   _rangeErrors(key) {
     let keyErrors = this.state.errors[key];
     return (
-      <div className="d-flex flex-column mb-1">
+      <div className="d-flex flex-column">
         {keyErrors.range && (
           <span className="text-danger">{keyErrors.range}</span>
         )}{" "}
@@ -161,10 +164,19 @@ class ExploreForm extends Component {
     );
   }
 
+  _inputHasErrors(key) {
+    return this.state.errors[key] != null;
+  }
+
   onChange = (key, e) => {
     let fields = this.state.fields;
+    let errors = this.state.errors;
     fields[key] = e.target.value;
-    this.setState({ fields: fields });
+
+    if (key in errors) {
+      errors[key] = EXPLORE_FORM_VALIDATIONS[key](fields[key]);
+    }
+    this.setState({ fields: fields, errors: errors });
   };
 
   onChangeMinValidation = (minFieldKey, maxFieldKey, errorKey, e) => {
@@ -179,9 +191,9 @@ class ExploreForm extends Component {
 
   validateIntervals = (minFieldKey, maxFieldKey, errorKey) => {
     const errors = this.state.errors;
-    let fields = this.state.fields;
-    let minValue = parseInt(fields[minFieldKey]);
-    let maxValue = parseInt(fields[maxFieldKey]);
+    const fields = this.state.fields;
+    const minValue = parseInt(fields[minFieldKey]);
+    const maxValue = parseInt(fields[maxFieldKey]);
 
     if (
       (minValue != "" || minValue == 0) &&
@@ -206,7 +218,6 @@ class ExploreForm extends Component {
             max: MAX_INTEGER,
           }))
         : null;
-    console.log(errors);
     this.setState({ errors: errors });
   };
 
@@ -246,10 +257,14 @@ class ExploreForm extends Component {
         </div>
         <hr />
         <h6>{i18n.t(titlePrefix + "header")}</h6>
+        {this.state.errors.title && (
+          <span className="text-danger">{this.state.errors.title}</span>
+        )}
         <InputField
           value={this.state.fields.title}
           placeholder={i18n.t(titlePrefix + "placeholder")}
           onChange={(e) => this.onChange(EXPLORE.TITLE, e)}
+          error={this._inputHasErrors(EXPLORE.TITLE)}
         />
         <hr />
         <div className="d-flex flex-row">
@@ -279,10 +294,14 @@ class ExploreForm extends Component {
         </div>
         <hr />
         <h6>{i18n.t(userPrefix + "username")}</h6>
+        {this.state.errors.username && (
+          <span className="text-danger">{this.state.errors.username}</span>
+        )}
         <InputField
           value={this.state.fields.username}
           placeholder={i18n.t(userPrefix + "username")}
           onChange={(e) => this.onChange(EXPLORE.USERNAME, e)}
+          error={this._inputHasErrors(EXPLORE.USERNAME)}
         />
         <hr />
         <h6>{i18n.t(userPrefix + "reputation")}</h6>

@@ -28,5 +28,5 @@ export const EXPLORE = {
 
 export const EXPLORE_ORDERBY = ["date", "reputation", "votes", "title"];
 export const SORT = ["asc", "desc", "no"];
-export const MIN_INTEGER = -20000000;
-export const MAX_INTEGER = 20000000;
+export const MIN_INTEGER = -2147483647;
+export const MAX_INTEGER = 2147483647;

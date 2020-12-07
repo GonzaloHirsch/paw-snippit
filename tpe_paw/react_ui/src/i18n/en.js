@@ -148,6 +148,8 @@ export default {
         range: "From value must be smaller than To value",
         min: "Values must be larger than {{min}}",
         max: "Values must be smaller than {{max}}",
+        title: "Title must be less than {{num}} character",
+        username: "Username must be less than {{num}} character",
       },
     },
   },

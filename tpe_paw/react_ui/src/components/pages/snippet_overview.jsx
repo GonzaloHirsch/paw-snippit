@@ -23,18 +23,18 @@ class SnippetOverview extends Component {
         description: "DESCRIPTION",
         code: "CODE",
         flagged: false,
-        createdDate: "10/10/10"
+        createdDate: "10/10/10",
       },
       creator: {
         username: "USERNAME",
         id: 0,
         picture: "/userIcon.jpg",
         hasPicture: false,
-        reputation: 0
+        reputation: 0,
       },
       language: {
         name: "LANGUAGE",
-        id: 0
+        id: 0,
       },
     };
   }
@@ -46,8 +46,6 @@ class SnippetOverview extends Component {
       .getSnippetWithId(snippetId)
       .then((res) => {
         this.setState({ snippet: res.data });
-        console.log(this.state.snippet, "CHEE");
-
         // If snippet was found, obtain the creator
         this.userClient
           .getUserWithUrl(this.state.snippet.creator)

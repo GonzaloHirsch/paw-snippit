@@ -129,8 +129,8 @@ export default {
         placeholder: "Select a language",
       },
       tags: {
-        header: "Tags",
-        placeholder: "Select tags",
+        header: "Tag",
+        placeholder: "Select a tag",
       },
       user: {
         username: "Username",
@@ -142,6 +142,7 @@ export default {
         from: "From",
         to: "To",
       },
+      submit: "Search",
     },
   },
   changePassword: {
@@ -164,7 +165,6 @@ export default {
       actionGoHome: "Go Home",
     },
   },
-  explore: {},
   snippetDetail: {
     flagged: {
       title: "Beware!",

@@ -9,15 +9,14 @@ const DropdownMenu = (props) => {
       onChange={props.onChange}
       value={props.value}
     >
-      {props.options.map(function (item, index) {
-        return item.id == "" ? (
-          <option value={item.id} hidden disabled>
-            {item.name}
-          </option>
-        ) : (
-          <option value={item.id}>{item.name}</option>
-        );
-      })}
+      <option key={""} value={props.defaultValue} hidden disabled>
+        {props.description}
+      </option>
+      {props.options.map((item, index) => (
+        <option key={item.id} value={item.id}>
+          {item.name}
+        </option>
+      ))}
     </select>
   );
 };

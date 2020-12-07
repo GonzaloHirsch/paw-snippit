@@ -1,9 +1,9 @@
 import React from "react";
 
-const TextInputField = (props) => {
+const InputField = (props) => {
   return (
     <input
-      type="text"
+      type={props.type == null ? "text" : props.type}
       className="form-control rounded-border"
       placeholder={props.placeholder}
       aria-label={props.placeholder}
@@ -14,4 +14,4 @@ const TextInputField = (props) => {
   );
 };
 
-export default TextInputField;
+export default InputField;

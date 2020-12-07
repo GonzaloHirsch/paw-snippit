@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { matchPath, withRouter } from "react-router-dom";
-import TextInputField from "../general/text_input_field";
+import InputField from "../forms/input_field";
 import i18n from "../../i18n";
 import { EXPLORE, EXPLORE_ORDERBY, SORT } from "../../js/constants";
-import DropdownMenu from "../general/dropdown_menu";
+import DropdownMenu from "../forms/dropdown_menu";
+import CustomCheckbox from "../forms/custom_checkbox";
 
 {
   /* <form
@@ -165,37 +166,13 @@ class ExploreForm extends Component {
     }
   }
 
-  getOrderByOptions() {
+  getOrderOptions(items, prefix) {
     const options = [];
-    const prefix = "explore.form.orderBy.";
-    options.push({
-      id: "",
-      name: i18n.t(prefix + "placeholder"),
-    });
 
-    EXPLORE_ORDERBY.forEach((item) => {
-      const optionName = prefix + item;
+    items.forEach((item) => {
       options.push({
         id: item,
-        name: i18n.t(optionName),
-      });
-    });
-    return options;
-  }
-
-  getSortingOptions() {
-    const options = [];
-    const prefix = "explore.form.sort.";
-    options.push({
-      id: "",
-      name: i18n.t(prefix + "placeholder"),
-    });
-
-    SORT.forEach((item) => {
-      const optionName = prefix + item;
-      options.push({
-        id: item,
-        name: i18n.t(optionName),
+        name: i18n.t(prefix + item),
       });
     });
     return options;
@@ -208,39 +185,129 @@ class ExploreForm extends Component {
   };
 
   render() {
+    const orderPrefix = "explore.form.orderBy.";
+    const sortPrefix = "explore.form.sort.";
+    const languagePrefix = "explore.form.language.";
+    const tagPrefix = "explore.form.tags.";
+    const userPrefix = "explore.form.user.";
+    const titlePrefix = "explore.form.title.";
+    const placeholderPrefix = "explore.form.placeholder.";
+    const flaggedPrefix = "explore.form.flagged.";
+
     return (
       <form className="flex-column" onSubmit={() => this.handleSearch()}>
+        <h6>{i18n.t(orderPrefix + "header")}</h6>
         <div className="d-flex flex-row">
           <DropdownMenu
             id={"exploreOrderByMenu"}
             value={this.state.field}
-            options={this.getOrderByOptions()}
+            options={this.getOrderOptions(EXPLORE_ORDERBY, orderPrefix)}
+            defaultValue={""}
+            description={i18n.t(orderPrefix + "placeholder")}
             onChange={(e) => this.onChange(EXPLORE.FIELD, e)}
           />
           <div className="m-2"></div>
           <DropdownMenu
             id={"exploreSortMenu"}
             value={this.state.sort}
-            options={this.getSortingOptions()}
+            description={i18n.t(sortPrefix + "placeholder")}
+            defaultValue={""}
+            options={this.getOrderOptions(SORT, sortPrefix)}
             onChange={(e) => this.onChange(EXPLORE.SORT, e)}
           />
         </div>
         <hr />
-        <h6>{i18n.t("explore.form.title.header")}</h6>
-        <TextInputField
+        <h6>{i18n.t(titlePrefix + "header")}</h6>
+        <InputField
           value={this.state.title}
-          placeholder={i18n.t("explore.form.title.placeholder")}
+          placeholder={i18n.t(titlePrefix + "placeholder")}
           onChange={(e) => this.onChange(EXPLORE.TITLE, e)}
         />
         <hr />
-        <h6>{i18n.t("explore.form.user.username")}</h6>
-        <TextInputField
+        <div className="d-flex flex-row">
+          <div>
+            <h6>{i18n.t(languagePrefix + "header")}</h6>
+            <DropdownMenu
+              id={"exploreLanguageMenu"}
+              value={this.state.language}
+              description={i18n.t(languagePrefix + "placeholder")}
+              defaultValue={-1}
+              options={this.props.languages}
+              onChange={(e) => this.onChange(EXPLORE.LANGUAGE, e)}
+            />
+          </div>
+          <div className="m-2"></div>
+          <div>
+            <h6>{i18n.t(tagPrefix + "header")}</h6>
+            <DropdownMenu
+              id={"exploreTagMenu"}
+              value={this.state.tag}
+              description={i18n.t(tagPrefix + "placeholder")}
+              defaultValue={-1}
+              options={this.props.tags}
+              onChange={(e) => this.onChange(EXPLORE.TAG, e)}
+            />
+          </div>
+        </div>
+        <hr />
+        <h6>{i18n.t(userPrefix + "username")}</h6>
+        <InputField
           value={this.state.username}
-          placeholder={i18n.t("explore.form.user.username")}
+          placeholder={i18n.t(userPrefix + "username")}
           onChange={(e) => this.onChange(EXPLORE.USERNAME, e)}
         />
         <hr />
-        <button type="submit">SUBMIT</button>
+        <h6>{i18n.t(userPrefix + "reputation")}</h6>
+        <div className="d-flex flex-row">
+          <InputField
+            type={"number"}
+            value={this.state.minRep}
+            placeholder={i18n.t(placeholderPrefix + "from")}
+            onChange={(e) => this.onChange(EXPLORE.MINREP, e)}
+          />
+          <div className="m-2"></div>
+          <InputField
+            type={"number"}
+            value={this.state.maxRep}
+            placeholder={i18n.t(placeholderPrefix + "to")}
+            onChange={(e) => this.onChange(EXPLORE.MAXREP, e)}
+          />
+        </div>
+        <hr />
+        <h6>{i18n.t("explore.form.votes")}</h6>
+        <div className="d-flex flex-row">
+          <InputField
+            type={"number"}
+            value={this.state.minVotes}
+            placeholder={i18n.t(placeholderPrefix + "from")}
+            onChange={(e) => this.onChange(EXPLORE.MINVOTES, e)}
+          />
+          <div className="m-2"></div>
+          <InputField
+            type={"number"}
+            value={this.state.maxVotes}
+            placeholder={i18n.t(placeholderPrefix + "to")}
+            onChange={(e) => this.onChange(EXPLORE.MAXVOTES, e)}
+          />
+        </div>
+        <hr />
+        <h6>{i18n.t("explore.form.date")}</h6>
+        <hr />
+        <h6>{i18n.t(flaggedPrefix + "header")}</h6>
+        <div className="d-flex flex-row">
+          <CustomCheckbox
+            label={i18n.t(flaggedPrefix + "placeholder")}
+            value={this.state.includeFlagged} //FIXME!
+            onChange={(e) => this.onChange(EXPLORE.FLAGGED, e)}
+          />
+        </div>
+        <hr />
+        <button
+          className="btn btn-lg btn-primary btn-block rounded-border form-button"
+          type="submit"
+        >
+          {i18n.t("explore.form.submit")}
+        </button>
       </form>
     );
   }

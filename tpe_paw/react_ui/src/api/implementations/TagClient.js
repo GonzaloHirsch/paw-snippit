@@ -6,8 +6,8 @@ export default class TagClient extends Client {
     return this.instance.get("tags/" + id);
   }
 
-  getTags() {
-    return this.instance.get("tags");
+  getTagList() {
+    return this.instance.get("tags/all");
   }
 
   getTagWithUrl(url) {

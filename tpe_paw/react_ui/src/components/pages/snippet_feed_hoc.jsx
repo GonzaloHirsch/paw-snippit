@@ -145,7 +145,6 @@ function SnippetFeedHOC(
           reload = true;
         }
 
-        console.log(reload);
         if (reload) {
           if (isSearching) {
             this.setState(

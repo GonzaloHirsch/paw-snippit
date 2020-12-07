@@ -6,8 +6,8 @@ export default class LanguageClient extends Client {
     return this.instance.get("languages/" + id);
   }
 
-  getLanguages() {
-    return this.instance.get("languages");
+  getLanguageList() {
+    return this.instance.get("languages/all");
   }
 
   getLanguageWithUrl(url) {

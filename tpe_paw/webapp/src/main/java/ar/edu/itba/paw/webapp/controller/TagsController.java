@@ -56,7 +56,7 @@ public class TagsController {
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getAllTags(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page, final @QueryParam(QUERY_PARAM_SHOW_EMPTY) @DefaultValue("true") boolean showEmpty, final @QueryParam(QUERY_PARAM_SHOW_ONLY_FOLLOWING) @DefaultValue("false") boolean showOnlyFollowing) {
+    public Response getTagsByPage(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page, final @QueryParam(QUERY_PARAM_SHOW_EMPTY) @DefaultValue("true") boolean showEmpty, final @QueryParam(QUERY_PARAM_SHOW_ONLY_FOLLOWING) @DefaultValue("false") boolean showOnlyFollowing) {
         User currentUser = loginAuthentication.getLoggedInUser();
         final List<TagDto> tags = tagService.getAllTags(showEmpty, showOnlyFollowing, currentUser != null ? currentUser.getId() : null, page, TAG_PAGE_SIZE).stream().map(t -> TagDto.fromTag(t, uriInfo)).collect(Collectors.toList());
         final int tagCount = this.tagService.getAllTagsCount(showEmpty, showOnlyFollowing, currentUser != null ? currentUser.getId() : null);
@@ -66,6 +66,17 @@ public class TagsController {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
         ResponseHelper.AddTotalItemsAttribute(builder, tagCount);
+        return builder.build();
+    }
+
+    @GET
+    @Path("/all")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getAllTags() {
+        final List<TagDto> tags = tagService.getAllTags().stream().map(t -> TagDto.fromTag(t, uriInfo)).collect(Collectors.toList());
+
+        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<TagDto>>(tags) {
+        });
         return builder.build();
     }
 

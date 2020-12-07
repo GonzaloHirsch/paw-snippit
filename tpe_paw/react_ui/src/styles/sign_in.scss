@@ -31,12 +31,13 @@
   border-top-right-radius: 0;
 }
 
-.form-signin .form-button, .form-button:active {
+.form-button,
+.form-button:active {
   background-color: $primary-color !important;
   border-color: $primary-color !important;
 }
 
-.form-signin .form-button:hover,
+.form-button:hover,
 .form-button:focus {
   background-color: $primary-color-dark !important;
   border-color: $primary-color !important;

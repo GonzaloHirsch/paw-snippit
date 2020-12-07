@@ -64,55 +64,61 @@ class ExploreForm extends Component {
         username: null,
       },
     };
+    this.validateAll();
   }
 
   handleSearch() {
-    // Determine if we add the "search" to the route
-    const isSearching = !!matchPath(this.props.location.pathname, "**/search");
-    let route;
-    if (isSearching) {
-      route = this.props.location.pathname;
-    } else {
-      let toAdd = "search";
-      if (
-        !(
-          this.props.location.pathname.charAt(
-            this.props.location.pathname.length - 1
-          ) === "/"
-        )
-      ) {
-        toAdd = "/search";
+    if (this.validateAll()) {
+      // Determine if we add the "search" to the route
+      const isSearching = !!matchPath(
+        this.props.location.pathname,
+        "**/search"
+      );
+      let route;
+      if (isSearching) {
+        route = this.props.location.pathname;
+      } else {
+        let toAdd = "search";
+        if (
+          !(
+            this.props.location.pathname.charAt(
+              this.props.location.pathname.length - 1
+            ) === "/"
+          )
+        ) {
+          toAdd = "/search";
+        }
+        route = this.props.location.pathname + toAdd;
       }
-      route = this.props.location.pathname + toAdd;
+
+      // Adding the params to not lose the existing ones
+      const queryFields = [
+        EXPLORE.TITLE,
+        EXPLORE.USERNAME,
+        EXPLORE.MINREP,
+        EXPLORE.MAXREP,
+        // EXPLORE.MINDATE,
+        // EXPLORE.MAXDATE,
+        EXPLORE.MINVOTES,
+        EXPLORE.MAXVOTES,
+      ];
+      let params = new URLSearchParams(this.props.location.search);
+      queryFields.forEach((field) => {
+        this._setQueryParam(params, field);
+      });
+
+      this._setParamWithDefault(params, EXPLORE.FIELD, "date");
+      this._setParamWithDefault(params, EXPLORE.SORT, "desc");
+      this._setParamWithDefault(params, EXPLORE.FLAGGED, true); // FIXME!
+      this._setParamWithDefault(params, EXPLORE.LANGUAGE, -1);
+      this._setParamWithDefault(params, EXPLORE.TAG, -1);
+
+      // Pushing the route
+      this.props.history.push({
+        pathname: route,
+        search: "?" + params.toString(),
+      });
     }
-
-    // Adding the params to not lose the existing ones
-    const queryFields = [
-      EXPLORE.TITLE,
-      EXPLORE.USERNAME,
-      EXPLORE.MINREP,
-      EXPLORE.MAXREP,
-      // EXPLORE.MINDATE,
-      // EXPLORE.MAXDATE,
-      EXPLORE.MINVOTES,
-      EXPLORE.MAXVOTES,
-    ];
-    let params = new URLSearchParams(this.props.location.search);
-    queryFields.forEach((field) => {
-      this._setQueryParam(params, field);
-    });
-
-    this._setParamWithDefault(params, EXPLORE.FIELD, "date");
-    this._setParamWithDefault(params, EXPLORE.SORT, "desc");
-    this._setParamWithDefault(params, EXPLORE.FLAGGED, true); // FIXME!
-    this._setParamWithDefault(params, EXPLORE.LANGUAGE, -1);
-    this._setParamWithDefault(params, EXPLORE.TAG, -1);
-
-    // Pushing the route
-    this.props.history.push({
-      pathname: route,
-      search: "?" + params.toString(),
-    });
   }
 
   _setQueryParam(params, name) {
@@ -144,6 +150,7 @@ class ExploreForm extends Component {
     return options;
   }
 
+  // Validations and error handling
   _rangeErrors(key) {
     let keyErrors = this.state.errors[key];
     return (
@@ -168,25 +175,10 @@ class ExploreForm extends Component {
     return this.state.errors[key] != null;
   }
 
-  onChange = (key, e) => {
-    let fields = this.state.fields;
-    let errors = this.state.errors;
-    fields[key] = e.target.value;
-
-    if (key in errors) {
-      errors[key] = EXPLORE_FORM_VALIDATIONS[key](fields[key]);
-    }
-    this.setState({ fields: fields, errors: errors });
-  };
-
-  onChangeMinValidation = (minFieldKey, maxFieldKey, errorKey, e) => {
-    this.onChange(minFieldKey, e);
-    this.validateIntervals(minFieldKey, maxFieldKey, errorKey);
-  };
-
-  onChangeMaxValidation = (minFieldKey, maxFieldKey, errorKey, e) => {
-    this.onChange(maxFieldKey, e);
-    this.validateIntervals(minFieldKey, maxFieldKey, errorKey);
+  validateInput = (key) => {
+    const errors = this.state.errors;
+    errors[key] = EXPLORE_FORM_VALIDATIONS[key](this.state.fields[key]);
+    this.setState({ errors: errors });
   };
 
   validateIntervals = (minFieldKey, maxFieldKey, errorKey) => {
@@ -219,6 +211,47 @@ class ExploreForm extends Component {
           }))
         : null;
     this.setState({ errors: errors });
+  };
+
+  validateAll() {
+    // Function will return true if the values are correct
+    const repErrorKey = "userReputation";
+    const snippetErrorKey = "snippetVotes";
+
+    let hasErrors = false;
+    this.validateIntervals(EXPLORE.MINREP, EXPLORE.MAXREP, repErrorKey);
+    this.validateIntervals(EXPLORE.MINVOTES, EXPLORE.MAXVOTES, snippetErrorKey);
+    this.validateInput(EXPLORE.TITLE);
+    this.validateInput(EXPLORE.USERNAME);
+
+    hasErrors = hasErrors || this._inputHasErrors(EXPLORE.TITLE);
+    hasErrors = hasErrors || this._inputHasErrors(EXPLORE.USERNAME);
+    hasErrors = hasErrors || this._rangeHasErrors("userReputation");
+    hasErrors = hasErrors || this._rangeHasErrors("snippetVotes");
+
+    return !hasErrors;
+  }
+
+  // Handlers
+  onChange = (key, e) => {
+    let fields = this.state.fields;
+    let errors = this.state.errors;
+    fields[key] = e.target.value;
+
+    if (key in errors) {
+      errors[key] = EXPLORE_FORM_VALIDATIONS[key](fields[key]);
+    }
+    this.setState({ fields: fields, errors: errors });
+  };
+
+  onChangeMinValidation = (minFieldKey, maxFieldKey, errorKey, e) => {
+    this.onChange(minFieldKey, e);
+    this.validateIntervals(minFieldKey, maxFieldKey, errorKey);
+  };
+
+  onChangeMaxValidation = (minFieldKey, maxFieldKey, errorKey, e) => {
+    this.onChange(maxFieldKey, e);
+    this.validateIntervals(minFieldKey, maxFieldKey, errorKey);
   };
 
   render() {

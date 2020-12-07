@@ -18,6 +18,8 @@ const SnippetUpvotedFeed = (props) => {
         links={props.links}
         currentPage={props.currentPage}
         onPageTransition={props.onPageTransition}
+        onSnippetFav={props.onSnippetFav}
+        userIsLogged={props.userIsLogged}
       />
     </React.Fragment>
   );

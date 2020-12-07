@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { mdiAlert } from "@mdi/js";
+import { mdiAlert, mdiHeart, mdiHeartOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 import { getUserProfilePicUrl } from "../../js/snippet_utils";
 import SyntaxHighlighter from "react-syntax-highlighter";
@@ -10,7 +10,7 @@ class SnippetCard extends Component {
   state = {};
 
   render() {
-    const { snippet } = this.props;
+    const { snippet, handleFav, userIsLogged } = this.props;
     const snippetLink = `/snippets/${snippet.id}`;
     return (
       <Link to={snippetLink} className="no-decoration">
@@ -32,6 +32,14 @@ class SnippetCard extends Component {
                   {snippet.createdDate}
                 </div>
               </div>
+              {userIsLogged && (
+                <Icon
+                  className={"mr-1 icon-size-2 icon-fav" + (snippet.faved ? "-selected" : "")}
+                  path={(snippet.faved ? mdiHeart : mdiHeartOutline)}
+                  size={2}
+                  onClick={(e) => handleFav(e, snippet.id)}
+                />
+              )}
               {snippet.flagged && (
                 <Icon
                   className="mr-1 icon-danger icon-size-2"

@@ -1,9 +1,11 @@
 import React from "react";
 import SnippetFeedClient from "../../api/implementations/SnippetFeedClient";
 import { extractLinkHeaders, extractItemCountHeader } from "../../js/api_utils";
+import { getSnippetPositionInArray } from "../../js/snippet_utils";
 import store from "../../store";
 import { withRouter, matchPath } from "react-router-dom";
 import { areEqualShallow } from "../../js/comparison";
+import SnippetActionsClient from "../../api/implementations/SnippetActionsClient";
 
 // Higher Order Component to reuse the repeated behaviour of the pages that contain Snippet Feed
 
@@ -16,17 +18,23 @@ function SnippetFeedHOC(
   return withRouter(
     class extends React.Component {
       snippetFeedClient;
+      snippetActionsClient;
 
       constructor(props) {
         super(props);
         const state = store.getState();
+        let userIsLogged = false;
         if (state.auth.token === null || state.auth.token === undefined) {
           this.snippetFeedClient = new SnippetFeedClient();
+          this.snippetActionsClient = new SnippetActionsClient();
         } else {
-          this.snippetFeedClient = new SnippetFeedClient(state.auth.token);
+          this.snippetFeedClient = new SnippetFeedClient(state.auth);
+          this.snippetActionsClient = new SnippetActionsClient(state.auth);
+          userIsLogged = true;
         }
 
         this.onPageTransition = this.onPageTransition.bind(this);
+        this.onSnippetFav = this.onSnippetFav.bind(this);
 
         // Keeping track of the search
         const search = searchFromUrl(this.props.location.search);
@@ -38,6 +46,7 @@ function SnippetFeedHOC(
           totalSnippets: 0,
           links: {},
           currentSearch: search,
+          userIsLogged: userIsLogged,
         };
       }
 
@@ -123,6 +132,37 @@ function SnippetFeedHOC(
         });
       };
 
+      onSnippetFav = (e, id) => {
+        let previousFavState = false;
+        // Impact the local snippet state
+        // Copy snippets array
+        let snippets = [...this.state.snippets];
+        // Find index of our item
+        const i = getSnippetPositionInArray(snippets, id);
+        // Copy item
+        let snippet = { ...snippets[i] };
+        // Store previous fav state
+        previousFavState = snippet.faved;
+        // Update variable
+        snippets.faved = !snippet.faved;
+        // Place item again
+        snippets[i] = snippet;
+        // Update state
+        this.setState({ snippets: snippets });
+
+        // Was faved, now not
+        if (previousFavState) {
+          this.snippetActionsClient.unfavSnippet(id);
+        }
+        // Was not fav, not it is
+        else {
+          this.snippetActionsClient.favSnippet(id);
+        }
+
+        // Prevent parent Link to navigate
+        e.preventDefault();
+      };
+
       checkIfLoadSnippets() {
         let pageParam = this.getPageFromUrl();
         const isSearching = !!matchPath(
@@ -166,6 +206,7 @@ function SnippetFeedHOC(
           <div>
             <WrappedComponent
               onPageTransition={this.onPageTransition}
+              onSnippetFav={this.onSnippetFav}
               {...this.state}
             ></WrappedComponent>
           </div>

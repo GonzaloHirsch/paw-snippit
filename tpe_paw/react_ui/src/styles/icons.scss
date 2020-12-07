@@ -1,14 +1,26 @@
 @import "variables";
 
 .icon-danger {
-    color: red !important;
+  color: red !important;
 }
 
 .icon-primary {
-    color: $primary-color !important;
+  color: $primary-color !important;
 }
 
 .icon-size-2 {
-    width: 2rem !important;
-    height: 2rem !important;
+  width: 2rem !important;
+  height: 2rem !important;
+}
+
+.icon-fav {
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    @extend .icon-fav;
+    color: red !important;
+  }
+  &-selected {
+    color: red !important;
+  }
 }

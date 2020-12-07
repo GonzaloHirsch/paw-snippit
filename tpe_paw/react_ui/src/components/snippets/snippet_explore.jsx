@@ -21,6 +21,8 @@ const SnippetExplore = (props) => {
           links={props.links}
           currentPage={props.currentPage}
           onPageTransition={props.onPageTransition}
+          onSnippetFav={props.onSnippetFav}
+          userIsLogged={props.userIsLogged}
         />
       </div>
     </React.Fragment>

@@ -21,7 +21,6 @@ export default function reducer(state = initialState, action) {
       const pureToken = token.replace("Bearer ", "");
       // We have to decode the token
       let content = jwt_decode(pureToken);
-      console.log(action.payload, "MY PAYLOAD")
       // Store the updated store
       return {
         ...state,

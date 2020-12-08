@@ -74,8 +74,8 @@ class SnippetExplore extends Component {
               links={this.props.links}
               currentPage={this.props.currentPage}
               onPageTransition={this.props.onPageTransition}
-              onSnippetFav={props.onSnippetFav}
-              userIsLogged={props.userIsLogged}
+              onSnippetFav={this.props.onSnippetFav}
+              userIsLogged={this.props.userIsLogged}
             />
           </div>
         </div>

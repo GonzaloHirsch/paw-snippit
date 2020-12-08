@@ -24,7 +24,6 @@ function loadFromLocalStorage() {
   try {
     const serialisedState = localStorage.getItem("persistantState");
     if (serialisedState === null) return undefined;
-    console.log(serialisedState, null, serialisedState === null, "NO DEBERIA ESTAR ACA")
     return JSON.parse(serialisedState);
   } catch (e) {
     console.warn(e);

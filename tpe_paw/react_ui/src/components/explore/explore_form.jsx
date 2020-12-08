@@ -12,6 +12,8 @@ import {
 import DropdownMenu from "../forms/dropdown_menu";
 import CustomCheckbox from "../forms/custom_checkbox";
 import { EXPLORE_FORM_VALIDATIONS } from "../../js/validations";
+import CustomDatePicker from "../forms/date_picker";
+import { getDateFromString } from "../../js/date_utils";
 
 class ExploreForm extends Component {
   constructor(props) {
@@ -34,19 +36,19 @@ class ExploreForm extends Component {
 
     this.state = {
       fields: {
-        field: field == null ? "" : field,
-        sort: sort == null ? "" : sort,
-        includeFlagged: includeFlagged == null ? false : includeFlagged,
-        title: title == null ? "" : title,
-        language: language == null ? -1 : language,
-        tag: tag == null ? -1 : tag,
-        username: username == null ? "" : username,
-        minRep: minRep == null ? "" : minRep,
-        maxRep: maxRep == null ? "" : maxRep,
-        minDate: minDate == null ? "" : minDate,
-        maxDate: maxDate == null ? "" : maxDate,
-        minVotes: minVotes == null ? "" : minVotes,
-        maxVotes: maxVotes == null ? "" : maxVotes,
+        field: field === null ? "" : field,
+        sort: sort === null ? "" : sort,
+        includeFlagged: includeFlagged === null ? false : includeFlagged,
+        title: title === null ? "" : title,
+        language: language === null ? -1 : language,
+        tag: tag === null ? -1 : tag,
+        username: username === null ? "" : username,
+        minRep: minRep === null ? "" : minRep,
+        maxRep: maxRep === null ? "" : maxRep,
+        minDate: getDateFromString(minDate),
+        maxDate: getDateFromString(maxDate),
+        minVotes: minVotes === null ? "" : minVotes,
+        maxVotes: maxVotes === null ? "" : maxVotes,
       },
       errors: {
         userReputation: {
@@ -64,6 +66,9 @@ class ExploreForm extends Component {
         username: null,
       },
     };
+  }
+
+  componentDidMount() {
     this.validateAll();
   }
 
@@ -97,8 +102,6 @@ class ExploreForm extends Component {
         EXPLORE.USERNAME,
         EXPLORE.MINREP,
         EXPLORE.MAXREP,
-        // EXPLORE.MINDATE,
-        // EXPLORE.MAXDATE,
         EXPLORE.MINVOTES,
         EXPLORE.MAXVOTES,
       ];
@@ -107,6 +110,9 @@ class ExploreForm extends Component {
         this._setQueryParam(params, field);
       });
 
+      this._setDateParam(params, EXPLORE.MINDATE, "");
+      this._setDateParam(params, EXPLORE.MAXDATE, "");
+      this._setParamWithDefault(params, EXPLORE.FIELD, "date");
       this._setParamWithDefault(params, EXPLORE.FIELD, "date");
       this._setParamWithDefault(params, EXPLORE.SORT, "desc");
       this._setParamWithDefault(params, EXPLORE.FLAGGED, true); // FIXME!
@@ -121,6 +127,15 @@ class ExploreForm extends Component {
     }
   }
 
+  _setDateParam(params, name) {
+    const value = this.state.fields[name];
+    if (value !== null && value !== undefined) {
+      params.set(name, value.toLocaleDateString("es"));
+    } else {
+      params.set(name, "");
+    }
+  }
+
   _setQueryParam(params, name) {
     const value = this.state.fields[name];
     if (value !== null && value !== undefined) {
@@ -131,7 +146,7 @@ class ExploreForm extends Component {
   }
   _setParamWithDefault(params, name, defaultValue) {
     const value = this.state.fields[name];
-    if (value !== null && value !== undefined && value != "") {
+    if (value !== null && value !== undefined && value !== "") {
       params.set(name, value);
     } else {
       params.set(name, defaultValue);
@@ -162,8 +177,8 @@ class ExploreForm extends Component {
         username: "",
         minRep: "",
         maxRep: "",
-        minDate: "",
-        maxDate: "",
+        minDate: null,
+        maxDate: null,
         minVotes: "",
         maxVotes: "",
       },
@@ -224,8 +239,8 @@ class ExploreForm extends Component {
     const maxValue = parseInt(fields[maxFieldKey]);
 
     if (
-      (minValue != "" || minValue == 0) &&
-      (maxValue != "" || maxValue == 0)
+      (minValue !== "" || minValue === 0) &&
+      (maxValue !== "" || maxValue === 0)
     ) {
       errors[errorKey].range =
         minValue > maxValue ? i18n.t("explore.form.errors.range") : null;
@@ -269,10 +284,21 @@ class ExploreForm extends Component {
   }
 
   // Handlers
-  onChange = (key, e) => {
+  onChange = (key, e, useChecked) => {
     let fields = this.state.fields;
     let errors = this.state.errors;
-    fields[key] = e.target.value;
+    fields[key] = useChecked ? e.target.checked : e.target.value;
+
+    if (key in errors) {
+      errors[key] = EXPLORE_FORM_VALIDATIONS[key](fields[key]);
+    }
+    this.setState({ fields: fields, errors: errors });
+  };
+
+  onDateChange = (key, e) => {
+    let fields = this.state.fields;
+    let errors = this.state.errors;
+    fields[key] = e;
 
     if (key in errors) {
       errors[key] = EXPLORE_FORM_VALIDATIONS[key](fields[key]);
@@ -281,12 +307,12 @@ class ExploreForm extends Component {
   };
 
   onChangeMinValidation = (minFieldKey, maxFieldKey, errorKey, e) => {
-    this.onChange(minFieldKey, e);
+    this.onChange(minFieldKey, e, false);
     this.validateIntervals(minFieldKey, maxFieldKey, errorKey);
   };
 
   onChangeMaxValidation = (minFieldKey, maxFieldKey, errorKey, e) => {
-    this.onChange(maxFieldKey, e);
+    this.onChange(maxFieldKey, e, false);
     this.validateIntervals(minFieldKey, maxFieldKey, errorKey);
   };
 
@@ -312,7 +338,7 @@ class ExploreForm extends Component {
             options={this._getOrderOptions(EXPLORE_ORDERBY, orderPrefix)}
             defaultValue={""}
             description={i18n.t(orderPrefix + "placeholder")}
-            onChange={(e) => this.onChange(EXPLORE.FIELD, e)}
+            onChange={(e) => this.onChange(EXPLORE.FIELD, e, false)}
           />
           <div className="m-2"></div>
           <DropdownMenu
@@ -321,7 +347,7 @@ class ExploreForm extends Component {
             description={i18n.t(sortPrefix + "placeholder")}
             defaultValue={""}
             options={this._getOrderOptions(SORT, sortPrefix)}
-            onChange={(e) => this.onChange(EXPLORE.SORT, e)}
+            onChange={(e) => this.onChange(EXPLORE.SORT, e, false)}
           />
         </div>
         <hr />
@@ -332,7 +358,7 @@ class ExploreForm extends Component {
         <InputField
           value={this.state.fields.title}
           placeholder={i18n.t(titlePrefix + "placeholder")}
-          onChange={(e) => this.onChange(EXPLORE.TITLE, e)}
+          onChange={(e) => this.onChange(EXPLORE.TITLE, e, false)}
           error={this._inputHasErrors(EXPLORE.TITLE)}
         />
         <hr />
@@ -345,7 +371,7 @@ class ExploreForm extends Component {
               description={i18n.t(languagePrefix + "placeholder")}
               defaultValue={-1}
               options={this.props.languages}
-              onChange={(e) => this.onChange(EXPLORE.LANGUAGE, e)}
+              onChange={(e) => this.onChange(EXPLORE.LANGUAGE, e, false)}
             />
           </div>
           <div className="m-2"></div>
@@ -357,7 +383,7 @@ class ExploreForm extends Component {
               description={i18n.t(tagPrefix + "placeholder")}
               defaultValue={-1}
               options={this.props.tags}
-              onChange={(e) => this.onChange(EXPLORE.TAG, e)}
+              onChange={(e) => this.onChange(EXPLORE.TAG, e, false)}
             />
           </div>
         </div>
@@ -369,7 +395,7 @@ class ExploreForm extends Component {
         <InputField
           value={this.state.fields.username}
           placeholder={i18n.t(userPrefix + "username")}
-          onChange={(e) => this.onChange(EXPLORE.USERNAME, e)}
+          onChange={(e) => this.onChange(EXPLORE.USERNAME, e, false)}
           error={this._inputHasErrors(EXPLORE.USERNAME)}
         />
         <hr />
@@ -447,13 +473,25 @@ class ExploreForm extends Component {
         </div>
         <hr />
         <h6>{i18n.t("explore.form.date")}</h6>
+        <div className="d-flex flex-row">
+          <CustomDatePicker
+            date={this.state.fields.minDate}
+            onChange={(e) => this.onDateChange(EXPLORE.MINDATE, e)}
+            placeholder={i18n.t(placeholderPrefix + "from")}
+          />
+          <div className="m-2"></div>
+          <CustomDatePicker
+            date={this.state.fields.maxDate}
+            onChange={(e) => this.onDateChange(EXPLORE.MAXDATE, e)}
+            placeholder={i18n.t(placeholderPrefix + "to")}
+          />
+        </div>
         <hr />
         <h6>{i18n.t(flaggedPrefix + "header")}</h6>
         <div className="d-flex flex-row">
           <CustomCheckbox
             label={i18n.t(flaggedPrefix + "placeholder")}
-            value={this.state.fields.includeFlagged} //FIXME!
-            onChange={(e) => this.onChange(EXPLORE.FLAGGED, e)}
+            onChange={(e) => this.onChange(EXPLORE.FLAGGED, e, true)}
           />
         </div>
         <hr />

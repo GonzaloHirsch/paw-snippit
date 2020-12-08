@@ -17,15 +17,15 @@ import java.util.Date;
 public class ExploreDto {
 
     // TODO - Solve the Date parsing issues
-//    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @BeforeToday(message = "{BeforeToday.exploreForm.date}")
+    @QueryParam("minDate")
+    private Date minDate;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
 //    @BeforeToday(message = "{BeforeToday.exploreForm.date}")
-//    @QueryParam("minDate")
-//    private Date minDate;
-//
-//    @DateTimeFormat(pattern = "dd/MM/yyyy")
-//    @BeforeToday(message = "{BeforeToday.exploreForm.date}")
-//    @QueryParam("maxDate")
-//    private Date maxDate;
+    @QueryParam("maxDate")
+    private Date maxDate;
 
     @Max(value = Integer.MAX_VALUE, message = "{Integer.maxValue}")
     @Min(value = Integer.MIN_VALUE, message = "{Integer.minValue}")
@@ -128,21 +128,21 @@ public class ExploreDto {
         this.language = language;
     }
 
-//    public Date getMinDate() {
-//        return minDate;
-//    }
-//
-//    public void setMinDate(Date minDate) {
-//        this.minDate = minDate;
-//    }
-//
-//    public Date getMaxDate() {
-//        return maxDate;
-//    }
-//
-//    public void setMaxDate(Date maxDate) {
-//        this.maxDate = maxDate;
-//    }
+    public Date getMinDate() {
+        return minDate;
+    }
+
+    public void setMinDate(Date minDate) {
+        this.minDate = minDate;
+    }
+
+    public Date getMaxDate() {
+        return maxDate;
+    }
+
+    public void setMaxDate(Date maxDate) {
+        this.maxDate = maxDate;
+    }
 
     public Integer getMinRep() {
         return minRep;

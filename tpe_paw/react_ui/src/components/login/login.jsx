@@ -27,7 +27,7 @@ class Login extends Component {
   handleLogin() {
     const hasErrors = this.validateAll();
 
-    console.log(this.state)
+    console.log(this.state);
 
     if (!hasErrors) {
       // Get an instance of the cliente
@@ -130,7 +130,7 @@ class Login extends Component {
             <CustomCheckbox
               label={i18n.t("login.form.remember")}
               onChange={(e) => this.handleChange(e, "remember", true)}
-            />{" "}
+            />
           </div>
         </CustomForm>
 

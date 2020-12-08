@@ -7,7 +7,8 @@ import i18n from "../../i18n";
 import { mdiAccount, mdiLock } from "@mdi/js";
 import TextInputFieldWithIcon from "../forms/text_input_field_with_icon";
 import CustomForm from "../forms/custom_form";
-import {LOGIN_VALIDATIONS} from "../../js/validations"
+import { LOGIN_VALIDATIONS } from "../../js/validations";
+import CustomCheckbox from "../forms/custom_checkbox";
 
 class Login extends Component {
   state = {
@@ -97,7 +98,7 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="form-signin rounded-lg">
+      <div className="form-signin rounded-border">
         <CustomForm
           title={i18n.t("login.title")}
           action={i18n.t("login.form.action")}
@@ -126,13 +127,10 @@ class Login extends Component {
           />
 
           <div className="checkbox mb-3">
-            <label>
-              <input
-                type="checkbox"
-                onChange={(e) => this.handleChange(e, "remember", true)}
-              />{" "}
-              {i18n.t("login.form.remember")}
-            </label>
+            <CustomCheckbox
+              label={i18n.t("login.form.remember")}
+              onChange={(e) => this.handleChange(e, "remember", true)}
+            />{" "}
           </div>
         </CustomForm>
 

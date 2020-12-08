@@ -106,7 +106,7 @@ class RecoverSend extends Component {
             </span>
           </span>
 
-          <div className="m-4 p-5 inner-square shadow rounded-lg">
+          <div className="m-4 p-5 inner-square shadow rounded-border">
             <span
               className="mb-2 align-items-horizontal-center fw-500"
               style={{ display: "flex", textAlign: "center", fontSize: "20px" }}
@@ -114,7 +114,7 @@ class RecoverSend extends Component {
               {i18n.t("recover.afterMessage")}
             </span>
             <button
-              className="btn btn-lg btn-primary btn-block mb-3 rounded-lg"
+              className="btn btn-lg btn-primary btn-block mb-3 rounded-border"
               onClick={() => this.handleGoHome()}
             >
               {i18n.t("recover.form.afterAction")}
@@ -153,7 +153,7 @@ class RecoverSend extends Component {
 
   render() {
     return (
-      <div className="form-signin rounded-lg">{this.getDisplayForm()}</div>
+      <div className="form-signin rounded-border">{this.getDisplayForm()}</div>
     );
   }
 }

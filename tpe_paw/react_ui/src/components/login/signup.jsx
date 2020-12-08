@@ -27,7 +27,7 @@ class SignUp extends Component {
 
   render() {
     return (
-      <div className="form-signin rounded-lg">
+      <div className="form-signin rounded-border">
         <CustomForm
           title={i18n.t("signup.title")}
           action={i18n.t("signup.form.action")}

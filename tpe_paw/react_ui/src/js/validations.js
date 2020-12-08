@@ -86,8 +86,26 @@ export const VERIFY_EMAIL_VALIDATIONS = {
   code: (val) => {
     return (
       (!val && i18n.t("verifyEmail.form.errors.emptyCode")) ||
-      (val.length !== 6 && i18n.t("verifyEmail.form.errors.invalidCodeLength")) ||
-      (!RegExp("^\\d{6}$").test(val) && i18n.t("verifyEmail.form.errors.invalidFormat")) ||
+      (val.length !== 6 &&
+        i18n.t("verifyEmail.form.errors.invalidCodeLength")) ||
+      (!RegExp("^\\d{6}$").test(val) &&
+        i18n.t("verifyEmail.form.errors.invalidFormat")) ||
+      null
+    );
+  },
+};
+
+export const EXPLORE_FORM_VALIDATIONS = {
+  title: (val) => {
+    return (
+      (val.length > 50 && i18n.t("explore.form.errors.title", { num: 50 })) ||
+      null
+    );
+  },
+  username: (val) => {
+    return (
+      (val.length > 50 &&
+        i18n.t("explore.form.errors.username", { num: 50 })) ||
       null
     );
   },

@@ -14,6 +14,7 @@ const SignUp = React.lazy(() => import("./components/login/signup"));
 const Home = React.lazy(() => import("./components/pages/home"));
 const Favorites = React.lazy(() => import("./components/pages/favorites"));
 const Upvoted = React.lazy(() => import("./components/pages/upvoted"));
+const Explore = React.lazy(() => import("./components/pages/explore"));
 const RecoverSend = React.lazy(() => import("./components/login/recover_send"));
 const ChangePassword = React.lazy(() => import("./components/login/change_password"));
 const Verify = React.lazy(() => import("./components/profile/verify"));
@@ -80,6 +81,13 @@ const routes = [
     name: i18n.t("nav.upvoted"),
     component: Upvoted,
     roles: [ROLE_USER, ROLE_ADMIN],
+  },
+  {
+    path: "/explore",
+    exact: false,
+    name: i18n.t("nav.explore"),
+    component: Explore,
+    roles: [],
   },
   {
     path: "/recover",

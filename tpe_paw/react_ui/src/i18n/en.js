@@ -101,39 +101,93 @@ export default {
       },
     },
   },
-  changePassword:{
-    invalidLink:{
-      message: "The link has expired",
-      action: "Go to Recover Password"
+  explore: {
+    form: {
+      orderBy: {
+        header: "Order",
+        placeholder: "Order By",
+        reputation: "User Reputation",
+        votes: "Snippet Votes",
+        title: "Snippet Title",
+        date: "Date Uploaded",
+      },
+      sort: {
+        placeholder: "Sort",
+        asc: "Ascending",
+        desc: "Descending",
+        no: "No Order",
+      },
+      flagged: {
+        header: "Flagged Snippets",
+        placeholder: "Include Flagged Snippets",
+      },
+      title: {
+        header: "Title",
+        placeholder: "Snippet Title",
+      },
+      language: {
+        header: "Language",
+        placeholder: "Select a language",
+      },
+      tags: {
+        header: "Tag",
+        placeholder: "Select a tag",
+      },
+      user: {
+        username: "Username",
+        reputation: "User Reputation",
+      },
+      votes: "Snippet Votes",
+      date: "Date Uploaded",
+      placeholder: {
+        from: "From",
+        to: "To",
+      },
+      submit: "Search",
+      reset: "Reset",
+      errors: {
+        range: "From value must be smaller than To value",
+        min: "Values must be larger than {{min}}",
+        max: "Values must be smaller than {{max}}",
+        title: "Title must be less than {{num}} character",
+        username: "Username must be less than {{num}} character",
+      },
     },
-    changeForm:{
+  },
+  changePassword: {
+    invalidLink: {
+      message: "The link has expired",
+      action: "Go to Recover Password",
+    },
+    changeForm: {
       title: "Change Password",
       password: "Password",
       repeatPassword: "Repeat password",
       action: "Change Password",
       errors: {
-        differentPasswords: "Passwords don't match"
-      }
+        differentPasswords: "Passwords don't match",
+      },
     },
-    changeSuccess:{
+    changeSuccess: {
       message: "Password has been successfully reset",
       actionGoLogin: "Go Login",
-      actionGoHome: "Go Home"
-    }
+      actionGoHome: "Go Home",
+    },
   },
-  explore: {},
   snippetDetail: {
     flagged: {
       title: "Beware!",
-      message: "The following snippet was marked as incorrect by the administrator. It may not work or be unsafe to use."
-    }
+      message:
+        "The following snippet was marked as incorrect by the administrator. It may not work or be unsafe to use.",
+    },
   },
   profile: {
     verify: {
       title: "Verify your account",
-      message: "Your email has not been verified, meaning you will not receive any emails from us. To verify your email click ",
+      message:
+        "Your email has not been verified, meaning you will not receive any emails from us. To verify your email click ",
       action: "here",
-    }
+    },
   },
   verifyEmail: {
     docTitle: "Verify Email",
@@ -149,8 +203,8 @@ export default {
         invalidCodeLength: "Code must be 6 digits long",
         invalidFormat: "Code must contain only digits",
         invalidCode: "Code is invalid",
-        invalidResend: "Error sending email with code"
-      }
-    }
-  }
+        invalidResend: "Error sending email with code",
+      },
+    },
+  },
 };

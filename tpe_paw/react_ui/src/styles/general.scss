@@ -23,7 +23,7 @@ img {
   width: 45px;
 }
 
-body{
+body {
   background-color: $app-background-color !important;
 }
 
@@ -93,10 +93,13 @@ body{
   justify-content: center;
 }
 
-.no-focus:focus{
+.no-focus:focus {
   outline: none !important;
 }
 
+.rounded-border {
+  border-radius: 8px !important;
+}
 .no-margin {
   margin: 0px !important;
 }
@@ -106,7 +109,7 @@ body{
 }
 
 .shadow {
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .primary-text {
@@ -126,4 +129,11 @@ body{
 .snippet-code-block pre, .card-snippet-block pre {
   background: none !important;
   width: 100% !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none !important;
 }

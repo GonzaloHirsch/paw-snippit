@@ -10,8 +10,8 @@ export function getExploreSearchFromUrl(url) {
   search.username = params.get("username");
   search.minRep = params.get("minRep");
   search.maxRep = params.get("maxRep");
-  search.minDate = params.get("minDate");
-  search.maxDate = params.get("maxDate");
+  //   search.minDate = params.get("minDate");
+  //   search.maxDate = params.get("maxDate");
   search.minVotes = params.get("minVotes");
   search.maxVotes = params.get("maxVotes");
   return search;

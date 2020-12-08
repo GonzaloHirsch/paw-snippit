@@ -6,6 +6,10 @@ export default class LanguageClient extends Client {
     return this.instance.get("languages/" + id);
   }
 
+  getLanguageList() {
+    return this.instance.get("languages/all");
+  }
+
   getLanguageWithUrl(url) {
     return axios.get(url);
   }

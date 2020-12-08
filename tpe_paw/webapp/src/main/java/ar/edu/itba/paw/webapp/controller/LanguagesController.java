@@ -58,7 +58,7 @@ public class LanguagesController {
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getAllLanguages(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page, final @QueryParam(QUERY_PARAM_SHOW_EMPTY) @DefaultValue("true") boolean showEmpty) {
+    public Response getLanguagesByPage(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page, final @QueryParam(QUERY_PARAM_SHOW_EMPTY) @DefaultValue("true") boolean showEmpty) {
         final List<LanguageDto> languages = languageService.getAllLanguages(showEmpty, page, TAG_PAGE_SIZE).stream().map(l -> LanguageDto.fromLanguage(l, uriInfo)).collect(Collectors.toList());
         final int languagesCount = this.languageService.getAllLanguagesCount(showEmpty);
         int pageCount = PagingHelper.CalculateTotalPages(languagesCount, LANGUAGE_PAGE_SIZE);
@@ -67,6 +67,16 @@ public class LanguagesController {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
         ResponseHelper.AddTotalItemsAttribute(builder, languagesCount);
+        return builder.build();
+    }
+
+    @GET
+    @Path("/all")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getAllLanguages() {
+        final List<LanguageDto> languages = languageService.getAllLanguages().stream().map(l -> LanguageDto.fromLanguage(l, uriInfo)).collect(Collectors.toList());
+        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<LanguageDto>>(languages) {
+        });
         return builder.build();
     }
 

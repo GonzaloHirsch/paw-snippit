@@ -15,7 +15,7 @@ class SnippetCard extends Component {
     return (
       <Link to={snippetLink} className="no-decoration">
         <div
-          className="card-snippet-container card mb-3 bg-light bg-white rounded"
+          className="card-snippet-container card mb-3 bg-light bg-white rounded-border"
           style={{ maxWidth: "40rem" }}
         >
           <div className="card-header px-4" style={{ fontSize: "20px" }}>
@@ -48,7 +48,7 @@ class SnippetCard extends Component {
                 />
               )}
               <div
-                className="language-snippet-tag p-2 flex-center rounded mr-1"
+                className="language-snippet-tag p-2 flex-center rounded-border mr-1"
                 style={{ fontSize: "20px" }}
               >
                 {snippet.language.name.toUpperCase()}

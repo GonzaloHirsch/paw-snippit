@@ -4,7 +4,6 @@ const CustomCheckbox = (props) => {
       <input
         className="mr-2"
         type="checkbox"
-        value={props.value}
         onChange={props.onChange}
       />
       {props.label}

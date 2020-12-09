@@ -5,6 +5,7 @@ import UserClient from "../../api/implementations/UserClient";
 import LanguageClient from "../../api/implementations/LanguageClient";
 import store from "../../store";
 import SnippetActionsClient from "../../api/implementations/SnippetActionsClient";
+import {isAdmin} from "../../js/security_utils"
 
 // Higher Order Component to reuse the repeated behaviour of the pages that contain Snippet Feed
 
@@ -20,6 +21,7 @@ class SnippetOverview extends Component {
     const state = store.getState();
     let userIsLogged = false;
     let userCanReport = false;
+    let userIsAdmin = false;
     if (state.auth.token === null || state.auth.token === undefined) {
       this.snippetActionsClient = new SnippetActionsClient();
       this.snippetClient = new SnippetClient();
@@ -32,9 +34,11 @@ class SnippetOverview extends Component {
       this.snippetActionsClient = new SnippetActionsClient(state.auth);
       userIsLogged = true;
       userCanReport = state.auth.info.canReport;
+      userIsAdmin = isAdmin(state.auth.roles)
     }
 
     this.onSnippetFav = this.onSnippetFav.bind(this);
+    this.onSnippetFlag = this.onSnippetFlag.bind(this);
     this.onReport = this.onReport.bind(this);
     this.dismissedReport = this.dismissedReport.bind(this);
 
@@ -62,6 +66,7 @@ class SnippetOverview extends Component {
       userIsLogged: userIsLogged,
       userCanReport: userCanReport,
       userIsOwner: false,
+      userIsAdmin: userIsAdmin
     };
   }
 
@@ -145,6 +150,30 @@ class SnippetOverview extends Component {
     e.preventDefault();
   }
 
+  onSnippetFlag(e, id) {
+    let previousFlagState = false;
+    // Copy snippets array
+    let snippet = { ...this.state.snippet };
+    // Store previous fav state
+    previousFlagState = snippet.flagged;
+    // Update variable
+    snippet.flagged = !snippet.flagged;
+    // Update state
+    this.setState({ snippet: snippet });
+
+    // Was faved, now not
+    if (previousFlagState) {
+      this.snippetActionsClient.unflagSnippet(id);
+    }
+    // Was not fav, not it is
+    else {
+      this.snippetActionsClient.flagSnippet(id);
+    }
+
+    // Prevent parent Link to navigate
+    e.preventDefault();
+  }
+
   onReport(id, detail) {
     // Copy snippets array
     let snippet = { ...this.state.snippet };
@@ -164,6 +193,7 @@ class SnippetOverview extends Component {
           {...this.state}
           dismissedReport={this.dismissedReport}
           handleFav={this.onSnippetFav}
+          handleFlag={this.onSnippetFlag}
           handleReport={this.onReport}
         />
       </div>

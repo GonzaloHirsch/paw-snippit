@@ -6,7 +6,7 @@ import i18n from "../../i18n";
 import DetailBox from "./detail_box";
 import LinkDetailBox from "./link_detail_box";
 import { getUserProfilePicUrl } from "../../js/snippet_utils";
-import { mdiAlertOctagon, mdiHeart, mdiHeartOutline } from "@mdi/js";
+import { mdiAlertOctagon, mdiFlag, mdiFlagOutline, mdiHeart, mdiHeartOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Helmet } from "react-helmet";
 import SyntaxHighlighter from "react-syntax-highlighter";
@@ -100,6 +100,8 @@ class SnippetDetail extends Component {
       handleFav,
       userCanReport,
       userIsOwner,
+      userIsAdmin,
+      handleFlag
     } = this.props;
     return (
       <div className="flex-column detail-container mx-5 my-4 p-5 inner-square shadow rounded-lg">
@@ -175,6 +177,19 @@ class SnippetDetail extends Component {
           <p className="card-snippet-fade-out card-snippet-fade-out-code hidden"></p>
         </div>
         <div className="row align-items-horizontal-center flex-row mt-4 p-2">
+          {userIsAdmin && (
+            <DetailBox>
+              <Icon
+                className={
+                  "row no-margin icon-fav" +
+                  (snippet.flagged ? "-selected" : "")
+                }
+                path={snippet.flagged ? mdiFlag : mdiFlagOutline}
+                size={3}
+                onClick={(e) => handleFlag(e, snippet.id)}
+              />
+            </DetailBox>
+          )}
           <DetailBox>
             <Icon
               className={

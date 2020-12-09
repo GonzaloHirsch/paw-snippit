@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.webapp.validations.IntegerOrder;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -15,17 +16,16 @@ import java.time.LocalDate;
 public class ExploreDto {
 
     // TODO - Solve the Date parsing issues
-    //@DateTimeFormat(pattern = "yyyy-MM-dd", iso = DateTimeFormat.ISO.DATE)
-//    @BeforeToday(message = "{BeforeToday.exploreForm.date}")
-//    @JsonFormat(pattern = "yyyy-MM-dd")
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @QueryParam("minDate")
     private LocalDate minDate;
 
-    //@DateTimeFormat(pattern = "yyyy-MM-dd", iso = DateTimeFormat.ISO.DATE)
-//    @BeforeToday(message = "{BeforeToday.exploreForm.date}")
-//    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @QueryParam("maxDate")
     private LocalDate maxDate;
+
+    //    @BeforeToday(message = "{BeforeToday.exploreForm.date}")
 
     @Max(value = Integer.MAX_VALUE, message = "{Integer.maxValue}")
     @Min(value = Integer.MIN_VALUE, message = "{Integer.minValue}")

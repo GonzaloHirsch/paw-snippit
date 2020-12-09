@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -256,6 +257,7 @@ public class UserController {
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build(); // UserNotFound
         }
+
         // Getting the URL for the server
         // We remove the API prefix and add the required #/ for the hashrouter of the client
         final String baseUrl = this.uriInfo.getBaseUri().toString().replace(Constants.API_PREFIX, "/#");

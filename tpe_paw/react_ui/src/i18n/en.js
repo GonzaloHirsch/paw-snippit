@@ -181,6 +181,11 @@ export default {
       message:
         "The following snippet was marked as incorrect by the administrator. It may not work or be unsafe to use.",
     },
+    deleted: {
+      title: "This snippet has been deleted by the owner!",
+      message:
+        "Deleted snippets will remain saved in your Favorites if liked before deletion. If you own the deleted snippet, you can recover it.",
+    },
     reported: {
       title: "This snippet was reported by a user!",
       message:

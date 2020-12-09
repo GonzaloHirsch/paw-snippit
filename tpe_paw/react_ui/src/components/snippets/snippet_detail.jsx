@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import SnippetDangerMessage from "./snippet_danger_message";
+import SnippetDeletedMessage from "./snippet_deleted_message"
 import SnippetReportedMessage from "./snippet_reported_message";
 import { Link } from "react-router-dom";
 import i18n from "../../i18n";
@@ -9,10 +10,12 @@ import { getUserProfilePicUrl } from "../../js/snippet_utils";
 import {
   mdiAlertOctagon,
   mdiContentCopy,
+  mdiDelete,
   mdiFlag,
   mdiFlagOutline,
   mdiHeart,
   mdiHeartOutline,
+  mdiDeleteRestore
 } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Helmet } from "react-helmet";
@@ -115,6 +118,7 @@ class SnippetDetail extends Component {
       userIsOwner,
       userIsAdmin,
       handleFlag,
+      handleDelete
     } = this.props;
     return (
       <div className="flex-column detail-container mx-5 my-4 p-5 inner-square shadow rounded-lg">
@@ -156,8 +160,9 @@ class SnippetDetail extends Component {
           </ModalFooter>
         </Modal>
 
+        {snippet.deleted && <SnippetDeletedMessage />}
         {snippet.flagged && <SnippetDangerMessage />}
-        {snippet.reported && userIsOwner && (
+        {snippet.reported && !snippet.deleted && userIsOwner && (
           <SnippetReportedMessage
             id={snippet.id}
             dismissedReport={dismissedReport}
@@ -224,6 +229,16 @@ class SnippetDetail extends Component {
                 onClick={(e) => handleFlag(e, snippet.id)}
               />
             </DetailBox>
+          )}
+          {userIsOwner && (
+            <DetailBox>
+            <Icon
+              className="row no-margin icon-delete"
+              path={snippet.deleted ? mdiDeleteRestore : mdiDelete}
+              size={3}
+              onClick={(e) => handleDelete(e, snippet.id)}
+            />
+          </DetailBox>
           )}
           <DetailBox>
             <Icon

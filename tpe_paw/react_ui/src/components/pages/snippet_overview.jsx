@@ -5,7 +5,7 @@ import UserClient from "../../api/implementations/UserClient";
 import LanguageClient from "../../api/implementations/LanguageClient";
 import store from "../../store";
 import SnippetActionsClient from "../../api/implementations/SnippetActionsClient";
-import {isAdmin} from "../../js/security_utils"
+import { isAdmin } from "../../js/security_utils";
 
 // Higher Order Component to reuse the repeated behaviour of the pages that contain Snippet Feed
 
@@ -34,11 +34,12 @@ class SnippetOverview extends Component {
       this.snippetActionsClient = new SnippetActionsClient(state.auth);
       userIsLogged = true;
       userCanReport = state.auth.info.canReport;
-      userIsAdmin = isAdmin(state.auth.roles)
+      userIsAdmin = isAdmin(state.auth.roles);
     }
 
     this.onSnippetFav = this.onSnippetFav.bind(this);
     this.onSnippetFlag = this.onSnippetFlag.bind(this);
+    this.onSnippetDelete = this.onSnippetDelete.bind(this);
     this.onReport = this.onReport.bind(this);
     this.dismissedReport = this.dismissedReport.bind(this);
 
@@ -50,6 +51,7 @@ class SnippetOverview extends Component {
         code: "CODE",
         flagged: false,
         favorite: false,
+        deleted: false,
         createdDate: "10/10/10",
       },
       creator: {
@@ -66,7 +68,7 @@ class SnippetOverview extends Component {
       userIsLogged: userIsLogged,
       userCanReport: userCanReport,
       userIsOwner: false,
-      userIsAdmin: userIsAdmin
+      userIsAdmin: userIsAdmin,
     };
   }
 
@@ -76,6 +78,16 @@ class SnippetOverview extends Component {
     this.snippetClient
       .getSnippetWithId(snippetId)
       .then((res) => {
+        if (
+          !(res.data.favorite || this.state.userIsOwner) &&
+          res.data.deleted
+        ) {
+          // TODO: REDIRECT TO 404
+          this.props.history.push({
+            pathname: "/login",
+            state: { from: this.props.history.location },
+          });
+        }
         this.setState({ snippet: res.data });
         // If snippet was found, obtain the creator
         this.userClient
@@ -174,6 +186,30 @@ class SnippetOverview extends Component {
     e.preventDefault();
   }
 
+  onSnippetDelete(e, id) {
+    let previousDeleteState = false;
+    // Copy snippets array
+    let snippet = { ...this.state.snippet };
+    // Store previous fav state
+    previousDeleteState = snippet.deleted;
+    // Update variable
+    snippet.deleted = !snippet.deleted;
+    // Update state
+    this.setState({ snippet: snippet });
+
+    // Was faved, now not
+    if (previousDeleteState) {
+      this.snippetActionsClient.restoreSnippet(id);
+    }
+    // Was not fav, not it is
+    else {
+      this.snippetActionsClient.deleteSnippet(id);
+    }
+
+    // Prevent parent Link to navigate
+    e.preventDefault();
+  }
+
   onReport(id, detail) {
     // Copy snippets array
     let snippet = { ...this.state.snippet };
@@ -195,6 +231,7 @@ class SnippetOverview extends Component {
           handleFav={this.onSnippetFav}
           handleFlag={this.onSnippetFlag}
           handleReport={this.onReport}
+          handleDelete={this.onSnippetDelete}
         />
       </div>
     );

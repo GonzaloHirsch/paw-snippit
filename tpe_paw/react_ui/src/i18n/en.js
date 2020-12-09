@@ -175,6 +175,7 @@ export default {
     },
   },
   snippetDetail: {
+    copied: "Copied to clipboard!",
     flagged: {
       title: "Beware!",
       message:

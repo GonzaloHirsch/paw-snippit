@@ -6,12 +6,19 @@ import i18n from "../../i18n";
 import DetailBox from "./detail_box";
 import LinkDetailBox from "./link_detail_box";
 import { getUserProfilePicUrl } from "../../js/snippet_utils";
-import { mdiAlertOctagon, mdiFlag, mdiFlagOutline, mdiHeart, mdiHeartOutline } from "@mdi/js";
+import {
+  mdiAlertOctagon,
+  mdiContentCopy,
+  mdiFlag,
+  mdiFlagOutline,
+  mdiHeart,
+  mdiHeartOutline,
+} from "@mdi/js";
 import Icon from "@mdi/react";
 import { Helmet } from "react-helmet";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { googlecode } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, UncontrolledTooltip } from "reactstrap";
 import {
   REPORT_VALIDATIONS,
   handleChange,
@@ -63,6 +70,12 @@ class SnippetDetail extends Component {
     }
   }
 
+  copyToClipboard() {
+    let textBox = document.getElementById("hidden-code-input");
+    textBox.select();
+    document.execCommand("copy");
+  }
+
   getReportedSnippetBox(snippet) {
     if (this.props.userCanReport && snippet.userReported) {
       return (
@@ -101,7 +114,7 @@ class SnippetDetail extends Component {
       userCanReport,
       userIsOwner,
       userIsAdmin,
-      handleFlag
+      handleFlag,
     } = this.props;
     return (
       <div className="flex-column detail-container mx-5 my-4 p-5 inner-square shadow rounded-lg">
@@ -165,6 +178,22 @@ class SnippetDetail extends Component {
         </div>
         <div className="dropdown-divider snippet-divider mb-4"></div>
         <div className="d-flex card-text snippet-code-block rounded px-3 py-2">
+          <Icon
+          id="copyCodeButton"
+            className="snippet-code-copy-button mt-1 mr-1 p-1 icon-size-2"
+            path={mdiContentCopy}
+            size={2}
+            onClick={(e) => this.copyToClipboard(e)}
+          />
+          <UncontrolledTooltip
+            placement="top"
+            target="copyCodeButton"
+            trigger="click"
+            autohide={true}
+          >
+            {i18n.t("snippetDetail.copied")}
+          </UncontrolledTooltip>
+
           <SyntaxHighlighter
             wrapLongLines={true}
             showInlineLineNumbers={false}
@@ -174,6 +203,12 @@ class SnippetDetail extends Component {
           >
             {snippet.code}
           </SyntaxHighlighter>
+          <textarea
+            id="hidden-code-input"
+            className="hidden-code"
+            value={snippet.code}
+            readOnly
+          />
           <p className="card-snippet-fade-out card-snippet-fade-out-code hidden"></p>
         </div>
         <div className="row align-items-horizontal-center flex-row mt-4 p-2">

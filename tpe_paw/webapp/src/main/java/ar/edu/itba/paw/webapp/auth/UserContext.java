@@ -8,17 +8,19 @@ public class UserContext {
     private Long id;
     private String username;
     private Collection<GrantedAuthority> authorities;
+    private boolean canReport;
 
     private UserContext() {
 
     }
 
-    public static UserContext create(Long id, String username, Collection<GrantedAuthority> authorities) {
+    public static UserContext create(Long id, String username, Collection<GrantedAuthority> authorities, boolean canReport) {
         UserContext ctx = new UserContext();
 
         ctx.id = id;
         ctx.username = username;
         ctx.authorities = authorities;
+        ctx.canReport = canReport;
 
         return ctx;
     }
@@ -45,5 +47,13 @@ public class UserContext {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isCanReport() {
+        return canReport;
+    }
+
+    public void setCanReport(boolean canReport) {
+        this.canReport = canReport;
     }
 }

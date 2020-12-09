@@ -29,6 +29,7 @@ public class JwtTokenFactory {
     private static final String TOKEN_ISSUER = "snippit.paw.itba";
     private static final String TOKEN_UID = "uid";
     private static final String TOKEN_AUTHORITIES = "auth";
+    private static final String TOKEN_REPORTING = "canReport";
 
     // TODO: check how to avoid making the stream every time
     @Value("classpath:authKey.key")
@@ -68,6 +69,7 @@ public class JwtTokenFactory {
                 .setClaims(claims)
                 .claim(TOKEN_UID, context.getId())
                 .claim(TOKEN_AUTHORITIES, context.getAuthorities())
+                .claim(TOKEN_REPORTING, context.isCanReport())
                 .setIssuer(TOKEN_ISSUER)
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(now.plus(DAYS_TO_EXPIRE, ChronoUnit.DAYS)))

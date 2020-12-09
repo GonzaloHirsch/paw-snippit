@@ -38,7 +38,7 @@ class ReportedSnippetMessage extends Component {
           size={1}
         />
         <Icon className="mr-1 icon-reported" path={mdiAlertOctagon} size={3} />
-        <div className="col">
+        <div className="col no-padding mx-2">
           <h3 className="fw-700">{i18n.t("snippetDetail.reported.title")}</h3>
           <div className="fw-500">
             {i18n.t("snippetDetail.reported.message")}

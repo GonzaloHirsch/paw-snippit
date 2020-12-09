@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.interfaces.service.ReportService;
 import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.User;
@@ -31,6 +32,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     private UserService userService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private ReportService reportService;
 
     // Refresh authority to check if the token contains
     private static final GrantedAuthority REFRESH_AUTHORITY = new SimpleGrantedAuthority(Authorities.REFRESH.getValue());
@@ -73,7 +76,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
                 .collect(Collectors.toList());
 
         // Creating the user context
-        UserContext userContext = UserContext.create(user.getId(), user.getUsername(), authorities);
+        UserContext userContext = UserContext.create(user.getId(), user.getUsername(), authorities, this.reportService.canReport(user));
 
         return new UsernamePasswordAuthenticationToken(userContext, null, userContext.getAuthorities());
     }

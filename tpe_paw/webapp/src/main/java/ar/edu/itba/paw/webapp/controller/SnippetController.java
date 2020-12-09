@@ -48,13 +48,13 @@ public class SnippetController {
     private FavoriteService favoriteService;
     @Autowired
     private ReportService reportService;
-//    @Autowired
+    @Autowired
     private LoginAuthentication loginAuthentication;
     //    @Autowired
     private TagService tagService;
     //    @Autowired
     private RoleService roleService;
-//    @Autowired
+    //    @Autowired
     private MessageSource messageSource;
 
     @Context
@@ -67,6 +67,7 @@ public class SnippetController {
     private static final String FLAGGED = "flagged/";
 
     private final static Map<String, SnippetDao.Types> typesMap;
+
     static {
         final Map<String, SnippetDao.Types> types = new HashMap<>();
         types.put(null, SnippetDao.Types.TITLE);
@@ -78,6 +79,7 @@ public class SnippetController {
     }
 
     private final static Map<String, SnippetDao.Orders> ordersMap;
+
     static {
         final Map<String, SnippetDao.Orders> orders = new HashMap<>();
         orders.put("asc", SnippetDao.Orders.ASC);
@@ -89,7 +91,7 @@ public class SnippetController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getHomeSnippetFeed(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
-        final List<SnippetDto> snippets = this.snippetService.getAllSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+        final List<SnippetDto> snippets = this.snippetService.getAllSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
         final int numberOfSnippets = this.snippetService.getAllSnippetsCount();
         final int pageCount = PagingHelper.CalculateTotalPages(numberOfSnippets, SNIPPET_PAGE_SIZE);
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
@@ -105,7 +107,7 @@ public class SnippetController {
     public Response searchInHome(final @BeanParam SearchDto searchDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
 
         final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.HOME, searchDto.getSort(), null, null, page)
-                .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+                .stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
 
         int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.HOME, null, null);
         final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
@@ -126,10 +128,10 @@ public class SnippetController {
 
         Instant minDate = null;
         Instant maxDate = null;
-        if (exploreDto.getMinDate() != null){
+        if (exploreDto.getMinDate() != null) {
             minDate = exploreDto.getMinDate().atStartOfDay(ZoneId.systemDefault()).toInstant();
         }
-        if (exploreDto.getMaxDate() != null){
+        if (exploreDto.getMaxDate() != null) {
             maxDate = exploreDto.getMaxDate().atStartOfDay(ZoneId.systemDefault()).toInstant();
         }
         Collection<Snippet> snippetsCollection = this.snippetService.findSnippetByDeepCriteria(
@@ -139,7 +141,7 @@ public class SnippetController {
                 exploreDto.getLanguage() == -1 ? null : exploreDto.getLanguage(), exploreDto.getTag() == -1 ? null : exploreDto.getTag(),
                 exploreDto.getTitle(), exploreDto.getUsername(),
                 ordersMap.get(exploreDto.getSort()), typesMap.get(exploreDto.getField()), exploreDto.getIncludeFlagged(), page, SNIPPET_PAGE_SIZE);
-        int snippetCount =  this.snippetService.getSnippetByDeepCriteriaCount(
+        int snippetCount = this.snippetService.getSnippetByDeepCriteriaCount(
                 minDate, maxDate,
                 exploreDto.getMinRep(), exploreDto.getMaxRep(),
                 exploreDto.getMinVotes(), exploreDto.getMaxVotes(),
@@ -147,7 +149,7 @@ public class SnippetController {
                 exploreDto.getTitle(), exploreDto.getUsername(),
                 exploreDto.getIncludeFlagged());
 
-        final List<SnippetDto> snippets = snippetsCollection.stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+        final List<SnippetDto> snippets = snippetsCollection.stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
         final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
@@ -199,7 +201,7 @@ public class SnippetController {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
-        final List<SnippetDto> snippets = this.snippetService.getAllFlaggedSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+        final List<SnippetDto> snippets = this.snippetService.getAllFlaggedSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
         final int snippetCount = this.snippetService.getAllFlaggedSnippetsCount();
         final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
@@ -222,7 +224,7 @@ public class SnippetController {
         }
 
         final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.FLAGGED, searchDto.getSort(), null, null, page)
-                .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+                .stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
 
         int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.FLAGGED, null, null);
         final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
@@ -246,14 +248,14 @@ public class SnippetController {
         if (retrievedSnippet.isPresent()) {
             Snippet snippet = retrievedSnippet.get();
             int voteCount = this.voteService.getVoteBalance(snippet.getId());
-            return Response.ok(SnippetWithVoteDto.fromSnippetAndVote(snippet, voteCount, this.uriInfo)).build();
+            return Response.ok(SnippetWithVoteDto.fromSnippetAndVote(snippet, voteCount, this.uriInfo, UserHelper.GetLoggedUserId(this.loginAuthentication), LocaleContextHolder.getLocale())).build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @DELETE //TODO ---> check what response to return
     @Path("/{id}/delete")
-    public Response deleteSnippet(final @PathParam(PATH_PARAM_ID) long id){
+    public Response deleteSnippet(final @PathParam(PATH_PARAM_ID) long id) {
         Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
 
         if (retrievedSnippet.isPresent()) {
@@ -273,7 +275,7 @@ public class SnippetController {
 
     @PUT
     @Path("/{id}/restore")
-    public Response restoreSnippet(final @PathParam(PATH_PARAM_ID) long id){
+    public Response restoreSnippet(final @PathParam(PATH_PARAM_ID) long id) {
         Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
 
         if (retrievedSnippet.isPresent()) {
@@ -407,7 +409,7 @@ public class SnippetController {
     @Path("/{id}/report")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response reportSnippet(final @PathParam(PATH_PARAM_ID) long id, final @Valid ReportDto reportDto) {
-        final String baseUrl = this.uriInfo.getBaseUri().toString(); //TODO how to do this?
+        final String baseUrl = this.uriInfo.getBaseUri().toString().replace(Constants.API_PREFIX, "/#");
         Snippet snippet = this.getSnippet(id);
         User loggedInUser = this.loginAuthentication.getLoggedInUser();
 

@@ -184,6 +184,19 @@ export default {
       title: "This snippet was reported by a user!",
       message: "Someone wants to let you know of an error they found or a suggestion they may have. Check your email to read the message sent by the user.",
       messageSuggestion: "If there is an error in your snippet, we recommend you delete it before the administrator flags it as unsafe and harms your reputation."
+    },
+    reporting: {
+      title: "Report Snippet",
+      message: "Write a message to the owner of this snippet with any errors you found or suggestions you may have.",
+      actionConfirm: "Confirm",
+      actionCancel: "Cancel",
+      form: {
+        hint: "Write your message",
+        errors: {
+          emptyMessage: "Message cannot be empty",
+          lengthMessage: "Message too long, must have less than {{limit}} characters"
+        }
+      }
     }
   },
   profile: {

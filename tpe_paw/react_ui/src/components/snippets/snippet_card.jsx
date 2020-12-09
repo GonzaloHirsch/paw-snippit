@@ -27,9 +27,9 @@ const SnippetCard = (props) => {
               <Icon
                 className={
                   "mr-1 icon-size-2 icon-fav" +
-                  (snippet.faved ? "-selected" : "")
+                  (snippet.favorite ? "-selected" : "")
                 }
-                path={snippet.faved ? mdiHeart : mdiHeartOutline}
+                path={snippet.favorite ? mdiHeart : mdiHeartOutline}
                 size={2}
                 onClick={(e) => handleFav(e, snippet.id)}
               />

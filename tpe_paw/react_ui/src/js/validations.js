@@ -110,3 +110,16 @@ export const EXPLORE_FORM_VALIDATIONS = {
     );
   },
 };
+
+export const REPORT_VALIDATIONS = {
+  message: (val) => {
+    return (
+      (!val && i18n.t("snippetDetail.reporting.form.errors.emptyMessage")) ||
+      (val.length > 300 &&
+        i18n.t("snippetDetail.reporting.form.errors.lengthMessage", {
+          limit: 300,
+        })) ||
+      null
+    );
+  },
+};

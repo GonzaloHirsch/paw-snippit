@@ -16,6 +16,9 @@ public class UserDto {
     private URI deletedSnippets;
     private String password;
     private String email;
+    private URI picture;
+    private boolean hasPicture;
+    private URI url;
 
     public static UserDto fromUser(User user, UriInfo uriInfo) {
         final UserDto dto = new UserDto();
@@ -29,6 +32,9 @@ public class UserDto {
         dto.deletedSnippets = uriInfo.getAbsolutePathBuilder().path("deleted_snippets").build();
         // DO NOT SET PASSWORD -> Sensitive
         // DO NOT SET EMAIL -> Sensitive
+        dto.picture = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(user.getId())).path("profile_photo").build();
+        dto.hasPicture = user.getIcon() != null;
+        dto.url = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(user.getId())).build();
 
         return dto;
     }
@@ -103,5 +109,29 @@ public class UserDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public URI getPicture() {
+        return picture;
+    }
+
+    public void setPicture(URI picture) {
+        this.picture = picture;
+    }
+
+    public boolean isHasPicture() {
+        return hasPicture;
+    }
+
+    public void setHasPicture(boolean hasPicture) {
+        this.hasPicture = hasPicture;
+    }
+
+    public URI getUrl() {
+        return url;
+    }
+
+    public void setUrl(URI url) {
+        this.url = url;
     }
 }

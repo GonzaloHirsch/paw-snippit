@@ -11,6 +11,7 @@ public class SnippetUserInfoDto {
     private long id;
     private URI picture;
     private boolean hasPicture;
+    private URI url;
 
     public static SnippetUserInfoDto fromUser(User user, UriInfo uriInfo) {
         final SnippetUserInfoDto dto = new SnippetUserInfoDto();
@@ -19,6 +20,7 @@ public class SnippetUserInfoDto {
         dto.id = user.getId();
         dto.picture = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(user.getId())).path("profile_photo").build();
         dto.hasPicture = user.getIcon() != null;
+        dto.url = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(user.getId())).build();
 
         return dto;
     }
@@ -53,5 +55,13 @@ public class SnippetUserInfoDto {
 
     public void setHasPicture(boolean hasPicture) {
         this.hasPicture = hasPicture;
+    }
+
+    public URI getUrl() {
+        return url;
+    }
+
+    public void setUrl(URI url) {
+        this.url = url;
     }
 }

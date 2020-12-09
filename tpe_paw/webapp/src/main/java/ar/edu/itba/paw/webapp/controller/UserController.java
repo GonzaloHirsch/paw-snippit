@@ -50,6 +50,8 @@ public class UserController {
     @Autowired
     private TagService tagService;
     @Autowired
+    private ReportService reportService;
+    @Autowired
     private LoginAuthentication loginAuthentication;
     @Autowired
     private EmailService emailService;
@@ -105,7 +107,7 @@ public class UserController {
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
 
-            final List<SnippetDto> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+            final List<SnippetDto> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
             final int snippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
             final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
@@ -137,7 +139,7 @@ public class UserController {
             final User user = maybeUser.get();
             final User loggedUser = this.loginAuthentication.getLoggedInUser();
             if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
-                final List<SnippetDto> snippets = this.snippetService.getAllDeletedSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+                final List<SnippetDto> snippets = this.snippetService.getAllDeletedSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
                 final int snippetCount = this.snippetService.getAllDeletedSnippetsByOwnerCount(user.getId());
                 final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
@@ -255,7 +257,6 @@ public class UserController {
             return Response.status(Response.Status.NOT_FOUND).build(); // UserNotFound
         }
         // Getting the URL for the server
-        // TODO --> FIX depending on how we change Reset password
         // We remove the API prefix and add the required #/ for the hashrouter of the client
         final String baseUrl = this.uriInfo.getBaseUri().toString().replace(Constants.API_PREFIX, "/#");
         try {
@@ -329,7 +330,7 @@ public class UserController {
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
 
-            final List<SnippetDto> snippets = this.snippetService.getAllFavoriteSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+            final List<SnippetDto> snippets = this.snippetService.getAllFavoriteSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
             final int snippetCount = this.snippetService.getAllFavoriteSnippetsCount(user.getId());
             final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
@@ -358,7 +359,7 @@ public class UserController {
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
 
-            final List<SnippetDto> snippets = this.snippetService.getAllFollowingSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+            final List<SnippetDto> snippets = this.snippetService.getAllFollowingSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
             final int snippetCount = this.snippetService.getAllFollowingSnippetsCount(user.getId());
             final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
@@ -404,7 +405,7 @@ public class UserController {
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
 
-            final List<SnippetDto> snippets = this.snippetService.getAllUpVotedSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+            final List<SnippetDto> snippets = this.snippetService.getAllUpVotedSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
             final int snippetCount = this.snippetService.getAllUpvotedSnippetsCount(user.getId());
             final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
@@ -432,7 +433,7 @@ public class UserController {
             final User user = maybeUser.get();
 
             final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), location, searchDto.getSort(), user.getId(), null, page)
-                    .stream().map(s -> SnippetDto.fromSnippet(s, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+                    .stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
 
             int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), location, user.getId(), null);
             final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);

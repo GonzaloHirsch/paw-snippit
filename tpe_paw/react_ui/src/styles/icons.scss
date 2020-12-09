@@ -8,10 +8,6 @@
   color: $primary-color !important;
 }
 
-.icon-reported {
-    color: $reported-color !important;
-  }
-
 .icon-size-2 {
   width: 2rem !important;
   height: 2rem !important;
@@ -26,5 +22,29 @@
   }
   &-selected {
     color: red !important;
+    // Add transition here because for some reason it doesn't take it into account when only in parent
+    transition: 0.3s;
+    cursor: pointer;
+  }
+  &-selected:hover {
+    color: gray !important;
+  }
+}
+
+.icon-reported {
+  color: $reported-color !important;
+}
+
+.icon-reported-clickable {
+  color: gray !important;
+  transition: 0.3s;
+  cursor: pointer;
+  &:hover {
+    @extend .icon-reported-clickable;
+    color: $reported-color !important;
+  }
+  &-selected {
+    @extend .icon-reported-clickable;
+    color: $reported-color !important;
   }
 }

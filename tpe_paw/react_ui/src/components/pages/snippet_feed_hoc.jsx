@@ -142,9 +142,9 @@ function SnippetFeedHOC(
         // Copy item
         let snippet = { ...snippets[i] };
         // Store previous fav state
-        previousFavState = snippet.faved;
+        previousFavState = snippet.favorite;
         // Update variable
-        snippets.faved = !snippet.faved;
+        snippet.favorite = !snippet.favorite;
         // Place item again
         snippets[i] = snippet;
         // Update state

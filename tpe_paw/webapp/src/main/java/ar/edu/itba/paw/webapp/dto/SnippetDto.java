@@ -20,9 +20,9 @@ public class SnippetDto {
     private LanguageDto language;
     private String createdDate;
     private boolean isFlagged;
-    private boolean isDeleted;
+    private boolean isFavorite;
 
-    public static SnippetDto fromSnippet(Snippet snippet, UriInfo uriInfo, Locale locale) {
+    public static SnippetDto fromSnippet(Snippet snippet, long currentUserId, UriInfo uriInfo, Locale locale) {
         final SnippetDto dto = new SnippetDto();
 
         dto.id = snippet.getId();
@@ -30,11 +30,10 @@ public class SnippetDto {
         dto.title = snippet.getTitle();
         dto.description = snippet.getDescription();
         dto.isFlagged = snippet.isFlagged();
-        dto.isDeleted = snippet.isDeleted();
         dto.creator = SnippetUserInfoDto.fromUser(snippet.getOwner(), uriInfo);
         dto.language = LanguageDto.fromLanguage(snippet.getLanguage(), uriInfo);
         dto.createdDate = DateFormat.getDateInstance(DateFormat.SHORT, locale).format(Date.from(snippet.getDateCreated()));
-        //snippet.getUserFavorites().stream().anyMatch(u -> u.getId().equals())
+        dto.isFavorite = snippet.getUserFavorites().stream().anyMatch(u -> u.getId().equals(currentUserId));
         return dto;
     }
 
@@ -86,14 +85,6 @@ public class SnippetDto {
         isFlagged = flagged;
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
     public LanguageDto getLanguage() {
         return language;
     }
@@ -108,5 +99,13 @@ public class SnippetDto {
 
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 }

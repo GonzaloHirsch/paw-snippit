@@ -8,15 +8,19 @@
 
 .verify-message h3,
 .verify-message span {
-  color: black;
+  color: rgb(252, 245, 245);
 }
 
-.profile-tabs {
+.profile-tabs-width {
   width: 50%;
 }
 
+.profile-tabs {
+  border-radius: 8px 8px 0px 0px;
+}
+
 .profile-photo {
-  border: black solid 2px;
+  border: white solid 2px;
   height: 200px;
   width: 200px;
   object-fit: cover;
@@ -24,14 +28,27 @@
   transition: 0.3s;
 }
 
+.profile-username {
+  font-size: 40px;
+}
+
 .profile-stat {
   font-size: 22px;
 }
 
 .profile-stat-num {
+  font-size: 35px;
   font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: -11px;
 }
 
 .profile-small-text {
   font-size: 17px;
+}
+
+.profile-user-data {
+  background-color: $primary-color;
+  padding-left: 50px !important;
+  padding-right: 28px !important;
 }

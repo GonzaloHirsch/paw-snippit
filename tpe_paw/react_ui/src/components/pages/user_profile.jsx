@@ -64,10 +64,10 @@ class UserProfile extends Component {
     return (
       <div className="px-3">
         <ul className="nav nav-tabs">
-          <li className="nav-item profile-tabs">
+          <li className="nav-item profile-tabs-width">
             <button
               className={
-                "parent-width nav-link " +
+                "parent-width nav-link profile-tabs " +
                 (this.state.context === ACTIVE_USER_SNIPPETS && "active")
               }
               onClick={() => this.onTabChange(ACTIVE_USER_SNIPPETS)}
@@ -75,10 +75,10 @@ class UserProfile extends Component {
               {i18n.t("profile.activeSnippets")}
             </button>
           </li>
-          <li className="nav-item profile-tabs">
+          <li className="nav-item profile-tabs-width">
             <button
               className={
-                "parent-width nav-link " +
+                "parent-width nav-link profile-tabs " +
                 (this.state.context === DELETED_USER_SNIPPETS && "active")
               }
               onClick={() => this.onTabChange(DELETED_USER_SNIPPETS)}
@@ -108,7 +108,7 @@ class UserProfile extends Component {
           ),
         (url) => getNavSearchFromUrl(url)
       );
-      return <ActiveSnippetFeed />;
+      return <ActiveSnippetFeed background={"hello"} />;
     } else if (this.state.context === DELETED_USER_SNIPPETS) {
       const DeletedSnippetFeed = SnippetFeedHOC(
         SnippetFeed,
@@ -131,13 +131,19 @@ class UserProfile extends Component {
 
   render() {
     return (
-      <div>
-        <ProfileDetail
-          owner={this.state.profileOwner}
-          loading={this.state.loading}
-        />
-        {this._renderTabs()}
-        <div className="pt-3">{this._renderFeedContext()}</div>
+      <div className="row parent-height">
+        <div className="col-3 profile-user-data d-flex flex-col align-items-center">
+          <ProfileDetail
+            owner={this.state.profileOwner}
+            loading={this.state.loading}
+          />
+        </div>
+        <div className="col-9 flex-column">
+          {this._renderTabs()}
+          <div className="pt-3 background-color rounded-border">
+            {this._renderFeedContext()}
+          </div>
+        </div>
       </div>
     );
   }

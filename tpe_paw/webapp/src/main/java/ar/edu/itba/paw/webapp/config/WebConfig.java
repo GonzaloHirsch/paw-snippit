@@ -50,7 +50,7 @@ import java.util.concurrent.TimeUnit;
 
 @EnableAsync
 @EnableWebMvc
-@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.validations", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence"})
+@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.utility", "ar.edu.itba.paw.webapp.validations", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence"})
 @Configuration
 @EnableScheduling
 @EnableTransactionManagement

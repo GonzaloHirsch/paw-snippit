@@ -1,5 +1,6 @@
 import React from "react";
 import SnippetDangerMessage from "./snippet_danger_message";
+import SnippetReportedMessage from "./snippet_reported_message";
 import { Link } from "react-router-dom";
 import i18n from "../../i18n";
 import DetailBox from "./detail_box";
@@ -10,7 +11,7 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { googlecode } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 const SnippetDetail = (props) => {
-  const { snippet, language, creator } = props;
+  const { snippet, language, creator, dismissedReport } = props;
   console.log(snippet);
   return (
     <div className="flex-column detail-container mx-5 my-4 p-5 inner-square shadow rounded-lg">
@@ -20,6 +21,7 @@ const SnippetDetail = (props) => {
         </title>
       </Helmet>
       {snippet.flagged && <SnippetDangerMessage />}
+      {snippet.flagged && <SnippetReportedMessage id={snippet.id} dismissedReport={dismissedReport}/>}
       <div className="row align-items-vertical no-margin mb-2">
         <h1 className="col no-padding">{snippet.title}</h1>
         <Link

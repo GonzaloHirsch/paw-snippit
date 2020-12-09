@@ -180,6 +180,11 @@ export default {
       message:
         "The following snippet was marked as incorrect by the administrator. It may not work or be unsafe to use.",
     },
+    reported: {
+      title: "This snippet was reported by a user!",
+      message: "Someone wants to let you know of an error they found or a suggestion they may have. Check your email to read the message sent by the user.",
+      messageSuggestion: "If there is an error in your snippet, we recommend you delete it before the administrator flags it as unsafe and harms your reputation."
+    }
   },
   profile: {
     activeSnippets: "Active Snippets",

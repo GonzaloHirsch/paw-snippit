@@ -130,7 +130,7 @@ class ExploreForm extends Component {
   _setDateParam(params, name) {
     const value = this.state.fields[name];
     if (value !== null && value !== undefined) {
-      params.set(name, value.toLocaleDateString("es"));
+      params.set(name, value.toISOString().split("T")[0]);
     } else {
       params.set(name, "");
     }

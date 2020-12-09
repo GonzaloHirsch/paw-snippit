@@ -47,4 +47,8 @@ export default class SnippetActionsClient extends Client {
       reportDetail: detail,
     });
   }
+
+  dismissReport(id) {
+    return this.instance.put("snippets/" + id + "/report/dismiss");
+  }
 }

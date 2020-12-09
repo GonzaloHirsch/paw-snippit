@@ -1,15 +1,13 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.webapp.validations.BeforeToday;
-import ar.edu.itba.paw.webapp.validations.DateOrder;
 import ar.edu.itba.paw.webapp.validations.IntegerOrder;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import javax.ws.rs.QueryParam;
-import java.util.Date;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.time.LocalDate;
 
 //@DateOrder(min = "minDate", max = "maxDate", message = "{DateOrder.exploreForm.dates}")
 @IntegerOrder(min = "minRep", max = "maxRep", message = "{IntegerOrder.exploreForm.order}")
@@ -17,15 +15,17 @@ import java.util.Date;
 public class ExploreDto {
 
     // TODO - Solve the Date parsing issues
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @BeforeToday(message = "{BeforeToday.exploreForm.date}")
-    @QueryParam("minDate")
-    private Date minDate;
-
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    //@DateTimeFormat(pattern = "yyyy-MM-dd", iso = DateTimeFormat.ISO.DATE)
 //    @BeforeToday(message = "{BeforeToday.exploreForm.date}")
+//    @JsonFormat(pattern = "yyyy-MM-dd")
+    @QueryParam("minDate")
+    private LocalDate minDate;
+
+    //@DateTimeFormat(pattern = "yyyy-MM-dd", iso = DateTimeFormat.ISO.DATE)
+//    @BeforeToday(message = "{BeforeToday.exploreForm.date}")
+//    @JsonFormat(pattern = "yyyy-MM-dd")
     @QueryParam("maxDate")
-    private Date maxDate;
+    private LocalDate maxDate;
 
     @Max(value = Integer.MAX_VALUE, message = "{Integer.maxValue}")
     @Min(value = Integer.MIN_VALUE, message = "{Integer.minValue}")
@@ -128,19 +128,19 @@ public class ExploreDto {
         this.language = language;
     }
 
-    public Date getMinDate() {
+    public LocalDate getMinDate() {
         return minDate;
     }
 
-    public void setMinDate(Date minDate) {
+    public void setMinDate(LocalDate minDate) {
         this.minDate = minDate;
     }
 
-    public Date getMaxDate() {
+    public LocalDate getMaxDate() {
         return maxDate;
     }
 
-    public void setMaxDate(Date maxDate) {
+    public void setMaxDate(LocalDate maxDate) {
         this.maxDate = maxDate;
     }
 

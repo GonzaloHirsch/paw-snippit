@@ -69,10 +69,19 @@ class SnippetOverview extends Component {
     this.loadSnippet();
   }
 
+  dismissedReport() {
+    // Copy snippets array
+    let snippet = {...this.state.snippet};
+    // Update variable
+    snippet.reported = false;
+    // Update state
+    this.setState({ snippet: snippet });
+  }
+
   render() {
     return (
       <div className="flex-center">
-        <SnippetDetail {...this.state} />
+        <SnippetDetail {...this.state} dismissedReport={this.dismissedReport} />
       </div>
     );
   }

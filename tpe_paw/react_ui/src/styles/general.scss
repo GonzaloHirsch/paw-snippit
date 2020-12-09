@@ -25,6 +25,7 @@ img {
 
 body {
   background-color: $app-background-color !important;
+  overflow-y: scroll;
 }
 
 .no-decoration {
@@ -126,9 +127,14 @@ body {
 }
 
 // Syntax highlighting
-.snippet-code-block pre, .card-snippet-block pre {
+.snippet-code-block pre,
+.card-snippet-block pre {
   background: none !important;
   width: 100% !important;
+}
+
+.parent-width {
+  width: 100%;
 }
 
 input:focus,

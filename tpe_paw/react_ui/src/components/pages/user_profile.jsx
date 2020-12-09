@@ -3,30 +3,106 @@ import ProfileDetail from "../profile/profile_detail";
 import SnippetFeedHOC from "./snippet_feed_hoc";
 import SnippetFeed from "../snippets/snippet_feed";
 import { getNavSearchFromUrl } from "../../js/search_from_url";
-
+import store from "../../store";
+import UserClient from "../../api/implementations/UserClient";
+import i18n from "../../i18n";
 import {
   ACTIVE_USER_SNIPPETS,
   DELETED_USER_SNIPPETS,
 } from "../../js/constants";
 
 class UserProfile extends Component {
-  state = {
-    context: ACTIVE_USER_SNIPPETS,
+  userClient;
+
+  constructor(props) {
+    super(props);
+    const state = store.getState();
+    let loggedUserId = null;
+    if (state.auth.token === null || state.auth.token === undefined) {
+      this.userClient = new UserClient();
+    } else {
+      this.userClient = new UserClient(state.auth);
+      loggedUserId = state.auth.info.uid;
+    }
+    this.state = {
+      loggedUserId: loggedUserId,
+      context: ACTIVE_USER_SNIPPETS,
+      profileOwner: [],
+      profileOwnerId: parseInt(
+        this.props.match === undefined || this.props.match === null
+          ? loggedUserId
+          : this.props.match.params.id
+      ),
+    };
+  }
+
+  loadUserData() {
+    this.userClient
+      .getUserWithId(this.state.profileOwnerId)
+      .then((res) => {
+        this.setState({
+          profileOwner: res.data,
+        });
+      })
+      .catch((e) => {});
+  }
+
+  componentDidMount() {
+    this.loadUserData();
+  }
+
+  onTabChange = (context) => {
+    this.setState({ context: context });
   };
 
-  _renderContext() {
+  _renderTabs() {
+    console.log(this.state);
+    if (this.state.profileOwnerId !== this.state.loggedUserId) {
+      return null;
+    }
+    return (
+      <div className="px-3">
+        <ul className="nav nav-tabs">
+          <li className="nav-item profile-tabs">
+            <button
+              className={
+                "parent-width nav-link " +
+                (this.state.context === ACTIVE_USER_SNIPPETS && "active")
+              }
+              onClick={() => this.onTabChange(ACTIVE_USER_SNIPPETS)}
+            >
+              {i18n.t("profile.activeSnippets")}
+            </button>
+          </li>
+          <li className="nav-item profile-tabs">
+            <button
+              className={
+                "parent-width nav-link " +
+                (this.state.context === DELETED_USER_SNIPPETS && "active")
+              }
+              onClick={() => this.onTabChange(DELETED_USER_SNIPPETS)}
+            >
+              {i18n.t("profile.deletedSnippets")}
+            </button>
+          </li>
+        </ul>
+      </div>
+    );
+  }
+
+  _renderFeedContext() {
     if (this.state.context === ACTIVE_USER_SNIPPETS) {
       const ActiveSnippetFeed = SnippetFeedHOC(
         SnippetFeed,
         (SnippetFeedClient, page) =>
           SnippetFeedClient.getProfileActiveSnippetFeed(
             page,
-            this.props.match.params.id
+            this.state.profileOwnerId
           ),
         (SnippetFeedClient, page, search) =>
           SnippetFeedClient.searchProfileActiveSnippetFeed(
             page,
-            this.props.match.params.id,
+            this.state.profileOwnerId,
             search
           ),
         (url) => getNavSearchFromUrl(url)
@@ -38,12 +114,12 @@ class UserProfile extends Component {
         (SnippetFeedClient, page) =>
           SnippetFeedClient.getProfileDeletedSnippetFeed(
             page,
-            this.props.match.params.id
+            this.state.profileOwnerId
           ),
         (SnippetFeedClient, page, search) =>
           SnippetFeedClient.searchProfileDeletedSnippetFeed(
             page,
-            this.props.match.params.id,
+            this.state.profileOwnerId,
             search
           ),
         (url) => getNavSearchFromUrl(url)
@@ -53,7 +129,13 @@ class UserProfile extends Component {
   }
 
   render() {
-    return this._renderContext();
+    return (
+      <div>
+        <ProfileDetail />
+        {this._renderTabs()}
+        <div className="pt-3">{this._renderFeedContext()}</div>
+      </div>
+    );
   }
 }
 

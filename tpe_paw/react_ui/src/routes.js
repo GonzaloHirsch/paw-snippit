@@ -116,9 +116,16 @@ const routes = [
   {
     path: "/user/:id",
     exact: false,
-    name: i18n.t("nav.profile"),
+    name: i18n.t("nav.profile"), // TODO FIX ME
     component: UserProfile,
     roles: [],
+  },
+  {
+    path: "/profile",
+    exact: false,
+    name: i18n.t("nav.profile"),
+    component: UserProfile,
+    roles: [ROLE_USER],
   },
 ];
 

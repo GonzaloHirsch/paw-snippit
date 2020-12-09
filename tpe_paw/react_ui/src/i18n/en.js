@@ -182,6 +182,8 @@ export default {
     },
   },
   profile: {
+    activeSnippets: "Active Snippets",
+    deletedSnippets: "Deleted Snippets",
     verify: {
       title: "Verify your account",
       message:

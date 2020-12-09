@@ -14,10 +14,7 @@ class SnippetCard extends Component {
     const snippetLink = `/snippets/${snippet.id}`;
     return (
       <Link to={snippetLink} className="no-decoration">
-        <div
-          className="card-snippet-container card mb-3 bg-light bg-white rounded-border"
-          style={{ maxWidth: "40rem" }}
-        >
+        <div className="card-snippet-container card mb-3 bg-light bg-white rounded-border">
           <div className="card-header px-4" style={{ fontSize: "20px" }}>
             <div className="row align-items-center">
               <img
@@ -34,8 +31,11 @@ class SnippetCard extends Component {
               </div>
               {userIsLogged && (
                 <Icon
-                  className={"mr-1 icon-size-2 icon-fav" + (snippet.faved ? "-selected" : "")}
-                  path={(snippet.faved ? mdiHeart : mdiHeartOutline)}
+                  className={
+                    "mr-1 icon-size-2 icon-fav" +
+                    (snippet.faved ? "-selected" : "")
+                  }
+                  path={snippet.faved ? mdiHeart : mdiHeartOutline}
                   size={2}
                   onClick={(e) => handleFav(e, snippet.id)}
                 />

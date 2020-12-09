@@ -15,8 +15,11 @@ const Home = React.lazy(() => import("./components/pages/home"));
 const Favorites = React.lazy(() => import("./components/pages/favorites"));
 const Upvoted = React.lazy(() => import("./components/pages/upvoted"));
 const Explore = React.lazy(() => import("./components/pages/explore"));
+const UserProfile = React.lazy(() => import("./components/pages/user_profile"));
 const RecoverSend = React.lazy(() => import("./components/login/recover_send"));
-const ChangePassword = React.lazy(() => import("./components/login/change_password"));
+const ChangePassword = React.lazy(() =>
+  import("./components/login/change_password")
+);
 const Verify = React.lazy(() => import("./components/profile/verify"));
 
 // We also take into account i18n in the naming of the routes
@@ -109,7 +112,14 @@ const routes = [
     name: i18n.t("nav.verify"),
     component: Verify,
     roles: [ROLE_USER, ROLE_ADMIN],
-  }
+  },
+  {
+    path: "/user/:id",
+    exact: false,
+    name: i18n.t("nav.profile"),
+    component: UserProfile,
+    roles: [],
+  },
 ];
 
 export default routes;

@@ -12,6 +12,7 @@ const SnippetFeed = React.lazy(() =>
 const Login = React.lazy(() => import("./components/login/login"));
 const SignUp = React.lazy(() => import("./components/login/signup"));
 const Home = React.lazy(() => import("./components/pages/home"));
+const Flagged = React.lazy(() => import("./components/pages/flagged"));
 const Favorites = React.lazy(() => import("./components/pages/favorites"));
 const Upvoted = React.lazy(() => import("./components/pages/upvoted"));
 const Explore = React.lazy(() => import("./components/pages/explore"));
@@ -77,6 +78,13 @@ const routes = [
     name: i18n.t("nav.favorites"),
     component: Favorites,
     roles: [ROLE_USER, ROLE_ADMIN],
+  },
+  {
+    path: "/flagged",
+    exact: false,
+    name: i18n.t("nav.flagged"),
+    component: Flagged,
+    roles: [ROLE_ADMIN],
   },
   {
     path: "/upvoted",

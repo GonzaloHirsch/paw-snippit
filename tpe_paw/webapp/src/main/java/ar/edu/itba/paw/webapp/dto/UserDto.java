@@ -5,19 +5,21 @@ import ar.edu.itba.paw.models.User;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.time.Instant;
 
 public class UserDto {
     private Long id;
     private String username;
     private String description;
     private boolean isVerified;
-    private int reputation;
     private URI activeSnippets;
     private URI deletedSnippets;
     private String password;
     private String email;
     private URI picture;
     private boolean hasPicture;
+    private Instant dateJoined;
+    private UserStatsDto stats;
     private URI url;
 
     public static UserDto fromUser(User user, UriInfo uriInfo) {
@@ -26,14 +28,15 @@ public class UserDto {
         dto.id = user.getId();
         dto.username = user.getUsername();
         dto.description = user.getDescription();
+        dto.dateJoined = user.getDateJoined();
         dto.isVerified = user.isVerified();
-        dto.reputation = user.getReputation();
         dto.activeSnippets = uriInfo.getAbsolutePathBuilder().path("active_snippets").build();
         dto.deletedSnippets = uriInfo.getAbsolutePathBuilder().path("deleted_snippets").build();
         // DO NOT SET PASSWORD -> Sensitive
         // DO NOT SET EMAIL -> Sensitive
         dto.picture = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(user.getId())).path("profile_photo").build();
         dto.hasPicture = user.getIcon() != null;
+        dto.stats = UserStatsDto.fromUser(user);
         dto.url = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(user.getId())).build();
 
         return dto;
@@ -69,14 +72,6 @@ public class UserDto {
 
     public void setVerified(boolean verified) {
         isVerified = verified;
-    }
-
-    public int getReputation() {
-        return reputation;
-    }
-
-    public void setReputation(int reputation) {
-        this.reputation = reputation;
     }
 
     public URI getActiveSnippets() {
@@ -133,5 +128,21 @@ public class UserDto {
 
     public void setUrl(URI url) {
         this.url = url;
+    }
+
+    public UserStatsDto getStats() {
+        return stats;
+    }
+
+    public void setStats(UserStatsDto stats) {
+        this.stats = stats;
+    }
+
+    public Instant getDateJoined() {
+        return dateJoined;
+    }
+
+    public void setDateJoined(Instant dateJoined) {
+        this.dateJoined = dateJoined;
     }
 }

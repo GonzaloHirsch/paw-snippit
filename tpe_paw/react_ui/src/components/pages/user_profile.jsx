@@ -33,6 +33,7 @@ class UserProfile extends Component {
           ? loggedUserId
           : this.props.match.params.id
       ),
+      loading: true,
     };
   }
 
@@ -42,6 +43,7 @@ class UserProfile extends Component {
       .then((res) => {
         this.setState({
           profileOwner: res.data,
+          loading: false,
         });
       })
       .catch((e) => {});
@@ -56,7 +58,6 @@ class UserProfile extends Component {
   };
 
   _renderTabs() {
-    console.log(this.state);
     if (this.state.profileOwnerId !== this.state.loggedUserId) {
       return null;
     }
@@ -131,7 +132,10 @@ class UserProfile extends Component {
   render() {
     return (
       <div>
-        <ProfileDetail />
+        <ProfileDetail
+          owner={this.state.profileOwner}
+          loading={this.state.loading}
+        />
         {this._renderTabs()}
         <div className="pt-3">{this._renderFeedContext()}</div>
       </div>

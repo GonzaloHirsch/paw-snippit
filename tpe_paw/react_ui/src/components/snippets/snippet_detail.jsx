@@ -130,7 +130,7 @@ class SnippetDetail extends Component {
           </ModalBody>
           <ModalFooter>
             <Button
-              color="primary"
+              className="form-button"
               onClick={() => this.handleReportSubmit(snippet.id)}
             >
               {i18n.t("snippetDetail.reporting.actionConfirm")}

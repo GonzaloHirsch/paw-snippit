@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import SnippetFeed from "../snippets/snippet_feed";
+import SnippetFeed from "./snippet_feed";
 import LanguageClient from "../../api/implementations/LanguageClient";
 import TagClient from "../../api/implementations/TagClient";
 import i18n from "../../i18n";
-import ExploreForm from "./explore_form";
+import ExploreForm from "../forms/explore_form";
 
 // Stateless Functional Component
 

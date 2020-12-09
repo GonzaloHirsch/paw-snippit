@@ -41,20 +41,24 @@ public class JwtTokenAuthenticationProcessingFilter extends GenericFilterBean {
 
         if (token != null) {
             // Extracting the username from the token
-            final Collection<GrantedAuthority> authorities = this.tokenExtractor.getAuthoritiesFromToken(token);
+            try {
+                final Collection<GrantedAuthority> authorities = this.tokenExtractor.getAuthoritiesFromToken(token);
 
-            // Avoid requests with the refresh token as the token
-            if (authorities.stream().noneMatch(a -> a.getAuthority().equals(Constants.REFRESH_AUTHORITY.getAuthority()))) {
-                // Extracting the username from the token
-                final String username = this.tokenExtractor.getUsernameFromToken(token);
+                // Avoid requests with the refresh token as the token
+                if (authorities.stream().noneMatch(a -> a.getAuthority().equals(Constants.REFRESH_AUTHORITY.getAuthority()))) {
+                    // Extracting the username from the token
+                    final String username = this.tokenExtractor.getUsernameFromToken(token);
 
-                if (username != null) {
-                    // Getting user details given the username
-                    final UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+                    if (username != null) {
+                        // Getting user details given the username
+                        final UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-                    // Generating the authentication
-                    auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+                        // Generating the authentication
+                        auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+                    }
                 }
+            } catch (IOException e) {
+                auth = null;
             }
         }
 

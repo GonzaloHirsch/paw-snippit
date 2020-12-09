@@ -28,6 +28,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -125,12 +126,12 @@ public class SnippetController {
 
         Instant minDate = null;
         Instant maxDate = null;
-//        if (exploreDto.getMinDate() != null){
-//            minDate = exploreDto.getMinDate().toInstant();
-//        }
-//        if (exploreDto.getMaxDate() != null){
-//            maxDate = exploreDto.getMaxDate().toInstant();
-//        }
+        if (exploreDto.getMinDate() != null){
+            minDate = exploreDto.getMinDate().atStartOfDay(ZoneId.systemDefault()).toInstant();
+        }
+        if (exploreDto.getMaxDate() != null){
+            maxDate = exploreDto.getMaxDate().atStartOfDay(ZoneId.systemDefault()).toInstant();
+        }
         Collection<Snippet> snippetsCollection = this.snippetService.findSnippetByDeepCriteria(
                 minDate, maxDate,
                 exploreDto.getMinRep(), exploreDto.getMaxRep(),

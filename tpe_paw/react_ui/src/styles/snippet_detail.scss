@@ -8,6 +8,20 @@
   border-radius: 10px;
 }
 
+.reported-message {
+  border: $reported-color solid 2px;
+  color: $reported-color;
+  border-radius: 10px;
+  position: relative;
+}
+
+.reported-message .reported-close-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
+
 .snippet-divider {
   border: black solid 2px;
 }

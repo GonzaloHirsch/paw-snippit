@@ -68,10 +68,9 @@ class UserProfile extends Component {
             <button
               className={
                 "parent-width nav-link profile-tabs " +
-                (this.state.context !== ACTIVE_USER_SNIPPETS &&
-                  "fw-300 profile-tabs-unselected ") +
-                (this.state.context === ACTIVE_USER_SNIPPETS &&
-                  " fw-500 active")
+                (this.state.context !== ACTIVE_USER_SNIPPETS
+                  ? "fw-300 profile-tabs-unselected"
+                  : "fw-500 active")
               }
               onClick={() => this.onTabChange(ACTIVE_USER_SNIPPETS)}
             >
@@ -82,10 +81,9 @@ class UserProfile extends Component {
             <button
               className={
                 "parent-width nav-link profile-tabs " +
-                (this.state.context !== DELETED_USER_SNIPPETS &&
-                  "fw-300 profile-tabs-unselected ") +
-                (this.state.context === DELETED_USER_SNIPPETS &&
-                  " fw-500 active")
+                (this.state.context !== DELETED_USER_SNIPPETS
+                  ? "fw-300 profile-tabs-unselected"
+                  : "fw-500 active")
               }
               onClick={() => this.onTabChange(DELETED_USER_SNIPPETS)}
             >

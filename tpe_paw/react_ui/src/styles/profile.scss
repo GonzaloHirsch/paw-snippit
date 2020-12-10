@@ -20,12 +20,13 @@
   color: black !important;
 }
 
-.profile-tabs:hover {
-  border-color: #dee2e6 #dee2e6 transparent !important;
-}
-
 .profile-tabs-unselected {
   border-color: transparent transparent #dee2e6 !important;
+}
+
+.profile-tabs-unselected:hover {
+  border-color: #dee2e6 #dee2e6 transparent !important;
+  font-weight: 400 !important;
 }
 
 .profile-photo {
@@ -39,6 +40,9 @@
 
 .profile-username {
   font-size: 40px;
+  text-align: center;
+  margin: 0px -20px;
+  word-wrap: break-word;
 }
 
 .profile-stat {
@@ -58,11 +62,24 @@
 
 .profile-user-data {
   background-color: $primary-color;
-  padding-left: 50px !important;
-  padding-right: 28px !important;
+  padding-left: 45px !important;
+  padding-right: 31px !important;
 }
 
 .profile-snippet-container {
   border: 1px solid;
   border-color: #fff #dee2e6 #dee2e6;
+}
+
+.profile-edit-button {
+  background-color: $primary-color-dark !important;
+  border-color: $primary-color-dark !important;
+}
+.profile-edit-button:hover {
+  background-color: $primary-color-darkest !important;
+  border-color: $primary-color-darkest !important;
+}
+
+.profile-edit-icon {
+  margin: 0px 5px 5px 0px;
 }

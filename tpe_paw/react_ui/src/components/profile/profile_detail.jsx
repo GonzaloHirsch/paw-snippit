@@ -24,7 +24,7 @@ class ProfileDetail extends Component {
     let error = {};
     error[key] = PROFILE_VALIDATION[key](this.state[key]);
     this.setState({ errors: error });
-    return error === null;
+    return error[key] === null;
   }
 
   // HANDLERS
@@ -33,7 +33,9 @@ class ProfileDetail extends Component {
   }
 
   _onClickDiscard() {
+    const errors = { description: null };
     this.setState({ edit: false });
+    this.setState({ errors: errors });
   }
 
   _onSubmitSaveDescription() {

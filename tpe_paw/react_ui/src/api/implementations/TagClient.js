@@ -13,4 +13,8 @@ export default class TagClient extends Client {
   getTagWithUrl(url) {
     return axios.get(url);
   }
+
+  getTagListWithUrl(url){
+    return axios.get(url);
+  }
 }

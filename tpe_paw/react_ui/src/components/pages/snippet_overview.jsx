@@ -3,6 +3,7 @@ import SnippetDetail from "../snippets/snippet_detail";
 import SnippetClient from "../../api/implementations/SnippetOverviewClient";
 import UserClient from "../../api/implementations/UserClient";
 import LanguageClient from "../../api/implementations/LanguageClient";
+import TagClient from "../../api/implementations/TagClient";
 import store from "../../store";
 import SnippetActionsClient from "../../api/implementations/SnippetActionsClient";
 import { isAdmin } from "../../js/security_utils";
@@ -13,6 +14,7 @@ class SnippetOverview extends Component {
   snippetClient;
   userClient;
   languageClient;
+  tagClient;
   snippetActionsClient;
 
   constructor(props) {
@@ -28,11 +30,13 @@ class SnippetOverview extends Component {
       this.snippetClient = new SnippetClient();
       this.userClient = new UserClient();
       this.languageClient = new LanguageClient();
+      this.tagClient = new TagClient();
     } else {
       this.snippetActionsClient = new SnippetActionsClient(state.auth);
       this.snippetClient = new SnippetClient(state.auth);
       this.userClient = new UserClient(state.auth);
-      this.snippetActionsClient = new SnippetActionsClient(state.auth);
+      this.languageClient = new LanguageClient(state.auth);
+      this.tagClient = new TagClient(state.auth);
       userIsLogged = true;
       userCanReport = state.auth.info.canReport;
       userIsAdmin = isAdmin(state.auth.roles);
@@ -67,6 +71,7 @@ class SnippetOverview extends Component {
         name: "LANGUAGE",
         id: 0,
       },
+      tags: [],
       userIsLogged: userIsLogged,
       userCanReport: userCanReport,
       userIsOwner: false,
@@ -77,13 +82,16 @@ class SnippetOverview extends Component {
 
   loadSnippet() {
     const snippetId = parseInt(this.props.match.params.id, 10);
+    const state = store.getState();
 
     this.snippetClient
       .getSnippetWithId(snippetId)
       .then((res) => {
+        const snippet = res.data;
+        console.log(snippet)
         if (
-          !(res.data.favorite || (res.data.creator.id === this.state.loggedUserId)) &&
-          res.data.deleted
+          !(snippet.favorite || (snippet.creator.id === this.state.loggedUserId)) &&
+          snippet.deleted
         ) {
           // TODO: REDIRECT TO 404
           this.props.history.push({
@@ -91,12 +99,12 @@ class SnippetOverview extends Component {
             state: { from: this.props.history.location },
           });
         }
-        this.setState({ snippet: res.data });
+        this.setState({ snippet: snippet });
+
         // If snippet was found, obtain the creator
         this.userClient
-          .getUserWithUrl(this.state.snippet.creator.url)
+          .getUserWithUrl(snippet.creator.url)
           .then((res) => {
-            const state = store.getState();
             let userIsOwner = false;
             if (
               state.auth.token !== null &&
@@ -111,11 +119,18 @@ class SnippetOverview extends Component {
 
         // If snippet was found, obtain the language
         this.languageClient
-          .getLanguageWithUrl(this.state.snippet.language.url)
+          .getLanguageWithUrl(snippet.language.url)
           .then((res) => {
             this.setState({ language: res.data });
           })
           .catch((e) => {});
+
+        // We obtain the tags
+        this.tagClient.getWithUrl(snippet.tags).then((res) => {
+          console.log(res.data)
+          this.setState({ tags: res.data });
+        })
+        .catch((e) => {});
       })
       .catch((e) => {});
   }

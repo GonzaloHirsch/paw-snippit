@@ -26,6 +26,11 @@ export const EXPLORE = {
   MAXVOTES: "maxVotes",
 };
 
+export const ITEM_TYPES = {
+  LANGUAGE: "language",
+  TAG: "tag"
+}
+
 export const EXPLORE_ORDERBY = ["date", "reputation", "votes", "title"];
 export const SORT = ["asc", "desc", "no"];
 export const MIN_INTEGER = -2147483647;

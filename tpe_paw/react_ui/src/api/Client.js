@@ -26,7 +26,7 @@ class Client {
 
     // Define the headers, if no token is present, it will be ignored or error
     const headers = {
-      "Authorization": token,
+      Authorization: token,
     };
 
     // Getting axios instance
@@ -37,6 +37,10 @@ class Client {
     });
 
     // TODO: ADD INTERCEPTORS FOR ERRORS
+  }
+
+  getWithUrl(url) {
+    return axios.get(url);
   }
 }
 

@@ -137,7 +137,7 @@ class NavBar extends Component {
     store.dispatch(logOut());
 
     // Push to home
-    this.props.history.push("/");
+    this.props.history.push("/goodbye");
   }
 
   handleSearch(search) {

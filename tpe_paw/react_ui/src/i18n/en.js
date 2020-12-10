@@ -31,6 +31,7 @@ export default {
     recover: "Recover",
     resetPassword: "Reset Password",
     verify: "Verify Email",
+    goodbye: "Goodbye",
     users: "Users",
     filter: {
       hint: "Search By",
@@ -246,4 +247,10 @@ export default {
     general: "Loading...",
     page: "Snippit is loading...",
   },
+  goodbye: {
+    title: "See you soon!",
+    login: "Back to Login",
+    home: "Back Home",
+    create: "Create a New Account"
+  }
 };

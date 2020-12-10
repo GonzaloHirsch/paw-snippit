@@ -253,6 +253,26 @@ public class SnippetController {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
+    @GET
+    @Path("/{id}/tags")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSnippetTags(final @PathParam(PATH_PARAM_ID) long id) {
+        // Don't go directly to DB because we need to know if the snippet exists
+        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
+
+        if (retrievedSnippet.isPresent()) {
+            Snippet snippet = retrievedSnippet.get();
+            final List<TagDto> tags = snippet.getTags().stream().map(t -> TagDto.fromTag(t, uriInfo)).collect(Collectors.toList());
+            final int tagCount = tags.size();
+
+            Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<TagDto>>(tags) {
+            });
+            ResponseHelper.AddTotalItemsAttribute(builder, tagCount);
+            return builder.build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
     @DELETE //TODO ---> check what response to return
     @Path("/{id}/delete")
     public Response deleteSnippet(final @PathParam(PATH_PARAM_ID) long id) {

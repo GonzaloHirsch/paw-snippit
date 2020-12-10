@@ -1,12 +1,38 @@
 import React, { Component } from "react";
+
+// Components
 import SnippetDangerMessage from "./snippet_danger_message";
-import SnippetDeletedMessage from "./snippet_deleted_message"
+import SnippetDeletedMessage from "./snippet_deleted_message";
 import SnippetReportedMessage from "./snippet_reported_message";
 import { Link } from "react-router-dom";
-import i18n from "../../i18n";
 import DetailBox from "./detail_box";
 import LinkDetailBox from "./link_detail_box";
+import Icon from "@mdi/react";
+import { Helmet } from "react-helmet";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  UncontrolledTooltip,
+} from "reactstrap";
+import TextAreaInputField from "../forms/text_area_input_field";
+import ItemFeed from "../items/item_feed";
+
+// JS Utils
 import { getUserProfilePicUrl } from "../../js/snippet_utils";
+import {
+  REPORT_VALIDATIONS,
+  handleChange,
+  validateAll,
+  hasErrors,
+} from "../../js/validations";
+import { ITEM_TYPES } from "../../js/constants";
+
+// Others
+import i18n from "../../i18n";
 import {
   mdiAlertOctagon,
   mdiContentCopy,
@@ -15,20 +41,9 @@ import {
   mdiFlagOutline,
   mdiHeart,
   mdiHeartOutline,
-  mdiDeleteRestore
+  mdiDeleteRestore,
 } from "@mdi/js";
-import Icon from "@mdi/react";
-import { Helmet } from "react-helmet";
-import SyntaxHighlighter from "react-syntax-highlighter";
 import { googlecode } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, UncontrolledTooltip } from "reactstrap";
-import {
-  REPORT_VALIDATIONS,
-  handleChange,
-  validateAll,
-  hasErrors,
-} from "../../js/validations";
-import TextAreaInputField from "../forms/text_area_input_field";
 
 class SnippetDetail extends Component {
   state = {
@@ -112,13 +127,14 @@ class SnippetDetail extends Component {
       snippet,
       language,
       creator,
+      tags,
       dismissedReport,
       handleFav,
       userCanReport,
       userIsOwner,
       userIsAdmin,
       handleFlag,
-      handleDelete
+      handleDelete,
     } = this.props;
     return (
       <div className="flex-column detail-container mx-5 my-4 p-5 inner-square shadow rounded-lg">
@@ -182,9 +198,9 @@ class SnippetDetail extends Component {
           <p>{snippet.description}</p>
         </div>
         <div className="dropdown-divider snippet-divider mb-4"></div>
-        <div className="d-flex card-text snippet-code-block rounded px-3 py-2">
+        <div className="d-flex card-text snippet-code-block rounded px-3 py-2 mb-2">
           <Icon
-          id="copyCodeButton"
+            id="copyCodeButton"
             className="snippet-code-copy-button mt-1 mr-1 p-1 icon-size-2"
             path={mdiContentCopy}
             size={2}
@@ -216,6 +232,15 @@ class SnippetDetail extends Component {
           />
           <p className="card-snippet-fade-out card-snippet-fade-out-code hidden"></p>
         </div>
+        {tags.length > 0 && (
+          <ItemFeed
+            items={tags}
+            currentPage={0}
+            hasPagination={false}
+            type={ITEM_TYPES.TAG}
+          />
+        )}
+
         <div className="row align-items-horizontal-center flex-row mt-4 p-2">
           {userIsAdmin && (
             <DetailBox>
@@ -232,13 +257,13 @@ class SnippetDetail extends Component {
           )}
           {userIsOwner && (
             <DetailBox>
-            <Icon
-              className="row no-margin icon-delete"
-              path={snippet.deleted ? mdiDeleteRestore : mdiDelete}
-              size={3}
-              onClick={(e) => handleDelete(e, snippet.id)}
-            />
-          </DetailBox>
+              <Icon
+                className="row no-margin icon-delete"
+                path={snippet.deleted ? mdiDeleteRestore : mdiDelete}
+                size={3}
+                onClick={(e) => handleDelete(e, snippet.id)}
+              />
+            </DetailBox>
           )}
           <DetailBox>
             <Icon

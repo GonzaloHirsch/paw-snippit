@@ -18,6 +18,7 @@ const Upvoted = React.lazy(() => import("./components/pages/upvoted"));
 const Explore = React.lazy(() => import("./components/pages/explore"));
 const UserProfile = React.lazy(() => import("./components/pages/user_profile"));
 const RecoverSend = React.lazy(() => import("./components/login/recover_send"));
+const Goodbye = React.lazy(() => import("./components/pages/goodbye"));
 const ChangePassword = React.lazy(() =>
   import("./components/login/change_password")
 );
@@ -85,6 +86,13 @@ const routes = [
     name: i18n.t("nav.flagged"),
     component: Flagged,
     roles: [ROLE_ADMIN],
+  },
+  {
+    path: "/goodbye",
+    exact: true,
+    name: i18n.t("nav.goodbye"),
+    component: Goodbye,
+    roles: [],
   },
   {
     path: "/upvoted",

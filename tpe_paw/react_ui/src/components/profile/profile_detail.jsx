@@ -2,91 +2,138 @@ import React, { Component } from "react";
 import { getUserProfilePicUrl } from "../../js/snippet_utils";
 import ProfileStatItem from "./profile_stat_item";
 import i18n from "../../i18n";
-import { mdiPencil } from "@mdi/js";
-import { mdiContentSaveEdit } from "@mdi/js";
+import { mdiPencil, mdiContentSaveEdit, mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
+import { PROFILE_VALIDATION } from "../../js/validations";
 
 class ProfileDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
       edit: false,
+      editCounter: 0,
       description: "",
+      errors: {
+        description: null,
+      },
     };
   }
 
-  _validateDescription() {}
+  // Validate Image or description form
+  _validateForm(key) {
+    let error = {};
+    error[key] = PROFILE_VALIDATION[key](this.state[key]);
+    this.setState({ errors: error });
+    return error === null;
+  }
 
-  _onEditClick() {
+  // HANDLERS
+  _onClickEdit() {
     this.setState({ edit: true });
   }
 
-  onEditComplete() {}
+  _onClickDiscard() {
+    this.setState({ edit: false });
+  }
 
   _onSubmitSaveDescription() {
-    this._validateDescription();
-    this.props.updateDescription(this.state.description);
+    // If editCounter == 0, there where no changes and no need to update
+    if (this.state.editCounter > 0) {
+      if (this._validateForm("description")) {
+        this.props.updateDescription(this.state.description);
+      } else {
+        return; // Do not want to submit or finish editing since there are still errors
+      }
+    }
     this.setState({ edit: false });
   }
 
   _onDescriptionChange(e) {
-    this.setState({ description: e });
+    const counter = this.state.editCounter;
+    let errors = this.state.errors;
+    errors.description = PROFILE_VALIDATION.description(e);
+    this.setState({ description: e, editCounter: counter + 1, errors: errors });
   }
 
-  _renderEditButtonText() {
-    return this.state.edit || this.props.descriptionLoading ? (
-      <div>
+  _renderDiscardButton() {
+    return (
+      <button
+        className={
+          "no-margin shadow btn btn-lg btn btn-danger btn-block mt-2 mb-1 rounded-border ld-over-inverse profile-button"
+        }
+        onClick={() => this._onClickDiscard()}
+      >
+        <Icon className="profile-edit-icon" path={mdiTrashCan} size={1}></Icon>
+        {i18n.t("profile.edit.discard")}
+      </button>
+    );
+  }
+
+  _renderSaveButton() {
+    return (
+      <button
+        className={
+          "no-margin shadow btn btn-lg btn-block mt-2 mb-1 rounded-border ld-over-inverse profile-button profile-edit-button " +
+          (this.props.descriptionLoading ? "running" : "")
+        }
+        type="submit"
+      >
+        <div className="ld ld-ring ld-spin"></div>
         <Icon
           className="profile-edit-icon"
           path={mdiContentSaveEdit}
           size={1}
         ></Icon>
         {i18n.t("profile.edit.save")}
-      </div>
-    ) : (
-      <React.Fragment>
+      </button>
+    );
+  }
+
+  _renderEditButton() {
+    return (
+      <button
+        className={
+          "no-margin shadow btn btn-lg btn-block mt-2 mb-1 rounded-border ld-over-inverse profile-button profile-edit-button"
+        }
+        onClick={() => this._onClickEdit()}
+      >
         <Icon className="profile-edit-icon" path={mdiPencil} size={1}></Icon>
-        {i18n.t("profile.edit.begin")}
-      </React.Fragment>
+        {i18n.t("profile.edit.begin")}{" "}
+      </button>
     );
   }
 
   _renderDescriptionForm() {
     const { owner, loggedUserId } = this.props;
+    const error = this.state.errors.description;
     const commonClasses =
-      "my-3 profile-small-text align-items-horizontal-center rounded-border";
+      "my-3 profile-small-text align-items-horizontal-center rounded-border parent-width";
     return owner.id === loggedUserId ? (
       this.state.edit || this.props.descriptionLoading ? (
         <form onSubmit={() => this._onSubmitSaveDescription()}>
           <textarea
-            placeholder={i18n.t("profile.edit.descriptionPlaceholder")}
-            className={commonClasses + " profile-edit-description "}
+            placeholder={i18n.t("profile.form.descriptionPlaceholder")}
+            className={
+              commonClasses +
+              " profile-edit-description " +
+              (error && "with-error")
+            }
             defaultValue={this.props.owner.description}
             onChange={(e) => this._onDescriptionChange(e.target.value)}
           ></textarea>
-          <button
-            className={
-              "no-margin shadow btn btn-lg btn-primary btn-block mt-2 mb-1 rounded-border ld-over-inverse profile-edit-button " +
-              (this.props.descriptionLoading ? "running" : "")
-            }
-            type="submit"
-          >
-            <div className="ld ld-ring ld-spin"></div>
-            {this._renderEditButtonText()}
-          </button>
+          {error && (
+            <div className="flex-center word-wrap text-danger parent-width fw-500 profile-edit-description-error">
+              {error}
+            </div>
+          )}
+
+          {this._renderDiscardButton()}
+          {this._renderSaveButton()}
         </form>
       ) : (
         <div>
           <div className={commonClasses}>{this.props.owner.description}</div>
-          <button
-            className={
-              "no-margin shadow btn btn-lg btn-primary btn-block mt-2 mb-1 rounded-border ld-over-inverse profile-edit-button"
-            }
-            onClick={() => this._onEditClick()}
-          >
-            <div className="ld ld-ring ld-spin"></div>
-            {this._renderEditButtonText()}
-          </button>
+          {this._renderEditButton()}
         </div>
       )
     ) : (
@@ -97,8 +144,7 @@ class ProfileDetail extends Component {
   _renderUserDetail() {
     const { owner } = this.props;
     return (
-      <React.Fragment>
-        {" "}
+      <div class="flex-center flex-column">
         <img
           className="profile-photo shadow"
           src={getUserProfilePicUrl(owner)}
@@ -126,7 +172,7 @@ class ProfileDetail extends Component {
 
           {this._renderDescriptionForm()}
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 

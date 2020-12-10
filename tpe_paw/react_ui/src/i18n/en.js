@@ -224,7 +224,14 @@ export default {
     edit: {
       begin: "Edit Profile",
       save: "Save Profile",
+      discard: "Discard",
+    },
+    form: {
       descriptionPlaceholder: "Enter your description here...",
+      errors: {
+        description: "Description must not be longer than {{num}} characters",
+        image: "TODO message!",
+      },
     },
   },
   verifyEmail: {

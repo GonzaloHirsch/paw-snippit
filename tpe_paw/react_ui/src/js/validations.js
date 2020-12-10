@@ -163,3 +163,14 @@ export const REGISTER_VALIDATIONS = {
   },
 };
 
+export const PROFILE_VALIDATION = {
+  description: (val) => {
+    return (
+      (val.length > 200 &&
+        i18n.t("profile.form.errors.description", {
+          limit: 200,
+        })) ||
+      null
+    );
+  },
+};

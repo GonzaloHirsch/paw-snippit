@@ -75,12 +75,17 @@
   padding-right: 25px !important;
 }
 
+.profile-button {
+  margin-left: -10px;
+  margin-right: -10px;
+  color: #fff !important;
+}
+
 .profile-edit-button {
   background-color: $primary-color-dark !important;
   border-color: $primary-color-dark !important;
-  margin-left: -10px;
-  margin-right: -10px;
 }
+
 .profile-edit-button:hover {
   background-color: $primary-color-darkest !important;
   border-color: $primary-color-darkest !important;
@@ -92,4 +97,10 @@
 
 .profile-edit-description {
   min-height: 150px;
+  border-color: $primary-color-darkest;
+}
+
+.profile-edit-description-error {
+  margin: -18px 0px 15px 0px;
+  text-align: center;
 }

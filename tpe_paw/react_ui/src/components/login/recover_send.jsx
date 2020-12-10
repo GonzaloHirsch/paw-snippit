@@ -130,6 +130,7 @@ class RecoverSend extends Component {
           onSubmit={() => this.handleSubmit()}
           generalError={this.state.responseErrors}
           includeAppName={false}
+          loading={false}
         >
           <span
             className="mb-2 align-items-horizontal-center fw-500"

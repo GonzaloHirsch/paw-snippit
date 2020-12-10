@@ -1,6 +1,6 @@
 import React from "react";
 import i18n from "../../i18n";
-import { mdiCodeTags } from "@mdi/js";
+import { mdiCodeTags, mdiLoading } from "@mdi/js";
 import Icon from "@mdi/react";
 
 const CustomForm = (props) => {
@@ -24,9 +24,13 @@ const CustomForm = (props) => {
           <span className="text-danger">{props.generalError}</span>
         )}
         <button
-          className="btn btn-lg btn-primary btn-block mt-3 rounded-border form-button"
+          className={
+            "btn btn-lg btn-primary btn-block mt-3 rounded-border form-button ld-over-inverse " +
+            (props.loading ? "running" : "")
+          }
           type="submit"
         >
+          <div className="ld ld-ring ld-spin"></div>
           {props.action}
         </button>
       </div>

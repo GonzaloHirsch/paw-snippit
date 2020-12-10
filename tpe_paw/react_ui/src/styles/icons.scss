@@ -48,3 +48,14 @@
     color: $reported-color !important;
   }
 }
+
+.icon-delete {
+  color: gray !important;
+  transition: 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    @extend .icon-delete;
+    color: black !important;
+  }
+}

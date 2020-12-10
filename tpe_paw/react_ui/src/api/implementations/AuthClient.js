@@ -8,6 +8,15 @@ export default class AuthClient extends Client {
     });
   }
 
+  signup(user, email, pass, repeatPass) {
+    return this.instance.post("users", {
+      username: user,
+      email: email,
+      password: pass,
+      repeatPassword: repeatPass
+    });
+  }
+
   sendRecoveryEmail(email) {
     return this.instance.post("users/recover_password", {
       email: email,

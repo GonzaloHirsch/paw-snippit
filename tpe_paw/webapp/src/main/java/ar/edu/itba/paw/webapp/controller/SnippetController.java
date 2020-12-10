@@ -50,11 +50,11 @@ public class SnippetController {
     private ReportService reportService;
     @Autowired
     private LoginAuthentication loginAuthentication;
-    //    @Autowired
+    @Autowired
     private TagService tagService;
-    //    @Autowired
+    @Autowired
     private RoleService roleService;
-    //    @Autowired
+    @Autowired
     private MessageSource messageSource;
 
     @Context
@@ -196,7 +196,7 @@ public class SnippetController {
     public Response getFlaggedSnippetFeed(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
 
         User loggedInUser = this.loginAuthentication.getLoggedInUser();
-        if (loggedInUser == null || !roleService.isAdmin(loggedInUser.getId())) {
+        if (loggedInUser == null || !this.roleService.isAdmin(loggedInUser.getId())) {
             LOGGER.warn("Only Admin can see flagged snippet feed");
             return Response.status(Response.Status.FORBIDDEN).build();
         }
@@ -364,7 +364,7 @@ public class SnippetController {
             Snippet snippet = retrievedSnippet.get();
 
             // Getting the url of the server
-            final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+            final String baseUrl = this.uriInfo.getBaseUri().toString().replace(Constants.API_PREFIX, "/#");
             try {
                 // Updating the flagged variable of snippet
                 this.snippetService.updateFlagged(snippet, snippet.getOwner(), flag, baseUrl);

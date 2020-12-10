@@ -48,4 +48,29 @@
 .snippet-code-block {
   background: $code-background-color;
   overflow-y: auto;
+  position: relative;
+}
+
+.hidden-code {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0);
+}
+
+.snippet-code-copy-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  color: $primary-color;
+  transition: 0.3s;
+
+  &:hover {
+    @extend .snippet-code-copy-button;
+    border: $primary-color solid 1px;
+    border-radius: 5px;
+  }
 }

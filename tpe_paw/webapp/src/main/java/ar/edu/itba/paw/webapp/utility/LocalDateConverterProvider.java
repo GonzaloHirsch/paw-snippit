@@ -9,13 +9,11 @@ import java.time.LocalDate;
 
 @Provider
 public class LocalDateConverterProvider implements ParamConverterProvider {
-
     @Override
-    public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType,
-                                              Annotation[] annotations) {
-        if (rawType.equals(LocalDate.class))
+    public <T> ParamConverter<T> getConverter(Class<T> aClass, Type type, Annotation[] annotations) {
+        if (aClass.equals(LocalDate.class)){
             return (ParamConverter<T>) new LocalDateConverter();
+        }
         return null;
     }
-
 }

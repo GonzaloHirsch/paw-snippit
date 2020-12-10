@@ -123,3 +123,43 @@ export const REPORT_VALIDATIONS = {
     );
   },
 };
+
+export const REGISTER_VALIDATIONS = {
+  username: (val) => {
+    return (
+      (!val && i18n.t("login.form.errors.emptyUser")) ||
+      (val.length < 6 && i18n.t("login.form.errors.smallUser")) ||
+      (val.length > 50 && i18n.t("login.form.errors.bigUser")) ||
+      (!RegExp("^[a-zA-Z0-9-_.]+$").test(val) &&
+        i18n.t("login.form.errors.invalidUser")) ||
+      null
+    );
+  },
+  email: (val) => {
+    return (
+      (!val && i18n.t("recover.form.errors.emptyEmail")) ||
+      (!RegExp(
+        "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$"
+      ).test(val) &&
+        i18n.t("recover.form.errors.invalidEmail")) ||
+      null
+    );
+  },
+  password: (val) => {
+    return (
+      (!val && i18n.t("login.form.errors.emptyPass")) ||
+      (val.length < 8 && i18n.t("login.form.errors.smallPass")) ||
+      (RegExp("\\s").test(val) && i18n.t("login.form.errors.invalidPass")) ||
+      null
+    );
+  },
+  repeatPassword: (val) => {
+    return (
+      (!val && i18n.t("login.form.errors.emptyPass")) ||
+      (val.length < 8 && i18n.t("login.form.errors.smallPass")) ||
+      (RegExp("\\s").test(val) && i18n.t("login.form.errors.invalidPass")) ||
+      null
+    );
+  },
+};
+

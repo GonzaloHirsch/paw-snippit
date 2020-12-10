@@ -217,6 +217,7 @@ class RecoverSend extends Component {
             onSubmit={(e) => this.handleSubmit(e)}
             generalError={this.state.responseErrors}
             includeAppName={false}
+            loading={false}
           >
             <TextInputFieldWithIcon
               id={"inputPassword"}

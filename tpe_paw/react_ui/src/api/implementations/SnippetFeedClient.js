@@ -107,6 +107,14 @@ export default class SnippetFeedClient extends Client {
     return this.instance.get("snippets/flagged?" + params.toString());
   }
 
+  searchFlaggedSnippetFeed(page, search) {
+    const params = new URLSearchParams({ page: page });
+    for (let key in search) {
+      params.set(key, search[key]);
+    }
+    return this.instance.get("snippets/flagged/search?" + params.toString());
+  }
+
   getSnippetFeedWithUrl(url) {
     return axios.get(url);
   }

@@ -1,12 +1,14 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Snippet;
+import ar.edu.itba.paw.models.Vote;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.util.Locale;
+import java.util.Optional;
 
 public class SnippetWithVoteDto {
 
@@ -24,6 +26,8 @@ public class SnippetWithVoteDto {
     private boolean isUserReported;
     private boolean isReported;
     private boolean isFavorite;
+    private boolean isUserVotedPositive;
+    private boolean isUserVotedNegative;
 
     public static SnippetWithVoteDto fromSnippetAndVote(Snippet snippet, int voteCount, UriInfo uriInfo, long currentUserId, Locale locale) {
         final SnippetWithVoteDto dto = new SnippetWithVoteDto();
@@ -44,6 +48,20 @@ public class SnippetWithVoteDto {
         dto.isFavorite = snippet.getUserFavorites().stream().anyMatch(u -> u.getId().equals(currentUserId));
         // Indicates if the snippet has any active reports
         dto.isReported = snippet.getReports().stream().anyMatch(r -> !r.isOwnerDismissed());
+        // Inicates the type of vote by the user
+        Optional<Vote> vote = snippet.getVotes().stream().filter(v -> v.getUser().getId().equals(currentUserId)).findFirst();
+        if (vote.isPresent()){
+            if (vote.get().isPositive()){
+                dto.isUserVotedPositive = true;
+                dto.isUserVotedNegative = false;
+            } else {
+                dto.isUserVotedPositive = false;
+                dto.isUserVotedNegative = true;
+            }
+        } else {
+            dto.isUserVotedPositive = false;
+            dto.isUserVotedNegative = false;
+        }
 
         return dto;
     }
@@ -158,5 +176,21 @@ public class SnippetWithVoteDto {
 
     public void setReported(boolean reported) {
         isReported = reported;
+    }
+
+    public boolean isUserVotedPositive() {
+        return isUserVotedPositive;
+    }
+
+    public void setUserVotedPositive(boolean userVotedPositive) {
+        isUserVotedPositive = userVotedPositive;
+    }
+
+    public boolean isUserVotedNegative() {
+        return isUserVotedNegative;
+    }
+
+    public void setUserVotedNegative(boolean userVotedNegative) {
+        isUserVotedNegative = userVotedNegative;
     }
 }

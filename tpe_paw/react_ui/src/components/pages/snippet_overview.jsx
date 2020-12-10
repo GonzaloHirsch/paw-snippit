@@ -48,6 +48,8 @@ class SnippetOverview extends Component {
     this.onSnippetDelete = this.onSnippetDelete.bind(this);
     this.onReport = this.onReport.bind(this);
     this.dismissedReport = this.dismissedReport.bind(this);
+    this.onSnippetLike = this.onSnippetLike.bind(this);
+    this.onSnippetDislike = this.onSnippetDislike.bind(this);
 
     this.state = {
       snippet: {
@@ -65,7 +67,9 @@ class SnippetOverview extends Component {
         id: 0,
         picture: "/userIcon.jpg",
         hasPicture: false,
-        reputation: 0,
+        stats: {
+          reputation: 0,
+        },
       },
       language: {
         name: "LANGUAGE",
@@ -76,7 +80,7 @@ class SnippetOverview extends Component {
       userCanReport: userCanReport,
       userIsOwner: false,
       userIsAdmin: userIsAdmin,
-      loggedUserId: loggedUserId
+      loggedUserId: loggedUserId,
     };
   }
 
@@ -88,9 +92,11 @@ class SnippetOverview extends Component {
       .getSnippetWithId(snippetId)
       .then((res) => {
         const snippet = res.data;
-        console.log(snippet)
+        console.log(snippet);
         if (
-          !(snippet.favorite || (snippet.creator.id === this.state.loggedUserId)) &&
+          !(
+            snippet.favorite || snippet.creator.id === this.state.loggedUserId
+          ) &&
           snippet.deleted
         ) {
           // TODO: REDIRECT TO 404
@@ -126,13 +132,27 @@ class SnippetOverview extends Component {
           .catch((e) => {});
 
         // We obtain the tags
-        this.tagClient.getWithUrl(snippet.tags).then((res) => {
-          console.log(res.data)
-          this.setState({ tags: res.data });
-        })
-        .catch((e) => {});
+        this.tagClient
+          .getWithUrl(snippet.tags)
+          .then((res) => {
+            console.log(res.data);
+            this.setState({ tags: res.data });
+          })
+          .catch((e) => {});
       })
       .catch((e) => {});
+  }
+
+  loadVotes() {
+    this.snippetActionsClient
+      .getSnippetVotes(this.state.snippet.id)
+      .then((res) => {
+        let snippet = { ...this.state.snippet };
+        // Update variable
+        snippet.voteCount = res.data.value;
+        // Update state
+        this.setState({ snippet: snippet });
+      });
   }
 
   componentDidMount() {
@@ -148,7 +168,7 @@ class SnippetOverview extends Component {
     this.setState({ snippet: snippet });
   }
 
-  onSnippetFav(e, id) {
+  enforceUserLogged() {
     // If user is not logged, redirect to login
     if (!this.state.userIsLogged) {
       this.props.history.push({
@@ -156,6 +176,11 @@ class SnippetOverview extends Component {
         state: { from: this.props.history.location },
       });
     }
+  }
+
+  onSnippetFav(e, id) {
+    // If user is not logged, redirect to login
+    this.enforceUserLogged();
 
     let previousFavState = false;
     // Copy snippets array
@@ -240,6 +265,64 @@ class SnippetOverview extends Component {
     this.snippetActionsClient.reportSnippet(id, detail);
   }
 
+  onSnippetLike(e, id) {
+    this.enforceUserLogged();
+
+    let previousLikeState = false;
+    // Copy snippets array
+    let snippet = { ...this.state.snippet };
+    // Store previous fav state
+    previousLikeState = snippet.userVotedPositive;
+    // Update variable
+    snippet.userVotedPositive = !snippet.userVotedPositive;
+    snippet.userVotedNegative = false;
+    // Update state
+    this.setState({ snippet: snippet });
+
+    // Was liked, now not
+    if (previousLikeState) {
+      this.snippetActionsClient
+        .unvoteSnippetPositive(id)
+        .then(() => this.loadVotes());
+    } else {
+      this.snippetActionsClient
+        .voteSnippetPositive(id)
+        .then(() => this.loadVotes());
+    }
+
+    // Prevent parent Link to navigate
+    e.preventDefault();
+  }
+
+  onSnippetDislike(e, id) {
+    this.enforceUserLogged();
+
+    let previousLikeState = false;
+    // Copy snippets array
+    let snippet = { ...this.state.snippet };
+    // Store previous fav state
+    previousLikeState = snippet.userVotedNegative;
+    // Update variable
+    snippet.userVotedPositive = false;
+    snippet.userVotedNegative = !snippet.userVotedNegative;
+    // Update state
+    this.setState({ snippet: snippet });
+
+    // Was disliked, now not
+    if (previousLikeState) {
+      this.snippetActionsClient
+        .unvoteSnippetNegative(id)
+        .then(() => this.loadVotes());
+    } else {
+      this.snippetActionsClient
+        .voteSnippetNegative(id)
+        .then(() => this.loadVotes());
+    }
+
+    // Prevent parent Link to navigate
+    e.preventDefault();
+  }
+
   render() {
     return (
       <div className="flex-center">
@@ -250,6 +333,8 @@ class SnippetOverview extends Component {
           handleFlag={this.onSnippetFlag}
           handleReport={this.onReport}
           handleDelete={this.onSnippetDelete}
+          handleLike={this.onSnippetLike}
+          handleDislike={this.onSnippetDislike}
         />
       </div>
     );

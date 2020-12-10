@@ -42,6 +42,10 @@ import {
   mdiHeart,
   mdiHeartOutline,
   mdiDeleteRestore,
+  mdiThumbUp,
+  mdiThumbUpOutline,
+  mdiThumbDown,
+  mdiThumbDownOutline
 } from "@mdi/js";
 import { googlecode } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
@@ -135,6 +139,8 @@ class SnippetDetail extends Component {
       userIsAdmin,
       handleFlag,
       handleDelete,
+      handleLike,
+      handleDislike
     } = this.props;
     return (
       <div className="flex-column detail-container mx-5 my-4 p-5 inner-square shadow rounded-lg">
@@ -278,21 +284,34 @@ class SnippetDetail extends Component {
           {userCanReport && !userIsOwner && this.getReportedSnippetBox(snippet)}
           <DetailBox>
             <div className="row no-margin fw-500">
-              <p>{creator.username}</p>
-            </div>
-            <div className="row no-margin fw-500">
-              <p>{creator.id}</p>
+            <Icon
+              className={
+                "row no-margin icon-like" + (snippet.userVotedPositive ? "-selected" : "")
+              }
+              path={snippet.userVotedPositive ? mdiThumbUp : mdiThumbUpOutline}
+              size={3}
+              onClick={(e) => handleLike(e, snippet.id)}
+            />
+            <span className="mx-2 align-items-vertical vote-count">{snippet.voteCount}</span>
+            <Icon
+              className={
+                "row no-margin icon-dislike" + (snippet.userVotedNegative ? "-selected" : "")
+              }
+              path={snippet.userVotedNegative ? mdiThumbDown : mdiThumbDownOutline}
+              size={3}
+              onClick={(e) => handleDislike(e, snippet.id)}
+            />
             </div>
           </DetailBox>
           <LinkDetailBox path={"/user/" + creator.id}>
-            <div className="row no-margin fw-500">
-              <span>{snippet.createdDate}</span>
+            <div className="row mb-2 fw-500 primary-text no-decoration">
+              <span>{i18n.t("snippetDetail.uploaded", {date: snippet.createdDate})}</span>
             </div>
             <div className="row no-margin align-items-vertical">
               <img src={getUserProfilePicUrl(creator)} alt="User Icon" />
               <div className="col flex-col align-items-vertical primary-text">
                 <span className="fw-700">{creator.username}</span>
-                <span className="fw-700">{creator.reputation}</span>
+                <span className="fw-700">{creator.stats.reputation}</span>
               </div>
             </div>
           </LinkDetailBox>

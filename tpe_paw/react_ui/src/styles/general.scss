@@ -140,6 +140,10 @@ html {
 
 .primary-text {
   color: $primary-color;
+  &:hover {
+    @extend .primary-text;
+    color: $primary-color;
+  } 
 }
 
 .link-text {

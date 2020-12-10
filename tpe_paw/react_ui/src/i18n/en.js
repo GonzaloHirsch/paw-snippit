@@ -177,6 +177,7 @@ export default {
   },
   snippetDetail: {
     copied: "Copied to clipboard!",
+    uploaded: "Uploaded on {{date}}",
     flagged: {
       title: "Beware!",
       message:

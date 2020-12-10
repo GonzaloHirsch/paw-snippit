@@ -60,3 +60,41 @@
     color: black !important;
   }
 }
+
+.icon-like {
+  cursor: pointer;
+  transition: 0.3s;
+  color: gray !important;
+  &:hover {
+    @extend .icon-fav;
+    color: lawngreen !important;
+  }
+  &-selected {
+    color: lawngreen !important;
+    // Add transition here because for some reason it doesn't take it into account when only in parent
+    transition: 0.3s;
+    cursor: pointer;
+  }
+  &-selected:hover {
+    color: gray !important;
+  }
+}
+
+.icon-dislike {
+  cursor: pointer;
+  transition: 0.3s;
+  color: gray !important;
+  &:hover {
+    @extend .icon-fav;
+    color: red !important;
+  }
+  &-selected {
+    color: red !important;
+    // Add transition here because for some reason it doesn't take it into account when only in parent
+    transition: 0.3s;
+    cursor: pointer;
+  }
+  &-selected:hover {
+    color: gray !important;
+  }
+}

@@ -10,6 +10,10 @@ export default class SnippetActionsClient extends Client {
     return this.instance.put("snippets/" + id + "/restore");
   }
 
+  getSnippetVotes(id){
+    return this.instance.get("snippets/" + id + "/vote_count")
+  }
+
   voteSnippetPositive(id) {
     return this.instance.put("snippets/" + id + "/vote_positive");
   }

@@ -273,6 +273,19 @@ public class SnippetController {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
+    @GET
+    @Path("/{id}/vote_count")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSnippetVoteCount(final @PathParam(PATH_PARAM_ID) long id) {
+        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
+
+        if (retrievedSnippet.isPresent()) {
+            int voteCount = this.voteService.getVoteBalance(id);
+            return Response.ok(ValueDto.fromValue(voteCount)).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
     @DELETE //TODO ---> check what response to return
     @Path("/{id}/delete")
     public Response deleteSnippet(final @PathParam(PATH_PARAM_ID) long id) {

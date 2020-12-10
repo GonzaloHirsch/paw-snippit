@@ -16,6 +16,7 @@
 .icon-fav {
   cursor: pointer;
   transition: 0.3s;
+  color: gray !important;
   &:hover {
     @extend .icon-fav;
     color: red !important;

@@ -22,6 +22,7 @@ class SnippetOverview extends Component {
     let userIsLogged = false;
     let userCanReport = false;
     let userIsAdmin = false;
+    let loggedUserId = -1;
     if (state.auth.token === null || state.auth.token === undefined) {
       this.snippetActionsClient = new SnippetActionsClient();
       this.snippetClient = new SnippetClient();
@@ -35,6 +36,7 @@ class SnippetOverview extends Component {
       userIsLogged = true;
       userCanReport = state.auth.info.canReport;
       userIsAdmin = isAdmin(state.auth.roles);
+      loggedUserId = state.auth.info.uid;
     }
 
     this.onSnippetFav = this.onSnippetFav.bind(this);
@@ -69,6 +71,7 @@ class SnippetOverview extends Component {
       userCanReport: userCanReport,
       userIsOwner: false,
       userIsAdmin: userIsAdmin,
+      loggedUserId: loggedUserId
     };
   }
 
@@ -79,7 +82,7 @@ class SnippetOverview extends Component {
       .getSnippetWithId(snippetId)
       .then((res) => {
         if (
-          !(res.data.favorite || this.state.userIsOwner) &&
+          !(res.data.favorite || (res.data.creator.id === this.state.loggedUserId)) &&
           res.data.deleted
         ) {
           // TODO: REDIRECT TO 404

@@ -219,7 +219,10 @@ export default {
       action: "here",
     },
     joinedOn: "Joined on {{date}}",
-    editButton: "Edit Profile",
+    edit: {
+      begin: "Edit Profile",
+      save: "Save Profile",
+    },
   },
   verifyEmail: {
     docTitle: "Verify Email",

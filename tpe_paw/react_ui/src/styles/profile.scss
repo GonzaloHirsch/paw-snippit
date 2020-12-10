@@ -71,9 +71,15 @@
   border-color: #fff #dee2e6 #dee2e6;
 }
 
+.profile-feed-container {
+  padding-right: 25px !important;
+}
+
 .profile-edit-button {
   background-color: $primary-color-dark !important;
   border-color: $primary-color-dark !important;
+  margin-left: -10px;
+  margin-right: -10px;
 }
 .profile-edit-button:hover {
   background-color: $primary-color-darkest !important;
@@ -82,4 +88,8 @@
 
 .profile-edit-icon {
   margin: 0px 5px 5px 0px;
+}
+
+.profile-edit-description {
+  min-height: 150px;
 }

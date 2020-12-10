@@ -3,10 +3,53 @@ import { getUserProfilePicUrl } from "../../js/snippet_utils";
 import ProfileStatItem from "./profile_stat_item";
 import i18n from "../../i18n";
 import { mdiPencil } from "@mdi/js";
+import { mdiContentSaveEdit } from "@mdi/js";
 import Icon from "@mdi/react";
 import ProfileVerifiedMessage from "./profile_verify_message";
 
 class ProfileDetail extends Component {
+  state = {
+    edit: false,
+  };
+
+  _onEditClick() {
+    this.setState({ edit: true });
+  }
+  _onSaveClick() {
+    this.setState({ edit: false });
+  }
+
+  _renderEditButtonText() {
+    return this.state.edit ? (
+      <div>
+        <Icon
+          className="profile-edit-icon"
+          path={mdiContentSaveEdit}
+          size={1}
+        ></Icon>
+        {i18n.t("profile.edit.save")}
+      </div>
+    ) : (
+      <React.Fragment>
+        <Icon className="profile-edit-icon" path={mdiPencil} size={1}></Icon>
+        {i18n.t("profile.edit.begin")}
+      </React.Fragment>
+    );
+  }
+
+  _renderDescription() {
+    const commonClasses =
+      "my-3 profile-small-text align-items-horizontal-center rounded-border";
+    return this.state.edit ? (
+      <textarea
+        className={commonClasses + " profile-edit-description "}
+        defaultValue={this.props.owner.description}
+      ></textarea>
+    ) : (
+      <div className={commonClasses}>{this.props.owner.description}</div>
+    );
+  }
+
   render() {
     const { owner, loading, loggedUser } = this.props;
     if (loading) {
@@ -38,24 +81,22 @@ class ProfileDetail extends Component {
                 itemCount={owner.stats.followingCount}
               />
             </div>
-            <div className="my-3 profile-small-text align-items-horizontal-center">
-              {owner.description}
-            </div>
+
+            {this._renderDescription()}
           </div>
           <button
             className={
-              "btn btn-lg btn-primary btn-block mt-2 mb-1 rounded-border ld-over-inverse profile-edit-button " +
+              "shadow btn btn-lg btn-primary btn-block mt-2 mb-1 rounded-border ld-over-inverse profile-edit-button " +
               (false ? "running" : "")
+            }
+            onClick={
+              this.state.edit
+                ? () => this._onSaveClick()
+                : () => this._onEditClick()
             }
           >
             <div className="ld ld-ring ld-spin"></div>
-            <Icon
-              className="profile-edit-icon"
-              path={mdiPencil}
-              size={1}
-            ></Icon>
-
-            {i18n.t("profile.editButton")}
+            {this._renderEditButtonText()}
           </button>
         </React.Fragment>
       );

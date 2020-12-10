@@ -34,6 +34,7 @@ class UserProfile extends Component {
           : this.props.match.params.id
       ),
       loading: true,
+      descriptionLoading: false,
     };
   }
 
@@ -59,13 +60,13 @@ class UserProfile extends Component {
   };
 
   onUpdateDescription = (description) => {
-    console.log("INSIDE PARENT UPDATE DESCRIPTION!");
+    this.setState({ descriptionLoading: true });
     this.userClient
       .putUserDescription(this.state.profileOwnerId, description)
       .then((res) => {
         const owner = { ...this.state.profileOwner };
         owner.description = description;
-        this.setState({ profileOwner: owner });
+        this.setState({ profileOwner: owner, descriptionLoading: false });
       })
       .catch((e) => {});
   };
@@ -155,6 +156,7 @@ class UserProfile extends Component {
             owner={this.state.profileOwner}
             loggedUserId={this.state.loggedUserId}
             loading={this.state.loading}
+            descriptionLoading={this.state.descriptionLoading}
             updateDescription={(description) =>
               this.onUpdateDescription(description)
             }

@@ -7,7 +7,7 @@ export default class UserClient extends Client {
   }
 
   putUserDescription(id, description) {
-    return this.instance.post("users/" + id + "/description", {
+    return this.instance.put("users/" + id + "/description", {
       description: description,
     });
   }

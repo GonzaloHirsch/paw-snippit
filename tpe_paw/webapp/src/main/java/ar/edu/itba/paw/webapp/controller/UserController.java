@@ -207,6 +207,25 @@ public class UserController {
         }
     }
 
+    @PUT
+    @Path("/{id}/description")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response changeDescription(final @PathParam(PATH_PARAM_ID) long id, @Valid UserDescriptionDto userDescriptionDto) {
+        Optional<User> maybeUser = this.userService.findUserById(id);
+        if (maybeUser.isPresent()) {
+            final User user = maybeUser.get();
+            final User loggedUser = this.loginAuthentication.getLoggedInUser();
+            if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
+                this.userService.changeDescription(id, userDescriptionDto.getDescription());
+                return Response.noContent().build();
+            } else {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+
+    }
+
     @POST
     @Path("/{id}/send_verify_email")
     public Response verifyUserEmailSendEmail(final @PathParam(PATH_PARAM_ID) long id) {

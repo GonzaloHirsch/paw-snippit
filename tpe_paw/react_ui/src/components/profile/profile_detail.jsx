@@ -21,11 +21,12 @@ class ProfileDetail extends Component {
     this.setState({ edit: true });
   }
 
+  onEditComplete() {}
+
   _onSubmitSaveDescription() {
-    this.setState({ edit: false });
     this._validateDescription();
     this.props.updateDescription(this.state.description);
-    console.log("Submir");
+    this.setState({ edit: false });
   }
 
   _onDescriptionChange(e) {
@@ -33,7 +34,7 @@ class ProfileDetail extends Component {
   }
 
   _renderEditButtonText() {
-    return this.state.edit ? (
+    return this.state.edit || this.props.descriptionLoading ? (
       <div>
         <Icon
           className="profile-edit-icon"
@@ -55,7 +56,7 @@ class ProfileDetail extends Component {
     const commonClasses =
       "my-3 profile-small-text align-items-horizontal-center rounded-border";
     return owner.id === loggedUserId ? (
-      this.state.edit ? (
+      this.state.edit || this.props.descriptionLoading ? (
         <form onSubmit={() => this._onSubmitSaveDescription()}>
           <textarea
             placeholder={i18n.t("profile.edit.descriptionPlaceholder")}
@@ -66,7 +67,7 @@ class ProfileDetail extends Component {
           <button
             className={
               "no-margin shadow btn btn-lg btn-primary btn-block mt-2 mb-1 rounded-border ld-over-inverse profile-edit-button " +
-              (false ? "running" : "")
+              (this.props.descriptionLoading ? "running" : "")
             }
             type="submit"
           >
@@ -79,8 +80,7 @@ class ProfileDetail extends Component {
           <div className={commonClasses}>{this.props.owner.description}</div>
           <button
             className={
-              "no-margin shadow btn btn-lg btn-primary btn-block mt-2 mb-1 rounded-border ld-over-inverse profile-edit-button " +
-              (false ? "running" : "")
+              "no-margin shadow btn btn-lg btn-primary btn-block mt-2 mb-1 rounded-border ld-over-inverse profile-edit-button"
             }
             onClick={() => this._onEditClick()}
           >

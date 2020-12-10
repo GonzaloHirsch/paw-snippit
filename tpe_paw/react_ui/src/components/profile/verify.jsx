@@ -163,6 +163,7 @@ class Verify extends Component {
             onSubmit={(e) => this.handleSubmit(e)}
             generalError={this.state.responseErrors}
             includeAppName={false}
+            loading={false}
           >
             <span
               className="mb-2 align-items-horizontal-center fw-500"

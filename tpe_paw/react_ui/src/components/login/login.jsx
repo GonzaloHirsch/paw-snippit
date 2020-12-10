@@ -105,6 +105,7 @@ class Login extends Component {
           onSubmit={() => this.handleLogin()}
           generalError={this.state.responseErrors}
           includeAppName={true}
+          loading={false}
         >
           <TextInputFieldWithIcon
             id={"inputUsername"}

@@ -68,7 +68,10 @@ class UserProfile extends Component {
             <button
               className={
                 "parent-width nav-link profile-tabs " +
-                (this.state.context === ACTIVE_USER_SNIPPETS && "active")
+                (this.state.context !== ACTIVE_USER_SNIPPETS &&
+                  "fw-300 profile-tabs-unselected ") +
+                (this.state.context === ACTIVE_USER_SNIPPETS &&
+                  " fw-500 active")
               }
               onClick={() => this.onTabChange(ACTIVE_USER_SNIPPETS)}
             >
@@ -79,7 +82,10 @@ class UserProfile extends Component {
             <button
               className={
                 "parent-width nav-link profile-tabs " +
-                (this.state.context === DELETED_USER_SNIPPETS && "active")
+                (this.state.context !== DELETED_USER_SNIPPETS &&
+                  "fw-300 profile-tabs-unselected ") +
+                (this.state.context === DELETED_USER_SNIPPETS &&
+                  " fw-500 active")
               }
               onClick={() => this.onTabChange(DELETED_USER_SNIPPETS)}
             >
@@ -140,7 +146,7 @@ class UserProfile extends Component {
         </div>
         <div className="col-9 flex-column">
           {this._renderTabs()}
-          <div className="pt-3 background-color rounded-border">
+          <div className="pt-3 background-color profile-snippet-container rounded-border">
             {this._renderFeedContext()}
           </div>
         </div>

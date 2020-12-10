@@ -16,7 +16,16 @@
 }
 
 .profile-tabs {
-  border-radius: 8px 8px 0px 0px;
+  border-radius: 8px 8px 0px 0px !important;
+  color: black !important;
+}
+
+.profile-tabs:hover {
+  border-color: #dee2e6 #dee2e6 transparent !important;
+}
+
+.profile-tabs-unselected {
+  border-color: transparent transparent #dee2e6 !important;
 }
 
 .profile-photo {
@@ -51,4 +60,9 @@
   background-color: $primary-color;
   padding-left: 50px !important;
   padding-right: 28px !important;
+}
+
+.profile-snippet-container {
+  border: 1px solid;
+  border-color: #fff #dee2e6 #dee2e6;
 }

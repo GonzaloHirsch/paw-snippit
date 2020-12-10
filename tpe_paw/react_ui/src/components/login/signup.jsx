@@ -32,7 +32,8 @@ class SignUp extends Component {
     loading: false,
   };
 
-  handleSubmit() {
+  handleSubmit(event) {
+    event.preventDefault();
     const hasErrors = this._validateAll();
 
     if (!hasErrors) {
@@ -57,10 +58,11 @@ class SignUp extends Component {
               // Get the token from the response
               // TODO: DETERMINE IF WE STORE THE REFRESH TOKEN
               const token = res.data.token;
+              const refreshToken = res.data.refreshToken;
 
               // Dispatch the login event
               // We add the remember to be true
-              store.dispatch(loginSuccess({ token }, true));
+              store.dispatch(loginSuccess({ token }, {refreshToken}, true));
 
               // Push to home
               this.props.history.push("/");

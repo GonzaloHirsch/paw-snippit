@@ -7,7 +7,8 @@ const Flagged = SnippetFeedHOC(
   (SnippetFeedClient, page) => SnippetFeedClient.getFlaggedSnippetFeed(page),
   (SnippetFeedClient, page, search) =>
     SnippetFeedClient.searchFlaggedSnippetFeed(page, search),
-  (url) => getNavSearchFromUrl(url)
+  (url) => getNavSearchFromUrl(url),
+  true
 );
 
 export default Flagged;

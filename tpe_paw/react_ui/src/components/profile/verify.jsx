@@ -37,7 +37,7 @@ class Verify extends Component {
 
   constructor(props) {
     super(props);
-    this.authClient = new AuthClient(store.getState().auth);
+    this.authClient = new AuthClient(props, store.getState().auth.token);
   }
 
   componentDidMount() {

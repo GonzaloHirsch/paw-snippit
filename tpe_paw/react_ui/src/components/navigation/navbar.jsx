@@ -140,7 +140,8 @@ class NavBar extends Component {
     this.props.history.push("/goodbye");
   }
 
-  handleSearch(search) {
+  handleSearch(event, search) {
+    event.preventDefault();
     // Determine if we add the "search" to the route
     const isSearching = !!matchPath(this.props.location.pathname, "**/search");
     let route;
@@ -277,7 +278,7 @@ class NavBar extends Component {
           >
             <form
               className="form-inline my-auto my-lg-0 col-8"
-              onSubmit={() => this.handleSearch(this.state.search)}
+              onSubmit={(e) => this.handleSearch(e, this.state.search)}
             >
               <div className="input-group mr-sm-2 search-box">
                 <input

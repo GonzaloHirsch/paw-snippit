@@ -13,15 +13,15 @@ import {
 
 class UserProfile extends Component {
   userClient;
+  protectedClient;
 
   constructor(props) {
     super(props);
     const state = store.getState();
     let loggedUserId = null;
-    if (state.auth.token === null || state.auth.token === undefined) {
-      this.userClient = new UserClient();
-    } else {
-      this.userClient = new UserClient(state.auth);
+    this.userClient = new UserClient();
+    if (!(state.auth.token === null || state.auth.token === undefined)) {
+      this.protectedClient = new UserClient(this.props, state.auth.token);
       loggedUserId = state.auth.info.uid;
     }
     this.state = {
@@ -125,7 +125,8 @@ class UserProfile extends Component {
             this.state.profileOwnerId,
             search
           ),
-        (url) => getNavSearchFromUrl(url)
+        (url) => getNavSearchFromUrl(url),
+        false
       );
       return <ActiveSnippetFeed background={"hello"} />;
     } else if (this.state.context === DELETED_USER_SNIPPETS) {
@@ -142,7 +143,8 @@ class UserProfile extends Component {
             this.state.profileOwnerId,
             search
           ),
-        (url) => getNavSearchFromUrl(url)
+        (url) => getNavSearchFromUrl(url),
+        true
       );
       return <DeletedSnippetFeed />;
     }

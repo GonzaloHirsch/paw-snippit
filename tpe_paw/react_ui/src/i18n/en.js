@@ -223,6 +223,7 @@ export default {
     edit: {
       begin: "Edit Profile",
       save: "Save Profile",
+      descriptionPlaceholder: "Enter your description here...",
     },
   },
   verifyEmail: {
@@ -251,6 +252,6 @@ export default {
     title: "See you soon!",
     login: "Back to Login",
     home: "Back Home",
-    create: "Create a New Account"
-  }
+    create: "Create a New Account",
+  },
 };

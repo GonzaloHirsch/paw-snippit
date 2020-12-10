@@ -53,10 +53,24 @@ class UserProfile extends Component {
     this.loadUserData();
   }
 
+  // Handlers
   onTabChange = (context) => {
     this.setState({ context: context });
   };
 
+  onUpdateDescription = (description) => {
+    console.log("INSIDE PARENT UPDATE DESCRIPTION!");
+    this.userClient
+      .putUserDescription(this.state.profileOwnerId, description)
+      .then((res) => {
+        const owner = { ...this.state.profileOwner };
+        owner.description = description;
+        this.setState({ profileOwner: owner });
+      })
+      .catch((e) => {});
+  };
+
+  // Render methods
   _renderTabs() {
     if (this.state.profileOwnerId !== this.state.loggedUserId) {
       return null;
@@ -139,7 +153,11 @@ class UserProfile extends Component {
         <div className="col-3 profile-user-data d-flex flex-col align-items-center">
           <ProfileDetail
             owner={this.state.profileOwner}
+            loggedUserId={this.state.loggedUserId}
             loading={this.state.loading}
+            updateDescription={(description) =>
+              this.onUpdateDescription(description)
+            }
           />
         </div>
         <div className="col-9 flex-column profile-feed-container">

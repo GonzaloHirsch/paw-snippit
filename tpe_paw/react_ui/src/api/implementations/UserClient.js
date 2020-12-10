@@ -6,6 +6,12 @@ export default class UserClient extends Client {
     return this.instance.get("users/" + id);
   }
 
+  putUserDescription(id, description) {
+    return this.instance.post("users/" + id + "/description", {
+      description: description,
+    });
+  }
+
   getUserWithUrl(url) {
     return axios.get(url);
   }

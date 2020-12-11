@@ -38,20 +38,37 @@ class UserProfile extends Component {
     };
   }
 
-  loadUserData() {
+  loadUserData(id) {
     this.userClient
-      .getUserWithId(this.state.profileOwnerId)
+      .getUserWithId(id)
       .then((res) => {
         this.setState({
           profileOwner: res.data,
           loading: false,
+          profileOwnerId: id
         });
       })
-      .catch((e) => {});
+      .catch((e) => {
+        console.log(e)
+        if (e.response) {
+          // User not found, go to 404
+          if (e.response.status === 404) {
+            this.props.history.push("/404");
+          }
+        }
+      });
   }
 
   componentDidMount() {
-    this.loadUserData();
+    this.loadUserData(this.state.profileOwnerId);
+  }
+
+  // In case the url changes 
+  componentDidUpdate(){
+    const userId = parseInt(this.props.match.params.id, 10);
+    if (userId !== this.state.profileOwnerId){
+      this.loadUserData(userId);
+    }
   }
 
   // Handlers

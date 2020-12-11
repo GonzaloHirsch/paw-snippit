@@ -162,7 +162,7 @@ class UserProfile extends Component {
             }
           />
         </div>
-        <div className="col-9 flex-column profile-feed-container">
+        <div className="col-9 flex-column">
           {this._renderTabs()}
           <div className="pt-3 background-color profile-snippet-container rounded-border">
             {this._renderFeedContext()}

@@ -29,19 +29,9 @@
   font-weight: 400 !important;
 }
 
-.profile-photo {
-  border: white solid 2px;
-  height: 200px;
-  width: 200px;
-  object-fit: cover;
-  margin: 25px;
-  transition: 0.3s;
-}
-
 .profile-username {
   font-size: 40px;
   text-align: center;
-  margin: 0px -20px;
   word-wrap: break-word;
 }
 
@@ -69,10 +59,6 @@
 .profile-snippet-container {
   border: 1px solid;
   border-color: #fff #dee2e6 #dee2e6;
-}
-
-.profile-feed-container {
-  padding-right: 25px !important;
 }
 
 .profile-button {
@@ -103,4 +89,36 @@
 .profile-edit-description-error {
   margin: -18px 0px 15px 0px;
   text-align: center;
+}
+
+// Image
+
+.profile-photo-padding {
+  padding: 25px;
+}
+
+.profile-photo-edit-icon {
+  position: absolute;
+  font-size: 100px !important;
+  color: black;
+  opacity: 0;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.profile-photo-wrap {
+  position: relative;
+  border-radius: 50%;
+}
+
+.profile-photo-wrap:hover .profile-photo-edit-icon {
+  opacity: 1;
+}
+
+.profile-photo {
+  border: white solid 2px;
+  height: 200px;
+  width: 200px;
+  object-fit: cover;
+  transition: 0.3s;
 }

@@ -5,6 +5,7 @@ import i18n from "../../i18n";
 import { mdiPencil, mdiContentSaveEdit, mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
 import { PROFILE_VALIDATION } from "../../js/validations";
+import ImagePicker from "../forms/image_picker";
 
 class ProfileDetail extends Component {
   constructor(props) {
@@ -133,7 +134,7 @@ class ProfileDetail extends Component {
           {this._renderSaveButton()}
         </form>
       ) : (
-        <div>
+        <div className="flex-center flex-wrap parent-width">
           <div className={commonClasses}>{this.props.owner.description}</div>
           {this._renderEditButton()}
         </div>
@@ -146,12 +147,9 @@ class ProfileDetail extends Component {
   _renderUserDetail() {
     const { owner } = this.props;
     return (
-      <div class="flex-center flex-column">
-        <img
-          className="profile-photo shadow"
-          src={getUserProfilePicUrl(owner)}
-          alt="User Icon"
-        />
+      <div className="flex-center flex-column parent-width">
+        <ImagePicker imageScr={getUserProfilePicUrl(owner)} />
+
         <div className="d-flex flex-col justify-content-center parent-width fwhite">
           <div className="fw-500  profile-username">{owner.username}</div>
           <span className="fw-100 profile-small-text d-flex justify-content-center">

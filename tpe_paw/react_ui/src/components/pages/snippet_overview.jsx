@@ -42,6 +42,7 @@ class SnippetOverview extends Component {
       loggedUserId = state.auth.info.uid;
     }
 
+    // Binding events
     this.onSnippetFav = this.onSnippetFav.bind(this);
     this.onSnippetFlag = this.onSnippetFlag.bind(this);
     this.onSnippetDelete = this.onSnippetDelete.bind(this);
@@ -50,9 +51,12 @@ class SnippetOverview extends Component {
     this.onSnippetLike = this.onSnippetLike.bind(this);
     this.onSnippetDislike = this.onSnippetDislike.bind(this);
 
+    // Getting initial id
+    const snippetId = parseInt(this.props.match.params.id, 10);
+
     this.state = {
       snippet: {
-        id: 0,
+        id: snippetId,
         title: "TITLE",
         description: "DESCRIPTION",
         code: "CODE",
@@ -91,7 +95,6 @@ class SnippetOverview extends Component {
       .getSnippetWithId(snippetId)
       .then((res) => {
         const snippet = res.data;
-        console.log(snippet);
         if (
           !(
             snippet.favorite || snippet.creator.id === this.state.loggedUserId
@@ -134,12 +137,18 @@ class SnippetOverview extends Component {
         this.tagClient
           .getWithUrl(snippet.tags)
           .then((res) => {
-            console.log(res.data);
             this.setState({ tags: res.data });
           })
           .catch((e) => {});
       })
-      .catch((e) => {});
+      .catch((e) => {
+        if (e.response) {
+          // User not found, go to 404
+          if (e.response.status === 404) {
+            this.props.history.push("/404");
+          }
+        }
+      });
   }
 
   loadVotes() {
@@ -156,6 +165,14 @@ class SnippetOverview extends Component {
 
   componentDidMount() {
     this.loadSnippet();
+  }
+
+  // In case the url changes 
+  componentDidUpdate(){
+    const snippetId = parseInt(this.props.match.params.id, 10);
+    if (snippetId !== this.state.snippet.id){
+      this.loadSnippet();
+    }
   }
 
   dismissedReport() {

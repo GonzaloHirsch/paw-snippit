@@ -18,6 +18,8 @@ function SnippetFeedHOC(
 ) {
   return withRouter(
     class extends React.Component {
+      // Variable to avoid loading on unmounted component
+      _isMounted = false;
       snippetFeedClient;
       snippetActionsClient;
 
@@ -69,11 +71,13 @@ function SnippetFeedHOC(
             // Extracting the other pages headers
             const newLinks = extractLinkHeaders(res.headers);
             const itemCount = extractItemCountHeader(res.headers);
-            this.setState({
-              links: newLinks,
-              snippets: res.data,
-              totalSnippets: itemCount,
-            });
+            if (this._isMounted) {
+              this.setState({
+                links: newLinks,
+                snippets: res.data,
+                totalSnippets: itemCount,
+              });
+            }
           })
           .catch((e) => {});
       }
@@ -84,11 +88,13 @@ function SnippetFeedHOC(
             // Extracting the other pages headers
             const newLinks = extractLinkHeaders(res.headers);
             const itemCount = extractItemCountHeader(res.headers);
-            this.setState({
-              links: newLinks,
-              snippets: res.data,
-              totalSnippets: itemCount,
-            });
+            if (this._isMounted) {
+              this.setState({
+                links: newLinks,
+                snippets: res.data,
+                totalSnippets: itemCount,
+              });
+            }
           })
           .catch((e) => {});
       }
@@ -107,6 +113,8 @@ function SnippetFeedHOC(
       // Lifecycle hooks
 
       componentDidMount() {
+        this._isMounted = true;
+
         const isSearching = !!matchPath(
           this.props.location.pathname,
           "**/search"
@@ -121,6 +129,10 @@ function SnippetFeedHOC(
 
       componentDidUpdate() {
         this.checkIfLoadSnippets();
+      }
+
+      componentWillUnmount() {
+        this._isMounted = false;
       }
 
       // Events

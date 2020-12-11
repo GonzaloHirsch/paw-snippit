@@ -463,6 +463,7 @@ class ExploreForm extends Component {
             {this.state.fields.language === null ? (
               <Typeahead
                 id={"exploreLanguageMenu"}
+                className="rounded-border"
                 placeholder={i18n.t(languagePrefix + "placeholder")}
                 options={this.state.options.languages}
                 labelKey="name"
@@ -471,6 +472,7 @@ class ExploreForm extends Component {
             ) : (
               <Typeahead
                 id={"exploreLanguageMenu"}
+                className="rounded-border"
                 placeholder={i18n.t(languagePrefix + "placeholder")}
                 options={this.state.options.languages}
                 labelKey="name"
@@ -482,10 +484,10 @@ class ExploreForm extends Component {
           <div className="m-2"></div>
           <div>
             <h6>{i18n.t(tagPrefix + "header")}</h6>
-            {console.log(this.state)}
             {this.state.fields.tag === null ? (
               <Typeahead
                 id={"exploreTagMenu"}
+                className="rounded-border"
                 placeholder={i18n.t(tagPrefix + "placeholder")}
                 options={this.state.options.tags}
                 labelKey="name"
@@ -494,6 +496,7 @@ class ExploreForm extends Component {
             ) : (
               <Typeahead
                 id={"exploreTagMenu"}
+                className="rounded-border"
                 placeholder={i18n.t(tagPrefix + "placeholder")}
                 options={this.state.options.tags}
                 labelKey="name"

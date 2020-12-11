@@ -44,7 +44,8 @@ class ImagePicker extends Component {
     this._preview(null, false);
   }
 
-  _onSubmit() {
+  _onSubmit(e) {
+    e.preventDefault();
     this.setState({ edit: false });
     this.props.handleSubmit(this.state.image);
   }
@@ -71,8 +72,8 @@ class ImagePicker extends Component {
           </div>
         </div>
         <form
-          enctype="multipart/form-data"
-          onSubmit={() => this._onSubmit()}
+          encType="multipart/form-data"
+          onSubmit={(e) => this._onSubmit(e)}
           className="flex-row"
         >
           <div

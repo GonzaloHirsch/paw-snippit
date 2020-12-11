@@ -13,8 +13,12 @@ export default class UserClient extends Client {
   }
 
   putUserImage(id, image) {
-    return this.instance.put("users/" + id + "/profile_photo", {
-      file: image,
+    var formData = new FormData();
+    formData.append("file", image);
+    return this.instance.put("users/" + id + "/profile_photo", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
   }
 

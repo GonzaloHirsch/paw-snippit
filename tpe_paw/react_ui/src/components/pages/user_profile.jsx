@@ -73,7 +73,7 @@ class UserProfile extends Component {
 
   onUpdateImage = (image) => {
     console.log(image);
-    this.userClient
+    this.protectedClient
       .putUserImage(this.state.profileOwnerId, image)
       .then((res) => {
         this.loadUserData();

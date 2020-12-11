@@ -12,8 +12,8 @@ const SnippetCard = (props) => {
   return (
     <Link to={snippetLink} className="no-decoration">
       <div className="card-snippet-container card mb-3 bg-light bg-white rounded-border">
-        <div className="card-header px-4" style={{ fontSize: "20px" }}>
-          <div className="row align-items-center">
+        <div className="card-header px-3" style={{ fontSize: "20px" }}>
+          <div className="row align-items-center no-margin">
             <img src={getUserProfilePicUrl(snippet.creator)} alt="User Icon" />
             <div className="col ml-2">
               <div className="row primary-text" style={{ fontSize: "18px" }}>

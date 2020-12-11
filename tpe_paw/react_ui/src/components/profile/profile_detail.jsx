@@ -39,7 +39,8 @@ class ProfileDetail extends Component {
     this.setState({ errors: errors });
   }
 
-  _onSubmitSaveDescription() {
+  _onSubmitSaveDescription(e) {
+    e.preventDefault();
     // If editCounter == 0, there where no changes and no need to update
     if (this.state.editCounter > 0) {
       if (this._validateForm("description")) {
@@ -113,7 +114,7 @@ class ProfileDetail extends Component {
       "my-3 profile-small-text align-items-horizontal-center rounded-border parent-width";
     return owner.id === loggedUserId ? (
       this.state.edit || this.props.descriptionLoading ? (
-        <form onSubmit={() => this._onSubmitSaveDescription()}>
+        <form onSubmit={(e) => this._onSubmitSaveDescription(e)}>
           <textarea
             placeholder={i18n.t("profile.form.descriptionPlaceholder")}
             className={
@@ -144,14 +145,30 @@ class ProfileDetail extends Component {
     );
   }
 
+  _renderUserIcon() {
+    const { owner, loggedUserId } = this.props;
+    return owner.id === loggedUserId ? (
+      <ImagePicker
+        imageSrc={getUserProfilePicUrl(owner)}
+        handleSubmit={this.props.updateImage}
+      />
+    ) : (
+      <div className="flex-center profile-photo-padding">
+        <img
+          id="profile-image"
+          className="profile-photo shadow"
+          src={getUserProfilePicUrl(owner)}
+          alt="User Icon"
+        ></img>
+      </div>
+    );
+  }
+
   _renderUserDetail() {
     const { owner } = this.props;
     return (
       <div className="flex-center flex-column parent-width">
-        <ImagePicker
-          imageSrc={getUserProfilePicUrl(owner)}
-          handleSubmit={this.props.updateImage}
-        />
+        {this._renderUserIcon()}
 
         <div className="d-flex flex-col justify-content-center parent-width fwhite">
           <div className="fw-500  profile-username">{owner.username}</div>

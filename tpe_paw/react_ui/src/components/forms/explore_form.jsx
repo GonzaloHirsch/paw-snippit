@@ -14,17 +14,27 @@ import CustomCheckbox from "../forms/custom_checkbox";
 import { EXPLORE_FORM_VALIDATIONS } from "../../js/validations";
 import CustomDatePicker from "../forms/date_picker";
 import { getDateFromString } from "../../js/date_utils";
+import { Typeahead } from "react-bootstrap-typeahead"; // ES2015
+import "react-bootstrap-typeahead/css/Typeahead.css";
+import LanguageClient from "../../api/implementations/LanguageClient";
+import TagClient from "../../api/implementations/TagClient";
+import reducer from "../../redux/reducers";
 
 class ExploreForm extends Component {
+  languageClient;
+  tagClient;
+
   constructor(props) {
     super(props);
+
+    this.languageClient = new LanguageClient();
+    this.tagClient = new TagClient();
+
     const {
       field,
       sort,
       includeFlagged,
       title,
-      language,
-      tag,
       username,
       minRep,
       maxRep,
@@ -40,8 +50,8 @@ class ExploreForm extends Component {
         sort: sort === null ? "" : sort,
         includeFlagged: includeFlagged === null ? false : includeFlagged,
         title: title === null ? "" : title,
-        language: language === null ? -1 : language,
-        tag: tag === null ? -1 : tag,
+        language: null,
+        tag: null,
         username: username === null ? "" : username,
         minRep: minRep === null ? "" : minRep,
         maxRep: maxRep === null ? "" : maxRep,
@@ -65,10 +75,75 @@ class ExploreForm extends Component {
         title: null,
         username: null,
       },
+      options: {
+        languages: [],
+        tags: [],
+      },
     };
   }
 
+  loadLanguages() {
+    this.languageClient
+      .getLanguageList()
+      .then((res) => {
+        let options = { ...this.state.options };
+        options.languages = res.data;
+        this.setState({
+          options: options,
+        });
+      })
+      .catch((e) => {});
+  }
+
+  loadLanguage() {
+    let { language } = this.props.urlSearch;
+    if (language === null || parseInt(language) === -1) return;
+    this.languageClient
+      .getLanguageWithId(language)
+      .then((res) => {
+        let fields = { ...this.state.fields };
+        fields.language = res.data;
+        this.setState({
+          fields: fields,
+        });
+      })
+      .catch((e) => {});
+  }
+
+  loadTags() {
+    this.tagClient
+      .getTagList()
+      .then((res) => {
+        let options = { ...this.state.options };
+        options.tags = res.data;
+        this.setState({
+          options: options,
+        });
+      })
+      .catch((e) => {});
+  }
+
+  loadTag() {
+    let { tag } = this.props.urlSearch;
+    if (tag === null || parseInt(tag) === -1) return;
+    this.tagClient
+      .getTagWithId(tag)
+      .then((res) => {
+        let fields = { ...this.state.fields };
+        fields.tag = res.data;
+        this.setState({
+          fields: fields,
+        });
+        console.log(res.data);
+      })
+      .catch((e) => {});
+  }
+
   componentDidMount() {
+    this.loadLanguages();
+    this.loadLanguage();
+    this.loadTags();
+    this.loadTag();
     this.validateAll();
   }
 
@@ -116,8 +191,8 @@ class ExploreForm extends Component {
       this._setParamWithDefault(params, EXPLORE.FIELD, "date");
       this._setParamWithDefault(params, EXPLORE.SORT, "desc");
       this._setParamWithDefault(params, EXPLORE.FLAGGED, true); // FIXME!
-      this._setParamWithDefault(params, EXPLORE.LANGUAGE, -1);
-      this._setParamWithDefault(params, EXPLORE.TAG, -1);
+      this._setTypeaheadWithDefault(params, EXPLORE.LANGUAGE);
+      this._setTypeaheadWithDefault(params, EXPLORE.TAG);
 
       // Pushing the route
       this.props.history.push({
@@ -153,6 +228,18 @@ class ExploreForm extends Component {
     }
   }
 
+  _setTypeaheadWithDefault(params, name) {
+    const value = this.state.fields[name];
+    console.log(value);
+
+    if (value !== null && value !== undefined && value !== "undefined") {
+      params.set(name, value.id);
+    } else {
+      params.set(name, -1);
+      console.log(params);
+    }
+  }
+
   _getOrderOptions(items, prefix) {
     const options = [];
 
@@ -172,8 +259,8 @@ class ExploreForm extends Component {
         sort: "",
         includeFlagged: false,
         title: "",
-        language: -1,
-        tag: -1,
+        language: null,
+        tag: null,
         username: "",
         minRep: "",
         maxRep: "",
@@ -285,6 +372,7 @@ class ExploreForm extends Component {
 
   // Handlers
   onChange = (key, e, useChecked) => {
+    console.log(e[0]);
     let fields = this.state.fields;
     let errors = this.state.errors;
     fields[key] = useChecked ? e.target.checked : e.target.value;
@@ -293,6 +381,13 @@ class ExploreForm extends Component {
       errors[key] = EXPLORE_FORM_VALIDATIONS[key](fields[key]);
     }
     this.setState({ fields: fields, errors: errors });
+  };
+
+  _onTypeaheadChange = (key, e) => {
+    console.log(e[0]);
+    let fields = this.state.fields;
+    fields[key] = e[0] === undefined ? null : e[0];
+    this.setState({ fields: fields });
   };
 
   onDateChange = (key, e) => {
@@ -365,26 +460,47 @@ class ExploreForm extends Component {
         <div className="d-flex flex-row">
           <div>
             <h6>{i18n.t(languagePrefix + "header")}</h6>
-            <DropdownMenu
-              id={"exploreLanguageMenu"}
-              value={this.state.fields.language}
-              description={i18n.t(languagePrefix + "placeholder")}
-              defaultValue={-1}
-              options={this.props.languages}
-              onChange={(e) => this.onChange(EXPLORE.LANGUAGE, e, false)}
-            />
+            {this.state.fields.language === null ? (
+              <Typeahead
+                id={"exploreLanguageMenu"}
+                placeholder={i18n.t(languagePrefix + "placeholder")}
+                options={this.state.options.languages}
+                labelKey="name"
+                onChange={(e) => this._onTypeaheadChange(EXPLORE.LANGUAGE, e)}
+              />
+            ) : (
+              <Typeahead
+                id={"exploreLanguageMenu"}
+                placeholder={i18n.t(languagePrefix + "placeholder")}
+                options={this.state.options.languages}
+                labelKey="name"
+                defaultSelected={[this.state.fields.language]}
+                onChange={(e) => this._onTypeaheadChange(EXPLORE.LANGUAGE, e)}
+              />
+            )}
           </div>
           <div className="m-2"></div>
           <div>
             <h6>{i18n.t(tagPrefix + "header")}</h6>
-            <DropdownMenu
-              id={"exploreTagMenu"}
-              value={this.state.fields.tag}
-              description={i18n.t(tagPrefix + "placeholder")}
-              defaultValue={-1}
-              options={this.props.tags}
-              onChange={(e) => this.onChange(EXPLORE.TAG, e, false)}
-            />
+            {console.log(this.state)}
+            {this.state.fields.tag === null ? (
+              <Typeahead
+                id={"exploreTagMenu"}
+                placeholder={i18n.t(tagPrefix + "placeholder")}
+                options={this.state.options.tags}
+                labelKey="name"
+                onChange={(e) => this._onTypeaheadChange(EXPLORE.TAG, e)}
+              />
+            ) : (
+              <Typeahead
+                id={"exploreTagMenu"}
+                placeholder={i18n.t(tagPrefix + "placeholder")}
+                options={this.state.options.tags}
+                labelKey="name"
+                defaultSelected={[this.state.fields.tag]}
+                onChange={(e) => this._onTypeaheadChange(EXPLORE.TAG, e)}
+              />
+            )}
           </div>
         </div>
         <hr />

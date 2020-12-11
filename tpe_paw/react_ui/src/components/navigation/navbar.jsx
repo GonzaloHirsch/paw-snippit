@@ -21,6 +21,7 @@ class NavBar extends Component {
   state = {
     navIsOpen: false,
     userIsLogged: false,
+    showSearch: true,
     username: "",
     roles: [],
     search: {
@@ -55,8 +56,16 @@ class NavBar extends Component {
 
   testForContext(test, ctx) {
     const isCtx = !!matchPath(this.props.location.pathname, test);
-    if (isCtx && this.state.currentContext !== ctx) {
-      this.setState({ currentContext: ctx });
+    if (isCtx) {
+      let showSearch = true;
+      if (ctx === CONTEXT.ERROR || ctx === CONTEXT.EXPLORE) {
+        showSearch = false;
+      }
+      if (this.state.currentContext !== ctx) {
+        this.setState({ currentContext: ctx, showSearch: showSearch });
+      } else if (this.state.showSearch !== showSearch) {
+        this.setState({ showSearch: showSearch });
+      }
     }
     return isCtx;
   }
@@ -70,11 +79,12 @@ class NavBar extends Component {
     if (this.testForContext("**/favorites", CONTEXT.FAVORITES)) return;
     if (this.testForContext("**/upvoted", CONTEXT.UPVOTED)) return;
     if (this.testForContext("**/flagged", CONTEXT.FLAGGED)) return;
+    if (this.testForContext("**/404", CONTEXT.ERROR)) return;
+    if (this.testForContext("**/500", CONTEXT.ERROR)) return;
     if (this.testForContext("**/", CONTEXT.HOME)) return;
   }
 
   componentDidMount() {
-    console.log(this.props, "PROPS");
     // Subscribing to changes in the auth status, if the user logs in, it is marked as logged in
     this.authUnsubscribe = store.subscribe(() => {
       const storedState = store.getState();
@@ -234,6 +244,85 @@ class NavBar extends Component {
     this.setState({ currentContext: newCtx });
   }
 
+  getSearchBar() {
+    return (
+      <form
+        className="form-inline my-auto my-lg-0 col-8"
+        onSubmit={(e) => this.handleSearch(e, this.state.search)}
+      >
+        <div className="input-group mr-sm-2 search-box">
+          <input
+            type="text"
+            className="form-control"
+            placeholder={i18n.t("nav.searchHint")}
+            aria-label={i18n.t("nav.searchHint")}
+            aria-describedby="button-addon2"
+            onChange={(e) =>
+              this.setState({
+                search: {
+                  query: e.target.value,
+                  type: this.state.search.type,
+                  sort: this.state.search.sort,
+                },
+              })
+            }
+            value={this.state.search.query}
+          />
+          <div className="input-group-append">
+            <select
+              className="custom-select form-control"
+              id="inputGroupSelect02"
+              onChange={(e) =>
+                this.setState({
+                  search: {
+                    query: this.state.search.query,
+                    type: e.target.value,
+                    sort: this.state.search.sort,
+                  },
+                })
+              }
+              value={this.state.search.type}
+            >
+              <option value="0">{i18n.t("nav.filter.hint")}</option>
+              <option value="all">{i18n.t("nav.filter.all")}</option>
+              <option value="tag">{i18n.t("nav.filter.tag")}</option>
+              <option value="title">{i18n.t("nav.filter.title")}</option>
+              <option value="content">{i18n.t("nav.filter.content")}</option>
+              <option value="username">{i18n.t("nav.filter.username")}</option>
+              <option value="language">{i18n.t("nav.filter.language")}</option>
+            </select>
+            <select
+              className="custom-select form-control"
+              id="inputGroupSelect03"
+              onChange={(e) =>
+                this.setState({
+                  search: {
+                    query: this.state.search.query,
+                    type: this.state.search.type,
+                    sort: e.target.value,
+                  },
+                })
+              }
+              value={this.state.search.sort}
+            >
+              <option value="0">{i18n.t("nav.order.hint")}</option>
+              <option value="asc">{i18n.t("nav.order.ascending")}</option>
+              <option value="desc">{i18n.t("nav.order.descending")}</option>
+              <option value="no">{i18n.t("nav.order.no")}</option>
+            </select>
+            <button
+              className="btn btn-outline-secondary"
+              type="submit"
+              id="button-addon2"
+            >
+              <Icon path={mdiMagnify} size={1} />
+            </button>
+          </div>
+        </div>
+      </form>
+    );
+  }
+
   render() {
     return (
       <div className="mb-1 text-white nav-parent">
@@ -255,7 +344,10 @@ class NavBar extends Component {
           </button>
           <Link
             to="/"
-            className="app-link text-white col-7 col-lg-2 align-items-horizontal-center"
+            className={
+              "app-link text-white align-items-horizontal-center " +
+              (this.state.showSearch ? "col-7 col-lg-2" : "col-8")
+            }
             onClick={() => this.handleNavigationChange(CONTEXT.HOME)}
           >
             <Icon path={mdiCodeTags} size={2}></Icon>
@@ -273,92 +365,19 @@ class NavBar extends Component {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div
-            className="collapse navbar-collapse col-2 col-lg-9"
+            className={
+              "collapse navbar-collapse col-2 " +
+              (this.state.showSearch ? "col-lg-9" : "col-lg-3")
+            }
             id="navbarSupportedContent"
           >
-            <form
-              className="form-inline my-auto my-lg-0 col-8"
-              onSubmit={(e) => this.handleSearch(e, this.state.search)}
+            {this.state.showSearch && this.getSearchBar()}
+            <div
+              className={
+                "nav-item align-items-horizontal-right " +
+                (this.state.showSearch ? "col-4" : "col-12")
+              }
             >
-              <div className="input-group mr-sm-2 search-box">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder={i18n.t("nav.searchHint")}
-                  aria-label={i18n.t("nav.searchHint")}
-                  aria-describedby="button-addon2"
-                  onChange={(e) =>
-                    this.setState({
-                      search: {
-                        query: e.target.value,
-                        type: this.state.search.type,
-                        sort: this.state.search.sort,
-                      },
-                    })
-                  }
-                  value={this.state.search.query}
-                />
-                <div className="input-group-append">
-                  <select
-                    className="custom-select form-control"
-                    id="inputGroupSelect02"
-                    onChange={(e) =>
-                      this.setState({
-                        search: {
-                          query: this.state.search.query,
-                          type: e.target.value,
-                          sort: this.state.search.sort,
-                        },
-                      })
-                    }
-                    value={this.state.search.type}
-                  >
-                    <option value="0">{i18n.t("nav.filter.hint")}</option>
-                    <option value="all">{i18n.t("nav.filter.all")}</option>
-                    <option value="tag">{i18n.t("nav.filter.tag")}</option>
-                    <option value="title">{i18n.t("nav.filter.title")}</option>
-                    <option value="content">
-                      {i18n.t("nav.filter.content")}
-                    </option>
-                    <option value="username">
-                      {i18n.t("nav.filter.username")}
-                    </option>
-                    <option value="language">
-                      {i18n.t("nav.filter.language")}
-                    </option>
-                  </select>
-                  <select
-                    className="custom-select form-control"
-                    id="inputGroupSelect03"
-                    onChange={(e) =>
-                      this.setState({
-                        search: {
-                          query: this.state.search.query,
-                          type: this.state.search.type,
-                          sort: e.target.value,
-                        },
-                      })
-                    }
-                    value={this.state.search.sort}
-                  >
-                    <option value="0">{i18n.t("nav.order.hint")}</option>
-                    <option value="asc">{i18n.t("nav.order.ascending")}</option>
-                    <option value="desc">
-                      {i18n.t("nav.order.descending")}
-                    </option>
-                    <option value="no">{i18n.t("nav.order.no")}</option>
-                  </select>
-                  <button
-                    className="btn btn-outline-secondary"
-                    type="submit"
-                    id="button-addon2"
-                  >
-                    <Icon path={mdiMagnify} size={1} />
-                  </button>
-                </div>
-              </div>
-            </form>
-            <div className="nav-item col-4 align-items-horizontal-right">
               {this.getTopRightNavItems()}
             </div>
           </div>

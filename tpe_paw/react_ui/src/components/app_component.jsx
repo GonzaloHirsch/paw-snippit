@@ -4,6 +4,7 @@ import {
   Switch,
   Route,
   withRouter,
+  Redirect
 } from "react-router-dom";
 import routes from "../routes";
 import { PrivateRoute } from "./navigation/private_route";
@@ -50,6 +51,7 @@ class AppComponent extends Component {
           <NavBar className="nav-spacing" />
           <Switch>
             {routes.map((route) => this.getRouteComponent(route))}
+            <Redirect to="/404"/>
           </Switch>
         </Router>
       </Suspense>

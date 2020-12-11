@@ -94,6 +94,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, API_PREFIX + "users/**").permitAll()
                 // Adding TAGS controller authorizations
                 .antMatchers(HttpMethod.POST, API_PREFIX + "tags/*/").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.PUT, API_PREFIX + "tags/*/").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.DELETE, API_PREFIX + "tags/*/follow").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.DELETE, API_PREFIX + "tags/*/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, API_PREFIX + "tags/**").permitAll()
                 // Adding LOGIN policy

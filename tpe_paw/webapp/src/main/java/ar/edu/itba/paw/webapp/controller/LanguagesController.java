@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.LanguageDto;
+import ar.edu.itba.paw.webapp.dto.LanguageWithEmptyDto;
 import ar.edu.itba.paw.webapp.dto.SnippetDto;
 import ar.edu.itba.paw.webapp.dto.SearchDto;
 import ar.edu.itba.paw.webapp.utility.*;
@@ -59,11 +60,16 @@ public class LanguagesController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getLanguagesByPage(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page, final @QueryParam(QUERY_PARAM_SHOW_EMPTY) @DefaultValue("true") boolean showEmpty) {
-        final List<LanguageDto> languages = languageService.getAllLanguages(showEmpty, page, TAG_PAGE_SIZE).stream().map(l -> LanguageDto.fromLanguage(l, uriInfo)).collect(Collectors.toList());
+        // Get languages
+        final Collection<Language> rawLanguages = this.languageService.getAllLanguages(showEmpty, page, LANGUAGE_PAGE_SIZE);
+        // Analyze if they are empty or not
+        rawLanguages.forEach(l -> this.snippetService.analizeSnippetsUsing(l));
+        // Generate DTOs
+        final List<LanguageWithEmptyDto> languages = rawLanguages.stream().map(l -> LanguageWithEmptyDto.fromLanguage(l, uriInfo)).collect(Collectors.toList());
         final int languagesCount = this.languageService.getAllLanguagesCount(showEmpty);
         int pageCount = PagingHelper.CalculateTotalPages(languagesCount, LANGUAGE_PAGE_SIZE);
 
-        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<LanguageDto>>(languages) {
+        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<LanguageWithEmptyDto>>(languages) {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
         ResponseHelper.AddTotalItemsAttribute(builder, languagesCount);

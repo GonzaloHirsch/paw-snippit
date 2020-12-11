@@ -16,6 +16,8 @@ const Flagged = React.lazy(() => import("./components/pages/flagged"));
 const Favorites = React.lazy(() => import("./components/pages/favorites"));
 const Upvoted = React.lazy(() => import("./components/pages/upvoted"));
 const Explore = React.lazy(() => import("./components/pages/explore"));
+const Languages = React.lazy(() => import("./components/pages/languages"));
+const Tags = React.lazy(() => import("./components/pages/tags"));
 const UserProfile = React.lazy(() => import("./components/pages/user_profile"));
 const RecoverSend = React.lazy(() => import("./components/login/recover_send"));
 const Goodbye = React.lazy(() => import("./components/pages/goodbye"));
@@ -144,6 +146,34 @@ const routes = [
     name: i18n.t("nav.profile"),
     component: UserProfile,
     roles: [ROLE_USER],
+  },
+  {
+    path: "/languages",
+    exact: true,
+    name: i18n.t("nav.languages"),
+    component: Languages,
+    roles: [],
+  },
+  {
+    path: "/languages/search",
+    exact: true,
+    name: i18n.t("nav.languages"),
+    component: Languages,
+    roles: [],
+  },
+  {
+    path: "/tags",
+    exact: true,
+    name: i18n.t("nav.tags"),
+    component: Tags,
+    roles: [],
+  },
+  {
+    path: "/tags/search",
+    exact: true,
+    name: i18n.t("nav.tags"),
+    component: Tags,
+    roles: [],
   },
   {
     path: "/404",

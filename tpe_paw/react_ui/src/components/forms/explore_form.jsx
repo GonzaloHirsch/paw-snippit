@@ -16,19 +16,16 @@ import CustomDatePicker from "../forms/date_picker";
 import { getDateFromString } from "../../js/date_utils";
 import { Typeahead } from "react-bootstrap-typeahead"; // ES2015
 import "react-bootstrap-typeahead/css/Typeahead.css";
-import LanguageClient from "../../api/implementations/LanguageClient";
-import TagClient from "../../api/implementations/TagClient";
+import LanguagesAndTagsClient from "../../api/implementations/LanguagesAndTagsClient";
 import reducer from "../../redux/reducers";
 
 class ExploreForm extends Component {
-  languageClient;
-  tagClient;
+  languagesAndTagsClient;
 
   constructor(props) {
     super(props);
 
-    this.languageClient = new LanguageClient();
-    this.tagClient = new TagClient();
+    this.languagesAndTagsClient = new LanguagesAndTagsClient();
 
     const {
       field,
@@ -83,7 +80,7 @@ class ExploreForm extends Component {
   }
 
   loadLanguages() {
-    this.languageClient
+    this.languagesAndTagsClient
       .getLanguageList()
       .then((res) => {
         let options = { ...this.state.options };
@@ -98,7 +95,7 @@ class ExploreForm extends Component {
   loadLanguage() {
     let { language } = this.props.urlSearch;
     if (language === null || parseInt(language) === -1) return;
-    this.languageClient
+    this.languagesAndTagsClient
       .getLanguageWithId(language)
       .then((res) => {
         let fields = { ...this.state.fields };
@@ -111,7 +108,7 @@ class ExploreForm extends Component {
   }
 
   loadTags() {
-    this.tagClient
+    this.languagesAndTagsClient
       .getTagList()
       .then((res) => {
         let options = { ...this.state.options };
@@ -126,7 +123,7 @@ class ExploreForm extends Component {
   loadTag() {
     let { tag } = this.props.urlSearch;
     if (tag === null || parseInt(tag) === -1) return;
-    this.tagClient
+    this.languagesAndTagsClient
       .getTagWithId(tag)
       .then((res) => {
         let fields = { ...this.state.fields };

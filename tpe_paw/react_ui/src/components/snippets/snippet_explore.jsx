@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import SnippetFeed from "./snippet_feed";
+import LanguagesAndTagsClient from "../../api/implementations/LanguagesAndTagsClient";
 import i18n from "../../i18n";
 import ExploreForm from "../forms/explore_form";
 

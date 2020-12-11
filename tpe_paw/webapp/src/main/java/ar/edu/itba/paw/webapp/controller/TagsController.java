@@ -8,9 +8,7 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.dto.SnippetDto;
-import ar.edu.itba.paw.webapp.dto.TagDto;
-import ar.edu.itba.paw.webapp.dto.SearchDto;
+import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.utility.*;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
@@ -58,11 +56,12 @@ public class TagsController {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getTagsByPage(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page, final @QueryParam(QUERY_PARAM_SHOW_EMPTY) @DefaultValue("true") boolean showEmpty, final @QueryParam(QUERY_PARAM_SHOW_ONLY_FOLLOWING) @DefaultValue("false") boolean showOnlyFollowing) {
         User currentUser = loginAuthentication.getLoggedInUser();
-        final List<TagDto> tags = tagService.getAllTags(showEmpty, showOnlyFollowing, currentUser != null ? currentUser.getId() : null, page, TAG_PAGE_SIZE).stream().map(t -> TagDto.fromTag(t, uriInfo)).collect(Collectors.toList());
+        final long loggedUserId = UserHelper.GetLoggedUserId(this.loginAuthentication);
+        final List<TagWithEmptyDto> tags = tagService.getAllTags(showEmpty, showOnlyFollowing, currentUser != null ? currentUser.getId() : null, page, TAG_PAGE_SIZE).stream().map(t -> TagWithEmptyDto.fromTag(t, loggedUserId, uriInfo)).collect(Collectors.toList());
         final int tagCount = this.tagService.getAllTagsCount(showEmpty, showOnlyFollowing, currentUser != null ? currentUser.getId() : null);
         int pageCount = PagingHelper.CalculateTotalPages(tagCount, TAG_PAGE_SIZE);
 
-        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<TagDto>>(tags) {
+        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<TagWithEmptyDto>>(tags) {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
         ResponseHelper.AddTotalItemsAttribute(builder, tagCount);
@@ -140,14 +139,38 @@ public class TagsController {
         }
     }
 
-    @POST
+    @PUT
     @Path("/{id}/follow")
     public Response followTag(final @PathParam(PATH_PARAM_ID) long id){
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser != null) {
-            // TODO: CHANGE TO DETERMINE IF FOLLOWED INSIDE SERVICE/DAO
-            //this.tagService.updateFollowing(currentUser.getId(), id, followForm.isFollows());
-            return Response.noContent().build();
+            if (this.tagService.tagExists(id)){
+                if (!this.tagService.userFollowsTag(currentUser.getId(), id)){
+                    this.tagService.followTag(currentUser.getId(), id);
+                }
+                return Response.noContent().build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+        } else {
+            LOGGER.warn("Inside the follow form of tag {} without a logged in user", id);
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+
+    @DELETE
+    @Path("/{id}/follow")
+    public Response unfollowTag(final @PathParam(PATH_PARAM_ID) long id){
+        User currentUser = this.loginAuthentication.getLoggedInUser();
+        if (currentUser != null) {
+            if (this.tagService.tagExists(id)){
+                if (this.tagService.userFollowsTag(currentUser.getId(), id)){
+                    this.tagService.unfollowTag(currentUser.getId(), id);
+                }
+                return Response.noContent().build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
         } else {
             LOGGER.warn("Inside the follow form of tag {} without a logged in user", id);
             return Response.status(Response.Status.FORBIDDEN).build();

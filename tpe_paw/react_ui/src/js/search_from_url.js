@@ -25,3 +25,21 @@ export function getNavSearchFromUrl(url) {
   search.sort = params.get("sort");
   return search;
 }
+
+export function getTagsSearchFromUrl(url){
+  const params = new URLSearchParams(url);
+  let search = {};
+  search.query = params.get("query");
+  search.type = params.get("type");
+  search.sort = params.get("sort");
+  return search;
+}
+
+export function getLanguagesSearchFromUrl(url){
+  const params = new URLSearchParams(url);
+  let search = {};
+  search.query = params.get("query");
+  search.type = params.get("type");
+  search.sort = params.get("sort");
+  return search;
+}

@@ -5,6 +5,10 @@ export default {
   snippet_plural: "Snippets",
   snippetWithNumber: "{{count}} Snippet",
   snippetWithNumber_plural: "{{count}} Snippets",
+  tagsWithNumber: "{{count}} Tag",
+  tagsWithNumber_plural: "{{count}} Tags",
+  languagesWithNumber: "{{count}} Language",
+  languagesWithNumber_plural: "{{count}} Languages",
   errors: {
     serverError: "Error in server, please try again later",
     unknownError: "Uknown error, please try again later",
@@ -278,5 +282,10 @@ export default {
         "Looks like there was an error on our side, please try again later or go back to Home",
       action: "Take me Home!",
     },
+  },
+  items: {
+    empty: "No Snippets",
+    follow: "Follow",
+    unfollow: "Unfollow",
   },
 };

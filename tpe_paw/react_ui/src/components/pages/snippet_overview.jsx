@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import SnippetDetail from "../snippets/snippet_detail";
 import SnippetClient from "../../api/implementations/SnippetOverviewClient";
 import UserClient from "../../api/implementations/UserClient";
-import LanguageClient from "../../api/implementations/LanguageClient";
-import TagClient from "../../api/implementations/TagClient";
+import LanguagesAndTagsClient from "../../api/implementations/LanguagesAndTagsClient";
 import store from "../../store";
 import SnippetActionsClient from "../../api/implementations/SnippetActionsClient";
 import { isAdmin } from "../../js/security_utils";
@@ -13,8 +12,7 @@ import { isAdmin } from "../../js/security_utils";
 class SnippetOverview extends Component {
   snippetClient;
   userClient;
-  languageClient;
-  tagClient;
+  languagesAndTagsClient;
   snippetActionsClient;
 
   constructor(props) {
@@ -27,8 +25,7 @@ class SnippetOverview extends Component {
     let loggedUserId = -1;
     this.snippetClient = new SnippetClient();
     this.userClient = new UserClient();
-    this.languageClient = new LanguageClient();
-    this.tagClient = new TagClient();
+    this.languagesAndTagsClient = new LanguagesAndTagsClient();
     if (state.auth.token === null || state.auth.token === undefined) {
       this.snippetActionsClient = new SnippetActionsClient();
     } else {
@@ -126,7 +123,7 @@ class SnippetOverview extends Component {
           .catch((e) => {});
 
         // If snippet was found, obtain the language
-        this.languageClient
+        this.languagesAndTagsClient
           .getLanguageWithUrl(snippet.language.url)
           .then((res) => {
             this.setState({ language: res.data });
@@ -134,7 +131,7 @@ class SnippetOverview extends Component {
           .catch((e) => {});
 
         // We obtain the tags
-        this.tagClient
+        this.languagesAndTagsClient
           .getWithUrl(snippet.tags)
           .then((res) => {
             this.setState({ tags: res.data });

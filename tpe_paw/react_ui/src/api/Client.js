@@ -48,10 +48,6 @@ class Client {
         if (errorResponse.status === 401) {
           const refreshInfo = store.getState().auth.refreshInfo;
           const remember = store.getState().auth.remember;
-          console.log(errorResponse.data)
-          console.log("TokenError" in errorResponse.data)
-          console.log(refreshInfo !== null)
-          console.log(refreshInfo)
           // Token expired
           if ("TokenError" in errorResponse.data && refreshInfo !== null) {
             const now = Date.now();
@@ -61,7 +57,6 @@ class Client {
               store.dispatch(logOut());
               props.history.push("/login");
             } else {
-              console.log("REFRESHING")
               // Getting the token and setting up headers
               const tk = store.getState().auth.refreshToken;
               let config = {
@@ -74,7 +69,6 @@ class Client {
               this.instance
                 .post("auth/refresh", {}, config)
                 .then((res) => {
-                  console.log("REFRESHED")
                   // Get the token from the response
                   const token = res.data.token;
                   const refreshToken = res.data.refreshToken;

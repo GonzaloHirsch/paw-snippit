@@ -8,6 +8,7 @@ export const CONTEXT = {
   FLAGGED: "flagged",
   FOLLOWING: "following",
   UPVOTED: "upvoted",
+  ERROR: "error"
 };
 
 export const EXPLORE = {

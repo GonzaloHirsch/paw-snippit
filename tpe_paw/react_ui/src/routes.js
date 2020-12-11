@@ -19,6 +19,8 @@ const Explore = React.lazy(() => import("./components/pages/explore"));
 const UserProfile = React.lazy(() => import("./components/pages/user_profile"));
 const RecoverSend = React.lazy(() => import("./components/login/recover_send"));
 const Goodbye = React.lazy(() => import("./components/pages/goodbye"));
+const Page404 = React.lazy(() => import("./components/pages/errors/page_404"));
+const Page500 = React.lazy(() => import("./components/pages/errors/page_500"));
 const ChangePassword = React.lazy(() =>
   import("./components/login/change_password")
 );
@@ -142,6 +144,20 @@ const routes = [
     name: i18n.t("nav.profile"),
     component: UserProfile,
     roles: [ROLE_USER],
+  },
+  {
+    path: "/404",
+    exact: true,
+    name: i18n.t("nav.error_404"),
+    component: Page404,
+    roles: [],
+  },
+  {
+    path: "/500",
+    exact: true,
+    name: i18n.t("nav.error_500"),
+    component: Page500,
+    roles: [],
   },
 ];
 

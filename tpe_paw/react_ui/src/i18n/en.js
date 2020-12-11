@@ -33,6 +33,7 @@ export default {
     verify: "Verify Email",
     goodbye: "Goodbye",
     users: "Users",
+    error_404: "Error 404",
     filter: {
       hint: "Search By",
       all: "All",
@@ -262,4 +263,18 @@ export default {
     home: "Back Home",
     create: "Create a New Account",
   },
+  errors:{
+    e404: {
+      number: "404",
+      title: "Content Not Found",
+      message: "Looks like the page you are looking for doesn't exist, why not go back Home?",
+      action: "Take me Home!"
+    },
+    e500: {
+      number: "500",
+      title: "Server Error",
+      message: "Looks like there was an error on our side, please try again later or go back to Home",
+      action: "Take me Home!"
+    }
+  }
 };

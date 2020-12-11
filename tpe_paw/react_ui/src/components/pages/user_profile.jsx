@@ -61,7 +61,7 @@ class UserProfile extends Component {
 
   onUpdateDescription = (description) => {
     this.setState({ descriptionLoading: true });
-    this.userClient
+    this.protectedClient
       .putUserDescription(this.state.profileOwnerId, description)
       .then((res) => {
         const owner = { ...this.state.profileOwner };

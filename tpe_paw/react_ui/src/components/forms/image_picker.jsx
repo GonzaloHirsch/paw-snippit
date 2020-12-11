@@ -1,48 +1,54 @@
 import React, { Component } from "react";
-import { getUserProfilePicUrl } from "../../js/snippet_utils";
+import { mdiCheckBold, mdiCloseThick } from "@mdi/js";
+import Icon from "@mdi/react";
 
 class ImagePicker extends Component {
-  //   handleFileChange(event) {
-  //     const { target } = event;
-  //     const { files } = target;
+  constructor(props) {
+    super(props);
+    this.state = { image: null, edit: false };
+  }
 
-  //     if (files && files[0]) {
-  //       var reader = new FileReader();
-
-  //       reader.onloadstart = () => this.setState({ loading: true });
-
-  //       reader.onload = (event) => {
-  //         this.setState({
-  //           data: event.target.result,
-  //           loading: false,
-  //         });
-  //       };
-
-  //       reader.readAsDataURL(files[0]);
-  //     }
-  //   }
-
-  _preview(input) {
-    console.log(input.target);
-    console.log(input.target.value);
-    console.log(input.target.files);
+  _preview(input, edit) {
     let output = document.getElementById("profile-image");
-    output.src = URL.createObjectURL(input.target.files[0]);
+    output.src = edit
+      ? URL.createObjectURL(input.target.files[0])
+      : (output.src = this.props.imageSrc);
+
     output.onload = function () {
       URL.revokeObjectURL(output.src);
     };
-    //   let save_btn = document.getElementById("image-confirm");
-    //   let discard_btn = document.getElementById("image-discard");
-    //   save_btn.classList.add("visible");
-    //   discard_btn.classList.add("visible");
-    //   save_btn.classList.remove("hidden-button");
-    //   discard_btn.classList.remove("hidden-button");
   }
 
   _hiddenClick() {
     let input = document.getElementById("profile-image-input");
     input.click();
   }
+
+  _submitImageForm() {
+    let frm = document.getElementById("image-form-submit");
+    frm.click();
+  }
+
+  _onFileChange(event) {
+    const { files } = event.target;
+    this.setState({ image: files[0], edit: true });
+
+    this._preview(event, true);
+  }
+
+  _onClickClear() {
+    this.setState({
+      image: null,
+      edit: false,
+    });
+    this._preview(null, false);
+  }
+
+  _onSubmit() {
+    this.setState({ edit: false });
+    this.props.handleSubmit(this.state.image);
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -58,23 +64,56 @@ class ImagePicker extends Component {
             <img
               id="profile-image"
               className="profile-photo shadow"
-              src={this.props.imageScr}
+              src={this.props.imageSrc}
               alt="User Icon"
               onClick={() => this._hiddenClick()}
             ></img>
           </div>
         </div>
-        <div className="flex-row hidden-code">
+        <form
+          enctype="multipart/form-data"
+          onSubmit={() => this._onSubmit()}
+          className="flex-row"
+        >
+          <div
+            id="image-discard"
+            className={
+              "image-discard-button image-action-container " +
+              (this.state.edit ? "visible" : "hidden-button")
+            }
+            onClick={() => this._onClickClear()}
+          >
+            <Icon
+              className="image-action-icon"
+              path={mdiCloseThick}
+              size={1}
+            ></Icon>
+          </div>
+          <div
+            id="image-confirm"
+            className={
+              "image-confirm-button image-action-container " +
+              (this.state.edit ? "visible" : "hidden-button")
+            }
+            onClick={() => this._submitImageForm()}
+          >
+            <Icon
+              className="image-action-icon"
+              path={mdiCheckBold}
+              size={1}
+            ></Icon>
+          </div>
+
           <input
             type="file"
             id="profile-image-input"
             className="hidden-code"
             name="file"
             accept="image/jpeg"
-            onChange={(e) => this._preview(e)}
+            onChange={(e) => this._onFileChange(e)}
           />
-          {/* <input type="submit" id="image-form-submit" /> */}
-        </div>
+          <input type="submit" id="image-form-submit" className="hidden-code" />
+        </form>
       </React.Fragment>
     );
   }

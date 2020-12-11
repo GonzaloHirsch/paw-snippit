@@ -159,6 +159,11 @@ div {
   text-decoration: underline;
 }
 
+.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
 // Syntax highlighting
 .snippet-code-block pre,
 .card-snippet-block pre {

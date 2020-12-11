@@ -100,7 +100,7 @@
 .profile-photo-edit-icon {
   position: absolute;
   font-size: 100px !important;
-  color: black;
+  color: white;
   opacity: 0;
   transition: 0.3s;
   cursor: pointer;
@@ -121,4 +121,51 @@
   width: 200px;
   object-fit: cover;
   transition: 0.3s;
+}
+
+.image-action-container {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid white;
+  transition: 0.3s;
+}
+
+.image-action-container:hover {
+  width: 41px;
+  height: 41px;
+}
+
+.image-action-icon {
+  position: relative;
+  margin: 7px 0px 0px 7px !important;
+  color: white;
+}
+
+.image-discard-button {
+  background-color: red;
+  position: absolute;
+  margin: -70px 0px 0px -80px;
+}
+
+.image-discard-button:hover {
+  background-color: darkred;
+}
+
+.image-confirm-button {
+  background-color: green;
+  position: absolute;
+  margin: -70px 0px 0px 40px;
+}
+.image-confirm-button:hover {
+  background-color: darkgreen;
+}
+
+// Extra
+
+.hidden-button {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+  opacity: 0;
 }

@@ -148,7 +148,10 @@ class ProfileDetail extends Component {
     const { owner } = this.props;
     return (
       <div className="flex-center flex-column parent-width">
-        <ImagePicker imageScr={getUserProfilePicUrl(owner)} />
+        <ImagePicker
+          imageSrc={getUserProfilePicUrl(owner)}
+          handleSubmit={this.props.updateImage}
+        />
 
         <div className="d-flex flex-col justify-content-center parent-width fwhite">
           <div className="fw-500  profile-username">{owner.username}</div>

@@ -71,6 +71,16 @@ class UserProfile extends Component {
       .catch((e) => {});
   };
 
+  onUpdateImage = (image) => {
+    console.log(image);
+    this.userClient
+      .putUserImage(this.state.profileOwnerId, image)
+      .then((res) => {
+        this.loadUserData();
+      })
+      .catch((e) => {});
+  };
+
   // Render methods
   _renderTabs() {
     if (this.state.profileOwnerId !== this.state.loggedUserId) {
@@ -128,7 +138,7 @@ class UserProfile extends Component {
         (url) => getNavSearchFromUrl(url),
         false
       );
-      return <ActiveSnippetFeed background={"hello"} />;
+      return <ActiveSnippetFeed />;
     } else if (this.state.context === DELETED_USER_SNIPPETS) {
       const DeletedSnippetFeed = SnippetFeedHOC(
         SnippetFeed,
@@ -162,6 +172,7 @@ class UserProfile extends Component {
             updateDescription={(description) =>
               this.onUpdateDescription(description)
             }
+            updateImage={(img) => this.onUpdateImage(img)}
           />
         </div>
         <div className="col-9 flex-column">

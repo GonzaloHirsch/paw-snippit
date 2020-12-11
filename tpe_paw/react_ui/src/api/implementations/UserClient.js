@@ -12,6 +12,12 @@ export default class UserClient extends Client {
     });
   }
 
+  putUserImage(id, image) {
+    return this.instance.put("users/" + id + "/profile_photo", {
+      file: image,
+    });
+  }
+
   getUserWithUrl(url) {
     return axios.get(url);
   }

@@ -13,7 +13,8 @@ function SnippetFeedHOC(
   WrappedComponent,
   getSnippets,
   searchSnippets,
-  searchFromUrl
+  searchFromUrl,
+  tokenProtected
 ) {
   return withRouter(
     class extends React.Component {
@@ -25,11 +26,20 @@ function SnippetFeedHOC(
         const state = store.getState();
         let userIsLogged = false;
         if (state.auth.token === null || state.auth.token === undefined) {
-          this.snippetFeedClient = new SnippetFeedClient();
           this.snippetActionsClient = new SnippetActionsClient();
         } else {
-          this.snippetFeedClient = new SnippetFeedClient(state.auth);
-          this.snippetActionsClient = new SnippetActionsClient(state.auth);
+          if (!tokenProtected) {
+            this.snippetFeedClient = new SnippetFeedClient();
+          } else {
+            this.snippetFeedClient = new SnippetFeedClient(
+              props,
+              state.auth.token
+            );
+          }
+          this.snippetActionsClient = new SnippetActionsClient(
+            props,
+            state.auth.token
+          );
           userIsLogged = true;
         }
 
@@ -152,11 +162,17 @@ function SnippetFeedHOC(
 
         // Was faved, now not
         if (previousFavState) {
-          this.snippetActionsClient.unfavSnippet(id);
+          this.snippetActionsClient
+            .unfavSnippet(id)
+            .then((res) => {})
+            .catch((e) => {});
         }
         // Was not fav, not it is
         else {
-          this.snippetActionsClient.favSnippet(id);
+          this.snippetActionsClient
+            .favSnippet(id)
+            .then((res) => {})
+            .catch((e) => {});
         }
 
         // Prevent parent Link to navigate

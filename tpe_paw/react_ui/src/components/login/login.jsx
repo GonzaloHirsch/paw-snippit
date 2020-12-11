@@ -24,7 +24,8 @@ class Login extends Component {
     responseErrors: null,
   };
 
-  handleLogin() {
+  handleLogin(event) {
+    event.preventDefault();
     const hasErrors = this.validateAll();
 
     console.log(this.state);
@@ -38,13 +39,12 @@ class Login extends Component {
         .login(this.state.fields.user, this.state.fields.pass)
         .then((res) => {
           // Get the token from the response
-          // TODO: DETERMINE IF WE STORE THE REFRESH TOKEN
           const token = res.data.token;
+          const refreshToken = res.data.refreshToken;
 
           // Dispatch the login event
-          store.dispatch(loginSuccess({ token }, this.state.fields.remember));
+          store.dispatch(loginSuccess({ token }, {refreshToken}, this.state.fields.remember));
 
-          console.log(this.props.history);
           // Push to home
           this.props.history.push("/");
         })
@@ -102,7 +102,7 @@ class Login extends Component {
         <CustomForm
           title={i18n.t("login.title")}
           action={i18n.t("login.form.action")}
-          onSubmit={() => this.handleLogin()}
+          onSubmit={(e) => this.handleLogin(e)}
           generalError={this.state.responseErrors}
           includeAppName={true}
           loading={false}

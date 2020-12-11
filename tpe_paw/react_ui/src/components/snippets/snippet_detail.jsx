@@ -165,19 +165,19 @@ class SnippetDetail extends Component {
               placeholder={i18n.t("snippetDetail.reporting.form.hint")}
               onChange={(e) => this._handleChange(e, "message")}
               errors={this.state.errors.message}
-              rows={10}
+              rows={7}
               cols={50}
             />
           </ModalBody>
           <ModalFooter>
+          <Button color="danger" onClick={this.setReporting}>
+              {i18n.t("snippetDetail.reporting.actionCancel")}
+            </Button>
             <Button
               className="form-button"
               onClick={() => this.handleReportSubmit(snippet.id)}
             >
               {i18n.t("snippetDetail.reporting.actionConfirm")}
-            </Button>{" "}
-            <Button color="danger" onClick={this.setReporting}>
-              {i18n.t("snippetDetail.reporting.actionCancel")}
             </Button>
           </ModalFooter>
         </Modal>

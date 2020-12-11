@@ -10,7 +10,8 @@ const Upvoted = SnippetFeedHOC(
   (SnippetFeedClient, page) => SnippetFeedClient.getUpvotedSnippetFeed(page, userId),
   (SnippetFeedClient, page, search) =>
     SnippetFeedClient.searchUpvotedSnippetFeed(page, userId, search),
-    (url) => getNavSearchFromUrl(url)
+    (url) => getNavSearchFromUrl(url),
+    true
 );
 
 export default Upvoted;

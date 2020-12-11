@@ -8,7 +8,8 @@ const Explore = SnippetFeedHOC(
   (SnippetFeedClient, page) => SnippetFeedClient.getHomeSnippetFeed(page),
   (SnippetFeedClient, page, search) =>
     SnippetFeedClient.exploreSnippetFeed(page, search),
-  (url) => getExploreSearchFromUrl(url)
+  (url) => getExploreSearchFromUrl(url),
+  false
 );
 
 export default Explore;

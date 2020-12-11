@@ -11,7 +11,7 @@ class ReportedSnippetMessage extends Component {
 
   constructor(props) {
     super(props);
-    this.snippetActionsClient = new SnippetActionsClient(store.getState().auth);
+    this.snippetActionsClient = new SnippetActionsClient(props, store.getState().auth.token);
   }
 
   handleDismiss(id, dismissedReport) {

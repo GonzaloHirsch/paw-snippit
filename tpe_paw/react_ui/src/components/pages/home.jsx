@@ -7,7 +7,8 @@ const Home = SnippetFeedHOC(
   (SnippetFeedClient, page) => SnippetFeedClient.getHomeSnippetFeed(page),
   (SnippetFeedClient, page, search) =>
     SnippetFeedClient.searchHomeSnippetFeed(page, search),
-  (url) => getNavSearchFromUrl(url)
+  (url) => getNavSearchFromUrl(url),
+  false
 );
 
 export default Home;

@@ -25,7 +25,8 @@ class RecoverSend extends Component {
     sentEmail: false,
   };
 
-  handleSubmit() {
+  handleSubmit(event) {
+    event.preventDefault();
     const hasErrors = this._validateAll();
 
     if (!hasErrors) {

@@ -4,6 +4,7 @@ import ar.edu.itba.paw.webapp.dto.LoginDto;
 import ar.edu.itba.paw.webapp.utility.Authorities;
 import ar.edu.itba.paw.webapp.utility.Constants;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,8 +106,11 @@ public class JwtRefreshProcessingFilter extends AbstractAuthenticationProcessing
             }
 
             return this.getAuthenticationManager().authenticate(auth);
-        } catch (JwtException e) {
+        } catch (ExpiredJwtException e) {
             response.getWriter().write(convertErrorMessageToJson(e.getMessage()));
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return this.getAuthenticationManager().authenticate(null);
+        } catch (JwtException e){
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return this.getAuthenticationManager().authenticate(null);
         }

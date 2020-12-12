@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.webapp.utility.Constants;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,8 +72,11 @@ public class JwtTokenAuthenticationProcessingFilter extends GenericFilterBean {
 
             // Continuing the filter chain
             chain.doFilter(request, response);
-        } catch (JwtException e){
+        } catch (ExpiredJwtException e){
             response.getWriter().write(convertErrorMessageToJson(e.getMessage()));
+            HttpServletResponse hsr = (HttpServletResponse) response;
+            hsr.setStatus(HttpStatus.UNAUTHORIZED.value());
+        } catch (JwtException e){
             HttpServletResponse hsr = (HttpServletResponse) response;
             hsr.setStatus(HttpStatus.UNAUTHORIZED.value());
         }

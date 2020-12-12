@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import SnippetDetail from "../snippets/snippet_detail";
-import SnippetClient from "../../api/implementations/SnippetOverviewClient";
+import SnippetClient from "../../api/implementations/SnippetClient";
 import UserClient from "../../api/implementations/UserClient";
 import LanguagesAndTagsClient from "../../api/implementations/LanguagesAndTagsClient";
 import store from "../../store";
@@ -164,10 +164,10 @@ class SnippetOverview extends Component {
     this.loadSnippet();
   }
 
-  // In case the url changes 
-  componentDidUpdate(){
+  // In case the url changes
+  componentDidUpdate() {
     const snippetId = parseInt(this.props.match.params.id, 10);
-    if (snippetId !== this.state.snippet.id){
+    if (snippetId !== this.state.snippet.id) {
       this.loadSnippet();
     }
   }

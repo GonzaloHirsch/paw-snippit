@@ -107,6 +107,11 @@ export default {
       },
     },
   },
+  snippetCreate: {
+    name: "Snippet Create",
+    button: "CREATE",
+    header: "Create a Snippet",
+  },
   explore: {
     form: {
       orderBy: {

@@ -9,6 +9,9 @@ const SnippetOverview = React.lazy(() =>
 const SnippetFeed = React.lazy(() =>
   import("./components/snippets/snippet_feed")
 );
+const SnippetCreate = React.lazy(() =>
+  import("./components/snippets/snippet_create")
+);
 const Login = React.lazy(() => import("./components/login/login"));
 const SignUp = React.lazy(() => import("./components/login/signup"));
 const Home = React.lazy(() => import("./components/pages/home"));
@@ -69,6 +72,13 @@ const routes = [
     name: i18n.t("nav.snippets"),
     component: SnippetFeed,
     roles: [],
+  },
+  {
+    path: "/snippets/create",
+    exact: true,
+    name: i18n.t("snippetCreate.name"),
+    component: SnippetCreate,
+    roles: [ROLE_USER],
   },
   {
     path: "/snippets/:id",

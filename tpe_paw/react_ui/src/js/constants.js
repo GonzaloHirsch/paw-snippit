@@ -3,12 +3,14 @@ export const CONTEXT = {
   FAVORITES: "favorites",
   EXPLORE: "explore",
   TAGS: "tags",
+  TAGS_SNIPPETS: "tags_snippets",
   LANGUAGES: "languages",
+  LANGUAGES_SNIPPETS: "languages_snippets",
   PROFILE: "profile",
   FLAGGED: "flagged",
   FOLLOWING: "following",
   UPVOTED: "upvoted",
-  ERROR: "error"
+  ERROR: "error",
 };
 
 export const EXPLORE = {

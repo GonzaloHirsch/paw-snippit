@@ -26,20 +26,19 @@ export function getNavSearchFromUrl(url) {
   return search;
 }
 
-export function getTagsSearchFromUrl(url){
+export function getTagsSearchFromUrl(url) {
   const params = new URLSearchParams(url);
   let search = {};
-  search.query = params.get("query");
-  search.type = params.get("type");
-  search.sort = params.get("sort");
+  search.name = params.get("query");
+  search.showEmpty = params.get("showEmpty");
+  search.showOnlyFollowing = params.get("showOnlyFollowing");
   return search;
 }
 
-export function getLanguagesSearchFromUrl(url){
+export function getLanguagesSearchFromUrl(url) {
   const params = new URLSearchParams(url);
   let search = {};
-  search.query = params.get("query");
-  search.type = params.get("type");
-  search.sort = params.get("sort");
+  search.name = params.get("query");
+  search.showEmpty = params.get("showEmpty");
   return search;
 }

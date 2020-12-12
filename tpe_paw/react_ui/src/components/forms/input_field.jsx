@@ -4,7 +4,7 @@ const InputField = (props) => {
   return (
     <input
       type={props.type == null ? "text" : props.type}
-      className={"form-control rounded-border " + (props.error && "with-error")}
+      className={"form-control " + (props.error && "with-error")}
       placeholder={props.placeholder}
       aria-label={props.placeholder}
       aria-describedby="button-addon2"

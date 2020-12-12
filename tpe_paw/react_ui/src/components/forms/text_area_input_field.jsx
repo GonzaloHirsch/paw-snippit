@@ -1,7 +1,16 @@
 import React from "react";
 
 const TextAreaInputField = (props) => {
-  const { type, id, placeholder, htmlFor, onChange, errors, cols, rows } = props;
+  const {
+    type,
+    id,
+    placeholder,
+    htmlFor,
+    onChange,
+    errors,
+    cols,
+    rows,
+  } = props;
   return (
     <React.Fragment>
       <label htmlFor={htmlFor} className="sr-only">

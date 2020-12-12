@@ -6,10 +6,7 @@ import ar.edu.itba.paw.models.Language;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.dto.LanguageDto;
-import ar.edu.itba.paw.webapp.dto.LanguageWithEmptyDto;
-import ar.edu.itba.paw.webapp.dto.SnippetDto;
-import ar.edu.itba.paw.webapp.dto.SearchDto;
+import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.utility.*;
 import ar.edu.itba.paw.webapp.form.DeleteForm;
 import ar.edu.itba.paw.webapp.form.ItemSearchForm;
@@ -67,6 +64,25 @@ public class LanguagesController {
         // Generate DTOs
         final List<LanguageWithEmptyDto> languages = rawLanguages.stream().map(l -> LanguageWithEmptyDto.fromLanguage(l, uriInfo)).collect(Collectors.toList());
         final int languagesCount = this.languageService.getAllLanguagesCount(showEmpty);
+        int pageCount = PagingHelper.CalculateTotalPages(languagesCount, LANGUAGE_PAGE_SIZE);
+
+        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<LanguageWithEmptyDto>>(languages) {
+        });
+        ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        ResponseHelper.AddTotalItemsAttribute(builder, languagesCount);
+        return builder.build();
+    }
+
+    @GET
+    @Path("/search")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response searchInAllTags(final @BeanParam LanguageSearchDto languageSearchDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page){
+        final Collection<Language> rawLanguages = this.languageService.findAllLanguagesByName(languageSearchDto.getName(), languageSearchDto.isShowEmpty(), page, LANGUAGE_PAGE_SIZE);
+        // Analyze if they are empty or not
+        rawLanguages.forEach(l -> this.snippetService.analizeSnippetsUsing(l));
+        // Generate DTOs
+        final List<LanguageWithEmptyDto> languages = rawLanguages.stream().map(l -> LanguageWithEmptyDto.fromLanguage(l, uriInfo)).collect(Collectors.toList());
+        int languagesCount = this.languageService.getAllLanguagesCountByName(languageSearchDto.getName(), languageSearchDto.isShowEmpty());
         int pageCount = PagingHelper.CalculateTotalPages(languagesCount, LANGUAGE_PAGE_SIZE);
 
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<LanguageWithEmptyDto>>(languages) {

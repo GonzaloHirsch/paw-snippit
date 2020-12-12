@@ -71,6 +71,8 @@ class NavBar extends Component {
   }
 
   determineCurrentContext() {
+    if (this.testForContext("**/tags/*/snippets", CONTEXT.TAGS_SNIPPETS)) return;
+    if (this.testForContext("**/languages/*/snippets", CONTEXT.LANGUAGES_SNIPPETS)) return;
     if (this.testForContext("**/tags", CONTEXT.TAGS)) return;
     if (this.testForContext("**/languages", CONTEXT.LANGUAGES)) return;
     if (this.testForContext("**/explore", CONTEXT.EXPLORE)) return;

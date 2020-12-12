@@ -79,6 +79,24 @@ public class TagsController {
         return builder.build();
     }
 
+    @GET
+    @Path("/search")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response searchInAllTags(final @BeanParam TagSearchDto tagSearchDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page){
+        User currentUser = loginAuthentication.getLoggedInUser();
+        final long loggedUserId = UserHelper.GetLoggedUserId(this.loginAuthentication);
+
+        final List<TagWithEmptyDto> tags = this.tagService.findTagsByName(tagSearchDto.getName(), tagSearchDto.isShowEmpty(), tagSearchDto.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null, page, TAG_PAGE_SIZE).stream().map(t -> TagWithEmptyDto.fromTag(t, loggedUserId, uriInfo)).collect(Collectors.toList());
+        final int tagCount = this.tagService.getAllTagsCountByName(tagSearchDto.getName(), tagSearchDto.isShowEmpty(), tagSearchDto.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null);
+        int pageCount = PagingHelper.CalculateTotalPages(tagCount, TAG_PAGE_SIZE);
+
+        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<TagWithEmptyDto>>(tags) {
+        });
+        ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        ResponseHelper.AddTotalItemsAttribute(builder, tagCount);
+        return builder.build();
+    }
+
 
     @GET
     @Path("/{id}")
@@ -262,7 +280,7 @@ public class TagsController {
 
     @Deprecated
     @RequestMapping("/tags/search")
-    public ModelAndView searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
+    public ModelAndView _searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         final ModelAndView mav = new ModelAndView("tagAndLanguages/tags");
         User currentUser = loginAuthentication.getLoggedInUser();
         Collection<Tag> allTags = this.tagService.findTagsByName(searchForm.getName(), searchForm.isShowEmpty(), searchForm.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null, page, TAG_PAGE_SIZE);

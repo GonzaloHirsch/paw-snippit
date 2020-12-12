@@ -1,5 +1,4 @@
 import Client from "../Client";
-import axios from "axios";
 
 export default class LanguagesAndTagsActionsClient extends Client {
   followTag(id) {

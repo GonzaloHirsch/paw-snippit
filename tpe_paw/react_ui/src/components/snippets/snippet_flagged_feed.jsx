@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import SnippetFeed from "./snippet_feed";
 import i18n from "../../i18n";
 

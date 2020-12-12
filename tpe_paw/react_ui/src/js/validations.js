@@ -166,11 +166,61 @@ export const REGISTER_VALIDATIONS = {
 export const PROFILE_VALIDATION = {
   description: (val) => {
     return (
-      (val.length > 200 &&
+      (val.length > 500 &&
         i18n.t("profile.form.errors.description", {
-          limit: 200,
+          limit: 500,
         })) ||
       null
     );
+  },
+};
+
+export const SNIPPET_CREATE_VALIDATIONS = {
+  title: (val) => {
+    return (
+      (val.length === 0 &&
+        i18n.t("snippetCreate.errors.empty", {
+          field: "Title",
+        })) ||
+      (val.length > 50 &&
+        i18n.t("snippetCreate.errors.maxLimit", { field: "Title", num: 50 })) ||
+      (val.length < 5 &&
+        i18n.t("snippetCreate.errors.minLimit", { field: "Title", num: 5 })) ||
+      null
+    );
+  },
+  description: (val) => {
+    return (
+      (val.length > 500 &&
+        i18n.t("snippetCreate.errors.minLimit", {
+          field: "Description",
+          num: 500,
+        })) ||
+      null
+    );
+  },
+  code: (val) => {
+    return (
+      (val.length === 0 &&
+        i18n.t("snippetCreate.errors.empty", {
+          field: "Code",
+        })) ||
+      (val.length > 30000 &&
+        i18n.t("snippetCreate.errors.maxLimit", {
+          field: "Code",
+          num: 30000,
+        })) ||
+      (val.length < 5 &&
+        i18n.t("snippetCreate.errors.minLimit", { field: "Code", num: 5 })) ||
+      null
+    );
+  },
+  language: (val) => {
+    return (
+      (val.length === 0 && i18n.t("snippetCreate.errors.language")) || null
+    );
+  },
+  tags: (val) => {
+    return null;
   },
 };

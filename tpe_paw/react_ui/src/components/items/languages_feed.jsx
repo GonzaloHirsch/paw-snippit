@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import PaginatedItemFeed from "./paginated_item_feed";
 import i18n from "../../i18n";
 import { ITEM_TYPES } from "../../js/constants";
@@ -6,7 +6,7 @@ import { ITEM_TYPES } from "../../js/constants";
 // Stateless Functional Component
 
 const LanguagesFeed = (props) => {
-    console.log(props)
+  console.log(props);
   return (
     <React.Fragment>
       <div className="mx-3 mb-3 fw-100">

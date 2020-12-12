@@ -109,8 +109,29 @@ export default {
   },
   snippetCreate: {
     name: "Snippet Create",
-    button: "CREATE",
+    button: "Create Snippet",
     header: "Create a Snippet",
+    fields: {
+      title: "Title",
+      description: "Description",
+      code: "Code",
+      language: "Language",
+      tags: "Tags",
+    },
+    placeholders: {
+      title: "Enter your snippet's title...",
+      description: "Enter your snippet's description...",
+      code: "Enter your snippet's code",
+      language: "Select a language...",
+      tags: "Select related tags...",
+    },
+    errors: {
+      empty: "{{field}} can not be empty",
+      maxLimit: "{{field}} must be less than {{num}} charaters",
+      minLimit: "{{field}} must include more than {{num}} charaters",
+      language: "Must select a language",
+      tags: "",
+    },
   },
   explore: {
     form: {

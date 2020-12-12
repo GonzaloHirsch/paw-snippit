@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
 
 import Icon from "@mdi/react";
 import {
@@ -21,7 +20,7 @@ class Pagination extends Component {
     const links = this.props.links;
     const handlePageTransition = this.props.onPageTransition;
     return (
-      <nav >
+      <nav>
         <ul className="pagination">
           {links[this.FIRST] !== undefined && (
             <li

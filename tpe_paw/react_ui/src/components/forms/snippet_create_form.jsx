@@ -5,6 +5,13 @@ import SnippetClient from "../../api/implementations/SnippetClient";
 import LanguagesAndTagsClient from "../../api/implementations/LanguagesAndTagsClient";
 import TextAreaInputField from "../forms/text_area_input_field";
 import i18n from "../../i18n";
+import { withRouter } from "react-router";
+import {
+  handleChange,
+  validateAll,
+  hasErrors,
+  SNIPPET_CREATE_VALIDATIONS,
+} from "../../js/validations";
 
 class SnippetCreateForm extends Component {
   snippetClient;
@@ -33,6 +40,7 @@ class SnippetCreateForm extends Component {
         languages: [],
         tags: [],
       },
+      loading: false,
     };
   }
 
@@ -58,7 +66,6 @@ class SnippetCreateForm extends Component {
         this.setState({
           options: options,
         });
-        console.log(this.state.options);
       })
       .catch((e) => {});
   }
@@ -68,20 +75,46 @@ class SnippetCreateForm extends Component {
     this._loadTags();
   }
 
-  _onTypeaheadChange(selected, key) {
+  _onTypeaheadChange(selected, name) {
     let fields = { ...this.state.fields };
-    fields[key] = selected;
-    this.setState({ fields: fields });
+    let errors = { ...this.state.errors };
+    fields[name] = selected;
+    errors[name] = SNIPPET_CREATE_VALIDATIONS[name](fields[name]);
+    this.setState({ fields: fields, errors: errors });
   }
 
-  _onInputChange(e, key) {
-    let fields = { ...this.state.fields };
-    fields[key] = e.target.value;
-    this.setState({ fields: fields });
+  _onInputChange(e, name) {
+    const state = handleChange(
+      e,
+      name,
+      SNIPPET_CREATE_VALIDATIONS,
+      this.state.fields,
+      this.state.errors
+    );
+    this.setState(state);
   }
 
   _onSubmit() {
-    console.log(this.state.fields);
+    const errors = validateAll(SNIPPET_CREATE_VALIDATIONS, this.state.fields);
+
+    if (!hasErrors(errors)) {
+      this.setState({ loading: true });
+      this._createSnippet();
+    } else {
+      this.setState({ errors: errors });
+    }
+  }
+
+  _createSnippet() {
+    const snippet = { ...this.state.fields };
+    snippet.language = snippet.language[0].id;
+    snippet.tags = snippet.tags.map((tag) => tag.id);
+    this.snippetClient
+      .postCreateSnippet(snippet)
+      .then(() => {
+        this.props.history.push("/"); // On success, redirect to the Home screen
+      })
+      .catch((e) => {}); // TODO
   }
 
   render() {
@@ -89,43 +122,54 @@ class SnippetCreateForm extends Component {
     const { fields, errors } = this.state;
     const textareaColumns = 60;
     return (
-      <form className="d-flex flex-column justify-space-between">
+      <form
+        onSubmit={() => this._onSubmit()}
+        className="d-flex flex-column justify-space-between"
+      >
         <div className="parent-width d-flex flex-row mb-3">
           <div
             className="d-flex flex-column"
             style={{ width: "65%", marginRight: "30px" }}
           >
-            <h5>{"Title"}</h5>
+            <h5>{i18n.t("snippetCreate.fields.title")}</h5>
             <input
               id="snippetTitleInput"
               type="text"
               className={"form-control  " + (errors.title && "with-error")}
-              placeholder={"Enter title"}
+              placeholder={i18n.t("snippetCreate.placeholders.title")}
               onChange={(e) => this._onInputChange(e, "title")}
               value={fields.title}
             />
+            {errors.title && (
+              <span className="text-danger">{errors.title}</span>
+            )}
           </div>
           <div className="d-flex flex-column" style={{ width: "30%" }}>
-            <h5>Language</h5>
-            <Typeahead
-              id="chooseLanguage"
-              placeholder={"Select a Language"}
-              options={languages}
-              labelKey="name"
-              onChange={(selected) =>
-                this._onTypeaheadChange(selected, "language")
-              }
-              selected={fields.language}
-            />
+            <h5>{i18n.t("snippetCreate.fields.language")}</h5>
+            <div className={errors.language && "error-container"}>
+              <Typeahead
+                id="chooseLanguage"
+                placeholder={i18n.t("snippetCreate.placeholders.language")}
+                options={languages}
+                labelKey="name"
+                onChange={(selected) =>
+                  this._onTypeaheadChange(selected, "language")
+                }
+                selected={fields.language}
+              />
+            </div>
+            {errors.language && (
+              <span className="text-danger">{errors.language}</span>
+            )}
           </div>
         </div>
         <div className="mb-3">
-          <h5>Description</h5>
+          <h5>{i18n.t("snippetCreate.fields.description")}</h5>
           <TextAreaInputField
             id={"inputDescription"}
             htmlFor={"inputDescription"}
             type={"text"}
-            placeholder={"Enter your description"}
+            placeholder={i18n.t("snippetCreate.placeholders.description")}
             onChange={(e) => this._onInputChange(e, "description")}
             errors={this.state.errors.description}
             rows={4}
@@ -133,39 +177,42 @@ class SnippetCreateForm extends Component {
           />
         </div>
         <div className="mb-3">
-          <h5>Code</h5>
+          <h5>{i18n.t("snippetCreate.fields.code")}</h5>
           <TextAreaInputField
             id={"inputDescription"}
             htmlFor={"inputDescription"}
             type={"text"}
-            placeholder={"Enter your description"}
+            placeholder={i18n.t("snippetCreate.placeholders.code")}
             onChange={(e) => this._onInputChange(e, "code")}
-            errors={this.state.errors.description}
+            errors={this.state.errors.code}
             rows={8}
             cols={textareaColumns}
           />
         </div>
         <div className="mb-3">
-          <h5>Tags</h5>
+          <h5>{i18n.t("snippetCreate.fields.tags")}</h5>
+
           <Typeahead
             multiple
             id="chooseTags"
-            className="parent-width"
-            placeholder={"Select Tags"}
+            placeholder={i18n.t("snippetCreate.placeholders.tags")}
             options={tags}
             labelKey="name"
             onChange={(selected) => this._onTypeaheadChange(selected, "tags")}
           />
         </div>
         <button
-          className="mt-2 btn btn-lg btn-primary btn-block rounded-border form-button"
+          className={
+            "no-margin shadow btn btn-primary btn-lg btn-block mt-2 rounded-border ld-over-inverse form-button " +
+            (this.state.loading ? "running" : "")
+          }
           type="submit"
         >
-          CREATE
-        </button>{" "}
+          {i18n.t("snippetCreate.button")}
+        </button>
       </form>
     );
   }
 }
 
-export default SnippetCreateForm;
+export default withRouter(SnippetCreateForm);

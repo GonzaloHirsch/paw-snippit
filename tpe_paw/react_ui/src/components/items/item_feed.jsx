@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import ItemCard from "./item_card";
 import Pagination from "../navigation/pagination";
 
@@ -10,7 +10,14 @@ const ItemFeed = (props) => {
     <div className="flex-column">
       <div className="card-columns item-columns">
         {items.map((item) => (
-          <ItemCard key={item.id} item={item} type={type} showEmpty={false} userIsLogged={false} showFollowing={false}/>
+          <ItemCard
+            key={item.id}
+            item={item}
+            type={type}
+            showEmpty={false}
+            userIsLogged={false}
+            showFollowing={false}
+          />
         ))}
       </div>
     </div>

@@ -1,5 +1,4 @@
 import Client from "../Client";
-import axios from "axios";
 
 export default class SnippetActionsClient extends Client {
   deleteSnippet(id) {
@@ -10,8 +9,8 @@ export default class SnippetActionsClient extends Client {
     return this.instance.put("snippets/" + id + "/restore");
   }
 
-  getSnippetVotes(id){
-    return this.instance.get("snippets/" + id + "/vote_count")
+  getSnippetVotes(id) {
+    return this.instance.get("snippets/" + id + "/vote_count");
   }
 
   voteSnippetPositive(id) {

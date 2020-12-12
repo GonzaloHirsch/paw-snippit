@@ -1,9 +1,5 @@
 import Client from "../Client";
 import axios from "axios";
-import {
-  ACTIVE_USER_SNIPPETS,
-  DELETED_USER_SNIPPETS,
-} from "../../js/constants";
 
 export default class SnippetFeedClient extends Client {
   getHomeSnippetFeed(page) {

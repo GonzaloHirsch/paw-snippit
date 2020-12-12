@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import SnippetCard from "./snippet_card";
 import Pagination from "../navigation/pagination";
 

@@ -17,7 +17,6 @@ import { getDateFromString } from "../../js/date_utils";
 import { Typeahead } from "react-bootstrap-typeahead"; // ES2015
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import LanguagesAndTagsClient from "../../api/implementations/LanguagesAndTagsClient";
-import reducer from "../../redux/reducers";
 
 class ExploreForm extends Component {
   languagesAndTagsClient;

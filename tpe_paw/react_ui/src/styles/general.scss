@@ -191,6 +191,11 @@ div {
   background-color: white !important;
 }
 
+.error-container {
+  border: 1px solid red !important;
+  border-radius: $border-radius;
+}
+
 input,
 textarea {
   border-radius: $border-radius !important;

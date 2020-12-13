@@ -91,8 +91,7 @@ class ExploreForm extends Component {
       .catch((e) => {});
   }
 
-  loadLanguage() {
-    let { language } = this.props.urlSearch;
+  loadLanguage(language) {
     if (parseInt(language) === -1) return;
     this.languagesAndTagsClient
       .getLanguageWithId(language)
@@ -119,10 +118,8 @@ class ExploreForm extends Component {
       .catch((e) => {});
   }
 
-  loadTag() {
-    let { tag } = this.props.urlSearch;
+  loadTag(tag) {
     if (parseInt(tag) === -1) return;
-    console.log("LOAD TAG");
     this.languagesAndTagsClient
       .getTagWithId(tag)
       .then((res) => {
@@ -131,17 +128,54 @@ class ExploreForm extends Component {
         this.setState({
           fields: fields,
         });
-        console.log("LOAD TAG", this.state.fields);
       })
       .catch((e) => {});
   }
 
   componentDidMount() {
-    this.loadLanguage();
-    this.loadTag();
+    this.loadLanguage(this.props.urlSearch.language);
+    this.loadTag(this.props.urlSearch.tag);
     this.loadLanguages();
     this.loadTags();
     this.validateAll();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const fields = { ...this.state.fields };
+    const { urlSearch } = nextProps;
+
+    if (urlSearch.language === -1) {
+      fields[EXPLORE.LANGUAGE] = [];
+    } else if (
+      (fields.language.length === 0 && urlSearch.language !== -1) ||
+      (fields.language.length > 0 &&
+        fields.language[0].id !== urlSearch.language)
+    ) {
+      this.loadLanguage(urlSearch.language);
+    }
+
+    if (urlSearch.tag === -1) {
+      fields[EXPLORE.TAG] = [];
+    } else if (
+      (fields.tag.length === 0 && urlSearch.tag !== -1) ||
+      (fields.tag.length > 0 && fields.tag[0].id !== urlSearch.tag)
+    ) {
+      this.loadTag(urlSearch.tag);
+    }
+
+    fields[EXPLORE.FIELD] = urlSearch.field;
+    fields[EXPLORE.SORT] = urlSearch.sort;
+    fields[EXPLORE.FLAGGED] = urlSearch.includeFlagged;
+    fields[EXPLORE.TITLE] = urlSearch.title;
+    fields[EXPLORE.USERNAME] = urlSearch.username;
+    fields[EXPLORE.MINREP] = urlSearch.minRep;
+    fields[EXPLORE.MAXREP] = urlSearch.maxRep;
+    fields[EXPLORE.MINDATE] = getDateFromString(urlSearch.minDate);
+    fields[EXPLORE.MAXDATE] = getDateFromString(urlSearch.maxDate);
+    fields[EXPLORE.MINVOTES] = urlSearch.minVotes;
+    fields[EXPLORE.MAXVOTES] = urlSearch.maxVotes;
+
+    this.setState({ fields: fields });
   }
 
   handleSearch() {

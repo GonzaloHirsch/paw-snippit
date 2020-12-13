@@ -47,8 +47,12 @@
 
 .snippet-code-block {
   background: $code-background-color;
-  overflow-y: auto;
   position: relative;
+}
+
+.snippet-code-block-pre {
+  max-height: 700px;
+  overflow-y: scroll !important;
 }
 
 .hidden-code {
@@ -75,6 +79,6 @@
   }
 }
 
-.vote-count{
+.vote-count {
   font-size: 40px;
 }

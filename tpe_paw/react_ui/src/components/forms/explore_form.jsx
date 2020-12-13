@@ -140,6 +140,7 @@ class ExploreForm extends Component {
     this.validateAll();
   }
 
+  /* Upon URL change, the fields in the form will update */
   componentWillReceiveProps(nextProps) {
     const fields = { ...this.state.fields };
     const { urlSearch } = nextProps;

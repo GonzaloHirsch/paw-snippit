@@ -17,12 +17,13 @@ const TextInputFieldWithIcon = (props) => {
         <input
           type={type}
           id={id}
-          className={"form-control m-0 " + (errors && "with-error")}
+          className={
+            "form-control m-0 input-with-icon " + (errors && "with-error")
+          }
           placeholder={placeholder}
           autoFocus
           onChange={onChange}
           formNoValidate
-          
         />{" "}
       </div>
       {errors && <span className="text-danger">{errors}</span>}

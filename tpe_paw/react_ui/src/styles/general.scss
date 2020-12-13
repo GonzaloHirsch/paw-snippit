@@ -113,6 +113,10 @@ h1 {
   font-weight: 900 !important;
 }
 
+.word-break {
+  word-break: break-word;
+}
+
 .align-items-vertical {
   display: flex !important;
   align-items: center;
@@ -203,6 +207,10 @@ h1 {
 input,
 textarea {
   border-radius: $border-radius !important;
+}
+
+.input-with-icon {
+  border-radius: 0px $border-radius $border-radius 0px !important;
 }
 
 input:focus,

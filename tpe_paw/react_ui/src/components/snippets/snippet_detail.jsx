@@ -45,7 +45,7 @@ import {
   mdiThumbUp,
   mdiThumbUpOutline,
   mdiThumbDown,
-  mdiThumbDownOutline
+  mdiThumbDownOutline,
 } from "@mdi/js";
 import { googlecode } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
@@ -140,7 +140,7 @@ class SnippetDetail extends Component {
       handleFlag,
       handleDelete,
       handleLike,
-      handleDislike
+      handleDislike,
     } = this.props;
     return (
       <div className="flex-column detail-container mx-5 my-4 p-5 inner-square shadow rounded-lg">
@@ -170,7 +170,7 @@ class SnippetDetail extends Component {
             />
           </ModalBody>
           <ModalFooter>
-          <Button color="danger" onClick={this.setReporting}>
+            <Button color="danger" onClick={this.setReporting}>
               {i18n.t("snippetDetail.reporting.actionCancel")}
             </Button>
             <Button
@@ -191,7 +191,7 @@ class SnippetDetail extends Component {
           />
         )}
         <div className="row align-items-vertical no-margin mb-2">
-          <h1 className="col no-padding">{snippet.title}</h1>
+          <h1 className="col no-padding word-break">{snippet.title}</h1>
           <Link
             to={"/languages/" + language.id}
             className="language-snippet-tag-link p-2 flex-center rounded mr-1"
@@ -201,10 +201,10 @@ class SnippetDetail extends Component {
           </Link>
         </div>
         <div className="row no-margin fw-500">
-          <p>{snippet.description}</p>
+          <p className="word-break">{snippet.description}</p>
         </div>
         <div className="dropdown-divider snippet-divider mb-4"></div>
-        <div className="d-flex card-text snippet-code-block rounded px-3 py-2 mb-2">
+        <div className="d-flex card-text snippet-code-block rounded mb-2">
           <Icon
             id="copyCodeButton"
             className="snippet-code-copy-button mt-1 mr-1 p-1 icon-size-2"
@@ -222,6 +222,7 @@ class SnippetDetail extends Component {
           </UncontrolledTooltip>
 
           <SyntaxHighlighter
+            className="snippet-code-block-pre px-4 py-3"
             wrapLongLines={true}
             showInlineLineNumbers={false}
             showLineNumbers={false}
@@ -284,28 +285,40 @@ class SnippetDetail extends Component {
           {userCanReport && !userIsOwner && this.getReportedSnippetBox(snippet)}
           <DetailBox>
             <div className="row no-margin fw-500">
-            <Icon
-              className={
-                "row no-margin icon-like" + (snippet.userVotedPositive ? "-selected" : "")
-              }
-              path={snippet.userVotedPositive ? mdiThumbUp : mdiThumbUpOutline}
-              size={3}
-              onClick={(e) => handleLike(e, snippet.id)}
-            />
-            <span className="mx-2 align-items-vertical vote-count">{snippet.voteCount}</span>
-            <Icon
-              className={
-                "row no-margin icon-dislike" + (snippet.userVotedNegative ? "-selected" : "")
-              }
-              path={snippet.userVotedNegative ? mdiThumbDown : mdiThumbDownOutline}
-              size={3}
-              onClick={(e) => handleDislike(e, snippet.id)}
-            />
+              <Icon
+                className={
+                  "row no-margin icon-like" +
+                  (snippet.userVotedPositive ? "-selected" : "")
+                }
+                path={
+                  snippet.userVotedPositive ? mdiThumbUp : mdiThumbUpOutline
+                }
+                size={3}
+                onClick={(e) => handleLike(e, snippet.id)}
+              />
+              <span className="mx-2 align-items-vertical vote-count">
+                {snippet.voteCount}
+              </span>
+              <Icon
+                className={
+                  "row no-margin icon-dislike" +
+                  (snippet.userVotedNegative ? "-selected" : "")
+                }
+                path={
+                  snippet.userVotedNegative ? mdiThumbDown : mdiThumbDownOutline
+                }
+                size={3}
+                onClick={(e) => handleDislike(e, snippet.id)}
+              />
             </div>
           </DetailBox>
           <LinkDetailBox path={"/user/" + creator.id}>
             <div className="row mb-2 fw-500 primary-text no-decoration">
-              <span>{i18n.t("snippetDetail.uploaded", {date: snippet.createdDate})}</span>
+              <span>
+                {i18n.t("snippetDetail.uploaded", {
+                  date: snippet.createdDate,
+                })}
+              </span>
             </div>
             <div className="row no-margin align-items-vertical">
               <img src={getUserProfilePicUrl(creator)} alt="User Icon" />

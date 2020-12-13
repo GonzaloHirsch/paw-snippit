@@ -46,8 +46,8 @@ class ExploreForm extends Component {
         sort: sort === null ? "" : sort,
         includeFlagged: includeFlagged === null ? false : includeFlagged,
         title: title === null ? "" : title,
-        language: null,
-        tag: null,
+        language: [],
+        tag: [],
         username: username === null ? "" : username,
         minRep: minRep === null ? "" : minRep,
         maxRep: maxRep === null ? "" : maxRep,
@@ -93,12 +93,12 @@ class ExploreForm extends Component {
 
   loadLanguage() {
     let { language } = this.props.urlSearch;
-    if (language === null || parseInt(language) === -1) return;
+    if (parseInt(language) === -1) return;
     this.languagesAndTagsClient
       .getLanguageWithId(language)
       .then((res) => {
         let fields = { ...this.state.fields };
-        fields.language = res.data;
+        fields.language = [res.data];
         this.setState({
           fields: fields,
         });
@@ -121,25 +121,26 @@ class ExploreForm extends Component {
 
   loadTag() {
     let { tag } = this.props.urlSearch;
-    if (tag === null || parseInt(tag) === -1) return;
+    if (parseInt(tag) === -1) return;
+    console.log("LOAD TAG");
     this.languagesAndTagsClient
       .getTagWithId(tag)
       .then((res) => {
         let fields = { ...this.state.fields };
-        fields.tag = res.data;
+        fields.tag = [res.data];
         this.setState({
           fields: fields,
         });
-        console.log(res.data);
+        console.log("LOAD TAG", this.state.fields);
       })
       .catch((e) => {});
   }
 
   componentDidMount() {
-    this.loadLanguages();
     this.loadLanguage();
-    this.loadTags();
     this.loadTag();
+    this.loadLanguages();
+    this.loadTags();
     this.validateAll();
   }
 
@@ -226,13 +227,11 @@ class ExploreForm extends Component {
 
   _setTypeaheadWithDefault(params, name) {
     const value = this.state.fields[name];
-    console.log(value);
 
-    if (value !== null && value !== undefined && value !== "undefined") {
-      params.set(name, value.id);
+    if (value.length > 0) {
+      params.set(name, value[0].id);
     } else {
       params.set(name, -1);
-      console.log(params);
     }
   }
 
@@ -255,8 +254,8 @@ class ExploreForm extends Component {
         sort: "",
         includeFlagged: false,
         title: "",
-        language: null,
-        tag: null,
+        language: [],
+        tag: [],
         username: "",
         minRep: "",
         maxRep: "",
@@ -368,23 +367,20 @@ class ExploreForm extends Component {
 
   // Handlers
   onChange = (key, e, useChecked) => {
-    console.log(e[0]);
     let fields = this.state.fields;
     let errors = this.state.errors;
     fields[key] = useChecked ? e.target.checked : e.target.value;
-
     if (key in errors) {
       errors[key] = EXPLORE_FORM_VALIDATIONS[key](fields[key]);
     }
     this.setState({ fields: fields, errors: errors });
   };
 
-  _onTypeaheadChange = (key, e) => {
-    console.log(e[0]);
-    let fields = this.state.fields;
-    fields[key] = e[0] === undefined ? null : e[0];
+  _onTypeaheadChange(name, selected) {
+    let fields = { ...this.state.fields };
+    fields[name] = selected;
     this.setState({ fields: fields });
-  };
+  }
 
   onDateChange = (key, e) => {
     let fields = this.state.fields;
@@ -419,13 +415,15 @@ class ExploreForm extends Component {
     const repErrorKey = "userReputation";
     const snippetErrorKey = "snippetVotes";
 
+    const { fields, errors, options } = this.state;
+
     return (
       <form className="flex-column" onSubmit={() => this.handleSearch()}>
         <h6>{i18n.t(orderPrefix + "header")}</h6>
         <div className="d-flex flex-row">
           <DropdownMenu
             id={"exploreOrderByMenu"}
-            value={this.state.fields.field}
+            value={fields.field}
             options={this._getOrderOptions(EXPLORE_ORDERBY, orderPrefix)}
             defaultValue={""}
             description={i18n.t(orderPrefix + "placeholder")}
@@ -434,7 +432,7 @@ class ExploreForm extends Component {
           <div className="m-2"></div>
           <DropdownMenu
             id={"exploreSortMenu"}
-            value={this.state.fields.sort}
+            value={fields.sort}
             description={i18n.t(sortPrefix + "placeholder")}
             defaultValue={""}
             options={this._getOrderOptions(SORT, sortPrefix)}
@@ -443,11 +441,9 @@ class ExploreForm extends Component {
         </div>
         <hr />
         <h6>{i18n.t(titlePrefix + "header")}</h6>
-        {this.state.errors.title && (
-          <span className="text-danger">{this.state.errors.title}</span>
-        )}
+        {errors.title && <span className="text-danger">{errors.title}</span>}
         <InputField
-          value={this.state.fields.title}
+          value={fields.title}
           placeholder={i18n.t(titlePrefix + "placeholder")}
           onChange={(e) => this.onChange(EXPLORE.TITLE, e, false)}
           error={this._inputHasErrors(EXPLORE.TITLE)}
@@ -456,55 +452,37 @@ class ExploreForm extends Component {
         <div className="d-flex flex-row">
           <div>
             <h6>{i18n.t(languagePrefix + "header")}</h6>
-            {this.state.fields.language === null ? (
-              <Typeahead
-                id={"exploreLanguageMenu"}
-                placeholder={i18n.t(languagePrefix + "placeholder")}
-                options={this.state.options.languages}
-                labelKey="name"
-                onChange={(e) => this._onTypeaheadChange(EXPLORE.LANGUAGE, e)}
-              />
-            ) : (
-              <Typeahead
-                id={"exploreLanguageMenu"}
-                placeholder={i18n.t(languagePrefix + "placeholder")}
-                options={this.state.options.languages}
-                labelKey="name"
-                defaultSelected={[this.state.fields.language]}
-                onChange={(e) => this._onTypeaheadChange(EXPLORE.LANGUAGE, e)}
-              />
-            )}
+            <Typeahead
+              id={"exploreLanguageMenu"}
+              placeholder={i18n.t(languagePrefix + "placeholder")}
+              options={options.languages}
+              labelKey="name"
+              onChange={(selected) =>
+                this._onTypeaheadChange(EXPLORE.LANGUAGE, selected)
+              }
+              selected={fields.language}
+            />
           </div>
           <div className="m-2"></div>
           <div>
             <h6>{i18n.t(tagPrefix + "header")}</h6>
-            {this.state.fields.tag === null ? (
-              <Typeahead
-                id={"exploreTagMenu"}
-                placeholder={i18n.t(tagPrefix + "placeholder")}
-                options={this.state.options.tags}
-                labelKey="name"
-                onChange={(e) => this._onTypeaheadChange(EXPLORE.TAG, e)}
-              />
-            ) : (
-              <Typeahead
-                id={"exploreTagMenu"}
-                placeholder={i18n.t(tagPrefix + "placeholder")}
-                options={this.state.options.tags}
-                labelKey="name"
-                defaultSelected={[this.state.fields.tag]}
-                onChange={(e) => this._onTypeaheadChange(EXPLORE.TAG, e)}
-              />
-            )}
+            <Typeahead
+              id={"exploreTagMenu"}
+              placeholder={i18n.t(tagPrefix + "placeholder")}
+              options={options.tags}
+              labelKey="name"
+              onChange={(e) => this._onTypeaheadChange(EXPLORE.TAG, e)}
+              selected={fields.tag}
+            />
           </div>
         </div>
         <hr />
         <h6>{i18n.t(userPrefix + "username")}</h6>
-        {this.state.errors.username && (
-          <span className="text-danger">{this.state.errors.username}</span>
+        {errors.username && (
+          <span className="text-danger">{errors.username}</span>
         )}
         <InputField
-          value={this.state.fields.username}
+          value={fields.username}
           placeholder={i18n.t(userPrefix + "username")}
           onChange={(e) => this.onChange(EXPLORE.USERNAME, e, false)}
           error={this._inputHasErrors(EXPLORE.USERNAME)}
@@ -516,7 +494,7 @@ class ExploreForm extends Component {
           <div className="d-flex flex-row">
             <InputField
               type={"number"}
-              value={this.state.fields.minRep}
+              value={fields.minRep}
               placeholder={i18n.t(placeholderPrefix + "from")}
               onChange={(e) =>
                 this.onChangeMinValidation(
@@ -531,7 +509,7 @@ class ExploreForm extends Component {
             <div className="m-2"></div>
             <InputField
               type={"number"}
-              value={this.state.fields.maxRep}
+              value={fields.maxRep}
               placeholder={i18n.t(placeholderPrefix + "to")}
               onChange={(e) =>
                 this.onChangeMaxValidation(
@@ -553,7 +531,7 @@ class ExploreForm extends Component {
             {" "}
             <InputField
               type={"number"}
-              value={this.state.fields.minVotes}
+              value={fields.minVotes}
               placeholder={i18n.t(placeholderPrefix + "from")}
               onChange={(e) =>
                 this.onChangeMinValidation(
@@ -568,7 +546,7 @@ class ExploreForm extends Component {
             <div className="m-2"></div>
             <InputField
               type={"number"}
-              value={this.state.fields.maxVotes}
+              value={fields.maxVotes}
               placeholder={i18n.t(placeholderPrefix + "to")}
               onChange={(e) =>
                 this.onChangeMaxValidation(
@@ -586,13 +564,13 @@ class ExploreForm extends Component {
         <h6>{i18n.t("explore.form.date")}</h6>
         <div className="d-flex flex-row">
           <CustomDatePicker
-            date={this.state.fields.minDate}
+            date={fields.minDate}
             onChange={(e) => this.onDateChange(EXPLORE.MINDATE, e)}
             placeholder={i18n.t(placeholderPrefix + "from")}
           />
           <div className="m-2"></div>
           <CustomDatePicker
-            date={this.state.fields.maxDate}
+            date={fields.maxDate}
             onChange={(e) => this.onDateChange(EXPLORE.MAXDATE, e)}
             placeholder={i18n.t(placeholderPrefix + "to")}
           />
@@ -607,13 +585,13 @@ class ExploreForm extends Component {
         </div>
         <hr />
         <div className="d-flex flex-row">
-          <button
+          <div
             className="mt-2 btn btn-lg btn-primary btn-block rounded-border form-button"
             onClick={() => this._resetFilters()}
             style={{ width: "35%" }}
           >
             {i18n.t("explore.form.reset")}
-          </button>
+          </div>
           <div className="m-2"></div>
           <button
             className="mt-2 btn btn-lg btn-primary btn-block rounded-border form-button"

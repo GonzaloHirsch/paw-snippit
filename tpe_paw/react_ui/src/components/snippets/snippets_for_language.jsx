@@ -40,7 +40,7 @@ class SnippetsForLanguage extends Component {
     return (
       <div className="flex-center flex-column">
         <div className="flex-center mt-4 mb-2">
-          <h1 className="fw-500 no-margin">
+          <h1 className="fw-300 no-margin">
             {i18n.t("items.snippetsFor", {
               item: this.state.language.name.toUpperCase(),
             })}
@@ -52,6 +52,7 @@ class SnippetsForLanguage extends Component {
 
         <SnippetFeed
           snippets={snippets}
+          totalSnippets={totalSnippets}
           links={links}
           currentPage={currentPage}
           onPageTransition={onPageTransition}

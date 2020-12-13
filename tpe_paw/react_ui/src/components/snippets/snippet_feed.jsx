@@ -1,12 +1,14 @@
 import React from "react";
 import SnippetCard from "./snippet_card";
 import Pagination from "../navigation/pagination";
+import i18n from "../../i18n";
 
 // Stateless Functional Component
 
 const SnippetFeed = (props) => {
   const {
     snippets,
+    totalSnippets,
     currentPage,
     links,
     onPageTransition,
@@ -15,24 +17,32 @@ const SnippetFeed = (props) => {
   } = props;
   return (
     <div className="parent-width flex-column">
-      <div className="card-columns mx-3">
-        {snippets.map((snippet) => (
-          <SnippetCard
-            key={snippet.id}
-            snippet={snippet}
-            handleFav={onSnippetFav}
-            userIsLogged={userIsLogged}
-          />
-        ))}
-      </div>
-      <div className="flex-center">
-        <Pagination
-          currentPage={currentPage}
-          links={links}
-          onPageTransition={onPageTransition}
-          className="mx-auto"
-        />
-      </div>
+      {totalSnippets === 0 ? (
+        <div className="flex-center fw-100" style={{ fontSize: "50px" }}>
+          {i18n.t("snippetsEmpty")}
+        </div>
+      ) : (
+        <React.Fragment>
+          <div className="card-columns mx-3">
+            {snippets.map((snippet) => (
+              <SnippetCard
+                key={snippet.id}
+                snippet={snippet}
+                handleFav={onSnippetFav}
+                userIsLogged={userIsLogged}
+              />
+            ))}
+          </div>
+          <div className="flex-center">
+            <Pagination
+              currentPage={currentPage}
+              links={links}
+              onPageTransition={onPageTransition}
+              className="mx-auto"
+            />
+          </div>
+        </React.Fragment>
+      )}
     </div>
   );
 };

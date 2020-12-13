@@ -107,37 +107,39 @@ class SnippetsForTag extends Component {
       userIsLogged,
     } = this.props;
     return (
-      <div className="flex-center flex-column">
-        <div className="flex-center flex-row mt-4 mb-2">
-          <h1 className="fw-500 no-margin">
-            {i18n.t("items.snippetsFor", {
-              item: this.state.tag.name.toUpperCase(),
-            })}
-          </h1>
-          <div className="mx-3"></div>
-          <Badge
-            onClick={(e) => this._onFollow(e)}
-            className={"flex-center tag-action-badge-snippets "}
-            color="secondary"
-          >
-            {this.state.follows
-              ? i18n.t("items.unfollow")
-              : i18n.t("items.follow")}
-          </Badge>
+      <React.Fragment>
+        <div className="mt-2 ml-3 mb-3">
+          <div className="d-flex align-items-center flex-row mb-2">
+            <h1 className="no-margin fw-300">
+              {i18n.t("items.snippetsFor", {
+                item: this.state.tag.name.toUpperCase(),
+              })}
+            </h1>
+            <div className="mx-3"></div>
+            <Badge
+              onClick={(e) => this._onFollow(e)}
+              className={"flex-center tag-action-badge-snippets "}
+              color="secondary"
+            >
+              {this.state.follows
+                ? i18n.t("items.unfollow")
+                : i18n.t("items.follow")}
+            </Badge>
+          </div>
+          <h5 className="fw-100">
+            ({i18n.t("snippetWithNumber", { count: totalSnippets })})
+          </h5>
         </div>
-        <h5 className="fw-100 mb-3">
-          ({i18n.t("snippetWithNumber", { count: totalSnippets })})
-        </h5>
-
         <SnippetFeed
           snippets={snippets}
+          totalSnippets={totalSnippets}
           links={links}
           currentPage={currentPage}
           onPageTransition={onPageTransition}
           onSnippetFav={onSnippetFav}
           userIsLogged={userIsLogged}
         />
-      </div>
+      </React.Fragment>
     );
   }
 }

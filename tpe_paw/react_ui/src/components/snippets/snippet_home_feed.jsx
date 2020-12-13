@@ -15,6 +15,7 @@ const SnippetHomeFeed = (props) => {
       </div>
       <SnippetFeed
         snippets={props.snippets}
+        totalSnippets={props.totalSnippets}
         links={props.links}
         currentPage={props.currentPage}
         onPageTransition={props.onPageTransition}

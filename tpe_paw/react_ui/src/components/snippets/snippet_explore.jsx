@@ -25,6 +25,7 @@ class SnippetExplore extends Component {
           <div className="col-8">
             <SnippetFeed
               snippets={this.props.snippets}
+              totalSnippets={this.props.totalSnippets}
               links={this.props.links}
               currentPage={this.props.currentPage}
               onPageTransition={this.props.onPageTransition}

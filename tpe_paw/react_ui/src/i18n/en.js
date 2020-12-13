@@ -2,6 +2,7 @@ export default {
   test: "My test in ENGLISH",
   app: "Snippit",
   snippet: "Snippet",
+  snippetsEmpty: "There are no snippets here",
   snippet_plural: "Snippets",
   snippetWithNumber: "{{count}} Snippet",
   snippetWithNumber_plural: "{{count}} Snippets",

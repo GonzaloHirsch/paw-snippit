@@ -60,7 +60,13 @@ public class TagsController {
     public Response getTagsByPage(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page, final @QueryParam(QUERY_PARAM_SHOW_EMPTY) @DefaultValue("true") boolean showEmpty, final @QueryParam(QUERY_PARAM_SHOW_ONLY_FOLLOWING) @DefaultValue("false") boolean showOnlyFollowing) {
         User currentUser = loginAuthentication.getLoggedInUser();
         final long loggedUserId = UserHelper.GetLoggedUserId(this.loginAuthentication);
-        final List<TagWithEmptyDto> tags = tagService.getAllTags(showEmpty, showOnlyFollowing, currentUser != null ? currentUser.getId() : null, page, TAG_PAGE_SIZE).stream().map(t -> TagWithEmptyDto.fromTag(t, loggedUserId, uriInfo)).collect(Collectors.toList());
+        final Collection<Tag> rawTags = tagService.getAllTags(showEmpty, showOnlyFollowing, currentUser != null ? currentUser.getId() : null, page, TAG_PAGE_SIZE);
+
+        // Analyze if they are empty or not
+        rawTags.forEach(t -> this.snippetService.analizeSnippetsUsing(t));
+
+        final List<TagWithEmptyDto> tags = rawTags.stream().map(t -> TagWithEmptyDto.fromTag(t, loggedUserId, uriInfo)).collect(Collectors.toList());
+
         final int tagCount = this.tagService.getAllTagsCount(showEmpty, showOnlyFollowing, currentUser != null ? currentUser.getId() : null);
         int pageCount = PagingHelper.CalculateTotalPages(tagCount, TAG_PAGE_SIZE);
 

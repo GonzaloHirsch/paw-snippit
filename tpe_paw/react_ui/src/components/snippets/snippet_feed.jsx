@@ -14,7 +14,7 @@ const SnippetFeed = (props) => {
     userIsLogged,
   } = props;
   return (
-    <div className="flex-column">
+    <div className="parent-width flex-column">
       <div className="card-columns mx-3">
         {snippets.map((snippet) => (
           <SnippetCard

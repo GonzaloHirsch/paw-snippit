@@ -12,6 +12,10 @@ const SnippetFeed = React.lazy(() =>
 const SnippetCreate = React.lazy(() =>
   import("./components/snippets/snippet_create")
 );
+const TagSnippets = React.lazy(() => import("./components/pages/tag_snippets"));
+const LanguageSnippets = React.lazy(() =>
+  import("./components/pages/language_snippets")
+);
 const Login = React.lazy(() => import("./components/login/login"));
 const SignUp = React.lazy(() => import("./components/login/signup"));
 const Home = React.lazy(() => import("./components/pages/home"));
@@ -172,6 +176,13 @@ const routes = [
     roles: [],
   },
   {
+    path: "/languages/:id",
+    exact: false,
+    name: i18n.t("items.snippetsFor", { item: "Language" }),
+    component: LanguageSnippets,
+    roles: [],
+  },
+  {
     path: "/tags",
     exact: true,
     name: i18n.t("nav.tags"),
@@ -183,6 +194,13 @@ const routes = [
     exact: true,
     name: i18n.t("nav.tags"),
     component: Tags,
+    roles: [],
+  },
+  {
+    path: "/tags/:id",
+    exact: false,
+    name: i18n.t("items.snippetsFor", { item: "Tag" }),
+    component: TagSnippets,
     roles: [],
   },
   {

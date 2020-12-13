@@ -239,6 +239,7 @@ function SnippetFeedHOC(
               onPageTransition={this.onPageTransition}
               onSnippetFav={this.onSnippetFav}
               {...this.state}
+              {...this.props}
             ></WrappedComponent>
           </div>
         );

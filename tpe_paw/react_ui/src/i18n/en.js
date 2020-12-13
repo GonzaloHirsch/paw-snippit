@@ -313,5 +313,6 @@ export default {
     empty: "No Snippets",
     follow: "Follow",
     unfollow: "Unfollow",
+    snippetsFor: "Snippets for {{item}}",
   },
 };

@@ -53,6 +53,10 @@ export default class LanguagesAndTagsClient extends Client {
     return this.instance.get("tags/search?" + params.toString());
   }
 
+  userFollowsTag(userId, tagId) {
+    return this.instance.get("tags/" + tagId + "/users/" + userId + "/follows");
+  }
+
   getTagWithUrl(url) {
     return axios.get(url);
   }

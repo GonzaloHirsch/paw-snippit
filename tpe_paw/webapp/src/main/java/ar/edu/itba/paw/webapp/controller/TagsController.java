@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.interfaces.service.TagService;
+import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
@@ -40,6 +41,8 @@ public class TagsController {
     private TagService tagService;
     @Autowired
     private SnippetService snippetService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private LoginAuthentication loginAuthentication;
     @Autowired
@@ -194,6 +197,21 @@ public class TagsController {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
+
+    @GET
+    @Path("/{id}/users/{userId}/follows")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response userFollowsTag(final @PathParam(USER_PARAM_ID) long userId, final @PathParam(PATH_PARAM_ID) long id) {
+        Optional<User> maybeUser = this.userService.findUserById(userId);
+        Optional<Tag> maybeTag = this.tagService.findTagById(id);
+
+        if (maybeUser.isPresent() && maybeTag.isPresent()) {
+            return Response.ok(BooleanDto.fromBoolean(this.tagService.userFollowsTag(userId, id))).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
 
     @DELETE
     @Path("/{id}")

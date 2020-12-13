@@ -111,6 +111,36 @@ export default class SnippetFeedClient extends Client {
     return this.instance.get("snippets/flagged/search?" + params.toString());
   }
 
+  getSnippetsForTag(id, page) {
+    const params = new URLSearchParams({ page: page });
+    return this.instance.get("tags/" + id + "/snippets?" + params.toString());
+  }
+
+  searchSnippetsForTag(id, page, search) {
+    const params = new URLSearchParams({ page: page });
+    for (let key in search) {
+      params.set(key, search[key]);
+    }
+    return this.instance.get("tags/" + id + "/snippets?" + params.toString());
+  }
+
+  getSnippetsForLanguage(id, page) {
+    const params = new URLSearchParams({ page: page });
+    return this.instance.get(
+      "languages/" + id + "/snippets?" + params.toString()
+    );
+  }
+
+  searchSnippetsForLanguage(id, page, search) {
+    const params = new URLSearchParams({ page: page });
+    for (let key in search) {
+      params.set(key, search[key]);
+    }
+    return this.instance.get(
+      "languages/" + id + "/snippets?" + params.toString()
+    );
+  }
+
   getSnippetFeedWithUrl(url) {
     return axios.get(url);
   }

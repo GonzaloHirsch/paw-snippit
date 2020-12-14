@@ -5,8 +5,7 @@ import ar.edu.itba.paw.models.Vote;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.sql.Date;
-import java.text.DateFormat;
+import java.time.Instant;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -19,7 +18,7 @@ public class SnippetWithVoteDto {
     private int voteCount;
     private SnippetUserInfoDto creator;
     private LanguageDto language;
-    private String createdDate;
+    private Instant createdDate;
     private URI tags;
     private boolean isFlagged;
     private boolean isDeleted;
@@ -42,7 +41,7 @@ public class SnippetWithVoteDto {
         dto.creator = SnippetUserInfoDto.fromUser(snippet.getOwner(), uriInfo);
         dto.language = LanguageDto.fromLanguage(snippet.getLanguage(), uriInfo);
         dto.tags = uriInfo.getBaseUriBuilder().path("snippets").path(String.valueOf(snippet.getId())).path("tags").build();
-        dto.createdDate = DateFormat.getDateInstance(DateFormat.SHORT, locale).format(Date.from(snippet.getDateCreated()));
+        dto.createdDate = snippet.getDateCreated();
         // Indicates if the logged user reported the snippet
         dto.isUserReported = snippet.getReports().stream().anyMatch(r -> r.getReportedBy().getId().equals(currentUserId));
         dto.isFavorite = snippet.getUserFavorites().stream().anyMatch(u -> u.getId().equals(currentUserId));
@@ -138,11 +137,11 @@ public class SnippetWithVoteDto {
         this.language = language;
     }
 
-    public String getCreatedDate() {
+    public Instant getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(String createdDate) {
+    public void setCreatedDate(Instant createdDate) {
         this.createdDate = createdDate;
     }
 

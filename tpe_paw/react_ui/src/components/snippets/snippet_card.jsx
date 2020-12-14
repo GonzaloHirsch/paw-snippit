@@ -5,6 +5,7 @@ import Icon from "@mdi/react";
 import { getUserProfilePicUrl } from "../../js/snippet_utils";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { googlecode } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { getDateFromAPIString } from "../../js/date_utils";
 
 const SnippetCard = (props) => {
   const { snippet, handleFav, userIsLogged } = props;
@@ -20,7 +21,7 @@ const SnippetCard = (props) => {
                 {snippet.creator.username}
               </div>
               <div className="row text-muted" style={{ fontSize: "12px" }}>
-                {snippet.createdDate}
+                {getDateFromAPIString(snippet.createdDate)}
               </div>
             </div>
             {userIsLogged && (

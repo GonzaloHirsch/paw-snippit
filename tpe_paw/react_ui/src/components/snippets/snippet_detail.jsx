@@ -9,6 +9,7 @@ import DetailBox from "./detail_box";
 import LinkDetailBox from "./link_detail_box";
 import Icon from "@mdi/react";
 import { Helmet } from "react-helmet";
+import { getDateFromAPIString } from "../../js/date_utils";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import {
   Button,
@@ -316,7 +317,7 @@ class SnippetDetail extends Component {
             <div className="row mb-2 fw-500 primary-text no-decoration">
               <span>
                 {i18n.t("snippetDetail.uploaded", {
-                  date: snippet.createdDate,
+                  date: getDateFromAPIString(snippet.createdDate),
                 })}
               </span>
             </div>

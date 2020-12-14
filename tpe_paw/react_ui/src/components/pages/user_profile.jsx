@@ -39,7 +39,6 @@ class UserProfile extends Component {
   }
 
   loadUserData(id) {
-    console.log(this.props);
     this.userClient
       .getUserWithId(id)
       .then((res) => {

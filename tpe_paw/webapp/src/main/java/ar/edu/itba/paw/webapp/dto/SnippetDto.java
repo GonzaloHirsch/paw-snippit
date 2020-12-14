@@ -1,14 +1,9 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Snippet;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.web.servlet.LocaleResolver;
 
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
-import java.sql.Date;
-import java.text.DateFormat;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Locale;
 
 public class SnippetDto {
@@ -18,7 +13,7 @@ public class SnippetDto {
     private String description;
     private SnippetUserInfoDto creator;
     private LanguageDto language;
-    private String createdDate;
+    private Instant createdDate;
     private boolean isFlagged;
     private boolean isFavorite;
 
@@ -32,7 +27,7 @@ public class SnippetDto {
         dto.isFlagged = snippet.isFlagged();
         dto.creator = SnippetUserInfoDto.fromUser(snippet.getOwner(), uriInfo);
         dto.language = LanguageDto.fromLanguage(snippet.getLanguage(), uriInfo);
-        dto.createdDate = DateFormat.getDateInstance(DateFormat.SHORT, locale).format(Date.from(snippet.getDateCreated()));
+        dto.createdDate = snippet.getDateCreated();
         dto.isFavorite = snippet.getUserFavorites().stream().anyMatch(u -> u.getId().equals(currentUserId));
         return dto;
     }
@@ -93,11 +88,11 @@ public class SnippetDto {
         this.language = language;
     }
 
-    public String getCreatedDate() {
+    public Instant getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(String createdDate) {
+    public void setCreatedDate(Instant createdDate) {
         this.createdDate = createdDate;
     }
 

@@ -150,7 +150,7 @@ const routes = [
   {
     path: "/user/:id",
     exact: false,
-    name: i18n.t("nav.profile"), // TODO FIX ME
+    name: i18n.t("nav.users"), // TODO FIX ME
     component: UserProfile,
     roles: [],
   },

@@ -95,8 +95,8 @@ public class TagsController {
         User currentUser = loginAuthentication.getLoggedInUser();
         final long loggedUserId = UserHelper.GetLoggedUserId(this.loginAuthentication);
 
-        final List<TagWithEmptyDto> tags = this.tagService.findTagsByName(tagSearchDto.getName(), tagSearchDto.isShowEmpty(), tagSearchDto.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null, page, TAG_PAGE_SIZE).stream().map(t -> TagWithEmptyDto.fromTag(t, loggedUserId, uriInfo)).collect(Collectors.toList());
-        final int tagCount = this.tagService.getAllTagsCountByName(tagSearchDto.getName(), tagSearchDto.isShowEmpty(), tagSearchDto.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null);
+        final List<TagWithEmptyDto> tags = this.tagService.findTagsByName(tagSearchDto.getQuery(), tagSearchDto.isShowEmpty(), tagSearchDto.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null, page, TAG_PAGE_SIZE).stream().map(t -> TagWithEmptyDto.fromTag(t, loggedUserId, uriInfo)).collect(Collectors.toList());
+        final int tagCount = this.tagService.getAllTagsCountByName(tagSearchDto.getQuery(), tagSearchDto.isShowEmpty(), tagSearchDto.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null);
         int pageCount = PagingHelper.CalculateTotalPages(tagCount, TAG_PAGE_SIZE);
 
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<TagWithEmptyDto>>(tags) {

@@ -23,16 +23,17 @@ class SnippetOverview extends Component {
     let userCanReport = false;
     let userIsAdmin = false;
     let loggedUserId = -1;
-    this.snippetClient = new SnippetClient();
     this.userClient = new UserClient();
     this.languagesAndTagsClient = new LanguagesAndTagsClient();
     if (state.auth.token === null || state.auth.token === undefined) {
       this.snippetActionsClient = new SnippetActionsClient();
+      this.snippetClient = new SnippetClient();
     } else {
       this.snippetActionsClient = new SnippetActionsClient(
         props,
         state.auth.token
       );
+      this.snippetClient = new SnippetClient(props, state.auth.token);
       userIsLogged = true;
       userCanReport = state.auth.info.canReport;
       userIsAdmin = isAdmin(state.auth.roles);

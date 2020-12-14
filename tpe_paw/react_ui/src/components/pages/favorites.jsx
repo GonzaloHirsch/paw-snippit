@@ -11,8 +11,7 @@ const Favorites = SnippetFeedHOC(
     SnippetFeedClient.getFavoritesSnippetFeed(page, userId),
   (SnippetFeedClient, page, search) =>
     SnippetFeedClient.searchFavoritesSnippetFeed(page, userId, search),
-  (url) => getNavSearchFromUrl(url),
-  true
+  (url) => getNavSearchFromUrl(url)
 );
 
 export default Favorites;

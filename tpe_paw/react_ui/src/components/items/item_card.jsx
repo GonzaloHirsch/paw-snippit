@@ -40,19 +40,6 @@ class ItemCard extends Component {
             </div>
             {showEmpty && (
               <div className="col-4 no-padding align-items-horizontal-right">
-                {userIsLogged && showFollowing && (
-                    <Badge
-                      onClick={(e) => onChangeFollowing(e, item.id)}
-                      className={
-                        "tag-action-badge " + (item.empty ? "mr-1" : "")
-                      }
-                      color="secondary"
-                    >
-                      {item.following
-                        ? i18n.t("items.unfollow")
-                        : i18n.t("items.follow")}
-                    </Badge>
-                )}
                 {showEmpty && item.empty && (
                   <React.Fragment>
                     <Icon
@@ -72,6 +59,19 @@ class ItemCard extends Component {
                       {i18n.t("items.empty")}
                     </Tooltip>
                   </React.Fragment>
+                )}
+                {userIsLogged && showFollowing && (
+                    <Badge
+                      onClick={(e) => onChangeFollowing(e, item.id)}
+                      className={
+                        "tag-action-badge " + (item.empty ? "ml-1" : "")
+                      }
+                      color="secondary"
+                    >
+                      {item.following
+                        ? i18n.t("items.unfollow")
+                        : i18n.t("items.follow")}
+                    </Badge>
                 )}
               </div>
             )}

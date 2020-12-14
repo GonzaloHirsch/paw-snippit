@@ -77,12 +77,12 @@ public class LanguagesController {
     @Path("/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response searchInAllTags(final @BeanParam LanguageSearchDto languageSearchDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page){
-        final Collection<Language> rawLanguages = this.languageService.findAllLanguagesByName(languageSearchDto.getName(), languageSearchDto.isShowEmpty(), page, LANGUAGE_PAGE_SIZE);
+        final Collection<Language> rawLanguages = this.languageService.findAllLanguagesByName(languageSearchDto.getQuery(), languageSearchDto.isShowEmpty(), page, LANGUAGE_PAGE_SIZE);
         // Analyze if they are empty or not
         rawLanguages.forEach(l -> this.snippetService.analizeSnippetsUsing(l));
         // Generate DTOs
         final List<LanguageWithEmptyDto> languages = rawLanguages.stream().map(l -> LanguageWithEmptyDto.fromLanguage(l, uriInfo)).collect(Collectors.toList());
-        int languagesCount = this.languageService.getAllLanguagesCountByName(languageSearchDto.getName(), languageSearchDto.isShowEmpty());
+        int languagesCount = this.languageService.getAllLanguagesCountByName(languageSearchDto.getQuery(), languageSearchDto.isShowEmpty());
         int pageCount = PagingHelper.CalculateTotalPages(languagesCount, LANGUAGE_PAGE_SIZE);
 
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<LanguageWithEmptyDto>>(languages) {

@@ -152,8 +152,7 @@ class UserProfile extends Component {
             this.state.profileOwnerId,
             search
           ),
-        (url) => getNavSearchFromUrl(url),
-        false
+        (url) => getNavSearchFromUrl(url)
       );
       return <ActiveSnippetFeed />;
     } else if (this.state.context === DELETED_USER_SNIPPETS) {
@@ -170,8 +169,7 @@ class UserProfile extends Component {
             this.state.profileOwnerId,
             search
           ),
-        (url) => getNavSearchFromUrl(url),
-        true
+        (url) => getNavSearchFromUrl(url)
       );
       return <DeletedSnippetFeed />;
     }

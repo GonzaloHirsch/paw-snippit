@@ -13,8 +13,7 @@ const LanguageSnippets = (props) => {
         page,
         search
       ),
-    (url) => getNavSearchFromUrl(url),
-    false
+    (url) => getNavSearchFromUrl(url)
   );
   return <SnippetsForLanguageWrapper />;
 };

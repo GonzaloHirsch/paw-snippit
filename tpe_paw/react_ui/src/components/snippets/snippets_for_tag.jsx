@@ -5,6 +5,10 @@ import i18n from "../../i18n";
 import store from "../../store";
 import { Badge } from "reactstrap";
 import SnippetFeed from "../snippets/snippet_feed";
+import { isAdmin } from "../../js/security_utils";
+import { logOut } from "../../redux/actions/actionCreators";
+import DeleteItemModal from "../items/delete_item_modal";
+import { ITEM_TYPES } from "../../js/constants";
 
 class SnippetsForTag extends Component {
   languagesAndTagsClient;
@@ -14,6 +18,7 @@ class SnippetsForTag extends Component {
     super(props);
     const state = store.getState();
     let loggedUserId = null;
+    let userIsAdmin = false;
     this.languagesAndTagsClient = new LanguagesAndTagsClient();
     this.languagesAndTagsActionsClient = new LanguagesAndTagsActionsClient();
     if (!(state.auth.token === null || state.auth.token === undefined)) {
@@ -26,11 +31,14 @@ class SnippetsForTag extends Component {
         state.auth.token
       );
       loggedUserId = state.auth.info.uid;
+      userIsAdmin = isAdmin(state.auth.roles);
     }
     this.state = {
       loggedUserId: loggedUserId,
-      tag: { id: -1, name: "..." },
+      tag: { id: -1, name: "...", deleted: false },
       follows: false,
+      userIsAdmin: userIsAdmin,
+      isDeleting: false,
     };
   }
 
@@ -69,6 +77,14 @@ class SnippetsForTag extends Component {
     }
   }
 
+  _enforceUserIsAdmin() {
+    // If user is not logged, redirect to login
+    if (!this.state.userIsAdmin) {
+      store.dispatch(logOut());
+      this.props.history.push("/login");
+    }
+  }
+
   _onFollow(e) {
     this._enforceUserLogged();
 
@@ -96,6 +112,30 @@ class SnippetsForTag extends Component {
     }
   }
 
+  _onDelete = (e) => {
+    this._enforceUserLogged();
+    this._enforceUserIsAdmin();
+
+    // Updating the local state
+    let tag = { ...this.state.tag };
+    tag.deleted = true;
+    this.setState({ tag: tag });
+
+    this.languagesAndTagsActionsClient
+      .deleteTag(tag.id)
+      .then((res) => {})
+      .catch((e) => {});
+
+    this._setDeleting();
+
+    // Redirect to tags again
+    this.props.history.push("/tags");
+  };
+
+  _setDeleting = () => {
+    this.setState({ isDeleting: !this.state.isDeleting });
+  };
+
   render() {
     const {
       snippets,
@@ -110,6 +150,13 @@ class SnippetsForTag extends Component {
       <React.Fragment>
         <div className="mt-2 ml-3 mb-3">
           <div className="d-flex align-items-center flex-row mb-2">
+            <DeleteItemModal
+              item={this.state.tag}
+              type={ITEM_TYPES.TAG}
+              isOpen={this.state.isDeleting}
+              onToggle={this._setDeleting}
+              handleDeleteConfirm={this._onDelete}
+            />
             <h1 className="no-margin fw-300">
               {i18n.t("items.snippetsFor", {
                 item: this.state.tag.name.toUpperCase(),
@@ -125,6 +172,18 @@ class SnippetsForTag extends Component {
                 ? i18n.t("items.unfollow")
                 : i18n.t("items.follow")}
             </Badge>
+            {this.state.userIsAdmin && !this.state.tag.deleted && (
+              <React.Fragment>
+                <div className="mx-2"></div>
+                <Badge
+                  onClick={this._setDeleting}
+                  className={"flex-center tag-delete-badge-snippets "}
+                  color="danger"
+                >
+                  {i18n.t("items.delete.actionName")}
+                </Badge>
+              </React.Fragment>
+            )}
           </div>
           <h5 className="fw-100">
             ({i18n.t("snippetWithNumber", { count: totalSnippets })})

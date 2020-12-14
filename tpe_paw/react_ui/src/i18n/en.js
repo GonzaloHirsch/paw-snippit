@@ -10,6 +10,7 @@ export default {
   tagsWithNumber_plural: "{{count}} Tags",
   languagesWithNumber: "{{count}} Language",
   languagesWithNumber_plural: "{{count}} Languages",
+  create: "Create",
   errors: {
     serverError: "Error in server, please try again later",
     unknownError: "Uknown error, please try again later",
@@ -116,6 +117,7 @@ export default {
   },
   snippetCreate: {
     name: "Snippet Create",
+    message: "Go ahead and create your first snippet",
     button: "Create Snippet",
     header: "Create a Snippet",
     fields: {
@@ -128,7 +130,7 @@ export default {
     placeholders: {
       title: "Enter your snippet's title...",
       description: "Enter your snippet's description...",
-      code: "Enter your snippet's code",
+      code: "Enter your snippet's code...",
       language: "Select a language...",
       tags: "Select related tags...",
     },
@@ -325,14 +327,17 @@ export default {
     delete: {
       actionName: "Delete",
       title: "Confirm Deletion",
-      tagsMessage: "Are you sure you want to delete \"{{name}}\" from Tags? Deleted tags will be removed from all the snippets containing it and from all users following list. This action can't be undone.",
-      languagesMessage: "Are you sure you want to delete \"{{name}}\" from Languages? Deleted languages will no longer be available for new snippets and will not appear in the language list unless added again by an administrator.",
+      tagsMessage:
+        'Are you sure you want to delete "{{name}}" from Tags? Deleted tags will be removed from all the snippets containing it and from all users following list. This action can\'t be undone.',
+      languagesMessage:
+        'Are you sure you want to delete "{{name}}" from Languages? Deleted languages will no longer be available for new snippets and will not appear in the language list unless added again by an administrator.',
       cancel: "Cancel",
-      confirm: "Confirm"
+      confirm: "Confirm",
     },
     deleted: {
       title: "This language has been deleted by the administrator",
-      message: "Deleted languages are not available for use in new snippets and do not appear in the languages list."
-    }
+      message:
+        "Deleted languages are not available for use in new snippets and do not appear in the languages list.",
+    },
   },
 };

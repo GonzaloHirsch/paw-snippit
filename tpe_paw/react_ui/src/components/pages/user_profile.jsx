@@ -10,6 +10,7 @@ import {
   ACTIVE_USER_SNIPPETS,
   DELETED_USER_SNIPPETS,
 } from "../../js/constants";
+import SnippetFeedProfile from "../snippets/snippet_feed_profile";
 
 class UserProfile extends Component {
   userClient;
@@ -139,7 +140,7 @@ class UserProfile extends Component {
   _renderFeedContext() {
     if (this.state.context === ACTIVE_USER_SNIPPETS) {
       const ActiveSnippetFeed = SnippetFeedHOC(
-        SnippetFeed,
+        SnippetFeedProfile,
         (SnippetFeedClient, page) =>
           SnippetFeedClient.getProfileActiveSnippetFeed(
             page,
@@ -153,7 +154,11 @@ class UserProfile extends Component {
           ),
         (url) => getNavSearchFromUrl(url)
       );
-      return <ActiveSnippetFeed />;
+      return (
+        <ActiveSnippetFeed
+          isOwner={this.state.profileOwnerId === this.state.loggedUserId}
+        />
+      );
     } else if (this.state.context === DELETED_USER_SNIPPETS) {
       const DeletedSnippetFeed = SnippetFeedHOC(
         SnippetFeed,
@@ -191,7 +196,7 @@ class UserProfile extends Component {
         </div>
         <div className="col-9 flex-column">
           {this._renderTabs()}
-          <div className="pt-3 background-color profile-snippet-container rounded-border">
+          <div className="py-3 background-color profile-snippet-container rounded-border">
             {this._renderFeedContext()}
           </div>
         </div>

@@ -18,7 +18,10 @@ const SnippetFeed = (props) => {
   return (
     <div className="parent-width flex-column">
       {totalSnippets === 0 ? (
-        <div className="flex-center fw-100" style={{ fontSize: "50px" }}>
+        <div
+          className="flex-center fw-100 text-center"
+          style={{ fontSize: "50px" }}
+        >
           {i18n.t("snippetsEmpty")}
         </div>
       ) : (

@@ -47,7 +47,7 @@ class NavBar extends Component {
       type: "0",
       sort: "0",
       showEmpty: true,
-      showOnlyFollowing: false
+      showOnlyFollowing: false,
     },
     currentContext: CONTEXT.HOME,
   };
@@ -107,11 +107,8 @@ class NavBar extends Component {
   determineCurrentContext() {
     if (this.testForContext("**/tags/search", CONTEXT.TAGS)) return;
     if (this.testForContext("**/languages/search", CONTEXT.LANGUAGES)) return;
-    if (this.testForContext("**/tags/*", CONTEXT.TAGS_SNIPPETS))
-      return;
-    if (
-      this.testForContext("**/languages/*", CONTEXT.LANGUAGES_SNIPPETS)
-    )
+    if (this.testForContext("**/tags/*", CONTEXT.TAGS_SNIPPETS)) return;
+    if (this.testForContext("**/languages/*", CONTEXT.LANGUAGES_SNIPPETS))
       return;
     if (this.testForContext("**/tags", CONTEXT.TAGS)) return;
     if (this.testForContext("**/languages", CONTEXT.LANGUAGES)) return;
@@ -242,8 +239,11 @@ class NavBar extends Component {
     if (this.state.userIsLogged) {
       return (
         <React.Fragment>
-          <Link to="/create" className="mx-1 text-white">
-            <Icon path={mdiPlusCircleOutline} size={1} />
+          <Link
+            to="/snippets/create"
+            className="create-button shadow btn rounded-border mr-3 "
+          >
+            {i18n.t("create")}
           </Link>
           <Link to="/profile" className="mx-1 text-white">
             <em className="ml-1">

@@ -17,7 +17,7 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
         <!--Configuration to register Jerseys multi part handling-->
         <init-param>
             <param-name>jersey.config.server.provider.classnames</param-name>
-            <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
+            <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature, ar.edu.itba.paw.webapp.utility.LocalDateConverterProvider</param-value>
         </init-param>
         <init-param>
             <param-name>jersey.config.beanValidation.enableOutputValidationErrorEntity.server</param-name>

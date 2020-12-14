@@ -8,7 +8,7 @@ const CustomDatePicker = (props) => {
   return (
     <DatePicker
       className="form-control rounded-border"
-      dateFormat="dd/MM/yyyy"
+      dateFormat="yyyy-MM-dd"
       selected={props.date}
       onChange={props.onChange}
       isClearable

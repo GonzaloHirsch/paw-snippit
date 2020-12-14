@@ -105,7 +105,21 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // Adding LOGIN policy
                 .antMatchers(HttpMethod.POST, API_PREFIX + "login").permitAll()
                 // Adding SNIPPETS policy
+                .antMatchers(HttpMethod.GET, API_PREFIX + "snippets/*/flagged").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, API_PREFIX + "snippets/*/flag").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, API_PREFIX + "snippets/*/flag").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, API_PREFIX + "snippets/**").permitAll()
+                .antMatchers(HttpMethod.DELETE, API_PREFIX + "snippets/*/delete").hasRole("USER")
+                .antMatchers(HttpMethod.PUT, API_PREFIX + "snippets/*/restore").hasRole("USER")
+                .antMatchers(HttpMethod.PUT, API_PREFIX + "snippets/*/vote_positive").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.DELETE, API_PREFIX + "snippets/*/vote_positive").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.PUT, API_PREFIX + "snippets/*/vote_negative").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.DELETE, API_PREFIX + "snippets/*/vote_negative").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.PUT, API_PREFIX + "snippets/*/fav").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.DELETE, API_PREFIX + "snippets/*/fav").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.PUT, API_PREFIX + "snippets/*/report").hasRole("USER")
+                .antMatchers(HttpMethod.PUT, API_PREFIX + "snippets/*/report/dismiss").hasRole("USER")
+                .antMatchers(HttpMethod.POST, API_PREFIX + "snippets").hasRole("USER")
                 // Adding default policy, must be authenticated
                 .antMatchers(API_PREFIX + "/**").authenticated();
 

@@ -1,9 +1,9 @@
 export function getDateFromString(stringDate) {
   if (stringDate !== null && stringDate !== undefined && stringDate !== "") {
-    const parts = stringDate.split("/");
+    const parts = stringDate.split("-");
     // Please pay attention to the month (parts[1]); JavaScript counts months from 0:
     // January - 0, February - 1, etc.
-    const date = new Date(parts[2], parts[1] - 1, parts[0]);
+    const date = new Date(parts[0], parts[1] - 1, parts[2]);
     return date;
   }
   return null;

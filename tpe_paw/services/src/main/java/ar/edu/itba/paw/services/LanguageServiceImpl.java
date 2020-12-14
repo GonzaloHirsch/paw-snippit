@@ -54,6 +54,12 @@ public class LanguageServiceImpl implements LanguageService {
     }
 
     @Override
+    @Transactional
+    public long addLanguage(String language) {
+        return this.languageDao.addLanguage(language).getId();
+    }
+
+    @Override
     public boolean languageExists(String language) {
         Optional<Language> lang = this.languageDao.findByName(language);
         return lang.isPresent() && !lang.get().isDeleted();

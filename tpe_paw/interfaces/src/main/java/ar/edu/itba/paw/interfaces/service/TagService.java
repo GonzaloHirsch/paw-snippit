@@ -32,6 +32,8 @@ public interface TagService {
 
     void addTags(List<String> tags);
 
+    long addTag(String name);
+
     boolean tagExists(final String tag);
 
     boolean tagExists(final long tag);

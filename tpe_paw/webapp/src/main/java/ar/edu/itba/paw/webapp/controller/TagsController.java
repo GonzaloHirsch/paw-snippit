@@ -55,6 +55,20 @@ public class TagsController {
 
     // TODO: ADD CREATE TAG
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response tagCreate(@Valid ItemCreateDto tagCreateDto) {
+        User loggedInUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedInUser == null || !this.roleService.isAdmin(loggedInUser.getId())) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        long tagId = this.tagService.addTag(tagCreateDto.getName());
+        // TODO check if tagId is null?
+
+        return Response.noContent().build();
+    }
+
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getTagsByPage(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page, final @QueryParam(QUERY_PARAM_SHOW_EMPTY) @DefaultValue("true") boolean showEmpty, final @QueryParam(QUERY_PARAM_SHOW_ONLY_FOLLOWING) @DefaultValue("false") boolean showOnlyFollowing) {

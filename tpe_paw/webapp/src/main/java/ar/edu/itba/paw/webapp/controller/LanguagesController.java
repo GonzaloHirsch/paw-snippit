@@ -54,6 +54,20 @@ public class LanguagesController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LanguagesController.class);
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response languageCreate(@Valid ItemCreateDto langCreateDto) {
+        User loggedInUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedInUser == null || !this.roleService.isAdmin(loggedInUser.getId())) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } 
+
+        long langId = this.languageService.addLanguage(langCreateDto.getName());
+        // TODO check if tagId is null?
+
+        return Response.noContent().build();
+    }
+
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getLanguagesByPage(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page, final @QueryParam(QUERY_PARAM_SHOW_EMPTY) @DefaultValue("true") boolean showEmpty) {

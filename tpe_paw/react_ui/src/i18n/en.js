@@ -246,6 +246,7 @@ export default {
   profile: {
     activeSnippets: "Active Snippets",
     deletedSnippets: "Deleted Snippets",
+    dateJoined: "Date joined {{date}}",
     verify: {
       title: "Verify your account",
       message:

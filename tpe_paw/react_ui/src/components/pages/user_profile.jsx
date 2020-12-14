@@ -39,17 +39,17 @@ class UserProfile extends Component {
   }
 
   loadUserData(id) {
+    console.log(this.props);
     this.userClient
       .getUserWithId(id)
       .then((res) => {
         this.setState({
           profileOwner: res.data,
           loading: false,
-          profileOwnerId: id
+          profileOwnerId: id,
         });
       })
       .catch((e) => {
-        console.log(e)
         if (e.response) {
           // User not found, go to 404
           if (e.response.status === 404) {
@@ -63,11 +63,12 @@ class UserProfile extends Component {
     this.loadUserData(this.state.profileOwnerId);
   }
 
-  // In case the url changes 
-  componentDidUpdate(){
-    const userId = parseInt(this.props.match.params.id, 10);
-    if (userId !== this.state.profileOwnerId){
-      this.loadUserData(userId);
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.match !== null && nextProps.match !== undefined) {
+      const userId = parseInt(nextProps.match.params.id, 10);
+      if (userId !== this.state.profileOwnerId) {
+        this.loadUserData(userId);
+      }
     }
   }
 
@@ -89,7 +90,6 @@ class UserProfile extends Component {
   };
 
   onUpdateImage = (image) => {
-    console.log(image);
     this.protectedClient
       .putUserImage(this.state.profileOwnerId, image)
       .then((res) => {

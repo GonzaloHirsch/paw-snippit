@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "",
   "dependencies": {
+    "@js-joda/core": "^3.2.0",
     "@mdi/js": "^5.8.55",
     "@mdi/react": "^1.4.0",
     "@testing-library/jest-dom": "^4.2.4",

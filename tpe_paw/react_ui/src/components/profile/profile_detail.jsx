@@ -6,6 +6,7 @@ import { mdiPencil, mdiContentSaveEdit, mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
 import { PROFILE_VALIDATION } from "../../js/validations";
 import ImagePicker from "../forms/image_picker";
+import { getDateFromAPIString } from "../../js/date_utils";
 
 class ProfileDetail extends Component {
   constructor(props) {
@@ -173,7 +174,9 @@ class ProfileDetail extends Component {
         <div className="d-flex flex-col justify-content-center parent-width fwhite">
           <div className="fw-500  profile-username">{owner.username}</div>
           <span className="fw-100 profile-small-text d-flex justify-content-center">
-            Date Joined TODO
+            {i18n.t("profile.dateJoined", {
+              date: getDateFromAPIString(owner.dateJoined),
+            })}
           </span>
           <div className="flex-center flex-wrap my-2">
             <ProfileStatItem

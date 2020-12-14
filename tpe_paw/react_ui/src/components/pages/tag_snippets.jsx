@@ -13,8 +13,7 @@ const TagSnippets = (props) => {
         page,
         search
       ),
-    (url) => getNavSearchFromUrl(url),
-    false
+    (url) => getNavSearchFromUrl(url)
   );
   return <SnippetsForTagWrapper />;
 };

@@ -13,8 +13,7 @@ function SnippetFeedHOC(
   WrappedComponent,
   getSnippets,
   searchSnippets,
-  searchFromUrl,
-  tokenProtected
+  searchFromUrl
 ) {
   return withRouter(
     class extends React.Component {
@@ -31,14 +30,10 @@ function SnippetFeedHOC(
           this.snippetActionsClient = new SnippetActionsClient();
           this.snippetFeedClient = new SnippetFeedClient();
         } else {
-          if (!tokenProtected) {
-            this.snippetFeedClient = new SnippetFeedClient();
-          } else {
-            this.snippetFeedClient = new SnippetFeedClient(
-              props,
-              state.auth.token
-            );
-          }
+          this.snippetFeedClient = new SnippetFeedClient(
+            props,
+            state.auth.token
+          );
           this.snippetActionsClient = new SnippetActionsClient(
             props,
             state.auth.token

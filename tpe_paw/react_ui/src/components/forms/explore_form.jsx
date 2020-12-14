@@ -92,7 +92,7 @@ class ExploreForm extends Component {
   }
 
   loadLanguage(language) {
-    if (parseInt(language) === -1) return;
+    if (language === null || parseInt(language) === -1) return;
     this.languagesAndTagsClient
       .getLanguageWithId(language)
       .then((res) => {
@@ -119,7 +119,7 @@ class ExploreForm extends Component {
   }
 
   loadTag(tag) {
-    if (parseInt(tag) === -1) return;
+    if (tag === null || parseInt(tag) === -1) return;
     this.languagesAndTagsClient
       .getTagWithId(tag)
       .then((res) => {
@@ -145,38 +145,41 @@ class ExploreForm extends Component {
     const fields = { ...this.state.fields };
     const { urlSearch } = nextProps;
 
-    if (urlSearch.language === -1) {
-      fields[EXPLORE.LANGUAGE] = [];
-    } else if (
-      (fields.language.length === 0 && urlSearch.language !== -1) ||
-      (fields.language.length > 0 &&
-        fields.language[0].id !== urlSearch.language)
-    ) {
-      this.loadLanguage(urlSearch.language);
+    // First time, everything comes as null and dont want to save those values
+    if (urlSearch.title !== null) {
+      if (urlSearch.language === -1) {
+        fields[EXPLORE.LANGUAGE] = [];
+      } else if (
+        (fields.language.length === 0 && urlSearch.language !== -1) ||
+        (fields.language.length > 0 &&
+          fields.language[0].id !== urlSearch.language)
+      ) {
+        this.loadLanguage(urlSearch.language);
+      }
+
+      if (urlSearch.tag === -1) {
+        fields[EXPLORE.TAG] = [];
+      } else if (
+        (fields.tag.length === 0 && urlSearch.tag !== -1) ||
+        (fields.tag.length > 0 && fields.tag[0].id !== urlSearch.tag)
+      ) {
+        this.loadTag(urlSearch.tag);
+      }
+
+      fields[EXPLORE.FIELD] = urlSearch.field;
+      fields[EXPLORE.SORT] = urlSearch.sort;
+      fields[EXPLORE.FLAGGED] = urlSearch.includeFlagged;
+      fields[EXPLORE.TITLE] = urlSearch.title;
+      fields[EXPLORE.USERNAME] = urlSearch.username;
+      fields[EXPLORE.MINREP] = urlSearch.minRep;
+      fields[EXPLORE.MAXREP] = urlSearch.maxRep;
+      fields[EXPLORE.MINDATE] = getDateFromString(urlSearch.minDate);
+      fields[EXPLORE.MAXDATE] = getDateFromString(urlSearch.maxDate);
+      fields[EXPLORE.MINVOTES] = urlSearch.minVotes;
+      fields[EXPLORE.MAXVOTES] = urlSearch.maxVotes;
+
+      this.setState({ fields: fields });
     }
-
-    if (urlSearch.tag === -1) {
-      fields[EXPLORE.TAG] = [];
-    } else if (
-      (fields.tag.length === 0 && urlSearch.tag !== -1) ||
-      (fields.tag.length > 0 && fields.tag[0].id !== urlSearch.tag)
-    ) {
-      this.loadTag(urlSearch.tag);
-    }
-
-    fields[EXPLORE.FIELD] = urlSearch.field;
-    fields[EXPLORE.SORT] = urlSearch.sort;
-    fields[EXPLORE.FLAGGED] = urlSearch.includeFlagged;
-    fields[EXPLORE.TITLE] = urlSearch.title;
-    fields[EXPLORE.USERNAME] = urlSearch.username;
-    fields[EXPLORE.MINREP] = urlSearch.minRep;
-    fields[EXPLORE.MAXREP] = urlSearch.maxRep;
-    fields[EXPLORE.MINDATE] = getDateFromString(urlSearch.minDate);
-    fields[EXPLORE.MAXDATE] = getDateFromString(urlSearch.maxDate);
-    fields[EXPLORE.MINVOTES] = urlSearch.minVotes;
-    fields[EXPLORE.MAXVOTES] = urlSearch.maxVotes;
-
-    this.setState({ fields: fields });
   }
 
   handleSearch() {
@@ -387,15 +390,15 @@ class ExploreForm extends Component {
     const snippetErrorKey = "snippetVotes";
 
     let hasErrors = false;
-    this.validateIntervals(EXPLORE.MINREP, EXPLORE.MAXREP, repErrorKey);
-    this.validateIntervals(EXPLORE.MINVOTES, EXPLORE.MAXVOTES, snippetErrorKey);
-    this.validateInput(EXPLORE.TITLE);
-    this.validateInput(EXPLORE.USERNAME);
+    // this.validateIntervals(EXPLORE.MINREP, EXPLORE.MAXREP, repErrorKey);
+    // this.validateIntervals(EXPLORE.MINVOTES, EXPLORE.MAXVOTES, snippetErrorKey);
+    // this.validateInput(EXPLORE.TITLE);
+    // this.validateInput(EXPLORE.USERNAME);
 
-    hasErrors = hasErrors || this._inputHasErrors(EXPLORE.TITLE);
-    hasErrors = hasErrors || this._inputHasErrors(EXPLORE.USERNAME);
-    hasErrors = hasErrors || this._rangeHasErrors("userReputation");
-    hasErrors = hasErrors || this._rangeHasErrors("snippetVotes");
+    // hasErrors = hasErrors || this._inputHasErrors(EXPLORE.TITLE);
+    // hasErrors = hasErrors || this._inputHasErrors(EXPLORE.USERNAME);
+    // hasErrors = hasErrors || this._rangeHasErrors("userReputation");
+    // hasErrors = hasErrors || this._rangeHasErrors("snippetVotes");
 
     return !hasErrors;
   }

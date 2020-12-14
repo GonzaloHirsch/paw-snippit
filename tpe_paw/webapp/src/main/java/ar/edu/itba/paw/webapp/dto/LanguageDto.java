@@ -9,6 +9,7 @@ public class LanguageDto {
     private String name;
     private Long id;
     private URI url;
+    private boolean deleted;
 
     public static LanguageDto fromLanguage(Language language, UriInfo uriInfo) {
         final LanguageDto dto = new LanguageDto();
@@ -16,6 +17,7 @@ public class LanguageDto {
         dto.id = language.getId();
         dto.name = language.getName();
         dto.url = uriInfo.getBaseUriBuilder().path("languages").path(String.valueOf(language.getId())).build();
+        dto.deleted = language.isDeleted();
 
         return dto;
     }
@@ -42,5 +44,13 @@ public class LanguageDto {
 
     public void setUrl(URI url) {
         this.url = url;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

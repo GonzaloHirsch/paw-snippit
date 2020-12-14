@@ -33,6 +33,17 @@
   }
 }
 
+.tag-delete-badge-snippets{
+  cursor: pointer;
+  height: 30px;
+  width: 100px;
+  font-size: 17px !important;
+  &:hover {
+    @extend .tag-delete-badge-snippets;
+    background-color: $danger-dark;
+  }
+}
+
 .item-columns {
   @include media-breakpoint-only(xs) {
     column-count: 2 !important;

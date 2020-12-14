@@ -322,5 +322,17 @@ export default {
     follow: "Follow",
     unfollow: "Unfollow",
     snippetsFor: "Snippets for {{item}}",
+    delete: {
+      actionName: "Delete",
+      title: "Confirm Deletion",
+      tagsMessage: "Are you sure you want to delete \"{{name}}\" from Tags? Deleted tags will be removed from all the snippets containing it and from all users following list. This action can't be undone.",
+      languagesMessage: "Are you sure you want to delete \"{{name}}\" from Languages? Deleted languages will no longer be available for new snippets and will not appear in the language list unless added again by an administrator.",
+      cancel: "Cancel",
+      confirm: "Confirm"
+    },
+    deleted: {
+      title: "This language has been deleted by the administrator",
+      message: "Deleted languages are not available for use in new snippets and do not appear in the languages list."
+    }
   },
 };

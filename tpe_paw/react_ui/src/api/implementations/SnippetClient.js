@@ -11,7 +11,7 @@ export default class SnippetClient extends Client {
   }
 
   postCreateSnippet(snippet) {
-    return this.instance.post("snippets/create", {
+    return this.instance.post("snippets", {
       title: snippet.title,
       description: snippet.description,
       code: snippet.code,

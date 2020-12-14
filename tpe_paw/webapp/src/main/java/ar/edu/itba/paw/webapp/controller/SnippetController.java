@@ -160,7 +160,6 @@ public class SnippetController {
     }
 
     @POST
-    @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response snippetCreate(@Valid SnippetCreateDto createDto) {
         // TODO --> JWT Tokens

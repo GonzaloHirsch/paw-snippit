@@ -121,7 +121,7 @@ export default class SnippetFeedClient extends Client {
     for (let key in search) {
       params.set(key, search[key]);
     }
-    return this.instance.get("tags/" + id + "/snippets?" + params.toString());
+    return this.instance.get("tags/" + id + "/snippets/search?" + params.toString());
   }
 
   getSnippetsForLanguage(id, page) {
@@ -137,7 +137,7 @@ export default class SnippetFeedClient extends Client {
       params.set(key, search[key]);
     }
     return this.instance.get(
-      "languages/" + id + "/snippets?" + params.toString()
+      "languages/" + id + "/snippets/search?" + params.toString()
     );
   }
 

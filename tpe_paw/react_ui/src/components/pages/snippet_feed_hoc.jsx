@@ -80,6 +80,7 @@ function SnippetFeedHOC(
       loadSearchedSnippets(page, search) {
         searchSnippets(this.snippetFeedClient, page, search)
           .then((res) => {
+            console.log(res);
             // Extracting the other pages headers
             const newLinks = extractLinkHeaders(res.headers);
             const itemCount = extractItemCountHeader(res.headers);
@@ -199,6 +200,7 @@ function SnippetFeedHOC(
 
         if (isSearching) {
           search = searchFromUrl(this.props.location.search);
+          console.log(search, this.state.currentSearch);
           if (!areEqualShallow(search, this.state.currentSearch)) {
             reload = true;
           }
@@ -206,6 +208,8 @@ function SnippetFeedHOC(
         if (pageParam !== this.state.currentPage) {
           reload = true;
         }
+
+        console.log("HOC", isSearching, reload);
 
         if (reload) {
           if (isSearching) {

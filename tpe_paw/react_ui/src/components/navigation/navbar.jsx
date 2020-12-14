@@ -1,9 +1,17 @@
+// Components
 import React, { Component } from "react";
 import Sidenav from "./sidenav";
-import store from "../../store";
 import { Link, withRouter, matchPath } from "react-router-dom";
-import i18n from "../../i18n";
 import Icon from "@mdi/react";
+import SearchBar from "./searchbar";
+
+// Redux
+import store from "../../store";
+import { logOut } from "../../redux/actions/actionCreators";
+import { LOGIN_SUCCESS } from "../../redux/actions/actionTypes";
+
+// Libs
+import i18n from "../../i18n";
 import {
   mdiClose,
   mdiMenu,
@@ -11,9 +19,19 @@ import {
   mdiMagnify,
   mdiPlusCircleOutline,
 } from "@mdi/js";
-import { logOut } from "../../redux/actions/actionCreators";
-import { LOGIN_SUCCESS } from "../../redux/actions/actionTypes";
 import { CONTEXT } from "../../js/constants";
+import {
+  getNavSearchFromUrl,
+  getTagsSearchFromUrl,
+  getLanguagesSearchFromUrl,
+  fillNavSearchFromUrl,
+  fillTagSearchFromUrl,
+  fillLanguageSearchFromUrl,
+  fillDefaultNavSearchFromUrl,
+  fillDefaultTagSearchFromUrl,
+  fillDefaultLanguageSearchFromUrl,
+} from "../../js/search_from_url";
+import { areEqualShallow } from "../../js/comparison";
 
 // Component -> https://getbootstrap.com/docs/4.5/components/navbar/
 class NavBar extends Component {
@@ -28,6 +46,8 @@ class NavBar extends Component {
       query: "",
       type: "0",
       sort: "0",
+      showEmpty: true,
+      showOnlyFollowing: false
     },
     currentContext: CONTEXT.HOME,
   };
@@ -54,25 +74,43 @@ class NavBar extends Component {
     }
   }
 
+  // Determining context
+  // --------------------------------------------------------------------
+
   testForContext(test, ctx) {
     const isCtx = !!matchPath(this.props.location.pathname, test);
     if (isCtx) {
+      // Determine if show search
       let showSearch = true;
       if (ctx === CONTEXT.ERROR || ctx === CONTEXT.EXPLORE) {
         showSearch = false;
       }
+      // Get the initial search value
+      let initialSearch = this.getSearchBasedOnContext(ctx);
+      // Fill with default values in case some not found
+      initialSearch = this.fillDefaultSearchBasedOnContext(initialSearch, ctx);
       if (this.state.currentContext !== ctx) {
-        this.setState({ currentContext: ctx, showSearch: showSearch });
+        this.setState({
+          currentContext: ctx,
+          showSearch: showSearch,
+          search: initialSearch,
+        });
       } else if (this.state.showSearch !== showSearch) {
         this.setState({ showSearch: showSearch });
+      } else if (!areEqualShallow(initialSearch, this.state.search)) {
+        this.setState({ search: initialSearch });
       }
     }
     return isCtx;
   }
 
   determineCurrentContext() {
-    if (this.testForContext("**/tags/*/snippets", CONTEXT.TAGS_SNIPPETS)) return;
-    if (this.testForContext("**/languages/*/snippets", CONTEXT.LANGUAGES_SNIPPETS)) return;
+    if (this.testForContext("**/tags/*/snippets", CONTEXT.TAGS_SNIPPETS))
+      return;
+    if (
+      this.testForContext("**/languages/*/snippets", CONTEXT.LANGUAGES_SNIPPETS)
+    )
+      return;
     if (this.testForContext("**/tags", CONTEXT.TAGS)) return;
     if (this.testForContext("**/languages", CONTEXT.LANGUAGES)) return;
     if (this.testForContext("**/explore", CONTEXT.EXPLORE)) return;
@@ -86,6 +124,44 @@ class NavBar extends Component {
     if (this.testForContext("**/", CONTEXT.HOME)) return;
   }
 
+  // Search methods
+  // --------------------------------------------------------------------
+
+  // Recovers the search params from the url
+  getSearchBasedOnContext(ctx) {
+    const urlSearch = this.props.location.search;
+    if (ctx === CONTEXT.TAGS) {
+      return getTagsSearchFromUrl(urlSearch);
+    } else if (ctx === CONTEXT.LANGUAGES) {
+      return getLanguagesSearchFromUrl(urlSearch);
+    }
+    return getNavSearchFromUrl(urlSearch);
+  }
+
+  // Adds possible missing params from the url
+  fillSearchBasedOnContext(search, ctx) {
+    let params = new URLSearchParams(this.props.location.search);
+    if (ctx === CONTEXT.TAGS) {
+      return fillTagSearchFromUrl(search, params);
+    } else if (ctx === CONTEXT.LANGUAGES) {
+      return fillLanguageSearchFromUrl(search, params);
+    }
+    return fillNavSearchFromUrl(search, params);
+  }
+
+  // Fills or replaces search params in case inexistent or wrong
+  fillDefaultSearchBasedOnContext(search, ctx) {
+    if (ctx === CONTEXT.TAGS) {
+      return fillDefaultTagSearchFromUrl(search);
+    } else if (ctx === CONTEXT.LANGUAGES) {
+      return fillDefaultLanguageSearchFromUrl(search);
+    }
+    return fillDefaultNavSearchFromUrl(search);
+  }
+
+  // Lifecycle hooks
+  // --------------------------------------------------------------------
+
   componentDidMount() {
     // Subscribing to changes in the auth status, if the user logs in, it is marked as logged in
     this.authUnsubscribe = store.subscribe(() => {
@@ -97,19 +173,14 @@ class NavBar extends Component {
     const storedState = store.getState();
     this.handleReduxUpdate(storedState);
 
+    // Determine current context
+    this.determineCurrentContext();
+
     const isSearching = !!matchPath(this.props.location.pathname, "**/search");
     if (isSearching) {
-      const params = new URLSearchParams(this.props.location.search);
-      this.setState({
-        search: {
-          query: params.get("query"),
-          type: params.get("type"),
-          sort: params.get("sort"),
-        },
-      });
+      const search = this.getSearchBasedOnContext(this.state.currentContext);
+      this.setState({ search: search });
     }
-
-    this.determineCurrentContext();
   }
 
   // We unsubscribe after the component will be unmounted
@@ -118,8 +189,12 @@ class NavBar extends Component {
   }
 
   componentDidUpdate() {
+    console.log("UPDATE");
     this.determineCurrentContext();
   }
+
+  // Events
+  // --------------------------------------------------------------------
 
   // Change status of the nav variable
   navInteract = (isNavOpen) => {
@@ -152,61 +227,14 @@ class NavBar extends Component {
     this.props.history.push("/goodbye");
   }
 
-  handleSearch(event, search) {
-    event.preventDefault();
-    // Determine if we add the "search" to the route
-    const isSearching = !!matchPath(this.props.location.pathname, "**/search");
-    let route;
-    if (isSearching) {
-      route = this.props.location.pathname;
-    } else {
-      let toAdd = "search";
-      if (
-        !(
-          this.props.location.pathname.charAt(
-            this.props.location.pathname.length - 1
-          ) === "/"
-        )
-      ) {
-        toAdd = "/search";
-      }
-      route = this.props.location.pathname + toAdd;
-    }
-
-    // Adding the params to not lose the existing ones
-    let params = new URLSearchParams(this.props.location.search);
-    if (search.query !== null && search.query !== undefined) {
-      params.set("query", search.query);
-    } else {
-      params.set("query", "");
-    }
-    if (
-      search.type !== null &&
-      search.type !== undefined &&
-      search.type !== "0"
-    ) {
-      params.set("type", search.type);
-    } else {
-      params.set("type", "all");
-    }
-    if (
-      search.sort !== null &&
-      search.sort !== undefined &&
-      search.sort !== "0"
-    ) {
-      params.set("sort", search.sort);
-    } else {
-      params.set("sort", "no");
-    }
-
-    this.setState({ search: search });
-
-    // Pushing the route
-    this.props.history.push({
-      pathname: route,
-      search: "?" + params.toString(),
-    });
+  handleNavigationChange(newCtx) {
+    // Closing the sidebar
+    this.navInteract(true);
+    this.setState({ currentContext: newCtx });
   }
+
+  // Component getters
+  // --------------------------------------------------------------------
 
   getTopRightNavItems() {
     if (this.state.userIsLogged) {
@@ -238,91 +266,6 @@ class NavBar extends Component {
         </React.Fragment>
       );
     }
-  }
-
-  handleNavigationChange(newCtx) {
-    // Closing the sidebar
-    this.navInteract(true);
-    this.setState({ currentContext: newCtx });
-  }
-
-  getSearchBar() {
-    return (
-      <form
-        className="form-inline my-auto my-lg-0 col-8"
-        onSubmit={(e) => this.handleSearch(e, this.state.search)}
-      >
-        <div className="input-group mr-sm-2 search-box">
-          <input
-            type="text"
-            className="form-control"
-            placeholder={i18n.t("nav.searchHint")}
-            aria-label={i18n.t("nav.searchHint")}
-            aria-describedby="button-addon2"
-            onChange={(e) =>
-              this.setState({
-                search: {
-                  query: e.target.value,
-                  type: this.state.search.type,
-                  sort: this.state.search.sort,
-                },
-              })
-            }
-            value={this.state.search.query}
-          />
-          <div className="input-group-append">
-            <select
-              className="custom-select form-control"
-              id="inputGroupSelect02"
-              onChange={(e) =>
-                this.setState({
-                  search: {
-                    query: this.state.search.query,
-                    type: e.target.value,
-                    sort: this.state.search.sort,
-                  },
-                })
-              }
-              value={this.state.search.type}
-            >
-              <option value="0">{i18n.t("nav.filter.hint")}</option>
-              <option value="all">{i18n.t("nav.filter.all")}</option>
-              <option value="tag">{i18n.t("nav.filter.tag")}</option>
-              <option value="title">{i18n.t("nav.filter.title")}</option>
-              <option value="content">{i18n.t("nav.filter.content")}</option>
-              <option value="username">{i18n.t("nav.filter.username")}</option>
-              <option value="language">{i18n.t("nav.filter.language")}</option>
-            </select>
-            <select
-              className="custom-select form-control"
-              id="inputGroupSelect03"
-              onChange={(e) =>
-                this.setState({
-                  search: {
-                    query: this.state.search.query,
-                    type: this.state.search.type,
-                    sort: e.target.value,
-                  },
-                })
-              }
-              value={this.state.search.sort}
-            >
-              <option value="0">{i18n.t("nav.order.hint")}</option>
-              <option value="asc">{i18n.t("nav.order.ascending")}</option>
-              <option value="desc">{i18n.t("nav.order.descending")}</option>
-              <option value="no">{i18n.t("nav.order.no")}</option>
-            </select>
-            <button
-              className="btn btn-outline-secondary"
-              type="submit"
-              id="button-addon2"
-            >
-              <Icon path={mdiMagnify} size={1} />
-            </button>
-          </div>
-        </div>
-      </form>
-    );
   }
 
   render() {
@@ -373,7 +316,15 @@ class NavBar extends Component {
             }
             id="navbarSupportedContent"
           >
-            {this.state.showSearch && this.getSearchBar()}
+            {this.state.showSearch && (
+              <SearchBar
+                ctx={this.state.currentContext}
+                search={this.state.search}
+                handleSearch={this.handleSearch}
+                handleSearchChange={this.handleSearchChange}
+                handleSearchChangeAndSearch={this.handleSearchChangeAndSearch}
+              />
+            )}
             <div
               className={
                 "nav-item align-items-horizontal-right " +

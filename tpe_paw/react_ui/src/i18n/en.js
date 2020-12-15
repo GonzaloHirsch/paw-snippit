@@ -340,4 +340,13 @@ export default {
         "Deleted languages are not available for use in new snippets and do not appear in the languages list.",
     },
   },
+  itemCreate: {
+    name: "Item Creation",
+    tag: {
+      action: "Add Tags",
+    },
+    language: {
+      action: "Add Languages",
+    },
+  },
 };

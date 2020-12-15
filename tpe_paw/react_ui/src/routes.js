@@ -12,6 +12,7 @@ const SnippetFeed = React.lazy(() =>
 const SnippetCreate = React.lazy(() =>
   import("./components/snippets/snippet_create")
 );
+const ItemCreate = React.lazy(() => import("./components/items/item_create"));
 const TagSnippets = React.lazy(() => import("./components/pages/tag_snippets"));
 const LanguageSnippets = React.lazy(() =>
   import("./components/pages/language_snippets")
@@ -83,6 +84,13 @@ const routes = [
     name: i18n.t("snippetCreate.name"),
     component: SnippetCreate,
     roles: [ROLE_USER],
+  },
+  {
+    path: "/items/create",
+    exact: true,
+    name: i18n.t("snippetCreate.name"), // TODO
+    component: ItemCreate,
+    roles: [ROLE_ADMIN],
   },
   {
     path: "/snippets/:id",

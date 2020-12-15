@@ -29,6 +29,14 @@ export default class LanguagesAndTagsClient extends Client {
     return axios.get(url);
   }
 
+  postAddLanguage(name) {
+    return this.instance.post("languages", { name: name });
+  }
+
+  getLanguageExists(name) {
+    return this.instance.get("languages/" + name + "/exists");
+  }
+
   // TAGS
   // ------------------------------------------------------------
 
@@ -63,5 +71,13 @@ export default class LanguagesAndTagsClient extends Client {
 
   getTagListWithUrl(url) {
     return axios.get(url);
+  }
+
+  postAddTag(name) {
+    return this.instance.post("tags", { name: name });
+  }
+
+  getTagExists(name) {
+    return this.instance.get("tags/" + name + "/exists");
   }
 }

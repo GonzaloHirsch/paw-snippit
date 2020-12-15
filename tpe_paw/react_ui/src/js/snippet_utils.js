@@ -5,9 +5,9 @@ export function getUserProfilePicUrl(creator) {
   return "/userIcon.jpg";
 }
 
-export function getSnippetPositionInArray(snippets, id){
-  for (let i in snippets){
-    if (snippets[i].id === id){
+export function getSnippetPositionInArray(snippets, id) {
+  for (let i in snippets) {
+    if (snippets[i].id === id) {
       return i;
     }
   }

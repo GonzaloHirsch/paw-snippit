@@ -60,7 +60,7 @@ public class LanguagesController {
         User loggedInUser = this.loginAuthentication.getLoggedInUser();
         if (loggedInUser == null || !this.roleService.isAdmin(loggedInUser.getId())) {
             return Response.status(Response.Status.NOT_FOUND).build();
-        } 
+        }
 
         long langId = this.languageService.addLanguage(langCreateDto.getName());
         // TODO check if tagId is null?
@@ -129,6 +129,13 @@ public class LanguagesController {
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
+
+    @GET
+    @Path("/{name}/exists")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getLanguageByName(final @PathParam(PATH_PARAM_NAME) long name) {
+        return Response.ok(BooleanDto.fromBoolean(this.languageService.languageExists(name))).build();
     }
 
     @GET

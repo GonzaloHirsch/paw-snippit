@@ -137,6 +137,13 @@ public class TagsController {
     }
 
     @GET
+    @Path("/{name}/exists")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getTagByName(final @PathParam(PATH_PARAM_NAME) long name) {
+        return Response.ok(BooleanDto.fromBoolean(this.tagService.tagExists(name))).build();
+    }
+
+    @GET
     @Path("/{id}/snippets")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getSnippetsForTag(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page){

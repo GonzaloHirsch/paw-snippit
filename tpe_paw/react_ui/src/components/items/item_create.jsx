@@ -2,9 +2,19 @@ import React, { Component } from "react";
 import { ITEM_TYPES } from "../../js/constants";
 import ItemCreateForm from "../forms/items_create_form";
 import i18n from "../../i18n";
+import store from "../../store";
 
 class ItemCreate extends Component {
-  state = { context: ITEM_TYPES.TAG };
+  constructor(props) {
+    super(props);
+    const state = store.getState();
+    if (state.auth.token === null || state.auth.token === undefined) {
+      // ERROR should not be here if you are not logged in
+    } else {
+      // TODO CHECK THAT HE IS ADMIN
+    }
+    this.state = { context: ITEM_TYPES.TAG, token: state.auth.token };
+  }
   render() {
     return (
       <div className="flex-center">
@@ -41,7 +51,7 @@ class ItemCreate extends Component {
               </li>
             </ul>
           </div>
-          <div className="py-3 background-color profile-snippet-container rounded-border">
+          <div className="p-3 background-color profile-snippet-container rounded-border">
             <ItemCreateForm {...this.state} />
           </div>
         </div>

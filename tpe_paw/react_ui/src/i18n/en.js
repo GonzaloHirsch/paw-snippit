@@ -342,11 +342,22 @@ export default {
   },
   itemCreate: {
     name: "Item Creation",
+    add: "Add",
+    existsMsg:
+      "List items with a gray background already exists in Snippit and will not be created again",
     tag: {
+      name: "tag",
       action: "Add Tags",
     },
     language: {
+      name: "language",
       action: "Add Languages",
+    },
+    errors: {
+      item: "Value must be between 1 and 30 characters",
+    },
+    placeholders: {
+      item: "Enter the {{item}} to add...",
     },
   },
 };

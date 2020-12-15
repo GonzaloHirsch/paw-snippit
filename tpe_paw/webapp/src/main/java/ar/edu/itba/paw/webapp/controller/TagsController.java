@@ -137,9 +137,12 @@ public class TagsController {
     }
 
     @GET
-    @Path("/{name}/exists")
+    @Path("/exists")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getTagByName(final @PathParam(PATH_PARAM_NAME) long name) {
+    public Response getTagByName(final @QueryParam(QUERY_PARAM_NAME) String name) {
+        if (name == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         return Response.ok(BooleanDto.fromBoolean(this.tagService.tagExists(name))).build();
     }
 

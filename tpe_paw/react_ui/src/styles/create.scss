@@ -24,3 +24,30 @@
 .rbt-input {
   border-radius: $border-radius !important;
 }
+
+// ITEM CREATE
+.item-value-error {
+  position: absolute;
+  margin: 38px 0px 0px 2px;
+  font-size: 15px;
+}
+
+.item-list-container {
+  border: 2px solid #ced4da;
+  min-height: 300px;
+}
+
+.item-element-container {
+  border: solid #ced4da;
+  border-width: 0px 0px 1px 0px;
+  border-radius: $border-radius $border-radius 0px 0px;
+}
+
+.item-element-exists {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.item-element-exists-msg {
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.5);
+}

@@ -97,11 +97,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, API_PREFIX + "tags/*/").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.DELETE, API_PREFIX + "tags/*/follow").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.DELETE, API_PREFIX + "tags/*/").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, API_PREFIX + "tags/exists").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, API_PREFIX + "tags/*/users/*/follows").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.GET, API_PREFIX + "tags/**").permitAll()
                 // Adding LANGUAGES controller authorizations
                 .antMatchers(HttpMethod.GET, API_PREFIX + "languages/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, API_PREFIX + "languages/*/").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, API_PREFIX + "languages/exists").hasRole("ADMIN")
                 // Adding LOGIN policy
                 .antMatchers(HttpMethod.POST, API_PREFIX + "login").permitAll()
                 // Adding SNIPPETS policy

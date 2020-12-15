@@ -132,9 +132,12 @@ public class LanguagesController {
     }
 
     @GET
-    @Path("/{name}/exists")
+    @Path("/exists")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getLanguageByName(final @PathParam(PATH_PARAM_NAME) long name) {
+    public Response getLanguageByName(final @QueryParam(QUERY_PARAM_NAME) String name) {
+        if (name == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         return Response.ok(BooleanDto.fromBoolean(this.languageService.languageExists(name))).build();
     }
 

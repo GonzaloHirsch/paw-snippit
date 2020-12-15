@@ -343,14 +343,17 @@ export default {
   itemCreate: {
     name: "Item Creation",
     add: "Add",
+    indications: "List of {{items}} to add will appear below",
     existsMsg:
       "List items with a gray background already exists in Snippit and will not be created again",
     tag: {
       name: "tag",
+      name_plural: "tags",
       action: "Add Tags",
     },
     language: {
       name: "language",
+      name_plural: "languages",
       action: "Add Languages",
     },
     errors: {

@@ -34,7 +34,8 @@ export default class LanguagesAndTagsClient extends Client {
   }
 
   getLanguageExists(name) {
-    return this.instance.get("languages/" + name + "/exists");
+    const params = new URLSearchParams({ name: name });
+    return this.instance.get("languages/exists?" + params.toString());
   }
 
   // TAGS

@@ -341,6 +341,7 @@ export default {
     },
   },
   itemCreate: {
+    header: "Add Tags and Languages",
     name: "Item Creation",
     add: "Add",
     indications: "List of {{items}} to add will appear below",
@@ -357,7 +358,8 @@ export default {
       action: "Add Languages",
     },
     errors: {
-      item: "Value must be between 1 and 30 characters",
+      length: "Value must be between 1 and 30 characters",
+      spaces: "Value must not contain spaces",
     },
     placeholders: {
       item: "Enter the {{item}} to add...",

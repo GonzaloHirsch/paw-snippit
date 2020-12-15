@@ -8,7 +8,7 @@ class ItemCreateForm extends Component {
     return (
       <button
         className={
-          "btn btn-lg btn-primary btn-block mt-3 rounded-border form-button ld-over-inverse " +
+          "btn btn-lg btn-primary btn-block mt-3 rounded-border shadow form-button ld-over-inverse " +
           (this.props.loading ? "running" : "")
         }
         type="submit"
@@ -25,7 +25,6 @@ class ItemCreateForm extends Component {
       value,
       errors,
       itemList,
-      showExistsMsg,
       onSubmit,
       onAdd,
       onDelete,
@@ -33,7 +32,6 @@ class ItemCreateForm extends Component {
     } = this.props;
     const itemName = i18n.t("itemCreate." + context + ".name");
     const itemNamePlural = i18n.t("itemCreate." + context + ".name_plural");
-    console.log(this.props);
     return (
       <form onSubmit={() => onSubmit()}>
         <div className="d-flex justify-space-between">
@@ -57,7 +55,7 @@ class ItemCreateForm extends Component {
             {i18n.t("itemCreate.add")}
           </div>
         </div>
-        <h6 className="mt-4">
+        <h6 className="mt-4 fw-300" style={{ fontSize: "20px" }}>
           {i18n.t("itemCreate.indications", { items: itemNamePlural })}
         </h6>
         <div className="item-list-container rounded-border">
@@ -70,11 +68,9 @@ class ItemCreateForm extends Component {
             />
           ))}
         </div>
-        {showExistsMsg ? (
-          <div className="flex-center item-element-exists-msg">
-            {i18n.t("itemCreate.existsMsg")}
-          </div>
-        ) : null}
+        <div className="flex-center item-element-exists-msg">
+          {i18n.t("itemCreate.existsMsg")}
+        </div>
         {this._renderSubmitButton()}
       </form>
     );

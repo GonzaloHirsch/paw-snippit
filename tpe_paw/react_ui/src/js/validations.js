@@ -230,10 +230,11 @@ export const SNIPPET_CREATE_VALIDATIONS = {
 
 export const ITEM_CREATE_VALIDATIONS = {
   item: (val) => {
-    console.log(val, val.length);
     return (
       ((val.length < 1 || val.length > 30) &&
-        i18n.t("itemCreate.errors.item")) ||
+        i18n.t("itemCreate.errors.length")) ||
+      (RegExp("\\s").test(val) &&
+        i18n.t("itemCreate.errors.spaces")) ||
       null
     );
   },

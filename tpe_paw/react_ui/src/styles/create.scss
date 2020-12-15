@@ -51,3 +51,12 @@
   font-size: 15px;
   color: rgba(0, 0, 0, 0.5);
 }
+
+.item-tabs-unselected {
+  border-color: transparent transparent #dee2e6 !important;
+}
+
+.item-tabs-unselected:hover {
+  border-color: #dee2e6 #dee2e6 transparent !important;
+  font-weight: 300 !important;
+}

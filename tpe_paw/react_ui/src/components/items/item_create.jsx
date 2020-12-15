@@ -198,7 +198,7 @@ class ItemCreate extends Component {
       <div className="flex-center flex-col">
         <h1 className="fw-100 my-3">{i18n.t("itemCreate.header")}</h1>
 
-        <div className="flex-col mt-2 shadow" style={{ width: "700px" }}>
+        <div className="flex-col mt-2 shadow" style={{ width: "660px" }}>
           <div>
             <ul className="nav nav-tabs">
               <li className="nav-item profile-tabs-width">
@@ -206,7 +206,7 @@ class ItemCreate extends Component {
                   className={
                     "parent-width nav-link profile-tabs " +
                     (context !== ITEM_TYPES.TAG
-                      ? "fw-100 profile-tabs-unselected"
+                      ? "fw-100 item-tabs-unselected"
                       : "fw-300 active")
                   }
                   style={{ fontSize: "30px" }}
@@ -220,7 +220,7 @@ class ItemCreate extends Component {
                   className={
                     "parent-width nav-link profile-tabs " +
                     (context !== ITEM_TYPES.LANGUAGE
-                      ? "fw-100 profile-tabs-unselected"
+                      ? "fw-100 item-tabs-unselected"
                       : "fw-300 active")
                   }
                   style={{ fontSize: "30px" }}

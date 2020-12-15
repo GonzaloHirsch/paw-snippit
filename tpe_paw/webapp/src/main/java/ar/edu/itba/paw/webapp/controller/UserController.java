@@ -79,11 +79,6 @@ public class UserController {
         final URI userUri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(registeredUser.getId())).build();
         return Response.created(userUri).build();
-
-        /* TODO How to do this?
-        this.signUpAuthentication.authWithAuthManager(request, registerForm.getUsername(), registerForm.getPassword());
-        String redirectUrl = this.signUpAuthentication.redirectionAuthenticationSuccess(request);
-        */
     }
 
     @GET

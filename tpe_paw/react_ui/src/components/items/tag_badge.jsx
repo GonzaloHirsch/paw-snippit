@@ -1,6 +1,7 @@
 import { Badge } from "reactstrap";
 import { mdiCloseCircle } from "@mdi/js";
 import Icon from "@mdi/react";
+import { Link } from "react-router-dom";
 
 const TagBadge = (props) => {
   return (
@@ -8,9 +9,16 @@ const TagBadge = (props) => {
       <Badge
         color="secondary"
         pill
-        className="d-flex justify-space-between align-items-center tag-badge word-break pl-3 pr-0"
+        className="d-flex justify-space-between align-items-center tag-badge p-0"
       >
-        {props.tag.name}
+        <Link
+          to={"/tags/" + props.tag.id}
+          className="flex-center parent-width parent-height word-break no-decoration"
+          style={{ minHeight: "30px", marginTop: "2px", marginBottom: "2px" }}
+        >
+          {props.tag.name}
+        </Link>
+
         <Icon
           className="tag-badge-icon"
           onClick={() => props.onUnfollow(props.tag)}

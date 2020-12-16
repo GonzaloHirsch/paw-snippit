@@ -6,6 +6,7 @@ import UserClient from "../../api/implementations/UserClient";
 import store from "../../store";
 import TagBadge from "../items/tag_badge";
 import { getItemPositionInArray } from "../../js/item_utils";
+import { Alert } from "reactstrap";
 
 // Stateless Functional Component
 class SnippetFollowing extends Component {
@@ -26,6 +27,10 @@ class SnippetFollowing extends Component {
     this.state = {
       followingTags: [],
       userId: state.auth.info.uid,
+      unfollowError: {
+        alert: false,
+        tagName: "",
+      },
     };
   }
 
@@ -45,15 +50,15 @@ class SnippetFollowing extends Component {
     const index = getItemPositionInArray(followingList, tag.id);
     followingList.splice(index, 1);
     this.setState({ followingTags: followingList });
-    this.tagActionClient
-      .unfollowTag(tag.id)
-      .then((res) => {
-        console.log("unfollowed tag with name ", tag.name);
-        // TODO ALERT
-      })
-      .catch((e) => {
-        /* TODO ALERT */
-      });
+    this.tagActionClient.unfollowTag(tag.id).catch((e) => {
+      const unfollowError = { alert: true, name: tag.name };
+      this.setState({ unfollowError: unfollowError });
+    });
+  };
+
+  onDismiss = () => {
+    const unfollowError = { alert: false, name: "" };
+    this.setState({ unfollowError: unfollowError });
   };
 
   render() {
@@ -65,6 +70,7 @@ class SnippetFollowing extends Component {
       onPageTransition,
       onSnippetFav,
       userIsLogged,
+      loading,
     } = this.props;
     return (
       <React.Fragment>
@@ -94,9 +100,20 @@ class SnippetFollowing extends Component {
               onPageTransition={onPageTransition}
               onSnippetFav={onSnippetFav}
               userIsLogged={userIsLogged}
+              loading={loading}
             />
           </div>
         </div>
+        <Alert
+          color="danger"
+          className="shadow flex-center custom-alert"
+          isOpen={this.state.unfollowError.alert}
+          toggle={() => this.onDismiss()}
+        >
+          {i18n.t("following.errorMsg", {
+            name: this.state.unfollowError.name,
+          })}
+        </Alert>
       </React.Fragment>
     );
   }

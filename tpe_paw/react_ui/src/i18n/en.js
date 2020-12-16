@@ -374,4 +374,7 @@ export default {
       item: "Enter the {{item}} to add...",
     },
   },
+  following: {
+    errorMsg: "Unable to unfollow tag {{name}}. Try again later.",
+  },
 };

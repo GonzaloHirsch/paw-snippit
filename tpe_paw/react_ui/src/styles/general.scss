@@ -219,3 +219,11 @@ textarea:focus,
 button:focus {
   outline: none !important;
 }
+
+.custom-alert {
+  position: fixed !important;
+  left: 50%;
+  top: 90%;
+  width: 600px;
+  margin-left: -300px;
+}

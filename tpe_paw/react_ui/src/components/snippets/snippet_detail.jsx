@@ -314,7 +314,7 @@ class SnippetDetail extends Component {
             </div>
           </DetailBox>
           <LinkDetailBox path={"/user/" + creator.id}>
-            <div className="row mb-2 fw-500 primary-text no-decoration">
+            <div className="row mb-2 fw-500 uploaded-on-text primary-text no-decoration">
               <span>
                 {i18n.t("snippetDetail.uploaded", {
                   date: getDateFromAPIString(snippet.createdDate),

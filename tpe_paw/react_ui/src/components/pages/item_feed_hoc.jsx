@@ -60,23 +60,26 @@ function ItemFeedHOC(
           links: {},
           currentSearch: search,
           userIsLogged: userIsLogged,
+          loading: false,
         };
       }
 
       // Loading data
 
       loadItems(page) {
+        this.setState({ loading: true });
         getItems(this.latClient, page)
           .then((res) => {
             // Extracting the other pages headers
             const newLinks = extractLinkHeaders(res.headers);
             const itemCount = extractItemCountHeader(res.headers);
             if (this._isMounted) {
-                console.log(res.data)
+              console.log(res.data);
               this.setState({
                 links: newLinks,
                 items: res.data,
                 totalItems: itemCount,
+                loading: false,
               });
             }
           })
@@ -84,6 +87,7 @@ function ItemFeedHOC(
       }
 
       loadSearchedItems(page, search) {
+        this.setState({ loading: true });
         searchItems(this.latClient, page, search)
           .then((res) => {
             // Extracting the other pages headers
@@ -94,6 +98,7 @@ function ItemFeedHOC(
                 links: newLinks,
                 items: res.data,
                 totalItems: itemCount,
+                loading: false,
               });
             }
           })
@@ -138,7 +143,7 @@ function ItemFeedHOC(
 
       // Events
 
-      handleChangeFollowing(e, id){
+      handleChangeFollowing(e, id) {
         let previousFollowState = false;
         // Impact the local snippet state
         // Copy snippets array

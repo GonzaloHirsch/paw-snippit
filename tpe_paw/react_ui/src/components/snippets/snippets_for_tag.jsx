@@ -9,6 +9,8 @@ import { isAdmin } from "../../js/security_utils";
 import { logOut } from "../../redux/actions/actionCreators";
 import DeleteItemModal from "../items/delete_item_modal";
 import { ITEM_TYPES } from "../../js/constants";
+import { Helmet } from "react-helmet";
+
 
 class SnippetsForTag extends Component {
   languagesAndTagsClient;
@@ -145,10 +147,16 @@ class SnippetsForTag extends Component {
       onPageTransition,
       onSnippetFav,
       userIsLogged,
+      loading
     } = this.props;
     return (
       <React.Fragment>
         <div className="mt-2 ml-3 mb-3">
+        <Helmet>
+          <title>
+            {i18n.t("nav.tags")} | {this.state.tag.name}
+          </title>
+        </Helmet>
           <div className="d-flex align-items-center flex-row mb-2">
             <DeleteItemModal
               item={this.state.tag}
@@ -197,6 +205,7 @@ class SnippetsForTag extends Component {
           onPageTransition={onPageTransition}
           onSnippetFav={onSnippetFav}
           userIsLogged={userIsLogged}
+          loading={loading}
         />
       </React.Fragment>
     );

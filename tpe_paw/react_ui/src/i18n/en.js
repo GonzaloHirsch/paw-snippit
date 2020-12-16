@@ -3,6 +3,7 @@ export default {
   app: "Snippit",
   snippet: "Snippet",
   snippetsEmpty: "There are no snippets here",
+  itemsEmpty: "There are no {{items}} here",
   snippet_plural: "Snippets",
   snippetWithNumber: "{{count}} Snippet",
   snippetWithNumber_plural: "{{count}} Snippets",
@@ -10,12 +11,15 @@ export default {
   tagsWithNumber_plural: "{{count}} Tags",
   languagesWithNumber: "{{count}} Language",
   languagesWithNumber_plural: "{{count}} Languages",
+  tags: "Tag",
+  tags_plural: "Tags",
+  languages: "Language",
+  languages_plural: "Languages",
+  tagsLower: "tag",
+  tagsLower_plural: "tags",
+  languagesLower: "language",
+  languagesLower_plural: "languages",
   create: "Create",
-  errors: {
-    serverError: "Error in server, please try again later",
-    unknownError: "Uknown error, please try again later",
-    noConnection: "Connection to server lost, please try again later",
-  },
   nav: {
     home: "Home",
     homeSearch: "Home Search",
@@ -305,6 +309,7 @@ export default {
   },
   errors: {
     e404: {
+      header: "Error 404",
       number: "404",
       title: "Content Not Found",
       message:
@@ -312,12 +317,16 @@ export default {
       action: "Take me Home!",
     },
     e500: {
+      header: "Error 500",
       number: "500",
       title: "Server Error",
       message:
         "Looks like there was an error on our side, please try again later or go back to Home",
       action: "Take me Home!",
     },
+    serverError: "Error in server, please try again later",
+    unknownError: "Uknown error, please try again later",
+    noConnection: "Connection to server lost, please try again later",
   },
   items: {
     empty: "No Snippets",

@@ -14,8 +14,9 @@ const SnippetProfileFeed = (props) => {
         onPageTransition={props.onPageTransition}
         onSnippetFav={props.onSnippetFav}
         userIsLogged={props.userIsLogged}
+        loading={props.loading}
       />
-      {props.isOwner && props.totalSnippets === 0 ? (
+      {!props.loading && props.isOwner && props.totalSnippets === 0 ? (
         <div className="flex-center flex-col my-3">
           <h2 className="fw-100">{i18n.t("snippetCreate.message")}</h2>
           <Link

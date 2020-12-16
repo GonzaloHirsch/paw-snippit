@@ -1,34 +1,16 @@
 import React, { Component } from "react";
-import { Link, withRouter, matchPath } from "react-router-dom";
+import { withRouter, matchPath } from "react-router-dom";
 import Icon from "@mdi/react";
-
-// Redux
-import store from "../../store";
-import { logOut } from "../../redux/actions/actionCreators";
-import { LOGIN_SUCCESS } from "../../redux/actions/actionTypes";
-
-// Libs
 import i18n from "../../i18n";
 import {
-  mdiClose,
-  mdiMenu,
-  mdiCodeTags,
   mdiMagnify,
-  mdiPlusCircleOutline,
 } from "@mdi/js";
 import { CONTEXT } from "../../js/constants";
 import {
-  getNavSearchFromUrl,
-  getTagsSearchFromUrl,
-  getLanguagesSearchFromUrl,
   fillNavSearchFromUrl,
   fillTagSearchFromUrl,
   fillLanguageSearchFromUrl,
-  fillDefaultNavSearchFromUrl,
-  fillDefaultTagSearchFromUrl,
-  fillDefaultLanguageSearchFromUrl,
 } from "../../js/search_from_url";
-import { areEqualShallow } from "../../js/comparison";
 
 class SearchBar extends Component {
   // Lifecycle hooks
@@ -45,7 +27,6 @@ class SearchBar extends Component {
       showOnlyFollowing,
     } = this.props.search;
 
-    console.log("SEARCH", this.props.search)
     this.state = {
       search: {
         query: query === null ? "" : query,
@@ -66,8 +47,8 @@ class SearchBar extends Component {
     currentSearch.query = search.query;
     currentSearch.type = search.type;
     currentSearch.sort = search.sort;
-    currentSearch.showEmpty = (search.showEmpty == 'true');
-    currentSearch.showOnlyFollowing = (search.showOnlyFollowing == 'true');
+    currentSearch.showEmpty = typeof search.showEmpty === "boolean" ? search.showEmpty : (search.showEmpty == 'true');
+    currentSearch.showOnlyFollowing = typeof search.showOnlyFollowing === "boolean" ? search.showOnlyFollowing : (search.showOnlyFollowing == 'true');
 
     this.setState({ search: currentSearch });
   }

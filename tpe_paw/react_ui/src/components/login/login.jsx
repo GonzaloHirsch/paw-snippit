@@ -9,6 +9,8 @@ import TextInputFieldWithIcon from "../forms/text_input_field_with_icon";
 import CustomForm from "../forms/custom_form";
 import { LOGIN_VALIDATIONS } from "../../js/validations";
 import CustomCheckbox from "../forms/custom_checkbox";
+import { Helmet } from "react-helmet";
+
 
 class Login extends Component {
   state = {
@@ -28,8 +30,6 @@ class Login extends Component {
     event.preventDefault();
     const hasErrors = this.validateAll();
 
-    console.log(this.state);
-
     if (!hasErrors) {
       // Get an instance of the cliente
       const authClient = new AuthClient();
@@ -43,7 +43,13 @@ class Login extends Component {
           const refreshToken = res.data.refreshToken;
 
           // Dispatch the login event
-          store.dispatch(loginSuccess({ token }, {refreshToken}, this.state.fields.remember));
+          store.dispatch(
+            loginSuccess(
+              { token },
+              { refreshToken },
+              this.state.fields.remember
+            )
+          );
 
           // Push to home
           this.props.history.push("/");
@@ -99,6 +105,11 @@ class Login extends Component {
   render() {
     return (
       <div className="form-signin rounded-border">
+        <Helmet>
+          <title>
+            {i18n.t("app")} | {i18n.t("nav.login")}
+          </title>
+        </Helmet>
         <CustomForm
           title={i18n.t("login.title")}
           action={i18n.t("login.form.action")}

@@ -6,6 +6,7 @@ import store from "../../store";
 import LanguagesAndTagsClient from "../../api/implementations/LanguagesAndTagsClient";
 import { getItemPositionInArrayWithName } from "../../js/item_utils";
 import { ITEM_CREATE_VALIDATIONS } from "../../js/validations";
+import { Helmet } from "react-helmet";
 
 class ItemCreate extends Component {
   itemsClient;
@@ -191,6 +192,11 @@ class ItemCreate extends Component {
     const { context } = this.state;
     return (
       <div className="flex-center flex-col">
+        <Helmet>
+          <title>
+            {i18n.t("app")} | {i18n.t("itemCreate.header")}
+          </title>
+        </Helmet>
         <h1 className="fw-100 my-3">{i18n.t("itemCreate.header")}</h1>
 
         <div className="flex-col mt-2 shadow" style={{ width: "660px" }}>

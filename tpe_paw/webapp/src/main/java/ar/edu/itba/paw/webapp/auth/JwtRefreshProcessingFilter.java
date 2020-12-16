@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.webapp.dto.LoginDto;
+import ar.edu.itba.paw.webapp.exception.AuthenticationMethodNotSupportedException;
+import ar.edu.itba.paw.webapp.exception.ExpiredAuthenticationTokenException;
+import ar.edu.itba.paw.webapp.exception.InvalidAuthenticationTokenException;
 import ar.edu.itba.paw.webapp.utility.Authorities;
 import ar.edu.itba.paw.webapp.utility.Constants;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -71,10 +74,8 @@ public class JwtRefreshProcessingFilter extends AbstractAuthenticationProcessing
         try {
             // Check if the method used is valid
             if (!HttpMethod.POST.name().equals(request.getMethod())) {
-                // FIXME: TIRAR EL ERROR
-            /*LOGGER.debug("Authentication method not supported. Request method: {}", request.getMethod());
-            throw new AuthMethodNotSupportedException("Authentication method not supported");*/
-                // THROW ERROR
+                LOGGER.debug("Authentication method not supported. Request method: {}", request.getMethod());
+                throw new AuthenticationMethodNotSupportedException("Authentication method not supported");
             }
 
             // Extracting the token from the request
@@ -106,21 +107,13 @@ public class JwtRefreshProcessingFilter extends AbstractAuthenticationProcessing
             }
 
             return this.getAuthenticationManager().authenticate(auth);
-        } catch (ExpiredJwtException e) {
-            response.getWriter().write(convertErrorMessageToJson(e.getMessage()));
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            return this.getAuthenticationManager().authenticate(null);
-        } catch (JwtException e){
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            return this.getAuthenticationManager().authenticate(null);
         }
-    }
-
-    private String convertErrorMessageToJson(String message) {
-        return Json.createObjectBuilder()
-                .add("TokenError", message)
-                .build()
-                .toString();
+        // On error throw corresponding token error exceptions for failure handler
+        catch (ExpiredJwtException e) {
+            throw new ExpiredAuthenticationTokenException(e.getMessage());
+        } catch (JwtException e){
+            throw new InvalidAuthenticationTokenException(e.getMessage());
+        }
     }
 
     @Override

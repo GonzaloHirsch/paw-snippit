@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.service.ReportService;
 import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.interfaces.service.UserService;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.webapp.exception.InvalidAuthenticationTokenException;
 import ar.edu.itba.paw.webapp.utility.Authorities;
 import ar.edu.itba.paw.webapp.utility.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         boolean isRefresh = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(Constants.REFRESH_AUTHORITY.getAuthority()));
 
         if (isRefresh && username == null && password == null) {
-            throw new BadCredentialsException("Invalid refresh token");
+            throw new InvalidAuthenticationTokenException("Invalid refresh token");
         }
 
         // Recovering user, if no user, throw exception

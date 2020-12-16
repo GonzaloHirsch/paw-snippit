@@ -107,7 +107,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // Adding LOGIN policy
                 .antMatchers(HttpMethod.POST, API_PREFIX + "login").permitAll()
                 // Adding SNIPPETS policy
-                .antMatchers(HttpMethod.GET, API_PREFIX + "snippets/*/flagged").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, API_PREFIX + "snippets/flagged").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, API_PREFIX + "snippets/*/flag").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, API_PREFIX + "snippets/*/flag").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, API_PREFIX + "snippets/**").permitAll()
@@ -128,47 +128,11 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         http
                 .addFilterBefore(new JwtLoginProcessingFilter(API_PREFIX + "auth/login", this.successHandler, this.failureHandler, this.objectMapper, this.authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtRefreshProcessingFilter(API_PREFIX + "auth/refresh", this.successHandler, this.failureHandler, this.objectMapper, this.authenticationManager(), this.tokenExtractor, this.userDetails), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtTokenAuthenticationProcessingFilter(this.tokenExtractor, this.userDetails), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtTokenAuthenticationProcessingFilter(this.tokenExtractor, this.userDetails), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
+                .and()
+                .exceptionHandling().authenticationEntryPoint(new PlainTextBasicAuthenticationEntryPoint());
     }
-
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.sessionManagement()
-//                .invalidSessionUrl("/")
-//            .and().authorizeRequests()
-////                .antMatchers("/goodbye", "/login", "/login_error", "/signup").anonymous()
-////                .antMatchers("/recover-password", "/reset-password").anonymous()
-////                .antMatchers("/verify-email", "/resend-email-verification").hasAnyRole("USER", "ADMIN")
-////                .antMatchers("/admin/add").hasRole("ADMIN")
-////                .antMatchers("/flagged/**", "/snippet/**/flag").hasRole("ADMIN")
-////                .antMatchers("/favorites/**", "/following/**", "/upvoted/**").hasAnyRole("USER", "ADMIN")
-////                .antMatchers("/snippet/**/vote/positive", "/snippet/**/vote/negative", "/snippet/**/fav").hasAnyRole("USER", "ADMIN")
-////                .antMatchers("/snippet/create", "/snippet/**/delete", "/snippet/**/report", "/snippet/**/report/dismiss"). hasRole("USER")
-////                .antMatchers("/user/**/active", "/user/**/deleted", "user/**/active/edit", "user/**/deleted/edit"). hasRole("USER")
-////                .antMatchers("/tags/**/follow").hasAnyRole("USER", "ADMIN")
-////                .antMatchers("/tags/**/delete", "/languages/**/delete").hasRole("ADMIN")
-//                .antMatchers("/**").permitAll()
-//            .and().formLogin()
-//                .loginPage("/login")
-//                .failureUrl("/login_error")
-//                .usernameParameter("username")
-//                .passwordParameter("password")
-//                .successHandler(new RefererRedirectionAuthenticationSuccessHandler())
-//                //.defaultSuccessUrl("/", false)
-//            .and().rememberMe()
-//                .rememberMeParameter("rememberme")
-//                .userDetailsService(userDetails)
-//                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
-//                .key(getRememberMeKey())
-//            .and().logout()
-//                .logoutUrl("/logout")
-//                .logoutSuccessUrl("/goodbye")
-//                .invalidateHttpSession(true)
-//                .deleteCookies("JSESSIONID")
-//            .and().exceptionHandling()
-//                .accessDeniedPage("/403")
-//            .and().csrf().disable();
-//    }
 
     @Override
     public void configure(final WebSecurity web) throws Exception {
@@ -183,14 +147,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 "/precache**"
         );
     }
-
-    /*
-    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-    */
 
     /**
      * Bean created based on https://stackoverflow.com/questions/51986766/spring-security-getauthenticationmanager-returns-null-within-custom-filter/51988966

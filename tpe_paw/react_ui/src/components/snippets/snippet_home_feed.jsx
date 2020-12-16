@@ -21,6 +21,7 @@ const SnippetHomeFeed = (props) => {
         onPageTransition={props.onPageTransition}
         onSnippetFav={props.onSnippetFav}
         userIsLogged={props.userIsLogged}
+        loading={props.loading}
       />
     </React.Fragment>
   );

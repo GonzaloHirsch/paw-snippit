@@ -24,6 +24,8 @@ const LanguagesFeed = (props) => {
         handleChangeFollowing={props.handleChangeFollowing}
         userIsLogged={props.userIsLogged}
         showFollowing={false}
+        loading={props.loading}
+        totalItems={props.totalItems}
       />
     </React.Fragment>
   );

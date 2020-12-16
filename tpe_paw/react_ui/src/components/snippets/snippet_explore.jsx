@@ -30,6 +30,7 @@ const SnippetExplore = (props) => {
             onPageTransition={props.onPageTransition}
             onSnippetFav={props.onSnippetFav}
             userIsLogged={props.userIsLogged}
+            loading={props.loading}
           />
         </div>
       </div>

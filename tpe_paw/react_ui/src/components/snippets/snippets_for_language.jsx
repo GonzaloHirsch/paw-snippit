@@ -98,6 +98,7 @@ class SnippetsForLanguage extends Component {
       onPageTransition,
       onSnippetFav,
       userIsLogged,
+      loading
     } = this.props;
     return (
       <div className="flex-center flex-column">
@@ -140,6 +141,7 @@ class SnippetsForLanguage extends Component {
           onPageTransition={onPageTransition}
           onSnippetFav={onSnippetFav}
           userIsLogged={userIsLogged}
+          loading={loading}
         />
       </div>
     );

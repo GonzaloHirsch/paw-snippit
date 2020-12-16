@@ -145,6 +145,7 @@ class SnippetsForTag extends Component {
       onPageTransition,
       onSnippetFav,
       userIsLogged,
+      loading
     } = this.props;
     return (
       <React.Fragment>
@@ -197,6 +198,7 @@ class SnippetsForTag extends Component {
           onPageTransition={onPageTransition}
           onSnippetFav={onSnippetFav}
           userIsLogged={userIsLogged}
+          loading={loading}
         />
       </React.Fragment>
     );

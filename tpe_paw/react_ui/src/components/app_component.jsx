@@ -10,6 +10,7 @@ import routes from "../routes";
 import { PrivateRoute } from "./navigation/private_route";
 import NavBar from "./navigation/navbar";
 
+
 class AppComponent extends Component {
   state = {};
 
@@ -42,8 +43,8 @@ class AppComponent extends Component {
     return (
       <Suspense
         fallback={
-          <div className="pt-1 text-center mt-5">
-            Snippit is Loading...
+          <div className="pt-1 align-items-horizontal-center align-items-vertical mt-5">
+           Snippit is Loading...
           </div>
         }
       >

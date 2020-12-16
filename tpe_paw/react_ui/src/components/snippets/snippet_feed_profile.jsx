@@ -14,6 +14,7 @@ const SnippetFeedProfile = (props) => {
         onPageTransition={props.onPageTransition}
         onSnippetFav={props.onSnippetFav}
         userIsLogged={props.userIsLogged}
+        loading={props.loading}
       />
       {props.isOwner && props.totalSnippets === 0 ? (
         <div className="flex-center flex-col my-3">

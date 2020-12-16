@@ -24,6 +24,8 @@ const TagsFeed = (props) => {
         handleChangeFollowing={props.handleChangeFollowing}
         userIsLogged={props.userIsLogged}
         showFollowing={true}
+        loading={props.loading}
+        totalItems={props.totalItems}
       />
     </React.Fragment>
   );

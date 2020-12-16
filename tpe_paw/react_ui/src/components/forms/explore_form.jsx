@@ -24,7 +24,7 @@ class ExploreForm extends Component {
   constructor(props) {
     super(props);
 
-    this.languagesAndTagsClient = new LanguagesAndTagsClient();
+    this.languagesAndTagsClient = new LanguagesAndTagsClient(this.props);
 
     const {
       field,

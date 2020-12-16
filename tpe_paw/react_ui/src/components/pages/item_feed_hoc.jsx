@@ -28,11 +28,11 @@ function ItemFeedHOC(
         const state = store.getState();
         let userIsLogged = false;
         if (state.auth.token === null || state.auth.token === undefined) {
-          this.latActionsClient = new LanguagesAndTagsActionsClient();
-          this.latClient = new LanguagesAndTagsClient();
+          this.latActionsClient = new LanguagesAndTagsActionsClient(this.props);
+          this.latClient = new LanguagesAndTagsClient(this.props);
         } else {
           if (!tokenProtected) {
-            this.latClient = new LanguagesAndTagsClient();
+            this.latClient = new LanguagesAndTagsClient(this.props);
           } else {
             this.latClient = new LanguagesAndTagsClient(
               props,

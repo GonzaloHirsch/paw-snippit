@@ -20,7 +20,7 @@ class SnippetCreateForm extends Component {
   constructor(props) {
     super(props);
     this.snippetClient = new SnippetClient(this.props, this.props.token);
-    this.languagesAndTagsClient = new LanguagesAndTagsClient();
+    this.languagesAndTagsClient = new LanguagesAndTagsClient(this.props);
     this.state = {
       fields: {
         title: "",

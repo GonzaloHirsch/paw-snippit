@@ -32,7 +32,7 @@ class Login extends Component {
 
     if (!hasErrors) {
       // Get an instance of the cliente
-      const authClient = new AuthClient();
+      const authClient = new AuthClient(this.props);
 
       // Call the auth method
       authClient
@@ -55,6 +55,7 @@ class Login extends Component {
           this.props.history.push("/");
         })
         .catch((e) => {
+          console.log(e)
           if (e.response) {
             // client received an error response (5xx, 4xx)
             if (e.response.status === 401) {

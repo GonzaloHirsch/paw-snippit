@@ -36,7 +36,7 @@ class RecoverSend extends Component {
 
   constructor(props) {
     super(props);
-    this.authClient = new AuthClient();
+    this.authClient = new AuthClient(this.props);
   }
 
   componentDidMount() {

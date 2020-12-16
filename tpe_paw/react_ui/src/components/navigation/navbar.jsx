@@ -32,6 +32,7 @@ import {
   fillDefaultLanguageSearchFromUrl,
 } from "../../js/search_from_url";
 import { areEqualShallow } from "../../js/comparison";
+import { isAdmin } from "../../js/security_utils";
 
 // Component -> https://getbootstrap.com/docs/4.5/components/navbar/
 class NavBar extends Component {
@@ -239,7 +240,7 @@ class NavBar extends Component {
       return (
         <React.Fragment>
           <Link
-            to="/snippets/create"
+            to={isAdmin(this.state.roles) ? "/items/create" : "/snippets/create"}
             className="create-button shadow btn rounded-border mr-3 "
           >
             {i18n.t("create")}

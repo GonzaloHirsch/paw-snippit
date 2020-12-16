@@ -21,8 +21,8 @@ class SnippetsForLanguage extends Component {
     super(props);
 
     const state = store.getState();
-    this.languagesAndTagsClient = new LanguagesAndTagsClient();
-    this.languagesAndTagsActionsClient = new LanguagesAndTagsActionsClient();
+    this.languagesAndTagsClient = new LanguagesAndTagsClient(this.props);
+    this.languagesAndTagsActionsClient = new LanguagesAndTagsActionsClient(this.props);
 
     let userIsAdmin = false;
     if (!(state.auth.token === null || state.auth.token === undefined)) {

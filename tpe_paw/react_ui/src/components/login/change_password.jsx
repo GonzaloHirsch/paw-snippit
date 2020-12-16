@@ -11,6 +11,7 @@ import {
   validateAll,
   hasErrors,
 } from "../../js/validations";
+import { Helmet } from "react-helmet";
 
 class RecoverSend extends Component {
   authClient;
@@ -39,7 +40,6 @@ class RecoverSend extends Component {
   }
 
   componentDidMount() {
-    console.log("MOUNTEDDDD")
     const params = new URLSearchParams(this.props.location.search);
     const id = params.get("id");
     const token = params.get("token");
@@ -169,7 +169,9 @@ class RecoverSend extends Component {
       !hasErrorsToShow &&
       this.state.fields.newPassword !== this.state.fields.repeatNewPassword
     ) {
-      errors["repeatNewPassword"] = i18n.t("changePassword.changeForm.errors.differentPasswords");
+      errors["repeatNewPassword"] = i18n.t(
+        "changePassword.changeForm.errors.differentPasswords"
+      );
       hasErrorsToShow = true;
     }
     this.setState({ errors: errors });
@@ -285,7 +287,14 @@ class RecoverSend extends Component {
 
   render() {
     return (
-      <div className="form-signin rounded-lg">{this.getDisplayForm()}</div>
+      <div className="form-signin rounded-lg">
+        <Helmet>
+          <title>
+            {i18n.t("app")} | {i18n.t("nav.resetPassword")}
+          </title>
+        </Helmet>
+        {this.getDisplayForm()}
+      </div>
     );
   }
 }

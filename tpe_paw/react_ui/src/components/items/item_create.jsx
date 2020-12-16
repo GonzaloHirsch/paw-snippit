@@ -11,6 +11,8 @@ import {
   hasErrors,
   ITEM_CREATE_VALIDATIONS,
 } from "../../js/validations";
+import { Helmet } from "react-helmet";
+
 
 class ItemCreate extends Component {
   itemsClient;
@@ -71,7 +73,7 @@ class ItemCreate extends Component {
       .then((res) => {
         this.onAddItemHelper(name, res.data.aBoolean, ITEM_TYPES.TAG);
       })
-      .catch((e) => { });
+      .catch((e) => {});
 
     // Clear the input
     fields.tag.item = "";
@@ -94,7 +96,7 @@ class ItemCreate extends Component {
       .then((res) => {
         this.onAddItemHelper(name, res.data.aBoolean, ITEM_TYPES.LANGUAGE);
       })
-      .catch((e) => { });
+      .catch((e) => {});
 
     // Clear the input
     fields.language.item = "";
@@ -137,7 +139,7 @@ class ItemCreate extends Component {
       loading.tag = true;
       this.setState({ loading: loading });
     } else {
-      this._onSubmitStateUpdate(ITEM_TYPES.TAG)
+      this._onSubmitStateUpdate(ITEM_TYPES.TAG);
     }
 
     filteredList.map((item, index) => {
@@ -147,10 +149,10 @@ class ItemCreate extends Component {
           .then(() => {
             // Submitted the last item
             if (!(index < length - 1)) {
-              this._onSubmitStateUpdate(ITEM_TYPES.TAG)
+              this._onSubmitStateUpdate(ITEM_TYPES.TAG);
             }
           })
-          .catch((e) => { });
+          .catch((e) => {});
       }
     });
   };
@@ -166,7 +168,7 @@ class ItemCreate extends Component {
       loading.language = true;
       this.setState({ loading: loading });
     } else {
-      this._onSubmitStateUpdate(ITEM_TYPES.LANGUAGE)
+      this._onSubmitStateUpdate(ITEM_TYPES.LANGUAGE);
     }
 
     filteredList.map((item, index) => {
@@ -179,7 +181,7 @@ class ItemCreate extends Component {
               this._onSubmitStateUpdate(ITEM_TYPES.LANGUAGE);
             }
           })
-          .catch((e) => { });
+          .catch((e) => {});
       }
     });
   };
@@ -196,6 +198,11 @@ class ItemCreate extends Component {
     const { context } = this.state;
     return (
       <div className="flex-center flex-col">
+        <Helmet>
+          <title>
+            {i18n.t("app")} | {i18n.t("itemCreate.header")}
+          </title>
+        </Helmet>
         <h1 className="fw-100 my-3">{i18n.t("itemCreate.header")}</h1>
 
         <div className="flex-col mt-2 shadow" style={{ width: "660px" }}>
@@ -247,20 +254,20 @@ class ItemCreate extends Component {
                 loading={this.state.loading.tag}
               />
             ) : (
-                <ItemCreateForm
-                  context={context}
-                  value={this.state.fields.language.item}
-                  errors={this.state.errors.language.item}
-                  itemList={this.state.itemList.language}
-                  onInputChange={(e) =>
-                    this.onInputChange(e, ITEM_TYPES.LANGUAGE)
-                  }
-                  onAdd={() => this.onAddLanguage()}
-                  onDelete={(idx) => this.onDeleteLanguage(idx)}
-                  onSubmit={() => this.onSubmitLanguage()}
-                  loading={this.state.loading.language}
-                />
-              )}
+              <ItemCreateForm
+                context={context}
+                value={this.state.fields.language.item}
+                errors={this.state.errors.language.item}
+                itemList={this.state.itemList.language}
+                onInputChange={(e) =>
+                  this.onInputChange(e, ITEM_TYPES.LANGUAGE)
+                }
+                onAdd={() => this.onAddLanguage()}
+                onDelete={(idx) => this.onDeleteLanguage(idx)}
+                onSubmit={() => this.onSubmitLanguage()}
+                loading={this.state.loading.language}
+              />
+            )}
           </div>
         </div>
       </div>

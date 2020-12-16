@@ -13,6 +13,7 @@ import {
   validateAll,
   hasErrors,
 } from "../../js/validations";
+import { Helmet } from "react-helmet";
 
 class SignUp extends Component {
   state = {
@@ -62,7 +63,7 @@ class SignUp extends Component {
 
               // Dispatch the login event
               // We add the remember to be true
-              store.dispatch(loginSuccess({ token }, {refreshToken}, true));
+              store.dispatch(loginSuccess({ token }, { refreshToken }, true));
 
               // Push to home
               this.props.history.push("/");
@@ -131,6 +132,11 @@ class SignUp extends Component {
   render() {
     return (
       <div className="form-signin rounded-border">
+        <Helmet>
+          <title>
+            {i18n.t("app")} | {i18n.t("nav.signup")}
+          </title>
+        </Helmet>
         <CustomForm
           title={i18n.t("signup.title")}
           action={i18n.t("signup.form.action")}

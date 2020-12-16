@@ -1,10 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import i18n from "../../../i18n";
+import { Helmet } from "react-helmet";
+
 
 const Page500 = () => {
   return (
     <React.Fragment>
+      <Helmet>
+        <title>
+          {i18n.t("app")} | {i18n.t("errors.e500.header")}
+        </title>
+      </Helmet>
       <div className="col align-items-horizontal-center flex-col flex-center mt-5">
         <div className="row error-number align-items-horizontal-center fw-700 mb-2">
           {i18n.t("errors.e500.number")}

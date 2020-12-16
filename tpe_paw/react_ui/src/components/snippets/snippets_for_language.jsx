@@ -10,6 +10,8 @@ import { isAdmin } from "../../js/security_utils";
 import { logOut } from "../../redux/actions/actionCreators";
 import DeleteItemModal from "../items/delete_item_modal";
 import { ITEM_TYPES } from "../../js/constants";
+import { Helmet } from "react-helmet";
+
 
 class SnippetsForLanguage extends Component {
   languagesAndTagsClient;
@@ -102,6 +104,11 @@ class SnippetsForLanguage extends Component {
     } = this.props;
     return (
       <div className="flex-center flex-column">
+        <Helmet>
+          <title>
+            {i18n.t("nav.languages")} | {this.state.language.name}
+          </title>
+        </Helmet>
         {this.state.language.deleted && <ItemDeletedMessage />}
         <div className="flex-center mt-4 mb-2">
           <DeleteItemModal

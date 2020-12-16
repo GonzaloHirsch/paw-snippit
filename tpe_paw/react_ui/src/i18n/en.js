@@ -20,11 +20,6 @@ export default {
   languagesLower: "language",
   languagesLower_plural: "languages",
   create: "Create",
-  errors: {
-    serverError: "Error in server, please try again later",
-    unknownError: "Uknown error, please try again later",
-    noConnection: "Connection to server lost, please try again later",
-  },
   nav: {
     home: "Home",
     homeSearch: "Home Search",
@@ -314,6 +309,7 @@ export default {
   },
   errors: {
     e404: {
+      header: "Error 404",
       number: "404",
       title: "Content Not Found",
       message:
@@ -321,12 +317,16 @@ export default {
       action: "Take me Home!",
     },
     e500: {
+      header: "Error 500",
       number: "500",
       title: "Server Error",
       message:
         "Looks like there was an error on our side, please try again later or go back to Home",
       action: "Take me Home!",
     },
+    serverError: "Error in server, please try again later",
+    unknownError: "Uknown error, please try again later",
+    noConnection: "Connection to server lost, please try again later",
   },
   items: {
     empty: "No Snippets",

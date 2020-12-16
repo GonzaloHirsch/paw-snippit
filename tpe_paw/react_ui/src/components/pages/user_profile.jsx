@@ -11,6 +11,7 @@ import {
   DELETED_USER_SNIPPETS,
 } from "../../js/constants";
 import SnippetFeedProfile from "../snippets/snippet_feed_profile";
+import { Helmet } from "react-helmet";
 
 class UserProfile extends Component {
   userClient;
@@ -98,6 +99,10 @@ class UserProfile extends Component {
       .catch((e) => {});
   };
 
+  isOwner = () => {
+    return this.state.profileOwnerId === this.state.loggedUserId;
+  };
+
   // Render methods
   _renderTabs() {
     if (this.state.profileOwnerId !== this.state.loggedUserId) {
@@ -182,6 +187,13 @@ class UserProfile extends Component {
   render() {
     return (
       <div className="row parent-height">
+        <Helmet>
+          <title>
+            {this.isOwner()
+              ? i18n.t("nav.profile")
+              : i18n.t("app") + " | " + this.state.profileOwner.username}
+          </title>
+        </Helmet>
         <div className="col-3 profile-user-data d-flex flex-col align-items-center">
           <ProfileDetail
             owner={this.state.profileOwner}

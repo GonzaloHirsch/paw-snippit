@@ -12,6 +12,8 @@ import {
   validateAll,
   hasErrors,
 } from "../../js/validations";
+import { Helmet } from "react-helmet";
+
 
 class RecoverSend extends Component {
   state = {
@@ -128,7 +130,7 @@ class RecoverSend extends Component {
         <CustomForm
           title={i18n.t("recover.title")}
           action={i18n.t("recover.form.action")}
-          onSubmit={() => this.handleSubmit()}
+          onSubmit={(e) => this.handleSubmit(e)}
           generalError={this.state.responseErrors}
           includeAppName={false}
           loading={false}
@@ -155,7 +157,14 @@ class RecoverSend extends Component {
 
   render() {
     return (
-      <div className="form-signin rounded-border">{this.getDisplayForm()}</div>
+      <div className="form-signin rounded-border">
+        <Helmet>
+          <title>
+            {i18n.t("app")} | {i18n.t("nav.resetPassword")}
+          </title>
+        </Helmet>
+        {this.getDisplayForm()}
+      </div>
     );
   }
 }

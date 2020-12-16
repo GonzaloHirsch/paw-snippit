@@ -148,10 +148,9 @@ class ItemCreate extends Component {
     itemList[context] = [];
     this.setState({ itemList: itemList, loading: loading });
 
-    if (showAlert && !error) {
-      this._showAlert(context, "success");
+    if (showAlert) {
+      this._showAlert(context, error ? "danger" : "success");
     }
-    console.log(this.state.alert);
   }
 
   // On submit, must call the API itemList.length times
@@ -171,7 +170,6 @@ class ItemCreate extends Component {
       this._onSubmitStateUpdate(ITEM_TYPES.TAG, error, false);
     }
 
-    console.log("LIST", filteredList);
     filteredList.map((item, index) => {
       if (!item.exists) {
         this.itemsClient
@@ -183,9 +181,11 @@ class ItemCreate extends Component {
             }
           })
           .catch((e) => {
-            console.log("IN HERE!");
             error = true;
-            this._showAlert(ITEM_TYPES.TAG, "danger", true);
+            // In case of error on the last item, still want to clear the list
+            if (!(index < length - 1)) {
+              this._onSubmitStateUpdate(ITEM_TYPES.TAG, error, true);
+            }
           });
       }
     });
@@ -220,7 +220,10 @@ class ItemCreate extends Component {
           })
           .catch((e) => {
             error = true;
-            this._showAlert(ITEM_TYPES.LANGUAGE, "danger", true);
+            // In case of error on the last item, still want to clear the list
+            if (!(index < length - 1)) {
+              this._onSubmitStateUpdate(ITEM_TYPES.LANGUAGE, error, true);
+            }
           });
       }
     });

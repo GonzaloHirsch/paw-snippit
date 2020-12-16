@@ -1,12 +1,14 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.webapp.dto.LoginDto;
+import ar.edu.itba.paw.webapp.exception.AuthenticationMethodNotSupportedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -56,10 +58,8 @@ public class JwtLoginProcessingFilter extends AbstractAuthenticationProcessingFi
             throws AuthenticationException, IOException, ServletException {
         // Check if the method used is valid
         if (!HttpMethod.POST.name().equals(request.getMethod())) {
-            // FIXME: TIRAR EL ERROR
-            /*LOGGER.debug("Authentication method not supported. Request method: {}", request.getMethod());
-            throw new AuthMethodNotSupportedException("Authentication method not supported");*/
-            // THROW ERROR
+            LOGGER.debug("Authentication method not supported. Request method: {}", request.getMethod());
+            throw new AuthenticationMethodNotSupportedException("Authentication method not supported");
         }
 
         // Map the data from the request into a login DTO
@@ -67,9 +67,7 @@ public class JwtLoginProcessingFilter extends AbstractAuthenticationProcessingFi
 
         // Verify there is information
         if ((loginDto.getUsername() == null || loginDto.getUsername().isEmpty()) || (loginDto.getPassword() == null || loginDto.getPassword().isEmpty())) {
-//            throw new AuthenticationServiceException("Username or Password not provided");
-            // THROW ERROR
-            // FIXME: TIRAR EL ERROR
+            throw new BadCredentialsException("Invalid username or password");
         }
 
         // Generating the token

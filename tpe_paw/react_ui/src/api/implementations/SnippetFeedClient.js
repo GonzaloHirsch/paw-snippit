@@ -93,9 +93,21 @@ export default class SnippetFeedClient extends Client {
     );
   }
 
-  getFollowingSnippetFeed(page) {
+  getFollowingSnippetFeed(page, userId) {
     const params = new URLSearchParams({ page: page });
-    return this.instance.get("snippets/following?" + params.toString());
+    return this.instance.get(
+      "users/" + userId + "/following_snippets?" + params.toString()
+    );
+  }
+
+  searchFollowingSnippetFeed(page, search, userId) {
+    const params = new URLSearchParams({ page: page });
+    for (let key in search) {
+      params.set(key, search[key]);
+    }
+    return this.instance.get(
+      "users/" + userId + "/following_snippets/search?" + params.toString()
+    );
   }
 
   getFlaggedSnippetFeed(page) {
@@ -121,7 +133,9 @@ export default class SnippetFeedClient extends Client {
     for (let key in search) {
       params.set(key, search[key]);
     }
-    return this.instance.get("tags/" + id + "/snippets/search?" + params.toString());
+    return this.instance.get(
+      "tags/" + id + "/snippets/search?" + params.toString()
+    );
   }
 
   getSnippetsForLanguage(id, page) {

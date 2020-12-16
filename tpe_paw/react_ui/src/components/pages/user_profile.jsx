@@ -10,7 +10,7 @@ import {
   ACTIVE_USER_SNIPPETS,
   DELETED_USER_SNIPPETS,
 } from "../../js/constants";
-import SnippetFeedProfile from "../snippets/snippet_feed_profile";
+import SnippetProfileFeed from "../snippets/snippet_profile_feed";
 
 class UserProfile extends Component {
   userClient;
@@ -140,7 +140,7 @@ class UserProfile extends Component {
   _renderFeedContext() {
     if (this.state.context === ACTIVE_USER_SNIPPETS) {
       const ActiveSnippetFeed = SnippetFeedHOC(
-        SnippetFeedProfile,
+        SnippetProfileFeed,
         (SnippetFeedClient, page) =>
           SnippetFeedClient.getProfileActiveSnippetFeed(
             page,

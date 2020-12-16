@@ -3,7 +3,7 @@ import SnippetFeed from "./snippet_feed";
 import i18n from "../../i18n";
 import { Link } from "react-router-dom";
 
-const SnippetFeedProfile = (props) => {
+const SnippetProfileFeed = (props) => {
   return (
     <React.Fragment>
       <SnippetFeed
@@ -30,4 +30,4 @@ const SnippetFeedProfile = (props) => {
   );
 };
 
-export default SnippetFeedProfile;
+export default SnippetProfileFeed;

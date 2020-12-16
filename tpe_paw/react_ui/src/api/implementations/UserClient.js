@@ -6,6 +6,10 @@ export default class UserClient extends Client {
     return this.instance.get("users/" + id);
   }
 
+  getUserFollowingTags(id) {
+    return this.instance.get("users/" + id + "/following_tags");
+  }
+
   putUserDescription(id, description) {
     return this.instance.put("users/" + id + "/description", {
       description: description,

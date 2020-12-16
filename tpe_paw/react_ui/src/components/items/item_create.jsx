@@ -5,12 +5,7 @@ import i18n from "../../i18n";
 import store from "../../store";
 import LanguagesAndTagsClient from "../../api/implementations/LanguagesAndTagsClient";
 import { getItemPositionInArrayWithName } from "../../js/item_utils";
-import {
-  handleChange,
-  validateAll,
-  hasErrors,
-  ITEM_CREATE_VALIDATIONS,
-} from "../../js/validations";
+import { ITEM_CREATE_VALIDATIONS } from "../../js/validations";
 
 class ItemCreate extends Component {
   itemsClient;
@@ -71,7 +66,7 @@ class ItemCreate extends Component {
       .then((res) => {
         this.onAddItemHelper(name, res.data.aBoolean, ITEM_TYPES.TAG);
       })
-      .catch((e) => { });
+      .catch((e) => {});
 
     // Clear the input
     fields.tag.item = "";
@@ -94,7 +89,7 @@ class ItemCreate extends Component {
       .then((res) => {
         this.onAddItemHelper(name, res.data.aBoolean, ITEM_TYPES.LANGUAGE);
       })
-      .catch((e) => { });
+      .catch((e) => {});
 
     // Clear the input
     fields.language.item = "";
@@ -137,7 +132,7 @@ class ItemCreate extends Component {
       loading.tag = true;
       this.setState({ loading: loading });
     } else {
-      this._onSubmitStateUpdate(ITEM_TYPES.TAG)
+      this._onSubmitStateUpdate(ITEM_TYPES.TAG);
     }
 
     filteredList.map((item, index) => {
@@ -147,10 +142,10 @@ class ItemCreate extends Component {
           .then(() => {
             // Submitted the last item
             if (!(index < length - 1)) {
-              this._onSubmitStateUpdate(ITEM_TYPES.TAG)
+              this._onSubmitStateUpdate(ITEM_TYPES.TAG);
             }
           })
-          .catch((e) => { });
+          .catch((e) => {});
       }
     });
   };
@@ -166,7 +161,7 @@ class ItemCreate extends Component {
       loading.language = true;
       this.setState({ loading: loading });
     } else {
-      this._onSubmitStateUpdate(ITEM_TYPES.LANGUAGE)
+      this._onSubmitStateUpdate(ITEM_TYPES.LANGUAGE);
     }
 
     filteredList.map((item, index) => {
@@ -179,7 +174,7 @@ class ItemCreate extends Component {
               this._onSubmitStateUpdate(ITEM_TYPES.LANGUAGE);
             }
           })
-          .catch((e) => { });
+          .catch((e) => {});
       }
     });
   };
@@ -233,7 +228,7 @@ class ItemCreate extends Component {
               </li>
             </ul>
           </div>
-          <div className="p-4 background-color profile-snippet-container rounded-border">
+          <div className="p-4 background-color profile-snippet-container">
             {context === ITEM_TYPES.TAG ? (
               <ItemCreateForm
                 context={context}
@@ -247,20 +242,20 @@ class ItemCreate extends Component {
                 loading={this.state.loading.tag}
               />
             ) : (
-                <ItemCreateForm
-                  context={context}
-                  value={this.state.fields.language.item}
-                  errors={this.state.errors.language.item}
-                  itemList={this.state.itemList.language}
-                  onInputChange={(e) =>
-                    this.onInputChange(e, ITEM_TYPES.LANGUAGE)
-                  }
-                  onAdd={() => this.onAddLanguage()}
-                  onDelete={(idx) => this.onDeleteLanguage(idx)}
-                  onSubmit={() => this.onSubmitLanguage()}
-                  loading={this.state.loading.language}
-                />
-              )}
+              <ItemCreateForm
+                context={context}
+                value={this.state.fields.language.item}
+                errors={this.state.errors.language.item}
+                itemList={this.state.itemList.language}
+                onInputChange={(e) =>
+                  this.onInputChange(e, ITEM_TYPES.LANGUAGE)
+                }
+                onAdd={() => this.onAddLanguage()}
+                onDelete={(idx) => this.onDeleteLanguage(idx)}
+                onSubmit={() => this.onSubmitLanguage()}
+                loading={this.state.loading.language}
+              />
+            )}
           </div>
         </div>
       </div>

@@ -399,7 +399,7 @@ public class UserController {
     @GET
     @Path("/{id}/following_tags")
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getFollowingTagsForUser(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
+    public Response getFollowingTagsForUser(final @PathParam(PATH_PARAM_ID) long id) {
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();

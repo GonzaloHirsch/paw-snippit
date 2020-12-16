@@ -22,6 +22,7 @@ const SignUp = React.lazy(() => import("./components/login/signup"));
 const Home = React.lazy(() => import("./components/pages/home"));
 const Flagged = React.lazy(() => import("./components/pages/flagged"));
 const Favorites = React.lazy(() => import("./components/pages/favorites"));
+const Following = React.lazy(() => import("./components/pages/following"));
 const Upvoted = React.lazy(() => import("./components/pages/upvoted"));
 const Explore = React.lazy(() => import("./components/pages/explore"));
 const Languages = React.lazy(() => import("./components/pages/languages"));
@@ -104,6 +105,13 @@ const routes = [
     exact: false,
     name: i18n.t("nav.favorites"),
     component: Favorites,
+    roles: [ROLE_USER, ROLE_ADMIN],
+  },
+  {
+    path: "/following",
+    exact: false,
+    name: i18n.t("nav.following"),
+    component: Following,
     roles: [ROLE_USER, ROLE_ADMIN],
   },
   {

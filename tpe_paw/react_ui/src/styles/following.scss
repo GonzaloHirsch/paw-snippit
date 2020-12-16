@@ -1,0 +1,22 @@
+@import "variables";
+
+.tag-badge {
+  width: 100%;
+  min-height: 30px;
+  font-size: 17px !important;
+  background-color: rgba(94, 53, 177, 0.8) !important;
+  transition: 0.3s !important;
+}
+
+.tag-badge:hover {
+  background-color: $primary-color !important;
+}
+
+.tag-badge-icon {
+  margin-right: 5px;
+  transition: 0.3s;
+}
+
+.tag-badge-icon:hover {
+  color: $code-background-color;
+}

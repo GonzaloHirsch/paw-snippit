@@ -48,7 +48,7 @@ public class JwtLoginAuthenticationFailureHandler implements AuthenticationFailu
 
     private String convertErrorMessageToJson(String property, String message) {
         return Json.createObjectBuilder()
-                .add("error", message)
+                .add(property, message)
                 .build()
                 .toString();
     }

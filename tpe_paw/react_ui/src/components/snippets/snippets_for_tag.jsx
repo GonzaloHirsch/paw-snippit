@@ -20,8 +20,8 @@ class SnippetsForTag extends Component {
     const state = store.getState();
     let loggedUserId = null;
     let userIsAdmin = false;
-    this.languagesAndTagsClient = new LanguagesAndTagsClient();
-    this.languagesAndTagsActionsClient = new LanguagesAndTagsActionsClient();
+    this.languagesAndTagsClient = new LanguagesAndTagsClient(this.props);
+    this.languagesAndTagsActionsClient = new LanguagesAndTagsActionsClient(this.props);
     if (!(state.auth.token === null || state.auth.token === undefined)) {
       this.languagesAndTagsClient = new LanguagesAndTagsClient(
         this.props,

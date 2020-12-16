@@ -23,11 +23,11 @@ class SnippetOverview extends Component {
     let userCanReport = false;
     let userIsAdmin = false;
     let loggedUserId = -1;
-    this.userClient = new UserClient();
-    this.languagesAndTagsClient = new LanguagesAndTagsClient();
+    this.userClient = new UserClient(this.props);
+    this.languagesAndTagsClient = new LanguagesAndTagsClient(this.props);
     if (state.auth.token === null || state.auth.token === undefined) {
-      this.snippetActionsClient = new SnippetActionsClient();
-      this.snippetClient = new SnippetClient();
+      this.snippetActionsClient = new SnippetActionsClient(this.props);
+      this.snippetClient = new SnippetClient(this.props);
     } else {
       this.snippetActionsClient = new SnippetActionsClient(
         props,
@@ -82,10 +82,12 @@ class SnippetOverview extends Component {
       userIsOwner: false,
       userIsAdmin: userIsAdmin,
       loggedUserId: loggedUserId,
+      loading: false,
     };
   }
 
   loadSnippet() {
+    this.setState({ loading: true });
     const snippetId = parseInt(this.props.match.params.id, 10);
     const state = store.getState();
 
@@ -105,39 +107,30 @@ class SnippetOverview extends Component {
             state: { from: this.props.history.location },
           });
         }
-        this.setState({ snippet: snippet });
+        this.setState({ snippet: snippet, loading: false });
 
-        // If snippet was found, obtain the creator
-        this.userClient
-          .getUserWithUrl(snippet.creator.url)
-          .then((res) => {
-            let userIsOwner = false;
-            if (
-              state.auth.token !== null &&
-              state.auth.token !== undefined &&
-              res.data.id === state.auth.info.uid
-            ) {
-              userIsOwner = true;
-            }
-            this.setState({ creator: res.data, userIsOwner: userIsOwner });
-          })
-          .catch((e) => {});
+        Promise.all([
+          this.userClient.getUserWithUrl(snippet.creator.url),
+          this.languagesAndTagsClient.getLanguageWithUrl(snippet.language.url),
+          this.languagesAndTagsClient.getWithUrl(snippet.tags),
+        ]).then((values) => {
+          let userIsOwner = false;
+          if (
+            state.auth.token !== null &&
+            state.auth.token !== undefined &&
+            values[0].data.id === state.auth.info.uid
+          ) {
+            userIsOwner = true;
+          }
 
-        // If snippet was found, obtain the language
-        this.languagesAndTagsClient
-          .getLanguageWithUrl(snippet.language.url)
-          .then((res) => {
-            this.setState({ language: res.data });
-          })
-          .catch((e) => {});
-
-        // We obtain the tags
-        this.languagesAndTagsClient
-          .getWithUrl(snippet.tags)
-          .then((res) => {
-            this.setState({ tags: res.data });
-          })
-          .catch((e) => {});
+          this.setState({
+            creator: values[0].data,
+            userIsOwner: userIsOwner,
+            language: values[1].data,
+            tags: values[2].data,
+            loading: false,
+          });
+        });
       })
       .catch((e) => {
         if (e.response) {

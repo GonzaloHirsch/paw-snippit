@@ -18,6 +18,7 @@ import {
   ModalBody,
   ModalFooter,
   UncontrolledTooltip,
+  Spinner
 } from "reactstrap";
 import TextAreaInputField from "../forms/text_area_input_field";
 import ItemFeed from "../items/item_feed";
@@ -142,6 +143,7 @@ class SnippetDetail extends Component {
       handleDelete,
       handleLike,
       handleDislike,
+      loading
     } = this.props;
     return (
       <div className="flex-column detail-container mx-5 my-4 p-5 inner-square shadow rounded-lg">
@@ -183,153 +185,166 @@ class SnippetDetail extends Component {
           </ModalFooter>
         </Modal>
 
-        {snippet.deleted && <SnippetDeletedMessage />}
-        {snippet.flagged && <SnippetDangerMessage />}
-        {snippet.reported && !snippet.deleted && userIsOwner && (
-          <SnippetReportedMessage
-            id={snippet.id}
-            dismissedReport={dismissedReport}
-          />
-        )}
-        <div className="row align-items-vertical no-margin mb-2">
-          <h1 className="col no-padding word-break">{snippet.title}</h1>
-          <Link
-            to={"/languages/" + language.id}
-            className="language-snippet-tag-link p-2 flex-center rounded mr-1"
-            style={{ fontSize: "20px" }}
-          >
-            {language.name.toUpperCase()}
-          </Link>
-        </div>
-        <div className="row no-margin fw-500">
-          <p className="word-break">{snippet.description}</p>
-        </div>
-        <div className="dropdown-divider snippet-divider mb-4"></div>
-        <div className="d-flex card-text snippet-code-block rounded mb-2">
-          <Icon
-            id="copyCodeButton"
-            className="snippet-code-copy-button mt-1 mr-1 p-1 icon-size-2"
-            path={mdiContentCopy}
-            size={2}
-            onClick={(e) => this.copyToClipboard(e)}
-          />
-          <UncontrolledTooltip
-            placement="top"
-            target="copyCodeButton"
-            trigger="click"
-            autohide={true}
-          >
-            {i18n.t("snippetDetail.copied")}
-          </UncontrolledTooltip>
-
-          <SyntaxHighlighter
-            className="snippet-code-block-pre px-4 py-3"
-            wrapLongLines={true}
-            showInlineLineNumbers={false}
-            showLineNumbers={false}
-            language={language.name}
-            style={googlecode}
-          >
-            {snippet.code}
-          </SyntaxHighlighter>
-          <textarea
-            id="hidden-code-input"
-            className="hidden-code"
-            value={snippet.code}
-            readOnly
-          />
-          <p className="card-snippet-fade-out card-snippet-fade-out-code hidden"></p>
-        </div>
-        {tags.length > 0 && (
-          <ItemFeed
-            items={tags}
-            currentPage={0}
-            hasPagination={false}
-            type={ITEM_TYPES.TAG}
-          />
-        )}
-
-        <div className="row align-items-horizontal-center flex-row mt-4 p-2">
-          {userIsAdmin && (
-            <DetailBox>
-              <Icon
-                className={
-                  "row no-margin icon-fav" +
-                  (snippet.flagged ? "-selected" : "")
-                }
-                path={snippet.flagged ? mdiFlag : mdiFlagOutline}
-                size={3}
-                onClick={(e) => handleFlag(e, snippet.id)}
+        {loading ? (
+          <div className="align-items-vertical align-items-horizontal-center">
+            <Spinner color="dark" style={{ width: "3rem", height: "3rem" }} />
+          </div>
+        ) : (
+          <React.Fragment>
+            {snippet.deleted && <SnippetDeletedMessage />}
+            {snippet.flagged && <SnippetDangerMessage />}
+            {snippet.reported && !snippet.deleted && userIsOwner && (
+              <SnippetReportedMessage
+                id={snippet.id}
+                dismissedReport={dismissedReport}
               />
-            </DetailBox>
-          )}
-          {userIsOwner && (
-            <DetailBox>
-              <Icon
-                className="row no-margin icon-delete"
-                path={snippet.deleted ? mdiDeleteRestore : mdiDelete}
-                size={3}
-                onClick={(e) => handleDelete(e, snippet.id)}
-              />
-            </DetailBox>
-          )}
-          <DetailBox>
-            <Icon
-              className={
-                "row no-margin icon-fav" + (snippet.favorite ? "-selected" : "")
-              }
-              path={snippet.favorite ? mdiHeart : mdiHeartOutline}
-              size={3}
-              onClick={(e) => handleFav(e, snippet.id)}
-            />
-          </DetailBox>
-          {userCanReport && !userIsOwner && this.getReportedSnippetBox(snippet)}
-          <DetailBox>
+            )}
+            <div className="row align-items-vertical no-margin mb-2">
+              <h1 className="col no-padding word-break">{snippet.title}</h1>
+              <Link
+                to={"/languages/" + language.id}
+                className="language-snippet-tag-link p-2 flex-center rounded mr-1"
+                style={{ fontSize: "20px" }}
+              >
+                {language.name.toUpperCase()}
+              </Link>
+            </div>
             <div className="row no-margin fw-500">
+              <p className="word-break">{snippet.description}</p>
+            </div>
+            <div className="dropdown-divider snippet-divider mb-4"></div>
+            <div className="d-flex card-text snippet-code-block rounded mb-2">
               <Icon
-                className={
-                  "row no-margin icon-like" +
-                  (snippet.userVotedPositive ? "-selected" : "")
-                }
-                path={
-                  snippet.userVotedPositive ? mdiThumbUp : mdiThumbUpOutline
-                }
-                size={3}
-                onClick={(e) => handleLike(e, snippet.id)}
+                id="copyCodeButton"
+                className="snippet-code-copy-button mt-1 mr-1 p-1 icon-size-2"
+                path={mdiContentCopy}
+                size={2}
+                onClick={(e) => this.copyToClipboard(e)}
               />
-              <span className="mx-2 align-items-vertical d-flex justify-content-center vote-count">
-                {snippet.voteCount}
-              </span>
-              <Icon
-                className={
-                  "row no-margin icon-dislike" +
-                  (snippet.userVotedNegative ? "-selected" : "")
-                }
-                path={
-                  snippet.userVotedNegative ? mdiThumbDown : mdiThumbDownOutline
-                }
-                size={3}
-                onClick={(e) => handleDislike(e, snippet.id)}
+              <UncontrolledTooltip
+                placement="top"
+                target="copyCodeButton"
+                trigger="click"
+                autohide={true}
+              >
+                {i18n.t("snippetDetail.copied")}
+              </UncontrolledTooltip>
+
+              <SyntaxHighlighter
+                className="snippet-code-block-pre px-4 py-3"
+                wrapLongLines={true}
+                showInlineLineNumbers={false}
+                showLineNumbers={false}
+                language={language.name}
+                style={googlecode}
+              >
+                {snippet.code}
+              </SyntaxHighlighter>
+              <textarea
+                id="hidden-code-input"
+                className="hidden-code"
+                value={snippet.code}
+                readOnly
               />
+              <p className="card-snippet-fade-out card-snippet-fade-out-code hidden"></p>
             </div>
-          </DetailBox>
-          <LinkDetailBox path={"/user/" + creator.id}>
-            <div className="row mb-2 fw-500 uploaded-on-text primary-text no-decoration">
-              <span>
-                {i18n.t("snippetDetail.uploaded", {
-                  date: getDateFromAPIString(snippet.createdDate),
-                })}
-              </span>
+            {tags.length > 0 && (
+              <ItemFeed
+                items={tags}
+                currentPage={0}
+                hasPagination={false}
+                type={ITEM_TYPES.TAG}
+              />
+            )}
+
+            <div className="row align-items-horizontal-center flex-row mt-4 p-2">
+              {userIsAdmin && (
+                <DetailBox>
+                  <Icon
+                    className={
+                      "row no-margin icon-fav" +
+                      (snippet.flagged ? "-selected" : "")
+                    }
+                    path={snippet.flagged ? mdiFlag : mdiFlagOutline}
+                    size={3}
+                    onClick={(e) => handleFlag(e, snippet.id)}
+                  />
+                </DetailBox>
+              )}
+              {userIsOwner && (
+                <DetailBox>
+                  <Icon
+                    className="row no-margin icon-delete"
+                    path={snippet.deleted ? mdiDeleteRestore : mdiDelete}
+                    size={3}
+                    onClick={(e) => handleDelete(e, snippet.id)}
+                  />
+                </DetailBox>
+              )}
+              <DetailBox>
+                <Icon
+                  className={
+                    "row no-margin icon-fav" +
+                    (snippet.favorite ? "-selected" : "")
+                  }
+                  path={snippet.favorite ? mdiHeart : mdiHeartOutline}
+                  size={3}
+                  onClick={(e) => handleFav(e, snippet.id)}
+                />
+              </DetailBox>
+              {userCanReport &&
+                !userIsOwner &&
+                this.getReportedSnippetBox(snippet)}
+              <DetailBox>
+                <div className="row no-margin fw-500">
+                  <Icon
+                    className={
+                      "row no-margin icon-like" +
+                      (snippet.userVotedPositive ? "-selected" : "")
+                    }
+                    path={
+                      snippet.userVotedPositive ? mdiThumbUp : mdiThumbUpOutline
+                    }
+                    size={3}
+                    onClick={(e) => handleLike(e, snippet.id)}
+                  />
+                  <span className="mx-2 align-items-vertical d-flex justify-content-center vote-count">
+                    {snippet.voteCount}
+                  </span>
+                  <Icon
+                    className={
+                      "row no-margin icon-dislike" +
+                      (snippet.userVotedNegative ? "-selected" : "")
+                    }
+                    path={
+                      snippet.userVotedNegative
+                        ? mdiThumbDown
+                        : mdiThumbDownOutline
+                    }
+                    size={3}
+                    onClick={(e) => handleDislike(e, snippet.id)}
+                  />
+                </div>
+              </DetailBox>
+              <LinkDetailBox path={"/user/" + creator.id}>
+                <div className="row mb-2 fw-500 uploaded-on-text primary-text no-decoration">
+                  <span>
+                    {i18n.t("snippetDetail.uploaded", {
+                      date: getDateFromAPIString(snippet.createdDate),
+                    })}
+                  </span>
+                </div>
+                <div className="row no-margin align-items-vertical">
+                  <img src={getUserProfilePicUrl(creator)} alt="User Icon" />
+                  <div className="col flex-col align-items-vertical primary-text">
+                    <span className="fw-700">{creator.username}</span>
+                    <span className="fw-700">{creator.stats.reputation}</span>
+                  </div>
+                </div>
+              </LinkDetailBox>
             </div>
-            <div className="row no-margin align-items-vertical">
-              <img src={getUserProfilePicUrl(creator)} alt="User Icon" />
-              <div className="col flex-col align-items-vertical primary-text">
-                <span className="fw-700">{creator.username}</span>
-                <span className="fw-700">{creator.stats.reputation}</span>
-              </div>
-            </div>
-          </LinkDetailBox>
-        </div>
+          </React.Fragment>
+        )}
       </div>
     );
   }

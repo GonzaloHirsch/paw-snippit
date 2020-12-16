@@ -39,7 +39,7 @@ class SignUp extends Component {
 
     if (!hasErrors) {
       // Get an instance of the cliente
-      const authClient = new AuthClient();
+      const authClient = new AuthClient(this.props);
 
       this.setState({ loading: true });
 

@@ -27,8 +27,8 @@ function SnippetFeedHOC(
         const state = store.getState();
         let userIsLogged = false;
         if (state.auth.token === null || state.auth.token === undefined) {
-          this.snippetActionsClient = new SnippetActionsClient();
-          this.snippetFeedClient = new SnippetFeedClient();
+          this.snippetActionsClient = new SnippetActionsClient(this.props);
+          this.snippetFeedClient = new SnippetFeedClient(this.props);
         } else {
           this.snippetFeedClient = new SnippetFeedClient(
             props,

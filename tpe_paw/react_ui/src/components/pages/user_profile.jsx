@@ -21,7 +21,7 @@ class UserProfile extends Component {
     super(props);
     const state = store.getState();
     let loggedUserId = null;
-    this.userClient = new UserClient();
+    this.userClient = new UserClient(this.props);
     if (!(state.auth.token === null || state.auth.token === undefined)) {
       this.protectedClient = new UserClient(this.props, state.auth.token);
       loggedUserId = state.auth.info.uid;

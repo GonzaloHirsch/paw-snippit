@@ -33,7 +33,7 @@ class RecoverSend extends Component {
 
     if (!hasErrors) {
       // Get an instance of the cliente
-      const authClient = new AuthClient();
+      const authClient = new AuthClient(this.props);
 
       // Call the auth method
       authClient

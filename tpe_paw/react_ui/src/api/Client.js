@@ -17,7 +17,8 @@ class Client {
     let token;
 
     // In case there are props, add the token
-    if (props) {
+    if (recvToken) {
+      console.log("TOKEN")
       token = recvToken;
     }
 
@@ -97,7 +98,6 @@ class Client {
           props.history.push("/login");
         }
         if (errorResponse.status === 500) {
-          store.dispatch(logOut());
           props.history.push("/500");
         }
         return Promise.reject(error);

@@ -297,7 +297,7 @@ class SnippetDetail extends Component {
                 size={3}
                 onClick={(e) => handleLike(e, snippet.id)}
               />
-              <span className="mx-2 align-items-vertical vote-count">
+              <span className="mx-2 align-items-vertical d-flex justify-content-center vote-count">
                 {snippet.voteCount}
               </span>
               <Icon

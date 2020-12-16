@@ -188,7 +188,6 @@ class NavBar extends Component {
   }
 
   componentDidUpdate() {
-    console.log("UPDATE");
     this.determineCurrentContext();
   }
 

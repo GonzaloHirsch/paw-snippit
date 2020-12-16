@@ -373,6 +373,10 @@ export default {
     placeholders: {
       item: "Enter the {{item}} to add...",
     },
+    alert: {
+      success: "Successfully added the entered {{items}}.",
+      danger: "Something went wrong, some of the {{items}} were not added.",
+    },
   },
   following: {
     errorMsg: "Unable to unfollow tag {{name}}. Try again later.",

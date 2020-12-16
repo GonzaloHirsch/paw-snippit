@@ -7,6 +7,7 @@ import LanguagesAndTagsClient from "../../api/implementations/LanguagesAndTagsCl
 import { getItemPositionInArrayWithName } from "../../js/item_utils";
 import { ITEM_CREATE_VALIDATIONS } from "../../js/validations";
 import { Helmet } from "react-helmet";
+import { Alert } from "reactstrap";
 
 class ItemCreate extends Component {
   itemsClient;
@@ -36,9 +37,34 @@ class ItemCreate extends Component {
         tag: false,
         language: false,
       },
+      alert: {
+        show: false,
+        context: "",
+        color: "success",
+        message: "",
+      },
     };
   }
 
+  // ALERT FUNCTIONS
+  _showAlert(context, type) {
+    const alert = {
+      show: true,
+      color: type,
+      message: i18n.t("itemCreate.alert." + type, {
+        items: i18n.t("itemCreate." + context + ".name_plural"),
+      }),
+    };
+    this.setState({ alert: alert });
+  }
+
+  onDismiss = () => {
+    const alert = { show: false, message: "", color: "success" };
+    this.setState({ alert: alert });
+    console.log("DISMISS", this.state.alert);
+  };
+
+  // ADD FUNTIONS
   onAddItemHelper(name, exists, context) {
     const items = [...this.state.itemList[context]];
     const itemList = { ...this.state.itemList };
@@ -97,6 +123,7 @@ class ItemCreate extends Component {
     this.setState({ fields: fields });
   };
 
+  // DELETE FUNCTIONS
   onDeleteTag = (index) => {
     const itemList = { ...this.state.itemList };
     let items = [...this.state.itemList.tag];
@@ -113,29 +140,38 @@ class ItemCreate extends Component {
     this.setState({ itemList: itemList });
   };
 
-  _onSubmitStateUpdate(context) {
+  // SUBMIT FUNCTIONS
+  _onSubmitStateUpdate(context, error, showAlert) {
     const loading = { ...this.state.loading };
     const itemList = { ...this.state.itemList };
     loading[context] = false;
     itemList[context] = [];
     this.setState({ itemList: itemList, loading: loading });
-    // TODO -> ALERT!
+
+    if (showAlert && !error) {
+      this._showAlert(context, "success");
+    }
+    console.log(this.state.alert);
   }
 
   // On submit, must call the API itemList.length times
   // to add the corresponding language or tag
-  onSubmitTag = () => {
+  onSubmitTag = (e) => {
+    e.preventDefault();
+
     const filteredList = this.state.itemList.tag.filter((item) => !item.exists);
     const length = filteredList.length;
     const loading = { ...this.state.loading };
+    const error = false;
 
     if (length > 0) {
       loading.tag = true;
       this.setState({ loading: loading });
     } else {
-      this._onSubmitStateUpdate(ITEM_TYPES.TAG);
+      this._onSubmitStateUpdate(ITEM_TYPES.TAG, error, false);
     }
 
+    console.log("LIST", filteredList);
     filteredList.map((item, index) => {
       if (!item.exists) {
         this.itemsClient
@@ -143,26 +179,33 @@ class ItemCreate extends Component {
           .then(() => {
             // Submitted the last item
             if (!(index < length - 1)) {
-              this._onSubmitStateUpdate(ITEM_TYPES.TAG);
+              this._onSubmitStateUpdate(ITEM_TYPES.TAG, error, true);
             }
           })
-          .catch((e) => {});
+          .catch((e) => {
+            console.log("IN HERE!");
+            error = true;
+            this._showAlert(ITEM_TYPES.TAG, "danger", true);
+          });
       }
     });
   };
 
-  onSubmitLanguage = () => {
+  onSubmitLanguage = (e) => {
+    e.preventDefault();
+
     const filteredList = this.state.itemList.language.filter(
       (item) => !item.exists
     );
     const length = filteredList.length;
     const loading = { ...this.state.loading };
+    const error = false;
 
     if (length > 0) {
       loading.language = true;
       this.setState({ loading: loading });
     } else {
-      this._onSubmitStateUpdate(ITEM_TYPES.LANGUAGE);
+      this._onSubmitStateUpdate(ITEM_TYPES.LANGUAGE, error, false);
     }
 
     filteredList.map((item, index) => {
@@ -172,14 +215,18 @@ class ItemCreate extends Component {
           .then(() => {
             // Submitted the last item
             if (!(index < length - 1)) {
-              this._onSubmitStateUpdate(ITEM_TYPES.LANGUAGE);
+              this._onSubmitStateUpdate(ITEM_TYPES.LANGUAGE, error, true);
             }
           })
-          .catch((e) => {});
+          .catch((e) => {
+            error = true;
+            this._showAlert(ITEM_TYPES.LANGUAGE, "danger", true);
+          });
       }
     });
   };
 
+  // ONCHANGE FUNCTION
   onInputChange(e, context) {
     let fields = { ...this.state.fields };
     let errors = { ...this.state.errors };
@@ -188,6 +235,7 @@ class ItemCreate extends Component {
 
     this.setState({ fields: fields, errors: errors });
   }
+
   render() {
     const { context } = this.state;
     return (
@@ -244,7 +292,7 @@ class ItemCreate extends Component {
                 onInputChange={(e) => this.onInputChange(e, ITEM_TYPES.TAG)}
                 onAdd={() => this.onAddTag()}
                 onDelete={(idx) => this.onDeleteTag(idx)}
-                onSubmit={() => this.onSubmitTag()}
+                onSubmit={(e) => this.onSubmitTag(e)}
                 loading={this.state.loading.tag}
               />
             ) : (
@@ -258,12 +306,20 @@ class ItemCreate extends Component {
                 }
                 onAdd={() => this.onAddLanguage()}
                 onDelete={(idx) => this.onDeleteLanguage(idx)}
-                onSubmit={() => this.onSubmitLanguage()}
+                onSubmit={(e) => this.onSubmitLanguage(e)}
                 loading={this.state.loading.language}
               />
             )}
           </div>
         </div>
+        <Alert
+          color={this.state.alert.color}
+          className="shadow flex-center custom-alert"
+          isOpen={this.state.alert.show}
+          toggle={() => this.onDismiss()}
+        >
+          {this.state.alert.message}
+        </Alert>
       </div>
     );
   }

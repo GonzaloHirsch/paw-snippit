@@ -33,7 +33,7 @@ class ItemCreateForm extends Component {
     const itemName = i18n.t("itemCreate." + context + ".name");
     const itemNamePlural = i18n.t("itemCreate." + context + ".name_plural");
     return (
-      <form onSubmit={() => onSubmit()}>
+      <form onSubmit={(e) => onSubmit(e)}>
         <div className="d-flex justify-space-between">
           <input
             id="createItemInput"

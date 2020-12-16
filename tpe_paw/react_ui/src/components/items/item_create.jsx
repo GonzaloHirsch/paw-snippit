@@ -61,7 +61,6 @@ class ItemCreate extends Component {
   onDismiss = () => {
     const alert = { show: false, message: "", color: "success" };
     this.setState({ alert: alert });
-    console.log("DISMISS", this.state.alert);
   };
 
   // ADD FUNTIONS

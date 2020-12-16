@@ -11,7 +11,6 @@ import DeleteItemModal from "../items/delete_item_modal";
 import { ITEM_TYPES } from "../../js/constants";
 import { Helmet } from "react-helmet";
 
-
 class SnippetsForTag extends Component {
   languagesAndTagsClient;
   languagesAndTagsActionsClient;
@@ -147,17 +146,17 @@ class SnippetsForTag extends Component {
       onPageTransition,
       onSnippetFav,
       userIsLogged,
-      loading
+      loading,
     } = this.props;
     return (
       <React.Fragment>
-        <div className="mt-2 ml-3 mb-3">
-        <Helmet>
-          <title>
-            {i18n.t("nav.tags")} | {this.state.tag.name}
-          </title>
-        </Helmet>
-          <div className="d-flex align-items-center flex-row mb-2">
+        <div className="flex-center flex-column">
+          <Helmet>
+            <title>
+              {i18n.t("nav.tags")} | {this.state.tag.name}
+            </title>
+          </Helmet>
+          <div className="flex-center mt-4 mb-2">
             <DeleteItemModal
               item={this.state.tag}
               type={ITEM_TYPES.TAG}
@@ -170,7 +169,7 @@ class SnippetsForTag extends Component {
                 item: this.state.tag.name.toUpperCase(),
               })}
             </h1>
-            <div className="mx-3"></div>
+            <div className="mx-2"></div>
             <Badge
               onClick={(e) => this._onFollow(e)}
               className={"flex-center tag-action-badge-snippets "}
@@ -193,7 +192,7 @@ class SnippetsForTag extends Component {
               </React.Fragment>
             )}
           </div>
-          <h5 className="fw-100">
+          <h5 className="fw-100 mb-3">
             ({i18n.t("snippetWithNumber", { count: totalSnippets })})
           </h5>
         </div>

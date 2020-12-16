@@ -174,7 +174,7 @@ class ProfileDetail extends Component {
         <div className="d-flex flex-col justify-content-center parent-width fwhite">
           <div className="fw-500  profile-username">{owner.username}</div>
           <span className="fw-100 profile-small-text d-flex justify-content-center">
-            {i18n.t("profile.dateJoined", {
+            {i18n.t("profile.joinedOn", {
               date: getDateFromAPIString(owner.dateJoined),
             })}
           </span>

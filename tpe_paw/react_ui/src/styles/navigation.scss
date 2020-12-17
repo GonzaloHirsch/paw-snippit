@@ -149,7 +149,7 @@
 }
 
 .search-button {
-  background-color: $code-background-color !important;
+  background-color: #d1d1d1 !important;
   color: white !important;
   height: 38px;
   border: 1px solid #ced4da !important;
@@ -157,7 +157,7 @@
 }
 
 .search-button:hover {
-  background-color: #d1d1d1 !important;
+  background-color: #c4c4c4 !important;
 }
 
 .search-box-style {
@@ -169,6 +169,16 @@
   min-width: max-content;
   margin-right: -6px;
   margin-left: 5px;
+}
+
+.navbar-following-buttons {
+  background-color: white !important;
+  border: 1px solid #ced4da !important;
+  padding: 0px 5px !important;
+}
+
+.navbar-following-buttons:hover {
+  background-color: #d1d1d1 !important;
 }
 
 .navbar-spacing {

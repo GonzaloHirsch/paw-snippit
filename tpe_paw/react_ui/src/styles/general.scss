@@ -146,6 +146,11 @@ h1 {
 .rounded-border {
   border-radius: $border-radius !important;
 }
+
+.no-border {
+  border-radius: 0px !important;
+}
+
 .no-margin {
   margin: 0px !important;
 }
@@ -222,6 +227,11 @@ select:focus,
 textarea:focus,
 button:focus {
   outline: none !important;
+}
+
+.form-control:focus {
+  border: 1px solid #ced4da !important;
+  box-shadow: 0 0 0 0rem rgba(255, 255, 255, 0) !important;
 }
 
 .custom-alert {

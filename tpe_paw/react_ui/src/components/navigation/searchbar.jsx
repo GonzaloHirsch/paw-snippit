@@ -125,7 +125,7 @@ class SearchBar extends Component {
   getShowEmptySearchControl() {
     return (
       <button
-        className="btn btn-outline-secondary"
+        className="btn btn-outline-secondary no-border navbar-following-buttons"
         type="button"
         onClick={(e) => this.handleSearchChangeAndSearch(e, "showEmpty", true)}
       >
@@ -143,7 +143,7 @@ class SearchBar extends Component {
           {this.getShowEmptySearchControl()}
           {this.props.userIsLogged && (
             <button
-              className="btn btn-outline-secondary"
+              className="btn btn-outline-secondary no-border navbar-following-buttons"
               type="button"
               onClick={(e) =>
                 this.handleSearchChangeAndSearch(e, "showOnlyFollowing", true)

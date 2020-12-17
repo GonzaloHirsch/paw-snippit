@@ -181,7 +181,7 @@ class Login extends Component {
         >
           <span>
             {i18n.t("login.signup")}
-            <Link to={this.getRedirectionObject("/signup")}>
+            <Link to={this.getRedirectionObject("/signup")} className="fwhite">
               <strong>{i18n.t("login.signupCall")}</strong>
             </Link>
           </span>
@@ -192,7 +192,7 @@ class Login extends Component {
         >
           <span>
             {i18n.t("login.recover")}
-            <Link to="/recover">
+            <Link to="/recover" className="fwhite">
               <strong>{i18n.t("login.recoverCall")}</strong>
             </Link>
           </span>

@@ -115,7 +115,7 @@ class RecoverSend extends Component {
               {i18n.t("recover.afterMessage")}
             </span>
             <button
-              className="btn btn-lg btn-primary btn-block mb-3 rounded-border"
+              className="btn btn-lg btn-primary btn-block mb-3 rounded-border form-button"
               onClick={() => this.handleGoHome()}
             >
               {i18n.t("recover.form.afterAction")}

@@ -6,22 +6,13 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.exception.SnippetNotFoundException;
 import ar.edu.itba.paw.webapp.utility.*;
-import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
-import ar.edu.itba.paw.webapp.form.SearchForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -430,7 +421,10 @@ public class SnippetController {
     }
 
     private Response addOrRemoveSnippetFav(final long id, final boolean isFav) {
-        this.snippetService.findSnippetById(id).orElseThrow(() -> new SnippetNotFoundException(id + " not found!")); // TODO CHECK
+        Optional<Snippet> maybeSnippet = this.snippetService.findSnippetById(id);
+        if (!maybeSnippet.isPresent()){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
@@ -490,109 +484,5 @@ public class SnippetController {
         }
         this.reportService.dismissReportsForSnippet(id);
         return Response.noContent().build();
-    }
-
-    private void logAndThrow(final long snippetId) {
-        LOGGER.error("No snippet found for id {}", snippetId);
-        throw new SnippetNotFoundException(messageSource.getMessage("error.404.snippet", new Object[]{snippetId}, LocaleContextHolder.getLocale()));
-    }
-
-    /////////////////////////////////////////// OLD ////////////////////////////////////////////
-
-    // Moved to UserController
-    @Deprecated
-    @RequestMapping("/favorites")
-    public ModelAndView getFavoritesSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
-        final ModelAndView mav = new ModelAndView("index");
-
-        User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null) this.logAndThrow(FAVORITES);
-
-        Collection<Snippet> snippets = this.snippetService.getAllFavoriteSnippets(currentUser.getId(), page, SNIPPET_PAGE_SIZE);
-        int totalSnippetCount = this.snippetService.getAllFavoriteSnippetsCount(currentUser.getId());
-
-        this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, FAVORITES);
-
-        return mav;
-    }
-
-    // Moved to UserController
-    @Deprecated
-    @RequestMapping("/following")
-    public ModelAndView getFollowingSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
-        final ModelAndView mav = new ModelAndView("snippet/snippetFollowing");
-
-        User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null) this.logAndThrow(FOLLOWING);
-
-        Collection<Snippet> snippets = this.snippetService.getAllFollowingSnippets(currentUser.getId(), page, SNIPPET_PAGE_SIZE);
-        int totalSnippetCount = this.snippetService.getAllFollowingSnippetsCount(currentUser.getId());
-        this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, FOLLOWING);
-
-        /* Show up to 25 tags -> most popular + non empty */
-        MavHelper.addTagChipUnfollowFormAttributes(mav, this.tagService.getSomeOrderedFollowedTagsForUser(currentUser.getId(), Constants.FOLLOWING_FEED_TAG_AMOUNT), currentUser.getFollowedTags().size());
-        return mav;
-    }
-
-    @Deprecated // Moved to UserController
-    @RequestMapping("/upvoted")
-    public ModelAndView getUpVotedSnippetFeed(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
-        final ModelAndView mav = new ModelAndView("index");
-
-        User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null) this.logAndThrow(UPVOTED);
-
-        Collection<Snippet> snippets = this.snippetService.getAllUpVotedSnippets(currentUser.getId(), page, SNIPPET_PAGE_SIZE);
-        int totalSnippetCount = this.snippetService.getAllUpvotedSnippetsCount(currentUser.getId());
-
-        this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, UPVOTED);
-
-        return mav;
-    }
-
-    @Deprecated
-    @RequestMapping("/flagged")
-    public ModelAndView getFlaggedSnippetFeedDep(final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
-        final ModelAndView mav = new ModelAndView("index");
-
-        User currentUser = this.loginAuthentication.getLoggedInUser();
-        if (currentUser == null || !roleService.isAdmin(currentUser.getId())) this.logAndThrow(FLAGGED);
-
-        Collection<Snippet> snippets = this.snippetService.getAllFlaggedSnippets(page, SNIPPET_PAGE_SIZE);
-        int totalSnippetCount = this.snippetService.getAllFlaggedSnippetsCount();
-
-        this.addModelAttributesHelper(mav, currentUser, totalSnippetCount, page, snippets, FLAGGED);
-
-        return mav;
-    }
-
-    @Deprecated
-    private void addModelAttributesHelper(ModelAndView mav, User currentUser, int snippetCount, int page, Collection<Snippet> snippets, String searchContext) {
-        mav.addObject("pages", snippetCount / SNIPPET_PAGE_SIZE + (snippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
-        mav.addObject("page", page);
-        mav.addObject("snippetList", snippets);
-        mav.addObject("totalSnippetCount", snippetCount);
-        mav.addObject("searchContext", searchContext);
-        mav.addObject("searching", false);
-
-        MavHelper.addSnippetCardFavFormAttributes(mav, currentUser, snippets);
-    }
-
-    @Deprecated
-    @ModelAttribute
-    public void addAttributes(Model model, @Valid final SearchForm searchForm) {
-        User currentUser = this.loginAuthentication.getLoggedInUser();
-
-        if (currentUser != null) {
-            this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
-        }
-        MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
-        model.addAttribute("searchForm", searchForm);
-    }
-
-    @Deprecated
-    private void logAndThrow(String location) {
-        LOGGER.warn("Inside {} with no logged in user", location);
-        throw new ForbiddenAccessException(messageSource.getMessage("error.403", new Object[]{location}, LocaleContextHolder.getLocale()));
     }
 }

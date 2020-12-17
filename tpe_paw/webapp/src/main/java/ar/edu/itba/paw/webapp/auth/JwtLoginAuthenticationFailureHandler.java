@@ -3,8 +3,6 @@ package ar.edu.itba.paw.webapp.auth;
 import ar.edu.itba.paw.webapp.exception.AuthenticationMethodNotSupportedException;
 import ar.edu.itba.paw.webapp.exception.ExpiredAuthenticationTokenException;
 import ar.edu.itba.paw.webapp.exception.InvalidAuthenticationTokenException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,8 +18,6 @@ import java.io.IOException;
 
 @Component
 public class JwtLoginAuthenticationFailureHandler implements AuthenticationFailureHandler {
-    @Autowired
-    private ObjectMapper mapper;
 
     private static final String EXPIRED_TOKEN_ERROR = "TokenError";
     private static final String GENERAL_ERROR = "error";

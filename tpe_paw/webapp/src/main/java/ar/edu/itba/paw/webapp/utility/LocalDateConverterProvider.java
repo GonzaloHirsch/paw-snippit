@@ -7,6 +7,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 
+/**
+ * Provider for the LocalDate Converter required to convert to and from LocalDate in DTOs
+ */
 @Provider
 public class LocalDateConverterProvider implements ParamConverterProvider {
     @Override

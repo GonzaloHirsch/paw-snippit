@@ -113,7 +113,7 @@ class Verify extends Component {
   }
 
   handleGoProfile() {
-    this.props.history.push("/users/" + this.state.info.id);
+    this.props.history.push("/profile");
   }
 
   // Handles the change in one field, validates that field

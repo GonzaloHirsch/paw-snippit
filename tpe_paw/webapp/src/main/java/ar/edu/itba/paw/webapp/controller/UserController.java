@@ -255,6 +255,7 @@ public class UserController {
                 if (!this.cryptoService.checkValidTOTP(user, verificationFormDto.getCode())) {
                     return Response.status(Response.Status.BAD_REQUEST).build();
                 }
+                this.userService.verifyUserEmail(id);
                 return Response.noContent().build();
             } else {
                 return Response.status(Response.Status.FORBIDDEN).build();

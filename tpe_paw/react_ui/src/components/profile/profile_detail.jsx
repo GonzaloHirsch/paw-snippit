@@ -7,6 +7,7 @@ import Icon from "@mdi/react";
 import { PROFILE_VALIDATION } from "../../js/validations";
 import ImagePicker from "../forms/image_picker";
 import { getDateFromAPIString } from "../../js/date_utils";
+import { Spinner } from "reactstrap";
 
 class ProfileDetail extends Component {
   constructor(props) {
@@ -202,7 +203,11 @@ class ProfileDetail extends Component {
   render() {
     const { loading } = this.props;
     if (loading) {
-      return <div>{i18n.t("loading.general")}</div>;
+      return (
+        <div className="align-items-vertical align-items-horizontal-center">
+          <Spinner color="dark" style={{ width: "3rem", height: "3rem" }} />
+        </div>
+      );
     } else {
       return <div>{this._renderUserDetail()}</div>;
     }

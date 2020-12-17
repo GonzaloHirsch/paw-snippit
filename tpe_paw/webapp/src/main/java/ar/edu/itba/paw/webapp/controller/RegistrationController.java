@@ -33,6 +33,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 //@Component
+@Deprecated
 public class RegistrationController {
 
 //    @Autowired

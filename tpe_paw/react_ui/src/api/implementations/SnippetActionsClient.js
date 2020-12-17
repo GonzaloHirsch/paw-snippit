@@ -2,7 +2,7 @@ import Client from "../Client";
 
 export default class SnippetActionsClient extends Client {
   deleteSnippet(id) {
-    return this.instance.delete("snippets/" + id + "/delete");
+    return this.instance.delete("snippets/" + id);
   }
 
   restoreSnippet(id) {

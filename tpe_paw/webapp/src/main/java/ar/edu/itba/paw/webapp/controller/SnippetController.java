@@ -91,7 +91,8 @@ public class SnippetController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getHomeSnippetFeed(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
-        final List<SnippetDto> snippets = this.snippetService.getAllSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+        long loggedUserId = UserHelper.GetLoggedUserId(this.loginAuthentication);
+        final List<SnippetDto> snippets = this.snippetService.getAllSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, loggedUserId, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
         final int numberOfSnippets = this.snippetService.getAllSnippetsCount();
         final int pageCount = PagingHelper.CalculateTotalPages(numberOfSnippets, SNIPPET_PAGE_SIZE);
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
@@ -105,9 +106,9 @@ public class SnippetController {
     @Path("/search")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response searchInHome(final @BeanParam SearchDto searchDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
-
+        long loggedUserId = UserHelper.GetLoggedUserId(this.loginAuthentication);
         final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.HOME, searchDto.getSort(), null, null, page)
-                .stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+                .stream().map(s -> SnippetDto.fromSnippet(s, loggedUserId, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
 
         int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.HOME, null, null);
         final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
@@ -149,7 +150,8 @@ public class SnippetController {
                 exploreDto.getTitle(), exploreDto.getUsername(),
                 exploreDto.getIncludeFlagged());
 
-        final List<SnippetDto> snippets = snippetsCollection.stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+        long loggedUserId = UserHelper.GetLoggedUserId(this.loginAuthentication);
+        final List<SnippetDto> snippets = snippetsCollection.stream().map(s -> SnippetDto.fromSnippet(s, loggedUserId, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
         final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
@@ -162,26 +164,26 @@ public class SnippetController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response snippetCreate(@Valid SnippetCreateDto createDto) {
-        // TODO --> JWT Tokens
         User loggedInUser = this.loginAuthentication.getLoggedInUser();
         if (loggedInUser == null) {
             LOGGER.error(messageSource.getMessage("error.403.snippet.create", null, Locale.ENGLISH));
-            return Response.status(Response.Status.FORBIDDEN).build();
-            // throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.snippet.create", null, LocaleContextHolder.getLocale()));
+            return Response.status(Response.Status.NOT_FOUND).build();
         } else if (this.roleService.isAdmin(loggedInUser.getId())) {
             LOGGER.error(messageSource.getMessage("error.403.admin.snippet.create", null, Locale.ENGLISH));
             return Response.status(Response.Status.FORBIDDEN).build();
-            // throw new ForbiddenAccessException(this.messageSource.getMessage("error.403.admin.snippet.create", null, LocaleContextHolder.getLocale()));
         }
+
         /* Extra validation
         this.validator.validateTagsExists(snippetCreateForm.getTags(), errors, LocaleContextHolder.getLocale()); */
+        // TODO: CHECK IF TAGS EXISTS
 
         Instant dateCreated = Instant.now();
         Long snippetId = this.snippetService.createSnippet(loggedInUser, createDto.getTitle(), createDto.getDescription(), createDto.getCode(), dateCreated, createDto.getLanguage(), createDto.getTags());
 
+        // If error creating snippet return bad request because probably client error in request
         if (snippetId == null) {
             LOGGER.error("Snippet creation was unsuccessful. Return id was null.");
-            // throw new FormErrorException(this.messageSource.getMessage("error.404.form", null, LocaleContextHolder.getLocale()));
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         final URI snippetUri = uriInfo.getAbsolutePathBuilder()
@@ -193,14 +195,14 @@ public class SnippetController {
     @Path("/flagged")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getFlaggedSnippetFeed(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
-
         User loggedInUser = this.loginAuthentication.getLoggedInUser();
         if (loggedInUser == null || !this.roleService.isAdmin(loggedInUser.getId())) {
             LOGGER.warn("Only Admin can see flagged snippet feed");
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        final List<SnippetDto> snippets = this.snippetService.getAllFlaggedSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+        long loggedUserId = UserHelper.GetLoggedUserId(this.loginAuthentication);
+        final List<SnippetDto> snippets = this.snippetService.getAllFlaggedSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, loggedUserId, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
         final int snippetCount = this.snippetService.getAllFlaggedSnippetsCount();
         final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
@@ -219,11 +221,12 @@ public class SnippetController {
         User loggedInUser = this.loginAuthentication.getLoggedInUser();
         if (loggedInUser == null || !roleService.isAdmin(loggedInUser.getId())) {
             LOGGER.warn("Only Admin can see flagged snippet feed");
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
 
+        long loggedUserId = UserHelper.GetLoggedUserId(this.loginAuthentication);
         final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.FLAGGED, searchDto.getSort(), null, null, page)
-                .stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+                .stream().map(s -> SnippetDto.fromSnippet(s, loggedUserId, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
 
         int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.FLAGGED, null, null);
         final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
@@ -285,8 +288,8 @@ public class SnippetController {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    @DELETE //TODO ---> check what response to return
-    @Path("/{id}/delete")
+    @DELETE
+    @Path("/{id}")
     public Response deleteSnippet(final @PathParam(PATH_PARAM_ID) long id) {
         Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
 
@@ -294,8 +297,9 @@ public class SnippetController {
             Snippet snippet = retrievedSnippet.get();
             User loggedInUser = this.loginAuthentication.getLoggedInUser();
             if (loggedInUser != null && loggedInUser.equals(snippet.getOwner())) {
+                // If the method returns false, it is because the snippet does not exists, will return NOT_FOUND
                 if (this.snippetService.deleteOrRestoreSnippet(snippet, true)) {
-                    return Response.noContent().build(); // TODO -> what to return? GET will return deleted snippets
+                    return Response.noContent().build();
                 }
             } else {
                 LOGGER.warn("User not logged in or owner of snippet {} attempting it's deletion", id);
@@ -314,8 +318,9 @@ public class SnippetController {
             Snippet snippet = retrievedSnippet.get();
             User loggedInUser = this.loginAuthentication.getLoggedInUser();
             if (loggedInUser != null && loggedInUser.equals(snippet.getOwner())) {
+                // If the method returns false, it is because the snippet does not exists, will return NOT_FOUND
                 if (this.snippetService.deleteOrRestoreSnippet(snippet, false)) {
-                    return Response.noContent().build(); // TODO what to return?
+                    return Response.noContent().build();
                 }
             } else {
                 LOGGER.warn("No user logged in or logged in user not admin but attempting to delete tag {}", id);
@@ -364,7 +369,7 @@ public class SnippetController {
                 return Response.noContent().build();
             } else {
                 LOGGER.error(messageSource.getMessage("error.403.snippet.vote", null, Locale.ENGLISH));
-                return Response.status(Response.Status.FORBIDDEN).build();
+                return Response.status(Response.Status.UNAUTHORIZED).build();
             }
         }
         return Response.status(Response.Status.NOT_FOUND).build();
@@ -388,7 +393,7 @@ public class SnippetController {
         User loggedInUser = this.loginAuthentication.getLoggedInUser();
         if (loggedInUser == null || !roleService.isAdmin(loggedInUser.getId())) {
             LOGGER.error(messageSource.getMessage("error.403.snippet.flag", null, Locale.ENGLISH));
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
@@ -430,7 +435,7 @@ public class SnippetController {
         User currentUser = this.loginAuthentication.getLoggedInUser();
         if (currentUser == null) {
             LOGGER.error(messageSource.getMessage("error.403.snippet.fav", null, Locale.ENGLISH));
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
         this.favoriteService.updateFavorites(currentUser.getId(), id, isFav);
         LOGGER.debug("User {} updated favorite on snippet {}", currentUser.getUsername(), id);
@@ -442,12 +447,17 @@ public class SnippetController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response reportSnippet(final @PathParam(PATH_PARAM_ID) long id, final @Valid ReportDto reportDto) {
         final String baseUrl = this.uriInfo.getBaseUri().toString().replace(Constants.API_PREFIX, "/#");
-        Snippet snippet = this.getSnippet(id);
+        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
+        if (!retrievedSnippet.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Snippet snippet = retrievedSnippet.get();
         User loggedInUser = this.loginAuthentication.getLoggedInUser();
 
         if (loggedInUser == null || loggedInUser.equals(snippet.getOwner())) {
             LOGGER.error(messageSource.getMessage("error.403.snippet.report.owner", null, Locale.ENGLISH));
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         } else if (!this.reportService.canReport(loggedInUser)) {
             LOGGER.error(messageSource.getMessage("error.403.snippet.report.reputation", null, Locale.ENGLISH));
             return Response.status(Response.Status.FORBIDDEN).build();
@@ -462,28 +472,24 @@ public class SnippetController {
         return Response.noContent().build();
     }
 
-    @PUT // TODO OR POST?
+    @PUT
     @Path("/{id}/report/dismiss")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response dismissReportWarning(final @PathParam(PATH_PARAM_ID) long id) {
         User loggedInUser = loginAuthentication.getLoggedInUser();
-        Snippet snippet = this.getSnippet(id);
+        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
+        if (!retrievedSnippet.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Snippet snippet = retrievedSnippet.get();
 
         if (loggedInUser == null || !loggedInUser.equals(snippet.getOwner())) {
             LOGGER.error(messageSource.getMessage("error.403.snippet.report.dismiss", null, Locale.ENGLISH));
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
         this.reportService.dismissReportsForSnippet(id);
         return Response.noContent().build();
-    }
-
-    //TODO Check how to send exceptions
-    private Snippet getSnippet(final long snippetId) {
-        Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(snippetId);
-        if (!retrievedSnippet.isPresent()) {
-            logAndThrow(snippetId);
-        }
-        return retrievedSnippet.get();
     }
 
     private void logAndThrow(final long snippetId) {

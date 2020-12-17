@@ -80,20 +80,23 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         // Setting authorized requests
         http.authorizeRequests()
                 // Adding USERS controller authorizations
-                .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/deleted_snippets").hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/favorite_snippets").hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/following_snippets").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/deleted_snippets/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/favorite_snippets/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/following_snippets/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/following_tags").hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/upvoted_snippets").hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.POST, API_PREFIX + "users/" + Constants.RECOVER_PASSWORD).anonymous()
+                .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/upvoted_snippets/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.POST, API_PREFIX + "users/recover_password").anonymous()
+                .antMatchers(HttpMethod.POST, API_PREFIX + "users/change_password").anonymous()
+                .antMatchers(HttpMethod.POST, API_PREFIX + "users/*/valid_token").anonymous()
                 .antMatchers(HttpMethod.PUT, API_PREFIX + "users/*/profile_photo").hasRole("USER")
                 .antMatchers(HttpMethod.PUT, API_PREFIX + "users/*/description").hasRole("USER")
                 .antMatchers(HttpMethod.POST, API_PREFIX + "users/*/send_verify_email").hasRole("USER")
                 .antMatchers(HttpMethod.POST, API_PREFIX + "users/*/verify_email").hasRole("USER")
+                .antMatchers(HttpMethod.POST, API_PREFIX + "users/**").anonymous()
                 .antMatchers(HttpMethod.POST, API_PREFIX + "users/*").hasRole("USER")
                 .antMatchers(HttpMethod.GET, API_PREFIX + "users/**").permitAll()
                 // Adding TAGS controller authorizations
-                .antMatchers(HttpMethod.POST, API_PREFIX + "tags/*/").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.POST, API_PREFIX + "tags/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, API_PREFIX + "tags/*/").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.DELETE, API_PREFIX + "tags/*/follow").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.DELETE, API_PREFIX + "tags/*/").hasRole("ADMIN")
@@ -103,15 +106,15 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // Adding LANGUAGES controller authorizations
                 .antMatchers(HttpMethod.GET, API_PREFIX + "languages/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, API_PREFIX + "languages/*/").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, API_PREFIX + "languages/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, API_PREFIX + "languages/exists").hasRole("ADMIN")
                 // Adding LOGIN policy
                 .antMatchers(HttpMethod.POST, API_PREFIX + "login").permitAll()
                 // Adding SNIPPETS policy
-                .antMatchers(HttpMethod.GET, API_PREFIX + "snippets/flagged").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, API_PREFIX + "snippets/flagged/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, API_PREFIX + "snippets/*/flag").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, API_PREFIX + "snippets/*/flag").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, API_PREFIX + "snippets/**").permitAll()
-                .antMatchers(HttpMethod.DELETE, API_PREFIX + "snippets/*/delete").hasRole("USER")
                 .antMatchers(HttpMethod.PUT, API_PREFIX + "snippets/*/restore").hasRole("USER")
                 .antMatchers(HttpMethod.PUT, API_PREFIX + "snippets/*/vote_positive").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.DELETE, API_PREFIX + "snippets/*/vote_positive").hasAnyRole("USER", "ADMIN")
@@ -122,6 +125,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, API_PREFIX + "snippets/*/report").hasRole("USER")
                 .antMatchers(HttpMethod.PUT, API_PREFIX + "snippets/*/report/dismiss").hasRole("USER")
                 .antMatchers(HttpMethod.POST, API_PREFIX + "snippets").hasRole("USER")
+                .antMatchers(HttpMethod.DELETE, API_PREFIX + "snippets/*").hasRole("USER")
                 // Adding default policy, must be authenticated
                 .antMatchers(API_PREFIX + "/**").authenticated();
 

@@ -49,7 +49,7 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Transactional
     @Override
-    public boolean deleteOrRestoreSnippet(Snippet snippet,boolean delete) {
+    public boolean deleteOrRestoreSnippet(Snippet snippet, boolean delete) {
         if (delete) {
             return snippetDao.deleteSnippetById(snippet.getId());
         }

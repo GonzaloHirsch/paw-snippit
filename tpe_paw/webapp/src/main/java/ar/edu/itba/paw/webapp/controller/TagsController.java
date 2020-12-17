@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -53,8 +54,6 @@ public class TagsController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TagsController.class);
 
-    // TODO: ADD CREATE TAG
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response tagCreate(@Valid ItemCreateDto tagCreateDto) {
@@ -64,9 +63,10 @@ public class TagsController {
         }
 
         long tagId = this.tagService.addTag(tagCreateDto.getName());
-        // TODO check if tagId is null?
-
-        return Response.noContent().build();
+        // Add URI to response
+        final URI tagUri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(tagId)).build();
+        return Response.created(tagUri).build();
     }
 
     @GET
@@ -144,7 +144,10 @@ public class TagsController {
     @Path("/exists")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getTagByName(final @QueryParam(QUERY_PARAM_NAME) String name) {
-        if (name == null) {
+        User loggedInUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedInUser == null || !this.roleService.isAdmin(loggedInUser.getId())) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } else if (name == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         return Response.ok(BooleanDto.fromBoolean(this.tagService.tagExists(name))).build();
@@ -236,6 +239,15 @@ public class TagsController {
     @Path("/{id}/users/{userId}/follows")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response userFollowsTag(final @PathParam(USER_PARAM_ID) long userId, final @PathParam(PATH_PARAM_ID) long id) {
+        // Check permissions
+        User loggedInUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedInUser == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        } else if (loggedInUser.getId() != userId){
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        // Get tags and user
         Optional<User> maybeUser = this.userService.findUserById(userId);
         Optional<Tag> maybeTag = this.tagService.findTagById(id);
 
@@ -257,7 +269,7 @@ public class TagsController {
             return Response.noContent().build();
         } else {
             LOGGER.warn("No user logged in or logged in user not admin but attempting to delete tag {}", id);
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 

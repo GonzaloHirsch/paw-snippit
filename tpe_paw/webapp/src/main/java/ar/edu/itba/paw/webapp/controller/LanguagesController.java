@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -58,14 +59,16 @@ public class LanguagesController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response languageCreate(@Valid ItemCreateDto langCreateDto) {
         User loggedInUser = this.loginAuthentication.getLoggedInUser();
+        // Check if user is admin
         if (loggedInUser == null || !this.roleService.isAdmin(loggedInUser.getId())) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-
+        // Create language
         long langId = this.languageService.addLanguage(langCreateDto.getName());
-        // TODO check if tagId is null?
-
-        return Response.noContent().build();
+        // Add URI to response
+        final URI langUri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(langId)).build();
+        return Response.created(langUri).build();
     }
 
     @GET
@@ -135,7 +138,11 @@ public class LanguagesController {
     @Path("/exists")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getLanguageByName(final @QueryParam(QUERY_PARAM_NAME) String name) {
-        if (name == null) {
+        // Check that user is admin
+        User loggedInUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedInUser == null || !this.roleService.isAdmin(loggedInUser.getId())) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } else if (name == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         return Response.ok(BooleanDto.fromBoolean(this.languageService.languageExists(name))).build();
@@ -186,7 +193,7 @@ public class LanguagesController {
         }
     }
 
-    @DELETE  // TODO --> esto deberia ser un post al ser borrado logico?
+    @DELETE
     @Path("/{id}")
     public Response deleteLanguage(final @PathParam(PATH_PARAM_ID) long id){
         User currentUser = this.loginAuthentication.getLoggedInUser();
@@ -196,7 +203,7 @@ public class LanguagesController {
             return Response.noContent().build();
         } else {
             LOGGER.error("No user logged in or logged in user not admin but language {} is trying to be deleted", id);
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 

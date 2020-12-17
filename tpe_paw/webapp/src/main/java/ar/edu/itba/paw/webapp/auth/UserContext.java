@@ -4,6 +4,9 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
+/**
+ * Context for the authentication process for the token
+ */
 public class UserContext {
     private Long id;
     private String username;

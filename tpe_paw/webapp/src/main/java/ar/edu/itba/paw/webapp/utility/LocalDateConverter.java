@@ -4,7 +4,11 @@ import javax.ws.rs.ext.ParamConverter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Converter to and from LocalDate for the DTOs
+ */
 public class LocalDateConverter implements ParamConverter<LocalDate> {
+    // We expect ISO format dates
     private static final DateTimeFormatter DF = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Override
     public LocalDate fromString(String s) {

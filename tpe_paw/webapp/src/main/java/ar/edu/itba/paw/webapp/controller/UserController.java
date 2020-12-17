@@ -2,12 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.dao.SnippetDao;
 import ar.edu.itba.paw.interfaces.service.*;
-import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.form.DescriptionForm;
-import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.utility.*;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -18,9 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -29,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.Instant;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,8 +39,6 @@ public class UserController {
     private SnippetService snippetService;
     @Autowired
     private TagService tagService;
-    @Autowired
-    private ReportService reportService;
     @Autowired
     private LoginAuthentication loginAuthentication;
     @Autowired
@@ -179,6 +170,7 @@ public class UserController {
             final User loggedUser = this.loginAuthentication.getLoggedInUser();
             if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
                 try {
+                    // TODO: CHECK MAX SIZE
                     byte[] data = IOUtils.toByteArray(inputStream);
                     this.userService.changeProfilePhoto(id, data);
                     return Response.noContent().build();
@@ -519,77 +511,4 @@ public class UserController {
         }
         return Optional.empty();
     }
-
-    ///////////////////////////////////////////////// OLD ///////////////////////////////////////////////////////
-
-/* TODO --> NEEDS CONVERTING
-    @RequestMapping(value = "/user/{id}/{context}/edit", method = {RequestMethod.POST})
-    public ModelAndView endEditUserProfile(
-            final @PathVariable("id") long id,
-            final @PathVariable("context") String context,
-            @Valid @ModelAttribute("descriptionForm") final DescriptionForm descriptionForm,
-            final BindingResult errors,
-            @ModelAttribute("profilePhotoForm") final ProfilePhotoForm profilePhotoForm,
-            final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-            final @RequestParam(value = "editing", required = false, defaultValue = "false") boolean editing
-    ) {
-        if (!(context.equals(Constants.OWNER_DELETED_CONTEXT) || context.equals(Constants.OWNER_ACTIVE_CONTEXT) || context.equals(Constants.USER_PROFILE_CONTEXT))) {
-            LOGGER.warn("Invalid URL in profile. Context = {}", context);
-            throw new InvalidUrlException();
-        }
-        if (errors.hasErrors()) {
-            return context.equals(Constants.OWNER_DELETED_CONTEXT) ?
-                    deletedSnippetUserProfile(id, profilePhotoForm, descriptionForm, page, true) :
-                    activeSnippetUserProfile(id, profilePhotoForm, descriptionForm, page, true);
-        }
-        User currentUser = this.loginAuthentication.getLoggedInUser();
-        User user = this.getUserWithId(id);
-        if (currentUser != null && currentUser.equals(user)) {
-            this.userService.changeDescription(id, descriptionForm.getDescription());
-        } else {
-            LOGGER.error(messageSource.getMessage("error.403.profile.owner", null, Locale.ENGLISH));
-            throw new ForbiddenAccessException(messageSource.getMessage("error.403.profile.owner", null, LocaleContextHolder.getLocale()));
-        }
-        return new ModelAndView("redirect:/user/" + id + "/" + context);
-    }*/
-
-    @Deprecated
-    private void logAndThrow(long id) {
-        LOGGER.warn("User with id {} doesn't exist", id);
-        // throw new UserNotFoundException(messageSource.getMessage("error.404.user", new Object[]{id}, LocaleContextHolder.getLocale()));
-    }
-
-    @Deprecated
-    private ModelAndView profileMav(long id, User currentUser, User user, String searchContext, DescriptionForm descriptionForm, String tabContext, Collection<Snippet> snippets, final int totalSnippetCount, final int totalUserSnippetCount, final int page, final boolean editing) {
-        final ModelAndView mav = new ModelAndView("user/profile");
-
-        MavHelper.addSnippetCardFavFormAttributes(mav, this.loginAuthentication.getLoggedInUser(), snippets);
-
-        descriptionForm.setDescription(user.getDescription());
-        mav.addObject("followedTags", this.tagService.getFollowedTagsForUser(user.getId()));
-        mav.addObject("pages", totalSnippetCount / SNIPPET_PAGE_SIZE + (totalSnippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
-        mav.addObject("page", page);
-        mav.addObject("editing", editing);
-        mav.addObject("isEdit", false);
-        mav.addObject("user", user);
-        mav.addObject("snippets", snippets);
-        mav.addObject("snippetsCount", totalUserSnippetCount);
-        mav.addObject("tabSnippetCount", totalSnippetCount);
-        mav.addObject("searchContext", searchContext);
-        mav.addObject("tabContext", tabContext);
-        return mav;
-    }
-
-    @Deprecated
-    @ModelAttribute
-    public void addAttributes(Model model, @Valid final SearchForm searchForm) {
-        User currentUser = this.loginAuthentication.getLoggedInUser();
-        // MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
-        if (currentUser != null) {
-            this.userService.updateLocale(currentUser.getId(), LocaleContextHolder.getLocale());
-        }
-        model.addAttribute("searchForm", searchForm);
-        model.addAttribute("searching", false);
-    }
-
 }

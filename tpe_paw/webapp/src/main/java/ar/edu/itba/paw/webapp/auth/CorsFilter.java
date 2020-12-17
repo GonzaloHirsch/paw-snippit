@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * CORS filter mainly for local development, but can be used in production
+ */
 @Component
 public class CorsFilter extends GenericFilterBean {
 

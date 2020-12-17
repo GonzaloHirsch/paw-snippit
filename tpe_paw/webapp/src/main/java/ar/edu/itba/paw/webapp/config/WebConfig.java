@@ -56,17 +56,6 @@ import java.util.concurrent.TimeUnit;
 @EnableTransactionManagement
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-    /* PostgreSQL Scripts used throughout the project development
-    @Value("classpath:schema.sql")
-    private Resource schemaSql;
-    @Value("classpath:populate.sql")
-    private Resource populatorSql;
-    @Value("classpath:populateRole.sql")
-    private Resource populatorRoleSql;
-    @Value("classpath:dbImprovements.sql")
-    private Resource dbImprovementsSql;
-    */
-
     @Bean
     public ViewResolver viewResolver() {
         final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();

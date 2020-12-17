@@ -43,9 +43,9 @@ public final class SearchHelper {
     }
 
     public static Collection<Snippet> FindByCriteria(SnippetService snippetService, String type, String query, SnippetDao.Locations location, String sort, Long userId, Long resourceId, int page) {
-        if (query.length() > MAX_SEARCH_QUERY_SIZE) {
+//        if (query.length() > MAX_SEARCH_QUERY_SIZE) {
 //            throw new URITooLongException(messageSource.getMessage("error.414.search", null, LocaleContextHolder.getLocale()));
-        }
+//        }
         if (!typesMap.containsKey(type) || !ordersMap.containsKey(sort)) {
             return Collections.emptyList();
         } else {

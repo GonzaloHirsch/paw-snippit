@@ -55,14 +55,14 @@ function SnippetFeedHOC(
           links: {},
           currentSearch: search,
           userIsLogged: userIsLogged,
-          loading: false
+          loading: false,
         };
       }
 
       // Loading data
 
       loadSnippets(page) {
-        this.setState({loading: true})
+        this.setState({ loading: true });
         getSnippets(this.snippetFeedClient, page)
           .then((res) => {
             // Extracting the other pages headers
@@ -73,7 +73,7 @@ function SnippetFeedHOC(
                 links: newLinks,
                 snippets: res.data,
                 totalSnippets: itemCount,
-                loading: false
+                loading: false,
               });
             }
           })
@@ -81,10 +81,9 @@ function SnippetFeedHOC(
       }
 
       loadSearchedSnippets(page, search) {
-        this.setState({loading: true})
+        this.setState({ loading: true });
         searchSnippets(this.snippetFeedClient, page, search)
           .then((res) => {
-            console.log(res);
             // Extracting the other pages headers
             const newLinks = extractLinkHeaders(res.headers);
             const itemCount = extractItemCountHeader(res.headers);
@@ -93,7 +92,7 @@ function SnippetFeedHOC(
                 links: newLinks,
                 snippets: res.data,
                 totalSnippets: itemCount,
-                loading: false
+                loading: false,
               });
             }
           })

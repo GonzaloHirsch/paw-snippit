@@ -21,7 +21,9 @@ class SnippetsForTag extends Component {
     let loggedUserId = null;
     let userIsAdmin = false;
     this.languagesAndTagsClient = new LanguagesAndTagsClient(this.props);
-    this.languagesAndTagsActionsClient = new LanguagesAndTagsActionsClient(this.props);
+    this.languagesAndTagsActionsClient = new LanguagesAndTagsActionsClient(
+      this.props
+    );
     if (!(state.auth.token === null || state.auth.token === undefined)) {
       this.languagesAndTagsClient = new LanguagesAndTagsClient(
         this.props,
@@ -52,7 +54,6 @@ class SnippetsForTag extends Component {
   }
 
   _userIsFollowing() {
-    console.log(this.props.match.params.id);
     if (this.state.loggedUserId !== null) {
       this.languagesAndTagsClient
         .userFollowsTag(this.state.loggedUserId, this.props.match.params.id)

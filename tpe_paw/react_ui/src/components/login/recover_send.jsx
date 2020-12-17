@@ -14,7 +14,6 @@ import {
 } from "../../js/validations";
 import { Helmet } from "react-helmet";
 
-
 class RecoverSend extends Component {
   state = {
     fields: {
@@ -46,8 +45,6 @@ class RecoverSend extends Component {
             // client received an error response (5xx, 4xx)
             if (e.response.status === 400) {
               let errors = {};
-              console.log(e);
-              console.log(e.response.data.errors);
               e.response.data.errors.forEach((error) => {
                 for (let key in error) {
                   errors[key] = error[key];

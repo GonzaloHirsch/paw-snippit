@@ -41,7 +41,6 @@ class Verify extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
     const params = new URLSearchParams(this.props.location.search);
     const id = params.get("id");
 

@@ -74,7 +74,6 @@ function ItemFeedHOC(
             const newLinks = extractLinkHeaders(res.headers);
             const itemCount = extractItemCountHeader(res.headers);
             if (this._isMounted) {
-              console.log(res.data);
               this.setState({
                 links: newLinks,
                 items: res.data,

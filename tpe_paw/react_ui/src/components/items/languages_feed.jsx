@@ -4,11 +4,9 @@ import i18n from "../../i18n";
 import { ITEM_TYPES } from "../../js/constants";
 import { Helmet } from "react-helmet";
 
-
 // Stateless Functional Component
 
 const LanguagesFeed = (props) => {
-  console.log(props);
   return (
     <React.Fragment>
       <Helmet>

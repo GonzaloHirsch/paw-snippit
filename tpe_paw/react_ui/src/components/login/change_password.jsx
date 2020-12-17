@@ -45,9 +45,7 @@ class RecoverSend extends Component {
     const token = params.get("token");
 
     // Storing the info in the url
-    this.setState({ info: { id: id, token: token } }, () => {
-      console.log(this.state);
-    });
+    this.setState({ info: { id: id, token: token } });
 
     this.authClient
       .isTokenValid(id, token)
@@ -100,8 +98,6 @@ class RecoverSend extends Component {
             // client received an error response (5xx, 4xx)
             if (e.response.status === 400) {
               let errors = {};
-              console.log(e);
-              console.log(e.response.data.errors);
               e.response.data.errors.forEach((error) => {
                 for (let key in error) {
                   errors[key] = error[key];

@@ -11,7 +11,6 @@ import { LOGIN_VALIDATIONS } from "../../js/validations";
 import CustomCheckbox from "../forms/custom_checkbox";
 import { Helmet } from "react-helmet";
 
-
 class Login extends Component {
   state = {
     fields: {
@@ -55,7 +54,6 @@ class Login extends Component {
           this.props.history.push("/");
         })
         .catch((e) => {
-          console.log(e)
           if (e.response) {
             // client received an error response (5xx, 4xx)
             if (e.response.status === 401) {

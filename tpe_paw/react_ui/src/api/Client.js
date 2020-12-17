@@ -1,6 +1,10 @@
 import conf from "../conf";
 import axios from "axios";
-import { logOut, loginExpired, loginSuccess } from "../redux/actions/actionCreators";
+import {
+  logOut,
+  loginExpired,
+  loginSuccess,
+} from "../redux/actions/actionCreators";
 import store from "../store";
 
 // Client parent class for all children to have axios instance
@@ -18,7 +22,6 @@ class Client {
 
     // In case there are props, add the token
     if (recvToken) {
-      console.log("TOKEN")
       token = recvToken;
     }
 
@@ -76,13 +79,9 @@ class Client {
 
                   // Dispatch the login event
                   store.dispatch(
-                    loginSuccess(
-                      { token },
-                      { refreshToken },
-                      remember
-                    )
+                    loginSuccess({ token }, { refreshToken }, remember)
                   );
-                    
+
                   // Refresh the page to make the new token changes appear
                   window.location.reload();
                 })

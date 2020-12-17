@@ -150,10 +150,18 @@ class ProfileDetail extends Component {
   _renderUserIcon() {
     const { owner, loggedUserId } = this.props;
     return owner.id === loggedUserId ? (
-      <ImagePicker
-        imageSrc={getUserProfilePicUrl(owner)}
-        handleSubmit={this.props.updateImage}
-      />
+      <React.Fragment>
+        <ImagePicker
+          imageSrc={getUserProfilePicUrl(owner)}
+          handleSubmit={this.props.updateImage}
+          imageLoading={this.props.imageLoading}
+        />
+        {this.props.imageRequestErrors && (
+          <div className="flex-center word-wrap text-danger parent-width fw-500 profile-edit-description-error">
+            {this.props.imageRequestErrors}
+          </div>
+        )}
+      </React.Fragment>
     ) : (
       <div className="flex-center profile-photo-padding">
         <img

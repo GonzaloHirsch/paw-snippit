@@ -170,8 +170,11 @@ public class UserController {
             final User loggedUser = this.loginAuthentication.getLoggedInUser();
             if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
                 try {
-                    // TODO: CHECK MAX SIZE
                     byte[] data = IOUtils.toByteArray(inputStream);
+                    // If data is over the limit, return BAD_REQUEST
+                    if (data.length > Constants.UPLOAD_MAX_SIZE){
+                        return Response.status(Response.Status.BAD_REQUEST).build();
+                    }
                     this.userService.changeProfilePhoto(id, data);
                     return Response.noContent().build();
                 } catch (IOException e) {

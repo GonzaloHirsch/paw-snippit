@@ -48,9 +48,6 @@ export const PrivateRoute = ({ ...rest }) => {
   const okRoles = rest.roles;
   // Current user roles
   const currentRoles = store.getState().auth.roles;
-  console.log(isAnon, "ANO");
-  console.log(checkIfAnonIsOk(isAnon, currentRoles), "NONON");
-  console.log(checkIfRolesAreOk(okRoles, currentRoles), "ROLES");
   // If the roles are ok, the component is rendered, if not, a redirect to login is made
   return (
     <Route

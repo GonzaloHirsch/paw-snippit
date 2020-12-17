@@ -38,6 +38,10 @@ class UserProfile extends Component {
       ),
       loading: true,
       descriptionLoading: false,
+      imageLoading: false,
+      errors: {
+        image: null,
+      },
     };
   }
 
@@ -92,12 +96,38 @@ class UserProfile extends Component {
   };
 
   onUpdateImage = (image) => {
+    this.setState({ imageLoading: true });
     this.protectedClient
       .putUserImage(this.state.profileOwnerId, image)
       .then((res) => {
+        this.setState({ imageLoading: false, errors: {image: null} });
         this.loadUserData(this.state.profileOwnerId);
       })
-      .catch((e) => {});
+      .catch((e) => {
+        let errors = {
+          image: null,
+        };
+        if (e.response) {
+          // client received an error response (5xx, 4xx)
+          if (e.response.status === 400) {
+            errors.image = i18n.t("profile.errors.imageTooBig", {
+              size: "1MB",
+            });
+          } else if (e.response.status === 500) {
+            errors.image = i18n.t("profile.errors.changeImageServerError");
+          }
+        } else if (e.request) {
+          // client never received a response, or request never left
+          errors.image = i18n.t("errors.noConnection");
+        } else {
+          // anything else
+          errors.image = i18n.t("errors.unknownError");
+        }
+        this.setState({
+          errors: errors,
+          imageLoading: false
+        });
+      });
   };
 
   isOwner = () => {
@@ -210,6 +240,8 @@ class UserProfile extends Component {
             loggedUserId={this.state.loggedUserId}
             loading={this.state.loading}
             descriptionLoading={this.state.descriptionLoading}
+            imageLoading={this.state.imageLoading}
+            imageRequestErrors={this.state.errors.image}
             updateDescription={(description) =>
               this.onUpdateDescription(description)
             }

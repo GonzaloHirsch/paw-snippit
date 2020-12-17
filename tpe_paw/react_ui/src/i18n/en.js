@@ -279,6 +279,10 @@ const i18n_en = {
         image: "TODO message!",
       },
     },
+    errors: {
+      imageTooBig: "Uploaded image is too big, maximum size is {{size}}",
+      changeImageServerError: "Error changing image, please try again later"
+    }
   },
   verifyEmail: {
     docTitle: "Verify Email",

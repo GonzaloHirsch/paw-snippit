@@ -131,3 +131,15 @@
 .app-link:active {
   text-decoration: none;
 }
+
+.top-profile-image {
+  border: white solid 2px;
+  transition: 0.3s;
+  border-radius: 50%;
+  padding: 2px;
+  cursor: pointer;
+  &:hover {
+    @extend .top-profile-image;
+    background-color: $primary-color-dark;
+  }
+}

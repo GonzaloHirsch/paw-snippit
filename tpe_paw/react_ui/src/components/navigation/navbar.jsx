@@ -12,7 +12,7 @@ import { LOGIN_SUCCESS } from "../../redux/actions/actionTypes";
 
 // Libs
 import i18n from "../../i18n";
-import { mdiClose, mdiMenu, mdiCodeTags } from "@mdi/js";
+import { mdiClose, mdiMenu, mdiCodeTags, mdiAccount } from "@mdi/js";
 import { CONTEXT, CONTEXT_WITHOUT_SEARCH } from "../../js/constants";
 import {
   getNavSearchFromUrl,
@@ -31,6 +31,8 @@ import { isAdmin } from "../../js/security_utils";
 // Component -> https://getbootstrap.com/docs/4.5/components/navbar/
 class NavBar extends Component {
   authUnsubscribe;
+  userClient;
+
   state = {
     navIsOpen: false,
     userIsLogged: false,
@@ -251,11 +253,11 @@ class NavBar extends Component {
           >
             {i18n.t("create")}
           </Link>
-          <Link to="/profile" className="mx-1 text-white">
-            <em className="ml-1">
-              {i18n.t("nav.greeting", { user: store.getState().auth.info.sub })}
-            </em>
-          </Link>
+          {!isAdmin(this.state.roles) && (
+            <Link to="/profile" className="mx-1 text-white">
+              <Icon path={mdiAccount} className="top-profile-image" size={2}></Icon>
+            </Link>
+          )}
         </React.Fragment>
       );
     } else {

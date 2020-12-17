@@ -4,7 +4,7 @@
 
 Credenciales para el Admin:
 ```
-User: admin
+User: pawadmin
 Pass: AdM1n2o2oP4w
 ```
 
@@ -62,6 +62,19 @@ Copy file from Pampero to Remote:
 cd web/
 put app.war
 exit
+```
+
+## Server Database
+Connect to Pampero:
+
+```
+ssh pampero.it.itba.edu.ar -l ghirsch
+```
+
+Connect to Remote:
+
+```
+psql -h 10.16.1.110 -U paw-2020a-2
 ```
 
 ## API Endpoints

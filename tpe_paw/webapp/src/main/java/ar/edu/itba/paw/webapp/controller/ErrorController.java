@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 //@Controller
+@Deprecated
 public class ErrorController {
 
 //    @Autowired

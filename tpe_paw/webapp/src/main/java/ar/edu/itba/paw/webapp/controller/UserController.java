@@ -6,7 +6,6 @@ import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.form.DescriptionForm;
 import ar.edu.itba.paw.webapp.form.SearchForm;
 import ar.edu.itba.paw.webapp.utility.*;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -31,10 +29,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -97,8 +93,6 @@ public class UserController {
     @Path("/{id}/active_snippets")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getActiveSnippetsForUser(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
-        //TODO only owner can be here
-
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
@@ -128,8 +122,6 @@ public class UserController {
     @Path("/{id}/deleted_snippets")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getDeletedSnippetsForUser(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
-        //TODO only owner can be here
-
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
@@ -145,7 +137,7 @@ public class UserController {
                 ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
                 return builder.build();
             } else {
-                return Response.status(Response.Status.FORBIDDEN).build();
+                return Response.status(Response.Status.NOT_FOUND).build();
             }
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -195,7 +187,7 @@ public class UserController {
                     return Response.serverError().build();
                 }
             } else {
-                return Response.status(Response.Status.FORBIDDEN).build();
+                return Response.status(Response.Status.NOT_FOUND).build();
             }
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -214,17 +206,15 @@ public class UserController {
                 this.userService.changeDescription(id, userDescriptionDto.getDescription());
                 return Response.noContent().build();
             } else {
-                return Response.status(Response.Status.FORBIDDEN).build();
+                return Response.status(Response.Status.NOT_FOUND).build();
             }
         }
         return Response.status(Response.Status.NOT_FOUND).build();
-
     }
 
     @POST
     @Path("/{id}/send_verify_email")
     public Response verifyUserEmailSendEmail(final @PathParam(PATH_PARAM_ID) long id) {
-        //TODO Must be logged in
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
@@ -237,7 +227,7 @@ public class UserController {
                 }
                 return Response.noContent().build();
             } else {
-                return Response.status(Response.Status.FORBIDDEN).build();
+                return Response.status(Response.Status.NOT_FOUND).build();
             }
         }
         return Response.status(Response.Status.NOT_FOUND).build();
@@ -258,7 +248,7 @@ public class UserController {
                 this.userService.verifyUserEmail(id);
                 return Response.noContent().build();
             } else {
-                return Response.status(Response.Status.FORBIDDEN).build();
+                return Response.status(Response.Status.NOT_FOUND).build();
             }
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -268,9 +258,15 @@ public class UserController {
     @POST
     @Path("/recover_password")
     public Response recoverPasswordSendEmail(final @Valid RecoveryDto recoveryDto) {
+        // No logged user can use this
+        final User loggedUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedUser != null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
         User user = this.userService.findUserByEmail(recoveryDto.getEmail()).orElse(null);
         if (user == null) {
-            return Response.status(Response.Status.NOT_FOUND).build(); // UserNotFound
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         // Getting the URL for the server
@@ -287,6 +283,12 @@ public class UserController {
     @POST
     @Path("/{id}/valid_token")
     public Response isRecoverPasswordTokenValid(final @PathParam(PATH_PARAM_ID) long id, final @Valid TokenDto tokenDto) {
+        // No logged user can use this
+        final User loggedUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedUser != null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
         /// Get the user
         Optional<User> maybeUser = userService.findUserById(id);
 
@@ -300,6 +302,12 @@ public class UserController {
     @POST
     @Path("/{id}/change_password")
     public Response changePasswordWithToken(final @PathParam(PATH_PARAM_ID) long id, final @Valid ResetPasswordDto resetPasswordDto) {
+        // No logged user can use this
+        final User loggedUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedUser != null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
         // Get the user
         Optional<User> maybeUser = userService.findUserById(id);
 
@@ -307,7 +315,7 @@ public class UserController {
         Optional<Response> maybeResponse = this.isResetPasswordTokenValid(maybeUser, resetPasswordDto.getToken());
 
         // If present, return the error response
-        if (maybeResponse.isPresent()){
+        if (maybeResponse.isPresent()) {
             return maybeResponse.get();
         }
 
@@ -318,9 +326,10 @@ public class UserController {
         return Response.noContent().build();
     }
 
-    @POST
+  /*  @POST
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
+    // TODO: HAY 2 metodos iguales
     public Response changeUserDescription(final @PathParam(PATH_PARAM_ID) long id, final UserDto userDto) {
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
@@ -335,27 +344,29 @@ public class UserController {
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-    }
+    }*/
 
     @GET
     @Path("/{id}/favorite_snippets")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getFavoriteSnippetsForUser(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page) {
-        //TODO only owner can be here
-
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
+            final User loggedUser = this.loginAuthentication.getLoggedInUser();
+            if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
+                final List<SnippetDto> snippets = this.snippetService.getAllFavoriteSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+                final int snippetCount = this.snippetService.getAllFavoriteSnippetsCount(user.getId());
+                final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
-            final List<SnippetDto> snippets = this.snippetService.getAllFavoriteSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
-            final int snippetCount = this.snippetService.getAllFavoriteSnippetsCount(user.getId());
-            final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
-
-            Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
-            });
-            ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
-            ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
-            return builder.build();
+                Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+                });
+                ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+                ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
+                return builder.build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -375,16 +386,20 @@ public class UserController {
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
+            final User loggedUser = this.loginAuthentication.getLoggedInUser();
+            if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
+                final List<SnippetDto> snippets = this.snippetService.getAllFollowingSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+                final int snippetCount = this.snippetService.getAllFollowingSnippetsCount(user.getId());
+                final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
-            final List<SnippetDto> snippets = this.snippetService.getAllFollowingSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
-            final int snippetCount = this.snippetService.getAllFollowingSnippetsCount(user.getId());
-            final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
-
-            Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
-            });
-            ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
-            ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
-            return builder.build();
+                Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+                });
+                ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+                ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
+                return builder.build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -403,12 +418,17 @@ public class UserController {
     public Response getFollowingTagsForUser(final @PathParam(PATH_PARAM_ID) long id) {
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
-            final User user = maybeUser.get();
-            final List<TagDto> followedTags = this.tagService.getSomeOrderedFollowedTagsForUser(user.getId(), Integer.MAX_VALUE).stream().map(s -> TagDto.fromTag(s, uriInfo)).collect(Collectors.toList());
+            final User loggedUser = this.loginAuthentication.getLoggedInUser();
+            if (loggedUser != null && loggedUser.getId().equals(id)) {
+                final User user = maybeUser.get();
+                final List<TagDto> followedTags = this.tagService.getSomeOrderedFollowedTagsForUser(user.getId(), Integer.MAX_VALUE).stream().map(s -> TagDto.fromTag(s, uriInfo)).collect(Collectors.toList());
 
-            Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<TagDto>>(followedTags) {
-            });
-            return builder.build();
+                Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<TagDto>>(followedTags) {
+                });
+                return builder.build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -421,16 +441,20 @@ public class UserController {
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
+            final User loggedUser = this.loginAuthentication.getLoggedInUser();
+            if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
+                final List<SnippetDto> snippets = this.snippetService.getAllUpVotedSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+                final int snippetCount = this.snippetService.getAllUpvotedSnippetsCount(user.getId());
+                final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
-            final List<SnippetDto> snippets = this.snippetService.getAllUpVotedSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
-            final int snippetCount = this.snippetService.getAllUpvotedSnippetsCount(user.getId());
-            final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
-
-            Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
-            });
-            ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
-            ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
-            return builder.build();
+                Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+                });
+                ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+                ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
+                return builder.build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -444,10 +468,17 @@ public class UserController {
     }
 
     private Response userContextSearch(final long id, SnippetDao.Locations location, SearchDto searchDto, int page) {
-        //TODO only owner can be here
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
             final User user = maybeUser.get();
+
+            // If it is a protected feed, check if it is the owner
+            if (location != SnippetDao.Locations.USER) {
+                final User loggedUser = this.loginAuthentication.getLoggedInUser();
+                if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
+                    return Response.status(Response.Status.NOT_FOUND).build();
+                }
+            }
 
             final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), location, searchDto.getSort(), user.getId(), null, page)
                     .stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
@@ -467,11 +498,12 @@ public class UserController {
 
     /**
      * Determines if given a user Id and a token, the token for the user is valid
+     *
      * @param maybeUser Optional with maybe a user
-     * @param token Token given in the request
+     * @param token     Token given in the request
      * @return An Optional with a possible response, empty if valid token
      */
-    private Optional<Response> isResetPasswordTokenValid(Optional<User> maybeUser, String token){
+    private Optional<Response> isResetPasswordTokenValid(Optional<User> maybeUser, String token) {
         // Find the user by the given id
         if (!maybeUser.isPresent()) {
             return Optional.of(Response.status(Response.Status.NOT_FOUND).build()); // UserNotFound

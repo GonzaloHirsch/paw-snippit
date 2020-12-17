@@ -28,6 +28,7 @@ import java.util.*;
 
 
 //@Controller
+@Deprecated
 public class AdminController {
 
 //    @Autowired

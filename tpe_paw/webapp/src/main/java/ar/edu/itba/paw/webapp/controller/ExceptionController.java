@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.Locale;
 
 //@ControllerAdvice
+@Deprecated
 public class ExceptionController {
 
 //    @Autowired

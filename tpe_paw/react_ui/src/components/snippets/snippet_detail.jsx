@@ -18,7 +18,7 @@ import {
   ModalBody,
   ModalFooter,
   UncontrolledTooltip,
-  Spinner
+  Spinner,
 } from "reactstrap";
 import TextAreaInputField from "../forms/text_area_input_field";
 import ItemFeed from "../items/item_feed";
@@ -143,7 +143,7 @@ class SnippetDetail extends Component {
       handleDelete,
       handleLike,
       handleDislike,
-      loading
+      loading,
     } = this.props;
     return (
       <div className="flex-column detail-container mx-5 my-4 p-5 inner-square shadow rounded-lg">
@@ -326,7 +326,10 @@ class SnippetDetail extends Component {
                   />
                 </div>
               </DetailBox>
-              <LinkDetailBox path={"/user/" + creator.id}>
+              <LinkDetailBox
+                path={"/user/" + creator.id}
+                style={{ minWidth: "190px" }}
+              >
                 <div className="row mb-2 fw-500 uploaded-on-text primary-text no-decoration">
                   <span>
                     {i18n.t("snippetDetail.uploaded", {

@@ -380,5 +380,6 @@ export default {
   },
   following: {
     errorMsg: "Unable to unfollow tag {{name}}. Try again later.",
+    showMore: "Show more",
   },
 };

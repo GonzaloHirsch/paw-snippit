@@ -7,8 +7,8 @@ import store from "../../store";
 import TagBadge from "../items/tag_badge";
 import { getItemPositionInArray } from "../../js/item_utils";
 import { Alert } from "reactstrap";
+import { FOLLOWING_LIST_LIMIT } from "../../js/constants";
 
-// Stateless Functional Component
 class SnippetFollowing extends Component {
   tagActionClient;
   userClient;
@@ -34,15 +34,14 @@ class SnippetFollowing extends Component {
     };
   }
 
-  loadFollowingTags() {
+  _loadFollowingTags() {
     this.userClient.getUserFollowingTags(this.state.userId).then((res) => {
       this.setState({ followingTags: res.data });
-      console.log(this.state);
     });
   }
 
   componentDidMount() {
-    this.loadFollowingTags();
+    this._loadFollowingTags();
   }
 
   onUnfollowTag = (tag) => {
@@ -60,6 +59,21 @@ class SnippetFollowing extends Component {
     const unfollowError = { alert: false, name: "" };
     this.setState({ unfollowError: unfollowError });
   };
+
+  _onShowMore() {
+    // REDIRECT TO TAG FEED WITH ONLY FOLLOWING
+  }
+
+  _renderShowMoreButton() {
+    return this.state.followingTags.length > FOLLOWING_LIST_LIMIT ? (
+      <button
+        className="no-margin form-button shadow btn btn-lg btn-block mt-2 mb-1 fwhite show-more-button"
+        onClick={() => this._onShowMore()}
+      >
+        {i18n.t("following.showMore")}{" "}
+      </button>
+    ) : null;
+  }
 
   render() {
     const {
@@ -82,13 +96,16 @@ class SnippetFollowing extends Component {
         </div>
         <div className="row no-margin">
           <div className="col-2 p-0 pl-2 flex-col">
-            {this.state.followingTags.map((tag) => (
-              <TagBadge
-                key={tag.id}
-                tag={tag}
-                onUnfollow={(tag) => this.onUnfollowTag(tag)}
-              />
-            ))}
+            {this.state.followingTags
+              .slice(0, FOLLOWING_LIST_LIMIT)
+              .map((tag) => (
+                <TagBadge
+                  key={tag.id}
+                  tag={tag}
+                  onUnfollow={(tag) => this.onUnfollowTag(tag)}
+                />
+              ))}
+            {this._renderShowMoreButton()}
           </div>
 
           <div className="col-10 p-0">

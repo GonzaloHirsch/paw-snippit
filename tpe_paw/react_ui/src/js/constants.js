@@ -31,8 +31,8 @@ export const EXPLORE = {
 
 export const ITEM_TYPES = {
   LANGUAGE: "language",
-  TAG: "tag"
-}
+  TAG: "tag",
+};
 
 export const EXPLORE_ORDERBY = ["date", "reputation", "votes", "title"];
 export const SORT = ["asc", "desc", "no"];
@@ -40,3 +40,4 @@ export const MIN_INTEGER = -2147483647;
 export const MAX_INTEGER = 2147483647;
 export const ACTIVE_USER_SNIPPETS = "active";
 export const DELETED_USER_SNIPPETS = "deleted";
+export const FOLLOWING_LIST_LIMIT = 25;

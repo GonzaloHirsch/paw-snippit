@@ -38,7 +38,7 @@ class SearchBar extends Component {
   }
 
   // Updating with the url info
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const currentSearch = { ...this.state.search };
     const { search } = nextProps;
 

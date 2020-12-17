@@ -255,7 +255,11 @@ class NavBar extends Component {
           </Link>
           {!isAdmin(this.state.roles) && (
             <Link to="/profile" className="mx-1 text-white">
-              <Icon path={mdiAccount} className="top-profile-image" size={2}></Icon>
+              <Icon
+                path={mdiAccount}
+                className="top-profile-image"
+                size={2}
+              ></Icon>
             </Link>
           )}
         </React.Fragment>
@@ -263,12 +267,24 @@ class NavBar extends Component {
     } else {
       return (
         <React.Fragment>
-          <Link to="/login" className="mx-1">
+          <Link
+            to={{
+              pathname: "/login",
+              state: { from: this.props.history.location },
+            }}
+            className="mx-1"
+          >
             <button type="button" className="btn btn-light">
               {i18n.t("nav.login")}
             </button>
           </Link>
-          <Link to="/signup" className="mx-1">
+          <Link
+            to={{
+              pathname: "/signup",
+              state: { from: this.props.history.location },
+            }}
+            className="mx-1"
+          >
             <button type="button" className="btn btn-light">
               {i18n.t("nav.signup")}
             </button>
@@ -310,8 +326,7 @@ class NavBar extends Component {
           </Link>
           <div
             className={
-              "col-2 " +
-              (this.state.showSearch ? "col-lg-9" : "col-lg-3")
+              "col-2 " + (this.state.showSearch ? "col-lg-9" : "col-lg-3")
             }
           >
             {this.state.showSearch && (

@@ -33,6 +33,19 @@ class SignUp extends Component {
     loading: false,
   };
 
+  getRedirectionObject(path) {
+    const fromLocation = this.props.history.location.state.from;
+    if (
+      fromLocation !== undefined &&
+      fromLocation !== null &&
+      fromLocation !== ""
+    ) {
+      return { pathname: path, state: { from: this.props.history.location } };
+    } else {
+      return { pathname: path };
+    }
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     const hasErrors = this._validateAll();
@@ -65,8 +78,13 @@ class SignUp extends Component {
               // We add the remember to be true
               store.dispatch(loginSuccess({ token }, { refreshToken }, true));
 
-              // Push to home
+              const fromLocation = this.props.history.location.state.from;
+              if (fromLocation !== undefined && fromLocation !== null && fromLocation !== ""){
+                this.props.history.push(fromLocation)
+              } else {
+                // Push to home
               this.props.history.push("/");
+              }
             });
         })
         .catch((e) => {
@@ -192,7 +210,7 @@ class SignUp extends Component {
         >
           <span>
             {i18n.t("signup.login")}
-            <Link to="/login">
+            <Link to={this.getRedirectionObject("/login")}>
               <strong>{i18n.t("signup.loginCall")}</strong>
             </Link>
           </span>

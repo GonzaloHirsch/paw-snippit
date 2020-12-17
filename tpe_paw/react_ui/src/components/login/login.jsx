@@ -50,8 +50,17 @@ class Login extends Component {
             )
           );
 
-          // Push to home
-          this.props.history.push("/");
+          const fromLocation = this.props.history.location.state.from;
+          if (
+            fromLocation !== undefined &&
+            fromLocation !== null &&
+            fromLocation !== ""
+          ) {
+            this.props.history.push(fromLocation);
+          } else {
+            // Push to home
+            this.props.history.push("/");
+          }
         })
         .catch((e) => {
           if (e.response) {
@@ -99,6 +108,19 @@ class Login extends Component {
     }
     this.setState({ errors: errors });
     return hasErrors;
+  }
+
+  getRedirectionObject(path) {
+    const fromLocation = this.props.history.location.state.from;
+    if (
+      fromLocation !== undefined &&
+      fromLocation !== null &&
+      fromLocation !== ""
+    ) {
+      return { pathname: path, state: { from: this.props.history.location } };
+    } else {
+      return { pathname: path };
+    }
   }
 
   render() {
@@ -151,7 +173,7 @@ class Login extends Component {
         >
           <span>
             {i18n.t("login.signup")}
-            <Link to="/signup">
+            <Link to={this.getRedirectionObject("/signup")}>
               <strong>{i18n.t("login.signupCall")}</strong>
             </Link>
           </span>

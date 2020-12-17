@@ -17,7 +17,8 @@ class AppComponent extends Component {
   // Function to determine the route component based on if the route is role protected or not
   getRouteComponent(route) {
     // We check if the roles for the route are empty, in that case it is NOT role protected
-    if (route.roles.length > 0) {
+    // It might be the case that a route roles are empty, but anonymous usage is required
+    if (route.roles.length > 0 || route.anon) {
       return (
         <PrivateRoute
           key={route.name}
@@ -25,6 +26,8 @@ class AppComponent extends Component {
           exact={route.exact}
           roles={route.roles}
           comp={route.component}
+          anon={route.anon}
+          strict={route.strict}
         ></PrivateRoute>
       );
     } else {

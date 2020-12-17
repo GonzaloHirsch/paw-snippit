@@ -87,8 +87,11 @@ class SnippetOverview extends Component {
   }
 
   loadSnippet() {
-    this.setState({ loading: true });
     const snippetId = parseInt(this.props.match.params.id, 10);
+    // Update the snippet id to avoid recursion of updates
+    const oldSnippet = {...this.state.snippet};
+    oldSnippet.id = snippetId; 
+    this.setState({ loading: true, snippet: oldSnippet });
     const state = store.getState();
 
     this.snippetClient

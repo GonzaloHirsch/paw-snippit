@@ -11,6 +11,14 @@ export const CONTEXT = {
   FOLLOWING: "following",
   UPVOTED: "upvoted",
   ERROR: "error",
+  LOGIN: "login",
+  SIGNUP: "signup",
+  RECOVER: "recover",
+  VERIFY: "verify",
+  RESET_PASSWORD: "reset-password",
+  GOODBYE: "goodbye",
+  SNIPPET_CREATE: "snippet-create",
+  ITEMS_CREATE: "items-create"
 };
 
 export const EXPLORE = {
@@ -41,3 +49,15 @@ export const MAX_INTEGER = 2147483647;
 export const ACTIVE_USER_SNIPPETS = "active";
 export const DELETED_USER_SNIPPETS = "deleted";
 export const FOLLOWING_LIST_LIMIT = 25;
+export const CONTEXT_WITHOUT_SEARCH = [
+  CONTEXT.ERROR,
+  CONTEXT.EXPLORE,
+  CONTEXT.LOGIN,
+  CONTEXT.SIGNUP,
+  CONTEXT.RECOVER,
+  CONTEXT.VERIFY,
+  CONTEXT.RESET_PASSWORD,
+  CONTEXT.GOODBYE,
+  CONTEXT.SNIPPET_CREATE,
+  CONTEXT.ITEMS_CREATE
+];

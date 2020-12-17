@@ -2,7 +2,7 @@ export function getUserProfilePicUrl(creator) {
   if (creator.hasPicture) {
     return creator.picture;
   }
-  return "/userIcon.jpg";
+  return process.env.PUBLIC_URL + "/userIcon.jpg";
 }
 
 export function getSnippetPositionInArray(snippets, id) {

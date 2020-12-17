@@ -308,23 +308,11 @@ class NavBar extends Component {
             <Icon path={mdiCodeTags} size={2}></Icon>
             <span className="ml-1">{i18n.t("app")}</span>
           </Link>
-          <button
-            className="navbar-toggler btn btn-sm text-white col-2 col-sm-1 no-focus"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
           <div
             className={
-              "collapse navbar-collapse col-2 " +
+              "col-2 " +
               (this.state.showSearch ? "col-lg-9" : "col-lg-3")
             }
-            id="navbarSupportedContent"
           >
             {this.state.showSearch && (
               <SearchBar

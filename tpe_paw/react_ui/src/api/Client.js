@@ -56,6 +56,7 @@ class Client {
           if (
             errorResponse.data !== null &&
             errorResponse.data !== undefined &&
+            typeof errorResponse.data == "object" &&
             "TokenError" in errorResponse.data &&
             refreshInfo !== null
           ) {

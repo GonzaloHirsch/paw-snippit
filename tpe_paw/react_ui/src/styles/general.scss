@@ -230,8 +230,7 @@ button:focus {
 }
 
 .form-control:focus {
-  border: 1px solid #ced4da !important;
-  box-shadow: 0 0 0 0rem rgba(255, 255, 255, 0) !important;
+  box-shadow: 0 0 0 0.01rem rgba(206, 212, 218, 1) !important;
 }
 
 .custom-alert {

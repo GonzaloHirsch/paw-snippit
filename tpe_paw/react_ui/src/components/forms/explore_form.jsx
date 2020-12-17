@@ -185,7 +185,8 @@ class ExploreForm extends Component {
     }
   }
 
-  handleSearch() {
+  handleSearch(e) {
+    e.preventDefault();
     if (this.validateAll()) {
       // Determine if we add the "search" to the route
       const isSearching = !!matchPath(
@@ -478,7 +479,7 @@ class ExploreForm extends Component {
     const { fields, errors, options } = this.state;
 
     return (
-      <form className="flex-column" onSubmit={() => this.handleSearch()}>
+      <form className="flex-column" onSubmit={(e) => this.handleSearch(e)}>
         <h6>{i18n.t(orderPrefix + "header")}</h6>
         <div className="d-flex flex-row">
           <DropdownMenu

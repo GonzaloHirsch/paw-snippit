@@ -6,6 +6,8 @@ import store from "../../store";
 import { withRouter, matchPath } from "react-router-dom";
 import { areEqualShallow } from "../../js/comparison";
 import SnippetActionsClient from "../../api/implementations/SnippetActionsClient";
+import { Alert } from "reactstrap";
+import i18n from "../../i18n";
 
 // Higher Order Component to reuse the repeated behaviour of the pages that contain Snippet Feed
 
@@ -56,6 +58,10 @@ function SnippetFeedHOC(
           currentSearch: search,
           userIsLogged: userIsLogged,
           loading: false,
+          alert: {
+            show: false,
+            message: "",
+          },
         };
       }
 
@@ -77,7 +83,17 @@ function SnippetFeedHOC(
               });
             }
           })
-          .catch((e) => {});
+          .catch((e) => {
+            if (e.response) {
+              // Error is not 400, 401, 403 or 500
+              const alert = {
+                show: true,
+                message: i18n.t("errors.unknownError"),
+              };
+              this.setState({ alert: alert });
+            }
+            this.setState({ loading: false });
+          });
       }
 
       loadSearchedSnippets(page, search) {
@@ -96,7 +112,25 @@ function SnippetFeedHOC(
               });
             }
           })
-          .catch((e) => {});
+          .catch((e) => {
+            if (e.response) {
+              // client received an error response (5xx, 4xx)
+              if (e.response.status === 400) {
+                // BAD REQUEST -> Show alert
+                const alert = { show: true, message: i18n.t("errors.e400") };
+                this.setState({ alert: alert });
+              } else {
+                // Error is not 400, 401, 403 or 500
+                const alert = {
+                  show: true,
+                  message: i18n.t("errors.unknownError"),
+                };
+                this.setState({ alert: alert });
+              }
+            }
+            // Stop loading in case of error
+            this.setState({ loading: false });
+          });
       }
 
       // Recover data from the URL
@@ -178,14 +212,32 @@ function SnippetFeedHOC(
           this.snippetActionsClient
             .unfavSnippet(id)
             .then((res) => {})
-            .catch((e) => {});
+            .catch((e) => {
+              if (e.response) {
+                // Error is not 400, 401, 403 or 500
+                const alert = {
+                  show: true,
+                  message: i18n.t("errors.unknownError"),
+                };
+                this.setState({ alert: alert });
+              }
+            });
         }
         // Was not fav, not it is
         else {
           this.snippetActionsClient
             .favSnippet(id)
             .then((res) => {})
-            .catch((e) => {});
+            .catch((e) => {
+              if (e.response) {
+                // Error is not 400, 401, 403 or 500
+                const alert = {
+                  show: true,
+                  message: i18n.t("errors.unknownError"),
+                };
+                this.setState({ alert: alert });
+              }
+            });
         }
 
         // Prevent parent Link to navigate
@@ -230,6 +282,12 @@ function SnippetFeedHOC(
         }
       }
 
+      // To dismiss the alert in case of error
+      onDismiss = () => {
+        const alert = { show: false, message: "" };
+        this.setState({ alert: alert });
+      };
+
       render() {
         return (
           <div>
@@ -239,6 +297,14 @@ function SnippetFeedHOC(
               {...this.state}
               {...this.props}
             ></WrappedComponent>
+            <Alert
+              color="danger"
+              className="shadow flex-center custom-alert"
+              isOpen={this.state.alert.show}
+              toggle={() => this.onDismiss()}
+            >
+              {this.state.alert.message}
+            </Alert>
           </div>
         );
       }

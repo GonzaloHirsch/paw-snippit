@@ -45,10 +45,10 @@ const i18n_en = {
     error_404: "Error 404",
     search: {
       searchHint: "Search...",
-      showEmpty: "Show empty",
-      hideEmpty: "Hide empty",
-      showOnlyFollowing: "Show only following",
-      hideOnlyFollowing: "Show all",
+      showEmpty: "Hiding Empty",
+      hideEmpty: "Showing Empty",
+      showOnlyFollowing: "Showing All",
+      hideOnlyFollowing: "Showing Followed",
       filter: {
         hint: "Search By",
         all: "All",
@@ -281,8 +281,8 @@ const i18n_en = {
     },
     errors: {
       imageTooBig: "Uploaded image is too big, maximum size is {{size}}",
-      changeImageServerError: "Error changing image, please try again later"
-    }
+      changeImageServerError: "Error changing image, please try again later",
+    },
   },
   verifyEmail: {
     docTitle: "Verify Email",
@@ -313,6 +313,7 @@ const i18n_en = {
     create: "Create a New Account",
   },
   errors: {
+    e400: "The entered search is invalid.",
     e404: {
       header: "Error 404",
       number: "404",

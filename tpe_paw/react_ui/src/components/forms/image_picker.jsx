@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { mdiCheckBold, mdiCloseThick } from "@mdi/js";
+import { mdiCheckBold, mdiCloseThick, mdiPencil } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Spinner } from "reactstrap";
 
@@ -59,10 +59,10 @@ class ImagePicker extends Component {
         <div className="flex-center profile-photo-padding">
           <div className="flex-center profile-photo-wrap">
             <span
-              className="material-icons profile-photo-edit-icon"
+              className="flex-center profile-photo-edit-icon"
               onClick={() => this._hiddenClick()}
             >
-              create
+              <Icon path={mdiPencil} size={5}></Icon>
             </span>
 
             <img

@@ -85,7 +85,7 @@ function SnippetFeedHOC(
           })
           .catch((e) => {
             if (e.response) {
-              // Error is not 400, 401, 403 or 500
+              // Error is not 401, 403, 404 or 500
               const alert = {
                 show: true,
                 message: i18n.t("errors.unknownError"),
@@ -120,7 +120,7 @@ function SnippetFeedHOC(
                 const alert = { show: true, message: i18n.t("errors.e400") };
                 this.setState({ alert: alert });
               } else {
-                // Error is not 400, 401, 403 or 500
+                // Error is not 401, 403, 404 or 500
                 const alert = {
                   show: true,
                   message: i18n.t("errors.unknownError"),
@@ -214,7 +214,7 @@ function SnippetFeedHOC(
             .then((res) => {})
             .catch((e) => {
               if (e.response) {
-                // Error is not 400, 401, 403 or 500
+                // Error is not 401, 403, 404 or 500
                 const alert = {
                   show: true,
                   message: i18n.t("errors.unknownError"),
@@ -230,7 +230,7 @@ function SnippetFeedHOC(
             .then((res) => {})
             .catch((e) => {
               if (e.response) {
-                // Error is not 400, 401, 403 or 500
+                // Error is not 401, 403, 404 or 500
                 const alert = {
                   show: true,
                   message: i18n.t("errors.unknownError"),

@@ -6,6 +6,8 @@ import { getItemPositionInArray } from "../../js/item_utils";
 import store from "../../store";
 import { withRouter, matchPath } from "react-router-dom";
 import { areEqualShallow } from "../../js/comparison";
+import { Alert } from "reactstrap";
+import i18n from "../../i18n";
 
 // Higher Order Component to reuse the repeated behaviour of the pages that contain Snippet Feed
 
@@ -61,6 +63,10 @@ function ItemFeedHOC(
           currentSearch: search,
           userIsLogged: userIsLogged,
           loading: false,
+          alert: {
+            show: false,
+            message: "",
+          },
         };
       }
 
@@ -82,7 +88,9 @@ function ItemFeedHOC(
               });
             }
           })
-          .catch((e) => {});
+          .catch((e) => {
+            this._handleError(e);
+          });
       }
 
       loadSearchedItems(page, search) {
@@ -101,7 +109,9 @@ function ItemFeedHOC(
               });
             }
           })
-          .catch((e) => {});
+          .catch((e) => {
+            this._handleError(e);
+          });
       }
 
       // Recover data from the URL
@@ -142,6 +152,18 @@ function ItemFeedHOC(
 
       // Events
 
+      _handleError(e) {
+        if (e.response) {
+          // Error is not 401, 403, 404 or 500
+          const alert = {
+            show: true,
+            message: i18n.t("errors.unknownError"),
+          };
+          this.setState({ alert: alert });
+        }
+        this.setState({ loading: false });
+      }
+
       handleChangeFollowing(e, id) {
         let previousFollowState = false;
         // Impact the local snippet state
@@ -165,14 +187,18 @@ function ItemFeedHOC(
           this.latActionsClient
             .unfollowTag(id)
             .then((res) => {})
-            .catch((e) => {});
+            .catch((e) => {
+              this._handleError(e);
+            });
         }
         // Was not fav, not it is
         else {
           this.latActionsClient
             .followTag(id)
             .then((res) => {})
-            .catch((e) => {});
+            .catch((e) => {
+              this._handleError(e);
+            });
         }
 
         // Prevent parent Link to navigate
@@ -235,6 +261,12 @@ function ItemFeedHOC(
         }
       }
 
+      // To dismiss the alert in case of error
+      onDismiss = () => {
+        const alert = { show: false, message: "" };
+        this.setState({ alert: alert });
+      };
+
       render() {
         return (
           <div>
@@ -243,6 +275,14 @@ function ItemFeedHOC(
               handleChangeFollowing={this.handleChangeFollowing}
               {...this.state}
             ></WrappedComponent>
+            <Alert
+              color="danger"
+              className="shadow flex-center custom-alert"
+              isOpen={this.state.alert.show}
+              toggle={() => this.onDismiss()}
+            >
+              {this.state.alert.message}
+            </Alert>
           </div>
         );
       }

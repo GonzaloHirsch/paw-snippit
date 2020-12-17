@@ -333,6 +333,8 @@ const i18n_en = {
     serverError: "Error in server, please try again later",
     unknownError: "Uknown error, please try again later",
     noConnection: "Connection to server lost, please try again later",
+    snippetCreate:
+      "An error occurred while creating your snippet. Please try again later.",
   },
   items: {
     empty: "No Snippets",
@@ -382,6 +384,7 @@ const i18n_en = {
     alert: {
       success: "Successfully added the entered {{items}}.",
       danger: "Something went wrong, some of the {{items}} were not added.",
+      addError: "An error occurred when adding {{name}} to the list.",
     },
   },
   following: {

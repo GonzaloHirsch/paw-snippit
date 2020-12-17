@@ -58,6 +58,17 @@ class ItemCreate extends Component {
     this.setState({ alert: alert });
   }
 
+  _showAlertOnAddError(name) {
+    const alert = {
+      show: true,
+      color: "danger",
+      message: i18n.t("itemCreate.alert.addError", {
+        name: name,
+      }),
+    };
+    this.setState({ alert: alert });
+  }
+
   onDismiss = () => {
     const alert = { show: false, message: "", color: "success" };
     this.setState({ alert: alert });
@@ -89,7 +100,9 @@ class ItemCreate extends Component {
       .then((res) => {
         this.onAddItemHelper(name, res.data.aBoolean, ITEM_TYPES.TAG);
       })
-      .catch((e) => {});
+      .catch((e) => {
+        this._showAlertOnAddError(name);
+      });
 
     // Clear the input
     fields.tag.item = "";
@@ -112,7 +125,9 @@ class ItemCreate extends Component {
       .then((res) => {
         this.onAddItemHelper(name, res.data.aBoolean, ITEM_TYPES.LANGUAGE);
       })
-      .catch((e) => {});
+      .catch((e) => {
+        this._showAlertOnAddError(name);
+      });
 
     // Clear the input
     fields.language.item = "";

@@ -2,7 +2,7 @@
   "name": "react_ui",
   "version": "0.1.0",
   "private": true,
-  "homepage": "",
+  "homepage": "http://pawserver.it.itba.edu.ar/paw-2020a-2/",
   "dependencies": {
     "@mdi/js": "^5.8.55",
     "@mdi/react": "^1.4.0",

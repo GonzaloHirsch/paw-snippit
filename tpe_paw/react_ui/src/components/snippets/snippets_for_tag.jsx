@@ -76,19 +76,26 @@ class SnippetsForTag extends Component {
         pathname: "/login",
         state: { from: this.props.history.location },
       });
+      return true;
     }
+    return false;
   }
 
   _enforceUserIsAdmin() {
     // If user is not logged, redirect to login
     if (!this.state.userIsAdmin) {
       store.dispatch(logOut());
-      this.props.history.push("/login");
+      this.props.history.push({
+        pathname: "/login",
+        state: { from: this.props.history.location },
+      });
+      return true;
     }
+    return false;
   }
 
   _onFollow(e) {
-    this._enforceUserLogged();
+    if (this._enforceUserLogged()) return;
 
     if (this.props.userIsLogged) {
       let previousFollowState = this.state.follows;
@@ -115,8 +122,8 @@ class SnippetsForTag extends Component {
   }
 
   _onDelete = (e) => {
-    this._enforceUserLogged();
-    this._enforceUserIsAdmin();
+    if (this._enforceUserLogged()) return;
+    if (this._enforceUserIsAdmin()) return;
 
     // Updating the local state
     let tag = { ...this.state.tag };

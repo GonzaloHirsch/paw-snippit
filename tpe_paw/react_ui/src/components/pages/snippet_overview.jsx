@@ -185,12 +185,14 @@ class SnippetOverview extends Component {
         pathname: "/login",
         state: { from: this.props.history.location },
       });
+      return true;
     }
+    return false;
   }
 
   onSnippetFav(e, id) {
     // If user is not logged, redirect to login
-    this.enforceUserLogged();
+    if (this.enforceUserLogged()) return;
 
     let previousFavState = false;
     // Copy snippets array
@@ -276,7 +278,7 @@ class SnippetOverview extends Component {
   }
 
   onSnippetLike(e, id) {
-    this.enforceUserLogged();
+    if (this.enforceUserLogged()) return;
 
     let previousLikeState = false;
     // Copy snippets array
@@ -305,7 +307,7 @@ class SnippetOverview extends Component {
   }
 
   onSnippetDislike(e, id) {
-    this.enforceUserLogged();
+    if (this.enforceUserLogged()) return;
 
     let previousLikeState = false;
     // Copy snippets array

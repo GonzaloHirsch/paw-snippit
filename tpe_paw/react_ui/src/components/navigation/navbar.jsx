@@ -267,12 +267,24 @@ class NavBar extends Component {
     } else {
       return (
         <React.Fragment>
-          <Link to="/login" className="mx-1">
+          <Link
+            to={{
+              pathname: "/login",
+              state: { from: this.props.history.location },
+            }}
+            className="mx-1"
+          >
             <button type="button" className="btn btn-light">
               {i18n.t("nav.login")}
             </button>
           </Link>
-          <Link to="/signup" className="mx-1">
+          <Link
+            to={{
+              pathname: "/signup",
+              state: { from: this.props.history.location },
+            }}
+            className="mx-1"
+          >
             <button type="button" className="btn btn-light">
               {i18n.t("nav.signup")}
             </button>
@@ -328,12 +340,7 @@ class NavBar extends Component {
                 handleSearchChangeAndSearch={this.handleSearchChangeAndSearch}
               />
             )}
-            <div
-              className="nav-item align-items-horizontal-right auth-buttons" // className={
-              //   "nav-item align-items-horizontal-right " +
-              //   (this.state.showSearch ? "col-4" : "col-12")
-              // }
-            >
+            <div className="nav-item align-items-horizontal-right auth-buttons">
               {this.getTopRightNavItems()}
             </div>
           </div>

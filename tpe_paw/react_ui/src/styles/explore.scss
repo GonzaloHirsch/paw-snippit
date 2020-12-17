@@ -1,0 +1,25 @@
+@import "variables";
+
+.explore-border {
+  border: solid $primary-color 2px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.explore-margin {
+  margin-left: 33px;
+}
+
+.explore-date-clear {
+  background-color: $primary-color !important;
+}
+
+.react-datepicker__close-icon::after {
+  background-color: $primary-color-light !important;
+}
+
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__quarter-text--keyboard-selected,
+.react-datepicker__year-text--keyboard-selected {
+  background-color: $primary-color !important;
+}

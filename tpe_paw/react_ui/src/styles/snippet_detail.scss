@@ -1,0 +1,89 @@
+.detail-container {
+  max-width: 1000px;
+}
+
+.danger-message {
+  border: red solid 2px;
+  color: red;
+  border-radius: 10px;
+}
+
+.reported-message {
+  border: $reported-color solid 2px;
+  color: $reported-color;
+  border-radius: 10px;
+  position: relative;
+}
+
+.reported-message .reported-close-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+.snippet-divider {
+  border: black solid 2px;
+}
+
+.boxed-content {
+  @extend .align-items-vertical;
+  border: 2px $primary-color solid;
+  border-radius: 8px;
+  min-width: 100px;
+  min-height: 100px;
+  display: inline-block;
+
+  &-link {
+    @extend .boxed-content;
+    text-decoration: none;
+  }
+
+  &-link:hover {
+    @extend .boxed-content;
+    text-decoration: none;
+  }
+}
+
+.snippet-code-block {
+  background: $code-background-color;
+  position: relative;
+}
+
+.snippet-code-block-pre {
+  max-height: 700px;
+  overflow-y: scroll !important;
+}
+
+.hidden-code {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0);
+}
+
+.snippet-code-copy-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  color: $primary-color;
+  transition: 0.3s;
+
+  &:hover {
+    @extend .snippet-code-copy-button;
+    border: $primary-color solid 1px;
+    border-radius: 5px;
+  }
+}
+
+.vote-count {
+  font-size: 40px;
+  width: 40px;
+}
+
+.uploaded-on-text {
+  font-size: 12px;
+}

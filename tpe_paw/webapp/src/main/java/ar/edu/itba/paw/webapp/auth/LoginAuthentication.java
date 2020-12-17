@@ -32,27 +32,14 @@ public class LoginAuthentication {
 
     private String getLoggedInUsername() {
         final SecurityContext securityContext = SecurityContextHolder.getContext();
-
-        if (securityContext != null) {
-            final Object userDetails = securityContext.getAuthentication().getPrincipal();
-            if (userDetails instanceof UserDetails) {
-                return ((UserDetails) userDetails).getUsername();
-            }
-        }
-        return null;
+        return this.getUsernameFromContext(securityContext);
     }
 
     private String getLoggedInUsernameWithSession(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
         final SecurityContext securityContext = (SecurityContext)session.getAttribute("SPRING_SECURITY_CONTEXT");
 
-        if (securityContext != null) {
-            final Object userDetails = securityContext.getAuthentication().getPrincipal();
-            if (userDetails instanceof UserDetails) {
-                return ((UserDetails) userDetails).getUsername();
-            }
-        }
-        return null;
+        return this.getUsernameFromContext(securityContext);
     }
 
     public User getLoggedInUser() {
@@ -80,4 +67,7 @@ public class LoginAuthentication {
         return user.get();
     }
 
+    private String getUsernameFromContext(SecurityContext ctx){
+        return ctx != null ? (String) ctx.getAuthentication().getPrincipal() : null;
+    }
 }

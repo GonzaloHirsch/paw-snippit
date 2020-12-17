@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.webapp.utility;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 public final class Constants {
     public static final int SNIPPET_PAGE_SIZE = 6;
     public static final int TAG_PAGE_SIZE = 20;
@@ -20,8 +23,28 @@ public final class Constants {
     public static final String LOGIN = "/login";
     public static final String SIGNUP = "/signup";
     public static final String GOODBYE = "/goodbye";
-    public static final String RESET_PASSWORD = "/reset-password";
-    public static final String RECOVER_PASSWORD = "/recover-password";
+    public static final String RESET_PASSWORD = "/reset_password";
+    public static final String RECOVER_PASSWORD = "/recover_password";
+
+    public static final String QUERY_PARAM_PAGE = "page";
+    public static final String QUERY_PARAM_NAME = "name";
+    public static final String QUERY_PARAM_SHOW_ONLY_FOLLOWING = "show_only_following";
+    public static final String QUERY_PARAM_SHOW_EMPTY = "show_empty";
+    public static final String PATH_PARAM_ID = "id";
+    public static final String USER_PARAM_ID = "userId";
+
+    public static final String LINK_FIRST = "first";
+    public static final String LINK_LAST = "last";
+    public static final String LINK_PREV = "prev";
+    public static final String LINK_NEXT = "next";
+
+    public static final String HEADER_ALL_ITEMS = "X-ALL-ITEMS";
+
+    public static final String API_PREFIX = "/api/v1/";
+
+    // Refresh authority to check if the token contains
+    public static final GrantedAuthority REFRESH_AUTHORITY = new SimpleGrantedAuthority(Authorities.REFRESH.getValue());
+
 
     /*
      * "The AssertionError isn’t strictly required, but it provides insurance in case the

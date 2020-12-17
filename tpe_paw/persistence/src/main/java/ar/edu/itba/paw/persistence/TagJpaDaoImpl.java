@@ -74,7 +74,6 @@ public class TagJpaDaoImpl implements TagDao {
         }
     }
 
-
     @Override
     public Collection<Tag> getAllTags(boolean showEmpty, boolean showOnlyFollowing, Long userId, int page, int pageSize) {
         Query nativeQuery;
@@ -107,7 +106,7 @@ public class TagJpaDaoImpl implements TagDao {
 
     @Override
     public Collection<Tag> getAllTags() {
-        return this.em.createQuery("from Tag", Tag.class).getResultList();
+        return this.em.createQuery("from Tag ORDER BY name", Tag.class).getResultList();
     }
 
     @Override

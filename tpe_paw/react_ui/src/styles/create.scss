@@ -1,0 +1,62 @@
+@import "variables";
+
+.create-button {
+  width: 85px;
+  margin-right: 20px;
+  color: black;
+  background-color: white !important;
+  transition: 0.3s;
+}
+
+.create-button:hover {
+  background-color: #dcdcdc !important;
+}
+
+.create-button-profile {
+  max-width: 200px;
+}
+
+.rbt-token {
+  background-color: #e3e1eb !important;
+  color: $primary-color-dark !important;
+}
+
+.rbt-input {
+  border-radius: $border-radius !important;
+}
+
+// ITEM CREATE
+.item-value-error {
+  position: absolute;
+  margin: 38px 0px 0px 2px;
+  font-size: 15px;
+}
+
+.item-list-container {
+  border: 1px solid #ced4da;
+  min-height: 300px;
+}
+
+.item-element-container {
+  border: solid #ced4da;
+  border-width: 0px 0px 1px 0px;
+  border-radius: $border-radius $border-radius 0px 0px;
+}
+
+.item-element-exists {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.item-element-exists-msg {
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.item-tabs-unselected {
+  border-color: transparent transparent #dee2e6 !important;
+}
+
+.item-tabs-unselected:hover {
+  border-color: #dee2e6 #dee2e6 transparent !important;
+  font-weight: 300 !important;
+}

@@ -36,7 +36,7 @@ public class LanguageJpaDaoImpl implements LanguageDao {
 
     @Override
     public Collection<Language> getAllLanguages() {
-        return this.em.createQuery("FROM Language WHERE deleted = FALSE", Language.class).getResultList();
+        return this.em.createQuery("FROM Language WHERE deleted = FALSE ORDER BY name ASC", Language.class).getResultList();
     }
 
     @Override

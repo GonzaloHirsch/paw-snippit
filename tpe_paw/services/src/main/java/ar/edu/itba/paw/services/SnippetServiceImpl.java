@@ -49,7 +49,7 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Transactional
     @Override
-    public boolean deleteOrRestoreSnippet(Snippet snippet, long userId, boolean delete) {
+    public boolean deleteOrRestoreSnippet(Snippet snippet, boolean delete) {
         if (delete) {
             return snippetDao.deleteSnippetById(snippet.getId());
         }
@@ -164,7 +164,7 @@ public class SnippetServiceImpl implements SnippetService {
             this.userService.changeReputation(owner.getId(), owner.getReputation() + FLAGGED_SNIPPET_REP_VALUE);
         }
         // Getting the url of the server
-        this.emailService.sendFlaggedEmail(baseUrl + "/snippet/" + snippet.getId(), snippet.getTitle(), owner.getEmail(), owner.getUsername(), isFlagged, owner.getLocale());
+        this.emailService.sendFlaggedEmail(baseUrl + "/snippets/" + snippet.getId(), snippet.getTitle(), owner.getEmail(), owner.getUsername(), isFlagged, owner.getLocale());
     }
 
     @Override

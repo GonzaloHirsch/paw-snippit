@@ -1,0 +1,167 @@
+@import "variables";
+
+.verify-message {
+  border: $primary-color solid 2px;
+  color: $primary-color;
+  border-radius: 10px;
+  max-width: 960px;
+}
+
+.profile-tabs-width {
+  width: 50%;
+}
+
+.profile-tabs {
+  border-radius: 8px 8px 0px 0px !important;
+  color: black !important;
+}
+
+.profile-tabs-unselected {
+  border-color: transparent transparent #dee2e6 !important;
+}
+
+.profile-tabs-unselected:hover {
+  border-color: #dee2e6 #dee2e6 transparent !important;
+  font-weight: 400 !important;
+}
+
+.profile-username {
+  font-size: 40px;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+.profile-stat {
+  font-size: 22px;
+}
+
+.profile-stat-num {
+  font-size: 35px;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: -11px;
+}
+
+.profile-small-text {
+  font-size: 17px;
+}
+
+.profile-user-data {
+  background-color: $primary-color;
+  padding-left: 45px !important;
+  padding-right: 31px !important;
+}
+
+.profile-snippet-container {
+  border: 1px solid;
+  border-color: #fff #dee2e6 #dee2e6;
+}
+
+.profile-button {
+  margin-left: -10px;
+  margin-right: -10px;
+  color: #fff !important;
+}
+
+.profile-edit-button {
+  background-color: $primary-color-dark !important;
+  border-color: $primary-color-dark !important;
+}
+
+.profile-edit-button:hover {
+  background-color: $primary-color-darkest !important;
+  border-color: $primary-color-darkest !important;
+}
+
+.profile-edit-icon {
+  margin: 0px 5px 5px 0px;
+}
+
+.profile-edit-description {
+  min-height: 150px;
+  border-color: $primary-color-darkest;
+}
+
+.profile-edit-description-error {
+  margin: -18px 0px 15px 0px;
+  text-align: center;
+}
+
+// Image
+
+.profile-photo-padding {
+  padding: 25px;
+}
+
+.profile-photo-edit-icon {
+  position: absolute;
+  font-size: 100px !important;
+  color: $code-background-color;
+  opacity: 0;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.profile-photo-wrap {
+  position: relative;
+  border-radius: 50%;
+}
+
+.profile-photo-wrap:hover .profile-photo-edit-icon {
+  opacity: 1;
+}
+
+.profile-photo {
+  border: white solid 2px;
+  height: 200px;
+  width: 200px;
+  object-fit: cover;
+  transition: 0.3s;
+}
+
+.image-action-container {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid white;
+  transition: 0.3s;
+}
+
+.image-action-container:hover {
+  width: 41px;
+  height: 41px;
+}
+
+.image-action-icon {
+  position: relative;
+  margin: 7px 0px 0px 7px !important;
+  color: white;
+}
+
+.image-discard-button {
+  background-color: red;
+  position: absolute;
+  margin: -70px 0px 0px -80px;
+}
+
+.image-discard-button:hover {
+  background-color: darkred;
+}
+
+.image-confirm-button {
+  background-color: green;
+  position: absolute;
+  margin: -70px 0px 0px 40px;
+}
+.image-confirm-button:hover {
+  background-color: darkgreen;
+}
+
+// Extra
+
+.hidden-button {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+  opacity: 0;
+}

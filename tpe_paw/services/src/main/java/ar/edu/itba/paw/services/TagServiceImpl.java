@@ -66,11 +66,13 @@ public class TagServiceImpl implements TagService {
         return this.tagDao.findById(tagId);
     }
 
+    @Transactional
     @Override
     public void followTag(long userId, long tagId) {
         this.followingDao.followTag(userId, tagId);
     }
 
+    @Transactional
     @Override
     public void unfollowTag(long userId, long tagId) {
         this.followingDao.unfollowTag(userId, tagId);
@@ -80,6 +82,12 @@ public class TagServiceImpl implements TagService {
     @Override
     public void addTags(List<String> tags) {
         this.tagDao.addTags(tags);
+    }
+
+    @Transactional
+    @Override
+    public long addTag(String name) {
+        return this.tagDao.addTag(name).getId();
     }
 
     @Override

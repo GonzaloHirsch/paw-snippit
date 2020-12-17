@@ -1,0 +1,57 @@
+@import "../node_modules/bootstrap/scss/_functions.scss";
+@import "../node_modules/bootstrap/scss/_variables.scss";
+@import "../node_modules/bootstrap/scss/mixins/_breakpoints.scss";
+@import "styles/general.scss";
+@import "styles/navigation.scss";
+@import "styles/sign_in.scss";
+@import "styles/checkbox.scss";
+@import "styles/snippet_columns.scss";
+@import "styles/snippet_card.scss";
+@import "styles/snippet_detail.scss";
+@import "styles/language.scss";
+@import "styles/explore.scss";
+@import "styles/errors.scss";
+@import "styles/icons.scss";
+@import "styles/profile.scss";
+@import "styles/item_card.scss";
+@import "styles/create.scss";
+@import "styles/following.scss";
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

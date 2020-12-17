@@ -1,0 +1,105 @@
+@import "variables";
+
+.icon-danger {
+  color: red !important;
+}
+
+.icon-primary {
+  color: $primary-color !important;
+}
+
+.icon-size-2 {
+  width: 2rem !important;
+  height: 2rem !important;
+}
+
+.icon-size-1 {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+.icon-fav {
+  cursor: pointer;
+  transition: 0.3s;
+  color: gray !important;
+  &:hover {
+    @extend .icon-fav;
+    color: red !important;
+  }
+  &-selected {
+    color: red !important;
+    // Add transition here because for some reason it doesn't take it into account when only in parent
+    transition: 0.3s;
+    cursor: pointer;
+  }
+  &-selected:hover {
+    color: gray !important;
+  }
+}
+
+.icon-reported {
+  color: $reported-color !important;
+}
+
+.icon-reported-clickable {
+  color: gray !important;
+  transition: 0.3s;
+  cursor: pointer;
+  &:hover {
+    @extend .icon-reported-clickable;
+    color: $reported-color !important;
+  }
+  &-selected {
+    @extend .icon-reported-clickable;
+    color: $reported-color !important;
+  }
+}
+
+.icon-delete {
+  color: gray !important;
+  transition: 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    @extend .icon-delete;
+    color: black !important;
+  }
+}
+
+.icon-like {
+  cursor: pointer;
+  transition: 0.3s;
+  color: gray !important;
+  &:hover {
+    @extend .icon-fav;
+    color: lawngreen !important;
+  }
+  &-selected {
+    color: lawngreen !important;
+    // Add transition here because for some reason it doesn't take it into account when only in parent
+    transition: 0.3s;
+    cursor: pointer;
+  }
+  &-selected:hover {
+    color: gray !important;
+  }
+}
+
+.icon-dislike {
+  cursor: pointer;
+  transition: 0.3s;
+  color: gray !important;
+  &:hover {
+    @extend .icon-fav;
+    color: red !important;
+  }
+  &-selected {
+    color: red !important;
+    // Add transition here because for some reason it doesn't take it into account when only in parent
+    transition: 0.3s;
+    cursor: pointer;
+  }
+  &-selected:hover {
+    color: gray !important;
+  }
+}

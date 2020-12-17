@@ -62,6 +62,13 @@ class SnippetFollowing extends Component {
 
   _onShowMore() {
     // REDIRECT TO TAG FEED WITH ONLY FOLLOWING
+    const params = new URLSearchParams({
+      page: 1,
+      showOnlyFollowing: true,
+      showEmpty: true,
+      query: "",
+    });
+    this.props.history.push("tags/search?" + params.toString());
   }
 
   _renderShowMoreButton() {

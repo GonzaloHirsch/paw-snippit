@@ -12,6 +12,7 @@ import {
   hasErrors,
   SNIPPET_CREATE_VALIDATIONS,
 } from "../../js/validations";
+import { extractResourceIdFromHeaders } from "../../js/api_utils";
 
 class SnippetCreateForm extends Component {
   snippetClient;
@@ -111,8 +112,10 @@ class SnippetCreateForm extends Component {
     snippet.tags = snippet.tags.map((tag) => tag.id);
     this.snippetClient
       .postCreateSnippet(snippet)
-      .then(() => {
-        this.props.history.push("/"); // On success, redirect to the Home screen
+      .then((res) => {
+        this.props.history.push(
+          "/snippets/" + extractResourceIdFromHeaders(res.headers)
+        ); // On success, redirect to the snippet
       })
       .catch((e) => {}); // TODO
   }

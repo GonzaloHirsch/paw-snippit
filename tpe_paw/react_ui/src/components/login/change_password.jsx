@@ -12,6 +12,8 @@ import {
   hasErrors,
 } from "../../js/validations";
 import { Helmet } from "react-helmet";
+import { withRouter } from "react-router-dom";
+
 
 class RecoverSend extends Component {
   authClient;
@@ -299,4 +301,4 @@ class RecoverSend extends Component {
   }
 }
 
-export default RecoverSend;
+export default withRouter(RecoverSend);

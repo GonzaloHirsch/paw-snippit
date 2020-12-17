@@ -25,3 +25,9 @@ export function extractItemCountHeader(headers) {
   const value = headers["x-all-items"];
   return parseInt(value, 10);
 }
+
+export function extractResourceIdFromHeaders(headers){
+  const value = headers["location"];
+  const parts = value.split("/");
+  return parseInt(parts[parts.length - 1], 10);
+}

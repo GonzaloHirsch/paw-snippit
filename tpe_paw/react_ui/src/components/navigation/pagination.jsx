@@ -42,9 +42,9 @@ class Pagination extends Component {
               </span>
             </li>
           )}
-          <li className="page-item">
+          <li className="page-item page-item-number">
             <span
-              className="page-link"
+              className="page-link page-link-selected"
               style={{
                 height: "100%",
                 display: "flex",

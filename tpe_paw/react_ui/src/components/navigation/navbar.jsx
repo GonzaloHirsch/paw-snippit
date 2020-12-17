@@ -19,7 +19,7 @@ import {
   mdiMagnify,
   mdiPlusCircleOutline,
 } from "@mdi/js";
-import { CONTEXT } from "../../js/constants";
+import { CONTEXT, CONTEXT_WITHOUT_SEARCH } from "../../js/constants";
 import {
   getNavSearchFromUrl,
   getTagsSearchFromUrl,
@@ -83,7 +83,7 @@ class NavBar extends Component {
     if (isCtx) {
       // Determine if show search
       let showSearch = true;
-      if (ctx === CONTEXT.ERROR || ctx === CONTEXT.EXPLORE) {
+      if (CONTEXT_WITHOUT_SEARCH.includes(ctx)) {
         showSearch = false;
       }
       // Get the initial search value
@@ -121,6 +121,14 @@ class NavBar extends Component {
     if (this.testForContext("**/flagged", CONTEXT.FLAGGED)) return;
     if (this.testForContext("**/404", CONTEXT.ERROR)) return;
     if (this.testForContext("**/500", CONTEXT.ERROR)) return;
+    if (this.testForContext("**/login", CONTEXT.LOGIN)) return;
+    if (this.testForContext("**/signup", CONTEXT.SIGNUP)) return;
+    if (this.testForContext("**/recover", CONTEXT.RECOVER)) return;
+    if (this.testForContext("**/verify", CONTEXT.VERIFY)) return;
+    if (this.testForContext("**/reset-password", CONTEXT.RESET_PASSWORD)) return;
+    if (this.testForContext("**/goodbye", CONTEXT.GOODBYE)) return;
+    if (this.testForContext("**/snippets/create", CONTEXT.SNIPPET_CREATE)) return;
+    if (this.testForContext("**/items/create", CONTEXT.ITEMS_CREATE)) return;
     if (this.testForContext("**/", CONTEXT.HOME)) return;
   }
 

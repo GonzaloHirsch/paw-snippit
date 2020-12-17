@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import store from "../../store";
 import { loginSuccess } from "../../redux/actions/actionCreators";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import AuthClient from "../../api/implementations/AuthClient";
 import i18n from "../../i18n";
 import { mdiEmail, mdiAccount, mdiLock } from "@mdi/js";
@@ -201,4 +201,4 @@ class SignUp extends Component {
   }
 }
 
-export default SignUp;
+export default withRouter(SignUp);

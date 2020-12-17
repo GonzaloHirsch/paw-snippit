@@ -50,15 +50,19 @@ class Login extends Component {
             )
           );
 
-          const fromLocation = this.props.history.location.state.from;
-          if (
-            fromLocation !== undefined &&
-            fromLocation !== null &&
-            fromLocation !== ""
-          ) {
-            this.props.history.push(fromLocation);
+          if (this.props.history.location.state !== undefined) {
+            const fromLocation = this.props.history.location.state.from;
+            if (
+              fromLocation !== undefined &&
+              fromLocation !== null &&
+              fromLocation !== ""
+            ) {
+              this.props.history.push(fromLocation);
+            } else {
+              // Push to home
+              this.props.history.push("/");
+            }
           } else {
-            // Push to home
             this.props.history.push("/");
           }
         })
@@ -111,13 +115,17 @@ class Login extends Component {
   }
 
   getRedirectionObject(path) {
-    const fromLocation = this.props.history.location.state.from;
-    if (
-      fromLocation !== undefined &&
-      fromLocation !== null &&
-      fromLocation !== ""
-    ) {
-      return { pathname: path, state: { from: this.props.history.location } };
+    if (this.props.history.location.state !== undefined) {
+      const fromLocation = this.props.history.location.state.from;
+      if (
+        fromLocation !== undefined &&
+        fromLocation !== null &&
+        fromLocation !== ""
+      ) {
+        return { pathname: path, state: { from: this.props.history.location } };
+      } else {
+        return { pathname: path };
+      }
     } else {
       return { pathname: path };
     }

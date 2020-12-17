@@ -263,7 +263,7 @@ export default {
       title: "Verify your account",
       message:
         "Your email has not been verified, meaning you will not receive any emails from us. To verify your email click ",
-      action: "here",
+      action: "here.",
     },
     joinedOn: "Joined on {{date}}",
     edit: {

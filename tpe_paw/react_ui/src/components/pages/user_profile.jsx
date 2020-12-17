@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ProfileDetail from "../profile/profile_detail";
+import ProfileVerifyMessage from "../profile/profile_verify_message";
 import SnippetFeedHOC from "./snippet_feed_hoc";
 import SnippetFeed from "../snippets/snippet_feed";
 import { getNavSearchFromUrl } from "../../js/search_from_url";
@@ -94,7 +95,7 @@ class UserProfile extends Component {
     this.protectedClient
       .putUserImage(this.state.profileOwnerId, image)
       .then((res) => {
-        this.loadUserData();
+        this.loadUserData(this.state.profileOwnerId);
       })
       .catch((e) => {});
   };
@@ -102,6 +103,15 @@ class UserProfile extends Component {
   isOwner = () => {
     return this.state.profileOwnerId === this.state.loggedUserId;
   };
+
+  _renderVerifyMessage() {
+    return this.state.loggedUserId === this.state.profileOwnerId &&
+      !this.state.profileOwner.verified ? (
+      <div className="flex-center mt-2">
+        <ProfileVerifyMessage id={this.state.profileOwnerId} />
+      </div>
+    ) : null;
+  }
 
   // Render methods
   _renderTabs() {
@@ -207,6 +217,7 @@ class UserProfile extends Component {
           />
         </div>
         <div className="col-9 flex-column">
+          {this._renderVerifyMessage()}
           {this._renderTabs()}
           <div className="py-3 background-color profile-snippet-container rounded-border">
             {this._renderFeedContext()}

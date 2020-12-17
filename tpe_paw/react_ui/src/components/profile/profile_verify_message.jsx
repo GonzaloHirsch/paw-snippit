@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import i18n from "../../i18n";
 import { mdiMessageAlert } from "@mdi/js";
 import Icon from "@mdi/react";
@@ -42,7 +42,7 @@ class ProfileVerifyMessage extends Component {
   render() {
     const { id } = this.props;
     return (
-      <div className="row verify-message p-3 mb-3 align-items-vertical">
+      <div className="row no-margin verify-message p-3 mb-3 align-items-vertical">
         <Icon className="mr-1 icon-primary" path={mdiMessageAlert} size={3} />
         <div className="col">
           <h3 className="fw-700">{i18n.t("profile.verify.title")}</h3>

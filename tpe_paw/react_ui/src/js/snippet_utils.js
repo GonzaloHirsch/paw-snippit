@@ -1,5 +1,4 @@
 export function getUserProfilePicUrl(creator) {
-  console.log(process.env.PUBLIC_URL, "URL")
   if (creator.hasPicture) {
     return creator.picture;
   }

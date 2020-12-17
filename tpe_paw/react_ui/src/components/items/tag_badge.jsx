@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const TagBadge = (props) => {
   return (
-    <div className="pb-1">
+    <div className="pb-2">
       <Badge
         color="secondary"
         pill

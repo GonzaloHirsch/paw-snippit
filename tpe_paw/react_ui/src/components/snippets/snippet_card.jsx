@@ -44,7 +44,7 @@ const SnippetCard = (props) => {
             )}
             <div
               className="language-snippet-tag p-2 flex-center rounded-border mr-1"
-              style={{ fontSize: "20px" }}
+              style={{ fontSize: "17px" }}
             >
               {snippet.language.name.toUpperCase()}
             </div>

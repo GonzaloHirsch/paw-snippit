@@ -13,6 +13,7 @@ const SnippetFeed = (props) => {
     currentPage,
     links,
     onPageTransition,
+    onPageTransitionWithPage,
     onSnippetFav,
     userIsLogged,
     loading,
@@ -49,6 +50,7 @@ const SnippetFeed = (props) => {
                 currentPage={currentPage}
                 links={links}
                 onPageTransition={onPageTransition}
+                onPageTransitionWithPage={onPageTransitionWithPage}
                 className="mx-auto"
               />
             </div>

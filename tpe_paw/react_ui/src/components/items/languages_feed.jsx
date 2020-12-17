@@ -26,6 +26,7 @@ const LanguagesFeed = (props) => {
         type={ITEM_TYPES.LANGUAGE}
         links={props.links}
         onPageTransition={props.onPageTransition}
+        onPageTransitionWithPage={props.onPageTransitionWithPage}
         handleChangeFollowing={props.handleChangeFollowing}
         userIsLogged={props.userIsLogged}
         showFollowing={false}

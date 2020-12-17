@@ -249,7 +249,7 @@ class NavBar extends Component {
             to={
               isAdmin(this.state.roles) ? "/items/create" : "/snippets/create"
             }
-            className="create-button shadow btn rounded-border mr-3 "
+            className="create-button shadow btn rounded-border mr-2 ml-2 "
           >
             {i18n.t("create")}
           </Link>
@@ -304,29 +304,31 @@ class NavBar extends Component {
           currentContext={this.state.currentContext}
           onNavigationChange={this.handleNavigationChange}
         />
-        <nav className="navbar navbar-expand-lg navbar-dark fixed-top row row-cols-3">
-          <button
-            className="btn btn-sm text-white col-2 col-sm-1 no-focus"
-            type="button"
-            aria-label="Toggle side navigation"
-            onClick={() => this.navInteract(this.state.navIsOpen)}
-          >
-            {this.getNavIcon(this.state.navIsOpen)}
-          </button>
-          <Link
-            to="/"
-            className={
-              "app-link text-white align-items-horizontal-center " +
-              (this.state.showSearch ? "col-7 col-lg-2" : "col-8")
-            }
-            onClick={() => this.handleNavigationChange(CONTEXT.HOME)}
-          >
-            <Icon path={mdiCodeTags} size={2}></Icon>
-            <span className="ml-1">{i18n.t("app")}</span>
-          </Link>
+        <nav className="navbar navbar-dark fixed-top d-flex justify-space-between">
+          <div className="d-flex flex-row">
+            <button
+              className="btn btn-sm text-white no-focus"
+              type="button"
+              aria-label="Toggle side navigation"
+              onClick={() => this.navInteract(this.state.navIsOpen)}
+            >
+              {this.getNavIcon(this.state.navIsOpen)}
+            </button>
+            <Link
+              to="/"
+              className={"px-2 app-link text-white flex-center "}
+              onClick={() => this.handleNavigationChange(CONTEXT.HOME)}
+            >
+              <Icon path={mdiCodeTags} size={2}></Icon>
+              <span className="ml-1">{i18n.t("app")}</span>
+            </Link>
+          </div>
           <div
             className={
-              "col-2 " + (this.state.showSearch ? "col-lg-9" : "col-lg-3")
+              "d-flex align-items-center " +
+              (this.state.showSearch
+                ? "navbar-spacing-responsive justify-space-between"
+                : "navbar-spacing justify-end")
             }
           >
             {this.state.showSearch && (
@@ -338,12 +340,7 @@ class NavBar extends Component {
                 handleSearchChangeAndSearch={this.handleSearchChangeAndSearch}
               />
             )}
-            <div
-              className={
-                "nav-item align-items-horizontal-right " +
-                (this.state.showSearch ? "col-4" : "col-12")
-              }
-            >
+            <div className="nav-item align-items-horizontal-right auth-buttons">
               {this.getTopRightNavItems()}
             </div>
           </div>

@@ -196,6 +196,7 @@ const i18n_en = {
         max: "Values must be smaller than {{max}}",
         title: "Title must be less than {{num}} character",
         username: "Username must be less than {{num}} character",
+        date: "From date must be an earlier date than To date",
       },
     },
   },

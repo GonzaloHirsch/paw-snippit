@@ -69,7 +69,7 @@ class UserProfile extends Component {
     this.loadUserData(this.state.profileOwnerId);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.match !== null && nextProps.match !== undefined) {
       const userId = parseInt(nextProps.match.params.id, 10);
       if (userId !== this.state.profileOwnerId) {
@@ -100,7 +100,7 @@ class UserProfile extends Component {
     this.protectedClient
       .putUserImage(this.state.profileOwnerId, image)
       .then((res) => {
-        this.setState({ imageLoading: false, errors: {image: null} });
+        this.setState({ imageLoading: false, errors: { image: null } });
         this.loadUserData(this.state.profileOwnerId);
       })
       .catch((e) => {
@@ -125,7 +125,7 @@ class UserProfile extends Component {
         }
         this.setState({
           errors: errors,
-          imageLoading: false
+          imageLoading: false,
         });
       });
   };

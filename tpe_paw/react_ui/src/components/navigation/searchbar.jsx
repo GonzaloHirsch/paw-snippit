@@ -38,7 +38,7 @@ class SearchBar extends Component {
   }
 
   // Updating with the url info
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const currentSearch = { ...this.state.search };
     const { search } = nextProps;
 
@@ -162,7 +162,7 @@ class SearchBar extends Component {
       return (
         <React.Fragment>
           <select
-            className="custom-select form-control"
+            className="navbar-dropdowns custom-select form-control"
             id="inputGroupSelect02"
             onChange={(e) => this.handleSearchChange(e, "type", false)}
             value={this.state.search.type}
@@ -182,7 +182,7 @@ class SearchBar extends Component {
             </option>
           </select>
           <select
-            className="custom-select form-control"
+            className="navbar-dropdowns custom-select form-control"
             id="inputGroupSelect03"
             onChange={(e) => this.handleSearchChange(e, "sort", false)}
             value={this.state.search.sort}
@@ -203,29 +203,27 @@ class SearchBar extends Component {
     const { ctx } = this.props;
     return (
       <form
-        className="form-inline my-auto my-lg-0 col-8"
+        className="input-group mr-sm-2 search-box"
         onSubmit={(e) => this.handleSearch(e, this.state.search)}
       >
-        <div className="input-group mr-sm-2 search-box">
-          <input
-            type="text"
-            className="form-control"
-            placeholder={i18n.t("nav.search.searchHint")}
-            aria-label={i18n.t("nav.search.searchHint")}
-            aria-describedby="button-addon2"
-            onChange={(e) => this.handleSearchChange(e, "query", false)}
-            value={this.state.search.query}
-          />
-          {this.getSearchItemsByContext(ctx)}
-          <div className="input-group-append">
-            <button
-              className="btn btn-outline-secondary"
-              type="submit"
-              id="button-addon2"
-            >
-              <Icon path={mdiMagnify} size={1} />
-            </button>
-          </div>
+        <input
+          type="text"
+          className="search-box-style form-control"
+          placeholder={i18n.t("nav.search.searchHint")}
+          aria-label={i18n.t("nav.search.searchHint")}
+          aria-describedby="button-addon2"
+          onChange={(e) => this.handleSearchChange(e, "query", false)}
+          value={this.state.search.query}
+        />
+        {this.getSearchItemsByContext(ctx)}
+        <div className="input-group-append">
+          <button
+            className="search-button btn btn-outline-secondary"
+            type="submit"
+            id="button-addon2"
+          >
+            <Icon path={mdiMagnify} size={1} />
+          </button>
         </div>
       </form>
     );

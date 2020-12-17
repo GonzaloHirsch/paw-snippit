@@ -16,4 +16,5 @@ export function getDateFromAPIString(stringDate) {
     const options = { year: "numeric", month: "short", day: "numeric" };
     return localDate.toLocaleDateString(navigator.language, options);
   }
+  return null;
 }

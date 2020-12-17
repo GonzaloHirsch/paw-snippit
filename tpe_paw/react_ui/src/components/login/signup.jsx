@@ -92,7 +92,7 @@ class SignUp extends Component {
             responseErrors = i18n.t("errors.unknownError");
           }
           this.setState({
-            responseErrors: i18n.t("errors.serverError"),
+            responseErrors: responseErrors,
             loading: false,
           });
         });
@@ -140,6 +140,7 @@ class SignUp extends Component {
         <CustomForm
           title={i18n.t("signup.title")}
           action={i18n.t("signup.form.action")}
+          generalError={this.state.responseErrors}
           onSubmit={(e) => this.handleSubmit(e)}
           includeAppName={true}
           loading={this.state.loading}

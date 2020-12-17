@@ -1,4 +1,4 @@
-export default {
+const i18n_es = {
   test: "Mi test en ESPAÑOL",
   nav: {
     home: "Página Principal",
@@ -8,3 +8,5 @@ export default {
     snippetsDetail: "Detalle de Snippets",
   },
 };
+
+export default i18n_es;

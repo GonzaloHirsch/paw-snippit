@@ -67,9 +67,6 @@ class ItemCreate extends Component {
   onAddItemHelper(name, exists, context) {
     const items = [...this.state.itemList[context]];
     const itemList = { ...this.state.itemList };
-    // Find index of our item
-    const i = getItemPositionInArrayWithName(items, name);
-
     const item = { name: name, exists: exists };
     items.push(item);
     itemList[context] = items;
@@ -160,7 +157,7 @@ class ItemCreate extends Component {
     const filteredList = this.state.itemList.tag.filter((item) => !item.exists);
     const length = filteredList.length;
     const loading = { ...this.state.loading };
-    const error = false;
+    let error = false;
 
     if (length > 0) {
       loading.tag = true;
@@ -169,7 +166,7 @@ class ItemCreate extends Component {
       this._onSubmitStateUpdate(ITEM_TYPES.TAG, error, false);
     }
 
-    filteredList.map((item, index) => {
+    filteredList.forEach((item, index) => {
       if (!item.exists) {
         this.itemsClient
           .postAddTag(item.name)
@@ -198,7 +195,7 @@ class ItemCreate extends Component {
     );
     const length = filteredList.length;
     const loading = { ...this.state.loading };
-    const error = false;
+    let error = false;
 
     if (length > 0) {
       loading.language = true;
@@ -207,7 +204,7 @@ class ItemCreate extends Component {
       this._onSubmitStateUpdate(ITEM_TYPES.LANGUAGE, error, false);
     }
 
-    filteredList.map((item, index) => {
+    filteredList.forEach((item, index) => {
       if (!item.exists) {
         this.itemsClient
           .postAddLanguage(item.name)

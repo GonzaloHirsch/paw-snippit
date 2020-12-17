@@ -3,13 +3,11 @@ import {
   HashRouter as Router,
   Switch,
   Route,
-  withRouter,
-  Redirect
+  Redirect,
 } from "react-router-dom";
 import routes from "../routes";
 import { PrivateRoute } from "./navigation/private_route";
 import NavBar from "./navigation/navbar";
-
 
 class AppComponent extends Component {
   state = {};
@@ -47,7 +45,7 @@ class AppComponent extends Component {
       <Suspense
         fallback={
           <div className="pt-1 align-items-horizontal-center align-items-vertical mt-5">
-           Snippit is Loading...
+            Snippit is Loading...
           </div>
         }
       >
@@ -55,7 +53,7 @@ class AppComponent extends Component {
           <NavBar className="nav-spacing" />
           <Switch>
             {routes.map((route) => this.getRouteComponent(route))}
-            <Redirect to="/404"/>
+            <Redirect to="/404" />
           </Switch>
         </Router>
       </Suspense>

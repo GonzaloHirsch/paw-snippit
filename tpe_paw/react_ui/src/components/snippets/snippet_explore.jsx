@@ -1,9 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import SnippetFeed from "./snippet_feed";
 import i18n from "../../i18n";
 import ExploreForm from "../forms/explore_form";
 import { Helmet } from "react-helmet";
-
 
 // Stateless Functional Component
 
@@ -22,13 +21,13 @@ const SnippetExplore = (props) => {
         </h5>
       </div>
       <div className="row">
-        <div className="col-3 explore-margin p-0">
+        <div className="col-3 py-0 pb-4 pr-0 no-margin explore-padding">
           <div className="p-3 rounded-border explore-border">
             <ExploreForm urlSearch={props.currentSearch} />
           </div>
         </div>
 
-        <div className="col-8">
+        <div className="col-9">
           <SnippetFeed
             snippets={props.snippets}
             totalSnippets={props.totalSnippets}

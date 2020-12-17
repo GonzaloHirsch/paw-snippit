@@ -15,7 +15,6 @@ import {
 } from "../../js/validations";
 import { Helmet } from "react-helmet";
 import { Alert } from "reactstrap";
-import ProfileVerifiedMessage from "./profile_verify_message";
 
 class Verify extends Component {
   authClient;

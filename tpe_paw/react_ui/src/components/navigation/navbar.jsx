@@ -12,13 +12,7 @@ import { LOGIN_SUCCESS } from "../../redux/actions/actionTypes";
 
 // Libs
 import i18n from "../../i18n";
-import {
-  mdiClose,
-  mdiMenu,
-  mdiCodeTags,
-  mdiMagnify,
-  mdiPlusCircleOutline,
-} from "@mdi/js";
+import { mdiClose, mdiMenu, mdiCodeTags } from "@mdi/js";
 import { CONTEXT, CONTEXT_WITHOUT_SEARCH } from "../../js/constants";
 import {
   getNavSearchFromUrl,
@@ -125,9 +119,11 @@ class NavBar extends Component {
     if (this.testForContext("**/signup", CONTEXT.SIGNUP)) return;
     if (this.testForContext("**/recover", CONTEXT.RECOVER)) return;
     if (this.testForContext("**/verify", CONTEXT.VERIFY)) return;
-    if (this.testForContext("**/reset-password", CONTEXT.RESET_PASSWORD)) return;
+    if (this.testForContext("**/reset-password", CONTEXT.RESET_PASSWORD))
+      return;
     if (this.testForContext("**/goodbye", CONTEXT.GOODBYE)) return;
-    if (this.testForContext("**/snippets/create", CONTEXT.SNIPPET_CREATE)) return;
+    if (this.testForContext("**/snippets/create", CONTEXT.SNIPPET_CREATE))
+      return;
     if (this.testForContext("**/items/create", CONTEXT.ITEMS_CREATE)) return;
     if (this.testForContext("**/", CONTEXT.HOME)) return;
   }
@@ -248,7 +244,9 @@ class NavBar extends Component {
       return (
         <React.Fragment>
           <Link
-            to={isAdmin(this.state.roles) ? "/items/create" : "/snippets/create"}
+            to={
+              isAdmin(this.state.roles) ? "/items/create" : "/snippets/create"
+            }
             className="create-button shadow btn rounded-border mr-3 "
           >
             {i18n.t("create")}

@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import { withRouter, matchPath } from "react-router-dom";
 import Icon from "@mdi/react";
 import i18n from "../../i18n";
-import {
-  mdiMagnify,
-} from "@mdi/js";
+import { mdiMagnify } from "@mdi/js";
 import { CONTEXT } from "../../js/constants";
 import {
   fillNavSearchFromUrl,
@@ -47,8 +45,14 @@ class SearchBar extends Component {
     currentSearch.query = search.query;
     currentSearch.type = search.type;
     currentSearch.sort = search.sort;
-    currentSearch.showEmpty = typeof search.showEmpty === "boolean" ? search.showEmpty : (search.showEmpty == 'true');
-    currentSearch.showOnlyFollowing = typeof search.showOnlyFollowing === "boolean" ? search.showOnlyFollowing : (search.showOnlyFollowing == 'true');
+    currentSearch.showEmpty =
+      typeof search.showEmpty === "boolean"
+        ? search.showEmpty
+        : search.showEmpty === "true";
+    currentSearch.showOnlyFollowing =
+      typeof search.showOnlyFollowing === "boolean"
+        ? search.showOnlyFollowing
+        : search.showOnlyFollowing === "true";
 
     this.setState({ search: currentSearch });
   }
@@ -152,9 +156,7 @@ class SearchBar extends Component {
       );
     } else if (ctx === CONTEXT.LANGUAGES) {
       return (
-        <React.Fragment>
-          {this.getShowEmptySearchControl()}
-        </React.Fragment>
+        <React.Fragment>{this.getShowEmptySearchControl()}</React.Fragment>
       );
     } else {
       return (

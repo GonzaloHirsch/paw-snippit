@@ -10,7 +10,7 @@ export function extractLinkHeaders(headers) {
       .trim()
       .replace(/</g, "")
       .replace(/>/g, "")
-      .replace(/\"/g, "")
+      .replace(/"/g, "")
       .replace(/;/g, "")
       .split(" ");
     const ref = parts[1].replace("rel=", "");
@@ -26,7 +26,7 @@ export function extractItemCountHeader(headers) {
   return parseInt(value, 10);
 }
 
-export function extractResourceIdFromHeaders(headers){
+export function extractResourceIdFromHeaders(headers) {
   const value = headers["location"];
   const parts = value.split("/");
   return parseInt(parts[parts.length - 1], 10);

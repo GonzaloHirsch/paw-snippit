@@ -6,9 +6,6 @@ import { ROLE_USER, ROLE_ADMIN } from "./js/security_utils";
 const SnippetOverview = React.lazy(() =>
   import("./components/pages/snippet_overview")
 );
-const SnippetFeed = React.lazy(() =>
-  import("./components/snippets/snippet_feed")
-);
 const SnippetCreate = React.lazy(() =>
   import("./components/snippets/snippet_create")
 );
@@ -55,7 +52,7 @@ const routes = [
     component: Home,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/search",
@@ -64,7 +61,7 @@ const routes = [
     component: Home,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/login",
@@ -73,7 +70,7 @@ const routes = [
     component: Login,
     roles: [],
     anon: true,
-    strict: false
+    strict: false,
   },
   {
     path: "/signup",
@@ -82,7 +79,7 @@ const routes = [
     component: SignUp,
     roles: [],
     anon: true,
-    strict: false
+    strict: false,
   },
   {
     path: "/snippets/create",
@@ -91,7 +88,7 @@ const routes = [
     component: SnippetCreate,
     roles: [ROLE_USER],
     anon: false,
-    strict: true
+    strict: true,
   },
   {
     path: "/items/create",
@@ -100,7 +97,7 @@ const routes = [
     component: ItemCreate,
     roles: [ROLE_ADMIN],
     anon: false,
-    strict: false   // Here is false because admins can be USER and ADMIN
+    strict: false, // Here is false because admins can be USER and ADMIN
   },
   {
     path: "/snippets/:id",
@@ -109,7 +106,7 @@ const routes = [
     component: SnippetOverview,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/favorites",
@@ -118,7 +115,7 @@ const routes = [
     component: Favorites,
     roles: [ROLE_USER, ROLE_ADMIN],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/favorites/search",
@@ -127,7 +124,7 @@ const routes = [
     component: Favorites,
     roles: [ROLE_USER, ROLE_ADMIN],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/following",
@@ -136,7 +133,7 @@ const routes = [
     component: Following,
     roles: [ROLE_USER, ROLE_ADMIN],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/flagged",
@@ -145,7 +142,7 @@ const routes = [
     component: Flagged,
     roles: [ROLE_ADMIN],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/flagged/search",
@@ -154,7 +151,7 @@ const routes = [
     component: Flagged,
     roles: [ROLE_ADMIN],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/goodbye",
@@ -163,7 +160,7 @@ const routes = [
     component: Goodbye,
     roles: [],
     anon: true,
-    strict: false
+    strict: false,
   },
   {
     path: "/upvoted",
@@ -172,7 +169,7 @@ const routes = [
     component: Upvoted,
     roles: [ROLE_USER, ROLE_ADMIN],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/upvoted/search",
@@ -181,7 +178,7 @@ const routes = [
     component: Upvoted,
     roles: [ROLE_USER, ROLE_ADMIN],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/explore",
@@ -190,7 +187,7 @@ const routes = [
     component: Explore,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/explore/search",
@@ -199,7 +196,7 @@ const routes = [
     component: Explore,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/recover",
@@ -208,7 +205,7 @@ const routes = [
     component: RecoverSend,
     roles: [],
     anon: true,
-    strict: false
+    strict: false,
   },
   {
     path: "/reset-password",
@@ -217,7 +214,7 @@ const routes = [
     component: ChangePassword,
     roles: [],
     anon: true,
-    strict: false
+    strict: false,
   },
   {
     path: "/verify",
@@ -226,7 +223,7 @@ const routes = [
     component: Verify,
     roles: [ROLE_USER],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/user/:id",
@@ -235,7 +232,7 @@ const routes = [
     component: UserProfile,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/user/:id/search",
@@ -244,7 +241,7 @@ const routes = [
     component: UserProfile,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/profile",
@@ -253,7 +250,7 @@ const routes = [
     component: UserProfile,
     roles: [ROLE_USER],
     anon: false,
-    strict: true
+    strict: true,
   },
   {
     path: "/profile/search",
@@ -262,7 +259,7 @@ const routes = [
     component: UserProfile,
     roles: [ROLE_USER],
     anon: false,
-    strict: true
+    strict: true,
   },
   {
     path: "/languages",
@@ -271,7 +268,7 @@ const routes = [
     component: Languages,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/languages/search",
@@ -280,7 +277,7 @@ const routes = [
     component: Languages,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/languages/:id",
@@ -289,7 +286,7 @@ const routes = [
     component: LanguageSnippets,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/languages/:id/search",
@@ -298,7 +295,7 @@ const routes = [
     component: LanguageSnippets,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/tags",
@@ -307,7 +304,7 @@ const routes = [
     component: Tags,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/tags/search",
@@ -316,7 +313,7 @@ const routes = [
     component: Tags,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/tags/:id",
@@ -325,7 +322,7 @@ const routes = [
     component: TagSnippets,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/tags/:id/search",
@@ -334,7 +331,7 @@ const routes = [
     component: TagSnippets,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/404",
@@ -343,7 +340,7 @@ const routes = [
     component: Page404,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
   {
     path: "/500",
@@ -352,7 +349,7 @@ const routes = [
     component: Page500,
     roles: [],
     anon: false,
-    strict: false
+    strict: false,
   },
 ];
 

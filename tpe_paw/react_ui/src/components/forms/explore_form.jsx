@@ -179,6 +179,7 @@ class ExploreForm extends Component {
       fields[EXPLORE.MAXVOTES] = urlSearch.maxVotes;
 
       this.setState({ fields: fields });
+      this.validateAll();
     }
   }
 
@@ -390,15 +391,15 @@ class ExploreForm extends Component {
     const snippetErrorKey = "snippetVotes";
 
     let hasErrors = false;
-    // this.validateIntervals(EXPLORE.MINREP, EXPLORE.MAXREP, repErrorKey);
-    // this.validateIntervals(EXPLORE.MINVOTES, EXPLORE.MAXVOTES, snippetErrorKey);
-    // this.validateInput(EXPLORE.TITLE);
-    // this.validateInput(EXPLORE.USERNAME);
+    this.validateIntervals(EXPLORE.MINREP, EXPLORE.MAXREP, repErrorKey);
+    this.validateIntervals(EXPLORE.MINVOTES, EXPLORE.MAXVOTES, snippetErrorKey);
+    this.validateInput(EXPLORE.TITLE);
+    this.validateInput(EXPLORE.USERNAME);
 
-    // hasErrors = hasErrors || this._inputHasErrors(EXPLORE.TITLE);
-    // hasErrors = hasErrors || this._inputHasErrors(EXPLORE.USERNAME);
-    // hasErrors = hasErrors || this._rangeHasErrors("userReputation");
-    // hasErrors = hasErrors || this._rangeHasErrors("snippetVotes");
+    hasErrors = hasErrors || this._inputHasErrors(EXPLORE.TITLE);
+    hasErrors = hasErrors || this._inputHasErrors(EXPLORE.USERNAME);
+    hasErrors = hasErrors || this._rangeHasErrors("userReputation");
+    hasErrors = hasErrors || this._rangeHasErrors("snippetVotes");
 
     return !hasErrors;
   }

@@ -40,7 +40,6 @@ class ProfileVerifyMessage extends Component {
   }
 
   render() {
-    const { id } = this.props;
     return (
       <div className="row no-margin verify-message p-3 mb-3 align-items-vertical">
         <Icon className="mr-1 icon-primary" path={mdiMessageAlert} size={3} />

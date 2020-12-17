@@ -1,8 +1,4 @@
-import React, { Component, Suspense } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import routes from "./routes";
-import logo from "./logo.svg";
-import { PrivateRoute } from "./components/navigation/private_route";
+import React from "react";
 import AppComponent from "./components/app_component";
 
 // Styles

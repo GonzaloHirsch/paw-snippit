@@ -1,4 +1,4 @@
-export default {
+const i18n_en = {
   test: "My test in ENGLISH",
   app: "Snippit",
   snippet: "Snippet",
@@ -383,3 +383,5 @@ export default {
     showMore: "Show more",
   },
 };
+
+export default i18n_en;

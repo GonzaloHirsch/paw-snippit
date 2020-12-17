@@ -53,8 +53,7 @@ class Client {
           const refreshInfo = store.getState().auth.refreshInfo;
           const remember = store.getState().auth.remember;
           // Token expired
-          console.log(errorResponse.data)
-          if (errorResponse.data !== null && errorResponse.data !== undefined &&  "TokenError" in errorResponse.data && refreshInfo !== null) {
+          if (errorResponse.data !== null && errorResponse.data !== undefined && (typeof errorResponse.data == "object") && "TokenError" in errorResponse.data && refreshInfo !== null) {
             const now = Date.now();
             const ts = refreshInfo.exp * 1000;
             // Expired refresh token

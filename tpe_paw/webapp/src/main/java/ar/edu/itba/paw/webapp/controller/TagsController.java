@@ -105,6 +105,11 @@ public class TagsController {
         User currentUser = loginAuthentication.getLoggedInUser();
         final long loggedUserId = UserHelper.GetLoggedUserId(this.loginAuthentication);
 
+        // Cannot be null user and show only following
+        if (currentUser == null && tagSearchDto.isShowOnlyFollowing()){
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
         final Collection<Tag> rawTags = this.tagService.findTagsByName(tagSearchDto.getQuery(), tagSearchDto.isShowEmpty(), tagSearchDto.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null, page, TAG_PAGE_SIZE);
 
         rawTags.forEach(t -> this.snippetService.analizeSnippetsUsing(t));

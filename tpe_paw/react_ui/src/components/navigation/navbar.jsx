@@ -338,6 +338,7 @@ class NavBar extends Component {
                 handleSearch={this.handleSearch}
                 handleSearchChange={this.handleSearchChange}
                 handleSearchChangeAndSearch={this.handleSearchChangeAndSearch}
+                userIsLogged={this.state.userIsLogged}
               />
             )}
             <div className="nav-item align-items-horizontal-right auth-buttons">

@@ -141,17 +141,19 @@ class SearchBar extends Component {
       return (
         <React.Fragment>
           {this.getShowEmptySearchControl()}
-          <button
-            className="btn btn-outline-secondary"
-            type="button"
-            onClick={(e) =>
-              this.handleSearchChangeAndSearch(e, "showOnlyFollowing", true)
-            }
-          >
-            {this.state.search.showOnlyFollowing
-              ? i18n.t("nav.search.hideOnlyFollowing")
-              : i18n.t("nav.search.showOnlyFollowing")}
-          </button>
+          {this.props.userIsLogged && (
+            <button
+              className="btn btn-outline-secondary"
+              type="button"
+              onClick={(e) =>
+                this.handleSearchChangeAndSearch(e, "showOnlyFollowing", true)
+              }
+            >
+              {this.state.search.showOnlyFollowing
+                ? i18n.t("nav.search.hideOnlyFollowing")
+                : i18n.t("nav.search.showOnlyFollowing")}
+            </button>
+          )}
         </React.Fragment>
       );
     } else if (ctx === CONTEXT.LANGUAGES) {

@@ -88,7 +88,7 @@ public class SnippetController {
         final int pageCount = PagingHelper.CalculateTotalPages(numberOfSnippets, SNIPPET_PAGE_SIZE);
 
         // If the page asked is greater than the one existing
-        if (page > pageCount){
+        if (page > pageCount && pageCount > 0){
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
@@ -111,7 +111,7 @@ public class SnippetController {
         final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
 
         // If the page asked is greater than the one existing
-        if (page > pageCount){
+        if (page > pageCount && pageCount > 0){
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
@@ -155,7 +155,7 @@ public class SnippetController {
         final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
         // If the page asked is greater than the one existing
-        if (page > pageCount){
+        if (page > pageCount && pageCount > 0){
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
@@ -208,7 +208,7 @@ public class SnippetController {
         final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
         // If the page asked is greater than the one existing
-        if (page > pageCount){
+        if (page > pageCount && pageCount > 0){
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
@@ -238,7 +238,7 @@ public class SnippetController {
         final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
 
         // If the page asked is greater than the one existing
-        if (page > pageCount){
+        if (page > pageCount && pageCount > 0){
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 

@@ -30,7 +30,7 @@ class ReportedSnippetMessage extends Component {
   render() {
     const { id, dismissedReport } = this.props;
     return (
-      <div className="row reported-message p-3 mb-3 align-items-vertical">
+      <div className="row no-margin reported-message p-3 mb-3 align-items-vertical">
         <Icon
           className="text-muted reported-close-icon mt-2 mr-2"
           onClick={() => this.handleDismiss(id, dismissedReport)}

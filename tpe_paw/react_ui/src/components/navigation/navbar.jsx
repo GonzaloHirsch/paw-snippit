@@ -12,14 +12,8 @@ import { LOGIN_SUCCESS } from "../../redux/actions/actionTypes";
 
 // Libs
 import i18n from "../../i18n";
-import {
-  mdiClose,
-  mdiMenu,
-  mdiCodeTags,
-  mdiMagnify,
-  mdiPlusCircleOutline,
-} from "@mdi/js";
-import { CONTEXT } from "../../js/constants";
+import { mdiClose, mdiMenu, mdiCodeTags, mdiAccount } from "@mdi/js";
+import { CONTEXT, CONTEXT_WITHOUT_SEARCH } from "../../js/constants";
 import {
   getNavSearchFromUrl,
   getTagsSearchFromUrl,
@@ -37,6 +31,8 @@ import { isAdmin } from "../../js/security_utils";
 // Component -> https://getbootstrap.com/docs/4.5/components/navbar/
 class NavBar extends Component {
   authUnsubscribe;
+  userClient;
+
   state = {
     navIsOpen: false,
     userIsLogged: false,
@@ -83,7 +79,7 @@ class NavBar extends Component {
     if (isCtx) {
       // Determine if show search
       let showSearch = true;
-      if (ctx === CONTEXT.ERROR || ctx === CONTEXT.EXPLORE) {
+      if (CONTEXT_WITHOUT_SEARCH.includes(ctx)) {
         showSearch = false;
       }
       // Get the initial search value
@@ -121,6 +117,16 @@ class NavBar extends Component {
     if (this.testForContext("**/flagged", CONTEXT.FLAGGED)) return;
     if (this.testForContext("**/404", CONTEXT.ERROR)) return;
     if (this.testForContext("**/500", CONTEXT.ERROR)) return;
+    if (this.testForContext("**/login", CONTEXT.LOGIN)) return;
+    if (this.testForContext("**/signup", CONTEXT.SIGNUP)) return;
+    if (this.testForContext("**/recover", CONTEXT.RECOVER)) return;
+    if (this.testForContext("**/verify", CONTEXT.VERIFY)) return;
+    if (this.testForContext("**/reset-password", CONTEXT.RESET_PASSWORD))
+      return;
+    if (this.testForContext("**/goodbye", CONTEXT.GOODBYE)) return;
+    if (this.testForContext("**/snippets/create", CONTEXT.SNIPPET_CREATE))
+      return;
+    if (this.testForContext("**/items/create", CONTEXT.ITEMS_CREATE)) return;
     if (this.testForContext("**/", CONTEXT.HOME)) return;
   }
 
@@ -240,27 +246,45 @@ class NavBar extends Component {
       return (
         <React.Fragment>
           <Link
-            to={isAdmin(this.state.roles) ? "/items/create" : "/snippets/create"}
-            className="create-button shadow btn rounded-border mr-3 "
+            to={
+              isAdmin(this.state.roles) ? "/items/create" : "/snippets/create"
+            }
+            className="create-button shadow btn rounded-border mr-2 ml-2 "
           >
             {i18n.t("create")}
           </Link>
-          <Link to="/profile" className="mx-1 text-white">
-            <em className="ml-1">
-              {i18n.t("nav.greeting", { user: store.getState().auth.info.sub })}
-            </em>
-          </Link>
+          {!isAdmin(this.state.roles) && (
+            <Link to="/profile" className="mx-1 text-white">
+              <Icon
+                path={mdiAccount}
+                className="top-profile-image"
+                size={2}
+              ></Icon>
+            </Link>
+          )}
         </React.Fragment>
       );
     } else {
       return (
         <React.Fragment>
-          <Link to="/login" className="mx-1">
+          <Link
+            to={{
+              pathname: "/login",
+              state: { from: this.props.history.location },
+            }}
+            className="mx-1"
+          >
             <button type="button" className="btn btn-light">
               {i18n.t("nav.login")}
             </button>
           </Link>
-          <Link to="/signup" className="mx-1">
+          <Link
+            to={{
+              pathname: "/signup",
+              state: { from: this.props.history.location },
+            }}
+            className="mx-1"
+          >
             <button type="button" className="btn btn-light">
               {i18n.t("nav.signup")}
             </button>
@@ -280,43 +304,32 @@ class NavBar extends Component {
           currentContext={this.state.currentContext}
           onNavigationChange={this.handleNavigationChange}
         />
-        <nav className="navbar navbar-expand-lg navbar-dark fixed-top row row-cols-3">
-          <button
-            className="btn btn-sm text-white col-2 col-sm-1 no-focus"
-            type="button"
-            aria-label="Toggle side navigation"
-            onClick={() => this.navInteract(this.state.navIsOpen)}
-          >
-            {this.getNavIcon(this.state.navIsOpen)}
-          </button>
-          <Link
-            to="/"
-            className={
-              "app-link text-white align-items-horizontal-center " +
-              (this.state.showSearch ? "col-7 col-lg-2" : "col-8")
-            }
-            onClick={() => this.handleNavigationChange(CONTEXT.HOME)}
-          >
-            <Icon path={mdiCodeTags} size={2}></Icon>
-            <span className="ml-1">{i18n.t("app")}</span>
-          </Link>
-          <button
-            className="navbar-toggler btn btn-sm text-white col-2 col-sm-1 no-focus"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
+        <nav className="navbar navbar-dark fixed-top d-flex justify-space-between">
+          <div className="d-flex flex-row">
+            <button
+              className="btn btn-sm text-white no-focus"
+              type="button"
+              aria-label="Toggle side navigation"
+              onClick={() => this.navInteract(this.state.navIsOpen)}
+            >
+              {this.getNavIcon(this.state.navIsOpen)}
+            </button>
+            <Link
+              to="/"
+              className={"px-2 app-link text-white flex-center "}
+              onClick={() => this.handleNavigationChange(CONTEXT.HOME)}
+            >
+              <Icon path={mdiCodeTags} size={2}></Icon>
+              <span className="ml-1">{i18n.t("app")}</span>
+            </Link>
+          </div>
           <div
             className={
-              "collapse navbar-collapse col-2 " +
-              (this.state.showSearch ? "col-lg-9" : "col-lg-3")
+              "d-flex align-items-center " +
+              (this.state.showSearch
+                ? "navbar-spacing-responsive justify-space-between"
+                : "navbar-spacing justify-end")
             }
-            id="navbarSupportedContent"
           >
             {this.state.showSearch && (
               <SearchBar
@@ -325,14 +338,10 @@ class NavBar extends Component {
                 handleSearch={this.handleSearch}
                 handleSearchChange={this.handleSearchChange}
                 handleSearchChangeAndSearch={this.handleSearchChangeAndSearch}
+                userIsLogged={this.state.userIsLogged}
               />
             )}
-            <div
-              className={
-                "nav-item align-items-horizontal-right " +
-                (this.state.showSearch ? "col-4" : "col-12")
-              }
-            >
+            <div className="nav-item align-items-horizontal-right auth-buttons">
               {this.getTopRightNavItems()}
             </div>
           </div>

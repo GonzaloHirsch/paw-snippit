@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import i18n from "../../i18n";
 import ItemListElement from "../items/item_list_element";
-import { mdiLoading } from "@mdi/js";
 
 class ItemCreateForm extends Component {
   _renderSubmitButton() {

@@ -14,6 +14,7 @@ const PaginatedItemFeed = (props) => {
     type,
     links,
     onPageTransition,
+    onPageTransitionWithPage,
     userIsLogged,
     showFollowing,
     handleChangeFollowing,
@@ -60,6 +61,7 @@ const PaginatedItemFeed = (props) => {
                 currentPage={currentPage}
                 links={links}
                 onPageTransition={onPageTransition}
+                onPageTransitionWithPage={onPageTransitionWithPage}
                 className="mx-auto"
               />
             </div>

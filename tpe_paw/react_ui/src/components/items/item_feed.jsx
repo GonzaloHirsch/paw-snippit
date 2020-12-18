@@ -1,6 +1,5 @@
 import React from "react";
 import ItemCard from "./item_card";
-import Pagination from "../navigation/pagination";
 
 // Stateless Functional Component
 

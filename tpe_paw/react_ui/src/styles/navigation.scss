@@ -17,7 +17,8 @@
 }
 
 /* The navigation menu links */
-.sidenav a {
+.sidenav a,
+.sidenav-button-item {
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 25px;
@@ -37,7 +38,8 @@
 }
 
 /* When you mouse over the navigation links, change their color */
-.sidenav a:hover {
+.sidenav a:hover,
+.sidenav-button-item:hover {
   background-color: $primary-color-light;
   color: #f1f1f1;
 }
@@ -73,7 +75,8 @@
   .sidenav {
     padding-top: 15px;
   }
-  .sidenav a {
+  .sidenav a,
+  .sidenav-button-item {
     font-size: 18px;
   }
 }
@@ -127,4 +130,75 @@
 /* selected link */
 .app-link:active {
   text-decoration: none;
+}
+
+.top-profile-image {
+  border: white solid 2px;
+  transition: 0.3s;
+  border-radius: 50%;
+  padding: 2px;
+  cursor: pointer;
+  &:hover {
+    @extend .top-profile-image;
+    background-color: $primary-color-dark;
+  }
+}
+
+.navbar-dropdowns {
+  max-width: 125px;
+}
+
+.search-button {
+  background-color: #d1d1d1 !important;
+  color: white !important;
+  height: 38px;
+  border: 1px solid #ced4da !important;
+  border-radius: 0px $border-radius $border-radius 0px !important;
+}
+
+.search-button:hover {
+  background-color: #c4c4c4 !important;
+}
+
+.search-box-style {
+  border-radius: $border-radius 0px 0px $border-radius !important;
+  max-width: 350px;
+}
+
+.auth-buttons {
+  min-width: max-content;
+  margin-right: -6px;
+  margin-left: 5px;
+}
+
+.navbar-following-buttons {
+  background-color: white !important;
+  border: 1px solid #ced4da !important;
+  padding: 0px 5px !important;
+}
+
+.navbar-following-buttons:hover {
+  background-color: #d1d1d1 !important;
+}
+
+.navbar-spacing {
+  width: 20% !important;
+}
+
+.navbar-spacing-responsive {
+  @include media-breakpoint-only(xs) {
+    width: 100% !important;
+  }
+  @include media-breakpoint-only(sm) {
+    width: 100% !important;
+  }
+  @include media-breakpoint-only(md) {
+    width: 73% !important;
+  }
+  @include media-breakpoint-only(lg) {
+    width: 73% !important;
+  }
+  @include media-breakpoint-only(xl) {
+    width: 73% !important;
+  }
 }

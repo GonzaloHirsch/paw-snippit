@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import store from "../../store";
 import { loginSuccess } from "../../redux/actions/actionCreators";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import AuthClient from "../../api/implementations/AuthClient";
 import i18n from "../../i18n";
 import { mdiAccount, mdiLock } from "@mdi/js";
@@ -10,7 +10,6 @@ import CustomForm from "../forms/custom_form";
 import { LOGIN_VALIDATIONS } from "../../js/validations";
 import CustomCheckbox from "../forms/custom_checkbox";
 import { Helmet } from "react-helmet";
-
 
 class Login extends Component {
   state = {
@@ -51,11 +50,23 @@ class Login extends Component {
             )
           );
 
-          // Push to home
-          this.props.history.push("/");
+          if (this.props.history.location.state !== undefined) {
+            const fromLocation = this.props.history.location.state.from;
+            if (
+              fromLocation !== undefined &&
+              fromLocation !== null &&
+              fromLocation !== ""
+            ) {
+              this.props.history.push(fromLocation);
+            } else {
+              // Push to home
+              this.props.history.push("/");
+            }
+          } else {
+            this.props.history.push("/");
+          }
         })
         .catch((e) => {
-          console.log(e)
           if (e.response) {
             // client received an error response (5xx, 4xx)
             if (e.response.status === 401) {
@@ -101,6 +112,23 @@ class Login extends Component {
     }
     this.setState({ errors: errors });
     return hasErrors;
+  }
+
+  getRedirectionObject(path) {
+    if (this.props.history.location.state !== undefined) {
+      const fromLocation = this.props.history.location.state.from;
+      if (
+        fromLocation !== undefined &&
+        fromLocation !== null &&
+        fromLocation !== ""
+      ) {
+        return { pathname: path, state: { from: this.props.history.location } };
+      } else {
+        return { pathname: path };
+      }
+    } else {
+      return { pathname: path };
+    }
   }
 
   render() {
@@ -153,7 +181,7 @@ class Login extends Component {
         >
           <span>
             {i18n.t("login.signup")}
-            <Link to="/signup">
+            <Link to={this.getRedirectionObject("/signup")} className="fwhite">
               <strong>{i18n.t("login.signupCall")}</strong>
             </Link>
           </span>
@@ -164,7 +192,7 @@ class Login extends Component {
         >
           <span>
             {i18n.t("login.recover")}
-            <Link to="/recover">
+            <Link to="/recover" className="fwhite">
               <strong>{i18n.t("login.recoverCall")}</strong>
             </Link>
           </span>
@@ -174,4 +202,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default withRouter(Login);

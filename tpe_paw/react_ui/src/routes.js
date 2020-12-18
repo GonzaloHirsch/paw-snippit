@@ -6,9 +6,6 @@ import { ROLE_USER, ROLE_ADMIN } from "./js/security_utils";
 const SnippetOverview = React.lazy(() =>
   import("./components/pages/snippet_overview")
 );
-const SnippetFeed = React.lazy(() =>
-  import("./components/snippets/snippet_feed")
-);
 const SnippetCreate = React.lazy(() =>
   import("./components/snippets/snippet_create")
 );
@@ -41,7 +38,11 @@ const Verify = React.lazy(() => import("./components/profile/verify"));
 /*
  Each route must have a "roles" attribute, if the route is available for anyone, 
  the "roles" attribute must be empty([]). In case a user does not have the role for the page,
- the app redirects the user either to the login or to the home feed
+ the app redirects the user either to the login or to the home feed.
+ Each route must have a "anon" attribute, it indicates that the route can only be navigated if no
+ user is logged.
+ Each route must have a "strict" attribute, it indicates that the user accessing must contain 
+ exactly the listed roles
 */
 const routes = [
   {
@@ -50,6 +51,8 @@ const routes = [
     name: i18n.t("nav.home"),
     component: Home,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/search",
@@ -57,6 +60,8 @@ const routes = [
     name: i18n.t("nav.homeSearch"),
     component: Home,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/login",
@@ -64,6 +69,8 @@ const routes = [
     name: i18n.t("nav.login"),
     component: Login,
     roles: [],
+    anon: true,
+    strict: false,
   },
   {
     path: "/signup",
@@ -71,6 +78,8 @@ const routes = [
     name: i18n.t("nav.signup"),
     component: SignUp,
     roles: [],
+    anon: true,
+    strict: false,
   },
   {
     path: "/snippets/create",
@@ -78,6 +87,8 @@ const routes = [
     name: i18n.t("snippetCreate.name"),
     component: SnippetCreate,
     roles: [ROLE_USER],
+    anon: false,
+    strict: true,
   },
   {
     path: "/items/create",
@@ -85,6 +96,8 @@ const routes = [
     name: i18n.t("snippetCreate.name"), // TODO
     component: ItemCreate,
     roles: [ROLE_ADMIN],
+    anon: false,
+    strict: false, // Here is false because admins can be USER and ADMIN
   },
   {
     path: "/snippets/:id",
@@ -92,6 +105,8 @@ const routes = [
     name: i18n.t("nav.snippetsDetail"),
     component: SnippetOverview,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/favorites",
@@ -99,6 +114,8 @@ const routes = [
     name: i18n.t("nav.favorites"),
     component: Favorites,
     roles: [ROLE_USER, ROLE_ADMIN],
+    anon: false,
+    strict: false,
   },
   {
     path: "/favorites/search",
@@ -106,6 +123,8 @@ const routes = [
     name: i18n.t("nav.favorites"),
     component: Favorites,
     roles: [ROLE_USER, ROLE_ADMIN],
+    anon: false,
+    strict: false,
   },
   {
     path: "/following",
@@ -113,6 +132,8 @@ const routes = [
     name: i18n.t("nav.following"),
     component: Following,
     roles: [ROLE_USER, ROLE_ADMIN],
+    anon: false,
+    strict: false,
   },
   {
     path: "/flagged",
@@ -120,6 +141,8 @@ const routes = [
     name: i18n.t("nav.flagged"),
     component: Flagged,
     roles: [ROLE_ADMIN],
+    anon: false,
+    strict: false,
   },
   {
     path: "/flagged/search",
@@ -127,6 +150,8 @@ const routes = [
     name: i18n.t("nav.flagged"),
     component: Flagged,
     roles: [ROLE_ADMIN],
+    anon: false,
+    strict: false,
   },
   {
     path: "/goodbye",
@@ -134,6 +159,8 @@ const routes = [
     name: i18n.t("nav.goodbye"),
     component: Goodbye,
     roles: [],
+    anon: true,
+    strict: false,
   },
   {
     path: "/upvoted",
@@ -141,6 +168,8 @@ const routes = [
     name: i18n.t("nav.upvoted"),
     component: Upvoted,
     roles: [ROLE_USER, ROLE_ADMIN],
+    anon: false,
+    strict: false,
   },
   {
     path: "/upvoted/search",
@@ -148,6 +177,8 @@ const routes = [
     name: i18n.t("nav.upvoted"),
     component: Upvoted,
     roles: [ROLE_USER, ROLE_ADMIN],
+    anon: false,
+    strict: false,
   },
   {
     path: "/explore",
@@ -155,6 +186,8 @@ const routes = [
     name: i18n.t("nav.explore"),
     component: Explore,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/explore/search",
@@ -162,6 +195,8 @@ const routes = [
     name: i18n.t("nav.explore"),
     component: Explore,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/recover",
@@ -169,6 +204,8 @@ const routes = [
     name: i18n.t("nav.recover"),
     component: RecoverSend,
     roles: [],
+    anon: true,
+    strict: false,
   },
   {
     path: "/reset-password",
@@ -176,13 +213,17 @@ const routes = [
     name: i18n.t("nav.resetPassword"),
     component: ChangePassword,
     roles: [],
+    anon: true,
+    strict: false,
   },
   {
     path: "/verify",
     exact: false,
     name: i18n.t("nav.verify"),
     component: Verify,
-    roles: [ROLE_USER, ROLE_ADMIN],
+    roles: [ROLE_USER],
+    anon: false,
+    strict: false,
   },
   {
     path: "/user/:id",
@@ -190,6 +231,8 @@ const routes = [
     name: i18n.t("nav.users"), // TODO FIX ME
     component: UserProfile,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/user/:id/search",
@@ -197,6 +240,8 @@ const routes = [
     name: i18n.t("nav.users"), // TODO FIX ME
     component: UserProfile,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/profile",
@@ -204,6 +249,8 @@ const routes = [
     name: i18n.t("nav.profile"),
     component: UserProfile,
     roles: [ROLE_USER],
+    anon: false,
+    strict: true,
   },
   {
     path: "/profile/search",
@@ -211,6 +258,8 @@ const routes = [
     name: i18n.t("nav.profile"),
     component: UserProfile,
     roles: [ROLE_USER],
+    anon: false,
+    strict: true,
   },
   {
     path: "/languages",
@@ -218,6 +267,8 @@ const routes = [
     name: i18n.t("nav.languages"),
     component: Languages,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/languages/search",
@@ -225,6 +276,8 @@ const routes = [
     name: i18n.t("nav.languages"),
     component: Languages,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/languages/:id",
@@ -232,6 +285,8 @@ const routes = [
     name: i18n.t("items.snippetsFor", { item: "Language" }),
     component: LanguageSnippets,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/languages/:id/search",
@@ -239,6 +294,8 @@ const routes = [
     name: i18n.t("items.snippetsFor", { item: "Language" }),
     component: LanguageSnippets,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/tags",
@@ -246,6 +303,8 @@ const routes = [
     name: i18n.t("nav.tags"),
     component: Tags,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/tags/search",
@@ -253,6 +312,8 @@ const routes = [
     name: i18n.t("nav.tags"),
     component: Tags,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/tags/:id",
@@ -260,6 +321,8 @@ const routes = [
     name: i18n.t("items.snippetsFor", { item: "Tag" }),
     component: TagSnippets,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/tags/:id/search",
@@ -267,6 +330,8 @@ const routes = [
     name: i18n.t("items.snippetsFor", { item: "Tag" }),
     component: TagSnippets,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/404",
@@ -274,6 +339,8 @@ const routes = [
     name: i18n.t("nav.error_404"),
     component: Page404,
     roles: [],
+    anon: false,
+    strict: false,
   },
   {
     path: "/500",
@@ -281,6 +348,8 @@ const routes = [
     name: i18n.t("nav.error_500"),
     component: Page500,
     roles: [],
+    anon: false,
+    strict: false,
   },
 ];
 

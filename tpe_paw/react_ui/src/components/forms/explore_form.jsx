@@ -141,29 +141,31 @@ class ExploreForm extends Component {
   }
 
   /* Upon URL change, the fields in the form will update */
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const fields = { ...this.state.fields };
     const { urlSearch } = nextProps;
 
+    const language = parseInt(urlSearch.language);
+    const tag = parseInt(urlSearch.tag);
+
     // First time, everything comes as null and dont want to save those values
     if (urlSearch.title !== null) {
-      if (urlSearch.language === -1) {
+      if (language === -1) {
         fields[EXPLORE.LANGUAGE] = [];
       } else if (
-        (fields.language.length === 0 && urlSearch.language !== -1) ||
-        (fields.language.length > 0 &&
-          fields.language[0].id !== urlSearch.language)
+        (fields.language.length === 0 && language !== -1) ||
+        (fields.language.length > 0 && fields.language[0].id !== language)
       ) {
-        this.loadLanguage(urlSearch.language);
+        this.loadLanguage(language);
       }
 
-      if (urlSearch.tag === -1) {
+      if (tag === -1) {
         fields[EXPLORE.TAG] = [];
       } else if (
-        (fields.tag.length === 0 && urlSearch.tag !== -1) ||
-        (fields.tag.length > 0 && fields.tag[0].id !== urlSearch.tag)
+        (fields.tag.length === 0 && tag !== -1) ||
+        (fields.tag.length > 0 && fields.tag[0].id !== tag)
       ) {
-        this.loadTag(urlSearch.tag);
+        this.loadTag(tag);
       }
 
       fields[EXPLORE.FIELD] = urlSearch.field;
@@ -179,10 +181,12 @@ class ExploreForm extends Component {
       fields[EXPLORE.MAXVOTES] = urlSearch.maxVotes;
 
       this.setState({ fields: fields });
+      this.validateAll();
     }
   }
 
-  handleSearch() {
+  handleSearch(e) {
+    e.preventDefault();
     if (this.validateAll()) {
       // Determine if we add the "search" to the route
       const isSearching = !!matchPath(
@@ -270,6 +274,9 @@ class ExploreForm extends Component {
       params.set(name, value[0].id);
     } else {
       params.set(name, -1);
+      const fields = { ...this.state.fields };
+      fields[name] = [];
+      this.setState({ fields: fields });
     }
   }
 
@@ -384,21 +391,40 @@ class ExploreForm extends Component {
     this.setState({ errors: errors });
   };
 
+  validateDates() {
+    const { fields } = this.state;
+    const errors = { ...this.state.errors };
+
+    // Must have both dates to have an error
+    if (fields.minDate !== null && fields.maxDate != null) {
+      errors.dateUploaded =
+        fields.minDate > fields.maxDate
+          ? i18n.t("explore.form.errors.date")
+          : null;
+      this.setState({ errors: errors });
+    } else {
+      errors.dateUploaded = null;
+    }
+    this.setState({ errors: errors });
+  }
+
   validateAll() {
     // Function will return true if the values are correct
     const repErrorKey = "userReputation";
     const snippetErrorKey = "snippetVotes";
 
     let hasErrors = false;
-    // this.validateIntervals(EXPLORE.MINREP, EXPLORE.MAXREP, repErrorKey);
-    // this.validateIntervals(EXPLORE.MINVOTES, EXPLORE.MAXVOTES, snippetErrorKey);
-    // this.validateInput(EXPLORE.TITLE);
-    // this.validateInput(EXPLORE.USERNAME);
+    this.validateIntervals(EXPLORE.MINREP, EXPLORE.MAXREP, repErrorKey);
+    this.validateIntervals(EXPLORE.MINVOTES, EXPLORE.MAXVOTES, snippetErrorKey);
+    this.validateInput(EXPLORE.TITLE);
+    this.validateInput(EXPLORE.USERNAME);
+    this.validateDates();
 
-    // hasErrors = hasErrors || this._inputHasErrors(EXPLORE.TITLE);
-    // hasErrors = hasErrors || this._inputHasErrors(EXPLORE.USERNAME);
-    // hasErrors = hasErrors || this._rangeHasErrors("userReputation");
-    // hasErrors = hasErrors || this._rangeHasErrors("snippetVotes");
+    hasErrors = hasErrors || this._inputHasErrors(EXPLORE.TITLE);
+    hasErrors = hasErrors || this._inputHasErrors(EXPLORE.USERNAME);
+    hasErrors = hasErrors || this._rangeHasErrors("userReputation");
+    hasErrors = hasErrors || this._rangeHasErrors("snippetVotes");
+    hasErrors = hasErrors || this._inputHasErrors("dateUploaded");
 
     return !hasErrors;
   }
@@ -422,13 +448,10 @@ class ExploreForm extends Component {
 
   onDateChange = (key, e) => {
     let fields = this.state.fields;
-    let errors = this.state.errors;
     fields[key] = e;
 
-    if (key in errors) {
-      errors[key] = EXPLORE_FORM_VALIDATIONS[key](fields[key]);
-    }
-    this.setState({ fields: fields, errors: errors });
+    this.setState({ fields: fields });
+    this.validateDates();
   };
 
   onChangeMinValidation = (minFieldKey, maxFieldKey, errorKey, e) => {
@@ -456,7 +479,7 @@ class ExploreForm extends Component {
     const { fields, errors, options } = this.state;
 
     return (
-      <form className="flex-column" onSubmit={() => this.handleSearch()}>
+      <form className="flex-column" onSubmit={(e) => this.handleSearch(e)}>
         <h6>{i18n.t(orderPrefix + "header")}</h6>
         <div className="d-flex flex-row">
           <DropdownMenu
@@ -600,6 +623,9 @@ class ExploreForm extends Component {
         </div>
         <hr />
         <h6>{i18n.t("explore.form.date")}</h6>
+        {errors.dateUploaded && (
+          <span className="text-danger">{errors.dateUploaded}</span>
+        )}
         <div className="d-flex flex-row">
           <CustomDatePicker
             date={fields.minDate}

@@ -1,0 +1,16 @@
+@import "variables";
+
+.page-link {
+    color: $primary-color !important;
+    cursor: pointer;
+    border: $primary-color solid 1px !important;
+
+    &-selected {
+        @extend .page-link;
+        background-color: lightgray !important;
+    }
+}
+
+.page-item-number {
+    //margin: 0 3px 0 3px;
+}

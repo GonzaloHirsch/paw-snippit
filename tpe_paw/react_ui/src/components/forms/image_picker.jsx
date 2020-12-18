@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { mdiCheckBold, mdiCloseThick } from "@mdi/js";
+import { mdiCheckBold, mdiCloseThick, mdiPencil } from "@mdi/js";
 import Icon from "@mdi/react";
+import { Spinner } from "reactstrap";
 
 class ImagePicker extends Component {
   constructor(props) {
@@ -31,9 +32,10 @@ class ImagePicker extends Component {
 
   _onFileChange(event) {
     const { files } = event.target;
-    this.setState({ image: files[0], edit: true });
-
-    this._preview(event, true);
+    if (files.length > 0) {
+      this.setState({ image: files[0], edit: true });
+      this._preview(event, true);
+    }
   }
 
   _onClickClear() {
@@ -48,6 +50,7 @@ class ImagePicker extends Component {
     e.preventDefault();
     this.setState({ edit: false });
     this.props.handleSubmit(this.state.image);
+    //this._preview(null, false);
   }
 
   render() {
@@ -56,10 +59,10 @@ class ImagePicker extends Component {
         <div className="flex-center profile-photo-padding">
           <div className="flex-center profile-photo-wrap">
             <span
-              className="material-icons profile-photo-edit-icon"
+              className="flex-center profile-photo-edit-icon"
               onClick={() => this._hiddenClick()}
             >
-              create
+              <Icon path={mdiPencil} size={5}></Icon>
             </span>
 
             <img
@@ -69,6 +72,17 @@ class ImagePicker extends Component {
               alt="User Icon"
               onClick={() => this._hiddenClick()}
             ></img>
+            {this.props.imageLoading && (
+              <div
+                className="align-items-vertical align-items-horizontal-center"
+                style={{ position: "absolute" }}
+              >
+                <Spinner
+                  color="dark"
+                  style={{ width: "3rem", height: "3rem" }}
+                />
+              </div>
+            )}
           </div>
         </div>
         <form

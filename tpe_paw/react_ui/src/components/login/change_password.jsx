@@ -12,8 +12,9 @@ import {
   hasErrors,
 } from "../../js/validations";
 import { Helmet } from "react-helmet";
+import { withRouter } from "react-router-dom";
 
-class RecoverSend extends Component {
+class ChangePassword extends Component {
   authClient;
 
   state = {
@@ -39,45 +40,54 @@ class RecoverSend extends Component {
     this.authClient = new AuthClient(this.props);
   }
 
-  componentDidMount() {
-    const params = new URLSearchParams(this.props.location.search);
+  loadComponentBasedOnParams(params) {
     const id = params.get("id");
     const token = params.get("token");
 
-    // Storing the info in the url
-    this.setState({ info: { id: id, token: token } }, () => {
-      console.log(this.state);
-    });
+    if (id !== this.state.info.id || token !== this.state.info.token) {
+      // Storing the info in the url
+      this.setState({ info: { id: id, token: token } });
 
-    this.authClient
-      .isTokenValid(id, token)
-      .then((res) => {
-        this.setState({ validToken: true });
-      })
-      .catch((e) => {
-        let errorsToStore = null;
-        if (e.response) {
-          // client received an error response (5xx, 4xx)
-          if (e.response.status === 400) {
-            let errors = {};
-            e.response.data.errors.forEach((error) => {
-              for (let key in error) {
-                errors[key] = error[key];
-              }
-            });
-            this.setState({ validToken: false, errors: errors });
-          } else if (e.response.status === 401) {
-            errorsToStore = i18n.t("login.form.errors.invalidGeneral");
-          } else if (e.response.status === 500) {
-            errorsToStore = i18n.t("errors.serverError");
+      this.authClient
+        .isTokenValid(id, token)
+        .then((res) => {
+          this.setState({ validToken: true });
+        })
+        .catch((e) => {
+          let errorsToStore = null;
+          if (e.response) {
+            // client received an error response (5xx, 4xx)
+            if (e.response.status === 400) {
+              let errors = {};
+              e.response.data.errors.forEach((error) => {
+                for (let key in error) {
+                  errors[key] = error[key];
+                }
+              });
+              this.setState({ validToken: false, errors: errors });
+            } else if (e.response.status === 401) {
+              errorsToStore = i18n.t("login.form.errors.invalidGeneral");
+            } else if (e.response.status === 500) {
+              errorsToStore = i18n.t("errors.serverError");
+            }
+          } else if (e.request) {
+            errorsToStore = i18n.t("errors.noConnection");
+          } else {
+            errorsToStore = i18n.t("errors.unknownError");
           }
-        } else if (e.request) {
-          errorsToStore = i18n.t("errors.noConnection");
-        } else {
-          errorsToStore = i18n.t("errors.unknownError");
-        }
-        this.setState({ validToken: false, responseErrors: errorsToStore });
-      });
+          this.setState({ validToken: false, responseErrors: errorsToStore });
+        });
+    }
+  }
+
+  componentDidMount() {
+    const params = new URLSearchParams(this.props.location.search);
+    this.loadComponentBasedOnParams(params);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const params = new URLSearchParams(nextProps.location.search);
+    this.loadComponentBasedOnParams(params);
   }
 
   handleSubmit(event) {
@@ -100,8 +110,6 @@ class RecoverSend extends Component {
             // client received an error response (5xx, 4xx)
             if (e.response.status === 400) {
               let errors = {};
-              console.log(e);
-              console.log(e.response.data.errors);
               e.response.data.errors.forEach((error) => {
                 for (let key in error) {
                   errors[key] = error[key];
@@ -299,4 +307,4 @@ class RecoverSend extends Component {
   }
 }
 
-export default RecoverSend;
+export default withRouter(ChangePassword);

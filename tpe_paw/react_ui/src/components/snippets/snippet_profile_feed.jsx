@@ -12,6 +12,7 @@ const SnippetProfileFeed = (props) => {
         links={props.links}
         currentPage={props.currentPage}
         onPageTransition={props.onPageTransition}
+        onPageTransitionWithPage={props.onPageTransitionWithPage}
         onSnippetFav={props.onSnippetFav}
         userIsLogged={props.userIsLogged}
         loading={props.loading}

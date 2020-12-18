@@ -4,11 +4,9 @@ import i18n from "../../i18n";
 import { ITEM_TYPES } from "../../js/constants";
 import { Helmet } from "react-helmet";
 
-
 // Stateless Functional Component
 
 const TagsFeed = (props) => {
-  console.log(props);
   return (
     <React.Fragment>
       <Helmet>
@@ -28,6 +26,7 @@ const TagsFeed = (props) => {
         type={ITEM_TYPES.TAG}
         links={props.links}
         onPageTransition={props.onPageTransition}
+        onPageTransitionWithPage={props.onPageTransitionWithPage}
         handleChangeFollowing={props.handleChangeFollowing}
         userIsLogged={props.userIsLogged}
         showFollowing={true}

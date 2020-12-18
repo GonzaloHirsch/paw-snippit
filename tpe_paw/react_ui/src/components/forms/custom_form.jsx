@@ -1,6 +1,6 @@
 import React from "react";
 import i18n from "../../i18n";
-import { mdiCodeTags, mdiLoading } from "@mdi/js";
+import { mdiCodeTags } from "@mdi/js";
 import Icon from "@mdi/react";
 
 const CustomForm = (props) => {

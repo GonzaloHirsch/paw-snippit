@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import { withRouter, matchPath } from "react-router-dom";
 import Icon from "@mdi/react";
 import i18n from "../../i18n";
-import {
-  mdiMagnify,
-} from "@mdi/js";
+import { mdiMagnify } from "@mdi/js";
 import { CONTEXT } from "../../js/constants";
 import {
   fillNavSearchFromUrl,
@@ -40,15 +38,21 @@ class SearchBar extends Component {
   }
 
   // Updating with the url info
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const currentSearch = { ...this.state.search };
     const { search } = nextProps;
 
     currentSearch.query = search.query;
     currentSearch.type = search.type;
     currentSearch.sort = search.sort;
-    currentSearch.showEmpty = typeof search.showEmpty === "boolean" ? search.showEmpty : (search.showEmpty == 'true');
-    currentSearch.showOnlyFollowing = typeof search.showOnlyFollowing === "boolean" ? search.showOnlyFollowing : (search.showOnlyFollowing == 'true');
+    currentSearch.showEmpty =
+      typeof search.showEmpty === "boolean"
+        ? search.showEmpty
+        : search.showEmpty === "true";
+    currentSearch.showOnlyFollowing =
+      typeof search.showOnlyFollowing === "boolean"
+        ? search.showOnlyFollowing
+        : search.showOnlyFollowing === "true";
 
     this.setState({ search: currentSearch });
   }
@@ -121,7 +125,7 @@ class SearchBar extends Component {
   getShowEmptySearchControl() {
     return (
       <button
-        className="btn btn-outline-secondary"
+        className="btn btn-outline-secondary no-border navbar-following-buttons"
         type="button"
         onClick={(e) => this.handleSearchChangeAndSearch(e, "showEmpty", true)}
       >
@@ -137,30 +141,30 @@ class SearchBar extends Component {
       return (
         <React.Fragment>
           {this.getShowEmptySearchControl()}
-          <button
-            className="btn btn-outline-secondary"
-            type="button"
-            onClick={(e) =>
-              this.handleSearchChangeAndSearch(e, "showOnlyFollowing", true)
-            }
-          >
-            {this.state.search.showOnlyFollowing
-              ? i18n.t("nav.search.hideOnlyFollowing")
-              : i18n.t("nav.search.showOnlyFollowing")}
-          </button>
+          {this.props.userIsLogged && (
+            <button
+              className="btn btn-outline-secondary no-border navbar-following-buttons"
+              type="button"
+              onClick={(e) =>
+                this.handleSearchChangeAndSearch(e, "showOnlyFollowing", true)
+              }
+            >
+              {this.state.search.showOnlyFollowing
+                ? i18n.t("nav.search.hideOnlyFollowing")
+                : i18n.t("nav.search.showOnlyFollowing")}
+            </button>
+          )}
         </React.Fragment>
       );
     } else if (ctx === CONTEXT.LANGUAGES) {
       return (
-        <React.Fragment>
-          {this.getShowEmptySearchControl()}
-        </React.Fragment>
+        <React.Fragment>{this.getShowEmptySearchControl()}</React.Fragment>
       );
     } else {
       return (
         <React.Fragment>
           <select
-            className="custom-select form-control"
+            className="navbar-dropdowns custom-select form-control"
             id="inputGroupSelect02"
             onChange={(e) => this.handleSearchChange(e, "type", false)}
             value={this.state.search.type}
@@ -180,7 +184,7 @@ class SearchBar extends Component {
             </option>
           </select>
           <select
-            className="custom-select form-control"
+            className="navbar-dropdowns custom-select form-control"
             id="inputGroupSelect03"
             onChange={(e) => this.handleSearchChange(e, "sort", false)}
             value={this.state.search.sort}
@@ -201,29 +205,27 @@ class SearchBar extends Component {
     const { ctx } = this.props;
     return (
       <form
-        className="form-inline my-auto my-lg-0 col-8"
+        className="input-group mr-sm-2 search-box"
         onSubmit={(e) => this.handleSearch(e, this.state.search)}
       >
-        <div className="input-group mr-sm-2 search-box">
-          <input
-            type="text"
-            className="form-control"
-            placeholder={i18n.t("nav.search.searchHint")}
-            aria-label={i18n.t("nav.search.searchHint")}
-            aria-describedby="button-addon2"
-            onChange={(e) => this.handleSearchChange(e, "query", false)}
-            value={this.state.search.query}
-          />
-          {this.getSearchItemsByContext(ctx)}
-          <div className="input-group-append">
-            <button
-              className="btn btn-outline-secondary"
-              type="submit"
-              id="button-addon2"
-            >
-              <Icon path={mdiMagnify} size={1} />
-            </button>
-          </div>
+        <input
+          type="text"
+          className="search-box-style form-control"
+          placeholder={i18n.t("nav.search.searchHint")}
+          aria-label={i18n.t("nav.search.searchHint")}
+          aria-describedby="button-addon2"
+          onChange={(e) => this.handleSearchChange(e, "query", false)}
+          value={this.state.search.query}
+        />
+        {this.getSearchItemsByContext(ctx)}
+        <div className="input-group-append">
+          <button
+            className="search-button btn btn-outline-secondary"
+            type="submit"
+            id="button-addon2"
+          >
+            <Icon path={mdiMagnify} size={1} />
+          </button>
         </div>
       </form>
     );

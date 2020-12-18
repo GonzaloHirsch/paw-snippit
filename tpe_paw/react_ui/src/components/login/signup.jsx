@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import store from "../../store";
 import { loginSuccess } from "../../redux/actions/actionCreators";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import AuthClient from "../../api/implementations/AuthClient";
 import i18n from "../../i18n";
 import { mdiEmail, mdiAccount, mdiLock } from "@mdi/js";
@@ -32,6 +32,23 @@ class SignUp extends Component {
     responseErrors: null,
     loading: false,
   };
+
+  getRedirectionObject(path) {
+    if (this.props.history.location.state !== undefined) {
+      const fromLocation = this.props.history.location.state.from;
+      if (
+        fromLocation !== undefined &&
+        fromLocation !== null &&
+        fromLocation !== ""
+      ) {
+        return { pathname: path, state: { from: this.props.history.location } };
+      } else {
+        return { pathname: path };
+      }
+    } else {
+      return { pathname: path };
+    }
+  }
 
   handleSubmit(event) {
     event.preventDefault();
@@ -65,8 +82,21 @@ class SignUp extends Component {
               // We add the remember to be true
               store.dispatch(loginSuccess({ token }, { refreshToken }, true));
 
-              // Push to home
-              this.props.history.push("/");
+              if (this.props.history.location.state !== undefined) {
+                const fromLocation = this.props.history.location.state.from;
+                if (
+                  fromLocation !== undefined &&
+                  fromLocation !== null &&
+                  fromLocation !== ""
+                ) {
+                  this.props.history.push(fromLocation);
+                } else {
+                  // Push to home
+                  this.props.history.push("/");
+                }
+              } else {
+                this.props.history.push("/");
+              }
             });
         })
         .catch((e) => {
@@ -92,7 +122,7 @@ class SignUp extends Component {
             responseErrors = i18n.t("errors.unknownError");
           }
           this.setState({
-            responseErrors: i18n.t("errors.serverError"),
+            responseErrors: responseErrors,
             loading: false,
           });
         });
@@ -140,6 +170,7 @@ class SignUp extends Component {
         <CustomForm
           title={i18n.t("signup.title")}
           action={i18n.t("signup.form.action")}
+          generalError={this.state.responseErrors}
           onSubmit={(e) => this.handleSubmit(e)}
           includeAppName={true}
           loading={this.state.loading}
@@ -191,7 +222,7 @@ class SignUp extends Component {
         >
           <span>
             {i18n.t("signup.login")}
-            <Link to="/login">
+            <Link to={this.getRedirectionObject("/login")} className="fwhite">
               <strong>{i18n.t("signup.loginCall")}</strong>
             </Link>
           </span>
@@ -201,4 +232,4 @@ class SignUp extends Component {
   }
 }
 
-export default SignUp;
+export default withRouter(SignUp);

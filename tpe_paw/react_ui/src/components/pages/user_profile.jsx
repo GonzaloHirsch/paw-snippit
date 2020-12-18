@@ -17,6 +17,8 @@ import { Helmet } from "react-helmet";
 class UserProfile extends Component {
   userClient;
   protectedClient;
+  ActiveSnippetFeed;
+  DeletedSnippetFeed;
 
   constructor(props) {
     super(props);
@@ -27,6 +29,40 @@ class UserProfile extends Component {
       this.protectedClient = new UserClient(this.props, state.auth.token);
       loggedUserId = state.auth.info.uid;
     }
+
+    // Generating feed instances
+    this.ActiveSnippetFeed = SnippetFeedHOC(
+      SnippetProfileFeed,
+      (SnippetFeedClient, page) =>
+        SnippetFeedClient.getProfileActiveSnippetFeed(
+          page,
+          this.state.profileOwnerId
+        ),
+      (SnippetFeedClient, page, search) =>
+        SnippetFeedClient.searchProfileActiveSnippetFeed(
+          page,
+          this.state.profileOwnerId,
+          search
+        ),
+      (url) => getNavSearchFromUrl(url)
+    );
+
+    this.DeletedSnippetFeed = SnippetFeedHOC(
+      SnippetFeed,
+      (SnippetFeedClient, page) =>
+        SnippetFeedClient.getProfileDeletedSnippetFeed(
+          page,
+          this.state.profileOwnerId
+        ),
+      (SnippetFeedClient, page, search) =>
+        SnippetFeedClient.searchProfileDeletedSnippetFeed(
+          page,
+          this.state.profileOwnerId,
+          search
+        ),
+      (url) => getNavSearchFromUrl(url)
+    );
+
     this.state = {
       loggedUserId: loggedUserId,
       context: ACTIVE_USER_SNIPPETS,
@@ -38,6 +74,10 @@ class UserProfile extends Component {
       ),
       loading: true,
       descriptionLoading: false,
+      imageLoading: false,
+      errors: {
+        image: null,
+      },
     };
   }
 
@@ -65,7 +105,7 @@ class UserProfile extends Component {
     this.loadUserData(this.state.profileOwnerId);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.match !== null && nextProps.match !== undefined) {
       const userId = parseInt(nextProps.match.params.id, 10);
       if (userId !== this.state.profileOwnerId) {
@@ -92,12 +132,38 @@ class UserProfile extends Component {
   };
 
   onUpdateImage = (image) => {
+    this.setState({ imageLoading: true });
     this.protectedClient
       .putUserImage(this.state.profileOwnerId, image)
       .then((res) => {
+        this.setState({ imageLoading: false, errors: { image: null } });
         this.loadUserData(this.state.profileOwnerId);
       })
-      .catch((e) => {});
+      .catch((e) => {
+        let errors = {
+          image: null,
+        };
+        if (e.response) {
+          // client received an error response (5xx, 4xx)
+          if (e.response.status === 400) {
+            errors.image = i18n.t("profile.errors.imageTooBig", {
+              size: "1MB",
+            });
+          } else if (e.response.status === 500) {
+            errors.image = i18n.t("profile.errors.changeImageServerError");
+          }
+        } else if (e.request) {
+          // client never received a response, or request never left
+          errors.image = i18n.t("errors.noConnection");
+        } else {
+          // anything else
+          errors.image = i18n.t("errors.unknownError");
+        }
+        this.setState({
+          errors: errors,
+          imageLoading: false,
+        });
+      });
   };
 
   isOwner = () => {
@@ -154,43 +220,13 @@ class UserProfile extends Component {
 
   _renderFeedContext() {
     if (this.state.context === ACTIVE_USER_SNIPPETS) {
-      const ActiveSnippetFeed = SnippetFeedHOC(
-        SnippetProfileFeed,
-        (SnippetFeedClient, page) =>
-          SnippetFeedClient.getProfileActiveSnippetFeed(
-            page,
-            this.state.profileOwnerId
-          ),
-        (SnippetFeedClient, page, search) =>
-          SnippetFeedClient.searchProfileActiveSnippetFeed(
-            page,
-            this.state.profileOwnerId,
-            search
-          ),
-        (url) => getNavSearchFromUrl(url)
-      );
       return (
-        <ActiveSnippetFeed
+        <this.ActiveSnippetFeed
           isOwner={this.state.profileOwnerId === this.state.loggedUserId}
         />
       );
     } else if (this.state.context === DELETED_USER_SNIPPETS) {
-      const DeletedSnippetFeed = SnippetFeedHOC(
-        SnippetFeed,
-        (SnippetFeedClient, page) =>
-          SnippetFeedClient.getProfileDeletedSnippetFeed(
-            page,
-            this.state.profileOwnerId
-          ),
-        (SnippetFeedClient, page, search) =>
-          SnippetFeedClient.searchProfileDeletedSnippetFeed(
-            page,
-            this.state.profileOwnerId,
-            search
-          ),
-        (url) => getNavSearchFromUrl(url)
-      );
-      return <DeletedSnippetFeed />;
+      return <this.DeletedSnippetFeed />;
     }
   }
 
@@ -210,6 +246,8 @@ class UserProfile extends Component {
             loggedUserId={this.state.loggedUserId}
             loading={this.state.loading}
             descriptionLoading={this.state.descriptionLoading}
+            imageLoading={this.state.imageLoading}
+            imageRequestErrors={this.state.errors.image}
             updateDescription={(description) =>
               this.onUpdateDescription(description)
             }

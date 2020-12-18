@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import AuthClient from "../../api/implementations/AuthClient";
 import i18n from "../../i18n";
 import { mdiEmail } from "@mdi/js";
+import { withRouter } from "react-router-dom";
 import TextInputFieldWithIcon from "../forms/text_input_field_with_icon";
 import CustomForm from "../forms/custom_form";
 import { mdiCodeTags } from "@mdi/js";
@@ -13,7 +14,6 @@ import {
   hasErrors,
 } from "../../js/validations";
 import { Helmet } from "react-helmet";
-
 
 class RecoverSend extends Component {
   state = {
@@ -46,8 +46,6 @@ class RecoverSend extends Component {
             // client received an error response (5xx, 4xx)
             if (e.response.status === 400) {
               let errors = {};
-              console.log(e);
-              console.log(e.response.data.errors);
               e.response.data.errors.forEach((error) => {
                 for (let key in error) {
                   errors[key] = error[key];
@@ -117,7 +115,7 @@ class RecoverSend extends Component {
               {i18n.t("recover.afterMessage")}
             </span>
             <button
-              className="btn btn-lg btn-primary btn-block mb-3 rounded-border"
+              className="btn btn-lg btn-primary btn-block mb-3 rounded-border form-button"
               onClick={() => this.handleGoHome()}
             >
               {i18n.t("recover.form.afterAction")}
@@ -169,4 +167,4 @@ class RecoverSend extends Component {
   }
 }
 
-export default RecoverSend;
+export default withRouter(RecoverSend);

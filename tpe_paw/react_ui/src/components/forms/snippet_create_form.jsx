@@ -6,12 +6,14 @@ import LanguagesAndTagsClient from "../../api/implementations/LanguagesAndTagsCl
 import TextAreaInputField from "../forms/text_area_input_field";
 import i18n from "../../i18n";
 import { withRouter } from "react-router";
+import { Alert } from "reactstrap";
 import {
   handleChange,
   validateAll,
   hasErrors,
   SNIPPET_CREATE_VALIDATIONS,
 } from "../../js/validations";
+import { extractResourceIdFromHeaders } from "../../js/api_utils";
 
 class SnippetCreateForm extends Component {
   snippetClient;
@@ -41,6 +43,10 @@ class SnippetCreateForm extends Component {
         tags: [],
       },
       loading: false,
+      alert: {
+        show: false,
+        message: "",
+      },
     };
   }
 
@@ -111,11 +117,29 @@ class SnippetCreateForm extends Component {
     snippet.tags = snippet.tags.map((tag) => tag.id);
     this.snippetClient
       .postCreateSnippet(snippet)
-      .then(() => {
-        this.props.history.push("/"); // On success, redirect to the Home screen
+      .then((res) => {
+        this.props.history.push(
+          "/snippets/" + extractResourceIdFromHeaders(res.headers)
+        ); // On success, redirect to the snippet
       })
-      .catch((e) => {}); // TODO
+      .catch((e) => {
+        if (e.response) {
+          // Error is not 401, 403, 404 or 500
+          const alert = {
+            show: true,
+            message: i18n.t("errors.snippetCreate"),
+          };
+          this.setState({ alert: alert });
+        }
+        this.setState({ loading: false });
+      });
   }
+
+  // To dismiss the alert in case of error
+  onDismiss = () => {
+    const alert = { show: false, message: "" };
+    this.setState({ alert: alert });
+  };
 
   render() {
     const { languages, tags } = this.state.options;
@@ -210,6 +234,14 @@ class SnippetCreateForm extends Component {
         >
           {i18n.t("snippetCreate.button")}
         </button>
+        <Alert
+          color="danger"
+          className="shadow flex-center custom-alert"
+          isOpen={this.state.alert.show}
+          toggle={() => this.onDismiss()}
+        >
+          {this.state.alert.message}
+        </Alert>
       </form>
     );
   }

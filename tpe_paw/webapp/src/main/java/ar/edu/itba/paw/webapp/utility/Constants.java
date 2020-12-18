@@ -42,6 +42,9 @@ public final class Constants {
 
     public static final String API_PREFIX = "/api/v1/";
 
+    public static final int MB_1 = 1048576;
+    public static final int UPLOAD_MAX_SIZE = 1 * MB_1;
+
     // Refresh authority to check if the token contains
     public static final GrantedAuthority REFRESH_AUTHORITY = new SimpleGrantedAuthority(Authorities.REFRESH.getValue());
 

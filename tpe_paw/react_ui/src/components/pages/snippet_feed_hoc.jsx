@@ -6,6 +6,8 @@ import store from "../../store";
 import { withRouter, matchPath } from "react-router-dom";
 import { areEqualShallow } from "../../js/comparison";
 import SnippetActionsClient from "../../api/implementations/SnippetActionsClient";
+import { Alert } from "reactstrap";
+import i18n from "../../i18n";
 
 // Higher Order Component to reuse the repeated behaviour of the pages that contain Snippet Feed
 
@@ -42,6 +44,7 @@ function SnippetFeedHOC(
         }
 
         this.onPageTransition = this.onPageTransition.bind(this);
+        this.onPageTransitionWithPage = this.onPageTransitionWithPage.bind(this);
         this.onSnippetFav = this.onSnippetFav.bind(this);
 
         // Keeping track of the search
@@ -55,14 +58,18 @@ function SnippetFeedHOC(
           links: {},
           currentSearch: search,
           userIsLogged: userIsLogged,
-          loading: false
+          loading: false,
+          alert: {
+            show: false,
+            message: "",
+          },
         };
       }
 
       // Loading data
 
       loadSnippets(page) {
-        this.setState({loading: true})
+        this.setState({ loading: true });
         getSnippets(this.snippetFeedClient, page)
           .then((res) => {
             // Extracting the other pages headers
@@ -73,18 +80,27 @@ function SnippetFeedHOC(
                 links: newLinks,
                 snippets: res.data,
                 totalSnippets: itemCount,
-                loading: false
+                loading: false,
               });
             }
           })
-          .catch((e) => {});
+          .catch((e) => {
+            if (e.response) {
+              // Error is not 401, 403, 404 or 500
+              const alert = {
+                show: true,
+                message: i18n.t("errors.unknownError"),
+              };
+              this.setState({ alert: alert });
+            }
+            this.setState({ loading: false });
+          });
       }
 
       loadSearchedSnippets(page, search) {
-        this.setState({loading: true})
+        this.setState({ loading: true });
         searchSnippets(this.snippetFeedClient, page, search)
           .then((res) => {
-            console.log(res);
             // Extracting the other pages headers
             const newLinks = extractLinkHeaders(res.headers);
             const itemCount = extractItemCountHeader(res.headers);
@@ -93,11 +109,29 @@ function SnippetFeedHOC(
                 links: newLinks,
                 snippets: res.data,
                 totalSnippets: itemCount,
-                loading: false
+                loading: false,
               });
             }
           })
-          .catch((e) => {});
+          .catch((e) => {
+            if (e.response) {
+              // client received an error response (5xx, 4xx)
+              if (e.response.status === 400) {
+                // BAD REQUEST -> Show alert
+                const alert = { show: true, message: i18n.t("errors.e400") };
+                this.setState({ alert: alert });
+              } else {
+                // Error is not 401, 403, 404 or 500
+                const alert = {
+                  show: true,
+                  message: i18n.t("errors.unknownError"),
+                };
+                this.setState({ alert: alert });
+              }
+            }
+            // Stop loading in case of error
+            this.setState({ loading: false });
+          });
       }
 
       // Recover data from the URL
@@ -145,16 +179,20 @@ function SnippetFeedHOC(
           ),
           10
         );
+        this.onPageTransitionWithPage(pageToMove);
+      };
+
+      onPageTransitionWithPage = (page) => {
         // Adding the params to not lose the existing ones
         let params = new URLSearchParams(this.props.location.search);
-        params.set("page", pageToMove);
+        params.set("page", page);
 
         // Pushing the route
         this.props.history.push({
           pathname: this.props.location.pathname,
           search: "?" + params.toString(),
         });
-      };
+      }
 
       onSnippetFav = (e, id) => {
         let previousFavState = false;
@@ -179,14 +217,32 @@ function SnippetFeedHOC(
           this.snippetActionsClient
             .unfavSnippet(id)
             .then((res) => {})
-            .catch((e) => {});
+            .catch((e) => {
+              if (e.response) {
+                // Error is not 401, 403, 404 or 500
+                const alert = {
+                  show: true,
+                  message: i18n.t("errors.unknownError"),
+                };
+                this.setState({ alert: alert });
+              }
+            });
         }
         // Was not fav, not it is
         else {
           this.snippetActionsClient
             .favSnippet(id)
             .then((res) => {})
-            .catch((e) => {});
+            .catch((e) => {
+              if (e.response) {
+                // Error is not 401, 403, 404 or 500
+                const alert = {
+                  show: true,
+                  message: i18n.t("errors.unknownError"),
+                };
+                this.setState({ alert: alert });
+              }
+            });
         }
 
         // Prevent parent Link to navigate
@@ -231,15 +287,30 @@ function SnippetFeedHOC(
         }
       }
 
+      // To dismiss the alert in case of error
+      onDismiss = () => {
+        const alert = { show: false, message: "" };
+        this.setState({ alert: alert });
+      };
+
       render() {
         return (
           <div>
             <WrappedComponent
               onPageTransition={this.onPageTransition}
+              onPageTransitionWithPage={this.onPageTransitionWithPage}
               onSnippetFav={this.onSnippetFav}
               {...this.state}
               {...this.props}
             ></WrappedComponent>
+            <Alert
+              color="danger"
+              className="shadow flex-center custom-alert"
+              isOpen={this.state.alert.show}
+              toggle={() => this.onDismiss()}
+            >
+              {this.state.alert.message}
+            </Alert>
           </div>
         );
       }

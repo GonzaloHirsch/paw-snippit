@@ -15,7 +15,6 @@ import {
 } from "../../js/validations";
 import { Helmet } from "react-helmet";
 import { Alert } from "reactstrap";
-import ProfileVerifiedMessage from "./profile_verify_message";
 
 class Verify extends Component {
   authClient;
@@ -41,7 +40,6 @@ class Verify extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
     const params = new URLSearchParams(this.props.location.search);
     const id = params.get("id");
 

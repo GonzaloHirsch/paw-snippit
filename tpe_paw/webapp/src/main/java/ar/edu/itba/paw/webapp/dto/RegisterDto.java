@@ -13,20 +13,20 @@ import javax.ws.rs.FormParam;
 @FieldMatch(first = "password", second = "repeatPassword", message = "{FieldMatch.registerForm.passwords}")
 public class RegisterDto {
 
-    @Size(min=6, max=50)
-    @Pattern(regexp = "^[a-zA-Z0-9-_.]+$")
-    @NotBlank
-    @UniqueUsername
+    @Size(min=6, max=50, message = "{Size.registerForm.username}")
+    @Pattern(regexp = "^[a-zA-Z0-9-_.]+$", message = "{Pattern.registerForm.username}")
+    @NotBlank(message = "{NotBlank.registerForm.username}")
+    @UniqueUsername(message = "{Unique.registerForm.username}")
     private String username;
 
-    @Email
-    @NotBlank
-    @UniqueEmail
+    @Email(message = "{Email.registerForm.email}")
+    @NotBlank(message = "{NotBlank.registerForm.email}")
+    @UniqueEmail(message = "{Unique.registerForm.email}")
     private String email;
 
-    @Size(min=8)
-    @NotBlank
-    @Pattern(regexp = "^\\S*$", message = "{form.error.password}")
+    @Size(min=8, message = "{Size.registerForm.password}")
+    @NotBlank(message = "{NotBlank.registerForm.password}")
+    @Pattern(regexp = "^\\S*$", message = "{Pattern.password.spaces}")
     private String password;
 
     private String repeatPassword;

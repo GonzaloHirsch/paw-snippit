@@ -12,7 +12,6 @@ import DeleteItemModal from "../items/delete_item_modal";
 import { ITEM_TYPES } from "../../js/constants";
 import { Helmet } from "react-helmet";
 
-
 class SnippetsForLanguage extends Component {
   languagesAndTagsClient;
   languagesAndTagsActionsClient;
@@ -22,7 +21,9 @@ class SnippetsForLanguage extends Component {
 
     const state = store.getState();
     this.languagesAndTagsClient = new LanguagesAndTagsClient(this.props);
-    this.languagesAndTagsActionsClient = new LanguagesAndTagsActionsClient(this.props);
+    this.languagesAndTagsActionsClient = new LanguagesAndTagsActionsClient(
+      this.props
+    );
 
     let userIsAdmin = false;
     if (!(state.auth.token === null || state.auth.token === undefined)) {
@@ -55,20 +56,27 @@ class SnippetsForLanguage extends Component {
         pathname: "/login",
         state: { from: this.props.history.location },
       });
+      return false;
     }
+    return true;
   }
 
   _enforceUserIsAdmin() {
     // If user is not logged, redirect to login
     if (!this.state.userIsAdmin) {
       store.dispatch(logOut());
-      this.props.history.push("/login");
+      this.props.history.push({
+        pathname: "/login",
+        state: { from: this.props.history.location },
+      });
+      return true;
     }
+    return false;
   }
 
   _onDelete = (e) => {
-    this._enforceUserLogged();
-    this._enforceUserIsAdmin();
+    if (this._enforceUserLogged()) return;
+    if (this._enforceUserIsAdmin()) return;
 
     // Updating the local state
     let language = { ...this.state.language };
@@ -98,9 +106,10 @@ class SnippetsForLanguage extends Component {
       links,
       currentPage,
       onPageTransition,
+      onPageTransitionWithPage,
       onSnippetFav,
       userIsLogged,
-      loading
+      loading,
     } = this.props;
     return (
       <div className="flex-center flex-column">
@@ -146,6 +155,7 @@ class SnippetsForLanguage extends Component {
           links={links}
           currentPage={currentPage}
           onPageTransition={onPageTransition}
+          onPageTransitionWithPage={onPageTransitionWithPage}
           onSnippetFav={onSnippetFav}
           userIsLogged={userIsLogged}
           loading={loading}

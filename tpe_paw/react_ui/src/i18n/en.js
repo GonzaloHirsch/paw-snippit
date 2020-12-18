@@ -1,5 +1,4 @@
-export default {
-  test: "My test in ENGLISH",
+const i18n_en = {
   app: "Snippit",
   snippet: "Snippet",
   snippetsEmpty: "There are no snippets here",
@@ -45,10 +44,10 @@ export default {
     error_404: "Error 404",
     search: {
       searchHint: "Search...",
-      showEmpty: "Show empty",
-      hideEmpty: "Hide empty",
-      showOnlyFollowing: "Show only following",
-      hideOnlyFollowing: "Show all",
+      showEmpty: "Hiding Empty",
+      hideEmpty: "Showing Empty",
+      showOnlyFollowing: "Showing All",
+      hideOnlyFollowing: "Showing Followed",
       filter: {
         hint: "Search By",
         all: "All",
@@ -121,7 +120,7 @@ export default {
   },
   snippetCreate: {
     name: "Snippet Create",
-    message: "Go ahead and create your first snippet",
+    message: "Go ahead and create your first Snippet",
     button: "Create Snippet",
     header: "Create a Snippet",
     fields: {
@@ -136,7 +135,7 @@ export default {
       description: "Enter your snippet's description...",
       code: "Enter your snippet's code...",
       language: "Select a language...",
-      tags: "Select related tags...",
+      tags: "Select tags related to your snippet...",
     },
     errors: {
       empty: "{{field}} can not be empty",
@@ -194,8 +193,9 @@ export default {
         range: "From value must be smaller than To value",
         min: "Values must be larger than {{min}}",
         max: "Values must be smaller than {{max}}",
-        title: "Title must be less than {{num}} character",
-        username: "Username must be less than {{num}} character",
+        title: "Title must be less than {{num}} characters",
+        username: "Username must be less than {{num}} characters",
+        date: "From date must be an earlier date than To date",
       },
     },
   },
@@ -275,8 +275,11 @@ export default {
       descriptionPlaceholder: "Enter your description here...",
       errors: {
         description: "Description must not be longer than {{num}} characters",
-        image: "TODO message!",
       },
+    },
+    errors: {
+      imageTooBig: "Uploaded image is too big, maximum size is {{size}}",
+      changeImageServerError: "Error changing image, please try again later",
     },
   },
   verifyEmail: {
@@ -308,6 +311,7 @@ export default {
     create: "Create a New Account",
   },
   errors: {
+    e400: "The entered search is invalid.",
     e404: {
       header: "Error 404",
       number: "404",
@@ -327,6 +331,8 @@ export default {
     serverError: "Error in server, please try again later",
     unknownError: "Uknown error, please try again later",
     noConnection: "Connection to server lost, please try again later",
+    snippetCreate:
+      "An error occurred while creating your snippet. Please try again later.",
   },
   items: {
     empty: "No Snippets",
@@ -376,6 +382,7 @@ export default {
     alert: {
       success: "Successfully added the entered {{items}}.",
       danger: "Something went wrong, some of the {{items}} were not added.",
+      addError: "An error occurred when adding {{name}} to the list.",
     },
   },
   following: {
@@ -383,3 +390,5 @@ export default {
     showMore: "Show more",
   },
 };
+
+export default i18n_en;

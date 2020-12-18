@@ -8,19 +8,19 @@ import javax.validation.constraints.Size;
 import java.util.Collection;
 
 public class SnippetCreateDto {
-    @Size(min=5, max=50)
-    @NotBlankWithSpaces
+    @Size(min=5, max=50, message = "{Size.snippetCreateForm.title}")
+    @NotBlankWithSpaces(message = "NotBlankWithSpaces.message")
     private String title;
 
-    @Size(max=500)
+    @Size(max=500, message = "{Size.snippetCreateForm.description}")
     private String description;
 
-    @Size(min=5, max=30000)
-    @NotBlankWithSpaces
+    @Size(min=5, max=30000, message = "{Size.snippetCreateForm.code}")
+    @NotBlankWithSpaces(message = "NotBlankWithSpaces.message")
     private String code;
 
-    @Min(value=1)
-    @FieldExists(fieldName = "Language")
+    @Min(value=1, message = "{Min.snippetCreateForm.language}")
+    @FieldExists(fieldName = "Language", message = "Exists.notFound.language")
     private Long language;
 
     private Collection<String> tags;

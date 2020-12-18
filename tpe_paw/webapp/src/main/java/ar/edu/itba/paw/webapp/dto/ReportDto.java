@@ -5,8 +5,8 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class ReportDto {
-    @NotBlank
-    @Size(max=300)
+    @NotBlank(message = "{NotBlank.reportForm.reportDetail}")
+    @Size(max=300, message = "{Size.reportForm.reportDetail}")
     private String reportDetail;
 
     public String getReportDetail() {

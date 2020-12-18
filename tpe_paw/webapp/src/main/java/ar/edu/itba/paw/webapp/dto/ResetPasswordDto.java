@@ -8,14 +8,14 @@ import javax.validation.constraints.Size;
 
 @FieldMatch(first = "newPassword", second = "repeatNewPassword", message = "{FieldMatch.registerForm.passwords}")
 public class ResetPasswordDto {
-    @Size(min = 8)
-    @NotBlank
-    @Pattern(regexp = "^\\S*$", message = "{form.error.password}")
+    @Size(min = 8, message = "{Size.resetPasswordForm.newPassword}")
+    @NotBlank(message = "{NotBlank.resetPasswordForm.newPassword}")
+    @Pattern(regexp = "^\\S*$", message = "{Pattern.password.spaces}")
     private String newPassword;
 
     private String repeatNewPassword;
 
-    @NotBlank
+    @NotBlank(message = "{NotBlank.resetPasswordForm.token}")
     private String token;
 
     public String getNewPassword() {

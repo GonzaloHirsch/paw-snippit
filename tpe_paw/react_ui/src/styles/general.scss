@@ -81,6 +81,10 @@ h1 {
   justify-content: space-between;
 }
 
+.justify-end {
+  justify-content: flex-end;
+}
+
 .align-items-center {
   align-items: center;
 }
@@ -142,6 +146,11 @@ h1 {
 .rounded-border {
   border-radius: $border-radius !important;
 }
+
+.no-border {
+  border-radius: 0px !important;
+}
+
 .no-margin {
   margin: 0px !important;
 }
@@ -218,6 +227,10 @@ select:focus,
 textarea:focus,
 button:focus {
   outline: none !important;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 0.01rem rgba(206, 212, 218, 1) !important;
 }
 
 .custom-alert {

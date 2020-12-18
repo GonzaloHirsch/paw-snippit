@@ -209,7 +209,7 @@ const routes = [
   },
   {
     path: "/reset-password",
-    exact: false,
+    exact: true,
     name: i18n.t("nav.resetPassword"),
     component: ChangePassword,
     roles: [],
@@ -218,12 +218,12 @@ const routes = [
   },
   {
     path: "/verify",
-    exact: false,
+    exact: true,
     name: i18n.t("nav.verify"),
     component: Verify,
     roles: [ROLE_USER],
     anon: false,
-    strict: false,
+    strict: true,
   },
   {
     path: "/user/:id",

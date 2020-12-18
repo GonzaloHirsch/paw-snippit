@@ -232,6 +232,7 @@ class ExploreForm extends Component {
       this._setParamWithDefault(params, EXPLORE.FLAGGED, true); // FIXME!
       this._setTypeaheadWithDefault(params, EXPLORE.LANGUAGE);
       this._setTypeaheadWithDefault(params, EXPLORE.TAG);
+      params.set("page", 1);
 
       // Pushing the route
       this.props.history.push({

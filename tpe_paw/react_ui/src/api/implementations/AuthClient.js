@@ -1,4 +1,5 @@
 import Client from "../Client";
+import axios from "axios";
 
 export default class AuthClient extends Client {
   login(user, pass) {
@@ -13,7 +14,7 @@ export default class AuthClient extends Client {
       username: user,
       email: email,
       password: pass,
-      repeatPassword: repeatPass
+      repeatPassword: repeatPass,
     });
   }
 
@@ -27,16 +28,21 @@ export default class AuthClient extends Client {
     return this.instance.post("users/" + id + "/send_verify_email");
   }
 
-  verifyEmail(id, code){
+  verifyEmail(id, code) {
     return this.instance.post("users/" + id + "/verify_email", {
-      code: code
+      code: code,
     });
   }
 
   isTokenValid(id, token) {
-    return this.instance.post("users/" + id + "/valid_token", {
-      token: token,
-    });
+    const params = new URLSearchParams({ token: token });
+    const url = this.buildBaseUrl();
+    return axios.get(
+      url + "users/" + id + "/valid_token?" + params.toString(),
+      {
+        timeout: 60000,
+      }
+    );
   }
 
   changePassword(id, token, data) {

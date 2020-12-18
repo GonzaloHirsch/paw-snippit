@@ -285,9 +285,9 @@ public class UserController {
         return Response.noContent().build();
     }
 
-    @POST
+    @GET
     @Path("/{id}/valid_token")
-    public Response isRecoverPasswordTokenValid(final @PathParam(PATH_PARAM_ID) long id, final @Valid TokenDto tokenDto) {
+    public Response isRecoverPasswordTokenValid(final @PathParam(PATH_PARAM_ID) long id, final @Valid @BeanParam TokenDto tokenDto) {
         // No logged user can use this
         final User loggedUser = this.loginAuthentication.getLoggedInUser();
         if (loggedUser != null) {

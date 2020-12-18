@@ -274,7 +274,7 @@ const i18n_en = {
     form: {
       descriptionPlaceholder: "Enter your description here...",
       errors: {
-        description: "Description must not be longer than {{num}} characters",
+        description: "Description must not be longer than {{limit}} characters",
       },
     },
     errors: {

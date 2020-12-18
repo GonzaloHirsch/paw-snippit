@@ -44,7 +44,9 @@ function SnippetFeedHOC(
         }
 
         this.onPageTransition = this.onPageTransition.bind(this);
-        this.onPageTransitionWithPage = this.onPageTransitionWithPage.bind(this);
+        this.onPageTransitionWithPage = this.onPageTransitionWithPage.bind(
+          this
+        );
         this.onSnippetFav = this.onSnippetFav.bind(this);
 
         // Keeping track of the search
@@ -192,7 +194,7 @@ function SnippetFeedHOC(
           pathname: this.props.location.pathname,
           search: "?" + params.toString(),
         });
-      }
+      };
 
       onSnippetFav = (e, id) => {
         let previousFavState = false;
@@ -302,6 +304,9 @@ function SnippetFeedHOC(
               onSnippetFav={this.onSnippetFav}
               {...this.state}
               {...this.props}
+              isSearching={
+                !!matchPath(this.props.location.pathname, "**/search")
+              }
             ></WrappedComponent>
             <Alert
               color="danger"

@@ -38,6 +38,8 @@ public class UserController {
     @Autowired
     private SnippetService snippetService;
     @Autowired
+    private RoleService roleService;
+    @Autowired
     private TagService tagService;
     @Autowired
     private LoginAuthentication loginAuthentication;
@@ -74,6 +76,10 @@ public class UserController {
     public Response getById(final @PathParam(PATH_PARAM_ID) long id) {
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
+            final User loggedUser = this.loginAuthentication.getLoggedInUser();
+            if (this.roleService.isAdmin(maybeUser.get().getId()) && (loggedUser == null || !this.roleService.isAdmin(loggedUser.getId()))) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
             return Response.ok(UserDto.fromUser(maybeUser.get(), this.uriInfo)).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();

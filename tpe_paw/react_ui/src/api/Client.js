@@ -103,6 +103,9 @@ class Client {
             store.dispatch(logOut());
             props.history.push("/login");
           }
+          if (errorResponse.status === 404) {
+            props.history.push("/404");
+          }
           if (errorResponse.status === 500) {
             props.history.push("/500");
           }

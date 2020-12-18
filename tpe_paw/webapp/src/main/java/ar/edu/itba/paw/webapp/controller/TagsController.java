@@ -80,6 +80,11 @@ public class TagsController {
         final int tagCount = this.tagService.getAllTagsCount(showEmpty, showOnlyFollowing, currentUser != null ? currentUser.getId() : null);
         int pageCount = PagingHelper.CalculateTotalPages(tagCount, TAG_PAGE_SIZE);
 
+        // If the page asked is greater than the one existing
+        if (page > pageCount){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<TagWithEmptyDto>>(tags) {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
@@ -117,6 +122,11 @@ public class TagsController {
         final List<TagWithEmptyDto> tags = rawTags.stream().map(t -> TagWithEmptyDto.fromTag(t, loggedUserId, uriInfo)).collect(Collectors.toList());
         final int tagCount = this.tagService.getAllTagsCountByName(tagSearchDto.getQuery(), tagSearchDto.isShowEmpty(), tagSearchDto.isShowOnlyFollowing(), currentUser != null ? currentUser.getId() : null);
         int pageCount = PagingHelper.CalculateTotalPages(tagCount, TAG_PAGE_SIZE);
+
+        // If the page asked is greater than the one existing
+        if (page > pageCount){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<TagWithEmptyDto>>(tags) {
         });
@@ -164,6 +174,11 @@ public class TagsController {
             final int snippetCount = this.snippetService.getAllSnippetsByTagCount(id);
             int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
+            // If the page asked is greater than the one existing
+            if (page > pageCount){
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });
             ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
@@ -185,8 +200,13 @@ public class TagsController {
             final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.TAGS, searchDto.getSort(), null, id, page)
                     .stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
 
-            int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.TAGS, null, id);
+            int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getSort(), searchDto.getQuery(), SnippetDao.Locations.TAGS, null, id);
             final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
+
+            // If the page asked is greater than the one existing
+            if (page > pageCount){
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });

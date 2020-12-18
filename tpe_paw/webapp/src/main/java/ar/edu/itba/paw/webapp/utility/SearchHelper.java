@@ -61,12 +61,16 @@ public final class SearchHelper {
         }
     }
 
-    public static int GetSnippetByCriteriaCount(SnippetService snippetService, String type, String query, SnippetDao.Locations location, Long userId, Long resourceId) {
-        return snippetService.getSnippetByCriteriaCount(
-                typesMap.get(type),
-                query == null ? "" : query,
-                location,
-                userId,
-                resourceId);
+    public static int GetSnippetByCriteriaCount(SnippetService snippetService, String type, String sort, String query, SnippetDao.Locations location, Long userId, Long resourceId) {
+        if (!typesMap.containsKey(type) || !ordersMap.containsKey(sort)) {
+            return 0;
+        } else {
+            return snippetService.getSnippetByCriteriaCount(
+                    typesMap.get(type),
+                    query == null ? "" : query,
+                    location,
+                    userId,
+                    resourceId);
+        }
     }
 }

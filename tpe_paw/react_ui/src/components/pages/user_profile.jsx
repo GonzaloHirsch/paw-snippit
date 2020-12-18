@@ -173,7 +173,7 @@ class UserProfile extends Component {
   _renderVerifyMessage() {
     return this.state.loggedUserId === this.state.profileOwnerId &&
       !this.state.profileOwner.verified ? (
-      <div className="flex-center mt-2">
+      <div className="flex-center my-2">
         <ProfileVerifyMessage id={this.state.profileOwnerId} />
       </div>
     ) : null;

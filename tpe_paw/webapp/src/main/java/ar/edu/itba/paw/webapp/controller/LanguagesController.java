@@ -74,6 +74,11 @@ public class LanguagesController {
         final int languagesCount = this.languageService.getAllLanguagesCount(showEmpty);
         int pageCount = PagingHelper.CalculateTotalPages(languagesCount, LANGUAGE_PAGE_SIZE);
 
+        // If the page asked is greater than the one existing
+        if (page > pageCount){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<LanguageWithEmptyDto>>(languages) {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
@@ -92,6 +97,11 @@ public class LanguagesController {
         final List<LanguageWithEmptyDto> languages = rawLanguages.stream().map(l -> LanguageWithEmptyDto.fromLanguage(l, uriInfo)).collect(Collectors.toList());
         int languagesCount = this.languageService.getAllLanguagesCountByName(languageSearchDto.getQuery(), languageSearchDto.isShowEmpty());
         int pageCount = PagingHelper.CalculateTotalPages(languagesCount, LANGUAGE_PAGE_SIZE);
+
+        // If the page asked is greater than the one existing
+        if (page > pageCount){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<LanguageWithEmptyDto>>(languages) {
         });
@@ -149,6 +159,11 @@ public class LanguagesController {
             final int snippetCount = this.snippetService.getAllSnippetsByLanguageCount(id);
             int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
+            // If the page asked is greater than the one existing
+            if (page > pageCount){
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });
             ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
@@ -171,8 +186,13 @@ public class LanguagesController {
             final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.LANGUAGES, searchDto.getSort(), null, id, page)
                     .stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
 
-            int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.LANGUAGES, null, id);
+            int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getSort(), searchDto.getQuery(), SnippetDao.Locations.LANGUAGES, null, id);
             final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
+
+            // If the page asked is greater than the one existing
+            if (page > pageCount){
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });

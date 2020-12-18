@@ -118,6 +118,10 @@ class Client {
   getWithUrl(url) {
     return axios.get(url);
   }
+
+  buildBaseUrl(){
+    return `${this.protocol}${this.domain}${this.port}${this.base}`;
+  }
 }
 
 export default Client;

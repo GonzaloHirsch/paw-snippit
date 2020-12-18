@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import AuthClient from "../../api/implementations/AuthClient";
+import UserClient from "../../api/implementations/UserClient";
 import i18n from "../../i18n";
 import TextInputFieldWithIcon from "../forms/text_input_field_with_icon";
 import { withRouter } from "react-router-dom";
@@ -18,11 +19,9 @@ import { Alert } from "reactstrap";
 
 class Verify extends Component {
   authClient;
+  userClient;
 
   state = {
-    info: {
-      id: 0,
-    },
     fields: {
       code: "",
     },
@@ -37,25 +36,25 @@ class Verify extends Component {
   constructor(props) {
     super(props);
     this.authClient = new AuthClient(props, store.getState().auth.token);
+    this.userClient = new UserClient(this.props);
   }
 
   componentDidMount() {
-    const params = new URLSearchParams(this.props.location.search);
-    const id = params.get("id");
-
-    // Storing the info in the url
-    this.setState({ info: { id: id } });
-
-    const storedData = store.getState().auth;
-
-    if (storedData.status !== actions.LOGIN_SUCCESS) {
-      // REDIRECT TO 404
-    } else {
-      if (storedData.info.uid !== id) {
-        // REDIRECT to 403
-      }
-      // TODO: CHECK IF THE USER IS ALREADY VERIFIED OR NOT
-    }
+    this.userClient
+      .getUserWithId(store.getState().auth.info.uid)
+      .then((res) => {
+        if (res.data.verified){
+          this.props.history.push("/profile");
+        }
+      })
+      .catch((e) => {
+        if (e.response) {
+          // User not found, go to 404
+          if (e.response.status === 404) {
+            this.props.history.push("/404");
+          }
+        }
+      });
   }
 
   handleSubmit(event) {
@@ -65,7 +64,7 @@ class Verify extends Component {
 
     if (!hasErrors) {
       this.authClient
-        .verifyEmail(this.state.info.id, this.state.fields.code)
+        .verifyEmail(store.getState().auth.info.uid, this.state.fields.code)
         .then((res) => {
           this.handleGoProfile();
         })
@@ -101,7 +100,7 @@ class Verify extends Component {
 
   handleResendEmail() {
     this.authClient
-      .sendVerifyEmail(this.state.info.id)
+      .sendVerifyEmail(store.getState().auth.info.uid)
       .then((res) => {
         this.setState({ alertOpen: true, sendError: false });
       })

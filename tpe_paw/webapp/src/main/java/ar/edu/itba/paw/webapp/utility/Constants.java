@@ -32,6 +32,7 @@ public final class Constants {
     public static final String QUERY_PARAM_SHOW_EMPTY = "show_empty";
     public static final String PATH_PARAM_ID = "id";
     public static final String USER_PARAM_ID = "userId";
+    public static final String PATH_PARAM_TOKEN = "token";
 
     public static final String LINK_FIRST = "first";
     public static final String LINK_LAST = "last";

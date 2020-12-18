@@ -87,7 +87,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/upvoted_snippets/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.POST, API_PREFIX + "users/recover_password").anonymous()
                 .antMatchers(HttpMethod.POST, API_PREFIX + "users/change_password").anonymous()
-                .antMatchers(HttpMethod.POST, API_PREFIX + "users/*/valid_token").anonymous()
+                .antMatchers(HttpMethod.GET, API_PREFIX + "users/*/valid_token").anonymous()
                 .antMatchers(HttpMethod.PUT, API_PREFIX + "users/*/profile_photo").hasRole("USER")
                 .antMatchers(HttpMethod.PUT, API_PREFIX + "users/*/description").hasRole("USER")
                 .antMatchers(HttpMethod.POST, API_PREFIX + "users/*/send_verify_email").hasRole("USER")

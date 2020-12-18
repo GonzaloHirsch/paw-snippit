@@ -226,7 +226,7 @@ const routes = [
     strict: true,
   },
   {
-    path: "/user/:id",
+    path: "/users/:id",
     exact: true,
     name: i18n.t("nav.users"), // TODO FIX ME
     component: UserProfile,
@@ -235,7 +235,7 @@ const routes = [
     strict: false,
   },
   {
-    path: "/user/:id/search",
+    path: "/users/:id/search",
     exact: true,
     name: i18n.t("nav.users"), // TODO FIX ME
     component: UserProfile,

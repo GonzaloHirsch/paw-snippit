@@ -85,7 +85,7 @@ const i18n_en = {
         invalidUser: "Invalid username",
         emptyPass: "Password is required",
         smallPass: "Password must be at least 8 characters long",
-        invalidPass: "Invalid password",
+        invalidPass: "Password can not contain spaces",
       },
     },
   },

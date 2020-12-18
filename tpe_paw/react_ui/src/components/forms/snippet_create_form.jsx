@@ -100,7 +100,8 @@ class SnippetCreateForm extends Component {
     this.setState(state);
   }
 
-  _onSubmit() {
+  _onSubmit(e) {
+    e.preventDefault();
     const errors = validateAll(SNIPPET_CREATE_VALIDATIONS, this.state.fields);
 
     if (!hasErrors(errors)) {
@@ -113,8 +114,11 @@ class SnippetCreateForm extends Component {
 
   _createSnippet() {
     const snippet = { ...this.state.fields };
+    snippet.title = snippet.title.trim();
+    snippet.description = snippet.description.trim();
+    snippet.code = snippet.code.trim();
     snippet.language = snippet.language[0].id;
-    snippet.tags = snippet.tags.map((tag) => tag.id);
+    snippet.tags = snippet.tags.map((tag) => tag.name);
     this.snippetClient
       .postCreateSnippet(snippet)
       .then((res) => {
@@ -147,7 +151,7 @@ class SnippetCreateForm extends Component {
     const textareaColumns = 60;
     return (
       <form
-        onSubmit={() => this._onSubmit()}
+        onSubmit={(e) => this._onSubmit(e)}
         className="d-flex flex-column justify-space-between"
       >
         <div className="parent-width d-flex flex-row mb-3">

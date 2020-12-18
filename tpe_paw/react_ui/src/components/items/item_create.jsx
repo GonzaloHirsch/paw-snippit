@@ -15,11 +15,6 @@ class ItemCreate extends Component {
   constructor(props) {
     super(props);
     const state = store.getState();
-    if (state.auth.token === null || state.auth.token === undefined) {
-      // ERROR should not be here if you are not logged in
-    } else {
-      // TODO CHECK THAT HE IS ADMIN
-    }
 
     this.itemsClient = new LanguagesAndTagsClient(this.props, state.auth.token);
     this.state = {

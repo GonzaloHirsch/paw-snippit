@@ -81,7 +81,7 @@ public class TagsController {
         int pageCount = PagingHelper.CalculateTotalPages(tagCount, TAG_PAGE_SIZE);
 
         // If the page asked is greater than the one existing
-        if (page > pageCount){
+        if (page > pageCount && pageCount > 0){
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
@@ -124,7 +124,7 @@ public class TagsController {
         int pageCount = PagingHelper.CalculateTotalPages(tagCount, TAG_PAGE_SIZE);
 
         // If the page asked is greater than the one existing
-        if (page > pageCount){
+        if (page > pageCount && pageCount > 0){
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
@@ -175,7 +175,7 @@ public class TagsController {
             int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
             // If the page asked is greater than the one existing
-            if (page > pageCount){
+            if (page > pageCount && pageCount > 0){
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
 
@@ -204,7 +204,7 @@ public class TagsController {
             final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
 
             // If the page asked is greater than the one existing
-            if (page > pageCount){
+            if (page > pageCount && pageCount > 0){
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
 

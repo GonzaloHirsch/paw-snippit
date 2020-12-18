@@ -132,13 +132,13 @@ class SnippetsForTag extends Component {
 
     this.languagesAndTagsActionsClient
       .deleteTag(tag.id)
-      .then((res) => {})
+      .then((res) => {
+        // Redirect to tags again
+        this.props.history.push("/tags");
+      })
       .catch((e) => {});
 
     this._setDeleting();
-
-    // Redirect to tags again
-    this.props.history.push("/tags");
   };
 
   _setDeleting = () => {

@@ -30,18 +30,41 @@ class UserProfile extends Component {
       loggedUserId = state.auth.info.uid;
     }
 
+    let ownerId = parseInt(
+      this.props.match === undefined || this.props.match === null
+        ? loggedUserId
+        : this.props.match.params.id
+    );
+
     // Generating feed instances
+    this.instantiateFeedHOCs(ownerId);
+
+    this.state = {
+      loggedUserId: loggedUserId,
+      context: ACTIVE_USER_SNIPPETS,
+      profileOwner: [],
+      profileOwnerId: ownerId,
+      loading: true,
+      descriptionLoading: false,
+      imageLoading: false,
+      errors: {
+        image: null,
+      },
+    };
+  }
+
+  instantiateFeedHOCs(id) {
     this.ActiveSnippetFeed = SnippetFeedHOC(
       SnippetProfileFeed,
       (SnippetFeedClient, page) =>
         SnippetFeedClient.getProfileActiveSnippetFeed(
           page,
-          this.state.profileOwnerId
+          id
         ),
       (SnippetFeedClient, page, search) =>
         SnippetFeedClient.searchProfileActiveSnippetFeed(
           page,
-          this.state.profileOwnerId,
+          id,
           search
         ),
       (url) => getNavSearchFromUrl(url)
@@ -52,33 +75,16 @@ class UserProfile extends Component {
       (SnippetFeedClient, page) =>
         SnippetFeedClient.getProfileDeletedSnippetFeed(
           page,
-          this.state.profileOwnerId
+          id
         ),
       (SnippetFeedClient, page, search) =>
         SnippetFeedClient.searchProfileDeletedSnippetFeed(
           page,
-          this.state.profileOwnerId,
+          id,
           search
         ),
       (url) => getNavSearchFromUrl(url)
     );
-
-    this.state = {
-      loggedUserId: loggedUserId,
-      context: ACTIVE_USER_SNIPPETS,
-      profileOwner: [],
-      profileOwnerId: parseInt(
-        this.props.match === undefined || this.props.match === null
-          ? loggedUserId
-          : this.props.match.params.id
-      ),
-      loading: true,
-      descriptionLoading: false,
-      imageLoading: false,
-      errors: {
-        image: null,
-      },
-    };
   }
 
   loadUserData(id) {
@@ -110,6 +116,8 @@ class UserProfile extends Component {
       const userId = parseInt(nextProps.match.params.id, 10);
       if (userId !== this.state.profileOwnerId) {
         this.loadUserData(userId);
+        // Generating feed instances
+        this.instantiateFeedHOCs(userId);
       }
     }
   }
@@ -173,7 +181,7 @@ class UserProfile extends Component {
   _renderVerifyMessage() {
     return this.state.loggedUserId === this.state.profileOwnerId &&
       !this.state.profileOwner.verified ? (
-      <div className="flex-center mt-2">
+      <div className="flex-center my-2">
         <ProfileVerifyMessage id={this.state.profileOwnerId} />
       </div>
     ) : null;

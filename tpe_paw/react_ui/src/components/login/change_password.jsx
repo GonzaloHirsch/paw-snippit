@@ -209,7 +209,7 @@ class ChangePassword extends Component {
               {i18n.t("changePassword.invalidLink.message")}
             </span>
             <button
-              className="btn btn-lg btn-primary btn-block mb-3 rounded-lg"
+              className="btn btn-lg form-button btn-block mb-3 rounded-lg"
               onClick={() => this.handleGoRecover()}
             >
               {i18n.t("changePassword.invalidLink.action")}
@@ -275,13 +275,13 @@ class ChangePassword extends Component {
                 {i18n.t("changePassword.changeSuccess.message")}
               </span>
               <button
-                className="btn btn-lg btn-primary btn-block mb-3 rounded-lg"
+                className="btn btn-lg form-button btn-block mb-3 rounded-lg"
                 onClick={() => this.handleGoHome()}
               >
                 {i18n.t("changePassword.changeSuccess.actionGoHome")}
               </button>
               <button
-                className="btn btn-lg btn-primary btn-block mb-3 rounded-lg"
+                className="btn btn-lg form-button btn-block mb-3 rounded-lg"
                 onClick={() => this.handleGoLogin()}
               >
                 {i18n.t("changePassword.changeSuccess.actionGoLogin")}

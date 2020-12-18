@@ -103,6 +103,9 @@ class Client {
             store.dispatch(logOut());
             props.history.push("/login");
           }
+          if (errorResponse.status === 404) {
+            props.history.push("/404");
+          }
           if (errorResponse.status === 500) {
             props.history.push("/500");
           }
@@ -114,6 +117,10 @@ class Client {
 
   getWithUrl(url) {
     return axios.get(url);
+  }
+
+  buildBaseUrl(){
+    return `${this.protocol}${this.domain}${this.port}${this.base}`;
   }
 }
 

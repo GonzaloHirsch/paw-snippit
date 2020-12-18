@@ -85,7 +85,7 @@ const i18n_en = {
         invalidUser: "Invalid username",
         emptyPass: "Password is required",
         smallPass: "Password must be at least 8 characters long",
-        invalidPass: "Invalid password",
+        invalidPass: "Password can not contain spaces",
       },
     },
   },
@@ -274,7 +274,7 @@ const i18n_en = {
     form: {
       descriptionPlaceholder: "Enter your description here...",
       errors: {
-        description: "Description must not be longer than {{num}} characters",
+        description: "Description must not be longer than {{limit}} characters",
       },
     },
     errors: {

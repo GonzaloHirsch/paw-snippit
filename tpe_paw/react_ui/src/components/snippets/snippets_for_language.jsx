@@ -56,9 +56,9 @@ class SnippetsForLanguage extends Component {
         pathname: "/login",
         state: { from: this.props.history.location },
       });
-      return false;
+      return true;
     }
-    return true;
+    return false;
   }
 
   _enforceUserIsAdmin() {

@@ -232,6 +232,7 @@ class ExploreForm extends Component {
       this._setParamWithDefault(params, EXPLORE.FLAGGED, true); // FIXME!
       this._setTypeaheadWithDefault(params, EXPLORE.LANGUAGE);
       this._setTypeaheadWithDefault(params, EXPLORE.TAG);
+      params.set("page", 1);
 
       // Pushing the route
       this.props.history.push({
@@ -475,6 +476,7 @@ class ExploreForm extends Component {
     const flaggedPrefix = "explore.form.flagged.";
     const repErrorKey = "userReputation";
     const snippetErrorKey = "snippetVotes";
+    const dateErrorKey = "dateUploaded";
 
     const { fields, errors, options } = this.state;
 
@@ -631,12 +633,14 @@ class ExploreForm extends Component {
             date={fields.minDate}
             onChange={(e) => this.onDateChange(EXPLORE.MINDATE, e)}
             placeholder={i18n.t(placeholderPrefix + "from")}
+            error={this._inputHasErrors(dateErrorKey)}
           />
           <div className="m-2"></div>
           <CustomDatePicker
             date={fields.maxDate}
             onChange={(e) => this.onDateChange(EXPLORE.MAXDATE, e)}
             placeholder={i18n.t(placeholderPrefix + "to")}
+            error={this._inputHasErrors(dateErrorKey)}
           />
         </div>
         <hr />

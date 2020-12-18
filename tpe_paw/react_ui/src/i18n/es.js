@@ -85,7 +85,7 @@ const i18n_es = {
         invalidUser: "Nombre de usuario inválido",
         emptyPass: "Contraseña es requerida",
         smallPass: "Contraseña debe tener al menos 8 carácteres",
-        invalidPass: "Contraseña inválida",
+        invalidPass: "Contraseña no puede contener espacios",
       },
     },
   },

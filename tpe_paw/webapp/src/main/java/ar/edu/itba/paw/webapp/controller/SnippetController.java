@@ -86,6 +86,12 @@ public class SnippetController {
         final List<SnippetDto> snippets = this.snippetService.getAllSnippets(page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, loggedUserId, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
         final int numberOfSnippets = this.snippetService.getAllSnippetsCount();
         final int pageCount = PagingHelper.CalculateTotalPages(numberOfSnippets, SNIPPET_PAGE_SIZE);
+
+        // If the page asked is greater than the one existing
+        if (page > pageCount && pageCount > 0){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
@@ -101,10 +107,13 @@ public class SnippetController {
         final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.HOME, searchDto.getSort(), null, null, page)
                 .stream().map(s -> SnippetDto.fromSnippet(s, loggedUserId, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
 
-        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.HOME, null, null);
+        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getSort(), searchDto.getQuery(), SnippetDao.Locations.HOME, null, null);
         final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
 
-        //TODO Previously added the heart attributes
+        // If the page asked is greater than the one existing
+        if (page > pageCount && pageCount > 0){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
         });
@@ -145,6 +154,11 @@ public class SnippetController {
         final List<SnippetDto> snippets = snippetsCollection.stream().map(s -> SnippetDto.fromSnippet(s, loggedUserId, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
         final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
+        // If the page asked is greater than the one existing
+        if (page > pageCount && pageCount > 0){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
@@ -163,10 +177,6 @@ public class SnippetController {
             LOGGER.error(messageSource.getMessage("error.403.admin.snippet.create", null, Locale.ENGLISH));
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-
-        /* Extra validation
-        this.validator.validateTagsExists(snippetCreateForm.getTags(), errors, LocaleContextHolder.getLocale()); */
-        // TODO: CHECK IF TAGS EXISTS
 
         Instant dateCreated = Instant.now();
         Long snippetId = this.snippetService.createSnippet(loggedInUser, createDto.getTitle(), createDto.getDescription(), createDto.getCode(), dateCreated, createDto.getLanguage(), createDto.getTags());
@@ -197,6 +207,11 @@ public class SnippetController {
         final int snippetCount = this.snippetService.getAllFlaggedSnippetsCount();
         final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
+        // If the page asked is greater than the one existing
+        if (page > pageCount && pageCount > 0){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
         });
         ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
@@ -219,10 +234,13 @@ public class SnippetController {
         final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.FLAGGED, searchDto.getSort(), null, null, page)
                 .stream().map(s -> SnippetDto.fromSnippet(s, loggedUserId, uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
 
-        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.FLAGGED, null, null);
+        int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getSort(), searchDto.getQuery(), SnippetDao.Locations.FLAGGED, null, null);
         final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
 
-        //TODO Previously added the heart attributes
+        // If the page asked is greater than the one existing
+        if (page > pageCount && pageCount > 0){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
         Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
         });

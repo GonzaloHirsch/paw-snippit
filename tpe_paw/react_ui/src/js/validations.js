@@ -179,13 +179,13 @@ export const SNIPPET_CREATE_VALIDATIONS = {
   title: (val) => {
     const title = i18n.t("snippetCreate.fields.title");
     return (
-      (val.length === 0 &&
+      (val.trim().length === 0 &&
         i18n.t("snippetCreate.errors.empty", {
           field: "Title",
         })) ||
-      (val.length > 50 &&
+      (val.trim().length > 50 &&
         i18n.t("snippetCreate.errors.maxLimit", { field: title, num: 50 })) ||
-      (val.length < 5 &&
+      (val.trim().length < 5 &&
         i18n.t("snippetCreate.errors.minLimit", { field: title, num: 5 })) ||
       null
     );
@@ -193,7 +193,7 @@ export const SNIPPET_CREATE_VALIDATIONS = {
   description: (val) => {
     const descr = i18n.t("snippetCreate.fields.description");
     return (
-      (val.length > 500 &&
+      (val.trim().length > 500 &&
         i18n.t("snippetCreate.errors.minLimit", {
           field: descr,
           num: 500,
@@ -204,16 +204,16 @@ export const SNIPPET_CREATE_VALIDATIONS = {
   code: (val) => {
     const code = i18n.t("snippetCreate.fields.code");
     return (
-      (val.length === 0 &&
+      (val.trim().length === 0 &&
         i18n.t("snippetCreate.errors.empty", {
           field: code,
         })) ||
-      (val.length > 30000 &&
+      (val.trim().length > 30000 &&
         i18n.t("snippetCreate.errors.maxLimit", {
           field: code,
           num: 30000,
         })) ||
-      (val.length < 5 &&
+      (val.trim().length < 5 &&
         i18n.t("snippetCreate.errors.minLimit", { field: code, num: 5 })) ||
       null
     );
@@ -233,8 +233,7 @@ export const ITEM_CREATE_VALIDATIONS = {
     return (
       ((val.length < 1 || val.length > 30) &&
         i18n.t("itemCreate.errors.length")) ||
-      (RegExp("\\s").test(val) &&
-        i18n.t("itemCreate.errors.spaces")) ||
+      (RegExp("\\s").test(val) && i18n.t("itemCreate.errors.spaces")) ||
       null
     );
   },

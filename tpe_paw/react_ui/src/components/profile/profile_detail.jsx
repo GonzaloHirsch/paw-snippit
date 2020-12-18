@@ -65,7 +65,7 @@ class ProfileDetail extends Component {
     return (
       <button
         className={
-          "no-margin shadow btn btn-lg btn btn-danger btn-block mt-2 mb-1 rounded-border ld-over-inverse profile-button"
+          "mx-0 mb-2 shadow btn btn-lg btn btn-danger btn-block mt-2 mb-1 rounded-border ld-over-inverse profile-button"
         }
         onClick={() => this._onClickDiscard()}
       >

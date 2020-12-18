@@ -74,7 +74,7 @@ class SnippetFollowing extends Component {
   _renderShowMoreButton() {
     return this.state.followingTags.length > FOLLOWING_LIST_LIMIT ? (
       <button
-        className="no-margin form-button shadow btn btn-lg btn-block mt-2 mb-1 fwhite show-more-button"
+        className="form-button shadow btn btn-lg btn-block mt-2 mb-1 fwhite show-more-button"
         onClick={() => this._onShowMore()}
       >
         {i18n.t("following.showMore")}{" "}

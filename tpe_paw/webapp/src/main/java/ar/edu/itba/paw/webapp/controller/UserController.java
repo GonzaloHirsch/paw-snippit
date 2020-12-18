@@ -38,6 +38,8 @@ public class UserController {
     @Autowired
     private SnippetService snippetService;
     @Autowired
+    private RoleService roleService;
+    @Autowired
     private TagService tagService;
     @Autowired
     private LoginAuthentication loginAuthentication;
@@ -74,6 +76,10 @@ public class UserController {
     public Response getById(final @PathParam(PATH_PARAM_ID) long id) {
         Optional<User> maybeUser = this.userService.findUserById(id);
         if (maybeUser.isPresent()) {
+            final User loggedUser = this.loginAuthentication.getLoggedInUser();
+            if (this.roleService.isAdmin(maybeUser.get().getId()) && (loggedUser == null || !this.roleService.isAdmin(loggedUser.getId()))) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
             return Response.ok(UserDto.fromUser(maybeUser.get(), this.uriInfo)).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -91,6 +97,11 @@ public class UserController {
             final List<SnippetDto> snippets = this.snippetService.getAllSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
             final int snippetCount = this.snippetService.getAllSnippetsByOwnerCount(user.getId());
             final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
+
+            // If the page asked is greater than the one existing
+            if (page > pageCount && pageCount > 0){
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });
@@ -121,6 +132,11 @@ public class UserController {
                 final List<SnippetDto> snippets = this.snippetService.getAllDeletedSnippetsByOwner(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
                 final int snippetCount = this.snippetService.getAllDeletedSnippetsByOwnerCount(user.getId());
                 final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
+
+                // If the page asked is greater than the one existing
+                if (page > pageCount && pageCount > 0){
+                    return Response.status(Response.Status.NOT_FOUND).build();
+                }
 
                 Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
                 });
@@ -275,9 +291,9 @@ public class UserController {
         return Response.noContent().build();
     }
 
-    @POST
+    @GET
     @Path("/{id}/valid_token")
-    public Response isRecoverPasswordTokenValid(final @PathParam(PATH_PARAM_ID) long id, final @Valid TokenDto tokenDto) {
+    public Response isRecoverPasswordTokenValid(final @PathParam(PATH_PARAM_ID) long id, final @Valid @BeanParam TokenDto tokenDto) {
         // No logged user can use this
         final User loggedUser = this.loginAuthentication.getLoggedInUser();
         if (loggedUser != null) {
@@ -321,26 +337,6 @@ public class UserController {
         return Response.noContent().build();
     }
 
-  /*  @POST
-    @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    // TODO: HAY 2 metodos iguales
-    public Response changeUserDescription(final @PathParam(PATH_PARAM_ID) long id, final UserDto userDto) {
-        Optional<User> maybeUser = this.userService.findUserById(id);
-        if (maybeUser.isPresent()) {
-            final User user = maybeUser.get();
-            final User loggedUser = this.loginAuthentication.getLoggedInUser();
-            if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
-                this.userService.changeDescription(id, userDto.getDescription());
-                return Response.noContent().build();
-            } else {
-                return Response.status(Response.Status.FORBIDDEN).build();
-            }
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-    }*/
-
     @GET
     @Path("/{id}/favorite_snippets")
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -353,6 +349,11 @@ public class UserController {
                 final List<SnippetDto> snippets = this.snippetService.getAllFavoriteSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
                 final int snippetCount = this.snippetService.getAllFavoriteSnippetsCount(user.getId());
                 final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
+
+                // If the page asked is greater than the one existing
+                if (page > pageCount && pageCount > 0){
+                    return Response.status(Response.Status.NOT_FOUND).build();
+                }
 
                 Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
                 });
@@ -386,6 +387,11 @@ public class UserController {
                 final List<SnippetDto> snippets = this.snippetService.getAllFollowingSnippets(user.getId(), page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
                 final int snippetCount = this.snippetService.getAllFollowingSnippetsCount(user.getId());
                 final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
+
+                // If the page asked is greater than the one existing
+                if (page > pageCount && pageCount > 0){
+                    return Response.status(Response.Status.NOT_FOUND).build();
+                }
 
                 Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
                 });
@@ -442,6 +448,11 @@ public class UserController {
                 final int snippetCount = this.snippetService.getAllUpvotedSnippetsCount(user.getId());
                 final int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
 
+                // If the page asked is greater than the one existing
+                if (page > pageCount && pageCount > 0){
+                    return Response.status(Response.Status.NOT_FOUND).build();
+                }
+
                 Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
                 });
                 ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
@@ -478,8 +489,13 @@ public class UserController {
             final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), location, searchDto.getSort(), user.getId(), null, page)
                     .stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
 
-            int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getQuery(), location, user.getId(), null);
+            int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getSort(), searchDto.getQuery(), location, user.getId(), null);
             final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
+
+            // If the page asked is greater than the one existing
+            if (page > pageCount && pageCount > 0){
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
 
             Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
             });

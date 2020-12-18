@@ -7,7 +7,7 @@ import Icon from "@mdi/react";
 
 const SnippetDeletedMessage = () => {
   return (
-    <div className="row shadow danger-message p-3 mb-3 align-items-vertical">
+    <div className="row mx-0 shadow danger-message p-3 mb-3 align-items-vertical">
       <Icon className="mr-1 icon-danger" path={mdiDeleteSweep} size={3} />
       <div className="col">
         <h3 className="fw-700">{i18n.t("snippetDetail.deleted.title")}</h3>

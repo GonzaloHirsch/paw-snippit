@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.webapp.validations.DateOrder;
 import ar.edu.itba.paw.webapp.validations.IntegerOrder;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -10,13 +11,10 @@ import javax.ws.rs.QueryParam;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDate;
 
-//@DateOrder(min = "minDate", max = "maxDate", message = "{DateOrder.exploreForm.dates}")
+@DateOrder(min = "minDate", max = "maxDate", message = "{DateOrder.exploreForm.dates}")
 @IntegerOrder(min = "minRep", max = "maxRep", message = "{IntegerOrder.exploreForm.order}")
 @IntegerOrder(min = "minVotes", max = "maxVotes", message = "{IntegerOrder.exploreForm.order}")
 public class ExploreDto {
-
-    // TODO - Solve the Date parsing issues
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @QueryParam("minDate")
     private LocalDate minDate;
@@ -24,8 +22,6 @@ public class ExploreDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @QueryParam("maxDate")
     private LocalDate maxDate;
-
-    //    @BeforeToday(message = "{BeforeToday.exploreForm.date}")
 
     @Max(value = Integer.MAX_VALUE, message = "{Integer.maxValue}")
     @Min(value = Integer.MIN_VALUE, message = "{Integer.minValue}")
@@ -47,19 +43,19 @@ public class ExploreDto {
     @QueryParam("maxVotes")
     private Integer maxVotes;
 
-    @Min(value=-1)
+    @Min(value=-1, message = "{Min.exploreForm.language}")
     @QueryParam("language")
     private Long language;
 
-    @Min(value=-1)
+    @Min(value=-1, message = "{Min.exploreForm.tag}")
     @QueryParam("tag")
     private Long tag;
 
-    @Size(max=50)
+    @Size(max=50, message = "{Size.exploreForm.username}")
     @QueryParam("username")
     private String username;
 
-    @Size(max=50)
+    @Size(max=50, message = "{Size.exploreForm.title}")
     @QueryParam("title")
     private String title;
 

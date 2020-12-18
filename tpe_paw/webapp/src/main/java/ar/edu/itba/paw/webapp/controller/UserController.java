@@ -470,7 +470,7 @@ public class UserController {
             // If it is a protected feed, check if it is the owner
             if (location != SnippetDao.Locations.USER) {
                 final User loggedUser = this.loginAuthentication.getLoggedInUser();
-                if (loggedUser != null && loggedUser.getId().equals(user.getId())) {
+                if (loggedUser != null && !loggedUser.getId().equals(user.getId())) {
                     return Response.status(Response.Status.NOT_FOUND).build();
                 }
             }

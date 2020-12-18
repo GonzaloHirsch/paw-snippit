@@ -49,6 +49,7 @@ function ItemFeedHOC(
         }
 
         this.onPageTransition = this.onPageTransition.bind(this);
+        this.onPageTransitionWithPage = this.onPageTransitionWithPage.bind(this);
         this.handleChangeFollowing = this.handleChangeFollowing.bind(this);
 
         // Keeping track of the search
@@ -212,16 +213,20 @@ function ItemFeedHOC(
           ),
           10
         );
+        this.onPageTransitionWithPage(pageToMove);
+      };
+
+      onPageTransitionWithPage = (page) => {
         // Adding the params to not lose the existing ones
         let params = new URLSearchParams(this.props.location.search);
-        params.set("page", pageToMove);
+        params.set("page", page);
 
         // Pushing the route
         this.props.history.push({
           pathname: this.props.location.pathname,
           search: "?" + params.toString(),
         });
-      };
+      }
 
       checkIfLoadItems() {
         let pageParam = this.getPageFromUrl();
@@ -272,6 +277,7 @@ function ItemFeedHOC(
           <div>
             <WrappedComponent
               onPageTransition={this.onPageTransition}
+              onPageTransitionWithPage={this.onPageTransitionWithPage}
               handleChangeFollowing={this.handleChangeFollowing}
               {...this.state}
             ></WrappedComponent>

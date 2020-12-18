@@ -44,6 +44,7 @@ function SnippetFeedHOC(
         }
 
         this.onPageTransition = this.onPageTransition.bind(this);
+        this.onPageTransitionWithPage = this.onPageTransitionWithPage.bind(this);
         this.onSnippetFav = this.onSnippetFav.bind(this);
 
         // Keeping track of the search
@@ -153,6 +154,7 @@ function SnippetFeedHOC(
           this.props.location.pathname,
           "**/search"
         );
+        console.log("MOUNT")
         if (isSearching) {
           const search = searchFromUrl(this.props.location.search);
           this.loadSearchedSnippets(this.state.currentPage, search);
@@ -162,6 +164,7 @@ function SnippetFeedHOC(
       }
 
       componentDidUpdate() {
+        console.log("UPDATE")
         this.checkIfLoadSnippets();
       }
 
@@ -178,16 +181,20 @@ function SnippetFeedHOC(
           ),
           10
         );
+        this.onPageTransitionWithPage(pageToMove);
+      };
+
+      onPageTransitionWithPage = (page) => {
         // Adding the params to not lose the existing ones
         let params = new URLSearchParams(this.props.location.search);
-        params.set("page", pageToMove);
+        params.set("page", page);
 
         // Pushing the route
         this.props.history.push({
           pathname: this.props.location.pathname,
           search: "?" + params.toString(),
         });
-      };
+      }
 
       onSnippetFav = (e, id) => {
         let previousFavState = false;
@@ -274,6 +281,7 @@ function SnippetFeedHOC(
               }
             );
           } else {
+            console.log("RUN PAGE")
             this.setState({ currentPage: pageParam }, () => {
               // Retrieving the page param
               this.loadSnippets(pageParam);
@@ -293,6 +301,7 @@ function SnippetFeedHOC(
           <div>
             <WrappedComponent
               onPageTransition={this.onPageTransition}
+              onPageTransitionWithPage={this.onPageTransitionWithPage}
               onSnippetFav={this.onSnippetFav}
               {...this.state}
               {...this.props}

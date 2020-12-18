@@ -26,6 +26,7 @@ const TagsFeed = (props) => {
         type={ITEM_TYPES.TAG}
         links={props.links}
         onPageTransition={props.onPageTransition}
+        onPageTransitionWithPage={props.onPageTransitionWithPage}
         handleChangeFollowing={props.handleChangeFollowing}
         userIsLogged={props.userIsLogged}
         showFollowing={true}

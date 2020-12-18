@@ -152,6 +152,7 @@ class SnippetsForTag extends Component {
       links,
       currentPage,
       onPageTransition,
+      onPageTransitionWithPage,
       onSnippetFav,
       userIsLogged,
       loading,
@@ -210,6 +211,7 @@ class SnippetsForTag extends Component {
           links={links}
           currentPage={currentPage}
           onPageTransition={onPageTransition}
+          onPageTransitionWithPage={onPageTransitionWithPage}
           onSnippetFav={onSnippetFav}
           userIsLogged={userIsLogged}
           loading={loading}

@@ -17,6 +17,8 @@ import { Helmet } from "react-helmet";
 class UserProfile extends Component {
   userClient;
   protectedClient;
+  ActiveSnippetFeed;
+  DeletedSnippetFeed;
 
   constructor(props) {
     super(props);
@@ -27,6 +29,40 @@ class UserProfile extends Component {
       this.protectedClient = new UserClient(this.props, state.auth.token);
       loggedUserId = state.auth.info.uid;
     }
+
+    // Generating feed instances
+    this.ActiveSnippetFeed = SnippetFeedHOC(
+      SnippetProfileFeed,
+      (SnippetFeedClient, page) =>
+        SnippetFeedClient.getProfileActiveSnippetFeed(
+          page,
+          this.state.profileOwnerId
+        ),
+      (SnippetFeedClient, page, search) =>
+        SnippetFeedClient.searchProfileActiveSnippetFeed(
+          page,
+          this.state.profileOwnerId,
+          search
+        ),
+      (url) => getNavSearchFromUrl(url)
+    );
+
+    this.DeletedSnippetFeed = SnippetFeedHOC(
+      SnippetFeed,
+      (SnippetFeedClient, page) =>
+        SnippetFeedClient.getProfileDeletedSnippetFeed(
+          page,
+          this.state.profileOwnerId
+        ),
+      (SnippetFeedClient, page, search) =>
+        SnippetFeedClient.searchProfileDeletedSnippetFeed(
+          page,
+          this.state.profileOwnerId,
+          search
+        ),
+      (url) => getNavSearchFromUrl(url)
+    );
+
     this.state = {
       loggedUserId: loggedUserId,
       context: ACTIVE_USER_SNIPPETS,
@@ -183,44 +219,15 @@ class UserProfile extends Component {
   }
 
   _renderFeedContext() {
+    console.log("RENDER FEED")
     if (this.state.context === ACTIVE_USER_SNIPPETS) {
-      const ActiveSnippetFeed = SnippetFeedHOC(
-        SnippetProfileFeed,
-        (SnippetFeedClient, page) =>
-          SnippetFeedClient.getProfileActiveSnippetFeed(
-            page,
-            this.state.profileOwnerId
-          ),
-        (SnippetFeedClient, page, search) =>
-          SnippetFeedClient.searchProfileActiveSnippetFeed(
-            page,
-            this.state.profileOwnerId,
-            search
-          ),
-        (url) => getNavSearchFromUrl(url)
-      );
       return (
-        <ActiveSnippetFeed
+        <this.ActiveSnippetFeed
           isOwner={this.state.profileOwnerId === this.state.loggedUserId}
         />
       );
     } else if (this.state.context === DELETED_USER_SNIPPETS) {
-      const DeletedSnippetFeed = SnippetFeedHOC(
-        SnippetFeed,
-        (SnippetFeedClient, page) =>
-          SnippetFeedClient.getProfileDeletedSnippetFeed(
-            page,
-            this.state.profileOwnerId
-          ),
-        (SnippetFeedClient, page, search) =>
-          SnippetFeedClient.searchProfileDeletedSnippetFeed(
-            page,
-            this.state.profileOwnerId,
-            search
-          ),
-        (url) => getNavSearchFromUrl(url)
-      );
-      return <DeletedSnippetFeed />;
+      return <this.DeletedSnippetFeed />;
     }
   }
 

@@ -1,5 +1,4 @@
 const i18n_en = {
-  test: "My test in ENGLISH",
   app: "Snippit",
   snippet: "Snippet",
   snippetsEmpty: "There are no snippets here",
@@ -121,7 +120,7 @@ const i18n_en = {
   },
   snippetCreate: {
     name: "Snippet Create",
-    message: "Go ahead and create your first snippet",
+    message: "Go ahead and create your first Snippet",
     button: "Create Snippet",
     header: "Create a Snippet",
     fields: {
@@ -136,7 +135,7 @@ const i18n_en = {
       description: "Enter your snippet's description...",
       code: "Enter your snippet's code...",
       language: "Select a language...",
-      tags: "Select related tags...",
+      tags: "Select tags related to your snippet...",
     },
     errors: {
       empty: "{{field}} can not be empty",
@@ -194,8 +193,8 @@ const i18n_en = {
         range: "From value must be smaller than To value",
         min: "Values must be larger than {{min}}",
         max: "Values must be smaller than {{max}}",
-        title: "Title must be less than {{num}} character",
-        username: "Username must be less than {{num}} character",
+        title: "Title must be less than {{num}} characters",
+        username: "Username must be less than {{num}} characters",
         date: "From date must be an earlier date than To date",
       },
     },

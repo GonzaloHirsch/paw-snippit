@@ -164,10 +164,6 @@ public class SnippetController {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
-        /* Extra validation
-        this.validator.validateTagsExists(snippetCreateForm.getTags(), errors, LocaleContextHolder.getLocale()); */
-        // TODO: CHECK IF TAGS EXISTS
-
         Instant dateCreated = Instant.now();
         Long snippetId = this.snippetService.createSnippet(loggedInUser, createDto.getTitle(), createDto.getDescription(), createDto.getCode(), dateCreated, createDto.getLanguage(), createDto.getTags());
 

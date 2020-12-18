@@ -183,7 +183,10 @@ class Verify extends Component {
             className="my-2 text-white mx-auto"
             style={{ display: "block", textAlign: "center" }}
           >
-            <span onClick={() => this.handleResendEmail()}>
+            <span
+              style={{ cursor: "pointer" }}
+              onClick={() => this.handleResendEmail()}
+            >
               {i18n.t("verifyEmail.form.actionResend")}
             </span>
           </div>

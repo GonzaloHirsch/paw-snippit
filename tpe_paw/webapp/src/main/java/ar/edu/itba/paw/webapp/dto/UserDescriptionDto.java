@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.dto;
 import javax.validation.constraints.Size;
 
 public class UserDescriptionDto {
-    @Size(max=500)
+    @Size(max=500, message = "{Size.profileForm.description}")
     private String description;
 
 

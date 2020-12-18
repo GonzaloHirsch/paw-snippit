@@ -25,7 +25,7 @@ const i18n_es = {
     signup: "Registrarse",
     snippets: "Snippets",
     snippetsDetail: "Detalle de Snippets",
-    homeSearch: "Busqueda Principal",
+    homeSearch: "Búsqueda Principal",
     favorites: "Favoritos",
     tags: "Etiquetas",
     languages: "Lenguajes",
@@ -39,11 +39,11 @@ const i18n_es = {
     recover: "Recuperar",
     resetPassword: "Restablecer Contraseña",
     verify: "Verificar Email",
-    goodbye: "Ádios",
+    goodbye: "Adios",
     users: "Usuarios",
     error_404: "Error 404",
     search: {
-      searchHint: "Busqueda...",
+      searchHint: "Búsqueda...",
       showEmpty: "Escondiendo vacíos",
       hideEmpty: "Mostrando vacíos",
       showOnlyFollowing: "Mostrando todos",
@@ -66,8 +66,8 @@ const i18n_es = {
     },
   },
   login: {
-    title: "Bienvenidos devuelta a ",
-    message: "Porfavor inicie sesión",
+    title: "Bienvenido devuelta a ",
+    message: "Por favor inicie sesión",
     signup: "¿No tenés una cuenta? ",
     signupCall: "¡Regístrate aquí!",
     recover: "¿Olvidaste tu contraseña? ",
@@ -80,18 +80,18 @@ const i18n_es = {
       errors: {
         invalidGeneral: "Nombre de usuario o contraseña inválida",
         emptyUser: "Nombre de usuario es requerido",
-        smallUser: "Nombre de usuario debe tener al menos 6 caracteres",
-        bigUser: "Nombre de usuario no debe exceder los 50 caracteres",
+        smallUser: "Nombre de usuario debe tener al menos 6 carácteres",
+        bigUser: "Nombre de usuario no debe exceder los 50 carácteres",
         invalidUser: "Nombre de usuario inválido",
         emptyPass: "Contraseña es requerida",
-        smallPass: "Contraseña debe tener al menos 8 caracteres",
+        smallPass: "Contraseña debe tener al menos 8 carácteres",
         invalidPass: "Contraseña inválida",
       },
     },
   },
   signup: {
     title: "Bienvenido a ",
-    message: "Porfavor regístrese",
+    message: "Por favor regístrese",
     login: "¿Ya tenés una cuenta? ",
     loginCall: "¡Inicia sesión aquí!",
     form: {
@@ -107,7 +107,7 @@ const i18n_es = {
     message:
       "Ingresa el email asociado a tu cuenta y te mandaremos un enlace para recuperar tu contraseña",
     afterMessage:
-      "Un enlace se ha mandado al email indicado para completar el proceso de recuperación de contraseña",
+      "Un enlace se ha mandado al email indicado para completar el proceso de recupero de contraseña",
     form: {
       email: "Insertar tu email aquí",
       action: "Mandar mail",
@@ -139,8 +139,8 @@ const i18n_es = {
     },
     errors: {
       empty: "{{field}} no puede estar vacío",
-      maxLimit: "{{field}} debe tener menos que {{num}} caracteres",
-      minLimit: "{{field}} debe incluir mas de {{num}} caracteres",
+      maxLimit: "{{field}} debe tener menos que {{num}} carácteres",
+      minLimit: "{{field}} debe incluir mas de {{num}} carácteres",
       language: "Se debe selecionar un lenguaje",
       tags: "",
     },
@@ -193,8 +193,8 @@ const i18n_es = {
         range: "Límite inferior debe ser menor al superior",
         min: "Valores deben ser mayores que {{min}}",
         max: "Valores deben ser menores que {{max}}",
-        title: "Título debe tener menos que {{num}} caracteres",
-        username: "Usuario debe tener menos que {{num}} caracteres",
+        title: "Título debe tener menos que {{num}} carácteres",
+        username: "Usuario debe tener menos que {{num}} carácteres",
         date: "Fecha inferior debe ser antes que la superior",
       },
     },
@@ -228,7 +228,7 @@ const i18n_es = {
         "Este snippet fue marcado como incorrecto por el administrador. Puede no funcionar o ser inseguro.",
     },
     deleted: {
-      title: "Este snippet fue borrado por su dueño!",
+      title: "¡Este snippet fue borrado por su dueño!",
       message:
         "Snippets borrados permaneceran guardados en Favoritos si fueron likeados antes de ser borrados. Si eres el dueño, lo podras restaurar.",
     },
@@ -250,7 +250,7 @@ const i18n_es = {
         errors: {
           emptyMessage: "El mensaje no puede estar vacío",
           lengthMessage:
-            "Mensaje demansiado largo, no debe exceder los {{limit}} caracteres",
+            "Mensaje demansiado largo, no debe exceder los {{limit}} carácteres",
         },
       },
     },
@@ -274,15 +274,14 @@ const i18n_es = {
     form: {
       descriptionPlaceholder: "Ingresa tu descripción aquí...",
       errors: {
-        description: "La aquí no puede exceder los {{num}} caracteres",
-        image: "TODO message!",
+        description: "La aquí no puede exceder los {{num}} carácteres",
       },
     },
     errors: {
       imageTooBig:
         "Imagen subida es demasiado grande, tamaño maximo es {{size}}",
       changeImageServerError:
-        "Error cambiando la imagen, porfavor inténtelo más tarde.",
+        "Error cambiando la imagen, por favor inténtelo más tarde.",
     },
   },
   verifyEmail: {
@@ -328,15 +327,15 @@ const i18n_es = {
       number: "500",
       title: "Error de servidor",
       message:
-        "Parece que hubo un error en nuestro lado, porfavor inténtelo denuevo más tarde o vuelve a la Página Principal",
+        "Parece que hubo un error en nuestro lado, por favor inténtelo denuevo más tarde o vuelve a la Página Principal",
       action: "¡Volver a la Página Principal!",
     },
-    serverError: "Error en el servidor, porfavor inténtelo denuevo más tarde",
-    unknownError: "Error desconocido, porfavor inténtelo denuevo más tarde",
+    serverError: "Error en el servidor, por favor inténtelo denuevo más tarde",
+    unknownError: "Error desconocido, por favor inténtelo denuevo más tarde",
     noConnection:
-      "Conexión al servidor fue perdida, porfavor inténtelo denuevo más tarde",
+      "Conexión al servidor fue perdida, por favor inténtelo denuevo más tarde",
     snippetCreate:
-      "Ocurrio un error al crear tu snippet. Porfavor inténtelo denuevo más tarde.",
+      "Ocurrio un error al crear tu snippet. Por favor inténtelo denuevo más tarde.",
   },
   items: {
     empty: "Ningún Snippets",
@@ -377,7 +376,7 @@ const i18n_es = {
       action: "Agregar Lenguajes",
     },
     errors: {
-      length: "Longitud debe estar entre 1 y 30 caracteres",
+      length: "Longitud debe estar entre 1 y 30 carácteres",
       spaces: "Valór no puede contener espacios",
     },
     placeholders: {
@@ -391,7 +390,7 @@ const i18n_es = {
   },
   following: {
     errorMsg:
-      "Un error se produjo al dejar de seguir {{name}}. porfavor inténtelo denuevo más tarde.",
+      "Un error se produjo al dejar de seguir {{name}}. por favor inténtelo denuevo más tarde.",
     showMore: "Mostrar más",
   },
 };

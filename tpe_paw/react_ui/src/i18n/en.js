@@ -275,7 +275,6 @@ const i18n_en = {
       descriptionPlaceholder: "Enter your description here...",
       errors: {
         description: "Description must not be longer than {{num}} characters",
-        image: "TODO message!",
       },
     },
     errors: {

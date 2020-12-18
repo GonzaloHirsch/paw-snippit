@@ -43,7 +43,6 @@ class ChangePassword extends Component {
   loadComponentBasedOnParams(params) {
     const id = params.get("id");
     const token = params.get("token");
-    console.log(id, token, "PROPD")
 
     if (id !== this.state.info.id || token !== this.state.info.token) {
       // Storing the info in the url

@@ -67,29 +67,31 @@ class Pagination extends Component {
     return this.sortPagesArray(pages);
   }
 
-  renderPageItem(i, handler){
-    return (<li
-      className="page-item page-item-number"
-      onClick={() => handler(i)}
-    >
-      <span
-        className="page-link"
-        style={{
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          cursor: "pointer",
-        }}
+  renderPageItem(i, handler) {
+    return (
+      <li
+        key={i}
+        className="page-item page-item-number"
+        onClick={() => handler(i)}
       >
-        {i}
-      </span>
-    </li>);
+        <span
+          className="page-link"
+          style={{
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
+        >
+          {i}
+        </span>
+      </li>
+    );
   }
 
   render() {
     const curr = this.props.currentPage;
     const links = this.props.links;
-    console.log(links, curr, "PAG")
     const handlePageTransition = this.props.onPageTransition;
     const handlePageTransitionWithPage = this.props.onPageTransitionWithPage;
     const leftPages = this.getNumberLeftItems(links);
@@ -117,10 +119,10 @@ class Pagination extends Component {
               </span>
             </li>
           )}
-          {leftPages.map((i) => (
+          {leftPages.map((i) =>
             this.renderPageItem(i, handlePageTransitionWithPage)
-          ))}
-          <li className="page-item page-item-number">
+          )}
+          <li key={curr} className="page-item page-item-number">
             <span
               className="page-link page-link-selected"
               style={{
@@ -133,9 +135,9 @@ class Pagination extends Component {
               {curr}
             </span>
           </li>
-          {rightPages.map((i) => (
+          {rightPages.map((i) =>
             this.renderPageItem(i, handlePageTransitionWithPage)
-          ))}
+          )}
           {links[this.NEXT] !== undefined && (
             <li
               className="page-item"

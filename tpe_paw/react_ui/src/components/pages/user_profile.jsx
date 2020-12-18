@@ -219,7 +219,6 @@ class UserProfile extends Component {
   }
 
   _renderFeedContext() {
-    console.log("RENDER FEED")
     if (this.state.context === ACTIVE_USER_SNIPPETS) {
       return (
         <this.ActiveSnippetFeed

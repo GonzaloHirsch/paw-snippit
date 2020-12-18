@@ -340,7 +340,7 @@ const i18n_es = {
   items: {
     empty: "Ningún Snippets",
     follow: "Seguir",
-    unfollow: "Dejar de seguir",
+    unfollow: "No seguir",
     snippetsFor: "Snippets para {{item}}",
     delete: {
       actionName: "Borrar",

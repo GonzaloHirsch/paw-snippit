@@ -4,7 +4,7 @@
 
 Credenciales para el Admin:
 ```
-User: admin
+User: pawadmin
 Pass: AdM1n2o2oP4w
 ```
 

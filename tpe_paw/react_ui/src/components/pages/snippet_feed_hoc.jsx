@@ -154,7 +154,6 @@ function SnippetFeedHOC(
           this.props.location.pathname,
           "**/search"
         );
-        console.log("MOUNT")
         if (isSearching) {
           const search = searchFromUrl(this.props.location.search);
           this.loadSearchedSnippets(this.state.currentPage, search);
@@ -164,7 +163,6 @@ function SnippetFeedHOC(
       }
 
       componentDidUpdate() {
-        console.log("UPDATE")
         this.checkIfLoadSnippets();
       }
 
@@ -281,7 +279,6 @@ function SnippetFeedHOC(
               }
             );
           } else {
-            console.log("RUN PAGE")
             this.setState({ currentPage: pageParam }, () => {
               // Retrieving the page param
               this.loadSnippets(pageParam);

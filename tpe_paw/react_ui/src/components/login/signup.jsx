@@ -74,7 +74,6 @@ class SignUp extends Component {
             .login(this.state.fields.username, this.state.fields.password)
             .then((res) => {
               // Get the token from the response
-              // TODO: DETERMINE IF WE STORE THE REFRESH TOKEN
               const token = res.data.token;
               const refreshToken = res.data.refreshToken;
 

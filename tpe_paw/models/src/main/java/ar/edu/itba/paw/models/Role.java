@@ -9,7 +9,6 @@ import java.util.List;
 @Table(name="roles")
 public class Role {
 
-    //TODO: Check correct sequence generator
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roles_id_seq")
     @SequenceGenerator(allocationSize = 1, sequenceName = "roles_id_seq", name="roles_id_seq")

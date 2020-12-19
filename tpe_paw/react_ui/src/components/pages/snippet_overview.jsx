@@ -89,8 +89,8 @@ class SnippetOverview extends Component {
   loadSnippet() {
     const snippetId = parseInt(this.props.match.params.id, 10);
     // Update the snippet id to avoid recursion of updates
-    const oldSnippet = {...this.state.snippet};
-    oldSnippet.id = snippetId; 
+    const oldSnippet = { ...this.state.snippet };
+    oldSnippet.id = snippetId;
     this.setState({ loading: true, snippet: oldSnippet });
     const state = store.getState();
 
@@ -104,7 +104,6 @@ class SnippetOverview extends Component {
           ) &&
           snippet.deleted
         ) {
-          // TODO: REDIRECT TO 404
           this.props.history.push({
             pathname: "/login",
             state: { from: this.props.history.location },

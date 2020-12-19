@@ -16,9 +16,7 @@ class SnippetFollowing extends Component {
   constructor(props) {
     super(props);
     const state = store.getState();
-    if (state.auth.token === null || state.auth.token === undefined) {
-      // ERROR should not be here if you are not logged in
-    }
+
     this.tagActionClient = new LanguagesAndTagsActionsClient(
       this.props,
       state.auth.token

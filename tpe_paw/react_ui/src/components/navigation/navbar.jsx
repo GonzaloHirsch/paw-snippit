@@ -109,7 +109,7 @@ class NavBar extends Component {
       return;
     if (this.testForContext("**/tags", CONTEXT.TAGS)) return;
     if (this.testForContext("**/languages", CONTEXT.LANGUAGES)) return;
-    if (this.testForContext("**/snippets", CONTEXT.SNIPPETS)) return;
+    if (this.testForContext("**/snippets/*", CONTEXT.SNIPPETS)) return;
     if (this.testForContext("**/explore", CONTEXT.EXPLORE)) return;
     if (this.testForContext("**/profile", CONTEXT.PROFILE)) return;
     if (this.testForContext("**/following", CONTEXT.FOLLOWING)) return;

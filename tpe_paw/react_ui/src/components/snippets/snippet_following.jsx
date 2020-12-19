@@ -49,10 +49,16 @@ class SnippetFollowing extends Component {
     const index = getItemPositionInArray(followingList, tag.id);
     followingList.splice(index, 1);
     this.setState({ followingTags: followingList });
-    this.tagActionClient.unfollowTag(tag.id).catch((e) => {
-      const unfollowError = { alert: true, name: tag.name };
-      this.setState({ unfollowError: unfollowError });
-    });
+    this.tagActionClient
+      .unfollowTag(tag.id)
+      .then((res) => {
+        // Want to reload snippets now that there was an unfollowed tag
+        this.props.loadSnippetsOnStateChange("following?page=1", 1);
+      })
+      .catch((e) => {
+        const unfollowError = { alert: true, name: tag.name };
+        this.setState({ unfollowError: unfollowError });
+      });
   };
 
   onDismiss = () => {

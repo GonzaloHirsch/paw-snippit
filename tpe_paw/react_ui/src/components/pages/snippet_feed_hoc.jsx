@@ -289,6 +289,16 @@ function SnippetFeedHOC(
         }
       }
 
+      loadSnippetsOnStateChange = (pathname, page) => {
+        this.loadSnippets(1);
+        if (
+          !!matchPath(this.props.location.pathname, "**/search") ||
+          page != this.state.currentPage
+        ) {
+          this.props.history.push(pathname);
+        }
+      };
+
       // To dismiss the alert in case of error
       onDismiss = () => {
         const alert = { show: false, message: "" };
@@ -306,6 +316,9 @@ function SnippetFeedHOC(
               {...this.props}
               isSearching={
                 !!matchPath(this.props.location.pathname, "**/search")
+              }
+              loadSnippetsOnStateChange={(path) =>
+                this.loadSnippetsOnStateChange(path)
               }
             ></WrappedComponent>
             <Alert

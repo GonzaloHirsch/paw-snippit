@@ -109,7 +109,7 @@ public class SnippetDeepSearchQuery {
             if (username != null && !username.isEmpty()){
                 this.checkIfFirst();
                 this.query.append("LOWER(s.username) LIKE LOWER(:username)");
-                this.params.put("username", "%"+username+"%");
+                this.params.put("username", "%"+SearchUtils.EscapeSpecialCharacters(username)+"%");
             }
             return this;
         }
@@ -123,7 +123,7 @@ public class SnippetDeepSearchQuery {
             if (title != null && !title.isEmpty()){
                 this.checkIfFirst();
                 this.query.append("LOWER(s.title) LIKE LOWER(:title)");
-                this.params.put("title", "%"+title+"%");
+                this.params.put("title", "%"+SearchUtils.EscapeSpecialCharacters(title)+"%");
             }
             return this;
         }

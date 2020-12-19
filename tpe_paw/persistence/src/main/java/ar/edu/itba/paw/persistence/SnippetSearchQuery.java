@@ -116,7 +116,7 @@ public class SnippetSearchQuery {
             if (userId != null){ params.put("userId", userId); }
             if (resourceId != null) { params.put("resourceId", resourceId);}
             this.query.append(typeMap.get(type));
-            params.put("term", "%" + term + "%");
+            params.put("term", "%" + SearchUtils.EscapeSpecialCharacters(term) + "%");
         }
 
         /**

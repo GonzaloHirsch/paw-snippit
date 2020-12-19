@@ -30,7 +30,7 @@ public class LanguageJpaDaoImpl implements LanguageDao {
     @Override
     public Optional<Language> findByName(final String name) {
         final TypedQuery<Language> query = this.em.createQuery("FROM Language AS l WHERE LOWER(l.name) LIKE LOWER(:name)", Language.class);
-        query.setParameter("name", name);
+        query.setParameter("name", SearchUtils.EscapeSpecialCharacters(name));
         return query.getResultList().stream().findFirst();
     }
 
@@ -64,10 +64,10 @@ public class LanguageJpaDaoImpl implements LanguageDao {
         Query nativeQuery;
         if (showEmpty){
             nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM languages WHERE LOWER(name) LIKE LOWER(:name) AND deleted = FALSE ORDER BY name ASC")
-                    .setParameter("name", "%"+name+"%");
+                    .setParameter("name", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
         } else {
             nativeQuery = this.em.createNativeQuery("SELECT DISTINCT s.language_id, l.name FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND LOWER(l.name) LIKE LOWER(:name) AND l.deleted = FALSE ORDER BY l.name ASC")
-                    .setParameter("name", "%"+name+"%");
+                    .setParameter("name", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
         }
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
@@ -93,10 +93,10 @@ public class LanguageJpaDaoImpl implements LanguageDao {
         Query nativeQuery;
         if (showEmpty){
             nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM languages WHERE deleted = FALSE AND LOWER(name) LIKE LOWER(:name)")
-                    .setParameter("name", "%"+name+"%");
+                    .setParameter("name", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
         } else {
             nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT s.language_id) FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND l.deleted = FALSE AND LOWER(l.name) LIKE LOWER(:name)")
-                    .setParameter("name", "%"+name+"%");
+                    .setParameter("name", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
         }
         return ((BigInteger) nativeQuery.getSingleResult()).intValue();
     }

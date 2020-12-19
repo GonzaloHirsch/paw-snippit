@@ -327,7 +327,7 @@ class SnippetDetail extends Component {
                 </div>
               </DetailBox>
               <LinkDetailBox
-                path={"/user/" + creator.id}
+                path={"/users/" + creator.id}
                 style={{ minWidth: "190px" }}
               >
                 <div className="row mb-2 fw-500 uploaded-on-text primary-text no-decoration">

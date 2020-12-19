@@ -7,5 +7,5 @@ export function renderWithrouter(comp) {
   const history = createMemoryHistory();
   const state = { a: 123, b: 456 };
   history.push("/", state);
-  render(<Router history={history}>{comp}</Router>);
+  return render(<Router history={history}>{comp}</Router>);
 }

@@ -2,14 +2,13 @@
 import React from "react";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import { render, fireEvent, waitFor, screen } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import Login from "../components/login/login";
-import { BrowserRouter } from "react-router-dom";
 import { renderWithrouter } from "./utils/components";
 
 const server = setupServer(
-  rest.get("/greeting", (req, res, ctx) => {
+  rest.post("/api/v1/login", (req, res, ctx) => {
     return res(ctx.json({ greeting: "hello there" }));
   })
 );
@@ -17,6 +16,19 @@ const server = setupServer(
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
+
+test("username and password set ok", async () => {
+  renderWithrouter(<Login />);
+
+  const username = "myusername";
+  const password = "mypassword";
+
+  fireEvent.change(screen.getByPlaceholderText("Username"), { target: { value: username } })
+  fireEvent.change(screen.getByPlaceholderText("Password"), { target: { value: password } })
+  
+  expect(screen.getByPlaceholderText("Username").value).toBe(username);
+  expect(screen.getByPlaceholderText("Password").value).toBe(password);
+});
 
 test("shows required errors in login", async () => {
   renderWithrouter(<Login />);

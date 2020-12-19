@@ -43,12 +43,12 @@ public class SnippetSearchQuery {
         private final static Map<SnippetDao.Types, String> typeMap;
         static {
             final Map<SnippetDao.Types, String> types = new HashMap<>();
-            types.put(SnippetDao.Types.ALL, " AS s LEFT OUTER JOIN snippet_tags AS ts ON s.id = ts.snippet_id LEFT OUTER JOIN tags AS t ON t.id = ts.tag_id WHERE lower(t.name) LIKE lower(:term) OR lower(s.title) LIKE lower(:term) OR lower(s.code) LIKE lower(:term) OR lower(s.username) LIKE lower(:term) OR lower(s.language) LIKE lower(:term)");
-            types.put(SnippetDao.Types.TAG, " AS s INNER JOIN snippet_tags AS ts ON s.id = ts.snippet_id INNER JOIN tags AS t ON t.id = ts.tag_id WHERE lower(t.name) LIKE lower(:term)");
-            types.put(SnippetDao.Types.TITLE, " AS s WHERE lower(s.title) LIKE lower(:term)");
-            types.put(SnippetDao.Types.CONTENT, " AS s WHERE lower(s.code) LIKE lower(:term)");
-            types.put(SnippetDao.Types.USER, " AS s WHERE lower(s.username) LIKE lower(:term)");
-            types.put(SnippetDao.Types.LANGUAGE, " AS s WHERE lower(s.language) LIKE lower(:term)");
+            types.put(SnippetDao.Types.ALL, " AS s LEFT OUTER JOIN snippet_tags AS ts ON s.id = ts.snippet_id LEFT OUTER JOIN tags AS t ON t.id = ts.tag_id WHERE " + SearchUtils.TranslateField("t.name") + " LIKE "+SearchUtils.TranslateField(":term")+" OR " + SearchUtils.TranslateField("s.title") + " LIKE "+SearchUtils.TranslateField(":term")+" OR " + SearchUtils.TranslateField("s.code") + " LIKE "+SearchUtils.TranslateField(":term")+" OR " + SearchUtils.TranslateField("s.username") + " LIKE "+SearchUtils.TranslateField(":term")+" OR " + SearchUtils.TranslateField("s.language") + " LIKE " + SearchUtils.TranslateField(":term"));
+            types.put(SnippetDao.Types.TAG, " AS s INNER JOIN snippet_tags AS ts ON s.id = ts.snippet_id INNER JOIN tags AS t ON t.id = ts.tag_id WHERE " + SearchUtils.TranslateField("t.name") + " LIKE " + SearchUtils.TranslateField(":term"));
+            types.put(SnippetDao.Types.TITLE, " AS s WHERE " + SearchUtils.TranslateField("s.title") + " LIKE " + SearchUtils.TranslateField(":term"));
+            types.put(SnippetDao.Types.CONTENT, " AS s WHERE " + SearchUtils.TranslateField("s.code") + " LIKE " + SearchUtils.TranslateField(":term"));
+            types.put(SnippetDao.Types.USER, " AS s WHERE " + SearchUtils.TranslateField("s.username") + " LIKE " + SearchUtils.TranslateField(":term"));
+            types.put(SnippetDao.Types.LANGUAGE, " AS s WHERE " + SearchUtils.TranslateField("s.language") + " LIKE " + SearchUtils.TranslateField(":term"));
             typeMap = Collections.unmodifiableMap(types);
         }
 

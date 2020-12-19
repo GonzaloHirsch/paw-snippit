@@ -63,10 +63,10 @@ public class LanguageJpaDaoImpl implements LanguageDao {
     public Collection<Language> findAllLanguagesByName(String name, boolean showEmpty, int page, int pageSize) {
         Query nativeQuery;
         if (showEmpty){
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM languages WHERE LOWER(name) LIKE LOWER(:name) AND deleted = FALSE ORDER BY name ASC")
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM languages WHERE " + SearchUtils.TranslateField("name") + " LIKE " + SearchUtils.TranslateField(":name") + " AND deleted = FALSE ORDER BY name ASC")
                     .setParameter("name", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT s.language_id, l.name FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND LOWER(l.name) LIKE LOWER(:name) AND l.deleted = FALSE ORDER BY l.name ASC")
+            nativeQuery = this.em.createNativeQuery("SELECT DISTINCT s.language_id, l.name FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND " + SearchUtils.TranslateField("l.name") + " LIKE " + SearchUtils.TranslateField(":name") + " AND l.deleted = FALSE ORDER BY l.name ASC")
                     .setParameter("name", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
         }
         nativeQuery.setFirstResult((page - 1) * pageSize);
@@ -92,10 +92,10 @@ public class LanguageJpaDaoImpl implements LanguageDao {
     public int getAllLanguagesCountByName(String name, boolean showEmpty) {
         Query nativeQuery;
         if (showEmpty){
-            nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM languages WHERE deleted = FALSE AND LOWER(name) LIKE LOWER(:name)")
+            nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM languages WHERE deleted = FALSE AND " + SearchUtils.TranslateField("name") + " LIKE " + SearchUtils.TranslateField(":name"))
                     .setParameter("name", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
         } else {
-            nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT s.language_id) FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND l.deleted = FALSE AND LOWER(l.name) LIKE LOWER(:name)")
+            nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT s.language_id) FROM snippets AS s INNER JOIN languages AS l ON s.language_id = l.id WHERE s.deleted = FALSE AND l.deleted = FALSE AND " + SearchUtils.TranslateField("l.name") + " LIKE " + SearchUtils.TranslateField(":name"))
                     .setParameter("name", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
         }
         return ((BigInteger) nativeQuery.getSingleResult()).intValue();

@@ -18,7 +18,8 @@ export const CONTEXT = {
   RESET_PASSWORD: "reset-password",
   GOODBYE: "goodbye",
   SNIPPET_CREATE: "snippet-create",
-  ITEMS_CREATE: "items-create"
+  ITEMS_CREATE: "items-create",
+  SNIPPETS: "snippets"
 };
 
 export const EXPLORE = {
@@ -59,5 +60,6 @@ export const CONTEXT_WITHOUT_SEARCH = [
   CONTEXT.RESET_PASSWORD,
   CONTEXT.GOODBYE,
   CONTEXT.SNIPPET_CREATE,
-  CONTEXT.ITEMS_CREATE
+  CONTEXT.ITEMS_CREATE,
+  CONTEXT.SNIPPETS
 ];

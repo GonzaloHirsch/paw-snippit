@@ -8,4 +8,8 @@ public final class SearchUtils {
     public static String EscapeSpecialCharacters(String s){
         return s.replace("%", "\\%").replace("_", "\\_");
     }
+
+    public static String TranslateField(String field){
+        return "TRANSLATE(lower(" + field + "),'ÀÁÂÃáàâãÉÈÊéèêëÍíÓÒÔÕóòôõÚÜúü','AAAAaaaaEEEeeeeIiOOOOooooUUuu')";
+    }
 }

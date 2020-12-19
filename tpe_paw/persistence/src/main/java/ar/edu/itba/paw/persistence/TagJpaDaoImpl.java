@@ -114,18 +114,18 @@ public class TagJpaDaoImpl implements TagDao {
         Query nativeQuery;
         if (showEmpty){
             if (showOnlyFollowing){
-                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id WHERE LOWER(t.name) LIKE LOWER(:term) AND f.user_id = :id")
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id WHERE " + SearchUtils.TranslateField("t.name") + " LIKE " + SearchUtils.TranslateField(":term") + " AND f.user_id = :id")
                         .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%").setParameter("id", userId);
             } else {
-                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM tags WHERE LOWER(name) LIKE LOWER(:term)")
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM tags WHERE " + SearchUtils.TranslateField("name") + " LIKE " + SearchUtils.TranslateField(":term"))
                         .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
             }
         } else {
             if (showOnlyFollowing){
-                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term) AND f.user_id = :id")
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND " + SearchUtils.TranslateField("t.name") + " LIKE " + SearchUtils.TranslateField(":term") + " AND f.user_id = :id")
                         .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%").setParameter("id", userId);
             } else {
-                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term)")
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND " + SearchUtils.TranslateField("t.name") + " LIKE " + SearchUtils.TranslateField(":term"))
                         .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
             }
         }
@@ -168,18 +168,18 @@ public class TagJpaDaoImpl implements TagDao {
         Query nativeQuery;
         if (showEmpty){
             if (showOnlyFollowing){
-                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id WHERE f.user_id = :id AND LOWER(t.name) LIKE LOWER(:term) ORDER BY t.name ASC")
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id WHERE f.user_id = :id AND " + SearchUtils.TranslateField("t.name") + " LIKE " + SearchUtils.TranslateField(":term") + " ORDER BY t.name ASC")
                         .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%").setParameter("id", userId);
             } else {
-                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM tags WHERE LOWER(name) LIKE LOWER(:term) ORDER BY name ASC")
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM tags WHERE " + SearchUtils.TranslateField("name") + " LIKE " + SearchUtils.TranslateField(":term") + " ORDER BY name ASC")
                         .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
             }
         } else {
             if (showOnlyFollowing){
-                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE f.user_id = :id AND sn.deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term) ORDER BY t.name ASC")
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE f.user_id = :id AND sn.deleted = FALSE AND " + SearchUtils.TranslateField("t.name") + " LIKE " + SearchUtils.TranslateField(":term") + " ORDER BY t.name ASC")
                         .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%").setParameter("id", userId);
             } else {
-                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term) ORDER BY t.name ASC")
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND " + SearchUtils.TranslateField("t.name") + " LIKE " + SearchUtils.TranslateField(":term") + " ORDER BY t.name ASC")
                         .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
             }
         }

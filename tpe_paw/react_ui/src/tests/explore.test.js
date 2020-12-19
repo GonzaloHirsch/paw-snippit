@@ -25,12 +25,6 @@ const server = setupServer(
   }),
   rest.get("http://localhost:8080/api/v1/languages/all", (req, res, ctx) => {
     return res(ctx.json([lang1, lang2]));
-  }),
-  rest.get("http://localhost:8080/api/v1/languages/1", (req, res, ctx) => {
-    return res(ctx.json(lang1));
-  }),
-  rest.get("http://localhost:8080/api/v1/tags/2", (req, res, ctx) => {
-    return res(ctx.json(tag2));
   })
 );
 
@@ -224,29 +218,3 @@ test("explore range validations are working", async () => {
     await screen.queryByText("Values must be smaller than " + MAX_INTEGER)
   ).toBeInTheDocument();
 });
-
-// test("shows required errors in login", async () => {
-//   renderWithrouter(<Login />);
-
-//   fireEvent.click(screen.getByText("Log In"));
-
-//   expect(screen.getByText("User is required")).toBeInTheDocument();
-//   expect(screen.getByText("Password is required")).toBeInTheDocument();
-// });
-/* 
-test('handles server error', async () => {
-  server.use(
-    rest.get('/greeting', (req, res, ctx) => {
-      return res(ctx.status(500))
-    })
-  )
-
-  render(<Fetch url="/greeting" />)
-
-  fireEvent.click(screen.getByText('Load Greeting'))
-
-  await waitFor(() => screen.getByRole('alert'))
-
-  expect(screen.getByRole('alert')).toHaveTextContent('Oops, failed to fetch!')
-  expect(screen.getByRole('button')).not.toHaveAttribute('disabled')
-}) */

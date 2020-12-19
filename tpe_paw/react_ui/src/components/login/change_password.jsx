@@ -85,7 +85,7 @@ class ChangePassword extends Component {
     this.loadComponentBasedOnParams(params);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const params = new URLSearchParams(nextProps.location.search);
     this.loadComponentBasedOnParams(params);
   }

@@ -82,7 +82,11 @@ class ItemCreate extends Component {
   // When a tag or language is added, must check if it
   // already exists and inform the user
   onAddTag = () => {
-    if (this.state.errors.tag.item !== null) return;
+    if (
+      this.state.fields.tag.item === "" ||
+      this.state.errors.tag.item !== null
+    )
+      return;
     const fields = { ...this.state.fields };
     const name = fields.tag.item;
 
@@ -105,7 +109,11 @@ class ItemCreate extends Component {
   };
 
   onAddLanguage = () => {
-    if (this.state.errors.language.item !== null) return;
+    if (
+      this.state.fields.language.item === "" ||
+      this.state.errors.language.item !== null
+    )
+      return;
     const fields = { ...this.state.fields };
     const name = fields.language.item;
 

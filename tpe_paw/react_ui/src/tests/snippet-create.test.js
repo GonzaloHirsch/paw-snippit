@@ -6,7 +6,6 @@ import { fireEvent, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { renderWithrouter } from "./utils/components";
 import SnippetCreateForm from "../components/forms/snippet_create_form";
-import { MAX_INTEGER, MIN_INTEGER } from "../js/constants";
 
 // Constants
 const titlePlaceholder = "Enter your snippet's title...";

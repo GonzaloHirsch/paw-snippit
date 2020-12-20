@@ -293,7 +293,7 @@ function SnippetFeedHOC(
         this.loadSnippets(1);
         if (
           !!matchPath(this.props.location.pathname, "**/search") ||
-          page != this.state.currentPage
+          page !== this.state.currentPage
         ) {
           this.props.history.push(pathname);
         }

@@ -6,7 +6,6 @@ import TextInputFieldWithIcon from "../forms/text_input_field_with_icon";
 import { withRouter } from "react-router-dom";
 import CustomForm from "../forms/custom_form";
 import store from "../../store";
-import * as actions from "../../redux/actions/actionTypes";
 import { mdiKey } from "@mdi/js";
 import {
   VERIFY_EMAIL_VALIDATIONS,

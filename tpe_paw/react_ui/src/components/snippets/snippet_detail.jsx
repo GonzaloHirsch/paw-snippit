@@ -293,7 +293,7 @@ class SnippetDetail extends Component {
                 />
               </DetailBox>
               {userCanReport &&
-                !userIsOwner &&
+                !userIsOwner && !snippet.deleted &&
                 this.getReportedSnippetBox(snippet)}
               <DetailBox>
                 <div className="row no-margin fw-500">

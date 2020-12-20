@@ -28,7 +28,6 @@ public class JwtTokenExtractor {
     // Prefix for the authorization token
     private static final String TOKEN_PREFIX = "Bearer ";
 
-    // TODO: check how to avoid making the stream every time
     @Value("classpath:authKey.key")
     private Resource resourceFile;
 

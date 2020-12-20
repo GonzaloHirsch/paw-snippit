@@ -26,20 +26,8 @@ public class JwtTokenFactory {
     private static final String TOKEN_AUTHORITIES = "auth";
     private static final String TOKEN_REPORTING = "canReport";
 
-    // TODO: check how to avoid making the stream every time
     @Value("classpath:authKey.key")
     private Resource resourceFile;
-
-   /*private byte[] secret = null;
-
-    @Autowired
-    public JwtTokenFactory(){
-        try {
-            this.secret = IOUtils.toByteArray(this.resourceFile.getInputStream());
-        } catch (IOException e) {
-            this.secret = null;
-        }
-    }*/
 
     // Time of expiration for the token
     private final static int DAYS_TO_EXPIRE = 1;

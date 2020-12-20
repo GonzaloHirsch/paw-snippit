@@ -34,7 +34,7 @@ public class TagJpaDaoImpl implements TagDao {
     @Override
     public Optional<Tag> findByName(final String name) {
         final TypedQuery<Tag> query = this.em.createQuery("from Tag as t where LOWER(t.name) LIKE LOWER(:name)", Tag.class);
-        query.setParameter("name", name);
+        query.setParameter("name", SearchUtils.EscapeSpecialCharacters(name));
         return query.getResultList().stream().findFirst();
     }
 
@@ -114,19 +114,19 @@ public class TagJpaDaoImpl implements TagDao {
         Query nativeQuery;
         if (showEmpty){
             if (showOnlyFollowing){
-                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id WHERE LOWER(t.name) LIKE LOWER(:term) AND f.user_id = :id")
-                        .setParameter("term", "%"+name+"%").setParameter("id", userId);
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id WHERE " + SearchUtils.TranslateField("t.name") + " LIKE " + SearchUtils.TranslateField(":term") + " AND f.user_id = :id")
+                        .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%").setParameter("id", userId);
             } else {
-                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM tags WHERE LOWER(name) LIKE LOWER(:term)")
-                        .setParameter("term", "%"+name+"%");
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT id) FROM tags WHERE " + SearchUtils.TranslateField("name") + " LIKE " + SearchUtils.TranslateField(":term"))
+                        .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
             }
         } else {
             if (showOnlyFollowing){
-                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term) AND f.user_id = :id")
-                        .setParameter("term", "%"+name+"%").setParameter("id", userId);
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND " + SearchUtils.TranslateField("t.name") + " LIKE " + SearchUtils.TranslateField(":term") + " AND f.user_id = :id")
+                        .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%").setParameter("id", userId);
             } else {
-                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term)")
-                        .setParameter("term", "%"+name+"%");
+                nativeQuery = this.em.createNativeQuery("SELECT COUNT(DISTINCT t.id) FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND " + SearchUtils.TranslateField("t.name") + " LIKE " + SearchUtils.TranslateField(":term"))
+                        .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
             }
         }
         return ((BigInteger) nativeQuery.getSingleResult()).intValue();
@@ -168,22 +168,22 @@ public class TagJpaDaoImpl implements TagDao {
         Query nativeQuery;
         if (showEmpty){
             if (showOnlyFollowing){
-                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id WHERE f.user_id = :id AND LOWER(t.name) LIKE LOWER(:term) ORDER BY t.name ASC")
-                        .setParameter("term", "%"+name+"%").setParameter("id", userId);
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id WHERE f.user_id = :id AND " + SearchUtils.TranslateField("t.name") + " LIKE " + SearchUtils.TranslateField(":term") + " ORDER BY t.name ASC")
+                        .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%").setParameter("id", userId);
             } else {
-                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM tags WHERE LOWER(name) LIKE LOWER(:term) ORDER BY name ASC")
-                        .setParameter("term", "%"+name+"%");
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT id, name FROM tags WHERE " + SearchUtils.TranslateField("name") + " LIKE " + SearchUtils.TranslateField(":term") + " ORDER BY name ASC")
+                        .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
             }
         } else {
             if (showOnlyFollowing){
-                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE f.user_id = :id AND sn.deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term) ORDER BY t.name ASC")
-                        .setParameter("term", "%"+name+"%").setParameter("id", userId);
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM follows AS f LEFT OUTER JOIN tags AS t ON f.tag_id = t.id INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE f.user_id = :id AND sn.deleted = FALSE AND " + SearchUtils.TranslateField("t.name") + " LIKE " + SearchUtils.TranslateField(":term") + " ORDER BY t.name ASC")
+                        .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%").setParameter("id", userId);
             } else {
-                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND LOWER(t.name) LIKE LOWER(:term) ORDER BY t.name ASC")
-                        .setParameter("term", "%"+name+"%");
+                nativeQuery = this.em.createNativeQuery("SELECT DISTINCT t.id, t.name FROM tags AS t INNER JOIN snippet_tags AS st ON st.tag_id = t.id INNER JOIN snippets AS sn ON st.snippet_id = sn.id WHERE deleted = FALSE AND " + SearchUtils.TranslateField("t.name") + " LIKE " + SearchUtils.TranslateField(":term") + " ORDER BY t.name ASC")
+                        .setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
             }
         }
-        nativeQuery.setParameter("term", "%"+name+"%");
+        nativeQuery.setParameter("term", "%"+SearchUtils.EscapeSpecialCharacters(name)+"%");
         nativeQuery.setFirstResult((page - 1) * pageSize);
         nativeQuery.setMaxResults(pageSize);
         List<Long> filteredIds = ((List<Object[]>) nativeQuery.getResultList())

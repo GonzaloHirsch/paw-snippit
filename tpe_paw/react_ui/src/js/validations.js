@@ -194,7 +194,7 @@ export const SNIPPET_CREATE_VALIDATIONS = {
     const descr = i18n.t("snippetCreate.fields.description");
     return (
       (val.trim().length > 500 &&
-        i18n.t("snippetCreate.errors.minLimit", {
+        i18n.t("snippetCreate.errors.maxLimit", {
           field: descr,
           num: 500,
         })) ||

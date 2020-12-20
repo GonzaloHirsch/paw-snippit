@@ -462,6 +462,8 @@ public class SnippetController {
         Optional<Snippet> retrievedSnippet = this.snippetService.findSnippetById(id);
         if (!retrievedSnippet.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
+        } else if (retrievedSnippet.get().isDeleted()){
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         Snippet snippet = retrievedSnippet.get();

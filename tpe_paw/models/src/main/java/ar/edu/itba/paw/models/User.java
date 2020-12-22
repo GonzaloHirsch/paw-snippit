@@ -12,7 +12,6 @@ import java.util.Locale;
 @Table(name = "users")
 public class User {
 
-    //TODO: Check correct sequence generator
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
     @SequenceGenerator(allocationSize = 1, sequenceName = "users_id_seq", name="users_id_seq")

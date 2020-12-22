@@ -108,8 +108,8 @@ public class SnippetDeepSearchQuery {
         public Builder addUsername(String username){
             if (username != null && !username.isEmpty()){
                 this.checkIfFirst();
-                this.query.append("LOWER(s.username) LIKE LOWER(:username)");
-                this.params.put("username", "%"+username+"%");
+                this.query.append(SearchUtils.TranslateField("s.username") + " LIKE " + SearchUtils.TranslateField(":username"));
+                this.params.put("username", "%"+SearchUtils.EscapeSpecialCharacters(username)+"%");
             }
             return this;
         }
@@ -122,8 +122,8 @@ public class SnippetDeepSearchQuery {
         public Builder addTitle(String title){
             if (title != null && !title.isEmpty()){
                 this.checkIfFirst();
-                this.query.append("LOWER(s.title) LIKE LOWER(:title)");
-                this.params.put("title", "%"+title+"%");
+                this.query.append(SearchUtils.TranslateField("s.title") + " LIKE " + SearchUtils.TranslateField(":title"));
+                this.params.put("title", "%"+SearchUtils.EscapeSpecialCharacters(title)+"%");
             }
             return this;
         }

@@ -18,9 +18,14 @@ import java.util.Optional;
 @Service
 public class SnippetServiceImpl implements SnippetService {
 
-    @Autowired private SnippetDao snippetDao;
-    @Autowired private UserService userService;
-    @Autowired private EmailService emailService;
+    @Autowired
+    private SnippetDao snippetDao;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private TagService tagService;
 
     @Override
     public Collection<Snippet> findSnippetByCriteria(SnippetDao.Types type, String term, SnippetDao.Locations location, SnippetDao.Orders order, Long userId, Long resourceId, int page, int pageSize) {
@@ -49,7 +54,7 @@ public class SnippetServiceImpl implements SnippetService {
 
     @Transactional
     @Override
-    public boolean deleteOrRestoreSnippet(Snippet snippet, long userId, boolean delete) {
+    public boolean deleteOrRestoreSnippet(Snippet snippet, boolean delete) {
         if (delete) {
             return snippetDao.deleteSnippetById(snippet.getId());
         }
@@ -57,7 +62,9 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
-    public Optional<Snippet> findSnippetById(long id) { return this.snippetDao.findSnippetById(id);}
+    public Optional<Snippet> findSnippetById(long id) {
+        return this.snippetDao.findSnippetById(id);
+    }
 
     @Override
     public Collection<Snippet> getAllSnippetsByOwner(final long userId, int page, int pageSize) {
@@ -70,7 +77,9 @@ public class SnippetServiceImpl implements SnippetService {
     }
 
     @Override
-    public Collection<Snippet> getAllSnippets(int page, int pageSize) { return this.snippetDao.getAllSnippets(page, pageSize); }
+    public Collection<Snippet> getAllSnippets(int page, int pageSize) {
+        return this.snippetDao.getAllSnippets(page, pageSize);
+    }
 
     @Override
     public int getAllSnippetsCount() {
@@ -150,6 +159,13 @@ public class SnippetServiceImpl implements SnippetService {
     @Transactional
     @Override
     public Long createSnippet(User owner, String title, String description, String code, Instant dateCreated, Long language, Collection<String> tags) {
+        // Checking the tags exist
+        for (String t : tags) {
+            if (!this.tagService.tagExists(t)) {
+                return null;
+            }
+        }
+
         return snippetDao.createSnippet(owner.getId(), title.trim(), description.trim(), code, dateCreated, language, tags);
     }
 
@@ -164,7 +180,7 @@ public class SnippetServiceImpl implements SnippetService {
             this.userService.changeReputation(owner.getId(), owner.getReputation() + FLAGGED_SNIPPET_REP_VALUE);
         }
         // Getting the url of the server
-        this.emailService.sendFlaggedEmail(baseUrl + "/snippet/" + snippet.getId(), snippet.getTitle(), owner.getEmail(), owner.getUsername(), isFlagged, owner.getLocale());
+        this.emailService.sendFlaggedEmail(baseUrl + "/snippets/" + snippet.getId(), snippet.getTitle(), owner.getEmail(), owner.getUsername(), isFlagged, owner.getLocale());
     }
 
     @Override

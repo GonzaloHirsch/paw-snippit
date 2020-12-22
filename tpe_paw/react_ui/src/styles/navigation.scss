@@ -1,0 +1,204 @@
+@import "variables";
+
+/* The side navigation menu */
+
+.sidenav {
+  height: 100%; /* 100% Full-height */
+  width: 0; /* 0 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: rgb(42, 42, 42); /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 15px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+  margin-top: 56px !important;
+}
+
+/* The navigation menu links */
+.sidenav a,
+.sidenav-button-item {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #f1f1f1;
+  display: block;
+  transition: 0.15s;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+.sidenav .sidenav-link-item {
+  text-decoration: none;
+}
+
+.sidenav span {
+  font-size: 20px;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover,
+.sidenav-button-item:hover {
+  background-color: $primary-color-light;
+  color: #f1f1f1;
+}
+
+.sidenav .selected {
+  background-color: $primary-color-light;
+  color: #f1f1f1;
+  border: $primary-color solid;
+  border-width: 0 7px 0 0;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.sidenav ul {
+  padding-left: 20px;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+  transition: margin-left 0.5s;
+  padding: 20px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
+  .sidenav a,
+  .sidenav-button-item {
+    font-size: 18px;
+  }
+}
+
+.menu-list {
+  padding: 0px;
+}
+
+.menu-divider {
+  margin-left: 10px !important;
+}
+
+/* Main navigation bar */
+
+.navbar {
+  background-color: $primary-color !important;
+}
+
+.nav-parent {
+  height: 65px;
+}
+
+.nav-spacing {
+  margin-bottom: 65px;
+}
+
+.search-box {
+  width: 100% !important;
+}
+
+.app-link {
+  cursor: pointer;
+  font-size: 25px;
+}
+
+/* unvisited link */
+.app-link:link {
+  text-decoration: none;
+}
+
+/* visited link */
+.app-link:visited {
+  text-decoration: none;
+}
+
+/* mouse over link */
+.app-link:hover {
+  text-decoration: none;
+}
+
+/* selected link */
+.app-link:active {
+  text-decoration: none;
+}
+
+.top-profile-image {
+  border: white solid 2px;
+  transition: 0.3s;
+  border-radius: 50%;
+  padding: 2px;
+  cursor: pointer;
+  &:hover {
+    @extend .top-profile-image;
+    background-color: $primary-color-dark;
+  }
+}
+
+.navbar-dropdowns {
+  max-width: 125px;
+}
+
+.search-button {
+  background-color: #d1d1d1 !important;
+  color: white !important;
+  height: 38px;
+  border: 1px solid #ced4da !important;
+  border-radius: 0px $border-radius $border-radius 0px !important;
+}
+
+.search-button:hover {
+  background-color: #c4c4c4 !important;
+}
+
+.search-box-style {
+  border-radius: $border-radius 0px 0px $border-radius !important;
+  max-width: 350px;
+}
+
+.auth-buttons {
+  min-width: max-content;
+  margin-right: -6px;
+  margin-left: 5px;
+}
+
+.navbar-following-buttons {
+  background-color: white !important;
+  border: 1px solid #ced4da !important;
+  padding: 0px 5px !important;
+}
+
+.navbar-following-buttons:hover {
+  background-color: #d1d1d1 !important;
+}
+
+.navbar-spacing {
+  width: 20% !important;
+}
+
+.navbar-spacing-responsive {
+  @include media-breakpoint-only(xs) {
+    width: 100% !important;
+  }
+  @include media-breakpoint-only(sm) {
+    width: 100% !important;
+  }
+  @include media-breakpoint-only(md) {
+    width: 73% !important;
+  }
+  @include media-breakpoint-only(lg) {
+    width: 73% !important;
+  }
+  @include media-breakpoint-only(xl) {
+    width: 73% !important;
+  }
+}

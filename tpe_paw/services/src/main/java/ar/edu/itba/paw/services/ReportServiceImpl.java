@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.dao.ReportDao;
 import ar.edu.itba.paw.interfaces.service.EmailService;
 import ar.edu.itba.paw.interfaces.service.ReportService;
+import ar.edu.itba.paw.interfaces.service.RoleService;
 import ar.edu.itba.paw.models.Report;
 import ar.edu.itba.paw.models.Snippet;
 import ar.edu.itba.paw.models.User;
@@ -19,6 +20,8 @@ public class ReportServiceImpl implements ReportService {
     private ReportDao reportDao;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private RoleService roleService;
 
     @Override
     public Optional<Report> getReport(long userId, long snippetId){
@@ -32,7 +35,7 @@ public class ReportServiceImpl implements ReportService {
 
         if(result) {
             this.emailService.sendReportedEmail(
-                    baseUrl + "/snippet/" + snippet.getId(),
+                    baseUrl + "/snippets/" + snippet.getId(),
                     snippet.getTitle(),
                     snippet.getOwner().getEmail(),
                     snippet.getOwner().getUsername(),
@@ -46,7 +49,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public boolean canReport(User user) {
-        return user.getReputation() >= MIN_REPUTATION_TO_REPORT;
+        return !this.roleService.isAdmin(user.getId()) && user.getReputation() >= MIN_REPUTATION_TO_REPORT;
     }
 
     /*

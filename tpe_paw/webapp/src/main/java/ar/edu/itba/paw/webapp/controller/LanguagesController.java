@@ -1,130 +1,220 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.service.*;
+import ar.edu.itba.paw.interfaces.dao.SnippetDao;
+import ar.edu.itba.paw.interfaces.service.LanguageService;
+import ar.edu.itba.paw.interfaces.service.RoleService;
+import ar.edu.itba.paw.interfaces.service.SnippetService;
 import ar.edu.itba.paw.models.Language;
-import ar.edu.itba.paw.models.Snippet;
-import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.LoginAuthentication;
-import ar.edu.itba.paw.webapp.utility.Constants;
-import ar.edu.itba.paw.webapp.exception.ForbiddenAccessException;
-import ar.edu.itba.paw.webapp.exception.LanguageNotFoundException;
-import ar.edu.itba.paw.webapp.form.DeleteForm;
-import ar.edu.itba.paw.webapp.form.FavoriteForm;
-import ar.edu.itba.paw.webapp.form.ItemSearchForm;
-import ar.edu.itba.paw.webapp.form.SearchForm;
-import ar.edu.itba.paw.webapp.utility.MavHelper;
+import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.utility.PagingHelper;
+import ar.edu.itba.paw.webapp.utility.ResponseHelper;
+import ar.edu.itba.paw.webapp.utility.SearchHelper;
+import ar.edu.itba.paw.webapp.utility.UserHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.utility.Constants.LANGUAGE_PAGE_SIZE;
-import static ar.edu.itba.paw.webapp.utility.Constants.SNIPPET_PAGE_SIZE;
+import static ar.edu.itba.paw.webapp.utility.Constants.*;
 
-@Controller
+@Component
+@Path("languages")
 public class LanguagesController {
-    @Autowired private LanguageService languageService;
-    @Autowired private SnippetService snippetService;
-    @Autowired private LoginAuthentication loginAuthentication;
-    @Autowired private TagService tagService;
-    @Autowired private RoleService roleService;
-    @Autowired private UserService userService;
-    @Autowired private MessageSource messageSource;
+    @Autowired
+    private LanguageService languageService;
+    @Autowired
+    private SnippetService snippetService;
+    @Autowired
+    private LoginAuthentication loginAuthentication;
+    @Autowired
+    private RoleService roleService;
+
+    @Context
+    private UriInfo uriInfo;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LanguagesController.class);
 
-    @RequestMapping("/languages")
-    public ModelAndView showAllLanguages(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
-        ModelAndView mav = new ModelAndView("tagAndLanguages/languages");
-        Collection<Language> allLanguages = this.languageService.getAllLanguages(searchForm.isShowEmpty(), page, LANGUAGE_PAGE_SIZE);
-
-        for (Language language : allLanguages) {
-            this.snippetService.analizeSnippetsUsing(language);
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response languageCreate(@Valid ItemCreateDto langCreateDto) {
+        User loggedInUser = this.loginAuthentication.getLoggedInUser();
+        // Check if user is admin
+        if (loggedInUser == null || !this.roleService.isAdmin(loggedInUser.getId())) {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        int languageCount = this.languageService.getAllLanguagesCount(searchForm.isShowEmpty());
-        mav.addObject("pages", (languageCount/ LANGUAGE_PAGE_SIZE) + (languageCount % LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
-        mav.addObject("page", page);
-        mav.addObject("searchContext","languages/");
-        mav.addObject("languages", allLanguages);
-        mav.addObject("searching", false);
-        mav.addObject("totalLanguagesCount", languageCount);
-        mav.addObject("itemSearchContext", "languages/");
-        return mav;
+        // Create language
+        long langId = this.languageService.addLanguage(langCreateDto.getName());
+        // Add URI to response
+        final URI langUri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(langId)).build();
+        return Response.created(langUri).build();
     }
 
-    @RequestMapping("/languages/search")
-    public ModelAndView searchInAllTags(@ModelAttribute("itemSearchForm") final ItemSearchForm searchForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
-        final ModelAndView mav = new ModelAndView("tagAndLanguages/languages");
-        Collection<Language> allLanguages = this.languageService.findAllLanguagesByName(searchForm.getName(), searchForm.isShowEmpty(), page, LANGUAGE_PAGE_SIZE);
-        int languageCount = this.languageService.getAllLanguagesCountByName(searchForm.getName(), searchForm.isShowEmpty());
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getLanguagesByPage(final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page, final @QueryParam(QUERY_PARAM_SHOW_EMPTY) @DefaultValue("true") boolean showEmpty) {
+        // Get languages
+        final Collection<Language> rawLanguages = this.languageService.getAllLanguages(showEmpty, page, LANGUAGE_PAGE_SIZE);
+        // Analyze if they are empty or not
+        rawLanguages.forEach(l -> this.snippetService.analizeSnippetsUsing(l));
+        // Generate DTOs
+        final List<LanguageWithEmptyDto> languages = rawLanguages.stream().map(l -> LanguageWithEmptyDto.fromLanguage(l, uriInfo)).collect(Collectors.toList());
+        final int languagesCount = this.languageService.getAllLanguagesCount(showEmpty);
+        int pageCount = PagingHelper.CalculateTotalPages(languagesCount, LANGUAGE_PAGE_SIZE);
 
-        for (Language language : allLanguages) {
-            this.snippetService.analizeSnippetsUsing(language);
+        // If the page asked is greater than the one existing
+        if (page > pageCount && pageCount > 0){
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        mav.addObject("pages", (languageCount/ LANGUAGE_PAGE_SIZE) + (languageCount % LANGUAGE_PAGE_SIZE == 0 ? 0 : 1));
-        mav.addObject("page", page);
-        mav.addObject("searchContext","languages/");
-        mav.addObject("languages", allLanguages);
-        mav.addObject("searching", true);
-        mav.addObject("totalLanguagesCount", languageCount);
-        mav.addObject("itemSearchContext", "languages/");
-        return mav;
+
+        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<LanguageWithEmptyDto>>(languages) {
+        });
+        ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        ResponseHelper.AddTotalItemsAttribute(builder, languagesCount);
+        return builder.build();
     }
 
-    @RequestMapping("/languages/{langId}")
-    public ModelAndView showSnippetsForLang(@PathVariable("langId") long langId, @ModelAttribute("deleteForm") final DeleteForm deleteForm, final @RequestParam(value = "page", required = false, defaultValue = "1") int page){
-        ModelAndView mav = new ModelAndView("tagAndLanguages/languageSnippets");
+    @GET
+    @Path("/search")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response searchInAllTags(final @BeanParam LanguageSearchDto languageSearchDto, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page){
+        final Collection<Language> rawLanguages = this.languageService.findAllLanguagesByName(languageSearchDto.getQuery(), languageSearchDto.isShowEmpty(), page, LANGUAGE_PAGE_SIZE);
+        // Analyze if they are empty or not
+        rawLanguages.forEach(l -> this.snippetService.analizeSnippetsUsing(l));
+        // Generate DTOs
+        final List<LanguageWithEmptyDto> languages = rawLanguages.stream().map(l -> LanguageWithEmptyDto.fromLanguage(l, uriInfo)).collect(Collectors.toList());
+        int languagesCount = this.languageService.getAllLanguagesCountByName(languageSearchDto.getQuery(), languageSearchDto.isShowEmpty());
+        int pageCount = PagingHelper.CalculateTotalPages(languagesCount, LANGUAGE_PAGE_SIZE);
 
-        /* Retrieve the tag */
-        Optional<Language> language = languageService.findById(langId);
-        if (!language.isPresent()) {
-            LOGGER.error("No language found with id {}", langId);
-            throw new LanguageNotFoundException(messageSource.getMessage("error.404.language", new Object[]{langId}, LocaleContextHolder.getLocale()));
+        // If the page asked is greater than the one existing
+        if (page > pageCount && pageCount > 0){
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        Collection<Snippet> snippets = snippetService.getSnippetsWithLanguage(langId, page, SNIPPET_PAGE_SIZE);
-        int totalSnippetCount = this.snippetService.getAllSnippetsByLanguageCount(langId);
 
-        mav.addObject("pages", totalSnippetCount/SNIPPET_PAGE_SIZE + (totalSnippetCount % SNIPPET_PAGE_SIZE == 0 ? 0 : 1));
-        mav.addObject("page", page);
-        mav.addObject("language", language.get());
-        mav.addObject("searchContext","languages/"+langId+"/");
-        mav.addObject("searching", false);
-        mav.addObject("totalSnippetCount", totalSnippetCount);
-        mav.addObject("snippetList", snippets);
-        MavHelper.addSnippetCardFavFormAttributes(mav, this.loginAuthentication.getLoggedInUser(), snippets);
-        return mav;
+        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<LanguageWithEmptyDto>>(languages) {
+        });
+        ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+        ResponseHelper.AddTotalItemsAttribute(builder, languagesCount);
+        return builder.build();
     }
 
-    @Transactional
-    @RequestMapping("/languages/{langId}/delete")
-    public ModelAndView deleteLanguage (@PathVariable("langId") long langId, @ModelAttribute("deleteForm") final DeleteForm deleteForm) {
-        User currentUser = loginAuthentication.getLoggedInUser();
-        if ( currentUser != null && roleService.isAdmin(currentUser.getId())){
-            this.languageService.removeLanguage(langId);
-            LOGGER.debug("Admin removed language with id {}", langId);
+    @GET
+    @Path("/all")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getAllLanguages() {
+        final List<LanguageDto> languages = languageService.getAllLanguages().stream().map(l -> LanguageDto.fromLanguage(l, uriInfo)).collect(Collectors.toList());
+        Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<LanguageDto>>(languages) {
+        });
+        return builder.build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getLanguageById(final @PathParam(PATH_PARAM_ID) long id){
+        Optional<Language> maybeLang = this.languageService.findById(id);
+        if (maybeLang.isPresent()) {
+            LanguageDto langDto = LanguageDto.fromLanguage(maybeLang.get(), uriInfo);
+            Response.ResponseBuilder builder = Response.ok(new GenericEntity<LanguageDto>(langDto) {
+            });
+            return builder.build();
         } else {
-            LOGGER.error("No user logged in or logged in user not admin but language {} is trying to be deleted", langId);
-            throw new ForbiddenAccessException(messageSource.getMessage("error.403.admin.delete", null, LocaleContextHolder.getLocale()));
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return new ModelAndView("redirect:/languages/" + langId);
     }
 
-    @ModelAttribute
-    public void addAttributes(Model model, @Valid final SearchForm searchForm) {
+    @GET
+    @Path("/exists")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getLanguageByName(final @QueryParam(QUERY_PARAM_NAME) String name) {
+        // Check that user is admin
+        User loggedInUser = this.loginAuthentication.getLoggedInUser();
+        if (loggedInUser == null || !this.roleService.isAdmin(loggedInUser.getId())) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } else if (name == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok(BooleanDto.fromBoolean(this.languageService.languageExists(name))).build();
+    }
+
+    @GET
+    @Path("/{id}/snippets")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getSnippetsForLanguage(final @PathParam(PATH_PARAM_ID) long id, final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page){
+        Optional<Language> lang = this.languageService.findById(id);
+        if (lang.isPresent()) {
+            final List<SnippetDto> snippets = this.snippetService.getSnippetsWithLanguage(id, page, SNIPPET_PAGE_SIZE).stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+            final int snippetCount = this.snippetService.getAllSnippetsByLanguageCount(id);
+            int pageCount = PagingHelper.CalculateTotalPages(snippetCount, SNIPPET_PAGE_SIZE);
+
+            // If the page asked is greater than the one existing
+            if (page > pageCount && pageCount > 0){
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
+            Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+            });
+            ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            ResponseHelper.AddTotalItemsAttribute(builder, snippetCount);
+            return builder.build();
+        } else {
+            LOGGER.error("No language found with id {}", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/snippets/search")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getSnippetsForLanguage(final @PathParam(PATH_PARAM_ID) long id,
+                                           final @BeanParam SearchDto searchDto,
+                                           final @QueryParam(QUERY_PARAM_PAGE) @DefaultValue("1") int page){
+        Optional<Language> maybeLang = this.languageService.findById(id);
+        if (maybeLang.isPresent()) {
+            final List<SnippetDto> snippets = SearchHelper.FindByCriteria(this.snippetService, searchDto.getType(), searchDto.getQuery(), SnippetDao.Locations.LANGUAGES, searchDto.getSort(), null, id, page)
+                    .stream().map(s -> SnippetDto.fromSnippet(s, UserHelper.GetLoggedUserId(this.loginAuthentication), uriInfo, LocaleContextHolder.getLocale())).collect(Collectors.toList());
+
+            int totalSnippetCount = SearchHelper.GetSnippetByCriteriaCount(this.snippetService, searchDto.getType(), searchDto.getSort(), searchDto.getQuery(), SnippetDao.Locations.LANGUAGES, null, id);
+            final int pageCount = PagingHelper.CalculateTotalPages(totalSnippetCount, SNIPPET_PAGE_SIZE);
+
+            // If the page asked is greater than the one existing
+            if (page > pageCount && pageCount > 0){
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
+            Response.ResponseBuilder builder = Response.ok(new GenericEntity<List<SnippetDto>>(snippets) {
+            });
+            ResponseHelper.AddLinkAttributes(builder, this.uriInfo, page, pageCount);
+            ResponseHelper.AddTotalItemsAttribute(builder, totalSnippetCount);
+            return builder.build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Response deleteLanguage(final @PathParam(PATH_PARAM_ID) long id){
         User currentUser = this.loginAuthentication.getLoggedInUser();
-        MavHelper.addCurrentUserAttributes(model, currentUser, tagService, roleService);
-        model.addAttribute("searchForm", searchForm);
+        if ( currentUser != null && roleService.isAdmin(currentUser.getId())){
+            this.languageService.removeLanguage(id);
+            LOGGER.debug("Admin removed language with id {}", id);
+            return Response.noContent().build();
+        } else {
+            LOGGER.error("No user logged in or logged in user not admin but language {} is trying to be deleted", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 }

@@ -29,7 +29,7 @@ public class DateOrderValidator implements ConstraintValidator<DateOrder, Object
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
         boolean valid = false;
-        SimpleDateFormat fmt = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         try
         {
             Date min = BeanUtils.getProperty(value, this.minField) != null ? fmt.parse(BeanUtils.getProperty(value, this.minField)) : null;

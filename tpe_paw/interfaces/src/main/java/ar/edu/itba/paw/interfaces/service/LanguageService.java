@@ -14,6 +14,7 @@ public interface LanguageService {
     int getAllLanguagesCountByName(String name, boolean showEmpty);
     int getAllLanguagesCount(boolean showEmpty);
     void addLanguages(List<String> languages);
+    long addLanguage(String language);
     boolean languageExists(final String language);
     boolean languageExists(final long id);
     void removeLanguage(final long langId);
